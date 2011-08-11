@@ -90,6 +90,9 @@
     <ClCompile Include="konomiTest\KNIdentifierFlagDictionaryTest.cpp">
       <Filter>konomi</Filter>
     </ClCompile>
+    <ClCompile Include="lynetteTest\LNModelTest.cpp">
+      <Filter>lynette</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SoraTestStdAfx.h" />
@@ -121,6 +124,9 @@
     </Filter>
     <Filter Include="runa">
       <UniqueIdentifier>{002bce9f-9428-4d0e-96d4-c83a701b5b63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lynette">
+      <UniqueIdentifier>{9f66d0cb-8a9b-4ebc-a82d-cf38c360a496}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

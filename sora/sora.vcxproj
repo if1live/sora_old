@@ -55,6 +55,7 @@
     <ClCompile Include="konomi\KNIdentifierFlagDictionary.cpp" />
     <ClCompile Include="konomi\KNMessageCodeDictionary.cpp" />
     <ClCompile Include="konomi\KNVariant.cpp" />
+    <ClCompile Include="lynette\LNModel.cpp" />
     <ClCompile Include="mio\MioConsole.cpp" />
     <ClCompile Include="mio\MioPath.cpp" />
     <ClCompile Include="mio\MioReader.cpp" />
@@ -92,6 +93,11 @@
     <ClInclude Include="konomi\KNTypedef.h" />
     <ClInclude Include="konomi\KNVariant.h" />
     <ClInclude Include="konomi\konomi.h" />
+    <ClInclude Include="lynette\LNTypedef.h" />
+    <ClInclude Include="lynette\LNBoundingVolumeTpl.h" />
+    <ClInclude Include="lynette\LNBoundingVolumeTpl.hpp" />
+    <ClInclude Include="lynette\LNModel.h" />
+    <ClInclude Include="lynette\LNTeapot.h" />
     <ClInclude Include="matsu\matsu.h" />
     <ClInclude Include="matsu\MTClassType.h" />
     <ClInclude Include="matsu\MTCoordinate.h" />
@@ -106,7 +112,7 @@
     <ClInclude Include="matsu\MTMatrixTpl.hpp" />
     <ClInclude Include="matsu\MTQuaternion.h" />
     <ClInclude Include="matsu\MTQuaternion.hpp" />
-    <ClInclude Include="matsu\MTRect.h" />
+    <ClInclude Include="matsu\MTRectTpl.h" />
     <ClInclude Include="matsu\MTSharedObject.h" />
     <ClInclude Include="matsu\MTSingleton.h" />
     <ClInclude Include="matsu\MTString.h" />

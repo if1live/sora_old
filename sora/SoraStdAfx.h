@@ -50,12 +50,9 @@
 		#import <OpenGLES/ES2/glext.h>
 	#endif
 
-#define SORA_USE_SHADER 1
 #elif _GLFW_
 	#include "GL/glew.h"
 	#include "GL/glfw.h"
-#define SORA_USE_SHADER 0
-#define _ES1_ 1
 #endif
 
 //boost

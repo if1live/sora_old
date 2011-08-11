@@ -98,6 +98,9 @@
     <ClCompile Include="konomi\KNIdentifierFlagDictionary.cpp">
       <Filter>konomi</Filter>
     </ClCompile>
+    <ClCompile Include="lynette\LNModel.cpp">
+      <Filter>lynette</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SoraStdAfx.h" />
@@ -326,11 +329,26 @@
     <ClInclude Include="runa\RNUberShader.h">
       <Filter>runa</Filter>
     </ClInclude>
-    <ClInclude Include="matsu\MTRect.h">
-      <Filter>matsu</Filter>
-    </ClInclude>
     <ClInclude Include="konomi\KNIdentifierFlagDictionary.h">
       <Filter>konomi</Filter>
+    </ClInclude>
+    <ClInclude Include="lynette\LNTypedef.h">
+      <Filter>lynette</Filter>
+    </ClInclude>
+    <ClInclude Include="lynette\LNModel.h">
+      <Filter>lynette</Filter>
+    </ClInclude>
+    <ClInclude Include="lynette\LNTeapot.h">
+      <Filter>lynette</Filter>
+    </ClInclude>
+    <ClInclude Include="lynette\LNBoundingVolumeTpl.h">
+      <Filter>lynette</Filter>
+    </ClInclude>
+    <ClInclude Include="lynette\LNBoundingVolumeTpl.hpp">
+      <Filter>lynette</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTRectTpl.h">
+      <Filter>matsu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -360,6 +378,9 @@
     </Filter>
     <Filter Include="runa">
       <UniqueIdentifier>{effebf2c-c7b6-49bc-aa1c-68b8efbbf847}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="lynette">
+      <UniqueIdentifier>{1dc8b307-106b-46df-8ee2-64a2ad5aa97c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

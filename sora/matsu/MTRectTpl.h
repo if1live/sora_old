@@ -3,15 +3,16 @@
 
 namespace matsu
 {
-	template<typename T> class Rect;
-	typedef Rect<int> Recti;
-	typedef Rect<float> Rectf;
+	template<typename T> class RectTpl;
+	typedef RectTpl<float> Rect;
+	typedef RectTpl<int> Recti;
+	typedef RectTpl<float> Rectf;
 
 	template<typename T>
-	class Rect {
+	class RectTpl {
 	public:
-		Rect(T x, T y, T w, T h);
-		~Rect();
+		RectTpl(T x, T y, T w, T h);
+		~RectTpl();
 
 		T getX() const;
 		T getY() const;
@@ -28,31 +29,31 @@ namespace matsu
 namespace matsu
 {
 	template<typename T>
-	Rect<T>::Rect(T x, T y, T w, T h)
+	RectTpl<T>::RectTpl(T x, T y, T w, T h)
 		: x_(x), y_(y), width_(w), height_(h)
 	{
 	}
 	template<typename T>
-	Rect<T>::~Rect()
+	RectTpl<T>::~RectTpl()
 	{
 	}
 	template<typename T>
-	T Rect<T>::getX() const
+	T RectTpl<T>::getX() const
 	{
 		return x_;
 	}
 	template<typename T>
-	T Rect<T>::getY() const
+	T RectTpl<T>::getY() const
 	{
 		return y_;
 	}
 	template<typename T>
-	T Rect<T>::getWidth() const
+	T RectTpl<T>::getWidth() const
 	{
 		return width_;
 	}
 	template<typename T>
-	T Rect<T>::getHeight() const
+	T RectTpl<T>::getHeight() const
 	{
 		return height_;
 	}
