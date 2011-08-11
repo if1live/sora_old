@@ -4,35 +4,21 @@
 #include "runa/RNUberShader.h"
 #include "runa/RNShaderProgram.h"
 
-#include "mio/MioPath.h"
-#include "mio/MioReader.h"
-#include "mio/MioConsole.h"
-#include "Mio/MioMacro.h"
-
 using namespace std;
 using namespace matsu;
-using namespace mio;
 
 namespace runa
 {
-	UberShader::UberShader()
+	UberShader::UberShader(const std::string &vertSrc, const std::string &fragSrc)
+		: origVertSrc_(vertSrc),
+		origFragSrc_(fragSrc)
 	{
-		/*
-		//uber shader 에서 갖다쓸 쉐이더를 생성하자. 이것이 쉐이더 기반 코드가 된다
-		string vertShaderPath = Path::appPath("soraRes/shader/UberShader.vsh");
-		string fragShaderPath = Path::appPath("soraRes/shader/UberShader.fsh");
-		MT_ASSERT(vertShaderPath.length() > 0);
-		MT_ASSERT(fragShaderPath.length() > 0);
-		origVertSrc_ = reader::read(vertShaderPath);
-		origFragSrc_ = reader::read(fragShaderPath);
-		*/
 	}
-
 	UberShader::~UberShader()
 	{
 	}
 
-	ShaderProgramPtr UberShader::getShader(int flag)
+	ShaderProgramPtr UberShader::getShader(FlagType flag)
 	{
 		ShaderDictType::iterator it = shaderDict_.find(flag);
 		if(it == shaderDict_.end())
@@ -42,7 +28,7 @@ namespace runa
 		}
 		return shaderDict_[flag];
 	}
-	ShaderProgramPtr UberShader::create(int flag) const
+	ShaderProgramPtr UberShader::create(FlagType flag) const
 	{
 		string prefix = createMacroCode(flag);
 		string vertSrc = prefix + origVertSrc_;
@@ -56,7 +42,7 @@ namespace runa
 		ShaderProgramPtr prog(new ShaderProgram(vertSrc, fragSrc));
 		return prog;
 	}
-	std::string UberShader::createMacroCode(int flag) const
+	std::string UberShader::createMacroCode(FlagType flag) const
 	{
 		string macro;
 		if(hasFlag(flag, UBER_SHADER_USE_NORMAL))
@@ -71,19 +57,21 @@ namespace runa
 		{
 			macro += "#define USE_TEXCOORD 1 \n";
 		}
+		/*
 		if(hasFlag(flag, UBER_SHADER_TEST_CEL))
 		{
 			macro += "#define TEST_CEL 1 \n";
 		}
+		*/
 		return macro;
 	}
-	bool UberShader::hasFlag(int src, int test) const
+	bool UberShader::hasFlag(FlagType src, FlagType test) const
 	{
 		return ((src & test) == test);
 	}
 	void UberShader::cleanupUnusedShader()
 	{
-		MIO_LOG("Uber Shader::shader count : %d", shaderDict_.size());
+		MT_LOG("Uber Shader::shader count : %d", shaderDict_.size());
 			
 		vector<int> unusedList;
 			
@@ -102,6 +90,6 @@ namespace runa
 			shaderDict_.erase(it);
 		}
 			
-		MIO_LOG("Uber Shader::after cleanup unused Shader count : %d", shaderDict_.size());
+		MT_LOG("Uber Shader::after cleanup unused Shader count : %d", shaderDict_.size());
 	}
 }

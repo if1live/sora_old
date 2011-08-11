@@ -48,9 +48,11 @@
       <FileType>CppHeader</FileType>
     </ClCompile>
     <ClInclude Include="hikaru\HKProfileSample.h" />
+    <ClInclude Include="konomi\KNIdentifierFlagDictionary.h" />
     <ClInclude Include="konomi\KNMessage.hpp">
       <FileType>CppCode</FileType>
     </ClInclude>
+    <ClCompile Include="konomi\KNIdentifierFlagDictionary.cpp" />
     <ClCompile Include="konomi\KNMessageCodeDictionary.cpp" />
     <ClCompile Include="konomi\KNVariant.cpp" />
     <ClCompile Include="mio\MioConsole.cpp" />
@@ -104,6 +106,7 @@
     <ClInclude Include="matsu\MTMatrixTpl.hpp" />
     <ClInclude Include="matsu\MTQuaternion.h" />
     <ClInclude Include="matsu\MTQuaternion.hpp" />
+    <ClInclude Include="matsu\MTRect.h" />
     <ClInclude Include="matsu\MTSharedObject.h" />
     <ClInclude Include="matsu\MTSingleton.h" />
     <ClInclude Include="matsu\MTString.h" />

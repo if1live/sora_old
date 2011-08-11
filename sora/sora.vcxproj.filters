@@ -95,6 +95,9 @@
     <ClCompile Include="runa\RNUberShader.cpp">
       <Filter>runa</Filter>
     </ClCompile>
+    <ClCompile Include="konomi\KNIdentifierFlagDictionary.cpp">
+      <Filter>konomi</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SoraStdAfx.h" />
@@ -322,6 +325,12 @@
     </ClInclude>
     <ClInclude Include="runa\RNUberShader.h">
       <Filter>runa</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTRect.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="konomi\KNIdentifierFlagDictionary.h">
+      <Filter>konomi</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -12,3 +12,6 @@
 /ipch
 /buildResult
 *.opensdf
+/soraTest/mioTest/test.txt
+/soraTest/test.txt
+/soraTest/buildTmp

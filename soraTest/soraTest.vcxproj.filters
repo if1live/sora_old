@@ -84,6 +84,12 @@
     <ClCompile Include="akiTest\AkiTextureTest.cpp">
       <Filter>aki</Filter>
     </ClCompile>
+    <ClCompile Include="runaTest\RNShaderTest.cpp">
+      <Filter>runa</Filter>
+    </ClCompile>
+    <ClCompile Include="konomiTest\KNIdentifierFlagDictionaryTest.cpp">
+      <Filter>konomi</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SoraTestStdAfx.h" />
@@ -112,6 +118,9 @@
     </Filter>
     <Filter Include="aki">
       <UniqueIdentifier>{11c3c01c-177d-433e-b586-4d505e619a72}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="runa">
+      <UniqueIdentifier>{002bce9f-9428-4d0e-96d4-c83a701b5b63}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

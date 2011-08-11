@@ -109,6 +109,7 @@
     <ClCompile Include="irinaTest\IREntityTest.cpp" />
     <ClCompile Include="irinaTest\IRValueDictTest.cpp" />
     <ClCompile Include="konomiTest\CHTouchTest.cpp" />
+    <ClCompile Include="konomiTest\KNIdentifierFlagDictionaryTest.cpp" />
     <ClCompile Include="konomiTest\KNMessageDecoratorTest.cpp" />
     <ClCompile Include="konomiTest\KNMessageTest.cpp" />
     <ClCompile Include="konomiTest\KNVariantTest.cpp" />
@@ -125,6 +126,7 @@
     <ClCompile Include="mioTest\MioReaderTest.cpp" />
     <ClCompile Include="mioTest\MioXmlNodeTest.cpp" />
     <ClCompile Include="mioTest\MioXmlReaderTest.cpp" />
+    <ClCompile Include="runaTest\RNShaderTest.cpp" />
     <ClCompile Include="SoraTestStdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SoraTestStdAfx.h</PrecompiledHeaderFile>
