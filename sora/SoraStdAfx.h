@@ -33,8 +33,8 @@
 #include <memory>
 #include <algorithm>
 
-//#include <exception>
-//#include <stdexcept>
+#include <exception>
+#include <stdexcept>
 
 #if _ES2_
 	#if _WIN_

@@ -58,6 +58,10 @@
     <ClCompile Include="mio\MioReader.cpp" />
     <ClCompile Include="mio\MioXmlNode.cpp" />
     <ClCompile Include="mio\MioXmlReader.cpp" />
+    <ClCompile Include="runa\RNShaderLocation.cpp" />
+    <ClCompile Include="runa\RNShaderProgram.cpp" />
+    <ClCompile Include="runa\RNUberShader.cpp" />
+    <ClCompile Include="runa\RNVBO.cpp" />
     <ClCompile Include="SoraStdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">SoraStdAfx.h</PrecompiledHeaderFile>
@@ -119,6 +123,14 @@
     <ClInclude Include="mio\MioReader.h" />
     <ClInclude Include="mio\MioXmlNode.h" />
     <ClInclude Include="mio\MioXmlReader.h" />
+    <ClInclude Include="runa\RNShader.h" />
+    <ClInclude Include="runa\RNShader.hpp" />
+    <ClInclude Include="runa\RNShaderLocation.h" />
+    <ClInclude Include="runa\RNShaderProgram.h" />
+    <ClInclude Include="runa\RNTypedef.h" />
+    <ClInclude Include="runa\RNUberShader.h" />
+    <ClInclude Include="runa\RNVBO.h" />
+    <ClInclude Include="runa\runa.h" />
     <ClInclude Include="SoraStdAfx.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

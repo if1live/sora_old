@@ -83,6 +83,18 @@
     <ClCompile Include="aki\AkiTexture.cpp">
       <Filter>aki</Filter>
     </ClCompile>
+    <ClCompile Include="runa\RNShaderProgram.cpp">
+      <Filter>runa</Filter>
+    </ClCompile>
+    <ClCompile Include="runa\RNShaderLocation.cpp">
+      <Filter>runa</Filter>
+    </ClCompile>
+    <ClCompile Include="runa\RNVBO.cpp">
+      <Filter>runa</Filter>
+    </ClCompile>
+    <ClCompile Include="runa\RNUberShader.cpp">
+      <Filter>runa</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SoraStdAfx.h" />
@@ -287,6 +299,30 @@
     <ClInclude Include="aki\AkiTexture.hpp">
       <Filter>aki</Filter>
     </ClInclude>
+    <ClInclude Include="runa\RNShader.h">
+      <Filter>runa</Filter>
+    </ClInclude>
+    <ClInclude Include="runa\runa.h">
+      <Filter>runa</Filter>
+    </ClInclude>
+    <ClInclude Include="runa\RNTypedef.h">
+      <Filter>runa</Filter>
+    </ClInclude>
+    <ClInclude Include="runa\RNShader.hpp">
+      <Filter>runa</Filter>
+    </ClInclude>
+    <ClInclude Include="runa\RNShaderProgram.h">
+      <Filter>runa</Filter>
+    </ClInclude>
+    <ClInclude Include="runa\RNShaderLocation.h">
+      <Filter>runa</Filter>
+    </ClInclude>
+    <ClInclude Include="runa\RNVBO.h">
+      <Filter>runa</Filter>
+    </ClInclude>
+    <ClInclude Include="runa\RNUberShader.h">
+      <Filter>runa</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="chizuru">
@@ -312,6 +348,9 @@
     </Filter>
     <Filter Include="aki">
       <UniqueIdentifier>{7810ded5-0898-4fe7-bc0c-6c63ddd4eb8d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="runa">
+      <UniqueIdentifier>{effebf2c-c7b6-49bc-aa1c-68b8efbbf847}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
