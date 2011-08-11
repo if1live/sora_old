@@ -1,0 +1,317 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="SoraStdAfx.cpp" />
+    <ClCompile Include="irina\IRComponent.cpp">
+      <Filter>irina</Filter>
+    </ClCompile>
+    <ClCompile Include="irina\IREntity.cpp">
+      <Filter>irina</Filter>
+    </ClCompile>
+    <ClCompile Include="irina\IRValueDict.cpp">
+      <Filter>irina</Filter>
+    </ClCompile>
+    <ClCompile Include="mio\MioConsole.cpp">
+      <Filter>mio</Filter>
+    </ClCompile>
+    <ClCompile Include="mio\MioPath.cpp">
+      <Filter>mio</Filter>
+    </ClCompile>
+    <ClCompile Include="mio\MioReader.cpp">
+      <Filter>mio</Filter>
+    </ClCompile>
+    <ClCompile Include="mio\MioXmlNode.cpp">
+      <Filter>mio</Filter>
+    </ClCompile>
+    <ClCompile Include="mio\MioXmlReader.cpp">
+      <Filter>mio</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHInputEventQueue.cpp">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHLocale.cpp">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHAccelerometerFilter.cpp">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHClock.cpp">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="konomi\KNVariant.cpp">
+      <Filter>konomi</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHDevice.cpp">
+      <Filter>chizuru\input</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHDevice_GLFW.cpp">
+      <Filter>chizuru\input</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHDevice_iOS.cpp">
+      <Filter>chizuru\input</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHKeyboardEvent.cpp">
+      <Filter>chizuru\input</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHFakeGyroscope.cpp">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHMouse.cpp">
+      <Filter>chizuru\input</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHTouchMessageDecorator.cpp">
+      <Filter>chizuru\input</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHAttitudeMessageDecorator.cpp">
+      <Filter>chizuru\input</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHInputEvent.cpp">
+      <Filter>chizuru\input</Filter>
+    </ClCompile>
+    <ClCompile Include="hikaru\HKProfileSample.cpp">
+      <Filter>hikaru</Filter>
+    </ClCompile>
+    <ClCompile Include="konomi\KNMessageCodeDictionary.cpp">
+      <Filter>konomi</Filter>
+    </ClCompile>
+    <ClCompile Include="aki\AkiImage.cpp">
+      <Filter>aki</Filter>
+    </ClCompile>
+    <ClCompile Include="aki\AkiImageLoader_SOIL.cpp">
+      <Filter>aki</Filter>
+    </ClCompile>
+    <ClCompile Include="aki\AkiTexture.cpp">
+      <Filter>aki</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SoraStdAfx.h" />
+    <ClInclude Include="irina\IRValueDict.hpp">
+      <Filter>irina</Filter>
+    </ClInclude>
+    <ClInclude Include="irina\IRComponent.h">
+      <Filter>irina</Filter>
+    </ClInclude>
+    <ClInclude Include="irina\IRComponent.hpp">
+      <Filter>irina</Filter>
+    </ClInclude>
+    <ClInclude Include="irina\IREntity.h">
+      <Filter>irina</Filter>
+    </ClInclude>
+    <ClInclude Include="irina\IREntity.hpp">
+      <Filter>irina</Filter>
+    </ClInclude>
+    <ClInclude Include="irina\IRValueDict.h">
+      <Filter>irina</Filter>
+    </ClInclude>
+    <ClInclude Include="mio\mio.h">
+      <Filter>mio</Filter>
+    </ClInclude>
+    <ClInclude Include="mio\MioXmlReader.h">
+      <Filter>mio</Filter>
+    </ClInclude>
+    <ClInclude Include="mio\MioConsole.h">
+      <Filter>mio</Filter>
+    </ClInclude>
+    <ClInclude Include="mio\MioMacro.h">
+      <Filter>mio</Filter>
+    </ClInclude>
+    <ClInclude Include="mio\MioPath.h">
+      <Filter>mio</Filter>
+    </ClInclude>
+    <ClInclude Include="mio\MioPlatform_iOS.h">
+      <Filter>mio</Filter>
+    </ClInclude>
+    <ClInclude Include="mio\MioReader.h">
+      <Filter>mio</Filter>
+    </ClInclude>
+    <ClInclude Include="mio\MioXmlNode.h">
+      <Filter>mio</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHInputEventQueue.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHLocale.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHAccelerometerFilter.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHClock.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTMath.hpp">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTMatrix.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTMatrix.hpp">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTMatrixTpl.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTMatrixTpl.hpp">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTQuaternion.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTQuaternion.hpp">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTSingleton.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTString.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTStringUtil.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTTemplateLib.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTTemplateLib.hpp">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTType.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTUnfixedSizeMemPool.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTVector.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTVectorTpl.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTVectorTpl.hpp">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\matsu.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTClassType.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTCoordinate.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTCoordinate.hpp">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTFixedSizeMemPool.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTMacro.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTMath.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="konomi\KNVariant.h">
+      <Filter>konomi</Filter>
+    </ClInclude>
+    <ClInclude Include="konomi\konomi.h">
+      <Filter>konomi</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\MTSharedObject.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="konomi\KNMessage.h">
+      <Filter>konomi</Filter>
+    </ClInclude>
+    <ClInclude Include="konomi\KNMessage.hpp">
+      <Filter>konomi</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHDevice_iOS.h">
+      <Filter>chizuru\input</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHDevice.h">
+      <Filter>chizuru\input</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHDevice_GLFW.h">
+      <Filter>chizuru\input</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHKeyboardEvent.h">
+      <Filter>chizuru\input</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHFakeGyroscope.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHMouse.h">
+      <Filter>chizuru\input</Filter>
+    </ClInclude>
+    <ClInclude Include="konomi\KNMessageDecorator.h">
+      <Filter>konomi</Filter>
+    </ClInclude>
+    <ClInclude Include="konomi\KNMessageDecorator.hpp">
+      <Filter>konomi</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHTouchMessageDecorator.h">
+      <Filter>chizuru\input</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHAttitudeMessageDecorator.h">
+      <Filter>chizuru\input</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHAccelerationMessageDecorator.h">
+      <Filter>chizuru\input</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHInputEvent.h">
+      <Filter>chizuru\input</Filter>
+    </ClInclude>
+    <ClInclude Include="hikaru\HKProfileSample.h">
+      <Filter>hikaru</Filter>
+    </ClInclude>
+    <ClInclude Include="konomi\KNMessageCodeDictionary.h">
+      <Filter>konomi</Filter>
+    </ClInclude>
+    <ClInclude Include="konomi\KNTypedef.h">
+      <Filter>konomi</Filter>
+    </ClInclude>
+    <ClInclude Include="aki\AkiImage.h">
+      <Filter>aki</Filter>
+    </ClInclude>
+    <ClInclude Include="aki\AkiImageLoader_SOIL.h">
+      <Filter>aki</Filter>
+    </ClInclude>
+    <ClInclude Include="aki\AkiTypedef.h">
+      <Filter>aki</Filter>
+    </ClInclude>
+    <ClInclude Include="aki\AkiTexture.h">
+      <Filter>aki</Filter>
+    </ClInclude>
+    <ClInclude Include="aki\AkiTexture.hpp">
+      <Filter>aki</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="chizuru">
+      <UniqueIdentifier>{ace43257-272e-44bd-aadb-5aba2a7adb50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="irina">
+      <UniqueIdentifier>{01dfdb2d-9fbf-42b4-af2f-42d7c09e10ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mio">
+      <UniqueIdentifier>{53ff2e7a-7604-4fb9-92ea-8cf30a8b44f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="matsu">
+      <UniqueIdentifier>{df6e5950-8496-4d26-9429-ad19426616fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="konomi">
+      <UniqueIdentifier>{81e17ddc-c6f8-4639-acd3-43492938b387}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="chizuru\input">
+      <UniqueIdentifier>{6664f36b-6654-4455-9b32-d3d52b554516}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hikaru">
+      <UniqueIdentifier>{e6249c2e-5fc8-4484-b8a3-430ed48a903e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="aki">
+      <UniqueIdentifier>{7810ded5-0898-4fe7-bc0c-6c63ddd4eb8d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

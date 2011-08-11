@@ -1,0 +1,14 @@
+
+/third_party/boost_1_46_1
+/third_party/gtest-1.6.0
+/third_party/soil
+/third_party/boost_1_46_1
+/third_party/glew
+/third_party/glfw
+/third_party/tinyxml
+*.suo
+*.sdf
+/buildTmp
+/ipch
+/buildResult
+*.opensdf

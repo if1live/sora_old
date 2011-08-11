@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main\testmain.cpp" />
+    <ClCompile Include="SoraTestStdAfx.cpp" />
+    <ClCompile Include="chizuruTest\CHInputEventTest.cpp">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuruTest\CHInputEventQueueTest.cpp">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="irinaTest\IRValueDictTest.cpp">
+      <Filter>irina</Filter>
+    </ClCompile>
+    <ClCompile Include="irinaTest\IRComponentTest.cpp">
+      <Filter>irina</Filter>
+    </ClCompile>
+    <ClCompile Include="irinaTest\IREntityTest.cpp">
+      <Filter>irina</Filter>
+    </ClCompile>
+    <ClCompile Include="mioTest\MioPathTest.cpp">
+      <Filter>mio</Filter>
+    </ClCompile>
+    <ClCompile Include="mioTest\MioXmlReaderTest.cpp">
+      <Filter>mio</Filter>
+    </ClCompile>
+    <ClCompile Include="mioTest\MioReaderTest.cpp">
+      <Filter>mio</Filter>
+    </ClCompile>
+    <ClCompile Include="mioTest\MioXmlNodeTest.cpp">
+      <Filter>mio</Filter>
+    </ClCompile>
+    <ClCompile Include="matsuTest\MTVectorTest.cpp">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="matsuTest\MTCoordinateTest.cpp">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="matsuTest\MTMathTest.cpp">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="matsuTest\MTMatrixTest.cpp">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="matsuTest\MTQuaternionTest.cpp">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="matsuTest\MTStringTest.cpp">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="matsuTest\MTStringUtilTest.cpp">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuruTest\CHLocaleTest.cpp">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="konomiTest\KNVariantTest.cpp">
+      <Filter>konomi</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuruTest\CHAccelerometerFilterTest.cpp">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="matsuTest\MTFixedSizeMemPoolTest.cpp">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="konomiTest\KNMessageTest.cpp">
+      <Filter>konomi</Filter>
+    </ClCompile>
+    <ClCompile Include="konomiTest\CHTouchTest.cpp">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="konomiTest\KNMessageDecoratorTest.cpp">
+      <Filter>konomi</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuruTest\CHMouseTest.cpp">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="hikaruTest\HKProfileTest.cpp">
+      <Filter>hikaru</Filter>
+    </ClCompile>
+    <ClCompile Include="akiTest\AkiImageTest.cpp">
+      <Filter>aki</Filter>
+    </ClCompile>
+    <ClCompile Include="akiTest\AkiTextureTest.cpp">
+      <Filter>aki</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="SoraTestStdAfx.h" />
+    <ClInclude Include="irinaTest\IRComponentTest.h">
+      <Filter>irina</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="chizuru">
+      <UniqueIdentifier>{da7bb95f-9853-4823-b67c-1fac42372291}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="irina">
+      <UniqueIdentifier>{513ca4c5-f85e-4622-af7e-12295682e128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mio">
+      <UniqueIdentifier>{7842e9de-c00a-46fc-9ec0-bbd0f99afef1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="matsu">
+      <UniqueIdentifier>{a015a7bb-fae8-4fd4-9c19-6f04ade7c097}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="konomi">
+      <UniqueIdentifier>{e7e59747-8b21-49ed-a63f-ee58cc72b92c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hikaru">
+      <UniqueIdentifier>{96e1ddd2-5274-4567-b3e0-c301334690cd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="aki">
+      <UniqueIdentifier>{11c3c01c-177d-433e-b586-4d505e619a72}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
