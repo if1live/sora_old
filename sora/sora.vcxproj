@@ -105,7 +105,6 @@
     <ClInclude Include="matsu\MTClassType.h" />
     <ClInclude Include="matsu\MTCoordinate.h" />
     <ClInclude Include="matsu\MTCoordinate.hpp" />
-    <ClInclude Include="matsu\MTFixedSizeMemPool.h" />
     <ClInclude Include="matsu\MTMacro.h" />
     <ClInclude Include="matsu\MTMath.h" />
     <ClInclude Include="matsu\MTMath.hpp" />
@@ -123,7 +122,6 @@
     <ClInclude Include="matsu\MTTemplateLib.h" />
     <ClInclude Include="matsu\MTTemplateLib.hpp" />
     <ClInclude Include="matsu\MTType.h" />
-    <ClInclude Include="matsu\MTUnfixedSizeMemPool.h" />
     <ClInclude Include="matsu\MTVector.h" />
     <ClInclude Include="matsu\MTVectorTpl.h" />
     <ClInclude Include="matsu\MTVectorTpl.hpp" />

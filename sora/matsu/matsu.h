@@ -28,7 +28,3 @@
 #include "matsu/MTTemplateLib.h"
 #include "matsu/MTSingleton.h"
 #include "matsu/MTSharedObject.h"
-
-//mem pool
-#include "matsu/MTFixedSizeMemPool.h"
-#include "matsu/MTUnfixedSizeMemPool.h"

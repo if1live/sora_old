@@ -118,7 +118,6 @@
     <ClCompile Include="lynetteTest\LNModelTest.cpp" />
     <ClCompile Include="main\testmain.cpp" />
     <ClCompile Include="matsuTest\MTCoordinateTest.cpp" />
-    <ClCompile Include="matsuTest\MTFixedSizeMemPoolTest.cpp" />
     <ClCompile Include="matsuTest\MTMathTest.cpp" />
     <ClCompile Include="matsuTest\MTMatrixTest.cpp" />
     <ClCompile Include="matsuTest\MTQuaternionTest.cpp" />

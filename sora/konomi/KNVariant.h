@@ -1,8 +1,6 @@
 ﻿// Ŭnicode please
 #pragma once
 
-#include "matsu/MTUnFixedSizeMemPool.h"
-
 namespace konomi
 {
 	typedef enum {
@@ -13,14 +11,7 @@ namespace konomi
 		VariantTypeNull
 	} VariantType;
 	
-	//variant의 경우는 구조 자체가 매우 단순하고 잦은 생성파괴가 있을것이다
-	//그렇다고 boost pool같은걸 쓰면 api가 new/delete하고 약간다르고
-	//variant가 동시에 그렇게 많이 존재할것같진 않으니까
-	//(대부분 지역변수일테고 실제로 항상 존재하는것은 얼마 되지 않을것이다)
-	//최대갯수를 적당히 잡자. variant자체가 워낙 크기가 작으니까 많이 생성해도
-	//심각한 문제는 발생하지 않을것이다.
-#define VARIANT_CAPACITY 512
-	class Variant : public matsu::UnfixedSizeMemPool<Variant, VARIANT_CAPACITY> {
+	class Variant {
 	public:
 	public:
 		Variant();

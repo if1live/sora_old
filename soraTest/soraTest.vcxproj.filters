@@ -60,9 +60,6 @@
     <ClCompile Include="chizuruTest\CHAccelerometerFilterTest.cpp">
       <Filter>chizuru</Filter>
     </ClCompile>
-    <ClCompile Include="matsuTest\MTFixedSizeMemPoolTest.cpp">
-      <Filter>matsu</Filter>
-    </ClCompile>
     <ClCompile Include="konomiTest\KNMessageTest.cpp">
       <Filter>konomi</Filter>
     </ClCompile>

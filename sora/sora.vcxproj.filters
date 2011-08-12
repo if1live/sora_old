@@ -197,9 +197,6 @@
     <ClInclude Include="matsu\MTType.h">
       <Filter>matsu</Filter>
     </ClInclude>
-    <ClInclude Include="matsu\MTUnfixedSizeMemPool.h">
-      <Filter>matsu</Filter>
-    </ClInclude>
     <ClInclude Include="matsu\MTVector.h">
       <Filter>matsu</Filter>
     </ClInclude>
@@ -219,9 +216,6 @@
       <Filter>matsu</Filter>
     </ClInclude>
     <ClInclude Include="matsu\MTCoordinate.hpp">
-      <Filter>matsu</Filter>
-    </ClInclude>
-    <ClInclude Include="matsu\MTFixedSizeMemPool.h">
       <Filter>matsu</Filter>
     </ClInclude>
     <ClInclude Include="matsu\MTMacro.h">
