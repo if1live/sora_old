@@ -8,8 +8,6 @@ namespace karen
 	template<typename T,int N>
 	class FreeListManager {
 	public:
-		FreeListManager();
-		virtual ~FreeListManager();
 		void *operator new(size_t x);
 		void operator delete(void *ptr);
 	private:
@@ -19,16 +17,6 @@ namespace karen
 
 namespace karen
 {
-	template<typename T,int N>
-	FreeListManager<T,N>::FreeListManager()
-	{
-	}
-
-	template<typename T,int N>
-	FreeListManager<T,N>::~FreeListManager()
-	{
-	}
-
 	template<typename T,int N>
 	void *FreeListManager<T,N>::operator new(size_t x)
 	{

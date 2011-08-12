@@ -7,9 +7,6 @@ namespace karen
 	template<typename T>
 	class ClassHeap {
 	public:
-		ClassHeap();
-		virtual ~ClassHeap();
-
 		void* operator new(size_t x);
 		void operator delete(void *ptr);
 
@@ -20,16 +17,6 @@ namespace karen
 
 namespace karen
 {
-	template<typename T>
-	ClassHeap<T>::ClassHeap()
-	{
-	}
-
-	template<typename T>
-	ClassHeap<T>::~ClassHeap()
-	{
-	}
-
 	template<typename T>
 	void* ClassHeap<T>::operator new(size_t x)
 	{

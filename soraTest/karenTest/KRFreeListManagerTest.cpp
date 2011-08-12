@@ -8,7 +8,7 @@ class FreeListManagerTest;
 class FreeListManagerTest : public FreeListManager<FreeListManagerTest,3> {
 public:
 	FreeListManagerTest() : a(1) {}
-	virtual ~FreeListManagerTest() {}
+	~FreeListManagerTest() { printf("a\n"); }
 	int a;
 };
 
