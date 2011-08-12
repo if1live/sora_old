@@ -1,3 +1,4 @@
+﻿// Ŭnicode please 
 #include "../SoraTestStdAfx.h"
 
 int main(int argc, char *argv[]) 

@@ -350,6 +350,12 @@
     <ClInclude Include="matsu\MTRectTpl.h">
       <Filter>matsu</Filter>
     </ClInclude>
+    <ClInclude Include="kurisu\KRTypedef.h">
+      <Filter>kurisu</Filter>
+    </ClInclude>
+    <ClInclude Include="karen\KRFreeListObjectPool.h">
+      <Filter>karen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="chizuru">
@@ -381,6 +387,12 @@
     </Filter>
     <Filter Include="lynette">
       <UniqueIdentifier>{1dc8b307-106b-46df-8ee2-64a2ad5aa97c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="kurisu">
+      <UniqueIdentifier>{b8966106-c34a-439f-8f5b-c221960fd8c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="karen">
+      <UniqueIdentifier>{c9f079f9-bf3d-4b33-96e9-5db0d703eb6b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -48,6 +48,7 @@
       <FileType>CppHeader</FileType>
     </ClCompile>
     <ClInclude Include="hikaru\HKProfileSample.h" />
+    <ClInclude Include="karen\KRFreeListObjectPool.h" />
     <ClInclude Include="konomi\KNIdentifierFlagDictionary.h" />
     <ClInclude Include="konomi\KNMessage.hpp">
       <FileType>CppCode</FileType>
@@ -93,6 +94,7 @@
     <ClInclude Include="konomi\KNTypedef.h" />
     <ClInclude Include="konomi\KNVariant.h" />
     <ClInclude Include="konomi\konomi.h" />
+    <ClInclude Include="kurisu\KRTypedef.h" />
     <ClInclude Include="lynette\LNTypedef.h" />
     <ClInclude Include="lynette\LNBoundingVolumeTpl.h" />
     <ClInclude Include="lynette\LNBoundingVolumeTpl.hpp" />

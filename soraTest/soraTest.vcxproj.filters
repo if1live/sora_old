@@ -93,6 +93,9 @@
     <ClCompile Include="lynetteTest\LNModelTest.cpp">
       <Filter>lynette</Filter>
     </ClCompile>
+    <ClCompile Include="karenTest\KRFreeListObjectPoolTest.cpp">
+      <Filter>karen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SoraTestStdAfx.h" />
@@ -127,6 +130,12 @@
     </Filter>
     <Filter Include="lynette">
       <UniqueIdentifier>{9f66d0cb-8a9b-4ebc-a82d-cf38c360a496}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="kurisu">
+      <UniqueIdentifier>{6d0a9efc-d7cc-4a62-b84a-08f23e84399f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="karen">
+      <UniqueIdentifier>{88fc10f5-d8f8-44a5-bcc7-b122cc74086f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

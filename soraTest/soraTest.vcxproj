@@ -108,6 +108,7 @@
     <ClCompile Include="irinaTest\IRComponentTest.cpp" />
     <ClCompile Include="irinaTest\IREntityTest.cpp" />
     <ClCompile Include="irinaTest\IRValueDictTest.cpp" />
+    <ClCompile Include="karenTest\KRFreeListObjectPoolTest.cpp" />
     <ClCompile Include="konomiTest\CHTouchTest.cpp" />
     <ClCompile Include="konomiTest\KNIdentifierFlagDictionaryTest.cpp" />
     <ClCompile Include="konomiTest\KNMessageDecoratorTest.cpp" />

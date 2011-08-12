@@ -5,7 +5,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sora", "sora\sora.vcxproj",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "soraTest", "soraTest\soraTest.vcxproj", "{3FD548D8-D95D-4AD7-8E03-BD25BBC083F5}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "soraDemo", "soraDemo\soraDemo.vcxproj", "{D44C58F2-A31B-46FA-9A07-E7BE1930B313}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "kurisuSample", "kurisuSample\kurisuSample.vcxproj", "{8FD28FE3-D2A8-4722-B2AC-388B7F1FADDD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,10 +21,10 @@ Global
 		{3FD548D8-D95D-4AD7-8E03-BD25BBC083F5}.Debug|Win32.Build.0 = Debug|Win32
 		{3FD548D8-D95D-4AD7-8E03-BD25BBC083F5}.Release|Win32.ActiveCfg = Release|Win32
 		{3FD548D8-D95D-4AD7-8E03-BD25BBC083F5}.Release|Win32.Build.0 = Release|Win32
-		{D44C58F2-A31B-46FA-9A07-E7BE1930B313}.Debug|Win32.ActiveCfg = Debug|Win32
-		{D44C58F2-A31B-46FA-9A07-E7BE1930B313}.Debug|Win32.Build.0 = Debug|Win32
-		{D44C58F2-A31B-46FA-9A07-E7BE1930B313}.Release|Win32.ActiveCfg = Release|Win32
-		{D44C58F2-A31B-46FA-9A07-E7BE1930B313}.Release|Win32.Build.0 = Release|Win32
+		{8FD28FE3-D2A8-4722-B2AC-388B7F1FADDD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8FD28FE3-D2A8-4722-B2AC-388B7F1FADDD}.Debug|Win32.Build.0 = Debug|Win32
+		{8FD28FE3-D2A8-4722-B2AC-388B7F1FADDD}.Release|Win32.ActiveCfg = Release|Win32
+		{8FD28FE3-D2A8-4722-B2AC-388B7F1FADDD}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
