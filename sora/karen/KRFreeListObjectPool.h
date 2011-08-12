@@ -19,7 +19,7 @@ namespace karen
 		T *objList_;
 		T **freeObjList_;
 		int maxSize_;
-		int freeListSize_;
+		int top_;
 	};
 }
 
@@ -30,7 +30,7 @@ namespace karen
 		: objList_(NULL),
 		freeObjList_(NULL),
 		maxSize_(0),
-		freeListSize_(0)
+		top_(0)
 	{
 		reset(maxSize);
 	}
@@ -51,13 +51,12 @@ namespace karen
 		if(objList_ != NULL)
 		{
 			//all previous allocated block must be unused
-			MT_ASSERT(maxSize_ == freeListSize_);
+			MT_ASSERT(maxSize_ == top_+1);
 			delete[](objList_);
 			delete[](freeObjList_);
 		}
 		//reallocate
 		maxSize_ = maxSize;
-		freeListSize_ = maxSize;
 
 		objList_ = new T[maxSize];
 		freeObjList_ = new T*[maxSize];
@@ -66,13 +65,14 @@ namespace karen
 		{
 			freeObjList_[i] = &(objList_[i]);
 		}
+		top_ = maxSize_-1;
 	}
 	template<typename T>
 	T *FreeListObjectPool<T>::malloc()
 	{
-		MT_ASSERT(freeListSize_ >= 1 && "no free block exist");
-		T *ptr = freeObjList_[freeListSize_];
-		freeListSize_--;
+		MT_ASSERT(top_ >= 0 && "no free block exist");
+		T *ptr = freeObjList_[top_];
+		top_--;
 		return ptr;
 	}
 	template<typename T>
@@ -90,7 +90,7 @@ namespace karen
 		}
 		MT_ASSERT(found == true);
 #endif
-		freeListSize_++;
-		freeObjList_[freeListSize_] = ptr;
+		top_++;
+		freeObjList_[top_] = ptr;
 	}
 }

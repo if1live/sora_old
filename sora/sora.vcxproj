@@ -49,11 +49,13 @@
     </ClCompile>
     <ClInclude Include="hikaru\HKProfileSample.h" />
     <ClInclude Include="karen\KRFreeListBlockPool.h" />
+    <ClInclude Include="karen\KRFreeListManager.h" />
     <ClInclude Include="karen\KRFreeListObjectPool.h" />
     <ClInclude Include="konomi\KNIdentifierFlagDictionary.h" />
     <ClInclude Include="konomi\KNMessage.hpp">
       <FileType>CppCode</FileType>
     </ClInclude>
+    <ClCompile Include="karen\KRFreeListBlockPool.cpp" />
     <ClCompile Include="konomi\KNIdentifierFlagDictionary.cpp" />
     <ClCompile Include="konomi\KNMessageCodeDictionary.cpp" />
     <ClCompile Include="konomi\KNVariant.cpp" />

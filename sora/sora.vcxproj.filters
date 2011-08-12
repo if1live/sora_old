@@ -101,6 +101,9 @@
     <ClCompile Include="lynette\LNModel.cpp">
       <Filter>lynette</Filter>
     </ClCompile>
+    <ClCompile Include="karen\KRFreeListBlockPool.cpp">
+      <Filter>karen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SoraStdAfx.h" />
@@ -351,6 +354,9 @@
       <Filter>karen</Filter>
     </ClInclude>
     <ClInclude Include="karen\KRFreeListBlockPool.h">
+      <Filter>karen</Filter>
+    </ClInclude>
+    <ClInclude Include="karen\KRFreeListManager.h">
       <Filter>karen</Filter>
     </ClInclude>
   </ItemGroup>
