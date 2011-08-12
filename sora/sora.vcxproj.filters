@@ -104,6 +104,12 @@
     <ClCompile Include="karen\KRFreeListBlockPool.cpp">
       <Filter>karen</Filter>
     </ClCompile>
+    <ClCompile Include="karen\KRHeap.cpp">
+      <Filter>karen</Filter>
+    </ClCompile>
+    <ClCompile Include="karen\KRHeapAllocHeader.cpp">
+      <Filter>karen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SoraStdAfx.h" />
@@ -357,6 +363,18 @@
       <Filter>karen</Filter>
     </ClInclude>
     <ClInclude Include="karen\KRFreeListManager.h">
+      <Filter>karen</Filter>
+    </ClInclude>
+    <ClInclude Include="karen\KRHeap.h">
+      <Filter>karen</Filter>
+    </ClInclude>
+    <ClInclude Include="karen\KRTypedef.h">
+      <Filter>karen</Filter>
+    </ClInclude>
+    <ClInclude Include="karen\KRClassHeap.h">
+      <Filter>karen</Filter>
+    </ClInclude>
+    <ClInclude Include="karen\KRHeapAllocHeader.h">
       <Filter>karen</Filter>
     </ClInclude>
   </ItemGroup>

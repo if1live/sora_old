@@ -48,14 +48,20 @@
       <FileType>CppHeader</FileType>
     </ClCompile>
     <ClInclude Include="hikaru\HKProfileSample.h" />
+    <ClInclude Include="karen\KRClassHeap.h" />
     <ClInclude Include="karen\KRFreeListBlockPool.h" />
     <ClInclude Include="karen\KRFreeListManager.h" />
     <ClInclude Include="karen\KRFreeListObjectPool.h" />
+    <ClInclude Include="karen\KRHeap.h" />
+    <ClInclude Include="karen\KRHeapAllocHeader.h" />
+    <ClInclude Include="karen\KRTypedef.h" />
     <ClInclude Include="konomi\KNIdentifierFlagDictionary.h" />
     <ClInclude Include="konomi\KNMessage.hpp">
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClCompile Include="karen\KRFreeListBlockPool.cpp" />
+    <ClCompile Include="karen\KRHeap.cpp" />
+    <ClCompile Include="karen\KRHeapAllocHeader.cpp" />
     <ClCompile Include="konomi\KNIdentifierFlagDictionary.cpp" />
     <ClCompile Include="konomi\KNMessageCodeDictionary.cpp" />
     <ClCompile Include="konomi\KNVariant.cpp" />
@@ -192,7 +198,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>../SoraStdAfx.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>..\third_party\boost_1_46_1;..\third_party\glew\include;..\third_party\glfw\include;..\third_party\soil\include;.;..\third_party\tinyxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_ES2_=1;_GLFW_=0</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_ES2_=1;_GLFW_=0;DEBUG</PreprocessorDefinitions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
     </ClCompile>
     <Link>

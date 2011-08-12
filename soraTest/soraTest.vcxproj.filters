@@ -99,6 +99,9 @@
     <ClCompile Include="karenTest\KRFreeListManagerTest.cpp">
       <Filter>karen</Filter>
     </ClCompile>
+    <ClCompile Include="karenTest\KRHeapTest.cpp">
+      <Filter>karen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SoraTestStdAfx.h" />

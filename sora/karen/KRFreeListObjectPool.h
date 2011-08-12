@@ -83,7 +83,7 @@ namespace karen
 		//ptr must be member of objList
 		for(int i = 0 ; i < maxSize_ ; i++)
 		{
-			if(objList_[i] == ptr)
+			if(&objList_[i] == ptr)
 			{
 				found = true;
 			}
