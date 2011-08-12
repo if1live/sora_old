@@ -48,6 +48,7 @@
       <FileType>CppHeader</FileType>
     </ClCompile>
     <ClInclude Include="hikaru\HKProfileSample.h" />
+    <ClInclude Include="karen\KRFreeListBlockPool.h" />
     <ClInclude Include="karen\KRFreeListObjectPool.h" />
     <ClInclude Include="konomi\KNIdentifierFlagDictionary.h" />
     <ClInclude Include="konomi\KNMessage.hpp">

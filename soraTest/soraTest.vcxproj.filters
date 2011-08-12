@@ -96,6 +96,9 @@
     <ClCompile Include="karenTest\KRFreeListObjectPoolTest.cpp">
       <Filter>karen</Filter>
     </ClCompile>
+    <ClCompile Include="karenTest\KRFreeListBlockPoolTest.cpp">
+      <Filter>karen</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SoraTestStdAfx.h" />

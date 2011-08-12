@@ -356,6 +356,9 @@
     <ClInclude Include="karen\KRFreeListObjectPool.h">
       <Filter>karen</Filter>
     </ClInclude>
+    <ClInclude Include="karen\KRFreeListBlockPool.h">
+      <Filter>karen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="chizuru">
