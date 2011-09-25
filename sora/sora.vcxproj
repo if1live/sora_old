@@ -19,7 +19,6 @@
     <ClCompile Include="aki\AkiTexture.cpp" />
     <ClCompile Include="chizuru\CHAccelerometerFilter.cpp" />
     <ClCompile Include="chizuru\CHAttitudeMessageDecorator.cpp" />
-    <ClCompile Include="chizuru\CHClock.cpp" />
     <ClCompile Include="chizuru\CHDevice.cpp" />
     <ClCompile Include="chizuru\CHDevice_GLFW.cpp" />
     <ClCompile Include="chizuru\CHDevice_iOS.cpp" />
@@ -27,7 +26,6 @@
     <ClCompile Include="chizuru\CHInputEvent.cpp" />
     <ClCompile Include="chizuru\CHInputEventQueue.cpp" />
     <ClCompile Include="chizuru\CHKeyboardEvent.cpp" />
-    <ClCompile Include="chizuru\CHLocale.cpp" />
     <ClCompile Include="chizuru\CHMouse.cpp" />
     <ClCompile Include="hikaru\HKProfileSample.cpp" />
     <ClCompile Include="irina\IRComponent.cpp" />
@@ -48,6 +46,8 @@
       <FileType>CppHeader</FileType>
     </ClCompile>
     <ClInclude Include="hikaru\HKProfileSample.h" />
+    <ClInclude Include="kanade\KDClock.h" />
+    <ClInclude Include="kanade\KDLocale.h" />
     <ClInclude Include="karen\KRClassHeap.h" />
     <ClInclude Include="karen\KRFreeListBlockPool.h" />
     <ClInclude Include="karen\KRFreeListManager.h" />
@@ -59,6 +59,8 @@
     <ClInclude Include="konomi\KNMessage.hpp">
       <FileType>CppCode</FileType>
     </ClInclude>
+    <ClCompile Include="kanade\KDClock.cpp" />
+    <ClCompile Include="kanade\KDLocale.cpp" />
     <ClCompile Include="karen\KRFreeListBlockPool.cpp" />
     <ClCompile Include="karen\KRHeap.cpp" />
     <ClCompile Include="karen\KRHeapAllocHeader.cpp" />
@@ -81,15 +83,21 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SoraStdAfx.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClInclude Include="sora\SRClassType.h" />
+    <ClInclude Include="sora\SRMacro.h" />
+    <ClInclude Include="sora\SRSharedObject.h" />
+    <ClInclude Include="sora\SRSingleton.h" />
+    <ClInclude Include="sora\SRString.h" />
+    <ClInclude Include="sora\SRStringUtil.h" />
+    <ClInclude Include="sora\SRTemplateLib.h" />
+    <ClInclude Include="sora\SRTemplateLib.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="chizuru\CHAccelerometerFilter.h" />
-    <ClInclude Include="chizuru\CHClock.h" />
     <ClInclude Include="chizuru\CHDevice.h" />
     <ClInclude Include="chizuru\CHInputEvent.h" />
     <ClInclude Include="chizuru\CHInputEventQueue.h" />
     <ClInclude Include="chizuru\CHKeyboardEvent.h" />
-    <ClInclude Include="chizuru\CHLocale.h" />
     <ClInclude Include="irina\IRComponent.h" />
     <ClInclude Include="irina\IRComponent.hpp" />
     <ClInclude Include="irina\IREntity.h" />
@@ -110,10 +118,8 @@
     <ClInclude Include="lynette\LNModel.h" />
     <ClInclude Include="lynette\LNTeapot.h" />
     <ClInclude Include="matsu\matsu.h" />
-    <ClInclude Include="matsu\MTClassType.h" />
     <ClInclude Include="matsu\MTCoordinate.h" />
     <ClInclude Include="matsu\MTCoordinate.hpp" />
-    <ClInclude Include="matsu\MTMacro.h" />
     <ClInclude Include="matsu\MTMath.h" />
     <ClInclude Include="matsu\MTMath.hpp" />
     <ClInclude Include="matsu\MTMatrix.h" />
@@ -123,12 +129,6 @@
     <ClInclude Include="matsu\MTQuaternion.h" />
     <ClInclude Include="matsu\MTQuaternion.hpp" />
     <ClInclude Include="matsu\MTRectTpl.h" />
-    <ClInclude Include="matsu\MTSharedObject.h" />
-    <ClInclude Include="matsu\MTSingleton.h" />
-    <ClInclude Include="matsu\MTString.h" />
-    <ClInclude Include="matsu\MTStringUtil.h" />
-    <ClInclude Include="matsu\MTTemplateLib.h" />
-    <ClInclude Include="matsu\MTTemplateLib.hpp" />
     <ClInclude Include="matsu\MTType.h" />
     <ClInclude Include="matsu\MTVector.h" />
     <ClInclude Include="matsu\MTVectorTpl.h" />
@@ -197,9 +197,11 @@
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>../SoraStdAfx.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\third_party\boost_1_46_1;..\third_party\glew\include;..\third_party\glfw\include;..\third_party\soil\include;.;..\third_party\tinyxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_ES2_=1;_GLFW_=0;DEBUG</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\third_party\freeglut\include;..\third_party\boost\;..\third_party\glew\include;..\third_party\glfw\include;..\third_party\soil\src;.;..\third_party\tinyxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_ES2_=1;_GLFW_=0;_GLUT_=1;DEBUG</PreprocessorDefinitions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -211,11 +213,13 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\third_party\boost_1_46_1;..\third_party\glew\include;..\third_party\glfw\include;..\third_party\soil\include;.;..\third_party\tinyxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_ES2_=1;_GLFW_=0</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\third_party\freeglut\include;..\third_party\boost\;..\third_party\glew\include;..\third_party\glfw\include;..\third_party\soil\src;.;..\third_party\tinyxml;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_ES2_=1;_GLFW_=0;_GLUT_=1;</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>../SoraStdAfx.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+      <MinimalRebuild>false</MinimalRebuild>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="sora">
+      <UniqueIdentifier>{3c8537c1-4f6d-474d-b1eb-65e2aec26026}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="matsu">
+      <UniqueIdentifier>{1a17fd62-9d6a-4172-b154-a1e3e2506764}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="karen">
+      <UniqueIdentifier>{a8994ec9-6c7e-482d-90f0-ac06cbbbda95}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="sora\string_util_test.cpp">
+      <Filter>sora</Filter>
+    </ClCompile>
+    <ClCompile Include="testmain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="precompile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="matsu\vector_test.cpp">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="matsu\matrix_test.cpp">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="matsu\matrix_template_test.cpp">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="matsu\quaternion_test.cpp">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="matsu\math_test.cpp">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="matsu\coordinate_test.cpp">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="matsu\angle_test.cpp">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="karen\heap_test.cpp">
+      <Filter>karen</Filter>
+    </ClCompile>
+    <ClCompile Include="karen\free_list_block_pool_test.cpp">
+      <Filter>karen</Filter>
+    </ClCompile>
+    <ClCompile Include="karen\free_list_manager_test.cpp">
+      <Filter>karen</Filter>
+    </ClCompile>
+    <ClCompile Include="karen\free_list_object_pool_test.cpp">
+      <Filter>karen</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="precompile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

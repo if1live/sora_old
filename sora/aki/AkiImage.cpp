@@ -62,7 +62,7 @@ namespace aki
 			pixelSize = 2;
 			break;
 		default:
-			MT_ASSERT(!"not valid");
+			SR_ASSERT(!"not valid");
 		}
 		return pixelSize;
 	}
@@ -123,10 +123,10 @@ namespace aki
 		//포맷이 동일할때만 덮어쓰기가 가능하게하자
 		//만약 포맷이 다를ㄹ떄 덮어쓰기를 지원할 경우는 아직까지 코드상에서 등장할일이
 		//없을거같으니까 나중에 추가하자
-		MT_ASSERT(desc_.getInternalFormat() == o.getDesc().getInternalFormat()
+		SR_ASSERT(desc_.getInternalFormat() == o.getDesc().getInternalFormat()
 			&& desc_.getPixelType() == o.getDesc().getPixelType());
 		//텍스쳐 크기 보정용인데 더 작은 이미지에 덮어쓰는 일은 없을것이다
-		MT_ASSERT(desc_.getWidth() >= o.getDesc().getWidth()
+		SR_ASSERT(desc_.getWidth() >= o.getDesc().getWidth()
 			&& desc_.getHeight() >= o.getDesc().getHeight());
 
 		//줄단위로 복사하기
@@ -148,7 +148,7 @@ namespace aki
 	{
 		int width = desc_.getWidth();
 		int height = desc_.getHeight();
-		MT_ASSERT(x >= 0 && x < width && y >= 0 && y < height);
+		SR_ASSERT(x >= 0 && x < width && y >= 0 && y < height);
 		int pixelSize = desc_.getPixelSize();
 		int linesize = desc_.getRowLineSize();
 		return (linesize * y) + (pixelSize * x);

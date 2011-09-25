@@ -4,7 +4,7 @@
 #include "../SoraStdAfx.h"
 
 #include "matsu/MTType.h"
-#include "matsu/MTSingleton.h"
+#include "sora/SRSingleton.h"
 
 namespace irina
 {
@@ -54,7 +54,7 @@ namespace irina
 			void cleanupComponent();
 	};
 
-	class NullComponent : public Component, public matsu::Singleton<NullComponent> {
+	class NullComponent : public Component, public sora::Singleton<NullComponent> {
 		COMPONENT_ATTRIBUTE("null", 0);
 	public:
 	};
@@ -62,7 +62,7 @@ namespace irina
 
 
 	template<typename T>
-		class ComponentManager : public matsu::Singleton< ComponentManager<T> > {
+		class ComponentManager : public sora::Singleton< ComponentManager<T> > {
 	public:
 		typedef std::set<T*> ComponentList;
 

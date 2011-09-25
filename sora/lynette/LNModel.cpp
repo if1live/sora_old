@@ -29,7 +29,7 @@ namespace lynette
 	}
 	const matsu::f32* Model::getVertexData() const
 	{
-		MT_ASSERT(vertexdata_.size() > 0 && "vertex data is empty!!");
+		SR_ASSERT(vertexdata_.size() > 0 && "vertex data is empty!!");
 		return &vertexdata_[0];
 	}
 	const matsu::u16* Model::getIndexData() const
@@ -42,12 +42,12 @@ namespace lynette
 	}
 	const matsu::f32* Model::getColorPtr() const
 	{
-		MT_ASSERT(isUseColor());
+		SR_ASSERT(isUseColor());
 		return getPosPtr() + 3;
 	}
 	const matsu::f32* Model::getTexCoordPtr() const
 	{
-		MT_ASSERT(isUseTexCoord());
+		SR_ASSERT(isUseTexCoord());
 		matsu::f32* ptr = const_cast<matsu::f32*>(getPosPtr());
 		ptr += 3;	//pos end
 		if(isUseColor())
@@ -58,7 +58,7 @@ namespace lynette
 	}
 	const matsu::f32* Model::getNormalPtr() const
 	{
-		MT_ASSERT(isUseNormal());
+		SR_ASSERT(isUseNormal());
 		matsu::f32* ptr = const_cast<matsu::f32*>(getPosPtr());
 		ptr += 3;	//pos end
 		if(isUseColor())

@@ -33,7 +33,7 @@ namespace runa
 				stride_ = sizeof(GLuint);
 				break;
 			default:
-				MT_ASSERT(!"Not valid indexType");
+				SR_ASSERT(!"Not valid indexType");
 				break;
 		}
 

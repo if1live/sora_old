@@ -53,16 +53,18 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\third_party\glew\include;..\third_party\glfw\include;..\third_party\boost_1_46_1;..\third_party\tinyxml;..\sora;..\third_party\gtest-1.6.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_WIN_=1;_GLFW_=1;USE_GTEST;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\third_party\freeglut\include;..\third_party\glew\include;..\third_party\glfw\include;..\third_party\boost;..\third_party\tinyxml;..\sora;..\third_party\gtest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WIN_=1;_GLFW_=0;_GLUT_=1;USE_GTEST;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>../SoraTestStdAfx.h</PrecompiledHeaderFile>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SOIL.lib;gtestd.lib;sora.lib;GLFW.lib;opengl32.lib;glew32.lib;tinyxml.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\third_party\glew\lib;..\third_party\glfw\lib-msvc100;..\buildResult\$(Configuration)\;..\third_party\gtest-1.6.0\lib;..\third_party\soil\lib;..\third_party\tinyxml\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SOIL.lib;gtestd.lib;sora.lib;freeglut.lib;opengl32.lib;glew32.lib;tinyxml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\third_party\freeglut\lib;..\third_party\glew\lib;..\third_party\glfw\lib-msvc100;..\buildResult\$(Configuration)\;..\third_party\gtest\lib;..\third_party\soil\lib;..\third_party\tinyxml\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>
       </IgnoreSpecificDefaultLibraries>
     </Link>
@@ -79,16 +81,18 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>../SoraTestStdAfx.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\third_party\glew\include;..\third_party\glfw\include;..\third_party\boost_1_46_1;..\third_party\tinyxml;..\sora;..\third_party\gtest-1.6.0\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>_WIN_=1;_GLFW_=1;USE_GTEST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\third_party\freeglut\include;..\third_party\glew\include;..\third_party\glfw\include;..\third_party\boost;..\third_party\tinyxml;..\sora;..\third_party\gtest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_WIN_=1;_GLFW_=0;_GLUT_=1;USE_GTEST;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>SOIL.lib;gtestd.lib;sora.lib;GLFW.lib;opengl32.lib;glew32.lib;tinyxml.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\third_party\glew\lib;..\third_party\glfw\lib-msvc100;..\buildResult\$(Configuration)\;..\third_party\gtest-1.6.0\lib;..\third_party\soil\lib;..\third_party\tinyxml\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SOIL.lib;gtestd.lib;sora.lib;freeglut.lib;opengl32.lib;glew32.lib;tinyxml.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\third_party\freeglut\lib;..\third_party\glew\lib;..\third_party\glfw\lib-msvc100;..\buildResult\$(Configuration)\;..\third_party\gtest\lib;..\third_party\soil\lib;..\third_party\tinyxml\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -102,12 +106,12 @@
     <ClCompile Include="chizuruTest\CHAccelerometerFilterTest.cpp" />
     <ClCompile Include="chizuruTest\CHInputEventQueueTest.cpp" />
     <ClCompile Include="chizuruTest\CHInputEventTest.cpp" />
-    <ClCompile Include="chizuruTest\CHLocaleTest.cpp" />
     <ClCompile Include="chizuruTest\CHMouseTest.cpp" />
     <ClCompile Include="hikaruTest\HKProfileTest.cpp" />
     <ClCompile Include="irinaTest\IRComponentTest.cpp" />
     <ClCompile Include="irinaTest\IREntityTest.cpp" />
     <ClCompile Include="irinaTest\IRValueDictTest.cpp" />
+    <ClCompile Include="kanade\KDLocaleTest.cpp" />
     <ClCompile Include="karenTest\KRFreeListBlockPoolTest.cpp" />
     <ClCompile Include="karenTest\KRFreeListManagerTest.cpp" />
     <ClCompile Include="karenTest\KRFreeListObjectPoolTest.cpp" />
@@ -123,8 +127,6 @@
     <ClCompile Include="matsuTest\MTMathTest.cpp" />
     <ClCompile Include="matsuTest\MTMatrixTest.cpp" />
     <ClCompile Include="matsuTest\MTQuaternionTest.cpp" />
-    <ClCompile Include="matsuTest\MTStringTest.cpp" />
-    <ClCompile Include="matsuTest\MTStringUtilTest.cpp" />
     <ClCompile Include="matsuTest\MTVectorTest.cpp" />
     <ClCompile Include="mioTest\MioPathTest.cpp" />
     <ClCompile Include="mioTest\MioReaderTest.cpp" />
@@ -137,6 +139,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">SoraTestStdAfx.h</PrecompiledHeaderFile>
     </ClCompile>
+    <ClCompile Include="soraTest\SRStringTest.cpp" />
+    <ClCompile Include="soraTest\SRStringUtilTest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="irinaTest\IRComponentTest.h" />

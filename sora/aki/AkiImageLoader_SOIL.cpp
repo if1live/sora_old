@@ -15,7 +15,7 @@ namespace aki
 {
 	ImagePtr ImageLoader_SOIL::load(const std::string &path)
 	{
-		MT_ASSERT(path.length() > 0);
+		SR_ASSERT(path.length() > 0);
 		int width, height, channels;
 		unsigned char *data = SOIL_load_image(
 			path.c_str(), 

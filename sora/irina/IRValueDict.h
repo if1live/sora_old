@@ -2,7 +2,7 @@
 #pragma once
 
 #include "../SoraStdAfx.h"
-#include "matsu/MTSingleton.h"
+#include "sora/SRSingleton.h"
 
 namespace irina
 {
@@ -23,7 +23,7 @@ namespace irina
 			const T& get() const;
 	};
 
-	class NullValue : public AbstractValue, public matsu::Singleton<NullValue> {
+	class NullValue : public AbstractValue, public sora::Singleton<NullValue> {
 	public:
 		ValueType getType() const { return ValueTypeContainer; }
 		bool isNull() const { return true; }

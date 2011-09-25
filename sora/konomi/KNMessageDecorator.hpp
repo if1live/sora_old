@@ -62,14 +62,14 @@ namespace konomi
 	CodeCheckMessageDecorator<N,code>::CodeCheckMessageDecorator(MessageType *msg)
 		: SuperDecoratorType(msg)
 	{
-		MT_ASSERT(msg->getCode() == code);
+		SR_ASSERT(msg->getCode() == code);
 	}
 
 	template<unsigned int N, MessageCode code>
 	CodeCheckMessageDecorator<N,code>::CodeCheckMessageDecorator(MessageType &msg)
 		: SuperDecoratorType(msg)
 	{
-		MT_ASSERT(msg.getCode() == code);
+		SR_ASSERT(msg.getCode() == code);
 	}
 	
 	template<unsigned int N, MessageCode code>

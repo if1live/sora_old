@@ -1,7 +1,7 @@
 // Ŭnicode please
 #pragma once
 
-#include "matsu/MTSingleton.h"
+#include "sora/SRSingleton.h"
 
 namespace chizuru
 {
@@ -16,7 +16,7 @@ namespace chizuru
 		DeviceOrientationLandscapeRight
 	} DeviceOrientation;
 	
-	class Device : public matsu::Singleton<Device> {
+	class Device : public sora::Singleton<Device> {
 	public:
 		Device();
 		DeviceOrientation getOrientation() const;

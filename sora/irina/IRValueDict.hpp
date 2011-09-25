@@ -8,7 +8,7 @@ namespace irina
 	{
 		if(getType() != ValueTypeContainer)
 		{
-			MT_ASSERT(!"not container");
+			SR_ASSERT(!"not container");
 		}
 		ValueContainer<T> *container = (ValueContainer<T>*)(this);
 		return container->get();
@@ -53,7 +53,7 @@ namespace irina
 		if(it == dict_.end())
 		{
 			//it==end인 경우 null 객체 반환
-			MT_ASSERT(!"key no exist");
+			SR_ASSERT(!"key no exist");
 		}
 		if(it->second->getType() == ValueTypeContainer)
 		{
@@ -62,7 +62,7 @@ namespace irina
 		}
 		//else
 		//value type이 contaier가 아닌 경우 캐스팅도 안되니까 그냥 null value
-		MT_ASSERT(!"value type is not container");
+		SR_ASSERT(!"value type is not container");
 		return (const T&)(NULL);
 	}
 

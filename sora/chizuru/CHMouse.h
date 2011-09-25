@@ -1,6 +1,6 @@
 #pragma once
 
-#include "matsu/MTSingleton.h"
+#include "sora/SRSingleton.h"
 #include "chizuru/CHInputEvent.h"
 #include "konomi/KNMessageDecorator.h"
 
@@ -9,9 +9,13 @@ namespace chizuru
 {
 	///@brief input message를 외부에서 받도록한건 외부에서 공용큐에 넣을지 지역큐에넣을지
 	///정할수있는 가능성을 남겨두기위해서이다
+#if _GLFW_
 	void updateMouse_glfw(InputMessageListType &msgList);
+#elif _GLUT_
+	
+#endif
 
-	class Mouse : public matsu::Singleton<Mouse> {
+	class Mouse : public sora::Singleton<Mouse> {
 	public:
 		Mouse();
 		virtual ~Mouse();

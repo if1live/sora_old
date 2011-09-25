@@ -7,7 +7,6 @@ using std::vector;
 using std::string;
 using std::auto_ptr;
 
-//#pragma mark file reader test
 TEST(MioFileReaderTest, read)
 {
 	string file = Path::appPath("testdata/mio/readerTest.txt");

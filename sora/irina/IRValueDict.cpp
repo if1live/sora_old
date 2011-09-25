@@ -1,7 +1,9 @@
 // Ŭnicode please
 #include "../SoraStdAfx.h"
 #include "IRValueDict.h"
-#include "matsu/MTTemplateLib.h"
+#include "sora/SRTemplateLib.h"
+
+using namespace sora;
 
 namespace irina
 {
@@ -12,7 +14,7 @@ namespace irina
 	ValueDict::~ValueDict()
 	{
 		//dict에 엮인것을 해제
-		matsu::destroyDict(dict_);
+		destroyDict(dict_);
 	}
 
 

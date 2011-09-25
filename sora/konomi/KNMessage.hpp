@@ -17,7 +17,7 @@ namespace konomi
 	Message<N>::Message(const Message<N2> &o)
 		: code_(o.getCode()), numParam_(0)
 	{
-		MT_ASSERT(o.getNumParam() <= N);
+		SR_ASSERT(o.getNumParam() <= N);
 		for(int i = 0 ; i < o.getNumParam() ; i++)
 		{
 			addParam(o.getParam(i));
@@ -45,7 +45,7 @@ namespace konomi
 	template<unsigned int N>
 	void Message<N>::addParam(const Variant &param)
 	{
-		MT_ASSERT(numParam_ < MaxVariantNumber);
+		SR_ASSERT(numParam_ < MaxVariantNumber);
 		paramList_[numParam_] = param;
 		numParam_++;
 	}
@@ -53,7 +53,7 @@ namespace konomi
 	template<unsigned int N>
 	const Variant& Message<N>::getParam(int index) const
 	{
-		MT_ASSERT(index >= 0 && index < N);	//배열 범위만 체그
+		SR_ASSERT(index >= 0 && index < N);	//배열 범위만 체그
 		return paramList_[index];	//범위벗어난것은 널객체가 반환될것이다
 	}
 	template<unsigned int N>
@@ -151,7 +151,7 @@ namespace konomi
 	template<unsigned int N>
 	void Message<N>::setParam(int index, const Variant &param)
 	{
-		MT_ASSERT(index >= 0 && index < numParam_);
+		SR_ASSERT(index >= 0 && index < numParam_);
 		paramList_[index] = param;
 	}
 }

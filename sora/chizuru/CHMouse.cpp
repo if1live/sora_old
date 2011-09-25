@@ -3,6 +3,7 @@
 
 namespace chizuru
 {
+#if _GLFW_
 	void updateMouse_glfw(InputMessageListType &msgList)
 	{
 		//glfw의 결과를 mouse에 꽂기
@@ -31,6 +32,7 @@ namespace chizuru
 
 		Mouse::getInstance().apply(state, xpos, ypos, msgList);
 	}
+#endif
 
 	Mouse::Mouse()
 	{
@@ -112,7 +114,7 @@ namespace chizuru
 	}
 	ButtonState Mouse::getState(MouseButton btn) const
 	{
-		MT_ASSERT(btn >= 0 && btn < CHIZURU_MOUSE_BTN_NUM);
+		SR_ASSERT(btn >= 0 && btn < CHIZURU_MOUSE_BTN_NUM);
 		return prevState_[btn];
 	}
 

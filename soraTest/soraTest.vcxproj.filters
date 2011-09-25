@@ -45,15 +45,6 @@
     <ClCompile Include="matsuTest\MTQuaternionTest.cpp">
       <Filter>matsu</Filter>
     </ClCompile>
-    <ClCompile Include="matsuTest\MTStringTest.cpp">
-      <Filter>matsu</Filter>
-    </ClCompile>
-    <ClCompile Include="matsuTest\MTStringUtilTest.cpp">
-      <Filter>matsu</Filter>
-    </ClCompile>
-    <ClCompile Include="chizuruTest\CHLocaleTest.cpp">
-      <Filter>chizuru</Filter>
-    </ClCompile>
     <ClCompile Include="konomiTest\KNVariantTest.cpp">
       <Filter>konomi</Filter>
     </ClCompile>
@@ -102,6 +93,15 @@
     <ClCompile Include="karenTest\KRHeapTest.cpp">
       <Filter>karen</Filter>
     </ClCompile>
+    <ClCompile Include="kanade\KDLocaleTest.cpp">
+      <Filter>kanade</Filter>
+    </ClCompile>
+    <ClCompile Include="soraTest\SRStringTest.cpp">
+      <Filter>sora</Filter>
+    </ClCompile>
+    <ClCompile Include="soraTest\SRStringUtilTest.cpp">
+      <Filter>sora</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SoraTestStdAfx.h" />
@@ -142,6 +142,12 @@
     </Filter>
     <Filter Include="karen">
       <UniqueIdentifier>{88fc10f5-d8f8-44a5-bcc7-b122cc74086f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="kanade">
+      <UniqueIdentifier>{ba10245c-369b-452b-bb53-ae376aa5a9a5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sora">
+      <UniqueIdentifier>{1a5c1e85-173f-4b19-9921-2bf205824923}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -44,7 +44,7 @@ namespace mio
 
 		if(doc.Error())
 		{
-			//MT_ASSERT(!"Xml Error");
+			//SR_ASSERT(!"Xml Error");
 			//xml문법 에러로 프로그램이 그냥 죽어버리면 여러모로 골치아프다. 
 			//그렇다고 예외를 던지면 받기가 미묘하다
 			//널 노드를 반환하고 이후 적절히 받은곳에서 처리하도록하자
@@ -59,7 +59,7 @@ namespace mio
 		
 		//root + construct custom xml tree
 		TiXmlNode *root = doc.RootElement();
-		MT_ASSERT(root);
+		SR_ASSERT(root);
 		
 		XmlNode *result = this->parse(root);
 		return XmlNodePtr(result);
@@ -68,7 +68,7 @@ namespace mio
 	{
 		if(node->Type() != TiXmlNode::TINYXML_ELEMENT)
 		{
-			MT_ASSERT(!"Not valid recursive call");
+			SR_ASSERT(!"Not valid recursive call");
 		}
 		//casting
 		TiXmlElement *elem = static_cast<TiXmlElement*>(node);

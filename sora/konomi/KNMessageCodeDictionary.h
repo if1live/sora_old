@@ -1,7 +1,7 @@
 #pragma once
 
 #include "konomi/KNTypedef.h"
-#include "matsu/MTSingleton.h"
+#include "sora/SRSingleton.h"
 
 //메세지 선언에 사용되는 매크로. 이것을 이요해서 메세지를 사용하면 
 //중복확인을 지원
@@ -37,7 +37,7 @@ namespace konomi
 	
 	///@brief message code의 중복 등록을 막기 위해서 메세지코드의 값과 기초정보를 같이 
 	///보관할수있는 클래스
-	class MessageCodeDictionary : public matsu::Singleton<MessageCodeDictionary> {
+	class MessageCodeDictionary : public sora::Singleton<MessageCodeDictionary> {
 	public:
 		MessageCodeDictionary();
 		virtual ~MessageCodeDictionary();

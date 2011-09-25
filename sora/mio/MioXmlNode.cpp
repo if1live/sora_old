@@ -9,12 +9,12 @@ namespace mio
 	XmlNode::XmlNode(const char *name)
 	: name_(name), parent_(NULL), children_(new XmlNodeList())
 	{
-		MT_ASSERT(strlen(name) > 0 && "node must have name");
+		SR_ASSERT(strlen(name) > 0 && "node must have name");
 	}
 	XmlNode::XmlNode(const std::string &name)
 	: name_(name), parent_(NULL), children_(new XmlNodeList())
 	{
-		MT_ASSERT(name.length() > 0 && "node must have name");
+		SR_ASSERT(name.length() > 0 && "node must have name");
 	}
 	XmlNode::~XmlNode()
 	{

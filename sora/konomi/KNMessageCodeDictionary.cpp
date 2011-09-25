@@ -60,7 +60,7 @@ namespace konomi
 	}
 	void MessageCodeDictionary::add(const MessageCodeDescription &desc)
 	{
-		MT_ASSERT(isExist(desc.getCode()) == false);
+		SR_ASSERT(isExist(desc.getCode()) == false);
 		codeDescList_.push_back(desc);
 	}
 	const MessageCodeDescription* MessageCodeDictionary::get(MessageCode code) const
@@ -91,7 +91,7 @@ namespace konomi
 			{
 				char msgbuf[512];
 				sprintf(msgbuf, "%d is defined in %s::%d", code, prev->getFile().c_str(), prev->getLine());
-				MT_ASSERT(false && msgbuf);
+				SR_ASSERT(false && msgbuf);
 				return false;
 			}
 			else

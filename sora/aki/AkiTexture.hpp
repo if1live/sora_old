@@ -29,7 +29,7 @@ namespace aki
 	template<unsigned int N>
 	GLuint TextureGroup<N>::getHandle(int index) const
 	{
-		MT_ASSERT(index >= 0 && index < N);
+		SR_ASSERT(index >= 0 && index < N);
 		return handle_[index];
 	}
 
@@ -54,7 +54,7 @@ namespace aki
 	template<unsigned int N>
 	bool TextureGroup<N>::loadImage(int index, Image *img)
 	{
-		MT_ASSERT(index >= 0 && index < N);
+		SR_ASSERT(index >= 0 && index < N);
 		const ImageDescription &desc = img->getDesc();
 		int width = desc.getWidth();
 		int height = desc.getHeight();
@@ -79,7 +79,7 @@ namespace aki
 			newImg.overwrite(*img);
 
 			const void *data = newImg.getData();
-			MT_ASSERT(data != NULL);
+			SR_ASSERT(data != NULL);
 
 			int internalFormat = newImg.getDesc().getInternalFormat();
 			int pixelType = newImg.getDesc().getPixelType();
@@ -89,7 +89,7 @@ namespace aki
 		else
 		{
 			const void *data = img->getData();
-			MT_ASSERT(data != NULL);
+			SR_ASSERT(data != NULL);
 
 			int internalFormat = img->getDesc().getInternalFormat();
 			int pixelType = img->getDesc().getPixelType();
@@ -117,7 +117,7 @@ namespace aki
 	template<unsigned int N>
 	const TextureSize &TextureGroup<N>::getSize(int index) const
 	{
-		MT_ASSERT(index >= 0 && index < N);
+		SR_ASSERT(index >= 0 && index < N);
 		return texSize_[index];
 	}
 
@@ -138,7 +138,7 @@ namespace aki
 	template<unsigned int N>
 	bool TextureGroup<N>::isLoaded(int index) const
 	{
-		MT_ASSERT(index >= 0 && index < N);
+		SR_ASSERT(index >= 0 && index < N);
 		const TextureSize &size = getSize();
 		if(size.getTexWidth() == 0 && size.getTexHeight() == 0)
 		{

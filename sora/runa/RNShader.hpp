@@ -32,7 +32,7 @@ namespace runa
 			const char *srccode = src.c_str();
 			MT_LINE_LOG(srccode);
 			MT_LINE_LOG(msg);
-			MT_ASSERT(!msg);
+			SR_ASSERT(!msg);
 			return false;
 		}
 		return true;

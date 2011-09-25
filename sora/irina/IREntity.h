@@ -33,7 +33,7 @@ namespace irina
 		const EntityId entityId_;
 	};
 
-	class EntityManager : public m::Singleton<EntityManager> {
+	class EntityManager : public sora::Singleton<EntityManager> {
 	public:
 		typedef std::map<EntityId, Entity*> EntityDict;
 

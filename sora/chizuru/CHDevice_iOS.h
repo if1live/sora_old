@@ -6,7 +6,7 @@
 
 namespace chizuru
 {
-	class DeviceCoreIOS : public DeviceCore, public matsu::Singleton<DeviceCoreIOS> {
+	class DeviceCoreIOS : public DeviceCore, public sora::Singleton<DeviceCoreIOS> {
 	public:
 		DeviceCoreIOS();
 		virtual ~DeviceCoreIOS();

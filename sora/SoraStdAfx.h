@@ -12,7 +12,7 @@
 
 //device의존적 분기를 위한 코드 include
 //tr1의 경우 플랫폼별 분기가 있어서 미리 인클루드한다
-#include "matsu/MTMacro.h"
+#include "sora/SRMacro.h"
 
 //stl
 #include <vector>
@@ -36,23 +36,18 @@
 #include <exception>
 #include <stdexcept>
 
-#if _ES2_
-	#if _WIN_
-		//opengl
-		//#include "esutil/esUtil.h"
-		//#include <GLES2/gl2.h>
-		//#include <GLES2/gl2platform.h>
-		//#include <EGL/egl.h>
-		#include "GL/glew.h"
-		#include "GL/glfw.h"
-	#elif _IPHONE_
-		#import <OpenGLES/ES2/gl.h>
-		#import <OpenGLES/ES2/glext.h>
-	#endif
-
-#elif _GLFW_
-	#include "GL/glew.h"
-	#include "GL/glfw.h"
+//opengl
+#if _WIN_
+#include "GL/glew.h"
+#if _GLFW_
+#include "GL/glew.h"
+#elif _GLUT_
+#include "GL/glut.h"
+#include "GL/freeglut.h"
+#endif
+#elif _IPHONE_
+#import <OpenGLES/ES2/gl.h>
+#import <OpenGLES/ES2/glext.h>
 #endif
 
 //boost
@@ -67,4 +62,4 @@
 #endif
 
 //sora library중에서 사실상 고정된 안정적인것은 precompile header에 떄려박자(치기 귀찮거든..)
-#include "matsu/MTMacro.h"
+#include "sora/SRMacro.h"

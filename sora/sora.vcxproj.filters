@@ -29,44 +29,14 @@
     <ClCompile Include="chizuru\CHInputEventQueue.cpp">
       <Filter>chizuru</Filter>
     </ClCompile>
-    <ClCompile Include="chizuru\CHLocale.cpp">
-      <Filter>chizuru</Filter>
-    </ClCompile>
     <ClCompile Include="chizuru\CHAccelerometerFilter.cpp">
-      <Filter>chizuru</Filter>
-    </ClCompile>
-    <ClCompile Include="chizuru\CHClock.cpp">
       <Filter>chizuru</Filter>
     </ClCompile>
     <ClCompile Include="konomi\KNVariant.cpp">
       <Filter>konomi</Filter>
     </ClCompile>
-    <ClCompile Include="chizuru\CHDevice.cpp">
-      <Filter>chizuru\input</Filter>
-    </ClCompile>
-    <ClCompile Include="chizuru\CHDevice_GLFW.cpp">
-      <Filter>chizuru\input</Filter>
-    </ClCompile>
-    <ClCompile Include="chizuru\CHDevice_iOS.cpp">
-      <Filter>chizuru\input</Filter>
-    </ClCompile>
-    <ClCompile Include="chizuru\CHKeyboardEvent.cpp">
-      <Filter>chizuru\input</Filter>
-    </ClCompile>
     <ClCompile Include="chizuru\CHFakeGyroscope.cpp">
       <Filter>chizuru</Filter>
-    </ClCompile>
-    <ClCompile Include="chizuru\CHMouse.cpp">
-      <Filter>chizuru\input</Filter>
-    </ClCompile>
-    <ClCompile Include="chizuru\CHTouchMessageDecorator.cpp">
-      <Filter>chizuru\input</Filter>
-    </ClCompile>
-    <ClCompile Include="chizuru\CHAttitudeMessageDecorator.cpp">
-      <Filter>chizuru\input</Filter>
-    </ClCompile>
-    <ClCompile Include="chizuru\CHInputEvent.cpp">
-      <Filter>chizuru\input</Filter>
     </ClCompile>
     <ClCompile Include="hikaru\HKProfileSample.cpp">
       <Filter>hikaru</Filter>
@@ -109,6 +79,36 @@
     </ClCompile>
     <ClCompile Include="karen\KRHeapAllocHeader.cpp">
       <Filter>karen</Filter>
+    </ClCompile>
+    <ClCompile Include="kanade\KDLocale.cpp">
+      <Filter>kanade</Filter>
+    </ClCompile>
+    <ClCompile Include="kanade\KDClock.cpp">
+      <Filter>kanade</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHAttitudeMessageDecorator.cpp">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHDevice.cpp">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHDevice_GLFW.cpp">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHDevice_iOS.cpp">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHInputEvent.cpp">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHKeyboardEvent.cpp">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHMouse.cpp">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\CHTouchMessageDecorator.cpp">
+      <Filter>chizuru</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -158,13 +158,7 @@
     <ClInclude Include="chizuru\CHInputEventQueue.h">
       <Filter>chizuru</Filter>
     </ClInclude>
-    <ClInclude Include="chizuru\CHLocale.h">
-      <Filter>chizuru</Filter>
-    </ClInclude>
     <ClInclude Include="chizuru\CHAccelerometerFilter.h">
-      <Filter>chizuru</Filter>
-    </ClInclude>
-    <ClInclude Include="chizuru\CHClock.h">
       <Filter>chizuru</Filter>
     </ClInclude>
     <ClInclude Include="matsu\MTMath.hpp">
@@ -188,21 +182,6 @@
     <ClInclude Include="matsu\MTQuaternion.hpp">
       <Filter>matsu</Filter>
     </ClInclude>
-    <ClInclude Include="matsu\MTSingleton.h">
-      <Filter>matsu</Filter>
-    </ClInclude>
-    <ClInclude Include="matsu\MTString.h">
-      <Filter>matsu</Filter>
-    </ClInclude>
-    <ClInclude Include="matsu\MTStringUtil.h">
-      <Filter>matsu</Filter>
-    </ClInclude>
-    <ClInclude Include="matsu\MTTemplateLib.h">
-      <Filter>matsu</Filter>
-    </ClInclude>
-    <ClInclude Include="matsu\MTTemplateLib.hpp">
-      <Filter>matsu</Filter>
-    </ClInclude>
     <ClInclude Include="matsu\MTType.h">
       <Filter>matsu</Filter>
     </ClInclude>
@@ -218,16 +197,10 @@
     <ClInclude Include="matsu\matsu.h">
       <Filter>matsu</Filter>
     </ClInclude>
-    <ClInclude Include="matsu\MTClassType.h">
-      <Filter>matsu</Filter>
-    </ClInclude>
     <ClInclude Include="matsu\MTCoordinate.h">
       <Filter>matsu</Filter>
     </ClInclude>
     <ClInclude Include="matsu\MTCoordinate.hpp">
-      <Filter>matsu</Filter>
-    </ClInclude>
-    <ClInclude Include="matsu\MTMacro.h">
       <Filter>matsu</Filter>
     </ClInclude>
     <ClInclude Include="matsu\MTMath.h">
@@ -239,50 +212,20 @@
     <ClInclude Include="konomi\konomi.h">
       <Filter>konomi</Filter>
     </ClInclude>
-    <ClInclude Include="matsu\MTSharedObject.h">
-      <Filter>matsu</Filter>
-    </ClInclude>
     <ClInclude Include="konomi\KNMessage.h">
       <Filter>konomi</Filter>
     </ClInclude>
     <ClInclude Include="konomi\KNMessage.hpp">
       <Filter>konomi</Filter>
     </ClInclude>
-    <ClInclude Include="chizuru\CHDevice_iOS.h">
-      <Filter>chizuru\input</Filter>
-    </ClInclude>
-    <ClInclude Include="chizuru\CHDevice.h">
-      <Filter>chizuru\input</Filter>
-    </ClInclude>
-    <ClInclude Include="chizuru\CHDevice_GLFW.h">
-      <Filter>chizuru\input</Filter>
-    </ClInclude>
-    <ClInclude Include="chizuru\CHKeyboardEvent.h">
-      <Filter>chizuru\input</Filter>
-    </ClInclude>
     <ClInclude Include="chizuru\CHFakeGyroscope.h">
       <Filter>chizuru</Filter>
-    </ClInclude>
-    <ClInclude Include="chizuru\CHMouse.h">
-      <Filter>chizuru\input</Filter>
     </ClInclude>
     <ClInclude Include="konomi\KNMessageDecorator.h">
       <Filter>konomi</Filter>
     </ClInclude>
     <ClInclude Include="konomi\KNMessageDecorator.hpp">
       <Filter>konomi</Filter>
-    </ClInclude>
-    <ClInclude Include="chizuru\CHTouchMessageDecorator.h">
-      <Filter>chizuru\input</Filter>
-    </ClInclude>
-    <ClInclude Include="chizuru\CHAttitudeMessageDecorator.h">
-      <Filter>chizuru\input</Filter>
-    </ClInclude>
-    <ClInclude Include="chizuru\CHAccelerationMessageDecorator.h">
-      <Filter>chizuru\input</Filter>
-    </ClInclude>
-    <ClInclude Include="chizuru\CHInputEvent.h">
-      <Filter>chizuru\input</Filter>
     </ClInclude>
     <ClInclude Include="hikaru\HKProfileSample.h">
       <Filter>hikaru</Filter>
@@ -377,6 +320,63 @@
     <ClInclude Include="karen\KRHeapAllocHeader.h">
       <Filter>karen</Filter>
     </ClInclude>
+    <ClInclude Include="kanade\KDLocale.h">
+      <Filter>kanade</Filter>
+    </ClInclude>
+    <ClInclude Include="kanade\KDClock.h">
+      <Filter>kanade</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHAccelerationMessageDecorator.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHTouchMessageDecorator.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHAttitudeMessageDecorator.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHDevice.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHDevice_GLFW.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHDevice_iOS.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHInputEvent.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHKeyboardEvent.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\CHMouse.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
+    <ClInclude Include="sora\SRSingleton.h">
+      <Filter>sora</Filter>
+    </ClInclude>
+    <ClInclude Include="sora\SRString.h">
+      <Filter>sora</Filter>
+    </ClInclude>
+    <ClInclude Include="sora\SRStringUtil.h">
+      <Filter>sora</Filter>
+    </ClInclude>
+    <ClInclude Include="sora\SRTemplateLib.h">
+      <Filter>sora</Filter>
+    </ClInclude>
+    <ClInclude Include="sora\SRTemplateLib.hpp">
+      <Filter>sora</Filter>
+    </ClInclude>
+    <ClInclude Include="sora\SRClassType.h">
+      <Filter>sora</Filter>
+    </ClInclude>
+    <ClInclude Include="sora\SRSharedObject.h">
+      <Filter>sora</Filter>
+    </ClInclude>
+    <ClInclude Include="sora\SRMacro.h">
+      <Filter>sora</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="chizuru">
@@ -394,17 +394,11 @@
     <Filter Include="konomi">
       <UniqueIdentifier>{81e17ddc-c6f8-4639-acd3-43492938b387}</UniqueIdentifier>
     </Filter>
-    <Filter Include="chizuru\input">
-      <UniqueIdentifier>{6664f36b-6654-4455-9b32-d3d52b554516}</UniqueIdentifier>
-    </Filter>
     <Filter Include="hikaru">
       <UniqueIdentifier>{e6249c2e-5fc8-4484-b8a3-430ed48a903e}</UniqueIdentifier>
     </Filter>
     <Filter Include="aki">
       <UniqueIdentifier>{7810ded5-0898-4fe7-bc0c-6c63ddd4eb8d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="runa">
-      <UniqueIdentifier>{effebf2c-c7b6-49bc-aa1c-68b8efbbf847}</UniqueIdentifier>
     </Filter>
     <Filter Include="lynette">
       <UniqueIdentifier>{1dc8b307-106b-46df-8ee2-64a2ad5aa97c}</UniqueIdentifier>
@@ -414,6 +408,15 @@
     </Filter>
     <Filter Include="karen">
       <UniqueIdentifier>{c9f079f9-bf3d-4b33-96e9-5db0d703eb6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="runa">
+      <UniqueIdentifier>{effebf2c-c7b6-49bc-aa1c-68b8efbbf847}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="kanade">
+      <UniqueIdentifier>{6b9a3fc9-1fe4-4d3e-86d2-64f076f8c294}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sora">
+      <UniqueIdentifier>{72fa1ea9-f903-4006-9579-9ceb9dcf8c6c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

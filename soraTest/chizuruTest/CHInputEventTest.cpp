@@ -1,5 +1,5 @@
 #include "../SoraTestStdAfx.h"
-#include "matsu/MTMacro.h"
+#include "sora/SRMacro.h"
 #include "chizuru/CHInputEvent.h"
 #include "chizuru/CHKeyboardEvent.h"
 

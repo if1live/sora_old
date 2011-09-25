@@ -1,9 +1,9 @@
 // Ŭnicode please
 #include "../SoraStdAfx.h"
 #include "IREntity.h"
-#include "matsu/MTTemplateLib.h"
+#include "sora/SRTemplateLib.h"
 
-using namespace matsu;
+using namespace sora;
 
 namespace irina
 {
@@ -14,7 +14,7 @@ namespace irina
 	}
 	Entity::~Entity() 
 	{
-		matsu::destroyDict(compDict_);
+		destroyDict(compDict_);
 		EntityManager::getInstance().remove(this);
 	}
 

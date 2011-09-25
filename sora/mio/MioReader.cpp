@@ -1,10 +1,10 @@
 // Ŭnicode please
 #include "../SoraStdAfx.h"
 #include "mio/MioReader.h"
-#include "matsu/MTStringUtil.h"
+#include "sora/SRStringUtil.h"
 
-using std::string;
-using std::vector;
+using namespace std;
+using namespace sora;
 
 namespace mio
 {
@@ -40,7 +40,7 @@ namespace mio
 		{
 			vector<string> result;
 			string rawdata(read(file, buffersize));
-			matsu::StringUtil::split(rawdata, result, "\r\n");
+			StringUtil::split(rawdata, result, "\r\n");
 			return result;
 		}
 	}

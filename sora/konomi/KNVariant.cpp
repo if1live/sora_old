@@ -1,7 +1,7 @@
 ﻿// Ŭnicode please
 #include "../SoraStdAfx.h"
 #include "konomi/KNVariant.h"
-#include "matsu/MTMacro.h"
+#include "sora/SRMacro.h"
 
 namespace konomi
 {
@@ -25,18 +25,18 @@ namespace konomi
 	}
 	Variant::operator int() const
 	{
-		MT_ASSERT(getType() == VariantTypeInt);
+		SR_ASSERT(getType() == VariantTypeInt);
 		return ivalue_;
 	}
 	Variant::operator float() const
 	{
-		MT_ASSERT(getType() == VariantTypeFloat);
+		SR_ASSERT(getType() == VariantTypeFloat);
 		return fvalue_;
 	}
 
 	Variant::operator bool() const
 	{
-		MT_ASSERT(getType() == VariantTypeBool);
+		SR_ASSERT(getType() == VariantTypeBool);
 		return bvalue_;
 	}
 
@@ -76,7 +76,7 @@ namespace konomi
 			return (pvalue_ == o.pvalue_);
 			break;
 		default:
-			MT_ASSERT(!"do not reach");
+			SR_ASSERT(!"do not reach");
 			return false;
 		};
 	}

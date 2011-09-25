@@ -73,7 +73,7 @@ namespace runa
 	
 	ShaderProgram &ShaderProgram::getLastUsedProgram()
 	{
-		MT_ASSERT(lastUsedProg_ != NULL && "not used shader program");
+		SR_ASSERT(lastUsedProg_ != NULL && "not used shader program");
 		return *lastUsedProg_;
 	}
 
@@ -118,7 +118,7 @@ namespace runa
 
 			MT_LOG("Program validate log: %s", log);
 			free(log);
-			MT_ASSERT(false);
+			SR_ASSERT(false);
 		}
 
 		glGetProgramiv(program_, GL_VALIDATE_STATUS, &status);
@@ -160,7 +160,7 @@ namespace runa
 
 		const int MaxNameLength = 1024;
 		char uniformName[MaxNameLength];
-		MT_ASSERT(maxUniformLen < MaxNameLength);
+		SR_ASSERT(maxUniformLen < MaxNameLength);
 		for(int i = 0 ; i < numUniform ; i++)
 		{
 			GLint size;
@@ -191,7 +191,7 @@ namespace runa
 
 		const int MaxNameLength = 1024;
 		char attributeName[MaxNameLength];
-		MT_ASSERT(maxAttributeLen < maxAttributeLen);
+		SR_ASSERT(maxAttributeLen < maxAttributeLen);
 		for(int i = 0 ; i < numAttribute ; i++)
 		{
 			GLint size;
