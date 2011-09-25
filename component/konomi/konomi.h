@@ -1,0 +1,2 @@
+// Ŭnicode please
+#pragma once
