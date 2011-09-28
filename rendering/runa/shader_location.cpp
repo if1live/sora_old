@@ -16,7 +16,7 @@ namespace runa
 	std::string ShaderLocation::str() const
 	{
 		std::ostringstream oss;
-		oss << "[Uniform]" << get_location() << "/" << get_name();
+		oss << "[Uniform]" << location() << "/" << name();
 		return oss.str();
 	}
 

@@ -15,14 +15,14 @@ namespace konomi
   template<unsigned int N>
   template<unsigned int N2>
   Message<N>::Message(const Message<N2> &o)
-    : code_(o.get_code()), num_param_(0)
+    : code_(o.code()), num_param_(0)
   {
-    SR_ASSERT(o.get_num_param() <= N);
-    for(int i = 0 ; i < o.get_num_param() ; i++)
+    SR_ASSERT(o.num_param() <= N);
+    for(int i = 0 ; i < o.num_param() ; i++)
     {
       AddParam(o.GetParam(i));
     }
-    num_param_ = o.get_num_param();
+    num_param_ = o.num_param();
   }
 
   template<unsigned int N>
@@ -31,13 +31,13 @@ namespace konomi
   }
 
   template<unsigned int N>
-  MessageCode Message<N>::get_code() const
+  MessageCode Message<N>::code() const
   {
     return code_;
   }
 
   template<unsigned int N>
-  int Message<N>::get_num_param() const
+  int Message<N>::num_param() const
   {
     return num_param_;
   }
@@ -68,14 +68,14 @@ namespace konomi
   template<unsigned int N2>
   bool Message<N>::operator==(const Message<N2> &o) const
   {
-    if(get_code() != o.get_code()) {
+    if(code() != o.code()) {
       return false;
     }
-    if(get_num_param() != o.get_num_param()) {
+    if(num_param() != o.num_param()) {
       return false;
     }
 
-    for(int i = 0 ; i < get_num_param() ; i++) {
+    for(int i = 0 ; i < num_param() ; i++) {
       if(GetParam(i) != o.GetParam(i)) {
         return false;
       }

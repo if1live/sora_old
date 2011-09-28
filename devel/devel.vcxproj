@@ -11,8 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{2BFEDE28-2DFB-4891-B535-4288C002F4AB}</ProjectGuid>
-    <RootNamespace>base</RootNamespace>
+    <ProjectGuid>{1564C565-337C-45B1-B9B3-A2505E8FA053}</ProjectGuid>
+    <RootNamespace>devel</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -36,16 +36,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" />
+  <PropertyGroup />
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
-      <MinimalRebuild>false</MinimalRebuild>
+      <AdditionalIncludeDirectories>..\third_party\boost;..\base;.;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -57,9 +53,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>.;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
-      <MinimalRebuild>false</MinimalRebuild>
+      <AdditionalIncludeDirectories>..\third_party\boost;..\base;.;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -68,44 +62,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="karen\class_heap.h" />
-    <ClInclude Include="karen\free_list_block_pool.h" />
-    <ClInclude Include="karen\free_list_manager.h" />
-    <ClInclude Include="karen\free_list_object_pool.h" />
-    <ClInclude Include="karen\heap.h" />
-    <ClInclude Include="karen\heap_alloc_header.h" />
-    <ClInclude Include="karen\karen_enum.h" />
-    <ClInclude Include="matsu\angle.h" />
-    <ClInclude Include="matsu\angle.hpp" />
-    <ClInclude Include="matsu\coordinate.h" />
-    <ClInclude Include="matsu\coordinate.hpp" />
-    <ClInclude Include="matsu\math.h" />
-    <ClInclude Include="matsu\math.hpp" />
-    <ClInclude Include="matsu\matrix.h" />
-    <ClInclude Include="matsu\matrix.hpp" />
-    <ClInclude Include="matsu\matrix_template.h" />
-    <ClInclude Include="matsu\matrix_template.hpp" />
-    <ClInclude Include="matsu\matsu_enum.h" />
-    <ClInclude Include="matsu\quaternion.h" />
-    <ClInclude Include="matsu\quaternion.hpp" />
-    <ClInclude Include="matsu\rectangle.h" />
-    <ClInclude Include="matsu\vector.h" />
-    <ClInclude Include="matsu\vector_template.h" />
-    <ClInclude Include="matsu\vector_template.hpp" />
-    <ClInclude Include="sora\macro.h" />
-    <ClInclude Include="sora\platform.h" />
-    <ClInclude Include="sora\shared_object.h" />
-    <ClInclude Include="sora\singleton.h" />
-    <ClInclude Include="sora\string_util.h" />
-    <ClInclude Include="sora\template_library.h" />
-    <ClInclude Include="sora\template_library.hpp" />
-    <ClInclude Include="sora\tr1_include.h" />
+    <ClCompile Include="hayami\log_stream.cpp" />
+    <ClInclude Include="hayami\hayami_enum.h" />
+    <ClInclude Include="hayami\logger.hpp">
+      <FileType>CppCode</FileType>
+    </ClInclude>
+    <ClCompile Include="hikaru\profile_sample.cpp" />
+    <ClInclude Include="hayami\log_stream.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="karen\free_list_block_pool.cpp" />
-    <ClCompile Include="karen\heap.cpp" />
-    <ClCompile Include="karen\heap_alloc_header.cpp" />
-    <ClCompile Include="sora\string_util.cpp" />
+    <ClInclude Include="hayami\logger.h" />
+    <ClInclude Include="hikaru\profile_sample.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

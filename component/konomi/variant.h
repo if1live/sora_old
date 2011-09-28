@@ -22,7 +22,7 @@ namespace konomi
 		Variant(T *ptr);
 		~Variant();
 
-		VariantType get_type() const;
+		VariantType type() const;
 
 		bool IsNull() const;
 		void SetNull();

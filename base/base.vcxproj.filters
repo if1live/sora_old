@@ -117,6 +117,9 @@
     <ClInclude Include="karen\free_list_object_pool.h">
       <Filter>karen</Filter>
     </ClInclude>
+    <ClInclude Include="sora\tr1_include.h">
+      <Filter>sora</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora\string_util.cpp">

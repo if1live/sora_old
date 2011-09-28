@@ -8,7 +8,7 @@ using namespace runa;
 TEST(VertexShader, test)
 {
 	VertexShader vsh;
-	EXPECT_EQ(0, vsh.get_handle());	//not yet created
+	EXPECT_EQ(0, vsh.handle());	//not yet created
 	EXPECT_EQ(GL_VERTEX_SHADER, vsh.Type);
 	EXPECT_EQ(GL_VERTEX_SHADER, VertexShader::Type);
 
@@ -25,13 +25,13 @@ TEST(VertexShader, test)
 				 }	\
 				 ";
 	vsh.Load(src);
-	EXPECT_EQ(true, vsh.get_handle() > 0);
+	EXPECT_EQ(true, vsh.handle() > 0);
 }
 
 TEST(FragmentShader, test)
 {
 	FragmentShader fsh;
-	EXPECT_EQ(0, fsh.get_handle());	//not yet created
+	EXPECT_EQ(0, fsh.handle());	//not yet created
 	EXPECT_EQ(GL_FRAGMENT_SHADER, fsh.Type);
 	EXPECT_EQ(GL_FRAGMENT_SHADER, FragmentShader::Type);
 	string src = "	\
@@ -43,5 +43,5 @@ TEST(FragmentShader, test)
 				 }	\
 				 ";
 	fsh.Load(src);
-	EXPECT_EQ(true, fsh.get_handle() > 0);
+	EXPECT_EQ(true, fsh.handle() > 0);
 }

@@ -8,8 +8,8 @@ using namespace konomi;
 TEST(Message, test)
 {
 	Message<8> msg(0);
-	EXPECT_EQ(0, msg.get_code());
-	EXPECT_EQ(0, msg.get_num_param());
+	EXPECT_EQ(0, msg.code());
+	EXPECT_EQ(0, msg.num_param());
 
 	//param test
 	int a = 1;
@@ -18,22 +18,22 @@ TEST(Message, test)
 	msg.AddParam(Variant(true));
 	msg.AddParam(Variant(&a));
 
-	EXPECT_EQ(4, msg.get_num_param());
+	EXPECT_EQ(4, msg.num_param());
 
 	const Variant &param1 = msg.GetParam(0);
-	EXPECT_EQ(kVariantTypeInt, param1.get_type());
+	EXPECT_EQ(kVariantTypeInt, param1.type());
 	EXPECT_EQ(1, (int)param1);
 
 	const Variant &param2 = msg.GetParam(1);
-	EXPECT_EQ(kVariantTypeFloat, param2.get_type());
+	EXPECT_EQ(kVariantTypeFloat, param2.type());
 	EXPECT_EQ(2.0f, (float)param2);
 
 	const Variant &param3 = msg.GetParam(2);
-	EXPECT_EQ(kVariantTypeBool, param3.get_type());
+	EXPECT_EQ(kVariantTypeBool, param3.type());
 	EXPECT_EQ(true, (bool)param3);
 
 	const Variant &param4 = msg.GetParam(3);
-	EXPECT_EQ(kVariantTypePointer, param4.get_type());
+	EXPECT_EQ(kVariantTypePointer, param4.type());
 	EXPECT_EQ(&a, param4.GetAsPointer<int>());
 }
 
@@ -87,7 +87,7 @@ TEST(Message, CanAddParam)
 TEST(Message, SetNumParam)
 {
 	Message<4> msg(1);
-	EXPECT_EQ(0, msg.get_num_param());
+	EXPECT_EQ(0, msg.num_param());
 
 	msg.SetNumParam(2);
 	for(int i = 0 ; i < msg.MaxVariantNumber ; i++)
@@ -110,8 +110,8 @@ TEST(Message, SetParam)
 	msg.SetNumParam(2);
 	msg.SetParam(1, Variant(1.0f));
 	
-	EXPECT_EQ(kVariantTypeInt, msg.GetParam(0).get_type());
-	EXPECT_EQ(kVariantTypeFloat, msg.GetParam(1).get_type());
-	EXPECT_EQ(kVariantTypeNull, msg.GetParam(2).get_type());
-	EXPECT_EQ(kVariantTypeNull, msg.GetParam(3).get_type());
+	EXPECT_EQ(kVariantTypeInt, msg.GetParam(0).type());
+	EXPECT_EQ(kVariantTypeFloat, msg.GetParam(1).type());
+	EXPECT_EQ(kVariantTypeNull, msg.GetParam(2).type());
+	EXPECT_EQ(kVariantTypeNull, msg.GetParam(3).type());
 }

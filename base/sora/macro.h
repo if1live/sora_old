@@ -101,7 +101,7 @@ CFShow([NSString stringWithFormat:[NSString stringWithUTF8String:format], ## __V
 #ifndef SR_GETTER_SETTER
 #define SR_GETTER_SETTER(TYPE, NAME)  \
   public: \
-  const TYPE &get_##NAME() const { return NAME##_; }  \
+  const TYPE &##NAME() const { return NAME##_; }  \
   void set_##NAME(const TYPE &v) { NAME##_ = v; } \
 private:  \
   TYPE NAME##_
@@ -110,7 +110,7 @@ private:  \
 #ifndef SR_GETTER
 #define SR_GETTER(TYPE, NAME) \
 public: \
-  const TYPE &get_##NAME() const { return NAME##_; }  \
+  const TYPE &##NAME() const { return NAME##_; }  \
 private:  \
   void set_##NAME(const TYPE &v) { NAME##_ = v; } \
   TYPE NAME##_
@@ -121,6 +121,6 @@ private:  \
 public: \
   void set_##NAME(const TYPE &v) { NAME##_ = v; } \
 private:  \
-  const TYPE &get_##NAME() const { return NAME##_; }  \
+  const TYPE &##NAME() const { return NAME##_; }  \
   TYPE NAME##_
 #endif

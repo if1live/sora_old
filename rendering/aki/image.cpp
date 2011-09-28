@@ -27,20 +27,20 @@ namespace aki
 	ImageDescription::~ImageDescription()
 	{
 	}
-	int ImageDescription::get_width() const
+	int ImageDescription::width() const
 	{
 		return width_;
 	}
-	int ImageDescription::get_height() const
+	int ImageDescription::height() const
 	{
 		return height_;
 	}
 
-	InternalFormat ImageDescription::get_internal_format() const
+	InternalFormat ImageDescription::internal_format() const
 	{
 		return internal_format_;
 	}
-	PixelType ImageDescription::get_pixel_type() const
+	PixelType ImageDescription::pixel_type() const
 	{
 		return pixel_type_;
 	}
@@ -48,7 +48,7 @@ namespace aki
 	int ImageDescription::GetPixelSize() const
 	{
 		int pixel_size = 0;
-		switch(get_pixel_type()) {
+		switch(pixel_type()) {
 		case kPixelType8888:
 			pixel_size = 4;	//4byte
 			break;
@@ -110,11 +110,11 @@ namespace aki
 		free(data_);
 		data_ = NULL;
 	}
-	const ImageDescription &Image::get_desc() const
+	const ImageDescription &Image::desc() const
 	{
 		return desc_;
 	}
-	const void *Image::get_data() const
+	const void *Image::data() const
 	{
 		return data_;
 	}
@@ -123,31 +123,31 @@ namespace aki
 		//포맷이 동일할때만 덮어쓰기가 가능하게하자
 		//만약 포맷이 다를ㄹ떄 덮어쓰기를 지원할 경우는 아직까지 코드상에서 등장할일이
 		//없을거같으니까 나중에 추가하자
-		SR_ASSERT(desc_.get_internal_format() == o.get_desc().get_internal_format()
-			&& desc_.get_pixel_type() == o.get_desc().get_pixel_type());
+		SR_ASSERT(desc_.internal_format() == o.desc().internal_format()
+			&& desc_.pixel_type() == o.desc().pixel_type());
 		//텍스쳐 크기 보정용인데 더 작은 이미지에 덮어쓰는 일은 없을것이다
-		SR_ASSERT(desc_.get_width() >= o.get_desc().get_width()
-			&& desc_.get_height() >= o.get_desc().get_height());
+		SR_ASSERT(desc_.width() >= o.desc().width()
+			&& desc_.height() >= o.desc().height());
 
 		//줄단위로 복사하기
-		for(int y = 0 ; y < o.get_desc().get_height() ; y++)
+		for(int y = 0 ; y < o.desc().height() ; y++)
 		{
 			int prev_index = o.GetPixelIndex(0, y);
 			int curr_index = GetPixelIndex(0, y);
-			unsigned char *prev_data = (unsigned char*)o.get_data();
-			unsigned char *curr_data = (unsigned char*)get_data();
+			unsigned char *prev_data = (unsigned char*)o.data();
+			unsigned char *curr_data = (unsigned char*)data();
 
 			unsigned char *src = prev_data + prev_index;
 			unsigned char *dst = curr_data + curr_index;
 
-			int rowline = o.get_desc().GetRowLineSize();
+			int rowline = o.desc().GetRowLineSize();
 			memcpy(dst, src, rowline);
 		}
 	}
 	int Image::GetPixelIndex(int x, int y) const
 	{
-		int width = desc_.get_width();
-		int height = desc_.get_height();
+		int width = desc_.width();
+		int height = desc_.height();
 		SR_ASSERT(x >= 0 && x < width && y >= 0 && y < height);
 		int pixel_size = desc_.GetPixelSize();
 		int linesize = desc_.GetRowLineSize();
@@ -160,7 +160,7 @@ namespace aki
 		{
 			return false;
 		}
-		int size = desc_.get_height() * desc_.GetRowLineSize();
+		int size = desc_.height() * desc_.GetRowLineSize();
 		if(memcmp(data_, o.data_, size) == 0)
 		{
 			return true;

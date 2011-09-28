@@ -12,7 +12,7 @@ namespace runa
 
 		bool Validate();
 		bool Link();
-		GLuint get_handle() const;
+		GLuint handle() const;
 
 		void bindAttribLocation(GLuint index, const GLchar* name) const { glBindAttribLocation(program_, index, name); }
 		GLuint GetAttribLocation(const GLchar* name) const { return glGetAttribLocation(program_, name); }

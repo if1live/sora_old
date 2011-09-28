@@ -18,7 +18,7 @@ namespace runa
 
 		bool Load(const std::string &src);
 
-		GLuint get_handle() const;
+		GLuint handle() const;
 
 	private:
 		GLuint handle_;

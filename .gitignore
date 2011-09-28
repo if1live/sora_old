@@ -21,3 +21,6 @@
 /base/Debug
 /base_test/Debug
 /component/Debug
+/component_test/Debug
+/rendering/Debug
+/devel/Debug

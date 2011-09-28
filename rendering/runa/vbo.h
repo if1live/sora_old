@@ -11,9 +11,9 @@ namespace runa
 		VertexBufferObject(const GLvoid *data, int count, GLsizei stride, GLenum usage);
 		virtual ~VertexBufferObject();
 
-		inline GLuint get_buffer() const { return buffer_; }
-		inline int get_count() const { return count_; }
-		inline GLsizei get_stride() const { return stride_; }
+		inline GLuint buffer() const { return buffer_; }
+		inline int count() const { return count_; }
+		inline GLsizei stride() const { return stride_; }
 	private:
 		GLuint buffer_;
 		int count_;
@@ -25,11 +25,11 @@ namespace runa
 		IndexBufferObject(const GLvoid *data, int count, GLenum index_type, GLenum draw_mode, GLenum usage);
 		virtual ~IndexBufferObject();
 
-		inline GLuint get_buffer() const { return buffer_; }
-		inline int get_count() const { return count_; }
-		inline GLsizei get_stride() const { return stride_; }
-		inline GLenum get_index_type() const { return index_type_; }
-		inline GLenum get_draw_mode() const { return draw_mode_; }
+		inline GLuint buffer() const { return buffer_; }
+		inline int count() const { return count_; }
+		inline GLsizei stride() const { return stride_; }
+		inline GLenum index_type() const { return index_type_; }
+		inline GLenum draw_mode() const { return draw_mode_; }
 	private:
 		GLuint buffer_;
 		int count_;

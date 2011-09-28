@@ -47,7 +47,7 @@ namespace runa
 	}
 
 	template<GLenum ShaderType>
-	GLuint Shader<ShaderType>::get_handle() const 
+	GLuint Shader<ShaderType>::handle() const 
 	{
 		return handle_; 
 	}

@@ -22,6 +22,12 @@
     <Filter Include="karen">
       <UniqueIdentifier>{a8994ec9-6c7e-482d-90f0-ac06cbbbda95}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NewFilter1">
+      <UniqueIdentifier>{4264749d-981f-4314-a368-2fc98ea1a8ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="hayami">
+      <UniqueIdentifier>{2cb34e9f-dfb4-43c1-97d2-ed8c99de1db5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora\string_util_test.cpp">
@@ -65,6 +71,9 @@
     </ClCompile>
     <ClCompile Include="karen\free_list_object_pool_test.cpp">
       <Filter>karen</Filter>
+    </ClCompile>
+    <ClCompile Include="hayami\logger_test.cpp">
+      <Filter>hayami</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

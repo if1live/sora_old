@@ -19,24 +19,24 @@ namespace konomi
   {
     return (type_ == kVariantTypeNull);
   }
-  VariantType Variant::get_type() const
+  VariantType Variant::type() const
   {
     return type_;
   }
   Variant::operator int() const
   {
-    SR_ASSERT(get_type() == kVariantTypeInt);
+    SR_ASSERT(type() == kVariantTypeInt);
     return ivalue_;
   }
   Variant::operator float() const
   {
-    SR_ASSERT(get_type() == kVariantTypeFloat);
+    SR_ASSERT(type() == kVariantTypeFloat);
     return fvalue_;
   }
 
   Variant::operator bool() const
   {
-    SR_ASSERT(get_type() == kVariantTypeBool);
+    SR_ASSERT(type() == kVariantTypeBool);
     return bvalue_;
   }
 

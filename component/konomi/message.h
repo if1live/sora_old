@@ -27,9 +27,9 @@ namespace konomi
     Message(const Message<N2> &o);
     ~Message();
 
-    MessageCode get_code() const;
+    MessageCode code() const;
 
-    int get_num_param() const;
+    int num_param() const;
     void AddParam(const Variant &param);
 
     template<int index>

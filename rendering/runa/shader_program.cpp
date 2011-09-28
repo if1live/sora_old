@@ -32,8 +32,8 @@ namespace runa
 		program_ = glCreateProgram();
 
 		//attach shader to program
-		glAttachShader(program_, vertex_shader_->get_handle());
-		glAttachShader(program_, fragment_shader_->get_handle());
+		glAttachShader(program_, vertex_shader_->handle());
+		glAttachShader(program_, fragment_shader_->handle());
 
 		// Link program.
 		if(Link() == false)
@@ -46,14 +46,14 @@ namespace runa
 	bool ShaderProgram::SetShader(VertexShader *vert_shader, FragmentShader *frag_shader)
 	{
 		assert(vert_shader != NULL && frag_shader != NULL);
-		glDetachShader(program_, vertex_shader_->get_handle());
-		glDetachShader(program_, fragment_shader_->get_handle());
+		glDetachShader(program_, vertex_shader_->handle());
+		glDetachShader(program_, fragment_shader_->handle());
 
 		vertex_shader_ = auto_ptr<VertexShader>(vert_shader);
 		fragment_shader_ = auto_ptr<FragmentShader>(frag_shader);
 
-		glAttachShader(program_, vertex_shader_->get_handle());
-		glAttachShader(program_, fragment_shader_->get_handle());
+		glAttachShader(program_, vertex_shader_->handle());
+		glAttachShader(program_, fragment_shader_->handle());
 
 		return Link();
 	}
@@ -80,16 +80,16 @@ namespace runa
 	void ShaderProgram::SetShader(VertexShader *vert_shader)
 	{
 		assert(vert_shader != NULL);
-		glDetachShader(program_, vertex_shader_->get_handle());
+		glDetachShader(program_, vertex_shader_->handle());
 		vertex_shader_ = auto_ptr<VertexShader>(vert_shader);
-		glAttachShader(program_, vertex_shader_->get_handle());
+		glAttachShader(program_, vertex_shader_->handle());
 	}
 	void ShaderProgram::SetShader(FragmentShader *frag_shader)
 	{
 		assert(frag_shader != NULL);
-		glDetachShader(program_, fragment_shader_->get_handle());
+		glDetachShader(program_, fragment_shader_->handle());
 		fragment_shader_ = auto_ptr<FragmentShader>(frag_shader);
-		glAttachShader(program_, fragment_shader_->get_handle());
+		glAttachShader(program_, fragment_shader_->handle());
 	}
 	void ShaderProgram::Use()
 	{
@@ -101,7 +101,7 @@ namespace runa
 		Use();
 	}
 
-	GLuint ShaderProgram::get_handle() const 
+	GLuint ShaderProgram::handle() const 
 	{
 		return program_; 
 	}

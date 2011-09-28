@@ -1,3 +1,4 @@
+﻿// Ŭnicode please
 #pragma once
 
 #include "matsu/matsu_enum.h"

@@ -23,22 +23,22 @@ namespace aki
 		TextureGroup();
 		~TextureGroup();
 
-		int get_id() const;
+		int id() const;
 
-		GLuint get_handle() const;
-		GLuint get_handle(int index) const;
+		GLuint handle() const;
+		GLuint handle(int index) const;
 		template<int index>
-		GLuint get_handle() const;
+		GLuint handle() const;
 
 		bool LoadImage(Image *img);
 		bool LoadImage(int index, Image *img);
 		template<int index>
 		bool LoadImage(Image *img);
 
-		const TextureSize &get_size() const;
-		const TextureSize &get_size(int index) const;
+		const TextureSize &size() const;
+		const TextureSize &size(int index) const;
 		template<int index>
-		const TextureSize &get_size() const;
+		const TextureSize &size() const;
 
 		bool IsLoaded() const;
 		bool IsLoaded(int index) const;
