@@ -1,7 +1,6 @@
 ﻿// Ŭnicode please
 #pragma once
 
-#include "sora/macro.h"
 #include "hayami/hayami_enum.h"
 #include <string>
 #include <cstdarg>
@@ -38,7 +37,13 @@ public:
 #undef LOGGER_FUNC
 
   void Flush();
-  SR_GETTER_SETTER(LogLevel, level);
+
+public:
+  //level의 경우는 필요에 따라서 up/down이 될테니까
+  //getter/setter가 둘다필요한데 이를 위해
+  //sora의 매크로를 쓰면 의존성이 생겨서 독립배포가 귀찮으니까
+  //그냥 public으로 만들었다
+  LogLevel level;
 
 private:
   void WriteLog(LogLevel log_level, const std::string &msg);

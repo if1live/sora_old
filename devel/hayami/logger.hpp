@@ -4,7 +4,7 @@
 namespace hayami {;
 template<typename LogStream>
 Logger<LogStream>::Logger(const std::string &name) 
-  : name_(name), level_(kLogLevelDebug) {
+  : name_(name), level(kLogLevelDebug) {
 
 }
 template<typename LogStream>
@@ -17,7 +17,7 @@ const std::string &Logger<LogStream>::name() const {
 }
 template<typename LogStream>
 void Logger<LogStream>::WriteLog(LogLevel log_level, const std::string &msg) {
-  if (log_level >= level_) {
+  if (log_level >= level) {
     stream_.WriteLog(name_, msg);
   }
 }

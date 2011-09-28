@@ -8,7 +8,7 @@ using namespace std;
 
 TEST(Logger, Log) {
   ConsoleLogger logger(string("sample"));
-  logger.set_level(kLogLevelWarning);
+  logger.level = kLogLevelWarning;
   logger.Debug("log debug");
   logger.Notice("log notice");
   logger.Warning("log warning");
