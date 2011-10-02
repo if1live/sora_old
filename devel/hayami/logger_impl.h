@@ -18,21 +18,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "hayami/log_stream.h"
-#include <cstdlib>
+#ifndef DEVEL_HAYAMI_LOGGER_IMPL_H_
+#define DEVEL_HAYAMI_LOGGER_IMPL_H_
+
 #include <string>
 
 namespace hayami {;
-ConsoleLogStream::ConsoleLogStream() {
+template<typename LogStream>
+Logger<LogStream>::Logger(const std::string &name
+  : name_(name), level(kLogLevelDebug) {
 }
-ConsoleLogStream::~ConsoleLogStream() {
+template<typename LogStream>
+Logger<LogStream>::~Logger() {
 }
-void ConsoleLogStream::WriteLog(const std::string &logger_name,
-  const std::string &msg) {
-    using ::std::string;
-    printf("[%s] %s\n", logger_name.c_str(), msg.c_str());
+template<typename LogStream>
+const std::string &Logger<LogStream>::name() const {
+  return name_;
 }
-void ConsoleLogStream::Flush() {
-  fflush(stdout);
+template<typename LogStream>
+void Logger<LogStream>::WriteLog(LogLevel log_level, const std::string &msg) {
+  if (log_level >= level) {
+    stream_.WriteLog(name_, msg);
+  }
+}
+
+template<typename LogStream>
+void Logger<LogStream>::Flush() {
+  stream_.Flush();
 }
 }
+
+#endif  // DEVEL_HAYAMI_LOGGER_IMPL_H_

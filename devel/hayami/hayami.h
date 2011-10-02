@@ -18,21 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "hayami/log_stream.h"
-#include <cstdlib>
-#include <string>
+#ifndef DEVEL_HAYAMI_HAYAMI_H_
+#define DEVEL_HAYAMI_HAYAMI_H_
 
-namespace hayami {;
-ConsoleLogStream::ConsoleLogStream() {
-}
-ConsoleLogStream::~ConsoleLogStream() {
-}
-void ConsoleLogStream::WriteLog(const std::string &logger_name,
-  const std::string &msg) {
-    using ::std::string;
-    printf("[%s] %s\n", logger_name.c_str(), msg.c_str());
-}
-void ConsoleLogStream::Flush() {
-  fflush(stdout);
-}
-}
+#include "hayami/hayami_enum.h"
+#include "hayami/logger.h"
+#include "hayami/log_stream.h"
+
+#endif  // DEVEL_HAYAMI_HAYAMI_H_
