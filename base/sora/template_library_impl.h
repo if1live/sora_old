@@ -18,36 +18,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef BASE_SORA_PLATFORM_H_
-#define BASE_SORA_PLATFORM_H_
+#ifndef BASE_SORA_TEMPLATE_LIBRARY_IMPL_H_
+#define BASE_SORA_TEMPLATE_LIBRARY_IMPL_H_
 
-// platform detect code
-#undef SR_IOS
-#undef SR_WIN
-#undef SR_ANDROID
-#define SR_IOS 0
-#define SR_WIN 0
-#define SR_ANDROID 0
+namespace sora {;
+template<typename AssocType>
+void DestroyDict(AssocType *dict) {
+  typename AssocType::iterator it = dict->begin();
+  typename AssocType::iterator endit = dict->end();
+  for ( ; it != endit ; it++) {
+    delete(it->second);
+  }
+  dict->clear();
+}
 
-// platform check macro
-#if __APPLE__
-// iphone check
-#import <Availability.h>
-#if __IPHONE_2_0
-#undef SR_IOS
-#define SR_IOS 1
-#endif
-#endif
-
-// android check
-#ifdef __ANDROID__
-#undef SR_ANDROID
-#define SR_ANDROID 1
-#endif
-
-#if (defined _WIN32) || (defined _W64)
-#undef SR_WIN
-#define SR_WIN 1
-#endif
-
-#endif  // BASE_SORA_PLATFORM_H_
+template<typename SequenceType>
+void DestroyList(SequenceType *list) {
+  typename SequenceType::iterator it = list->begin();
+  typename SequenceType::iterator endit = list->end();
+  for ( ; it != endit ; it++) {
+    delete(*it);
+  }
+  list->clear();
+}
+}
+#endif  // BASE_SORA_TEMPLATE_LIBRARY_IMPL_H_

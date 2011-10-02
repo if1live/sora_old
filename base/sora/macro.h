@@ -1,12 +1,32 @@
+﻿/*  Copyright (C) 2011 by if1live */
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 // Ŭnicode please
-#pragma once
+#ifndef BASE_SORA_MACRO_H_
+#define BASE_SORA_MACRO_H_
 
-#include "sora/platform.h"
 #include <cassert>
+#include "sora/platform.h"
 
-//assert
+// custom assert
 #ifndef ST_ASSERT
-#define SR_ASSERT(STATMENT) do { assert(STATMENT); } while(0)
+#define SR_ASSERT(STATMENT) do { assert(STATMENT); } while (0)
 #endif
 /*
 #undef SR_ASSERT
@@ -33,71 +53,8 @@ if(CustomAssertFunction((int)(STATMENT), "assert occur", __LINE__, __FILE__))	{ 
 #endif
 #endif
 */
-//custom log console function/macro
-//arg to string
-#define FMT_TO_STRING(fmt, ...)	\
-  const int bufsize = 1024 * 64;	\
-  char buffer[bufsize];	\
-  va_list argptr;	\
-  int ret;	\
-  va_start(argptr, fmt);	\
-  ret = vsprintf(buffer, fmt, argptr);	\
-  va_end(argptr);	\
-  std::string msg(buffer);
 
-
-//log
-#if SR_IOS
-/*#import <Foundation/Foundation.h>
-//#define MT_LOG(format, ...)	\
-CFShow([NSString stringWithFormat:[NSString stringWithUTF8String:format], ## __VA_ARGS__]);
-//#define MT_LINE_LOG(msg)	CFShow([NSString stringWithUTF8String:msg]);
-//아이폰에서 로그를 일단 똇다. 다른 함수로 구현해야될듯*/
-#define MT_LOG(format, ...) { mio::Console::log(format, ## __VA_ARGS__); }
-#define MT_LINE_LOG(msg) { mio::Console::log(msg); }
-
-#elif SR_ANDROID
-#define MT_LOG(format, ...) do{;}while(0)
-#define MT_LINE_LOG(msg) { mio::Console::log(msg); }
-
-#elif SR_WIN
-#define MT_LOG(format, ...) { fprintf(stderr, format, ## __VA_ARGS__); printf("\n"); }
-#define MT_LINE_LOG(msg) { fprintf(stderr, msg);  printf("\n");}
-
-#else
-#error "not support platform"
-#endif
-
-//TODO macro
-//http://www.gpgstudy.com/forum/viewtopic.php?t=126
-//----------------------------------------------------------
-// FIXMEs / TODOs / NOTE macros
-//----------------------------------------------------------
-/*
-#define _QUOTE(x) #x
-#define QUOTE(x) _QUOTE(x)
-#define __FILE__LINE__ __FILE__ "(" QUOTE(__LINE__) ") : "
-
-#define NOTE( x )  message( x )
-#define FILE_LINE  message( __FILE__LINE__ )
-
-#define TODO( x )  message( __FILE__LINE__"n" \
-" ------------------------------------------------\n" \
-"|  TODO :   ##x n" \
-" -------------------------------------------------\n" )
-
-#define FIXME( x )  message(  __FILE__LINE__"n" \
-" ------------------------------------------------n"  \
-"|  FIXME :  ##x n" \
-" -------------------------------------------------n" )
-#define todo( x )  message( __FILE__LINE__" TODO :   ##x n" ) 
-#define fixme( x )  message( __FILE__LINE__" FIXME:   ##x n" ) 
-
-#pragma NOTE("fds")
-#pragma message("asdfasdf")
-*/
-
-
+// auto getter/setter macro
 #ifndef SR_GETTER_SETTER
 #define SR_GETTER_SETTER(TYPE, NAME)  \
   public: \
@@ -124,3 +81,5 @@ private:  \
   const TYPE &##NAME() const { return NAME##_; }  \
   TYPE NAME##_
 #endif
+
+#endif  // BASE_SORA_MACRO_H_
