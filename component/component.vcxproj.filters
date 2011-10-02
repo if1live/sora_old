@@ -16,6 +16,9 @@
     <Filter Include="konomi">
       <UniqueIdentifier>{38161ad3-487d-4120-8be0-d75bad303bfe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="irina">
+      <UniqueIdentifier>{971646cb-f9f7-41c4-affc-59a478420c71}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="konomi\identifier_flag_dictionary.cpp">

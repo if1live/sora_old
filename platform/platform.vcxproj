@@ -11,17 +11,17 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{E4D2B288-06E5-4E9C-8CF8-BF79B7EFA9B7}</ProjectGuid>
-    <RootNamespace>rendering</RootNamespace>
+    <ProjectGuid>{2D4442FE-AB8F-4163-A487-41A8D7B9CF55}</ProjectGuid>
+    <RootNamespace>platform</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
@@ -41,9 +41,6 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\devel;..\third_party\glfw\include;..\third_party\soil\src;..\third_party\glew\include;..\third_party\freeglut\include;..\third_party\boost;..\base;.;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -55,9 +52,6 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\devel;..\third_party\glfw\include;..\third_party\soil\src;..\third_party\glew\include;..\third_party\freeglut\include;..\third_party\boost;..\base;.;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PrecompiledHeader>Use</PrecompiledHeader>
-      <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -66,34 +60,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="aki\image.cc" />
-    <ClCompile Include="aki\image_description.cc" />
-    <ClCompile Include="aki\image_loader_soil.cc" />
-    <ClCompile Include="aki\texture.cpp" />
-    <ClCompile Include="precompile.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="runa\shader_location.cc" />
-    <ClCompile Include="runa\shader_program.cc" />
-    <ClCompile Include="runa\uber_shader.cc" />
-    <ClCompile Include="runa\vbo.cc" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="aki\aki_enum.h" />
-    <ClInclude Include="aki\image.h" />
-    <ClInclude Include="aki\image_description.h" />
-    <ClInclude Include="aki\image_loader_soil.h" />
-    <ClInclude Include="aki\texture.h" />
-    <ClInclude Include="aki\texture_impl.h" />
-    <ClInclude Include="precompile.h" />
-    <ClInclude Include="runa\runa_enum.h" />
-    <ClInclude Include="runa\shader.h" />
-    <ClInclude Include="runa\shader_impl.h" />
-    <ClInclude Include="runa\shader_location.h" />
-    <ClInclude Include="runa\shader_program.h" />
-    <ClInclude Include="runa\uber_shader.h" />
-    <ClInclude Include="runa\vbo.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

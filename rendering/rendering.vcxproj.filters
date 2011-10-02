@@ -21,13 +21,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="aki\image_loader_soil.cpp">
-      <Filter>aki</Filter>
-    </ClCompile>
     <ClCompile Include="aki\texture.cpp">
-      <Filter>aki</Filter>
-    </ClCompile>
-    <ClCompile Include="aki\image.cpp">
       <Filter>aki</Filter>
     </ClCompile>
     <ClCompile Include="precompile.cpp">
@@ -45,7 +39,13 @@
     <ClCompile Include="runa\vbo.cc">
       <Filter>runa</Filter>
     </ClCompile>
-    <ClCompile Include="aki\image_description.cpp">
+    <ClCompile Include="aki\image_loader_soil.cc">
+      <Filter>aki</Filter>
+    </ClCompile>
+    <ClCompile Include="aki\image_description.cc">
+      <Filter>aki</Filter>
+    </ClCompile>
+    <ClCompile Include="aki\image.cc">
       <Filter>aki</Filter>
     </ClCompile>
   </ItemGroup>
@@ -54,9 +54,6 @@
       <Filter>aki</Filter>
     </ClInclude>
     <ClInclude Include="aki\texture.h">
-      <Filter>aki</Filter>
-    </ClInclude>
-    <ClInclude Include="aki\texture.hpp">
       <Filter>aki</Filter>
     </ClInclude>
     <ClInclude Include="aki\aki_enum.h">
@@ -90,6 +87,9 @@
       <Filter>runa</Filter>
     </ClInclude>
     <ClInclude Include="aki\image_description.h">
+      <Filter>aki</Filter>
+    </ClInclude>
+    <ClInclude Include="aki\texture_impl.h">
       <Filter>aki</Filter>
     </ClInclude>
   </ItemGroup>

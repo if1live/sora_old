@@ -122,14 +122,14 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="karen\heap.cpp">
-      <Filter>karen</Filter>
-    </ClCompile>
-    <ClCompile Include="karen\free_list_block_pool.cpp">
-      <Filter>karen</Filter>
-    </ClCompile>
     <ClCompile Include="sora\string_util.cc">
       <Filter>sora</Filter>
+    </ClCompile>
+    <ClCompile Include="karen\free_list_block_pool.cc">
+      <Filter>karen</Filter>
+    </ClCompile>
+    <ClCompile Include="karen\heap.cc">
+      <Filter>karen</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

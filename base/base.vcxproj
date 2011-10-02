@@ -102,8 +102,8 @@
     <ClInclude Include="sora\tr1_include.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="karen\free_list_block_pool.cpp" />
-    <ClCompile Include="karen\heap.cpp" />
+    <ClCompile Include="karen\free_list_block_pool.cc" />
+    <ClCompile Include="karen\heap.cc" />
     <ClCompile Include="sora\string_util.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
