@@ -86,18 +86,18 @@ TEST(VectorTemplate, xyzw)
 	int data2[] = {3, 4};
 	VectorTemplate<int,2> v2(data2);
 	
-	EXPECT_EQ(3, v2.GetX());
-	EXPECT_EQ(4, v2.GetY());
+	EXPECT_EQ(3, v2.x());
+	EXPECT_EQ(4, v2.y());
 	//EXPECT_EQ(0, v2.z());
 	//EXPECT_EQ(0, v2.w());
 	
-	v2.SetX(1);
-	v2.SetY(2);
+	v2.set_x(1);
+	v2.set_y(2);
 	//v2.setZ(3);
 	//v2.setW(4);
 	
-	EXPECT_EQ(1, v2.GetX());
-	EXPECT_EQ(2, v2.GetY());
+	EXPECT_EQ(1, v2.x());
+	EXPECT_EQ(2, v2.y());
 	//EXPECT_EQ(0, v2.z());
 	//EXPECT_EQ(0, v2.w());
 }

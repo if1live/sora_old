@@ -163,7 +163,7 @@ T CalculateIncludeAngleRadian(T src, T dst) {
   vec3 srcVec3(srcVec2);
   vec3 dstVec3(dstVec2);
   vec3 crossPan = srcVec3.Cross(dstVec3);
-  if (crossPan.GetZ() > 0) {
+  if (crossPan.z() > 0) {
     return rawAbsRadian;
   } else {
     return -rawAbsRadian;

@@ -51,10 +51,8 @@ class Singleton {
  protected:
   Singleton() {
     SR_ASSERT(ctx_ == NULL);
-    typedef unsigned int Long;
-    Long offset = (Long)static_cast<T*>(1)
-    - (Long)static_cast<Singleton*>(static_cast<T*>(1));
-    ctx_ = static_cast<T*>((Long)(this + offset));
+    long offset = (long)(T*)(1) - (long)(Singleton*)(T*)(1);
+    ctx_ = (T*)((long)(this + offset));
   }
   virtual ~Singleton() {
     SR_ASSERT(ctx_ != NULL);

@@ -108,19 +108,19 @@ class VectorTemplate {
 #define SHORT_GETTER(NAME, index) \
   T NAME() const { SR_ASSERT(index < D); \
   { return data[index]; } }
-  SHORT_GETTER(GetX, 0);
-  SHORT_GETTER(GetY, 1);
-  SHORT_GETTER(GetZ, 2);
-  SHORT_GETTER(GetW, 3);
+  SHORT_GETTER(x, 0);
+  SHORT_GETTER(y, 1);
+  SHORT_GETTER(z, 2);
+  SHORT_GETTER(w, 3);
 #undef SHORT_GETTER
 
 #define SHORT_SETTER(NAME, index) \
 void NAME(T value) { SR_ASSERT(index < D); \
   { data[index] = value; } }
-  SHORT_SETTER(SetX, 0);
-  SHORT_SETTER(SetY, 1);
-  SHORT_SETTER(SetZ, 2);
-  SHORT_SETTER(SetW, 3);
+  SHORT_SETTER(set_x, 0);
+  SHORT_SETTER(set_y, 1);
+  SHORT_SETTER(set_z, 2);
+  SHORT_SETTER(set_w, 3);
 #undef SHORT_SETTER
 
  public:

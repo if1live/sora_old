@@ -18,33 +18,46 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef RENDERING_RUNA_SHADER_H_
-#define RENDERING_RUNA_SHADER_H_
+#include "precompile.h"
 
-#include <string>
-#include "runa/runa_enum.h"
+#include "runa/vbo.h"
 
 namespace runa {;
-template<GLenum ShaderType>
-class Shader {
- public:
-  enum {
-    Type = ShaderType,
-  };
-
- public:
-  Shader();
-  explicit Shader(const std::string &src);
-  ~Shader();
-
-  bool Load(const std::string &src);
-
-  GLuint handle() const;
-
- private:
-  GLuint handle_;
-};
+VertexBufferObject::VertexBufferObject(const GLvoid *data,
+  int count, GLsizei stride, GLenum usage)
+  : buffer_(0), count_(count), stride_(stride) {
+  glGenBuffers(1, &buffer_);
+  glBindBuffer(GL_ARRAY_BUFFER, buffer_);
+  glBufferData(GL_ARRAY_BUFFER, stride*count, data, usage);
 }
-#include "runa/shader_impl.h"
+VertexBufferObject::~VertexBufferObject() {
+  glDeleteBuffers(1, &buffer_);
+}
 
-#endif  // RENDERING_RUNA_SHADER_H_
+IndexBufferObject::IndexBufferObject(const GLvoid *data,
+  int count, GLenum index_type, GLenum draw_mode, GLenum usage)
+  : buffer_(0), count_(count), draw_mode_(draw_mode), index_type_(index_type) {
+  // stride 계산
+  switch (index_type) {
+  case GL_UNSIGNED_BYTE:
+    stride_ = sizeof(GLubyte);
+    break;
+  case GL_UNSIGNED_SHORT:
+    stride_ = sizeof(GLushort);
+    break;
+  case GL_UNSIGNED_INT:
+    stride_ = sizeof(GLuint);
+    break;
+  default:
+    SR_ASSERT(!"Not valid index_type");
+    break;
+  }
+
+  glGenBuffers(1, &buffer_);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer_);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, stride_*count, data, usage);
+}
+IndexBufferObject::~IndexBufferObject() {
+  glDeleteBuffers(1, &buffer_);
+}
+}

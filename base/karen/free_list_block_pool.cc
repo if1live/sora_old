@@ -18,92 +18,73 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef BASE_KAREN_FREE_LIST_OBJECT_POOL_H_
-#define BASE_KAREN_FREE_LIST_OBJECT_POOL_H_
-
+#include <cstdlib>
+#include <cstring>
+#include "karen/free_list_block_pool.h"
 #include "sora/macro.h"
 
 namespace karen {;
-/// @brief reference GPG 4. free list memory manager
-/// this class use new/delete to requset/destory memory
-/// if constructor call in pool initializion is not important, use this class
-/// @param N max pool size
-template<typename T>
-class FreeListObjectPool {
- public:
-  explicit FreeListObjectPool(int max_size);
-  ~FreeListObjectPool();
-  void Reset(int max_size);
-  T *Malloc();
-  void Free(T *ptr);
- private:
-  T *object_list_;
-  T **free_object_list_;
-  int max_size_;
-  int top_;
-};
-}
-
-namespace karen {;
-template<typename T>
-FreeListObjectPool<T>::FreeListObjectPool(int max_size)
+FreeListBlockPool::FreeListBlockPool(int max_size, int block_size)
   : object_list_(NULL),
   free_object_list_(NULL),
-  max_size_(0),
-  top_(0) {
-  Reset(max_size);
+  max_size_(max_size),
+  top_(0),
+  block_size_(block_size) {
+  Reset(max_size, block_size);
 }
-template<typename T>
-FreeListObjectPool<T>::~FreeListObjectPool() {
+
+FreeListBlockPool::~FreeListBlockPool() {
   // release all obj at once
   // SR_ASSERT(max_size_ == freeListSize_);
-  delete[](object_list_);
-  delete[](free_object_list_);
+  ::free(free_object_list_);
+  ::free(object_list_);
   object_list_ = NULL;
   free_object_list_ = NULL;
 }
 
-template<typename T>
-void FreeListObjectPool<T>::Reset(int max_size) {
+void FreeListBlockPool::Reset(int max_size, int block_size) {
   if (object_list_ != NULL) {
     // all previous allocated block must be unused
     SR_ASSERT(max_size_ == top_+1);
-    delete[](object_list_);
-    delete[](free_object_list_);
+    ::free(free_object_list_);
+    ::free(object_list_);
   }
   // reallocate
   max_size_ = max_size;
 
-  object_list_ = new T[max_size];
-  free_object_list_ = new T*[max_size];
+  object_list_ = static_cast<byte*>(
+    ::malloc(sizeof(object_list_) * max_size * block_size));
+  memset(object_list_, 0, sizeof(byte) * max_size * block_size);
+  free_object_list_ = static_cast<byte**>(
+    ::malloc(sizeof(object_list_) * max_size));
+  memset(free_object_list_, 0, sizeof(byte*) * max_size);
 
   for (int i = 0 ; i < max_size_ ; i++) {
-    free_object_list_[i] = &(object_list_[i]);
+    byte *ptr = (object_list_ + i*block_size);
+    free_object_list_[i] = ptr;
   }
-  top_ = max_size_-1;
+  top_ = max_size-1;
 }
-template<typename T>
-T *FreeListObjectPool<T>::Malloc() {
+
+void *FreeListBlockPool::Malloc() {
   SR_ASSERT(top_ >= 0 && "no free block exist");
-  T *ptr = free_object_list_[top_];
+  byte *ptr = free_object_list_[top_];
   top_--;
-  return ptr;
+  return reinterpret_cast<void*>(ptr);
 }
-template<typename T>
-void FreeListObjectPool<T>::Free(T *ptr) {
+
+void FreeListBlockPool::Free(void *ptr) {
 #if DEBUG
   bool found = false;
   // ptr must be member of object_list
   for (int i = 0 ; i < max_size_ ; i++) {
-    if (&object_list_[i] == ptr) {
+    if ((object_list_ + i*block_size_) == ptr) {
       found = true;
     }
   }
   SR_ASSERT(found == true);
 #endif
   top_++;
-  free_object_list_[top_] = ptr;
+  free_object_list_[top_] = reinterpret_cast<byte*>(ptr);
 }
 }
-
-#endif  // BASE_KAREN_FREE_LIST_OBJECT_POOL_H_

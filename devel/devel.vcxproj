@@ -62,9 +62,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="hayami\log_stream.cpp" />
+    <ClCompile Include="hayami\log_stream.cc" />
+    <ClInclude Include="hayami\hayami.h" />
     <ClInclude Include="hayami\hayami_enum.h" />
-    <ClInclude Include="hayami\logger.hpp">
+    <ClInclude Include="hayami\logger_impl.h">
       <FileType>CppCode</FileType>
     </ClInclude>
     <ClCompile Include="hikaru\profile_sample.cpp" />

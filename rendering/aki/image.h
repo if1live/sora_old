@@ -1,52 +1,56 @@
-#pragma once
+ï»¿/*  Copyright (C) 2011 by if1live */
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+// Å¬nicode please
+#ifndef RENDERING_AKI_IMAGE_H_
+#define RENDERING_AKI_IMAGE_H_
 
+#include <string>
 #include "aki/aki_enum.h"
+#include "aki/image_description.h"
 
-namespace aki
-{
-	class ImageDescription {
-	public:
-		ImageDescription();
-		ImageDescription(int width, int height, InternalFormat internal_format, PixelType pixel_type);
-		~ImageDescription();
-		int width() const;
-		int height() const;
-		InternalFormat internal_format() const;
-		PixelType pixel_type() const;
+namespace aki {;
+class Image {
+ public:
+  static ImagePtr create(const std::string &path);
 
-		bool operator==(const ImageDescription &o) const;
-		bool operator!=(const ImageDescription &o) const;
-		
-		int GetRowLineSize() const;
-		int GetPixelSize() const;
-	private:
-		int width_;
-		int height_;
-		InternalFormat internal_format_;
-		PixelType pixel_type_;
-	};
-	class Image {
-	public:
-		static ImagePtr create(const std::string &path);
-	public:
-		//RGBA¸¦ »ç¿ëÇÑ °ËÁ¤»ö ÀÌ¹ÌÁö ¸¸µé±â
-		//ÀÌ¹ÌÁö°¡ ÅØ½ºÃÄ »ı¼ºÇÏ±âÀ§ÇÑ Å©±â°¡ ¾Æ´Ò¶§ »ç¿ëÇÑ´Ù
-		Image(int width, int height);
-		Image(const ImageDescription &desc, void *data);
-		~Image();
-		const ImageDescription &desc() const;
-		const void *data() const;
+ public:
+  // RGBAë¥¼ ì‚¬ìš©í•œ ê²€ì •ìƒ‰ ì´ë¯¸ì§€ ë§Œë“¤ê¸°
+  // ì´ë¯¸ì§€ê°€ í…ìŠ¤ì³ ìƒì„±í•˜ê¸°ìœ„í•œ í¬ê¸°ê°€ ì•„ë‹ë•Œ ì‚¬ìš©í•œë‹¤
+  Image(int width, int height);
+  Image(const ImageDescription &desc, void *data);
+  ~Image();
+  const ImageDescription &desc() const;
+  const void *data() const;
 
-		//´Ù¸¥ ÀÌ¹ÌÁö¸¦ µ¤¾î¾º¿ì´Â ÇÔ¼ö. ÀÌ°ÍÀÌ ÀÖ¾î¾ß
-		//ÅØ½ºÃÄÅ©±â¸¦ 2ÀÇ ½Â¼ö·Î º¸Á¤ÇÏ´Â°ÍÀ» ±ú²ıÇÏ°Ô ÇÒ¼öÀÖ´Ù
-		void Overwrite(const Image &o);
+  // ë‹¤ë¥¸ ì´ë¯¸ì§€ë¥¼ ë®ì–´ì”Œìš°ëŠ” í•¨ìˆ˜. ì´ê²ƒì´ ìˆì–´ì•¼
+  // í…ìŠ¤ì³í¬ê¸°ë¥¼ 2ì˜ ìŠ¹ìˆ˜ë¡œ ë³´ì •í•˜ëŠ”ê²ƒì„ ê¹¨ë—í•˜ê²Œ í• ìˆ˜ìˆë‹¤
+  void Overwrite(const Image &o);
 
-		int GetPixelIndex(int x, int y) const;
-		
-		bool operator==(const Image &o) const;
-		bool operator!=(const Image &o) const;
-	private:
-		ImageDescription desc_;
-		void *data_;
-	};
+  int GetPixelIndex(int x, int y) const;
+
+  bool operator==(const Image &o) const;
+  bool operator!=(const Image &o) const;
+
+ private:
+  ImageDescription desc_;
+  void *data_;
+};
 }
+#endif  // RENDERING_AKI_IMAGE_H_

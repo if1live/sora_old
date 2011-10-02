@@ -1,32 +1,54 @@
-#pragma once
+ï»¿/*  Copyright (C) 2011 by if1live */
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+// Å¬nicode please
+#ifndef RENDERING_AKI_AKI_ENUM_H_
+#define RENDERING_AKI_AKI_ENUM_H_
 
-namespace aki
-{
-	class Image;
-	typedef std::tr1::shared_ptr<Image> ImagePtr;
+namespace aki {
+  class Image;
+  class ImageDescription;
+  typedef std::tr1::shared_ptr<Image> ImagePtr;
 
-	//openglÀ» À§ÇÑ ÀÌ¹ÌÁö¶óÀÌºê·¯¸®´Ï±î opengl es¿¡¼­ ¹Ş¾ÆµéÀÏ¼öÀÖ´Â
-	//Æ÷¸ËÀ¸·Î¸¸ ³»ºÎ¿¡¼­ Ã³¸®ÇØµµ ÃæºĞÇÏ´Ù
-	//opengl°ú µ¿ÀÏÇÑ enumÀ» ¾¸À¸·Î½á Á÷Åëº¯È¯À» °¡´ÉÇÏ°ÔÇÔ
-	typedef enum {
-		kInternalFormatRGBA = GL_RGBA,
-		kInternalFormatRGB = GL_RGB,
-		kInternalFormatLuminanceAlpha = GL_LUMINANCE_ALPHA,
-		kInternalFormatLuminance = GL_LUMINANCE,
-		kInternalFormatAlpha = GL_ALPHA,
-	} InternalFormat;
+  // openglì„ ìœ„í•œ ì´ë¯¸ì§€ë¼ì´ë¸ŒëŸ¬ë¦¬ë‹ˆê¹Œ opengl esì—ì„œ ë°›ì•„ë“¤ì¼ìˆ˜ìˆëŠ”
+  // í¬ë§·ìœ¼ë¡œë§Œ ë‚´ë¶€ì—ì„œ ì²˜ë¦¬í•´ë„ ì¶©ë¶„í•˜ë‹¤
+  // openglê³¼ ë™ì¼í•œ enumì„ ì”€ìœ¼ë¡œì¨ ì§í†µë³€í™˜ì„ ê°€ëŠ¥í•˜ê²Œí•¨
+  typedef enum {
+    kInternalFormatRGBA = GL_RGBA,
+    kInternalFormatRGB = GL_RGB,
+    kInternalFormatLuminanceAlpha = GL_LUMINANCE_ALPHA,
+    kInternalFormatLuminance = GL_LUMINANCE,
+    kInternalFormatAlpha = GL_ALPHA,
+  } InternalFormat;
 
-	//opengl°ú °°Àº Æ÷¸ËÀ» ½á¼­ Á÷µ¿º¯È¯À» Çã¿ë
-	typedef enum {
-		kPixelType8888 = GL_UNSIGNED_BYTE,
-		kPixelType4444 = GL_UNSIGNED_SHORT_4_4_4_4,
-		kPixelType5551 = GL_UNSIGNED_SHORT_5_5_5_1,
-		kPixelType565 = GL_UNSIGNED_SHORT_5_6_5
-	} PixelType;
+  // openglê³¼ ê°™ì€ í¬ë§·ì„ ì¨ì„œ ì§ë™ë³€í™˜ì„ í—ˆìš©
+  typedef enum {
+    kPixelType8888 = GL_UNSIGNED_BYTE,
+    kPixelType4444 = GL_UNSIGNED_SHORT_4_4_4_4,
+    kPixelType5551 = GL_UNSIGNED_SHORT_5_5_5_1,
+    kPixelType565 = GL_UNSIGNED_SHORT_5_6_5
+  } PixelType;
 
-	//texture
-	class TextureSize;
-	template<unsigned int N>	class TextureGroup;
-	typedef TextureGroup<1> Texture;
-	typedef std::tr1::shared_ptr<Texture> TexturePtr;
+  // texture
+  class TextureSize;
+  template<unsigned int N>  class TextureGroup;
+  typedef TextureGroup<1> Texture;
+  typedef std::tr1::shared_ptr<Texture> TexturePtr;
 }
+#endif  // RENDERING_AKI_AKI_ENUM_H_

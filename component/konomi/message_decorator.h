@@ -17,8 +17,8 @@
 }	\
 	void SETTER_NAME(const matsu::VectorTemplate<TYPE,2> &value)	\
 {	\
-	SetPrimitiveParam<TYPE, INDEX1>(value.GetX());	\
-	SetPrimitiveParam<TYPE, INDEX2>(value.GetY());	\
+	SetPrimitiveParam<TYPE, INDEX1>(value.x());	\
+	SetPrimitiveParam<TYPE, INDEX2>(value.y());	\
 }
 
 #define KONOMI_MSG_ACCESS_VECTOR3(TYPE, GETTER_NAME, SETTER_NAME, INDEX1, INDEX2, INDEX3)	\
@@ -31,9 +31,9 @@
 }	\
 	void SETTER_NAME(const matsu::VectorTemplate<TYPE,3> &value)	\
 {	\
-	SetPrimitiveParam<TYPE, INDEX1>(value.GetX());	\
-	SetPrimitiveParam<TYPE, INDEX2>(value.GetY());	\
-	SetPrimitiveParam<TYPE, INDEX3>(value.GetZ());	\
+	SetPrimitiveParam<TYPE, INDEX1>(value.x());	\
+	SetPrimitiveParam<TYPE, INDEX2>(value.y());	\
+	SetPrimitiveParam<TYPE, INDEX3>(value.z());	\
 }
 
 #define KONOMI_MSG_ACCESS_ENUM(ENUM, GETTER_NAME, SETTER_NAME, INDEX)	\

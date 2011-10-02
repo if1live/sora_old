@@ -1,18 +1,40 @@
-﻿// Ŭnicode please
-#pragma once
-namespace runa
-{
-	template<GLenum>
-	class Shader;
+﻿/*  Copyright (C) 2011 by if1live */
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+// Ŭnicode please
+#ifndef RENDERING_RUNA_RUNA_ENUM_H_
+#define RENDERING_RUNA_RUNA_ENUM_H_
 
-	typedef Shader<GL_VERTEX_SHADER> VertexShader;
-	typedef Shader<GL_FRAGMENT_SHADER> FragmentShader;
+namespace runa {;
+template<GLenum>
+class Shader;
 
-	typedef std::tr1::shared_ptr<VertexShader> VertexShaderPtr;
-	typedef std::tr1::shared_ptr<FragmentShader> FragmentShaderPtr;
+typedef Shader<GL_VERTEX_SHADER> VertexShader;
+typedef Shader<GL_FRAGMENT_SHADER> FragmentShader;
 
-	class ShaderProgram;
-	typedef std::tr1::shared_ptr<ShaderProgram> ShaderProgramPtr;
+typedef std::tr1::shared_ptr<VertexShader> VertexShaderPtr;
+typedef std::tr1::shared_ptr<FragmentShader> FragmentShaderPtr;
 
-	class ShaderLocation;
+class ShaderProgram;
+typedef std::tr1::shared_ptr<ShaderProgram> ShaderProgramPtr;
+
+class ShaderLocation;
 }
+
+#endif  // RENDERING_RUNA_RUNA_ENUM_H_

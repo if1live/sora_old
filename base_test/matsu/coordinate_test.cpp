@@ -35,7 +35,7 @@ TEST(SphericalPoint, construct)
 	
 	p4 = SphericalPoint<float>::CreateDegreeBase(1.f, 100.f, -10.f);
 	EXPECT_EQ(1.f, p4.radius());
-	EXPECT_EQ(true, Angle<float>(350.f) == p4.pi_degree());
+  EXPECT_EQ(true, Angle<float>(350.f).GetDegree() == p4.pi_degree());
 }
 
 TEST(SphericalPoint, Create)

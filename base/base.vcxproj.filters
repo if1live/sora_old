@@ -33,9 +33,6 @@
     <ClInclude Include="sora\template_library.h">
       <Filter>sora</Filter>
     </ClInclude>
-    <ClInclude Include="sora\template_library.hpp">
-      <Filter>sora</Filter>
-    </ClInclude>
     <ClInclude Include="sora\macro.h">
       <Filter>sora</Filter>
     </ClInclude>
@@ -48,34 +45,19 @@
     <ClInclude Include="matsu\vector_template.h">
       <Filter>matsu</Filter>
     </ClInclude>
-    <ClInclude Include="matsu\vector_template.hpp">
-      <Filter>matsu</Filter>
-    </ClInclude>
     <ClInclude Include="sora\platform.h">
       <Filter>sora</Filter>
     </ClInclude>
     <ClInclude Include="matsu\matrix.h">
       <Filter>matsu</Filter>
     </ClInclude>
-    <ClInclude Include="matsu\matrix.hpp">
-      <Filter>matsu</Filter>
-    </ClInclude>
     <ClInclude Include="matsu\matrix_template.h">
-      <Filter>matsu</Filter>
-    </ClInclude>
-    <ClInclude Include="matsu\matrix_template.hpp">
       <Filter>matsu</Filter>
     </ClInclude>
     <ClInclude Include="matsu\matsu_enum.h">
       <Filter>matsu</Filter>
     </ClInclude>
-    <ClInclude Include="matsu\quaternion.hpp">
-      <Filter>matsu</Filter>
-    </ClInclude>
     <ClInclude Include="matsu\quaternion.h">
-      <Filter>matsu</Filter>
-    </ClInclude>
-    <ClInclude Include="matsu\math.hpp">
       <Filter>matsu</Filter>
     </ClInclude>
     <ClInclude Include="matsu\math.h">
@@ -84,16 +66,10 @@
     <ClInclude Include="matsu\rectangle.h">
       <Filter>matsu</Filter>
     </ClInclude>
-    <ClInclude Include="matsu\coordinate.hpp">
-      <Filter>matsu</Filter>
-    </ClInclude>
     <ClInclude Include="matsu\coordinate.h">
       <Filter>matsu</Filter>
     </ClInclude>
     <ClInclude Include="matsu\angle.h">
-      <Filter>matsu</Filter>
-    </ClInclude>
-    <ClInclude Include="matsu\angle.hpp">
       <Filter>matsu</Filter>
     </ClInclude>
     <ClInclude Include="karen\heap.h">
@@ -120,19 +96,40 @@
     <ClInclude Include="sora\tr1_include.h">
       <Filter>sora</Filter>
     </ClInclude>
+    <ClInclude Include="sora\template_library_impl.h">
+      <Filter>sora</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\angle_impl.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\coordinate_impl.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\math_impl.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\matrix_impl.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\matrix_template_impl.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\vector_template_impl.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\quaternion_impl.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sora\string_util.cpp">
-      <Filter>sora</Filter>
-    </ClCompile>
     <ClCompile Include="karen\heap.cpp">
-      <Filter>karen</Filter>
-    </ClCompile>
-    <ClCompile Include="karen\heap_alloc_header.cpp">
       <Filter>karen</Filter>
     </ClCompile>
     <ClCompile Include="karen\free_list_block_pool.cpp">
       <Filter>karen</Filter>
+    </ClCompile>
+    <ClCompile Include="sora\string_util.cc">
+      <Filter>sora</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

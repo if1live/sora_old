@@ -18,14 +18,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef BASE_KAREN_KAREN_ENUM_H_
-#define BASE_KAREN_KAREN_ENUM_H_
+#include "hayami/log_stream.h"
+#include <cstdlib>
+#include <string>
 
-namespace karen {;
-enum {
-  kAllocatedMemorySignature = 0x12345678,
-};
-class Heap;
-struct HeapAllocHeader;
+namespace hayami {;
+ConsoleLogStream::ConsoleLogStream() {
 }
-#endif  // BASE_KAREN_KAREN_ENUM_H_
+ConsoleLogStream::~ConsoleLogStream() {
+}
+void ConsoleLogStream::WriteLog(const std::string &logger_name,
+  const std::string &msg) {
+    using ::std::string;
+    printf("[%s] %s\n", logger_name.c_str(), msg.c_str());
+}
+void ConsoleLogStream::Flush() {
+  fflush(stdout);
+}
+}

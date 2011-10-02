@@ -25,7 +25,7 @@
 
 namespace hayami {;
 template<typename LogStream>
-Logger<LogStream>::Logger(const std::string &name
+Logger<LogStream>::Logger(const std::string &name)
   : name_(name), level(kLogLevelDebug) {
 }
 template<typename LogStream>

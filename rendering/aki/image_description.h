@@ -18,14 +18,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef BASE_KAREN_KAREN_ENUM_H_
-#define BASE_KAREN_KAREN_ENUM_H_
+#ifndef RENDERING_AKI_IMAGE_DESCRIPTION_H_
+#define RENDERING_AKI_IMAGE_DESCRIPTION_H_
 
-namespace karen {;
-enum {
-  kAllocatedMemorySignature = 0x12345678,
+#include "aki/aki_enum.h"
+
+namespace aki {;
+class ImageDescription {
+ public:
+  ImageDescription();
+  explicit ImageDescription(int width,
+    int height, InternalFormat internal_format, PixelType pixel_type);
+  ~ImageDescription();
+  int width() const;
+  int height() const;
+  InternalFormat internal_format() const;
+  PixelType pixel_type() const;
+
+  bool operator==(const ImageDescription &o) const;
+  bool operator!=(const ImageDescription &o) const;
+
+  int GetRowLineSize() const;
+  int GetPixelSize() const;
+
+ private:
+  int width_;
+  int height_;
+  InternalFormat internal_format_;
+  PixelType pixel_type_;
 };
-class Heap;
-struct HeapAllocHeader;
 }
-#endif  // BASE_KAREN_KAREN_ENUM_H_
+
+#endif  // RENDERING_AKI_IMAGE_DESCRIPTION_H_

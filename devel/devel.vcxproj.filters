@@ -24,7 +24,7 @@
     <ClCompile Include="hikaru\profile_sample.cpp">
       <Filter>hikaru</Filter>
     </ClCompile>
-    <ClCompile Include="hayami\log_stream.cpp">
+    <ClCompile Include="hayami\log_stream.cc">
       <Filter>hayami</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,13 +35,16 @@
     <ClInclude Include="hayami\logger.h">
       <Filter>hayami</Filter>
     </ClInclude>
-    <ClInclude Include="hayami\logger.hpp">
-      <Filter>hayami</Filter>
-    </ClInclude>
     <ClInclude Include="hayami\hayami_enum.h">
       <Filter>hayami</Filter>
     </ClInclude>
     <ClInclude Include="hayami\log_stream.h">
+      <Filter>hayami</Filter>
+    </ClInclude>
+    <ClInclude Include="hayami\hayami.h">
+      <Filter>hayami</Filter>
+    </ClInclude>
+    <ClInclude Include="hayami\logger_impl.h">
       <Filter>hayami</Filter>
     </ClInclude>
   </ItemGroup>

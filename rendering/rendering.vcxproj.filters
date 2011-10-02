@@ -33,17 +33,20 @@
     <ClCompile Include="precompile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="runa\uber_shader.cpp">
+    <ClCompile Include="runa\shader_location.cc">
       <Filter>runa</Filter>
     </ClCompile>
-    <ClCompile Include="runa\vbo.cpp">
+    <ClCompile Include="runa\shader_program.cc">
       <Filter>runa</Filter>
     </ClCompile>
-    <ClCompile Include="runa\shader_location.cpp">
+    <ClCompile Include="runa\uber_shader.cc">
       <Filter>runa</Filter>
     </ClCompile>
-    <ClCompile Include="runa\shader_program.cpp">
+    <ClCompile Include="runa\vbo.cc">
       <Filter>runa</Filter>
+    </ClCompile>
+    <ClCompile Include="aki\image_description.cpp">
+      <Filter>aki</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -80,11 +83,14 @@
     <ClInclude Include="runa\shader.h">
       <Filter>runa</Filter>
     </ClInclude>
-    <ClInclude Include="runa\shader.hpp">
-      <Filter>runa</Filter>
-    </ClInclude>
     <ClInclude Include="runa\shader_location.h">
       <Filter>runa</Filter>
+    </ClInclude>
+    <ClInclude Include="runa\shader_impl.h">
+      <Filter>runa</Filter>
+    </ClInclude>
+    <ClInclude Include="aki\image_description.h">
+      <Filter>aki</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

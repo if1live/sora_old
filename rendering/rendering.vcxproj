@@ -41,7 +41,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\third_party\glfw\include;..\third_party\soil\src;..\third_party\glew\include;..\third_party\freeglut\include;..\third_party\boost;..\base;.;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\devel;..\third_party\glfw\include;..\third_party\soil\src;..\third_party\glew\include;..\third_party\freeglut\include;..\third_party\boost;..\base;.;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -55,7 +55,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\third_party\soil\src;..\third_party\glew\include;..\third_party\freeglut\include;..\third_party\boost;..\base;.;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\devel;..\third_party\glfw\include;..\third_party\soil\src;..\third_party\glew\include;..\third_party\freeglut\include;..\third_party\boost;..\base;.;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -67,27 +67,29 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="aki\image.cpp" />
+    <ClCompile Include="aki\image_description.cpp" />
     <ClCompile Include="aki\image_loader_soil.cpp" />
     <ClCompile Include="aki\texture.cpp" />
     <ClCompile Include="precompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="runa\shader_location.cpp" />
-    <ClCompile Include="runa\shader_program.cpp" />
-    <ClCompile Include="runa\uber_shader.cpp" />
-    <ClCompile Include="runa\vbo.cpp" />
+    <ClCompile Include="runa\shader_location.cc" />
+    <ClCompile Include="runa\shader_program.cc" />
+    <ClCompile Include="runa\uber_shader.cc" />
+    <ClCompile Include="runa\vbo.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aki\aki_enum.h" />
     <ClInclude Include="aki\image.h" />
+    <ClInclude Include="aki\image_description.h" />
     <ClInclude Include="aki\image_loader_soil.h" />
     <ClInclude Include="aki\texture.h" />
     <ClInclude Include="aki\texture.hpp" />
     <ClInclude Include="precompile.h" />
     <ClInclude Include="runa\runa_enum.h" />
     <ClInclude Include="runa\shader.h" />
-    <ClInclude Include="runa\shader.hpp" />
+    <ClInclude Include="runa\shader_impl.h" />
     <ClInclude Include="runa\shader_location.h" />
     <ClInclude Include="runa\shader_program.h" />
     <ClInclude Include="runa\uber_shader.h" />

@@ -76,36 +76,35 @@
     <ClInclude Include="karen\heap_alloc_header.h" />
     <ClInclude Include="karen\karen_enum.h" />
     <ClInclude Include="matsu\angle.h" />
-    <ClInclude Include="matsu\angle.hpp" />
+    <ClInclude Include="matsu\angle_impl.h" />
     <ClInclude Include="matsu\coordinate.h" />
-    <ClInclude Include="matsu\coordinate.hpp" />
+    <ClInclude Include="matsu\coordinate_impl.h" />
     <ClInclude Include="matsu\math.h" />
-    <ClInclude Include="matsu\math.hpp" />
+    <ClInclude Include="matsu\math_impl.h" />
     <ClInclude Include="matsu\matrix.h" />
-    <ClInclude Include="matsu\matrix.hpp" />
+    <ClInclude Include="matsu\matrix_impl.h" />
     <ClInclude Include="matsu\matrix_template.h" />
-    <ClInclude Include="matsu\matrix_template.hpp" />
+    <ClInclude Include="matsu\matrix_template_impl.h" />
     <ClInclude Include="matsu\matsu_enum.h" />
     <ClInclude Include="matsu\quaternion.h" />
-    <ClInclude Include="matsu\quaternion.hpp" />
+    <ClInclude Include="matsu\quaternion_impl.h" />
     <ClInclude Include="matsu\rectangle.h" />
     <ClInclude Include="matsu\vector.h" />
     <ClInclude Include="matsu\vector_template.h" />
-    <ClInclude Include="matsu\vector_template.hpp" />
+    <ClInclude Include="matsu\vector_template_impl.h" />
     <ClInclude Include="sora\macro.h" />
     <ClInclude Include="sora\platform.h" />
     <ClInclude Include="sora\shared_object.h" />
     <ClInclude Include="sora\singleton.h" />
     <ClInclude Include="sora\string_util.h" />
     <ClInclude Include="sora\template_library.h" />
-    <ClInclude Include="sora\template_library.hpp" />
+    <ClInclude Include="sora\template_library_impl.h" />
     <ClInclude Include="sora\tr1_include.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="karen\free_list_block_pool.cpp" />
     <ClCompile Include="karen\heap.cpp" />
-    <ClCompile Include="karen\heap_alloc_header.cpp" />
-    <ClCompile Include="sora\string_util.cpp" />
+    <ClCompile Include="sora\string_util.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
