@@ -18,11 +18,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef BASE_SORA_STRING_UTIL_H_
-#define BASE_SORA_STRING_UTIL_H_
-
 #include "sora/string_util.h"
-
+#include <vector>
+#include <string>
 #include <sstream>
 
 namespace sora {;
@@ -99,4 +97,3 @@ std::string StringUtil::Join(
   return oss.str();
 }
 }
-#endif  // BASE_SORA_STRING_UTIL_H_
