@@ -1,4 +1,6 @@
 // Ŭnicode please
+#ifndef SORA_MATSU_MATSU_H_
+#define SORA_MATSU_MATSU_H_
 #pragma once
 
 //외부에서 사용할경우 이것만 인클루드해서 쓸수있도록 통쨰로 분리해놓자
@@ -28,3 +30,5 @@
 #include "sora/SRTemplateLib.h"
 #include "sora/SRSingleton.h"
 #include "matsu/MTSharedObject.h"
+
+#endif
