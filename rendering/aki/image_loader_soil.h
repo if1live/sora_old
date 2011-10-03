@@ -27,7 +27,7 @@
 namespace aki {;
 class ImageLoader_SOIL {
  public:
-  static ImagePtr load(const std::string &str);
+  static ImagePtr Load(const std::string &str);
 };
 }
 #endif  // RENDERING_AKI_IMAGE_LOADER_SOIL_H_

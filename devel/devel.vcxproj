@@ -68,12 +68,10 @@
     <ClInclude Include="hayami\logger_impl.h">
       <FileType>CppCode</FileType>
     </ClInclude>
-    <ClCompile Include="hikaru\profile_sample.cpp" />
     <ClInclude Include="hayami\log_stream.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="hayami\logger.h" />
-    <ClInclude Include="hikaru\profile_sample.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

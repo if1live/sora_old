@@ -26,12 +26,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="testmain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="precompile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="runa\shader_test.cpp">
       <Filter>runa</Filter>
     </ClCompile>
@@ -40,6 +34,12 @@
     </ClCompile>
     <ClCompile Include="aki\texture_test.cc">
       <Filter>aki</Filter>
+    </ClCompile>
+    <ClCompile Include="testmain.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="precompile.cc">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

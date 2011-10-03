@@ -68,8 +68,8 @@
     <None Include="mio\path_ios.mm" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="mio\path.cpp" />
-    <ClCompile Include="mio\path_win.cpp" />
+    <ClCompile Include="mio\path.cc" />
+    <ClCompile Include="mio\path_win.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

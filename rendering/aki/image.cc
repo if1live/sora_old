@@ -30,10 +30,10 @@
 
 
 namespace aki {;
-ImagePtr Image::create(const std::string &path) {
+ImagePtr Image::Create(const std::string &path) {
 #if SR_WIN
   // use soil
-  return ImageLoader_SOIL::load(path);
+  return ImageLoader_SOIL::Load(path);
 #elif _IPHONE_
 #error "not support"
   // use core graphic

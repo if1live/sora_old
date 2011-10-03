@@ -31,10 +31,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="mio\path_win.cpp">
+    <ClCompile Include="mio\path_win.cc">
       <Filter>mio</Filter>
     </ClCompile>
-    <ClCompile Include="mio\path.cpp">
+    <ClCompile Include="mio\path.cc">
       <Filter>mio</Filter>
     </ClCompile>
   </ItemGroup>

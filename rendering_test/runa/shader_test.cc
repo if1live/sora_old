@@ -18,36 +18,46 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode pleasep
-
 #include "precompile.h"
-#include "aki/image.h"
-#include "aki/image_description.h"
-#if SR_WIN
-#include "aki/image_loader_soil.h"
-#endif
-#include "mio/path.h"
+#include "runa/shader.h"
 
-using mio::Path;
-using aki::ImageLoader_SOIL;
-using aki::ImageDescription;
-using aki::ImagePtr;
 using std::string;
+using runa::VertexShader;
+using runa::FragmentShader;
 
-TEST(AkiImage, test) {
+TEST(VertexShader, test) {
+  VertexShader vsh;
+  EXPECT_EQ(0, vsh.handle());  // not yet created
+  EXPECT_EQ(GL_VERTEX_SHADER, vsh.Type);
+  EXPECT_EQ(GL_VERTEX_SHADER, VertexShader::Type);
+
+  // load sample shader
+  string src = ""
+               "uniform mat4 u_mvpMatrix;  "
+               "attribute vec4 a_position;  "
+               "attribute vec4 a_color;  "
+               "varying vec4 v_color;  "
+               "void main()  "
+               "{  "
+               "v_color = a_color; "
+               "gl_Position = u_mvpMatrix * a_position;"
+               "}";
+  vsh.Load(src);
+  EXPECT_EQ(true, vsh.handle() > 0);
 }
 
-TEST(AkiImageLoader_SOIL, Load) {
-  string path1 = Path::AppPath("testdata/aki/c.png");
-  ImagePtr img = ImageLoader_SOIL::Load(path1);
-  const ImageDescription &desc1 = img->desc();
-  EXPECT_EQ(aki::kInternalFormatRGBA, desc1.internal_format());
-  EXPECT_EQ(500, desc1.width());
-  EXPECT_EQ(282, desc1.height());
-
-  string path2 = Path::AppPath("testdata/aki/target.png");
-  ImagePtr img1 = ImageLoader_SOIL::Load(path2);
-  const ImageDescription &desc2 = img1->desc();
-  EXPECT_EQ(aki::kInternalFormatRGBA, desc2.internal_format());
-  EXPECT_EQ(256, desc2.width());
-  EXPECT_EQ(256, desc2.height());
+TEST(FragmentShader, test) {
+  FragmentShader fsh;
+  EXPECT_EQ(0, fsh.handle());  // not yet created
+  EXPECT_EQ(GL_FRAGMENT_SHADER, fsh.Type);
+  EXPECT_EQ(GL_FRAGMENT_SHADER, FragmentShader::Type);
+  string src = ""
+    "precision mediump float;  "
+    "varying vec4 v_color;  "
+    "void main()  "
+    "{  "
+    "gl_FragColor = v_color;  "
+    "}  ";
+  fsh.Load(src);
+  EXPECT_EQ(true, fsh.handle() > 0);
 }

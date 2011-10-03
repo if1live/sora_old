@@ -28,7 +28,7 @@
 namespace aki {;
 class Image {
  public:
-  static ImagePtr create(const std::string &path);
+  static ImagePtr Create(const std::string &path);
 
  public:
   // RGBA를 사용한 검정색 이미지 만들기

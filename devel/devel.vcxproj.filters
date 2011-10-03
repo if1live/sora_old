@@ -13,25 +13,16 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="hikaru">
-      <UniqueIdentifier>{7a2d7601-4512-45c5-b1a0-e043da3d1c7c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="hayami">
       <UniqueIdentifier>{055a5f1c-4d3f-4e09-8707-3617c4f4269d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="hikaru\profile_sample.cpp">
-      <Filter>hikaru</Filter>
-    </ClCompile>
     <ClCompile Include="hayami\log_stream.cc">
       <Filter>hayami</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="hikaru\profile_sample.h">
-      <Filter>hikaru</Filter>
-    </ClInclude>
     <ClInclude Include="hayami\logger.h">
       <Filter>hayami</Filter>
     </ClInclude>

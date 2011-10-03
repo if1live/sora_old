@@ -23,6 +23,7 @@
 #include "aki/image.h"
 #include "matsu/math.h"
 
+
 namespace aki {;
 template<unsigned int N>
 int TextureGroup<N>::next_id_ = 0;
@@ -71,8 +72,8 @@ bool TextureGroup<N>::LoadImage(int index, Image *img) {
   const ImageDescription &desc = img->desc();
   int width = desc.width();
   int height = desc.height();
-  int tex_width = matsu::ceilPower(2, width);
-  int tex_height = matsu::ceilPower(2, height);
+  int tex_width = matsu::CeilPower(2, width);
+  int tex_height = matsu::CeilPower(2, height);
 
   TextureSize size(width, height, tex_width, tex_height);
   tex_size_[index] = size;
