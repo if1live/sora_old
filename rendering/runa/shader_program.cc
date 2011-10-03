@@ -209,10 +209,10 @@ std::vector<ShaderLocation> ShaderProgram::GetAttributeLocationList() {
 void ShaderProgram::BindAttribLocation(GLuint index, const GLchar* name) const {
   glBindAttribLocation(program_, index, name); 
 }
-GLuint ShaderProgram::GetAttribLocation(const GLchar* name) const {
+GLint ShaderProgram::GetAttribLocation(const GLchar* name) const {
   return glGetAttribLocation(program_, name); 
 }
-GLuint ShaderProgram::GetUniformLocation(const GLchar* name) const { 
+GLint ShaderProgram::GetUniformLocation(const GLchar* name) const { 
   return glGetUniformLocation(program_, name); 
 }
 }

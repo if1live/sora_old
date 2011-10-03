@@ -25,9 +25,6 @@
 #include "hayami/hayami.h"
 
 namespace runa {;
-using hayami::ConsoleLogger;
-hayami::ConsoleLogger logger("Shader");
-
 template<GLenum ShaderType>
 Shader<ShaderType>::Shader()
   : handle_(0) {
@@ -51,6 +48,8 @@ bool Shader<ShaderType>::Load(const std::string &src) {
     GLchar msg[1024];
     glGetShaderInfoLog(handle_, sizeof(msg), 0, &msg[0]);
     const char *srccode = src.c_str();
+
+    hayami::ConsoleLogger logger("Shader");
     logger.Error(srccode);
     SR_ASSERT(!msg);
     return false;

@@ -23,6 +23,7 @@
 
 #include <vector>
 #include <string>
+#include <boost/noncopyable.hpp>
 #include "runa/runa_enum.h"
 
 namespace runa {;
@@ -39,8 +40,8 @@ class ShaderProgram : boost::noncopyable {
   GLuint handle() const;
 
   void BindAttribLocation(GLuint index, const GLchar* name) const;
-  GLuint GetAttribLocation(const GLchar* name) const;
-  GLuint GetUniformLocation(const GLchar* name) const;
+  GLint GetAttribLocation(const GLchar* name) const;
+  GLint GetUniformLocation(const GLchar* name) const;
 
   void Use();
   /// @brief same with use

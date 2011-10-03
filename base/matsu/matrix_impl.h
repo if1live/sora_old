@@ -35,7 +35,7 @@ MatrixTemplate<T, 4, 4> Matrix::Translate(T x, T y, T z) {
       0, 0, 1, 0,
       x, y, z, 1
   };
-  m.SetData(data);
+  m.SetMatrix(data);
   return m;
 }
 template <typename T>
@@ -51,7 +51,7 @@ MatrixTemplate<T, 4, 4> Matrix::Scale(T x, T y, T z) {
       0, 0, z, 0,
       0, 0, 0, 1
   };
-  m.SetData(data);
+  m.SetMatrix(data);
   return m;
 }
 template <typename T>
@@ -67,7 +67,7 @@ MatrixTemplate<T, 4, 4> Matrix::RotateX(T degrees) {
       0, -s, c, 0,
       0, 0, 0, 1
   };
-  m.SetData(data);
+  m.SetMatrix(data);
   return m;
 }
 template <typename T>
@@ -83,7 +83,7 @@ MatrixTemplate<T, 4, 4> Matrix::RotateY(T degrees) {
       s, 0, c, 0,
       0, 0, 0, 1,
   };
-  m.SetData(data);
+  m.SetMatrix(data);
   return m;
 }
 template <typename T>
@@ -99,7 +99,7 @@ MatrixTemplate<T, 4, 4> Matrix::RotateZ(T degrees) {
       0, 0, 1, 0,
       0, 0, 0, 1
   };
-  m.SetData(data);
+  m.SetMatrix(data);
   return m;
 }
 
@@ -112,7 +112,7 @@ MatrixTemplate<T, 4, 4> Matrix::xAxisShear(T y, T z) {
       z, 0, 1, 0,
       0, 0, 0, 1
   };
-  m.SetData(data);
+  m.SetMatrix(data);
   return m;
 }
 template<typename T>
@@ -124,7 +124,7 @@ MatrixTemplate<T, 4, 4> Matrix::yAxisShear(T x, T z) {
       0, z, 1, 0,
       0, 0, 0, 1,
   };
-  m.SetData(data);
+  m.SetMatrix(data);
   return m;
 }
 template<typename T>
@@ -136,7 +136,7 @@ MatrixTemplate<T, 4, 4> Matrix::zAxisShear(T x, T y) {
       0, 0, 1, 0,
       0, 0, 0, 1,
   };
-  m.SetData(data);
+  m.SetMatrix(data);
   return m;
 }
 
@@ -146,7 +146,7 @@ MatrixTemplate<T, 4, 4> Matrix::Ortho(T left,
   // http://www.opengl.org/sdk/docs/man/xhtml/glOrtho.xml
   T a = static_cast<T>(2) / (right - left);
   T b = static_cast<T>(2) / (top - bottom);
-  T c = static_cast<T>(-2) / (farVal - nearVal);
+  T c = static_cast<T>(2) / (farVal - nearVal); //-2, 2에 따라서 이동방향이 바뀐다
   T tx = -(right+left) / (right-left);
   T ty = -(top+bottom) / (top-bottom);
   T tz = -(farVal+nearVal) / (farVal-nearVal);
@@ -158,7 +158,7 @@ MatrixTemplate<T, 4, 4> Matrix::Ortho(T left,
       0, 0, c, 0,
       tx, ty, tz, 1
   };
-  m.SetData(data);
+  m.SetMatrix(data);
 
   return m;
 }
@@ -179,7 +179,7 @@ MatrixTemplate<T, 4, 4> Matrix::Frustum(T left,
       c, d, e, -1,
       0, 0, f, 1
   };
-  m.SetData(data);
+  m.SetMatrix(data);
   return m;
 }
 

@@ -27,4 +27,4 @@
 /third_party/freeglut
 *Debug*
 *.user
-/Release
+*Release*

@@ -13,33 +13,18 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="runa">
-      <UniqueIdentifier>{c94572c0-830f-4cf9-a473-8b829c228315}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="aki">
-      <UniqueIdentifier>{e8f457ec-1693-42c4-9866-7ba8e6a1bc7f}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="precompile.h">
+    <ClCompile Include="main.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="board.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="board.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="aki\image_test.cc">
-      <Filter>aki</Filter>
-    </ClCompile>
-    <ClCompile Include="aki\texture_test.cc">
-      <Filter>aki</Filter>
-    </ClCompile>
-    <ClCompile Include="testmain.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="precompile.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="runa\shader_test.cc">
-      <Filter>runa</Filter>
-    </ClCompile>
   </ItemGroup>
 </Project>

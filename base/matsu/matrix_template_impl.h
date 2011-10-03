@@ -211,6 +211,7 @@ MatrixTemplate<T, size, size> MatrixTemplate<T, row, col>::operator*=(
     }
   }
   memcpy(data, result.data, sizeof(T) * row * col);
+  return result;
 }
 template<typename T, int row, int col>
 template<int col2>
