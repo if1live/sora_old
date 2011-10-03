@@ -84,10 +84,10 @@ void Board::DrawTile(int x, int y, const matsu::vec4 &color) const {
     (float)win_width_, 0.0f, (float)win_height_, 0.1f, 10.0f);
   projection *= matsu::Matrix::Translate<float>(0, 0, 1);
   projection *= matsu::Matrix::Scale<float>(tile_size_, tile_size_, 1);
-  glUniformMatrix4fv(mvp_location, 16, GL_FALSE, projection.Pointer());
+  glUniformMatrix4fv(mvp_location, 1, GL_FALSE, projection.Pointer());
 
   //색 설정
-  glUniform4fv(color_location, 4, color.Pointer());
+  glUniform4fv(color_location, 1, color.Pointer());
 
   //3 2
   //0 1
@@ -119,7 +119,7 @@ void Board::DrawGrid() const {
 
   //set color
   matsu::vec4 gray(0.5, 0.5, 0.5, 1.0);
-  glUniform4fv(color_location, 4, gray.Pointer());
+  glUniform4fv(color_location, 1, gray.Pointer());
 
   // apply projection
   matsu::mat4 projection;
@@ -127,7 +127,7 @@ void Board::DrawGrid() const {
     (float)win_width_, 0.0f, (float)win_height_, 0.1f, 10.0f);
   projection *= matsu::Matrix::Translate<float>(0, 0, 1);
   projection *= matsu::Matrix::Scale<float>(tile_size_, tile_size_, 1);
-  glUniformMatrix4fv(mvp_location, 16, GL_FALSE, projection.Pointer());
+  glUniformMatrix4fv(mvp_location, 1, GL_FALSE, projection.Pointer());
 
   // 세로줄 
   vector<matsu::vec2> grid_line_;
