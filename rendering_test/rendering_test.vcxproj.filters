@@ -16,6 +16,9 @@
     <Filter Include="runa">
       <UniqueIdentifier>{c94572c0-830f-4cf9-a473-8b829c228315}</UniqueIdentifier>
     </Filter>
+    <Filter Include="aki">
+      <UniqueIdentifier>{e8f457ec-1693-42c4-9866-7ba8e6a1bc7f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="precompile.h">
@@ -31,6 +34,12 @@
     </ClCompile>
     <ClCompile Include="runa\shader_test.cpp">
       <Filter>runa</Filter>
+    </ClCompile>
+    <ClCompile Include="aki\image_test.cc">
+      <Filter>aki</Filter>
+    </ClCompile>
+    <ClCompile Include="aki\texture_test.cc">
+      <Filter>aki</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

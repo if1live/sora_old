@@ -21,9 +21,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="aki\texture.cpp">
-      <Filter>aki</Filter>
-    </ClCompile>
     <ClCompile Include="precompile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -46,6 +43,9 @@
       <Filter>aki</Filter>
     </ClCompile>
     <ClCompile Include="aki\image.cc">
+      <Filter>aki</Filter>
+    </ClCompile>
+    <ClCompile Include="aki\texture.cc">
       <Filter>aki</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,13 +1,10 @@
-#include "../SoraTestStdAfx.h"
-#include "aki/AkiImage.h"
+#include "precompile.h"
+#include "aki/image.h"
 #if _WIN_
-#include "aki/AkiImageLoader_SOIL.h"
+#include "aki/image_loader_soil.h"
 #endif
 #include "mio/MioPath.h"
 
-using namespace aki;
-using namespace std;
-using namespace mio;
 
 TEST(AkiImage, test)
 {

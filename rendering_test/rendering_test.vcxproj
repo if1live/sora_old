@@ -81,6 +81,8 @@
     <ClInclude Include="precompile.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="aki\image_test.cc" />
+    <ClCompile Include="aki\texture_test.cc" />
     <ClCompile Include="precompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

@@ -16,5 +16,26 @@
     <Filter Include="chizuru">
       <UniqueIdentifier>{21cb35ed-f68b-4a15-bd48-2d17a6a80b85}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mio">
+      <UniqueIdentifier>{8c38c41d-6ee5-4e1f-85e3-d098e1ab9b09}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="mio\path.h">
+      <Filter>mio</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mio\path_ios.mm">
+      <Filter>mio</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="mio\path_win.cpp">
+      <Filter>mio</Filter>
+    </ClCompile>
+    <ClCompile Include="mio\path.cpp">
+      <Filter>mio</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
