@@ -33,8 +33,6 @@
 #include "board.h"
 
 const int kTileSize = 16;
-const int kWinWidth = 480;
-const int kWinHeight = 320;
 const float kMoveDelay = 0.2f;
 
 void Update(float dt);
@@ -60,7 +58,9 @@ auto_ptr<Player> player;
 
 int main() {
   Window &win = Window::GetInstance();
-  win.Initialize(kWinWidth, kWinHeight);
+  const int width = 480;
+  const int height = 320;
+  win.Initialize(width, height);
 
   Init();
 
@@ -90,7 +90,8 @@ int main() {
 }
 
 void Init() {
-  board.reset(new Board(kWinWidth, kWinHeight, kTileSize));
+  Window &win = Window::GetInstance();
+  board.reset(new Board(win.get_width(), win.get_height(), kTileSize));
   player.reset(new Player(board->GetBoardWidth() / 2, 
     board->GetBoardHeight() /2, matsu::kDirection2Left));
 

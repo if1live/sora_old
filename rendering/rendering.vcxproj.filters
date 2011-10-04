@@ -54,7 +54,7 @@
     <ClCompile Include="runa\window_glfw.cc">
       <Filter>runa</Filter>
     </ClCompile>
-    <ClCompile Include="runa\basic_color_shader.cpp">
+    <ClCompile Include="runa\basic_color_shader.cc">
       <Filter>runa</Filter>
     </ClCompile>
   </ItemGroup>
