@@ -23,11 +23,12 @@
 #include <algorithm>
 #include <GL/glew.h>
 #include "runa/shader_program.h"
+#include "runa/basic_color_shader.h"
 #include "matsu/matrix.h"
 
 using std::list;
 using std::vector;
-using runa::ShaderProgram;
+using runa::BasicColorShader;
 using std::string;
 using matsu::ivec2;
 using matsu::vec2;
@@ -45,38 +46,19 @@ win_width_(win_width),
 win_height_(win_height),
 apple_position_(-1, -1) {
   // create board draw shader
-  string vertex_src = "uniform mat4 u_mvp;  "
-    "attribute vec4 a_position;  "
-    "uniform vec4 u_color;  "
-    "varying vec4 v_color;  "
-    "void main()  "
-    "{  "
-    "v_color = u_color; "
-    "gl_Position = u_mvp * a_position;"
-    "}";
-
-  string fragment_src = ""
-    "precision mediump float;  "
-    "varying vec4 v_color;  "
-    "void main()  "
-    "{  "
-    "gl_FragColor = v_color;  "
-    "}  ";
-  shader_program_.reset(new ShaderProgram(vertex_src, fragment_src));
+  BasicColorShader::GetInstance().Initialize();
 }
 Board::~Board() {
 }
 void Board::Draw() const {
 }
 void Board::DrawTile(int x, int y, const matsu::vec4 &color) const {
-  GLint position_location = shader_program_->GetAttribLocation("a_position");
-  SR_ASSERT(position_location != -1);
-  GLint color_location = shader_program_->GetUniformLocation("u_color");
-  SR_ASSERT(color_location != -1);
-  GLint mvp_location = shader_program_->GetUniformLocation("u_mvp");
-  SR_ASSERT(mvp_location != -1);
+  BasicColorShader &shader = BasicColorShader::GetInstance();
+  GLint position_location = shader.get_position_location();
+  GLint color_location = shader.get_color_location();
+  GLint mvp_location = shader.get_mvp_location();
   
-  shader_program_->Use();
+  shader.Use();
 
   // apply projection
   matsu::mat4 projection;
@@ -108,14 +90,12 @@ void Board::DrawTile(int x, int y, const matsu::vec4 &color) const {
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, index);
 }
 void Board::DrawGrid() const {
-  GLint position_location = shader_program_->GetAttribLocation("a_position");
-  SR_ASSERT(position_location != -1);
-  GLint color_location = shader_program_->GetUniformLocation("u_color");
-  SR_ASSERT(color_location != -1);
-  GLint mvp_location = shader_program_->GetUniformLocation("u_mvp");
-  SR_ASSERT(mvp_location != -1);
-
-  shader_program_->Use();
+  BasicColorShader &shader = BasicColorShader::GetInstance();
+  GLint position_location = shader.get_position_location();
+  GLint color_location = shader.get_color_location();
+  GLint mvp_location = shader.get_mvp_location();
+  
+  shader.Use();
 
   //set color
   matsu::vec4 gray(0.5, 0.5, 0.5, 1.0);

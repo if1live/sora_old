@@ -31,7 +31,6 @@
 #include <GL/glew.h>
 #include <GL/glfw.h>
 #endif
-#include "runa/runa_enum.h"
 
 namespace nadeko {;
 
@@ -62,7 +61,6 @@ private:
   int tile_size_;
   int win_width_;
   int win_height_;
-  std::auto_ptr<runa::ShaderProgram> shader_program_;
   matsu::ivec2 apple_position_;
 };
 
