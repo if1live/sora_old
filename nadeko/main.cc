@@ -29,7 +29,7 @@
 
 #include "runa/shader.h"
 #include "runa/shader_program.h"
-
+#include "runa/window.h"
 #include "board.h"
 
 const int kTileSize = 16;
@@ -46,6 +46,7 @@ using matsu::vec4;
 using std::string;
 using std::auto_ptr;
 using runa::ShaderProgram;
+using runa::Window;
 using nadeko::Board;
 using nadeko::Player;
 
@@ -58,22 +59,13 @@ auto_ptr<Board> board;
 auto_ptr<Player> player;
 
 int main() {
-  int running = GL_TRUE;
-  // Initialize GLFW
-  if (!glfwInit()) {
-    exit(EXIT_FAILURE);
-  }
-  // Open an OpenGL window
-  if (!glfwOpenWindow(kWinWidth, kWinHeight, 0, 0, 0, 0, 0, 0, GLFW_WINDOW)) {
-    glfwTerminate();
-    exit(EXIT_FAILURE);
-  }
-
-  //use glew
-  glewInit();
+  Window &win = Window::GetInstance();
+  win.Initialize(kWinWidth, kWinHeight);
 
   Init();
+
   // Main loop
+  int running = GL_TRUE;
   while (running) {
     static double prev_time = glfwGetTime();
     double curr_time = glfwGetTime();
@@ -89,8 +81,10 @@ int main() {
 
     prev_time = curr_time;
   }
+
   // Close window and terminate GLFW
-  glfwTerminate();
+  win.Deinitialize();
+  
   // Exit program
   exit(EXIT_SUCCESS);
 }

@@ -18,17 +18,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef RENDERING_RUNA_GL_TOOL_H_
-#define RENDERING_RUNA_GL_TOOL_H_
+#ifndef RENDERING_RUNA_WINDOW_H_
+#define RENDERING_RUNA_WINDOW_H_
 
-#include <string>
-#include "runa/runa_enum.h"
-
+#include "sora/singleton.h"
 namespace runa {;
-class GLTool {
+class Window : public sora::Singleton<Window> {
  public:
-  static bool CheckError(const std::string &title);
+  Window();
+  ~Window();
+
+  void Initialize(int w, int h);
+  void Deinitialize();
+  int get_width() const;
+  int get_height() const;
+
+ private:
+   int width_;
+   int height_;
 };
 }
 
-#endif  // RENDERING_RUNA_GL_TOOL_H_
+#endif  // RENDERING_RUNA_WINDOW_H_

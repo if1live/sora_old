@@ -51,6 +51,9 @@
     <ClCompile Include="runa\gl_tool.cc">
       <Filter>runa</Filter>
     </ClCompile>
+    <ClCompile Include="runa\window_glfw.cc">
+      <Filter>runa</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aki\image_loader_soil.h">
@@ -96,6 +99,9 @@
       <Filter>aki</Filter>
     </ClInclude>
     <ClInclude Include="runa\gl_tool.h">
+      <Filter>runa</Filter>
+    </ClInclude>
+    <ClInclude Include="runa\window.h">
       <Filter>runa</Filter>
     </ClInclude>
   </ItemGroup>

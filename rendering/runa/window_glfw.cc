@@ -18,17 +18,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef RENDERING_RUNA_GL_TOOL_H_
-#define RENDERING_RUNA_GL_TOOL_H_
-
-#include <string>
-#include "runa/runa_enum.h"
+#include "precompile.h"
+#if SR_WIN
+#include "runa/window.h"
 
 namespace runa {;
-class GLTool {
- public:
-  static bool CheckError(const std::string &title);
-};
+Window::Window() 
+: width_(480), height_(320) {
+}
+Window::~Window() {
+}
+void Window::Initialize(int w, int h) {
+  width_ = w;
+  height_ = h;
+
+  // Initialize GLFW
+  if (!glfwInit()) {
+    exit(EXIT_FAILURE);
+  }
+  // Open an OpenGL window
+  if (!glfwOpenWindow(w, h, 0, 0, 0, 0, 0, 0, GLFW_WINDOW)) {
+    glfwTerminate();
+    exit(EXIT_FAILURE);
+  }
+
+  //use glew
+  glewInit();
+}
+void Window::Deinitialize() {
+  // Close window and terminate GLFW
+  glfwTerminate();
+}
+int Window::get_width() const {
+  return width_;
+}
+int Window::get_height() const {
+  return height_;
+}
 }
 
-#endif  // RENDERING_RUNA_GL_TOOL_H_
+#endif
