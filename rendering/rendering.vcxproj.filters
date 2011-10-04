@@ -48,6 +48,9 @@
     <ClCompile Include="aki\texture.cc">
       <Filter>aki</Filter>
     </ClCompile>
+    <ClCompile Include="runa\gl_tool.cc">
+      <Filter>runa</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aki\image_loader_soil.h">
@@ -91,6 +94,9 @@
     </ClInclude>
     <ClInclude Include="aki\texture_impl.h">
       <Filter>aki</Filter>
+    </ClInclude>
+    <ClInclude Include="runa\gl_tool.h">
+      <Filter>runa</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
