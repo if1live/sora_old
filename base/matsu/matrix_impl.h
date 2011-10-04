@@ -146,7 +146,7 @@ MatrixTemplate<T, 4, 4> Matrix::Ortho(T left,
   // http://www.opengl.org/sdk/docs/man/xhtml/glOrtho.xml
   T a = static_cast<T>(2) / (right - left);
   T b = static_cast<T>(2) / (top - bottom);
-  T c = static_cast<T>(2) / (farVal - nearVal); //-2, 2에 따라서 이동방향이 바뀐다
+  T c = static_cast<T>(-2) / (farVal - nearVal); //-2, 2에 따라서 이동방향이 바뀐다
   T tx = -(right+left) / (right-left);
   T ty = -(top+bottom) / (top-bottom);
   T tz = -(farVal+nearVal) / (farVal-nearVal);

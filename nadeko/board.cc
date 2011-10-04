@@ -109,7 +109,7 @@ void Board::DrawColorTile(int x, int y, const matsu::vec4 &color) const {
   matsu::mat4 projection;
   projection = matsu::Matrix::Ortho<float>(0.0f, 
     (float)win_width_, 0.0f, (float)win_height_, 0.1f, 10.0f);
-  projection *= matsu::Matrix::Translate<float>(0, 0, 1);
+  projection *= matsu::Matrix::Translate<float>(0, 0, -1);
   projection *= matsu::Matrix::Scale<float>(tile_size_, tile_size_, 1);
   glUniformMatrix4fv(mvp_location, 1, GL_FALSE, projection.Pointer());
 
@@ -152,7 +152,7 @@ void Board::DrawTextureTile(int x, int y, const matsu::vec4 &color) const {
   matsu::mat4 projection;
   projection = matsu::Matrix::Ortho<float>(0.0f, 
     (float)win_width_, 0.0f, (float)win_height_, 0.1f, 10.0f);
-  projection *= matsu::Matrix::Translate<float>(0, 0, 1);
+  projection *= matsu::Matrix::Translate<float>(0, 0, -1);
   projection *= matsu::Matrix::Scale<float>(tile_size_, tile_size_, 1);
   glUniformMatrix4fv(mvp_location, 1, GL_FALSE, projection.Pointer());
 
@@ -206,7 +206,7 @@ void Board::DrawGrid() const {
   matsu::mat4 projection;
   projection = matsu::Matrix::Ortho<float>(0.0f, 
     (float)win_width_, 0.0f, (float)win_height_, 0.1f, 10.0f);
-  projection *= matsu::Matrix::Translate<float>(0, 0, 1);
+  projection *= matsu::Matrix::Translate<float>(0, 0, -1);
   projection *= matsu::Matrix::Scale<float>(tile_size_, tile_size_, 1);
   glUniformMatrix4fv(mvp_location, 1, GL_FALSE, projection.Pointer());
 
@@ -274,6 +274,58 @@ void Board::DrawApple() const {
   vec4 color(0, 0, 1, 1);
   const ivec2 &pos = get_apple_position();
   DrawColorTile(pos.x(), pos.y(), color);
+}
+void Board::DrawBackground() const {
+  GLint position_location = shader_prog->GetAttribLocation("a_position");
+  GLint texcoord_location = shader_prog->GetAttribLocation("a_texcoord");
+  GLint color_location = shader_prog->GetUniformLocation("u_color");
+  GLint mvp_location = shader_prog->GetUniformLocation("u_mvp");
+  SR_ASSERT(position_location != -1);
+  SR_ASSERT(texcoord_location != -1);
+  SR_ASSERT(color_location != -1);
+  SR_ASSERT(mvp_location != -1);
+
+  glEnable(GL_TEXTURE_2D);
+  shader_prog->Use();
+
+  // apply projection
+  matsu::mat4 projection;
+  projection = matsu::Matrix::Ortho<float>(0, 1, 0, 1, 0.1f, 10.0f);
+  projection *= matsu::Matrix::Translate<float>(0, 0, -1);
+  glUniformMatrix4fv(mvp_location, 1, GL_FALSE, projection.Pointer());
+
+  //색 설정
+  vec4 color(0.2, 0.2, 0.2, 0.2);
+  glUniform4fv(color_location, 1, color.Pointer());
+
+  //3 2
+  //0 1
+  int vertex[] = {
+    0, 0,
+    1, 0,
+    1, 1,
+    0, 1,
+  };
+  glVertexAttribPointer(position_location, 2, GL_INT, GL_FALSE, 0, vertex);
+  glEnableVertexAttribArray(position_location);
+
+  //텍스쳐 설정
+  float texcoord[] = {
+    0, 1,
+    1, 1,
+    1, 0,
+    0, 0
+  };
+  glVertexAttribPointer(texcoord_location, 2, GL_FLOAT, GL_FALSE, 0, texcoord);
+  glEnableVertexAttribArray(texcoord_location);
+
+  //index써서 그리기
+  unsigned char index[] = {
+    0, 1, 2,
+    0, 2, 3,
+  };
+  glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, index);
+  glDisable(GL_TEXTURE_2D);
 }
 //////////////////////////////////////
 

@@ -62,6 +62,7 @@ using mio::Path;
 
 auto_ptr<Board> board;
 auto_ptr<Player> player;
+bool show_bg = false;
 
 int main() {
   // load sample texture
@@ -124,6 +125,12 @@ void Update(float dt) {
     player->SetNextDirection(kDirection2Down);
   }
 
+  if (glfwGetKey('B') == GLFW_PRESS) {
+    show_bg = true;
+  } else {
+    show_bg = false;
+  }
+
   const float move_delay = kMoveDelay;
   static float remain_time = move_delay;
   remain_time -= dt;
@@ -135,6 +142,9 @@ void Update(float dt) {
 void Draw() {
   glClear(GL_COLOR_BUFFER_BIT);
 
+  if (show_bg == true) {
+    board->DrawBackground();
+  }
   player->Draw(*board);
 
   board->DrawApple();
