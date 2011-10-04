@@ -83,6 +83,8 @@ bool TextureGroup<N>::LoadImage(int index, Image *img) {
   glBindTexture(GL_TEXTURE_2D, handle_[index]);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
   // load image
   // 텍스쳐 크기 보정때문에 여기부터는 약간 달라진다

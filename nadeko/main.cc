@@ -129,7 +129,7 @@ void Update(float dt) {
   remain_time -= dt;
   if(remain_time < 0) {
     remain_time = move_delay;
-    //player->Move(board.get());
+    player->Move(board.get());
   }
 }
 void Draw() {

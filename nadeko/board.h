@@ -45,7 +45,8 @@ public:
   ~Board();
 
   void Draw() const;
-  void DrawTile(int x, int y, const matsu::vec4 &color) const;
+  void DrawColorTile(int x, int y, const matsu::vec4 &color) const;
+  void DrawTextureTile(int x, int y, const matsu::vec4 &color) const;
   void DrawGrid() const;
   void DrawApple() const;
   

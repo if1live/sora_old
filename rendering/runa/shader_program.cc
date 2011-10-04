@@ -22,10 +22,12 @@
 #include "runa/shader_program.h"
 #include "runa/shader.h"
 #include "runa/shader_location.h"
+#include "hayami/hayami.h"
 
 using std::vector;
 using std::string;
 using std::auto_ptr;
+using hayami::ConsoleLogger;
 
 namespace runa {;
 ShaderProgram *ShaderProgram::last_used_prog_ = NULL;
@@ -123,10 +125,10 @@ bool ShaderProgram::Validate() {
   if (logLength > 0) {
     GLchar *log = static_cast<GLchar *>(malloc(logLength));
     glGetProgramInfoLog(program_, logLength, &logLength, log);
-
-    // MT_LOG("Program Validate log: %s", log);
+    ConsoleLogger logger(std::string("ShaderProgram"));
+    logger.Warning(log);
     free(log);
-    SR_ASSERT(false);
+    //SR_ASSERT(false);
   }
 
   glGetProgramiv(program_, GL_VALIDATE_STATUS, &status);
@@ -144,7 +146,8 @@ bool ShaderProgram::Link() {
   if (status == GL_FALSE) {
     GLchar msg[256];
     glGetProgramInfoLog(program_, sizeof(msg), 0, &msg[0]);
-    // MT_LINE_LOG(msg);
+    ConsoleLogger logger(std::string("ShaderProgram"));
+    logger.Error(msg);
     return false;
   }
   return true;
