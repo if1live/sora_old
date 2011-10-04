@@ -34,6 +34,7 @@ class Image {
   // RGBA를 사용한 검정색 이미지 만들기
   // 이미지가 텍스쳐 생성하기위한 크기가 아닐때 사용한다
   Image(int width, int height);
+  Image(int w, int h, InternalFormat format, PixelType pixel_type);
   Image(const ImageDescription &desc, void *data);
   ~Image();
   const ImageDescription &desc() const;

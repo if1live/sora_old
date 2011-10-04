@@ -22,7 +22,7 @@
 #define RENDERING_AKI_TEXTURE_IMPL_H_
 #include "aki/image.h"
 #include "matsu/math.h"
-
+#include <boost/static_assert.hpp>
 
 namespace aki {;
 template<unsigned int N>

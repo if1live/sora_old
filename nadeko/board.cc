@@ -25,7 +25,14 @@
 #include "runa/shader_program.h"
 #include "runa/basic_color_shader.h"
 #include "matsu/matrix.h"
+#include "mio/path.h"
+#include "aki/image.h"
+#include "aki/texture.h"
+#include "aki/image_loader.h"
 
+using aki::TexturePtr;
+using aki::ImagePtr;
+using mio::Path;
 using std::list;
 using std::vector;
 using runa::BasicColorShader;
@@ -38,7 +45,6 @@ using matsu::kDirection2Up;
 using matsu::kDirection2Left;
 using matsu::kDirection2Right;
 
-
 namespace nadeko {;
 Board::Board(int win_width, int win_height, int tile_size) 
 : tile_size_(tile_size),
@@ -47,6 +53,13 @@ win_height_(win_height),
 apple_position_(-1, -1) {
   // create board draw shader
   BasicColorShader::GetInstance().Initialize();
+
+  // reload texture
+  string bg_file = "testdata/nadeko/nadeko_01.jpg";
+  bg_file = Path::AppPath(bg_file);
+  aki::ImagePtr img = aki::ImageLoader::Load(bg_file);
+  texture_.reset(new aki::Texture());
+  texture_->LoadImage(img.get());
 }
 Board::~Board() {
 }

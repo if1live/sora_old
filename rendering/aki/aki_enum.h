@@ -30,11 +30,11 @@ typedef std::tr1::shared_ptr<Image> ImagePtr;
 // 포맷으로만 내부에서 처리해도 충분하다
 // opengl과 동일한 enum을 씀으로써 직통변환을 가능하게함
 typedef enum {
-  kInternalFormatRGBA = GL_RGBA,
-  kInternalFormatRGB = GL_RGB,
-  kInternalFormatLuminanceAlpha = GL_LUMINANCE_ALPHA,
-  kInternalFormatLuminance = GL_LUMINANCE,
   kInternalFormatAlpha = GL_ALPHA,
+  kInternalFormatLuminance = GL_LUMINANCE,
+  kInternalFormatLuminanceAlpha = GL_LUMINANCE_ALPHA,
+  kInternalFormatRGB = GL_RGB,
+  kInternalFormatRGBA = GL_RGBA,
 } InternalFormat;
 
 // opengl과 같은 포맷을 써서 직동변환을 허용

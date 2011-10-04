@@ -20,7 +20,7 @@
 // Ŭnicode please
 #include "precompile.h"
 #if SR_WIN
-#include "aki/image_loader_soil.h"
+#include "aki/image_loader.h"
 #include "aki/image.h"
 
 // 이미지 불러오는 기능을 윈도우에서는 SOIL로
@@ -28,7 +28,7 @@
 #include <SOIL.h>
 
 namespace aki {;
-ImagePtr ImageLoader_SOIL::Load(const std::string &path) {
+ImagePtr ImageLoader::Load(const std::string &path) {
   SR_ASSERT(path.length() > 0);
   int width, height, channels;
   unsigned char *data = SOIL_load_image(

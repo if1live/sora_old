@@ -20,3 +20,4 @@
 //boost
 #include <boost/utility.hpp>
 #include <boost/foreach.hpp>
+#include <boost/static_assert.hpp>

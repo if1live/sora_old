@@ -22,22 +22,11 @@
 #include "aki/image.h"
 #include <string>
 #include "aki/image_description.h"
-#if SR_WIN
-#include "aki/image_loader_soil.h"
-#elif
-#error "not support"
-#endif
-
+#include "aki/image_loader.h"
 
 namespace aki {;
 ImagePtr Image::Create(const std::string &path) {
-#if SR_WIN
-  // use soil
-  return ImageLoader_SOIL::Load(path);
-#elif _IPHONE_
-#error "not support"
-  // use core graphic
-#endif
+  return ImageLoader::Load(path);
 }
 Image::Image(const ImageDescription &desc, void *data)
   : desc_(desc), data_(data) {
@@ -47,6 +36,21 @@ Image::Image(int width, int height)
   desc_ = ImageDescription(width, height, kInternalFormatRGBA, kPixelType8888);
   data_ = malloc(sizeof(unsigned char) * 4 * width * height);
   memset(data_, 0, sizeof(unsigned char) * 4 * width * height);
+}
+Image::Image(int w, int h, InternalFormat format, PixelType pixel_type)
+: data_(NULL), desc_(w, h, format, pixel_type) {
+  int size = -1;
+  if (pixel_type == kPixelType8888) {
+    size = sizeof(unsigned char) * 4 * w * h;
+  } else if (pixel_type == kPixelType4444) {
+    size = sizeof(unsigned char) * 2 * w * h;
+  } else if (pixel_type == kPixelType5551) {
+    size = sizeof(unsigned char) * 2 * w * h;
+  } else if (pixel_type == kPixelType565) {
+    size = sizeof(unsigned char) * 2 * w * h;
+  }
+  data_ = malloc(size);
+  memset(data_, 0, size);
 }
 Image::~Image() {
   free(data_);

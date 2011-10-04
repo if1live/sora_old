@@ -32,6 +32,8 @@
 #include <GL/glfw.h>
 #endif
 
+#include "aki/aki_enum.h"
+
 namespace nadeko {;
 
 class Board;
@@ -62,6 +64,7 @@ private:
   int win_width_;
   int win_height_;
   matsu::ivec2 apple_position_;
+  aki::TexturePtr texture_;
 };
 
 class Player {

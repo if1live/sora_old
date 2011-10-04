@@ -18,16 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef RENDERING_AKI_IMAGE_LOADER_SOIL_H_
-#define RENDERING_AKI_IMAGE_LOADER_SOIL_H_
+#ifndef RENDERING_AKI_IMAGE_LOADER_H_
+#define RENDERING_AKI_IMAGE_LOADER_H_
 
 #include <string>
 #include "aki/aki_enum.h"
 
 namespace aki {;
-class ImageLoader_SOIL {
+class ImageLoader {
  public:
   static ImagePtr Load(const std::string &str);
 };
 }
-#endif  // RENDERING_AKI_IMAGE_LOADER_SOIL_H_
+#endif  // RENDERING_AKI_IMAGE_LOADER_H_

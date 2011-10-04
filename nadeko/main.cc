@@ -30,6 +30,12 @@
 #include "runa/shader.h"
 #include "runa/shader_program.h"
 #include "runa/window.h"
+
+#include "mio/path.h"
+
+#include "aki/image.h"
+#include "aki/image_loader.h"
+
 #include "board.h"
 
 const int kTileSize = 16;
@@ -52,14 +58,22 @@ using matsu::kDirection2Down;
 using matsu::kDirection2Up;
 using matsu::kDirection2Left;
 using matsu::kDirection2Right;
+using mio::Path;
 
 auto_ptr<Board> board;
 auto_ptr<Player> player;
 
 int main() {
+  // load sample texture
+  string bg_file = "testdata/nadeko/nadeko_01.jpg";
+  bg_file = Path::AppPath(bg_file);
+  aki::ImagePtr img = aki::ImageLoader::Load(bg_file);
+  const int width = img->desc().width();
+  const int height = img->desc().height();
+
+  // const int width = 480;
+  // const int height = 320;
   Window &win = Window::GetInstance();
-  const int width = 480;
-  const int height = 320;
   win.Initialize(width, height);
 
   Init();
@@ -115,7 +129,7 @@ void Update(float dt) {
   remain_time -= dt;
   if(remain_time < 0) {
     remain_time = move_delay;
-    player->Move(board.get());
+    //player->Move(board.get());
   }
 }
 void Draw() {
