@@ -71,10 +71,17 @@ void BasicTextureShader::Initialize() {
   SR_ASSERT(texcoord_location_ != -1);
   SR_ASSERT(mvp_location_ != -1);
 }
-const runa::ShaderProgram &BasicTextureShader::get_program() const {
+bool BasicTextureShader::IsInitialized() const {
+  if(program_.get() == NULL) {
+    return false;
+  } else {
+    return true;
+  }
+}
+const runa::ShaderProgram &BasicTextureShader::program() const {
   return *program_;
 }
-runa::ShaderProgram &BasicTextureShader::get_program() {
+runa::ShaderProgram &BasicTextureShader::program() {
   return *program_;
 }
 
@@ -89,10 +96,10 @@ void BasicTextureShader::SetMatrix(const float *m) {
   glUniformMatrix4fv(mvp_location_, 1, GL_FALSE, m);
 }
 
-int BasicTextureShader::get_position_location() const {
+int BasicTextureShader::position_location() const {
   return position_location_;
 }
-int BasicTextureShader::get_texcoord_location() const {
+int BasicTextureShader::texcoord_location() const {
   return texcoord_location_;
 }
 void BasicTextureShader::Use() {

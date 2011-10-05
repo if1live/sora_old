@@ -18,62 +18,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef NADEKO_BOARD_H_
-#define NADEKO_BOARD_H_
+#ifndef NADEKO_BOARD_VIEW_H_
+#define NADEKO_BOARD_VIEW_H_
 
-#include <list>
+//opengl
+#include "sora/platform.h"
+#include "sora/tr1_include.h"
+#if SR_WIN
+#include <GL/glew.h>
+#include <GL/glfw.h>
+#endif
+#include "aki/aki_enum.h"
 #include "matsu/vector.h"
-#include "matsu/matsu_enum.h"
+#include "runa/runa_enum.h"
 
 namespace nadeko {;
-
-class Board;
 class Player;
 
-class Board {
-public:
-  Board(int win_size, int win_height, int tile_size);
-  ~Board();
-  
-  int GetBoardWidth() const;
-  int GetBoardHeight() const;
+class BoardView {
+ public:
+  BoardView(int win_width, int win_height, int tile_size);
+  ~BoardView();
 
-  // 판을 나갔는가?
-  bool IsOverBoard(int x, int y) const;
-
-  // 사과의 위치
-  const matsu::ivec2 &apple_position() const;
-  void CreateApple(const Player &player);
-
-private:
+  void DrawBackground() const;
+  void DrawGrid() const;
+  void DrawColorTile(int x, int y, const matsu::vec4 &color) const;
+  void DrawBodyTile(int x, int y, const matsu::vec4 &color) const;
+  void DrawApple(int x, int y) const;
+  void DrawPlayer(const Player &player) const;
+ private:
   int tile_size_;
   int win_width_;
   int win_height_;
-  matsu::ivec2 apple_position_;
-};
+  aki::TexturePtr texture_;
 
-class Player {
-public:
-  typedef std::list<matsu::ivec2> PositionListType;
-  typedef PositionListType::const_iterator ConstIterator;
-  typedef PositionListType::iterator Iterator;
-
-public:
-  Player(int x, int y, matsu::Direction2 dir);
-  ~Player();
-  void Push(const matsu::ivec2 &pos);
-  void SetNextDirection(matsu::Direction2 direction);
-  const matsu::ivec2 &GetHead() const;
-  void Move(Board *board);
-
-  ConstIterator Begin() const;
-  ConstIterator End() const;
-
-private:
-  std::list<matsu::ivec2> pos_list_;
-  int length_;
-  matsu::Direction2 direction_;
-  matsu::Direction2 next_direction_;
+  //몸통을 그릴때 사용하는 쉐이더
+  std::auto_ptr<runa::ShaderProgram> body_shader_prog;
 };
 }
-#endif  // NADEKO_BOARD_H_
+
+#endif  // NADEKO_BOARD_VIEW_H_

@@ -25,6 +25,7 @@
 
 #include "runa/runa_enum.h"
 #include "sora/singleton.h"
+#include <boost/noncopyable.hpp>
 
 namespace runa {;
 class BasicColorShader : public sora::Singleton<BasicColorShader>,
@@ -34,15 +35,16 @@ class BasicColorShader : public sora::Singleton<BasicColorShader>,
   ~BasicColorShader();
 
   void Initialize();
-  const runa::ShaderProgram &get_program() const;
-  runa::ShaderProgram &get_program();
+  bool IsInitialized() const;
+  const runa::ShaderProgram &program() const;
+  runa::ShaderProgram &program();
 
   void SetColor4fv(const float *ptr);
   void SetMatrix(const float *m);
 
-  int get_position_location() const;
-  int get_color_location() const;
-  int get_mvp_location() const;
+  int position_location() const;
+  int color_location() const;
+  int mvp_location() const;
   void Use();
  private:
   std::auto_ptr<runa::ShaderProgram> program_;

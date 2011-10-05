@@ -21,9 +21,15 @@
     <ClCompile Include="board.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="board_view.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="board_view.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

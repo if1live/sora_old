@@ -30,8 +30,8 @@ class Window : public sora::Singleton<Window> {
 
   void Initialize(int w, int h);
   void Deinitialize();
-  int get_width() const;
-  int get_height() const;
+  int width() const;
+  int height() const;
 
  private:
    int width_;

@@ -49,10 +49,10 @@ void Window::Deinitialize() {
   // Close window and terminate GLFW
   glfwTerminate();
 }
-int Window::get_width() const {
+int Window::width() const {
   return width_;
 }
-int Window::get_height() const {
+int Window::height() const {
   return height_;
 }
 }

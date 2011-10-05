@@ -36,7 +36,8 @@
 #include "aki/image.h"
 #include "aki/image_loader.h"
 
-#include "board.h"
+#include "nadeko/board.h"
+#include "nadeko/board_view.h"
 
 const int kTileSize = 16;
 const float kMoveDelay = 0.2f;
@@ -53,6 +54,7 @@ using runa::ShaderProgram;
 using runa::Window;
 using nadeko::Board;
 using nadeko::Player;
+using nadeko::BoardView;
 
 using matsu::kDirection2Down;
 using matsu::kDirection2Up;
@@ -62,6 +64,7 @@ using mio::Path;
 
 auto_ptr<Board> board;
 auto_ptr<Player> player;
+auto_ptr<BoardView> board_view;
 bool show_bg = false;
 
 int main() {
@@ -106,11 +109,15 @@ int main() {
 
 void Init() {
   Window &win = Window::GetInstance();
-  board.reset(new Board(win.get_width(), win.get_height(), kTileSize));
+  int win_w = win.width();
+  int win_h = win.height();
+  board.reset(new Board(win_w, win_h, kTileSize));
   player.reset(new Player(board->GetBoardWidth() / 2, 
     board->GetBoardHeight() /2, matsu::kDirection2Left));
-
+ 
   board->CreateApple(*player);
+
+  board_view.reset(new BoardView(win_w, win_h, kTileSize));
 }
 
 void Update(float dt) {
@@ -143,10 +150,11 @@ void Draw() {
   glClear(GL_COLOR_BUFFER_BIT);
 
   if (show_bg == true) {
-    board->DrawBackground();
+    board_view->DrawBackground();
   }
-  player->Draw(*board);
-
-  board->DrawApple();
-  board->DrawGrid();
+  board_view->DrawPlayer(*player);
+  //draw apple
+  const matsu::vec2 &apple_pos = board->apple_position();
+  board_view->DrawApple(apple_pos.x(), apple_pos.y());
+  board_view->DrawGrid();
 }

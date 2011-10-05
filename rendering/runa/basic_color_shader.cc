@@ -64,19 +64,26 @@ void BasicColorShader::Initialize() {
 void BasicColorShader::Use() {
   program_->Use();
 }
-const runa::ShaderProgram &BasicColorShader::get_program() const {
+bool BasicColorShader::IsInitialized() const {
+  if(program_.get() == NULL) {
+    return false;
+  } else {
+    return true;
+  }
+}
+const runa::ShaderProgram &BasicColorShader::program() const {
   return *program_;
 }
-runa::ShaderProgram &BasicColorShader::get_program() {
+runa::ShaderProgram &BasicColorShader::program() {
   return *program_;
 }
-int BasicColorShader::get_position_location() const {
+int BasicColorShader::position_location() const {
   return position_location_;
 }
-int BasicColorShader::get_color_location() const {
+int BasicColorShader::color_location() const {
   return color_location_;
 }
-int BasicColorShader::get_mvp_location() const {
+int BasicColorShader::mvp_location() const {
   return mvp_location_;
 }
 void BasicColorShader::SetColor4fv(const float *ptr) {

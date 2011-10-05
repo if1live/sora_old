@@ -41,7 +41,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\third_party\boost;..\platform;..\devel;..\rendering;..\third_party\glfw\include;..\third_party\soil\src;..\third_party\glew\include;..\third_party\freeglut\include;..\component;..\third_party\gtest\include;..\base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;.;..\third_party\boost;..\platform;..\devel;..\rendering;..\third_party\glfw\include;..\third_party\soil\src;..\third_party\glew\include;..\third_party\freeglut\include;..\component;..\third_party\gtest\include;..\base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -55,7 +55,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\third_party\boost;..\platform;..\devel;..\rendering;..\third_party\glfw\include;..\third_party\soil\src;..\third_party\glew\include;..\third_party\freeglut\include;..\component;..\third_party\gtest\include;..\base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..;.;..\third_party\boost;..\platform;..\devel;..\rendering;..\third_party\glfw\include;..\third_party\soil\src;..\third_party\glew\include;..\third_party\freeglut\include;..\component;..\third_party\gtest\include;..\base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -67,6 +67,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="board.cc" />
+    <ClCompile Include="board_view.cc" />
     <ClCompile Include="main.cc" />
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +86,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="board.h" />
+    <ClInclude Include="board_view.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
