@@ -18,39 +18,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-/// @brief 간단한 형태의 샘플 쉐이더. gl이 잘 초기화되었나 테스트할때 사용할수있다. 
-/// 단색물체만 지원한다. (디버깅용으로 유용하게 쓸거같아서 독립클래스로 만듬)
-#ifndef RENDERING_RUNA_BASIC_COLOR_SHADER_H_
-#define RENDERING_RUNA_BASIC_COLOR_SHADER_H_
+#ifndef RENDERING_RUNA_BASIC_TEXTURE_SHADER_H_
+#define RENDERING_RUNA_BASIC_TEXTURE_SHADER_H_
 
 #include "runa/runa_enum.h"
 #include "sora/singleton.h"
 
 namespace runa {;
-class BasicColorShader : public sora::Singleton<BasicColorShader>,
+class BasicTextureShader : public sora::Singleton<BasicTextureShader>,
   private boost::noncopyable {
  public:
-  BasicColorShader();
-  ~BasicColorShader();
+  BasicTextureShader();
+  ~BasicTextureShader();
 
   void Initialize();
   const runa::ShaderProgram &get_program() const;
   runa::ShaderProgram &get_program();
 
+  void SetColorToWhite();
   void SetColor4fv(const float *ptr);
   void SetMatrix(const float *m);
 
   int get_position_location() const;
-  int get_color_location() const;
-  int get_mvp_location() const;
+  int get_texcoord_location() const;
   void Use();
+
  private:
   std::auto_ptr<runa::ShaderProgram> program_;
 
   int position_location_;
   int color_location_;
+  int texcoord_location_;
   int mvp_location_;
 };
 }
 
-#endif  // RENDERING_RUNA_BASIC_COLOR_SHADER_H_
+#endif  // RENDERING_RUNA_BASIC_TEXTURE_SHADER_H_

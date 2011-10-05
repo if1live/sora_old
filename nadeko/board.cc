@@ -100,8 +100,6 @@ void Board::Draw() const {
 void Board::DrawColorTile(int x, int y, const matsu::vec4 &color) const {
   BasicColorShader &shader = BasicColorShader::GetInstance();
   GLint position_location = shader.get_position_location();
-  GLint color_location = shader.get_color_location();
-  GLint mvp_location = shader.get_mvp_location();
   
   shader.Use();
 
@@ -111,10 +109,10 @@ void Board::DrawColorTile(int x, int y, const matsu::vec4 &color) const {
     (float)win_width_, 0.0f, (float)win_height_, 0.1f, 10.0f);
   projection *= matsu::Matrix::Translate<float>(0, 0, -1);
   projection *= matsu::Matrix::Scale<float>(tile_size_, tile_size_, 1);
-  glUniformMatrix4fv(mvp_location, 1, GL_FALSE, projection.Pointer());
+  shader.SetMatrix(projection.Pointer());
 
   //색 설정
-  glUniform4fv(color_location, 1, color.Pointer());
+  shader.SetColor4fv(color.Pointer());
 
   //3 2
   //0 1

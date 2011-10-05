@@ -79,4 +79,10 @@ int BasicColorShader::get_color_location() const {
 int BasicColorShader::get_mvp_location() const {
   return mvp_location_;
 }
+void BasicColorShader::SetColor4fv(const float *ptr) {
+  glUniform4fv(color_location_, 1, ptr);
+}
+void BasicColorShader::SetMatrix(const float *m) {
+  glUniformMatrix4fv(mvp_location_, 1, GL_FALSE, m);
+}
 }

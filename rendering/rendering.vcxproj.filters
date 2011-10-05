@@ -57,6 +57,9 @@
     <ClCompile Include="runa\basic_color_shader.cc">
       <Filter>runa</Filter>
     </ClCompile>
+    <ClCompile Include="runa\basic_texture_shader.cc">
+      <Filter>runa</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aki\texture.h">
@@ -109,6 +112,9 @@
     </ClInclude>
     <ClInclude Include="aki\image_loader.h">
       <Filter>aki</Filter>
+    </ClInclude>
+    <ClInclude Include="runa\basic_texture_shader.h">
+      <Filter>runa</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
