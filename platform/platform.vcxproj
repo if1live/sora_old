@@ -63,6 +63,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="mio\path.h" />
+    <ClInclude Include="mio\reader.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="mio\path_ios.mm" />
@@ -70,6 +71,7 @@
   <ItemGroup>
     <ClCompile Include="mio\path.cc" />
     <ClCompile Include="mio\path_win.cc" />
+    <ClCompile Include="mio\reader.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

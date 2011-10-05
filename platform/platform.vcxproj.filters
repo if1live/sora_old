@@ -24,6 +24,9 @@
     <ClInclude Include="mio\path.h">
       <Filter>mio</Filter>
     </ClInclude>
+    <ClInclude Include="mio\reader.h">
+      <Filter>mio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="mio\path_ios.mm">
@@ -35,6 +38,9 @@
       <Filter>mio</Filter>
     </ClCompile>
     <ClCompile Include="mio\path.cc">
+      <Filter>mio</Filter>
+    </ClCompile>
+    <ClCompile Include="mio\reader.cc">
       <Filter>mio</Filter>
     </ClCompile>
   </ItemGroup>

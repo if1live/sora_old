@@ -29,6 +29,7 @@
 #include "aki/texture.h"
 #include "aki/image.h"
 #include "mio/path.h"
+#include "mio/reader.h"
 
 #include "nadeko/board.h"
 
@@ -39,6 +40,7 @@ using std::vector;
 using matsu::vec2;
 using matsu::vec4;
 using matsu::ivec2;
+using mio::Path;
 
 namespace nadeko {;
 BoardView::BoardView(int win_width, int win_height, int tile_size)
@@ -55,40 +57,16 @@ tile_size_(tile_size) {
 
   // reload texture
   string bg_file = "testdata/nadeko/nadeko_01.jpg";
-  bg_file = mio::Path::AppPath(bg_file);
+  bg_file = Path::AppPath(bg_file);
   aki::ImagePtr img = aki::ImageLoader::Load(bg_file);
   texture_.reset(new aki::Texture());
   texture_->LoadImage(img.get());
 
   // body texture test shader
-  const char vertex_src[] = "uniform mat4 u_mvp;  "
-    "attribute vec4 a_position; "
-    "attribute vec2 a_texcoord; "
-    "uniform vec4 u_color;  "    
-    "varying vec4 v_color;  "
-    "varying vec2 v_texcoord; "
-    "void main()  "
-    "{  "
-    "v_texcoord = a_texcoord; "
-    "v_color = u_color; "
-    "gl_Position = u_mvp * a_position;"
-    "}";
-  const char fragment_src[] = ""
-      "precision mediump float;  "
-      "varying vec4 v_color;  "
-      "varying vec2 v_texcoord; "
-      "uniform sampler2D s_texture; "
-      "void main()  "
-      "{  "
-      "vec4 tmp = texture2D(s_texture, v_texcoord); "
-      "vec4 tmp1 = vec4(tmp.x * v_color.x, tmp.y * v_color.y, tmp.z * v_color.z, tmp.w * v_color.w);"
-      "float minimum = 0.3;"
-      "float r = tmp1.x > minimum ? tmp1.x : minimum; "
-      "float g = tmp1.y > minimum ? tmp1.y : minimum; "
-      "float b = tmp1.z > minimum ? tmp1.z : minimum; "
-      "float a = tmp1.w > minimum ? tmp1.w : minimum; "
-      "gl_FragColor = vec4(r, g, b, a);  "
-      "}  ";
+  string vertex_file = Path::AppPath("testdata/nadeko/snake_body.vsh");
+  string fragment_file = Path::AppPath("testdata/nadeko/snake_body.fsh");
+  string vertex_src = mio::reader::Read(vertex_file);
+  string fragment_src = mio::reader::Read(fragment_file);
   body_shader_prog.reset(new runa::ShaderProgram(vertex_src, fragment_src));
 }
 BoardView::~BoardView() {
