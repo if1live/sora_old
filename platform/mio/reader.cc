@@ -27,14 +27,21 @@ using std::string;
 namespace mio {;
 namespace reader {;
 std::string Read(const std::string &file, int buffersize) {
+  string tmp;
+  Read(file, &tmp, buffersize);
+  return tmp;
+}
+int Read(const std::string &file, std::string *target, int buffersize) {
   SR_ASSERT(buffersize >= 1);
   SR_ASSERT(file.empty() == false);
+  SR_ASSERT(target != NULL);
   FILE *f = fopen(file.c_str(), "rb");
   if (f == NULL) {
     string empty;
-    return empty;
+    *target = empty;
+    return 0;
   }
-  string result;
+  string &result = *target;
   //create buffer
   char *buf = new char[buffersize + 1];	//마지막 1은 null을 위한 영역
   memset(buf, 0, sizeof(char) * (buffersize+1));	//0으로 채우기
@@ -49,7 +56,7 @@ std::string Read(const std::string &file, int buffersize) {
   }
   delete[](buf);
   fclose(f);
-  return result;
+  return result.size();
 }
 /*
 //개행을 어떻게 처리할 것인가

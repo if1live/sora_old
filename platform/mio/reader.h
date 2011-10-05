@@ -27,6 +27,7 @@ namespace mio {;
 namespace reader {;
 	const int kDefaultBufferSize = 1024 * 128;	//128kb
 	std::string Read(const std::string &file, int buffersize=kDefaultBufferSize);
+  int Read(const std::string &file, std::string *target, int buffersize=kDefaultBufferSize);
 	//std::vector<std::string> Readline(const std::string &file, int buffersize=kDefaultBufferSize);
 }
 

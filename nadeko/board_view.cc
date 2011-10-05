@@ -65,8 +65,10 @@ tile_size_(tile_size) {
   // body texture test shader
   string vertex_file = Path::AppPath("testdata/nadeko/snake_body.vsh");
   string fragment_file = Path::AppPath("testdata/nadeko/snake_body.fsh");
-  string vertex_src = mio::reader::Read(vertex_file);
-  string fragment_src = mio::reader::Read(fragment_file);
+  string vertex_src;
+  string fragment_src;
+  mio::reader::Read(vertex_file, &vertex_src);
+  mio::reader::Read(fragment_file, &fragment_src);
   body_shader_prog.reset(new runa::ShaderProgram(vertex_src, fragment_src));
 }
 BoardView::~BoardView() {

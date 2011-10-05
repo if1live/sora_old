@@ -98,12 +98,18 @@ void Board::CreateApple(const Player &player) {
 //////////////////////////////////////
 
 Player::Player(int x, int y, matsu::Direction2 dir) 
-: length_(10), 
-direction_(dir),
-next_direction_(dir) {
-  pos_list_.push_back(matsu::ivec2(x, y));
+  : initial_x_(x), initial_y_(y), initial_dir_(dir) {
+  Reset();
 }
 Player::~Player() {
+}
+void Player::Reset() {
+  length_ = 10;
+  direction_ = initial_dir_;
+  next_direction_ = initial_dir_;
+  alive_ = true;
+  pos_list_.clear();
+  pos_list_.push_back(matsu::ivec2(initial_x_, initial_y_));
 }
 void Player::Push(const matsu::ivec2 &pos) {
   //머리가 가장 앞
@@ -132,6 +138,11 @@ void Player::SetNextDirection(matsu::Direction2 direction) {
   }
 }
 void Player::Move(Board *board) {
+  if (alive_ == false) {
+    // 죽었으면 로직을 돌릴 이유가 없다
+    return;
+  }
+
   direction_ = next_direction_;
 
   const ivec2 &head_pos = GetHead();
@@ -148,7 +159,7 @@ void Player::Move(Board *board) {
 
   /// next로 이동하면 맵을 넘어가는가?
   if (board->IsOverBoard(next_head_pos.x(), next_head_pos.y())) {
-    exit(-1);
+    alive_ = false;
   }
 
   /// next로 이동시 죽는지 확인하기
@@ -156,7 +167,7 @@ void Player::Move(Board *board) {
     pos_list_.end(), next_head_pos);
   if (it != pos_list_.end()) {
     //몸통과 충돌한다!
-    exit(-1);
+    alive_ = false;
   }
 
   /// next에 사과가 있는지 확인하기

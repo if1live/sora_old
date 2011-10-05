@@ -63,6 +63,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\third_party\soil\lib;..\third_party\glew\lib;..\third_party\glfw\lib;$(SolutionDir)$(Configuration)\;..\third_party\gtest\lib</AdditionalLibraryDirectories>
       <AdditionalDependencies>base.lib;rendering.lib;devel.lib;platform.lib;soil.lib;glfw.lib;glew32.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <SubSystem>
+      </SubSystem>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

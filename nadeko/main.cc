@@ -113,7 +113,7 @@ void Init() {
   int win_h = win.height();
   board.reset(new Board(win_w, win_h, kTileSize));
   player.reset(new Player(board->GetBoardWidth() / 2, 
-    board->GetBoardHeight() /2, matsu::kDirection2Left));
+    board->GetBoardHeight() /2, matsu::kDirection2Up));
  
   board->CreateApple(*player);
 
@@ -136,6 +136,10 @@ void Update(float dt) {
     show_bg = true;
   } else {
     show_bg = false;
+  }
+
+  if(glfwGetKey('R') == GLFW_PRESS) {
+    player->Reset();
   }
 
   const float move_delay = kMoveDelay;

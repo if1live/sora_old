@@ -65,6 +65,7 @@ public:
   void SetNextDirection(matsu::Direction2 direction);
   const matsu::ivec2 &GetHead() const;
   void Move(Board *board);
+  void Reset();
 
   ConstIterator Begin() const;
   ConstIterator End() const;
@@ -74,6 +75,12 @@ private:
   int length_;
   matsu::Direction2 direction_;
   matsu::Direction2 next_direction_;
+
+  bool alive_;
+  //최초 위치
+  int initial_x_;
+  int initial_y_;
+  matsu::Direction2 initial_dir_;
 };
 }
 #endif  // NADEKO_BOARD_H_
