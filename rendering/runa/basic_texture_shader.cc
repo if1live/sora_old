@@ -60,6 +60,7 @@ BasicTextureShader::~BasicTextureShader() {
 }
 
 void BasicTextureShader::Initialize() {
+  SR_ASSERT(program_.get() == NULL);
   program_.reset(new ShaderProgram(texture_vertex_src, texture_fragment_src));
 
   position_location_ = program_->GetAttribLocation("a_position");

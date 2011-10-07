@@ -39,7 +39,7 @@ typedef enum {
 
 // opengl과 같은 포맷을 써서 직동변환을 허용
 typedef enum {
-  kPixelType8888 = GL_UNSIGNED_BYTE,
+  kPixelTypeByte = GL_UNSIGNED_BYTE,
   kPixelType4444 = GL_UNSIGNED_SHORT_4_4_4_4,
   kPixelType5551 = GL_UNSIGNED_SHORT_5_5_5_1,
   kPixelType565 = GL_UNSIGNED_SHORT_5_6_5

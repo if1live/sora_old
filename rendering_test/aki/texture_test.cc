@@ -38,8 +38,8 @@ TEST(AkiTexture, test) {
   Texture tex;
   tex.LoadImage(img.get());
   // 원본 이미지 크기 정보
-  EXPECT_EQ(500, img->desc().width());
-  EXPECT_EQ(282, img->desc().height());
+  EXPECT_EQ(500, img->desc().width);
+  EXPECT_EQ(282, img->desc().height);
 
   const TextureSize &size = tex.size();
   EXPECT_EQ(500, size.orig_width());

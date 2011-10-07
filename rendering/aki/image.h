@@ -44,6 +44,9 @@ class Image {
   // 텍스쳐크기를 2의 승수로 보정하는것을 깨끗하게 할수있다
   void Overwrite(const Image &o);
 
+  // 상하반전
+  void InverseY();
+
   int GetPixelIndex(int x, int y) const;
 
   bool operator==(const Image &o) const;

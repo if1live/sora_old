@@ -18,31 +18,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef RENDERING_AKI_IMAGE_DESCRIPTION_H_
-#define RENDERING_AKI_IMAGE_DESCRIPTION_H_
+#ifndef RENDERING_KANAKO_FONT_H_
+#define RENDERING_KANAKO_FONT_H_
 
 #include "aki/aki_enum.h"
+#include "runa/runa_enum.h"
+#include "runa/vertex.h"
 
-namespace aki {;
-class ImageDescription {
- public:
-  ImageDescription();
-  explicit ImageDescription(int width,
-    int height, InternalFormat internal_format, PixelType pixel_type);
-  ~ImageDescription();
+namespace kanako {;
+class Font {
+public:
+  typedef std::vector<runa::TextureVertex> VertexListType;
+  typedef std::vector<unsigned short> IndexListType;
 
-  bool operator==(const ImageDescription &o) const;
-  bool operator!=(const ImageDescription &o) const;
+public:
+  Font();
+  ~Font();
 
-  int GetRowLineSize() const;
-  int GetPixelSize() const;
-
- public:
-  int width;
-  int height;
-  InternalFormat internal_format;
-  PixelType pixel_type;
+  void Draw() const;
+  void GetCharacterCoord(unsigned char ch, int *x, int *y) const;
+  int GetCharacterPixelIndex(int base_x, int base_y, int x, int y) const;
+  
+  void GetCharacterTextureQuad(unsigned char ch,
+    float *left, float *right, float *top, float *bottom) const;
+private:
+  std::auto_ptr<aki::Texture> font_texture_;
 };
 }
 
-#endif  // RENDERING_AKI_IMAGE_DESCRIPTION_H_
+#endif  // RENDERING_KANAKO_FONT_H_

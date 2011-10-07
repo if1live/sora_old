@@ -18,31 +18,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef RENDERING_AKI_IMAGE_DESCRIPTION_H_
-#define RENDERING_AKI_IMAGE_DESCRIPTION_H_
+#ifndef RENDERING_RUNA_VERTEX_H_
+#define RENDERING_RUNA_VERTEX_H_
 
-#include "aki/aki_enum.h"
-
-namespace aki {;
-class ImageDescription {
- public:
-  ImageDescription();
-  explicit ImageDescription(int width,
-    int height, InternalFormat internal_format, PixelType pixel_type);
-  ~ImageDescription();
-
-  bool operator==(const ImageDescription &o) const;
-  bool operator!=(const ImageDescription &o) const;
-
-  int GetRowLineSize() const;
-  int GetPixelSize() const;
-
- public:
-  int width;
-  int height;
-  InternalFormat internal_format;
-  PixelType pixel_type;
+namespace runa {;
+template<typename VertexType,
+  int VertexDim,
+  typename ColorType,
+  int ColorDim,
+  typename TexCoordType,
+  int TexCoordDim>
+struct Vertex {
+  VertexType vertex[VertexDim];
+  ColorType color[ColorDim];
+  TexCoordType texcoord[TexCoordDim];
 };
 }
 
-#endif  // RENDERING_AKI_IMAGE_DESCRIPTION_H_
+#endif  // RENDERING_RUNA_VERTEX_H_

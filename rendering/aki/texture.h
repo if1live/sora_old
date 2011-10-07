@@ -50,6 +50,8 @@ class TextureGroup {
   template<int index>
   GLuint handle() const;
 
+  void Bind() const;
+
   bool LoadImage(Image *img);
   bool LoadImage(int index, Image *img);
   template<int index>

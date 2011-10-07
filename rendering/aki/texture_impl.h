@@ -70,8 +70,8 @@ template<unsigned int N>
 bool TextureGroup<N>::LoadImage(int index, Image *img) {
   SR_ASSERT(index >= 0 && index < N);
   const ImageDescription &desc = img->desc();
-  int width = desc.width();
-  int height = desc.height();
+  int width = desc.width;
+  int height = desc.height;
   int tex_width = matsu::CeilPower(2, width);
   int tex_height = matsu::CeilPower(2, height);
 
@@ -96,16 +96,16 @@ bool TextureGroup<N>::LoadImage(int index, Image *img) {
     const void *data = newImg.data();
     SR_ASSERT(data != NULL);
 
-    int internal_format = newImg.desc().internal_format();
-    int pixel_type = newImg.desc().pixel_type();
+    int internal_format = newImg.desc().internal_format;
+    int pixel_type = newImg.desc().pixel_type;
     glTexImage2D(GL_TEXTURE_2D, 0, internal_format, tex_width, tex_height,
       0, internal_format, pixel_type, data);
   } else {
     const void *data = img->data();
     SR_ASSERT(data != NULL);
 
-    int internal_format = img->desc().internal_format();
-    int pixel_type = img->desc().pixel_type();
+    int internal_format = img->desc().internal_format;
+    int pixel_type = img->desc().pixel_type;
     glTexImage2D(GL_TEXTURE_2D, 0, internal_format, tex_width, tex_height,
       0, internal_format, pixel_type, data);
   }
@@ -158,6 +158,11 @@ template<int index>
 bool TextureGroup<N>::IsLoaded() const {
   BOOST_STATIC_ASSERT(index >= 0 && index < N);
   return IsLoaded(index);
+}
+
+template<unsigned int N>
+void TextureGroup<N>::Bind() const {
+  glBindTexture(GL_TEXTURE_2D, handle());
 }
 }
 #endif  // RENDERING_AKI_TEXTURE_IMPL_H_

@@ -70,6 +70,7 @@
     <ClCompile Include="aki\image_description.cc" />
     <ClCompile Include="aki\image_loader_soil.cc" />
     <ClCompile Include="aki\texture.cc" />
+    <ClCompile Include="kanako\font.cc" />
     <ClCompile Include="precompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -90,6 +91,8 @@
     <ClInclude Include="aki\image_loader.h" />
     <ClInclude Include="aki\texture.h" />
     <ClInclude Include="aki\texture_impl.h" />
+    <ClInclude Include="kanako\font.h" />
+    <ClInclude Include="kanako\vincent.h" />
     <ClInclude Include="precompile.h" />
     <ClInclude Include="runa\basic_color_shader.h" />
     <ClInclude Include="runa\basic_texture_shader.h" />
@@ -101,6 +104,7 @@
     <ClInclude Include="runa\shader_program.h" />
     <ClInclude Include="runa\uber_shader.h" />
     <ClInclude Include="runa\vbo.h" />
+    <ClInclude Include="runa\vertex.h" />
     <ClInclude Include="runa\window.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

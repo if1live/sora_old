@@ -50,16 +50,15 @@ mvp_location_(-1) {
 BasicColorShader::~BasicColorShader() {
 }
 void BasicColorShader::Initialize() {
-  if(program_.get() == NULL) {
-    program_.reset(new ShaderProgram(basic_vertex_src, basic_fragment_src));
+  SR_ASSERT(program_.get() == NULL);
+  program_.reset(new ShaderProgram(basic_vertex_src, basic_fragment_src));
 
-    position_location_ = program_->GetAttribLocation("a_position");
-    color_location_ = program_->GetUniformLocation("u_color");
-    mvp_location_ = program_->GetUniformLocation("u_mvp");
-    SR_ASSERT(position_location_ != -1);
-    SR_ASSERT(color_location_ != -1);
-    SR_ASSERT(mvp_location_ != -1);
-  }
+  position_location_ = program_->GetAttribLocation("a_position");
+  color_location_ = program_->GetUniformLocation("u_color");
+  mvp_location_ = program_->GetUniformLocation("u_mvp");
+  SR_ASSERT(position_location_ != -1);
+  SR_ASSERT(color_location_ != -1);
+  SR_ASSERT(mvp_location_ != -1);
 }
 void BasicColorShader::Use() {
   program_->Use();

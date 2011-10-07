@@ -23,66 +23,68 @@
 
 namespace aki {;
 ImageDescription::ImageDescription()
-  : width_(0),
-  height_(0),
-  internal_format_(kInternalFormatRGBA),
-  pixel_type_(kPixelType8888) {
+  : width(0),
+  height(0),
+  internal_format(kInternalFormatRGBA),
+  pixel_type(kPixelTypeByte) {
 }
 ImageDescription::ImageDescription(int width,
   int height, InternalFormat internal_format, PixelType pixel_type)
-  : width_(width),
-  height_(height),
-  internal_format_(internal_format),
-  pixel_type_(pixel_type) {
+  : width(width),
+  height(height),
+  internal_format(internal_format),
+  pixel_type(pixel_type) {
 }
 ImageDescription::~ImageDescription() {
 }
-int ImageDescription::width() const {
-  return width_;
-}
-int ImageDescription::height() const {
-  return height_;
-}
-
-InternalFormat ImageDescription::internal_format() const {
-  return internal_format_;
-}
-PixelType ImageDescription::pixel_type() const {
-  return pixel_type_;
-}
-
-int ImageDescription::GetPixelSize() const {
-  int pixel_size = 0;
-  switch (pixel_type()) {
-  case kPixelType8888:
-    pixel_size = 4;   // 4byte
-    break;
-  case kPixelType5551:
-    pixel_size = 2;
-    break;
-  case kPixelType4444:
-    pixel_size = 2;
-    break;
-  case kPixelType565:
-    pixel_size = 2;
-    break;
-  default:
-    SR_ASSERT(!"not valid");
-  }
-  return pixel_size;
-}
 int ImageDescription::GetRowLineSize() const {
   int pixel_size = GetPixelSize();
-  int linesize = pixel_size * width_;
+  int linesize = pixel_size * width;
   return linesize;
 }
 bool ImageDescription::operator==(const ImageDescription &o) const {
-  return (width_ == o.width_
-    && height_ == o.height_
-    && internal_format_ == o.internal_format_
-    && pixel_type_ == o.pixel_type_);
+  return (width == o.width
+    && height == o.height
+    && internal_format == o.internal_format
+    && pixel_type == o.pixel_type);
 }
 bool ImageDescription::operator!=(const ImageDescription &o) const {
   return !(*this == o);
+}
+int ImageDescription::GetPixelSize() const {
+  int pixel_size = 0;
+  if (internal_format == kInternalFormatAlpha) {
+    if (pixel_type == kPixelTypeByte) {
+      pixel_size = 1;
+    }
+
+  } else if (internal_format == kInternalFormatLuminance) {
+    if (pixel_type == kPixelTypeByte) {
+      pixel_size = 1;
+    }
+
+  } else if (internal_format == kInternalFormatLuminanceAlpha) {
+    if (pixel_type == kPixelTypeByte) {
+      pixel_size = 2;
+    }
+
+  } else if (internal_format == kInternalFormatRGB) {
+    if (pixel_type == kPixelType565) {
+      pixel_size = 2;
+    } else if (pixel_type == kPixelTypeByte) {
+      pixel_size = 3;
+    }
+
+  } else if (internal_format == kInternalFormatRGBA) {
+    if (pixel_type == kPixelType4444) {
+      pixel_size = 2;
+    } else if (pixel_type == kPixelType5551) {
+      pixel_size = 2;
+    } else if (pixel_type == kPixelTypeByte) {
+      pixel_size = 4;
+    }
+  }
+  SR_ASSERT(pixel_size > 0);
+  return pixel_size;
 }
 }

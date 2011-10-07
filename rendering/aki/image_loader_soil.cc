@@ -53,7 +53,7 @@ ImagePtr ImageLoader::Load(const std::string &path) {
     format = kInternalFormatRGBA;
     break;
   }
-  PixelType pixel_type = kPixelType8888;
+  PixelType pixel_type = kPixelTypeByte;
 
   ImageDescription desc(width, height, format, pixel_type);
   return ImagePtr(new Image(desc, data));

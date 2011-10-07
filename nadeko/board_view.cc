@@ -86,6 +86,7 @@ void BoardView::DrawBackground() const {
 
   glEnable(GL_TEXTURE_2D);
   shader.Use();
+  texture_->Bind();
 
   // apply projection
   matsu::mat4 projection;

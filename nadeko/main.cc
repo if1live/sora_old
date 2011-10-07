@@ -38,6 +38,7 @@
 
 #include "nadeko/board.h"
 #include "nadeko/board_view.h"
+#include "kanako/font.h"
 
 const int kTileSize = 16;
 const float kMoveDelay = 0.2f;
@@ -62,6 +63,7 @@ using matsu::kDirection2Left;
 using matsu::kDirection2Right;
 using mio::Path;
 
+auto_ptr<kanako::Font> font;
 auto_ptr<Board> board;
 auto_ptr<Player> player;
 auto_ptr<BoardView> board_view;
@@ -72,8 +74,8 @@ int main() {
   string bg_file = "testdata/nadeko/nadeko_01.jpg";
   bg_file = Path::AppPath(bg_file);
   aki::ImagePtr img = aki::ImageLoader::Load(bg_file);
-  const int width = img->desc().width();
-  const int height = img->desc().height();
+  const int width = img->desc().width;
+  const int height = img->desc().height;
 
   // const int width = 480;
   // const int height = 320;
@@ -118,6 +120,9 @@ void Init() {
   board->CreateApple(*player);
 
   board_view.reset(new BoardView(win_w, win_h, kTileSize));
+
+  // debug text library test
+  font.reset(new kanako::Font());
 }
 
 void Update(float dt) {
@@ -147,7 +152,7 @@ void Update(float dt) {
   remain_time -= dt;
   if(remain_time < 0) {
     remain_time = move_delay;
-    player->Move(board.get());
+    //player->Move(board.get());
   }
 }
 void Draw() {
@@ -161,4 +166,6 @@ void Draw() {
   const matsu::vec2 &apple_pos = board->apple_position();
   board_view->DrawApple(apple_pos.x(), apple_pos.y());
   board_view->DrawGrid();
+
+  font->Draw();
 }

@@ -19,6 +19,9 @@
     <Filter Include="runa">
       <UniqueIdentifier>{78270e7a-e24e-41d8-b4ac-0fd9d739ce5a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="kanako">
+      <UniqueIdentifier>{ab483874-24c8-4497-86f1-8b36a433d456}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="precompile.cpp">
@@ -59,6 +62,9 @@
     </ClCompile>
     <ClCompile Include="runa\basic_texture_shader.cc">
       <Filter>runa</Filter>
+    </ClCompile>
+    <ClCompile Include="kanako\font.cc">
+      <Filter>kanako</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -114,6 +120,15 @@
       <Filter>aki</Filter>
     </ClInclude>
     <ClInclude Include="runa\basic_texture_shader.h">
+      <Filter>runa</Filter>
+    </ClInclude>
+    <ClInclude Include="kanako\font.h">
+      <Filter>kanako</Filter>
+    </ClInclude>
+    <ClInclude Include="kanako\vincent.h">
+      <Filter>kanako</Filter>
+    </ClInclude>
+    <ClInclude Include="runa\vertex.h">
       <Filter>runa</Filter>
     </ClInclude>
   </ItemGroup>

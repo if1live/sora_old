@@ -40,6 +40,17 @@ class ShaderLocation;
 class Window;
 class GLTool;
 class BasicColorShader;
+
+//vertex
+template<typename VertexType,
+  int VertexDim,
+  typename ColorType,
+  int ColorDim,
+  typename TexCoordType,
+  int TexCoordDim>
+struct Vertex;
+typedef Vertex<float, 3, float, 4, float, 2> TextureVertex;
+typedef Vertex<float, 3, float, 4, float, 0> ColorVertex;
 }
 
 #endif  // RENDERING_RUNA_RUNA_ENUM_H_
