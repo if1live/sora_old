@@ -69,6 +69,9 @@
     <ClCompile Include="kanako\label.cc">
       <Filter>kanako</Filter>
     </ClCompile>
+    <ClCompile Include="runa\ui_draw_helper.cc">
+      <Filter>runa</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aki\texture.h">
@@ -139,6 +142,9 @@
     </ClInclude>
     <ClInclude Include="kanako\kanako_enum.h">
       <Filter>kanako</Filter>
+    </ClInclude>
+    <ClInclude Include="runa\ui_draw_helper.h">
+      <Filter>runa</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

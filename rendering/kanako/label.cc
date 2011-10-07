@@ -22,10 +22,15 @@
 #include "kanako/label.h"
 #include "kanako/font.h"
 #include "runa/basic_texture_shader.h"
+#include "runa/basic_color_shader.h"
 #include "matsu/matrix.h"
 #include "runa/gl_tool.h"
+#include "runa/window.h"
+#include "runa/ui_draw_helper.h"
+#include "matsu/rectangle.h"
 
 using runa::BasicTextureShader;
+using runa::BasicColorShader;
 
 namespace kanako {;
 
@@ -102,19 +107,17 @@ void Label::Draw() const {
 
   // 적절히 그리기
   BasicTextureShader &shader = BasicTextureShader::GetInstance();
+  shader.Use();
   GLint position_location = shader.position_location();
   GLint texcoord_location = shader.texcoord_location();
 
   glEnable(GL_TEXTURE_2D);
-  shader.Use();
   font.BindFontTexture();
 
   // apply projection
   matsu::mat4 projection;
-  //int win_w = runa::Window().GetInstance().width();
-  //int win_h = runa::Window().GetInstance().height();
-  int win_w = 512;
-  int win_h = 512;
+  int win_w = runa::Window::GetInstance().width();
+  int win_h = runa::Window::GetInstance().height();
   projection = matsu::Matrix::Ortho<float>(0, win_w, 0, win_h, 0.1f, 10.0f);
   projection *= matsu::Matrix::Translate<float>(position.x(), win_h - position.y(), -1);
   projection *= matsu::Matrix::Scale<float>(scale, scale, 1);
@@ -135,4 +138,13 @@ void Label::Draw() const {
 
   SR_ASSERT(runa::GLTool::CheckError("draw label"));
 }
+void Label::DrawBorder(const matsu::vec4 &color) const {
+  float width = (kFontSize * text.size()) * scale;
+  float height = kFontSize* scale;
+  float x = position.x();
+  float y = position.y();
+  matsu::Rectf rect(x-1, y+1, width+2, height+2);
+  runa::UIDrawHelper::DrawLineRect(rect, color);
+}
+
 }

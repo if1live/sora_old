@@ -41,6 +41,7 @@
 
 #include "kanako/font.h"
 #include "kanako/label.h"
+#include "runa/ui_draw_helper.h"
 
 const int kTileSize = 16;
 const float kMoveDelay = 0.2f;
@@ -51,6 +52,7 @@ void Init();
 
 using matsu::Matrix;
 using matsu::vec4;
+using matsu::vec2;
 using std::string;
 using std::auto_ptr;
 using runa::ShaderProgram;
@@ -167,8 +169,13 @@ void Draw() {
 
   //kanako::Font().GetInstance().Draw();
   kanako::Label label(std::string("hello world"));
-  //label.scale = 2;
+  label.scale = 1.5;
   label.color = matsu::vec4(1, 0, 1, 1);
   label.position = matsu::vec2(10, 10);
+
   label.Draw();
+  label.DrawBorder(matsu::vec4(1, 1, 1, 1));
+
+  /// ui test
+  runa::UIDrawHelper::DrawLine(vec2(100, 100), vec2(150, 120), vec4(1, 1, 1, 1));
 }

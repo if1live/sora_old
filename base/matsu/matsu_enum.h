@@ -50,5 +50,27 @@ typedef enum {
   kDirection3Front,
   kDirection3Back
 } Direction3;
+
+template<typename T, int D> class VectorTemplate;
+typedef VectorTemplate<int, 2> ivec2;
+typedef VectorTemplate<float, 2> vec2;
+typedef VectorTemplate<int, 3> ivec3;
+typedef VectorTemplate<float, 3> vec3;
+typedef VectorTemplate<int, 4> ivec4;
+typedef VectorTemplate<float, 4> vec4;
+
+
+template<typename T, int row, int col>  class MatrixTemplate;
+typedef MatrixTemplate<int, 2, 2> imat2;
+typedef MatrixTemplate<float, 2, 2> mat2;
+typedef MatrixTemplate<int, 3, 3> imat3;
+typedef MatrixTemplate<float, 3, 3> mat3;
+typedef MatrixTemplate<int, 4, 4> imat4;
+typedef MatrixTemplate<float, 4, 4> mat4;
+
+template<typename T> class Rectangle;
+typedef Rectangle<int> Recti;
+typedef Rectangle<float> Rectf;
+
 }
 #endif  // BASE_MATSU_MATSU_ENUM_H_

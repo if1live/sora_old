@@ -22,15 +22,7 @@
 #define BASE_MATSU_MATRIX_H_
 
 #include "matsu/matrix_template.h"
-
-namespace matsu {;
-typedef MatrixTemplate<int, 2, 2> imat2;
-typedef MatrixTemplate<float, 2, 2> mat2;
-typedef MatrixTemplate<int, 3, 3> imat3;
-typedef MatrixTemplate<float, 3, 3> mat3;
-typedef MatrixTemplate<int, 4, 4> imat4;
-typedef MatrixTemplate<float, 4, 4> mat4;
-}
+#include "matsu/matsu_enum.h"
 
 namespace matsu {;
 class Matrix {

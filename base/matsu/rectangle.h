@@ -21,11 +21,9 @@
 #ifndef BASE_MATSU_RECTANGLE_H_
 #define BASE_MATSU_RECTANGLE_H_
 
-namespace matsu {;
-template<typename T> class Rectangle;
-typedef Rectangle<int> Recti;
-typedef Rectangle<float> Rectf;
+#include "matsu/matsu_enum.h"
 
+namespace matsu {;
 template<typename T>
 class Rectangle {
  public:

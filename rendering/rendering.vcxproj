@@ -82,6 +82,7 @@
     <ClCompile Include="runa\shader_location.cc" />
     <ClCompile Include="runa\shader_program.cc" />
     <ClCompile Include="runa\uber_shader.cc" />
+    <ClCompile Include="runa\ui_draw_helper.cc" />
     <ClCompile Include="runa\vbo.cc" />
     <ClCompile Include="runa\window_glfw.cc" />
   </ItemGroup>
@@ -99,6 +100,7 @@
     <ClInclude Include="precompile.h" />
     <ClInclude Include="runa\basic_color_shader.h" />
     <ClInclude Include="runa\basic_texture_shader.h" />
+    <ClInclude Include="runa\ui_draw_helper.h" />
     <ClInclude Include="runa\gl_tool.h" />
     <ClInclude Include="runa\runa_enum.h" />
     <ClInclude Include="runa\shader.h" />

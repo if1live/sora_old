@@ -50,7 +50,7 @@ template<typename VertexType,
   int TexCoordDim>
 struct Vertex;
 typedef Vertex<float, 3, float, 4, float, 2> TextureVertex;
-typedef Vertex<float, 3, float, 4, float, 0> ColorVertex;
+typedef Vertex<float, 3, float, 4, bool, 1> ColorVertex;
 }
 
 #endif  // RENDERING_RUNA_RUNA_ENUM_H_

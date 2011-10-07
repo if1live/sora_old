@@ -18,28 +18,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef RENDERING_KANAKO_LABEL_H_
-#define RENDERING_KANAKO_LABEL_H_
+#ifndef RENDERING_RUNA_DRAW_UI_HELPER_H_
+#define RENDERING_RUNA_DRAW_UI_HELPER_H_
 
-#include "kanako/kanako_enum.h"
-#include "matsu/vector.h"
+#include "matsu/matsu_enum.h"
 
-namespace kanako {;
-class Label {
+namespace runa {;
+/// @brief ui좌표계에서 뭔가를 그리는 함수 모음
+class UIDrawHelper {
 public:
-  Label();
-  explicit Label(const std::string &msg);
-  ~Label();
-
-  void Draw() const;
-  void DrawBorder(const matsu::vec4 &color) const;
-
-  float scale;
-  matsu::vec2 position;
-  matsu::vec4 color;
-  std::string text;
+  static void DrawLine(const matsu::vec2 &p1,
+    const matsu::vec2 &p2, const matsu::vec4 &color);
+  static void DrawLine(const std::vector<matsu::vec2> &ui_point_list,
+    const matsu::vec4 &color);
+  /// @brief rect는 원점이 왼쪽위이다. UI좌표계와 맞춤
+  static void DrawLineRect(const matsu::Rectf &rect, const matsu::vec4 &color);
+  static void DrawRect(const matsu::Rectf &rect, const matsu::vec4 &color);
 };
-
 }
 
-#endif  // RENDERING_KANAKO_LABEL_H_
+#endif  // RENDERING_RUNA_DRAW_UI_HELPER_H_
