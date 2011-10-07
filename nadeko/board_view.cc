@@ -220,6 +220,7 @@ void BoardView::DrawBodyTile(int x, int y, const matsu::vec4 &color) const {
 
   glEnable(GL_TEXTURE_2D);
   body_shader_prog->Use();
+  texture_->Bind();
 
   // apply projection
   matsu::mat4 projection;

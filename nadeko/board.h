@@ -66,6 +66,7 @@ public:
   const matsu::ivec2 &GetHead() const;
   void Move(Board *board);
   void Reset();
+  int score() const;
 
   ConstIterator Begin() const;
   ConstIterator End() const;
@@ -77,6 +78,7 @@ private:
   matsu::Direction2 next_direction_;
 
   bool alive_;
+  int score_;
   //최초 위치
   int initial_x_;
   int initial_y_;

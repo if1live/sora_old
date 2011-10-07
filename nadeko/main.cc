@@ -152,7 +152,7 @@ void Update(float dt) {
   remain_time -= dt;
   if(remain_time < 0) {
     remain_time = move_delay;
-    //player->Move(board.get());
+    player->Move(board.get());
   }
 }
 void Draw() {
@@ -167,15 +167,17 @@ void Draw() {
   board_view->DrawApple(apple_pos.x(), apple_pos.y());
   board_view->DrawGrid();
 
-  //kanako::Font().GetInstance().Draw();
-  kanako::Label label(std::string("hello world"));
-  label.scale = 1.5;
-  label.color = matsu::vec4(1, 0, 1, 1);
+  //점수를 적당히 그리기
+  char score_buffer[64];
+  sprintf(score_buffer, "Score %d", player->score());
+  std::string score_text = score_buffer;
+  kanako::Label label(score_text);
+  label.scale = 1.3;
+  label.color = matsu::vec4(1, 1, 1, 1);
   label.position = matsu::vec2(10, 10);
 
   label.Draw();
-  label.DrawBorder(matsu::vec4(1, 1, 1, 1));
-
+  //label.DrawBorder(matsu::vec4(1, 1, 1, 1));
   /// ui test
-  runa::UIDrawHelper::DrawLine(vec2(100, 100), vec2(150, 120), vec4(1, 1, 1, 1));
+  //runa::UIDrawHelper::DrawLine(vec2(100, 100), vec2(150, 120), vec4(1, 1, 1, 1));
 }

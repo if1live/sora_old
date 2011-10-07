@@ -108,6 +108,7 @@ void Player::Reset() {
   direction_ = initial_dir_;
   next_direction_ = initial_dir_;
   alive_ = true;
+  score_ = 0;
   pos_list_.clear();
   pos_list_.push_back(matsu::ivec2(initial_x_, initial_y_));
 }
@@ -173,6 +174,7 @@ void Player::Move(Board *board) {
   /// next에 사과가 있는지 확인하기
   if (board->apple_position() == next_head_pos) {
     length_++;
+    score_++;
     board->CreateApple(*this);
   }
   Push(next_head_pos);
@@ -182,5 +184,8 @@ Player::ConstIterator Player::Begin() const {
 }
 Player::ConstIterator Player::End() const {
   return pos_list_.end();
+}
+int Player::score() const {
+  return score_;
 }
 }
