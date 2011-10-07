@@ -165,7 +165,7 @@ void Draw() {
   //draw apple
   const matsu::vec2 &apple_pos = board->apple_position();
   board_view->DrawApple(apple_pos.x(), apple_pos.y());
-  board_view->DrawGrid();
+  //board_view->DrawGrid();
 
   //점수를 적당히 그리기
   char score_buffer[64];

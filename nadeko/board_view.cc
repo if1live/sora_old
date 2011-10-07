@@ -100,13 +100,13 @@ void BoardView::DrawBackground() const {
 
   //3 2
   //0 1
-  int vertex[] = {
+  float vertex[] = {
     0, 0,
     1, 0,
     1, 1,
     0, 1,
   };
-  glVertexAttribPointer(position_location, 2, GL_INT, GL_FALSE, 0, vertex);
+  glVertexAttribPointer(position_location, 2, GL_FLOAT, GL_FALSE, 0, vertex);
   glEnableVertexAttribArray(position_location);
 
   //텍스쳐 설정
@@ -189,13 +189,13 @@ void BoardView::DrawColorTile(int x, int y, const matsu::vec4 &color) const {
 
   //3 2
   //0 1
-  int vertex[] = {
+  float vertex[] = {
     x, y ,
     (x + 1), y,
     (x + 1), (y + 1),
     x, (y + 1)
   };
-  glVertexAttribPointer(position_location, 2, GL_INT, GL_FALSE, 0, vertex);
+  glVertexAttribPointer(position_location, 2, GL_FLOAT, GL_FALSE, 0, vertex);
   glEnableVertexAttribArray(position_location);
 
   //index써서 그리기
@@ -235,13 +235,13 @@ void BoardView::DrawBodyTile(int x, int y, const matsu::vec4 &color) const {
 
   //3 2
   //0 1
-  int vertex[] = {
+  float vertex[] = {
     x, y ,
     (x + 1), y,
     (x + 1), (y + 1),
     x, (y + 1)
   };
-  glVertexAttribPointer(position_location, 2, GL_INT, GL_FALSE, 0, vertex);
+  glVertexAttribPointer(position_location, 2, GL_FLOAT, GL_FALSE, 0, vertex);
   glEnableVertexAttribArray(position_location);
 
   //텍스쳐 설정
