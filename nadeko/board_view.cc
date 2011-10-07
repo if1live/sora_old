@@ -23,6 +23,7 @@
 #include "runa/basic_color_shader.h"
 #include "runa/basic_texture_shader.h"
 #include "runa/shader_program.h"
+#include "runa/gl_tool.h"
 #include "matsu/matrix.h"
 #include "matsu/vector.h"
 #include "aki/image_loader.h"
@@ -70,6 +71,9 @@ tile_size_(tile_size) {
   mio::reader::Read(vertex_file, &vertex_src);
   mio::reader::Read(fragment_file, &fragment_src);
   body_shader_prog.reset(new runa::ShaderProgram(vertex_src, fragment_src));
+  body_shader_prog->Validate();
+
+  SR_ASSERT(runa::GLTool::CheckError("snaek body shader"));
 }
 BoardView::~BoardView() {
 }
@@ -121,6 +125,8 @@ void BoardView::DrawBackground() const {
   };
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, index);
   glDisable(GL_TEXTURE_2D);
+
+  SR_ASSERT(runa::GLTool::CheckError("draw background"));
 }
 
 void BoardView::DrawGrid() const {
@@ -159,6 +165,8 @@ void BoardView::DrawGrid() const {
   glVertexAttribPointer(position_location, 2, GL_FLOAT, GL_FALSE, 0, grid_line_[0].Pointer());
   glEnableVertexAttribArray(position_location);
   glDrawArrays(GL_LINES, 0, grid_line_.size());
+
+  SR_ASSERT(runa::GLTool::CheckError("draw grid"));
 }
 
 void BoardView::DrawColorTile(int x, int y, const matsu::vec4 &color) const {
@@ -195,6 +203,8 @@ void BoardView::DrawColorTile(int x, int y, const matsu::vec4 &color) const {
     0, 2, 3,
   };
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, index);
+
+  SR_ASSERT(runa::GLTool::CheckError("draw color tile"));
 }
 void BoardView::DrawBodyTile(int x, int y, const matsu::vec4 &color) const {
   GLint position_location = body_shader_prog->GetAttribLocation("a_position");
@@ -253,10 +263,14 @@ void BoardView::DrawBodyTile(int x, int y, const matsu::vec4 &color) const {
   };
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, index);
   glDisable(GL_TEXTURE_2D);
+
+  SR_ASSERT(runa::GLTool::CheckError("draw body tile"));
 }
 void BoardView::DrawApple(int x, int y) const {
   matsu::vec4 color(0, 0, 1, 1);
   DrawColorTile(x, y, color);
+
+  SR_ASSERT(runa::GLTool::CheckError("draw apple"));
 }
 void BoardView::DrawPlayer(const Player &player) const {
   Player::ConstIterator it = player.Begin();
@@ -275,5 +289,7 @@ void BoardView::DrawPlayer(const Player &player) const {
       DrawBodyTile(pos.x(), pos.y(), body_color);
     }
   }
+
+  SR_ASSERT(runa::GLTool::CheckError("draw player"));
 }
 }
