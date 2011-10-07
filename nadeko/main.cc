@@ -38,7 +38,9 @@
 
 #include "nadeko/board.h"
 #include "nadeko/board_view.h"
+
 #include "kanako/font.h"
+#include "kanako/label.h"
 
 const int kTileSize = 16;
 const float kMoveDelay = 0.2f;
@@ -63,7 +65,6 @@ using matsu::kDirection2Left;
 using matsu::kDirection2Right;
 using mio::Path;
 
-auto_ptr<kanako::Font> font;
 auto_ptr<Board> board;
 auto_ptr<Player> player;
 auto_ptr<BoardView> board_view;
@@ -120,9 +121,6 @@ void Init() {
   board->CreateApple(*player);
 
   board_view.reset(new BoardView(win_w, win_h, kTileSize));
-
-  // debug text library test
-  font.reset(new kanako::Font());
 }
 
 void Update(float dt) {
@@ -167,5 +165,10 @@ void Draw() {
   board_view->DrawApple(apple_pos.x(), apple_pos.y());
   board_view->DrawGrid();
 
-  font->Draw();
+  //kanako::Font().GetInstance().Draw();
+  kanako::Label label(std::string("hello world"));
+  //label.scale = 2;
+  label.color = matsu::vec4(1, 0, 1, 1);
+  label.position = matsu::vec2(10, 10);
+  label.Draw();
 }

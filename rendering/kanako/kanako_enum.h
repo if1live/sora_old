@@ -18,35 +18,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef RENDERING_KANAKO_FONT_H_
-#define RENDERING_KANAKO_FONT_H_
-
-#include "aki/aki_enum.h"
-#include "runa/runa_enum.h"
-#include "runa/vertex.h"
-#include "sora/singleton.h"
-#include "kanako/kanako_enum.h"
+#ifndef RENDERING_KANAKO_KANAKO_ENUM_H_
+#define RENDERING_KANAKO_KANAKO_ENUM_H_
 
 namespace kanako {;
-class Font : public sora::Singleton<Font> {
-public:
-  typedef std::vector<runa::TextureVertex> VertexListType;
-  typedef std::vector<unsigned short> IndexListType;
+class Font;
+class Label;
+class TextArea;
 
-public:
-  Font();
-  ~Font();
-
-  void Draw() const;
-  void GetCharacterCoord(unsigned char ch, int *x, int *y) const;
-  int GetCharacterPixelIndex(int base_x, int base_y, int x, int y) const;
-  
-  void GetCharacterTextureQuad(unsigned char ch,
-    float *left, float *right, float *top, float *bottom) const;
-  void BindFontTexture() const;
-private:
-  std::auto_ptr<aki::Texture> font_texture_;
-};
+// vincent 폰트를 기반으로 텍스쳐 만들기
+// 128글자, 8*8폰트니까
+// 256글자를 저장할수있는 영역을 할당하고
+// 16 * 16개의 글자를 배열할수있도록 텍스쳐의 크기를
+// 128 * 128의 텍스쳐 영역에 글자를 적절히 배치한다
+const int kTextureWidth = 128;
+const int kTextureHeight = 128;
+const int kFontSize = 8;
 }
 
-#endif  // RENDERING_KANAKO_FONT_H_
+#endif  // RENDERING_KANAKO_KANAKO_ENUM_H_

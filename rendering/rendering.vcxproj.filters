@@ -66,6 +66,9 @@
     <ClCompile Include="kanako\font.cc">
       <Filter>kanako</Filter>
     </ClCompile>
+    <ClCompile Include="kanako\label.cc">
+      <Filter>kanako</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aki\texture.h">
@@ -122,14 +125,20 @@
     <ClInclude Include="runa\basic_texture_shader.h">
       <Filter>runa</Filter>
     </ClInclude>
-    <ClInclude Include="kanako\font.h">
-      <Filter>kanako</Filter>
-    </ClInclude>
     <ClInclude Include="kanako\vincent.h">
       <Filter>kanako</Filter>
     </ClInclude>
     <ClInclude Include="runa\vertex.h">
       <Filter>runa</Filter>
+    </ClInclude>
+    <ClInclude Include="kanako\font.h">
+      <Filter>kanako</Filter>
+    </ClInclude>
+    <ClInclude Include="kanako\label.h">
+      <Filter>kanako</Filter>
+    </ClInclude>
+    <ClInclude Include="kanako\kanako_enum.h">
+      <Filter>kanako</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

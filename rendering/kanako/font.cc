@@ -26,6 +26,7 @@
 #include "aki/texture.h"
 #include "matsu/matrix.h"
 #include "matsu/vector.h"
+#include "runa/window.h"
 
 #include "runa/gl_tool.h"
 #include "runa/basic_texture_shader.h"
@@ -35,15 +36,6 @@ using aki::Texture;
 using runa::BasicTextureShader;
 
 namespace kanako {;
-// vincent 폰트를 기반으로 텍스쳐 만들기
-// 128글자, 8*8폰트니까
-// 256글자를 저장할수있는 영역을 할당하고
-// 16 * 16개의 글자를 배열할수있도록 텍스쳐의 크기를
-// 128 * 128의 텍스쳐 영역에 글자를 적절히 배치한다
-const int kTextureWidth = 128;
-const int kTextureHeight = 128;
-const int kFontSize = 8;
-
 Font::Font() {  
   // 텍스쳐는 1/0만 처리하면됨. 작게 할당받자
   typedef unsigned char byte;
@@ -61,7 +53,7 @@ Font::Font() {
     for (int y = 0 ; y < kFontSize ; y++) {
       char character_scanline = character_font[y];
       for (int x = 0 ; x < kFontSize ; x++) {
-        bool pixel = (1 << (kFontSize - x)) & character_scanline;
+        bool pixel = (1 << (kFontSize - 1 - x)) & character_scanline;
         SR_ASSERT(pixel == 0 || pixel == 1);
         int pixel_index = GetCharacterPixelIndex(base_x, base_y, x, y);
         
@@ -105,6 +97,7 @@ void Font::Draw() const {
   matsu::mat4 projection;
   projection = matsu::Matrix::Ortho<float>(0, 512, 0, 512, 0.1f, 10.0f);
   projection *= matsu::Matrix::Translate<float>(0, 0, -1);
+  //projection *= matsu::Matrix::Scale<float>(3, 3, 1);
   shader.SetMatrix(projection.Pointer());
 
   //색 설정
@@ -114,19 +107,22 @@ void Font::Draw() const {
   //0 1
   int vertex[] = {
     0, 0,
-    128, 0,
-    128, 128,
-    0, 128,
+    8, 0,
+    8, 8,
+    0, 8,
   };
   glVertexAttribPointer(position_location, 2, GL_INT, GL_FALSE, 0, vertex);
   glEnableVertexAttribArray(position_location);
 
   //텍스쳐 설정
+  float left, right, top, bottom;
+  GetCharacterTextureQuad('A', &left, &right, &top, &bottom);
+
   float texcoord[] = {
-    0, 0,
-    1, 0,
-    1, 1,
-    0, 1
+    left, bottom,
+    right, bottom,
+    right, top,
+    left, top
   };
   glVertexAttribPointer(texcoord_location, 2, GL_FLOAT, GL_FALSE, 0, texcoord);
   glEnableVertexAttribArray(texcoord_location);
@@ -146,6 +142,10 @@ void Font::GetCharacterTextureQuad(unsigned char ch,
   int x, y;
   GetCharacterCoord(ch, &x, &y);
 
+  *left = x * (1 / 16.0f);
+  *right = (x + 1) * (1 / 16.0f);
+  *top = 1 - y * (1 / 16.0f);
+  *bottom = 1 - (y + 1) * (1 / 16.0f);
 }
 void Font::GetCharacterCoord(unsigned char ch, int *x, int *y) const {
   *y = ch / 16;
@@ -157,4 +157,8 @@ int Font::GetCharacterPixelIndex(int base_x, int base_y, int x, int y) const {
   int index = pixel_y * kTextureWidth + pixel_x;
   return index;
 }
+void Font::BindFontTexture() const {
+  font_texture_->Bind();
+}
+
 }

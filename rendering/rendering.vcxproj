@@ -71,6 +71,7 @@
     <ClCompile Include="aki\image_loader_soil.cc" />
     <ClCompile Include="aki\texture.cc" />
     <ClCompile Include="kanako\font.cc" />
+    <ClCompile Include="kanako\label.cc" />
     <ClCompile Include="precompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -92,6 +93,8 @@
     <ClInclude Include="aki\texture.h" />
     <ClInclude Include="aki\texture_impl.h" />
     <ClInclude Include="kanako\font.h" />
+    <ClInclude Include="kanako\kanako_enum.h" />
+    <ClInclude Include="kanako\label.h" />
     <ClInclude Include="kanako\vincent.h" />
     <ClInclude Include="precompile.h" />
     <ClInclude Include="runa\basic_color_shader.h" />

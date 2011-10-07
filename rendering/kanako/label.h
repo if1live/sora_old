@@ -18,35 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef RENDERING_KANAKO_FONT_H_
-#define RENDERING_KANAKO_FONT_H_
+#ifndef RENDERING_KANAKO_LABEL_H_
+#define RENDERING_KANAKO_LABEL_H_
 
-#include "aki/aki_enum.h"
-#include "runa/runa_enum.h"
-#include "runa/vertex.h"
-#include "sora/singleton.h"
 #include "kanako/kanako_enum.h"
+#include "matsu/vector.h"
 
 namespace kanako {;
-class Font : public sora::Singleton<Font> {
+class Label {
 public:
-  typedef std::vector<runa::TextureVertex> VertexListType;
-  typedef std::vector<unsigned short> IndexListType;
-
-public:
-  Font();
-  ~Font();
+  Label();
+  explicit Label(const std::string &msg);
+  ~Label();
 
   void Draw() const;
-  void GetCharacterCoord(unsigned char ch, int *x, int *y) const;
-  int GetCharacterPixelIndex(int base_x, int base_y, int x, int y) const;
-  
-  void GetCharacterTextureQuad(unsigned char ch,
-    float *left, float *right, float *top, float *bottom) const;
-  void BindFontTexture() const;
-private:
-  std::auto_ptr<aki::Texture> font_texture_;
+
+  float scale;
+  matsu::vec2 position;
+  matsu::vec4 color;
+  std::string text;
 };
+
 }
 
-#endif  // RENDERING_KANAKO_FONT_H_
+#endif  // RENDERING_KANAKO_LABEL_H_
