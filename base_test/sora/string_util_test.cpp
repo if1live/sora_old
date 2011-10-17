@@ -1,11 +1,31 @@
+ï»¿/*  Copyright (C) 2011 by if1live */
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+// Å¬nicode please
 #include "precompile.h"
 #include "sora/string_util.h"
 
-using namespace sora;
-using namespace std;
+using std::string;
+using std::vector;
+using sora::StringUtil;
 
-TEST(StringUtil, Trim)
-{
+TEST(StringUtil, Trim) {
 	string a("as df");
 	EXPECT_TRUE(StringUtil::Trim(a) == "as df");
 	string b("  as df");
@@ -16,8 +36,7 @@ TEST(StringUtil, Trim)
 	EXPECT_TRUE(StringUtil::Trim(d) == "as df");
 }
 
-TEST(StringUtil, LeftTrim)
-{
+TEST(StringUtil, LeftTrim) {
 	string a("as df");
 	EXPECT_TRUE(StringUtil::LeftTrim(a) == "as df");
 	string b("  as df");
@@ -41,17 +60,16 @@ TEST(StringUtil, RightTrim)
 }
 
 
-TEST(StringUtil, Split)
-{
+TEST(StringUtil, Split) {
 	vector<string> result;
 	int retval;
 	
-	//¾ø´Â°Å ÂÉ°³±â ½Ãµµ
+	//ì—†ëŠ”ê±° ìª¼ê°œê¸° ì‹œë„
 	string test0("kldp.org");
 	retval = StringUtil::Split(test0, 'z', &result);
 	EXPECT_EQ(1, retval);
 
-	//1±ÛÀÚ·Î ÀÚ¸£±â
+	//1ê¸€ìë¡œ ìë¥´ê¸°
 	string test1("kldp.org/node/11");
   result.clear();
 	retval = StringUtil::Split(test1, '/', &result);
@@ -63,8 +81,8 @@ TEST(StringUtil, Split)
 
   
   /*
-	//¿©·¯±ÛÀÚ¸¦ ¹Ş¾Æ¼­ ÇÑ°³¶óµµ µîÀåÇÏ¸é ÀÚ¸£±â
-	//strtokÀÇ delim°°Àº ´À³¦?
+	//ì—¬ëŸ¬ê¸€ìë¥¼ ë°›ì•„ì„œ í•œê°œë¼ë„ ë“±ì¥í•˜ë©´ ìë¥´ê¸°
+	//strtokì˜ delimê°™ì€ ëŠë‚Œ?
 	retval = StringUtil::Split(test1, result, "node");
 	EXPECT_EQ(4, retval);
 	ASSERT_EQ(4, (int)result.size());
@@ -75,8 +93,7 @@ TEST(StringUtil, Split)
   */
 }
 
-TEST(StringUtil, Join)
-{
+TEST(StringUtil, Join) {
 	string delim("::");
 	string result;
 
@@ -95,14 +112,14 @@ TEST(StringUtil, Tokenize)
 	vector<String> result;
 	int retval;
 
-	///Á¤»óÀûÀ¸·Î Àß¸° °æ¿ì
+	///ì •ìƒì ìœ¼ë¡œ ì˜ë¦° ê²½ìš°
 	retval = StringUtil::Tokenize(test1, result, "node");
 	EXPECT_EQ(2, retval);
 	ASSERT_EQ(2, (int)result.size());
 	EXPECT_TRUE(result[0] == "kldp.org/");
 	EXPECT_TRUE(result[1] == "/11");
 
-	//Á¤»óÀûÀ¸·Î Àß¸°°æ¿ì 2
+	//ì •ìƒì ìœ¼ë¡œ ì˜ë¦°ê²½ìš° 2
 	retval = StringUtil::Tokenize(test1, result, "/");
 	EXPECT_EQ(3, retval);
 	ASSERT_EQ(3, (int)result.size());
@@ -110,11 +127,11 @@ TEST(StringUtil, Tokenize)
 	EXPECT_TRUE(result[1] == "node");
 	EXPECT_TRUE(result[2] == "11");
 
-	//±ÛÀÚ´Â ÀÖÁö¸¸ ¹®ÀÚ¿­ÀÌ ¾ø¾î¼­ ¸øÀÚ¸¥ °æ¿ì
+	//ê¸€ìëŠ” ìˆì§€ë§Œ ë¬¸ìì—´ì´ ì—†ì–´ì„œ ëª»ìë¥¸ ê²½ìš°
 	retval = StringUtil::Tokenize(test1, result, "onde");
 	EXPECT_EQ(1, retval);
 	EXPECT_TRUE(result[0] == "kldp.org/node/11");
 
-	//std::string°°Àº ±âº» Å¬·¡½º¸¦ ±â¹İÀ¸·Î ¹º°¡¸¦ ¼öÇàÇÏ´Â ÀÛ¾÷À» ¿ÜºÎ¿¡¼­ ´õ ¸¹ÀÌ ÇÒ°Å°°´Ù
+	//std::stringê°™ì€ ê¸°ë³¸ í´ë˜ìŠ¤ë¥¼ ê¸°ë°˜ìœ¼ë¡œ ë­”ê°€ë¥¼ ìˆ˜í–‰í•˜ëŠ” ì‘ì—…ì„ ì™¸ë¶€ì—ì„œ ë” ë§ì´ í• ê±°ê°™ë‹¤
 }
 */

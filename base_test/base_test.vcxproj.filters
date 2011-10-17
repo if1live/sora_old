@@ -75,6 +75,9 @@
     <ClCompile Include="hayami\logger_test.cpp">
       <Filter>hayami</Filter>
     </ClCompile>
+    <ClCompile Include="sora\flag_generator_test.cpp">
+      <Filter>sora</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="precompile.h">

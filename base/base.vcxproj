@@ -92,6 +92,7 @@
     <ClInclude Include="matsu\vector.h" />
     <ClInclude Include="matsu\vector_template.h" />
     <ClInclude Include="matsu\vector_template_impl.h" />
+    <ClInclude Include="sora\flag_generator.h" />
     <ClInclude Include="sora\macro.h" />
     <ClInclude Include="sora\platform.h" />
     <ClInclude Include="sora\shared_object.h" />
