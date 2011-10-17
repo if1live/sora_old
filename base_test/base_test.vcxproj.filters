@@ -78,6 +78,9 @@
     <ClCompile Include="sora\flag_generator_test.cpp">
       <Filter>sora</Filter>
     </ClCompile>
+    <ClCompile Include="sora\id_generator_test.cpp">
+      <Filter>sora</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="precompile.h">

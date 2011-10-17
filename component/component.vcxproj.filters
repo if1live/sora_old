@@ -33,6 +33,15 @@
     <ClCompile Include="precompile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="irina\world.cpp">
+      <Filter>irina</Filter>
+    </ClCompile>
+    <ClCompile Include="irina\entity.cpp">
+      <Filter>irina</Filter>
+    </ClCompile>
+    <ClCompile Include="irina\component.cpp">
+      <Filter>irina</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="konomi\identifier_flag_dictionary.h">
@@ -64,6 +73,18 @@
     </ClInclude>
     <ClInclude Include="precompile.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="irina\world.h">
+      <Filter>irina</Filter>
+    </ClInclude>
+    <ClInclude Include="irina\entity.h">
+      <Filter>irina</Filter>
+    </ClInclude>
+    <ClInclude Include="irina\component.h">
+      <Filter>irina</Filter>
+    </ClInclude>
+    <ClInclude Include="irina\irina_enum.h">
+      <Filter>irina</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

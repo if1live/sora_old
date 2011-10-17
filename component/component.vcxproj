@@ -71,6 +71,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="irina\component.cpp" />
+    <ClCompile Include="irina\entity.cpp" />
+    <ClCompile Include="irina\world.cpp" />
     <ClCompile Include="konomi\identifier_flag_dictionary.cpp" />
     <ClCompile Include="konomi\message_code_dictionary.cpp" />
     <ClCompile Include="konomi\variant.cpp" />
@@ -80,6 +83,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="irina\component.h" />
+    <ClInclude Include="irina\entity.h" />
+    <ClInclude Include="irina\irina_enum.h" />
+    <ClInclude Include="irina\world.h" />
     <ClInclude Include="konomi\identifier_flag_dictionary.h" />
     <ClInclude Include="konomi\konomi.h" />
     <ClInclude Include="konomi\konomi_enum.h" />

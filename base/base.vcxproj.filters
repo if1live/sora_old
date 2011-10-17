@@ -123,6 +123,9 @@
     <ClInclude Include="sora\flag_generator.h">
       <Filter>sora</Filter>
     </ClInclude>
+    <ClInclude Include="sora\id_generator.h">
+      <Filter>sora</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora\string_util.cc">
