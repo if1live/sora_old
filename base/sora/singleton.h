@@ -54,7 +54,7 @@ class Singleton {
     long offset = (long)(T*)(1) - (long)(Singleton*)(T*)(1);
     ctx_ = (T*)((long)(this + offset));
   }
-  virtual ~Singleton() {
+  ~Singleton() {
     SR_ASSERT(ctx_ != NULL);
     ctx_ = NULL;
   }

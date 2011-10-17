@@ -22,14 +22,22 @@
 #define COMPONENT_IRINA_WORLD_H_
 
 #include "irina/irina_enum.h"
+#include "sora/tr1_include.h"
 
 namespace irina {;
 class World {
  public:
+  typedef std::tr1::unordered_map<int, Entity*> EntityDictType;
+ public:
   World();
   ~World();
 
+  Entity *CreateEntity();
+  bool DestroyEntity(Entity *entity);
+
  private:
+  EntityDictType entity_dict_;
+  
 };
 }
 

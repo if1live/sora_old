@@ -126,6 +126,9 @@
     <ClInclude Include="sora\id_generator.h">
       <Filter>sora</Filter>
     </ClInclude>
+    <ClInclude Include="karen\boost_class_pool.h">
+      <Filter>karen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora\string_util.cc">

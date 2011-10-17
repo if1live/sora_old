@@ -71,9 +71,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="irina\component.cpp" />
-    <ClCompile Include="irina\entity.cpp" />
-    <ClCompile Include="irina\world.cpp" />
+    <ClCompile Include="irina\component.cc" />
+    <ClCompile Include="irina\entity.cc" />
+    <ClCompile Include="irina\world.cc" />
     <ClCompile Include="konomi\identifier_flag_dictionary.cpp" />
     <ClCompile Include="konomi\message_code_dictionary.cpp" />
     <ClCompile Include="konomi\variant.cpp" />

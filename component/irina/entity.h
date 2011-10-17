@@ -22,15 +22,32 @@
 #define COMPONENT_IRINA_ENTITY_H_
 
 #include "irina/irina_enum.h"
+#include "sora/id_generator.h"
 
 namespace irina {;
-class Entity {
+class Entity : public sora::IdGenerator<Entity> {
  public:
-  Entity();
+  Entity(World *world);
   ~Entity();
 
+  World *world();
+
+ ///custom data
+ public:
+  template<typename T>
+  T GetUserDataAs();
+  void *user_data;
+
  private:
+  World *world_;
 };
+}
+
+namespace irina {;
+template<typename T>
+T Entity::GetUserDataAs() {
+  return reinterpret_cast<T>(user_data);
+}
 }
 
 #endif  // COMPONENT_IRINA_ENTITY_H_

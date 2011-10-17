@@ -19,7 +19,25 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "precompile.h"
+#include "irina/world.h"
+#include "sora/template_library.h"
 #include "irina/entity.h"
 
 namespace irina {;
+World::World() {
+}
+World::~World() {
+  sora::DestroyDict(&entity_dict_);
+}
+Entity *World::CreateEntity() {
+  Entity *entity = new Entity(this);
+  return entity;
+}
+bool World::DestroyEntity(Entity *entity) {
+  EntityDictType::iterator it = entity_dict_.find(entity->id());
+  if (it != entity_dict_.end()) {
+    entity_dict_.erase(it);
+    delete(entity);
+  }
+}
 }

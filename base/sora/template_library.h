@@ -32,6 +32,6 @@ template<typename SeqType>
 void DestroyList(SeqType *list);
 }
 
-#include "sora/template_library_impl.hpp"
+#include "sora/template_library_impl.h"
 
 #endif  // BASE_SORA_TEMPLATE_LIBRARY_H_

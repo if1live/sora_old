@@ -75,26 +75,26 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="hayami\logger_test.cpp" />
-    <ClCompile Include="karen\free_list_block_pool_test.cpp" />
-    <ClCompile Include="karen\free_list_manager_test.cpp" />
-    <ClCompile Include="karen\free_list_object_pool_test.cpp" />
-    <ClCompile Include="karen\heap_test.cpp" />
-    <ClCompile Include="matsu\angle_test.cpp" />
-    <ClCompile Include="matsu\coordinate_test.cpp" />
-    <ClCompile Include="matsu\math_test.cpp" />
-    <ClCompile Include="matsu\matrix_test.cpp" />
-    <ClCompile Include="matsu\matrix_template_test.cpp" />
-    <ClCompile Include="matsu\quaternion_test.cpp" />
-    <ClCompile Include="matsu\vector_test.cpp" />
-    <ClCompile Include="precompile.cpp">
+    <ClCompile Include="hayami\logger_test.cc" />
+    <ClCompile Include="karen\free_list_block_pool_test.cc" />
+    <ClCompile Include="karen\free_list_manager_test.cc" />
+    <ClCompile Include="karen\free_list_object_pool_test.cc" />
+    <ClCompile Include="karen\heap_test.cc" />
+    <ClCompile Include="matsu\angle_test.cc" />
+    <ClCompile Include="matsu\coordinate_test.cc" />
+    <ClCompile Include="matsu\math_test.cc" />
+    <ClCompile Include="matsu\matrix_test.cc" />
+    <ClCompile Include="matsu\matrix_template_test.cc" />
+    <ClCompile Include="matsu\quaternion_test.cc" />
+    <ClCompile Include="matsu\vector_test.cc" />
+    <ClCompile Include="precompile.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="sora\flag_generator_test.cpp" />
-    <ClCompile Include="sora\id_generator_test.cpp" />
-    <ClCompile Include="sora\string_util_test.cpp" />
-    <ClCompile Include="testmain.cpp" />
+    <ClCompile Include="sora\flag_generator_test.cc" />
+    <ClCompile Include="sora\id_generator_test.cc" />
+    <ClCompile Include="sora\string_util_test.cc" />
+    <ClCompile Include="testmain.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="precompile.h" />

@@ -32,7 +32,7 @@ class IdGenerator {
   IdGenerator& operator=(const IdGenerator &o) {
     this->id_ = o.id_;
   }
-  virtual ~IdGenerator() {}
+  ~IdGenerator() {}
   int id() const { return id_; }
  private:
   int id_;

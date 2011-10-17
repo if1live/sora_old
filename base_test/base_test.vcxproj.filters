@@ -30,56 +30,56 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="sora\string_util_test.cpp">
+    <ClCompile Include="sora\string_util_test.cc">
       <Filter>sora</Filter>
     </ClCompile>
-    <ClCompile Include="testmain.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="sora\id_generator_test.cc">
+      <Filter>sora</Filter>
     </ClCompile>
-    <ClCompile Include="precompile.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="sora\flag_generator_test.cc">
+      <Filter>sora</Filter>
     </ClCompile>
-    <ClCompile Include="matsu\vector_test.cpp">
-      <Filter>matsu</Filter>
-    </ClCompile>
-    <ClCompile Include="matsu\matrix_test.cpp">
-      <Filter>matsu</Filter>
-    </ClCompile>
-    <ClCompile Include="matsu\matrix_template_test.cpp">
-      <Filter>matsu</Filter>
-    </ClCompile>
-    <ClCompile Include="matsu\quaternion_test.cpp">
-      <Filter>matsu</Filter>
-    </ClCompile>
-    <ClCompile Include="matsu\math_test.cpp">
-      <Filter>matsu</Filter>
-    </ClCompile>
-    <ClCompile Include="matsu\coordinate_test.cpp">
-      <Filter>matsu</Filter>
-    </ClCompile>
-    <ClCompile Include="matsu\angle_test.cpp">
-      <Filter>matsu</Filter>
-    </ClCompile>
-    <ClCompile Include="karen\heap_test.cpp">
+    <ClCompile Include="karen\free_list_block_pool_test.cc">
       <Filter>karen</Filter>
     </ClCompile>
-    <ClCompile Include="karen\free_list_block_pool_test.cpp">
+    <ClCompile Include="karen\free_list_manager_test.cc">
       <Filter>karen</Filter>
     </ClCompile>
-    <ClCompile Include="karen\free_list_manager_test.cpp">
+    <ClCompile Include="karen\free_list_object_pool_test.cc">
       <Filter>karen</Filter>
     </ClCompile>
-    <ClCompile Include="karen\free_list_object_pool_test.cpp">
+    <ClCompile Include="karen\heap_test.cc">
       <Filter>karen</Filter>
     </ClCompile>
-    <ClCompile Include="hayami\logger_test.cpp">
+    <ClCompile Include="hayami\logger_test.cc">
       <Filter>hayami</Filter>
     </ClCompile>
-    <ClCompile Include="sora\flag_generator_test.cpp">
-      <Filter>sora</Filter>
+    <ClCompile Include="matsu\angle_test.cc">
+      <Filter>matsu</Filter>
     </ClCompile>
-    <ClCompile Include="sora\id_generator_test.cpp">
-      <Filter>sora</Filter>
+    <ClCompile Include="matsu\coordinate_test.cc">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="matsu\math_test.cc">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="matsu\matrix_template_test.cc">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="matsu\matrix_test.cc">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="matsu\quaternion_test.cc">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="matsu\vector_test.cc">
+      <Filter>matsu</Filter>
+    </ClCompile>
+    <ClCompile Include="precompile.cc">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="testmain.cc">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

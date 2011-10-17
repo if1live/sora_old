@@ -18,12 +18,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "precompile.h"
-#include "irina/world.h"
+#ifndef BASE_KAREN_BOOST_CLASS_POOL_H_
+#define BASE_KAREN_BOOST_CLASS_POOL_H_
 
-namespace irina {;
-World::World() {
+#include <boost/pool.hpp>
+
+namespace karen {;
+template<typename T>
+class BoostClassPool {
+ public:
+  BoostClassPool() {}
+  ~BoostClassPool() {}
+
+  void *operator new() {
+    void *ptr = GetPool().malloc();
+    return ptr;
+  }
+  void operator delete(void *ptr) {
+    GetPool().free(ptr);
+  }
+ private:
+  static boost::pool<> &GetPool() {
+    static boost::pool<> pool(sizeof(T));
+    return pool;
+  }
 }
-World::~World() {
 }
-}
+
+#endif  // BASE_KAREN_BOOST_CLASS_POOL_H_

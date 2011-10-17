@@ -68,6 +68,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="karen\boost_class_pool.h" />
     <ClInclude Include="karen\class_heap.h" />
     <ClInclude Include="karen\free_list_block_pool.h" />
     <ClInclude Include="karen\free_list_manager.h" />

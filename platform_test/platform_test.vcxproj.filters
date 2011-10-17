@@ -24,7 +24,7 @@
     <ClCompile Include="mio\path_test.cc">
       <Filter>mio</Filter>
     </ClCompile>
-    <ClCompile Include="precompile.cpp">
+    <ClCompile Include="precompile.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

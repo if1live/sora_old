@@ -18,22 +18,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="konomi\message_decorator_test.cpp">
+    <ClCompile Include="konomi\identifier_flag_dictionary_test.cc">
       <Filter>konomi</Filter>
     </ClCompile>
-    <ClCompile Include="konomi\message_test.cpp">
+    <ClCompile Include="konomi\message_decorator_test.cc">
       <Filter>konomi</Filter>
     </ClCompile>
-    <ClCompile Include="konomi\variant_test.cpp">
+    <ClCompile Include="konomi\message_test.cc">
       <Filter>konomi</Filter>
     </ClCompile>
-    <ClCompile Include="konomi\identifier_flag_dictionary_test.cpp">
+    <ClCompile Include="konomi\variant_test.cc">
       <Filter>konomi</Filter>
     </ClCompile>
-    <ClCompile Include="precompile.cpp">
+    <ClCompile Include="precompile.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="testmain.cpp">
+    <ClCompile Include="testmain.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

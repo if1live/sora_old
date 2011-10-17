@@ -18,35 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef BASE_SORA_SHARED_OBJECT_H_
-#define BASE_SORA_SHARED_OBJECT_H_
+#include "precompile.h"
+#include "irina/entity.h"
 
-namespace sora {;
-template<typename T>
-class SharedObject {
- public:
-  static T& GetInstance() {
-    if (ctx_ == NULL) {;
-      ctx_ = new T;
-    }
-      return *ctx_;
-    }
-  static void DestoryInstance() {
-    if (ctx_ != NULL) {
-      delete(ctx_)
-      ctx_ = NULL;
-    }
-  }
-  static bool IsCreated() {
-    return (ctx_ != NULL);
-  }
-  SharedObject() {}
-  ~SharedObject() {}
- private:
-  static T *ctx_;
-};
-
-template<typename T>
-T *SharedObject<T>::ctx_ = NULL;
+namespace irina {;
+Entity::Entity(World *world) : world_(world), user_data(NULL) {
 }
-#endif  // BASE_SORA_SHARED_OBJECT_H_
+Entity::~Entity() {
+}
+World *Entity::world() {
+  return world_;
+}
+}

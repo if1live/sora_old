@@ -33,13 +33,13 @@
     <ClCompile Include="precompile.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="irina\world.cpp">
+    <ClCompile Include="irina\component.cc">
       <Filter>irina</Filter>
     </ClCompile>
-    <ClCompile Include="irina\entity.cpp">
+    <ClCompile Include="irina\entity.cc">
       <Filter>irina</Filter>
     </ClCompile>
-    <ClCompile Include="irina\component.cpp">
+    <ClCompile Include="irina\world.cc">
       <Filter>irina</Filter>
     </ClCompile>
   </ItemGroup>
