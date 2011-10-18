@@ -91,6 +91,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="sora\class_type_test.cc" />
     <ClCompile Include="sora\flag_generator_test.cc" />
     <ClCompile Include="sora\id_generator_test.cc" />
     <ClCompile Include="sora\string_table_test.cc" />
