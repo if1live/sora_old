@@ -54,6 +54,11 @@ TEST(ClassType, test) {
 
 class Type2Test {
   SR_SUPER_CLASS_2(Type2Test);
+public:
+  // virtual을 사용하지 않는 버전은 타입을 받아서 설정해줘야돌아간다
+  Type2Test(int class_type) {
+    set_class_type(class_type);
+  }
 };
 class Type2Test1 : public Type2Test {
   SR_CHILD_CLASS_2("type2_test_1");

@@ -24,7 +24,6 @@
 #include <vector>
 #include <string>
 #include <algorithm>
-#include "sora/macro.h"
 
 namespace sora {;
 class StringCodeDictionary {
@@ -117,6 +116,7 @@ public: \
 // virtual 기반이 아닌것
 // 자식의 생성자에서 타입을 얻어서 부모생성자로 꽂아줘야되지만
 // virtual을 줄일수 있다
+// 기본생성자와 같은 곳에서 인자로 받은 class_type를 초기화 시켜줄수있어야한다
 #define SR_SUPER_CLASS_2(CLASS_NAME)  \
 public: \
   int GetClassType() const { return class_type_; }  \
@@ -132,9 +132,8 @@ public: \
   static int ClassNameToType(const std::string &name) { \
     return GetCodeDictionary().NameToCode(name);  \
   } \
-public: \
-  CLASS_NAME(int class_type) : class_type_(class_type) {} \
 private:  \
+  void set_class_type(int class_type) { class_type_ = class_type; } \
   int class_type_;
 
 #define SR_CHILD_CLASS_2(CLASS_TYPE)  \
@@ -153,6 +152,5 @@ public: \
     static std::string name(CLASS_TYPE);  \
     return name;  \
   }
-
 
 #endif  // BASE_SORA_CLASS_TYPE_H_

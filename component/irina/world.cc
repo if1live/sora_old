@@ -38,6 +38,9 @@ bool World::DestroyEntity(Entity *entity) {
   if (it != entity_dict_.end()) {
     entity_dict_.erase(it);
     delete(entity);
+    return true;
+  } else {
+    return false;
   }
 }
 }
