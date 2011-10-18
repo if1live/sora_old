@@ -52,5 +52,37 @@ TEST(ClassType, test) {
   EXPECT_EQ(true, obj2.GetClassType() == TypeTest1::ClassNameToType(TypeTest2::ClassName()));
 }
 
+class Type2Test {
+  SR_SUPER_CLASS_2(Type2Test);
+};
+class Type2Test1 : public Type2Test {
+  SR_CHILD_CLASS_2("type2_test_1");
+public:
+  Type2Test1() : Type2Test(ClassType()) {}
+};
+class Type2Test2 : public Type2Test {
+  SR_CHILD_CLASS_2("type2_test_2");
+public:
+  Type2Test2() : Type2Test(ClassType()) {}
+};
+
 TEST(ClassType2, test) {
+  using std::string;
+
+  Type2Test1 obj1;
+  EXPECT_EQ(true, obj1.GetClassType() == Type2Test1::ClassType());
+  EXPECT_EQ(true, obj1.GetClassName() == "type2_test_1");
+  EXPECT_EQ(true, obj1.GetClassName() == Type2Test1::ClassName());
+
+  Type2Test2 obj2;
+  const string &name1 = obj1.GetClassName();
+  const string &name2 = obj2.GetClassName();
+  int code1 = obj1.GetClassType();
+  int code2 = obj2.GetClassType();
+  EXPECT_EQ(true, name1 != name2);
+  EXPECT_EQ(true, code1 != code2);
+
+  const string &name3 = Type2Test1::ClassTypeToName(Type2Test2::ClassType());
+  EXPECT_EQ(true, obj2.GetClassName() == name3);
+  EXPECT_EQ(true, obj2.GetClassType() == Type2Test1::ClassNameToType(Type2Test2::ClassName()));
 }

@@ -117,9 +117,42 @@ public: \
 // virtual 기반이 아닌것
 // 자식의 생성자에서 타입을 얻어서 부모생성자로 꽂아줘야되지만
 // virtual을 줄일수 있다
-#define SR_SUPER_CLASS_2()
+#define SR_SUPER_CLASS_2(CLASS_NAME)  \
+public: \
+  int GetClassType() const { return class_type_; }  \
+  const std::string &GetClassName() const { return ClassTypeToName(class_type_); }  \
+public: \
+  static sora::StringCodeDictionary &GetCodeDictionary() {  \
+    static sora::StringCodeDictionary dict_;  \
+    return dict_; \
+  } \
+  static const std::string &ClassTypeToName(int code) { \
+    return GetCodeDictionary().CodeToName(code);  \
+  } \
+  static int ClassNameToType(const std::string &name) { \
+    return GetCodeDictionary().NameToCode(name);  \
+  } \
+public: \
+  CLASS_NAME(int class_type) : class_type_(class_type) {} \
+private:  \
+  int class_type_;
 
-#define SR_CHILD_CLASS_2(CLASS_TYPE)
+#define SR_CHILD_CLASS_2(CLASS_TYPE)  \
+public: \
+  static int ClassType() {  \
+    static bool first_run = true; \
+    static int code = -1; \
+    if (first_run == true) {  \
+      first_run = true; \
+      code = GetCodeDictionary().Register(std::string(CLASS_TYPE));  \
+    } \
+    return code;  \
+  } \
+  static const std::string &ClassName() { \
+    static int code = ClassType();  \
+    static std::string name(CLASS_TYPE);  \
+    return name;  \
+  }
 
 
 #endif  // BASE_SORA_CLASS_TYPE_H_
