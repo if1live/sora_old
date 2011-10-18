@@ -81,6 +81,9 @@
     <ClCompile Include="testmain.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sora\string_table_test.cc">
+      <Filter>sora</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="precompile.h">

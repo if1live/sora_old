@@ -99,6 +99,8 @@
     <ClInclude Include="sora\platform.h" />
     <ClInclude Include="sora\shared_object.h" />
     <ClInclude Include="sora\singleton.h" />
+    <ClInclude Include="sora\string_hash_functor.h" />
+    <ClInclude Include="sora\string_table.h" />
     <ClInclude Include="sora\string_util.h" />
     <ClInclude Include="sora\template_library.h" />
     <ClInclude Include="sora\template_library_impl.h" />
@@ -107,6 +109,7 @@
   <ItemGroup>
     <ClCompile Include="karen\free_list_block_pool.cc" />
     <ClCompile Include="karen\heap.cc" />
+    <ClCompile Include="sora\string_hash_functor.cc" />
     <ClCompile Include="sora\string_util.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
