@@ -84,6 +84,9 @@
     <ClCompile Include="sora\class_type_test.cc">
       <Filter>sora</Filter>
     </ClCompile>
+    <ClCompile Include="sora\property_test.cc">
+      <Filter>sora</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="precompile.h">

@@ -94,6 +94,7 @@
     <ClCompile Include="sora\class_type_test.cc" />
     <ClCompile Include="sora\flag_generator_test.cc" />
     <ClCompile Include="sora\id_generator_test.cc" />
+    <ClCompile Include="sora\property_test.cc" />
     <ClCompile Include="sora\string_table_test.cc" />
     <ClCompile Include="sora\string_util_test.cc" />
     <ClCompile Include="testmain.cc" />

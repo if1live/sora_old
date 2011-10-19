@@ -98,6 +98,7 @@
     <ClInclude Include="sora\id_generator.h" />
     <ClInclude Include="sora\macro.h" />
     <ClInclude Include="sora\platform.h" />
+    <ClInclude Include="sora\property.h" />
     <ClInclude Include="sora\shared_object.h" />
     <ClInclude Include="sora\singleton.h" />
     <ClInclude Include="sora\string_hash_functor.h" />
