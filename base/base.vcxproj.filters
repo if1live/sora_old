@@ -141,6 +141,12 @@
     <ClInclude Include="sora\property.h">
       <Filter>sora</Filter>
     </ClInclude>
+    <ClInclude Include="matsu\range.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="sora\string_code_dictionary.h">
+      <Filter>sora</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora\string_util.cc">

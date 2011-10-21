@@ -21,59 +21,7 @@
 #ifndef BASE_SORA_CLASS_TYPE_H_
 #define BASE_SORA_CLASS_TYPE_H_
 
-#include <vector>
-#include <string>
-#include <algorithm>
-
-namespace sora {;
-class StringCodeDictionary {
-public:
-  StringCodeDictionary() {}
-  ~StringCodeDictionary() {}
-  int Register(const std::string &name) {
-    using std::vector;
-    using std::string;
-    using std::find;
-    using std::distance;
-    vector<string> &name_list = str_list_;
-    vector<string>::iterator found = find(name_list.begin(),
-      name_list.end(), name);
-    if (found == name_list.end()) {
-      str_list_.push_back(name);
-      return str_list_.size() - 1;
-    } else {
-      return distance(name_list.begin(), found);
-    }
-  }
-  const std::string &CodeToName(int code) {
-    using std::vector;
-    using std::string;
-    static std::string empty("");
-    vector<string> &name_list = str_list_;
-    if (code < 0 || code >= name_list.size()) {
-      return empty;
-    } else {
-      return name_list[code];
-    }
-  }
-  int NameToCode(const std::string &name) {
-    using std::vector;
-    using std::string;
-    using std::find;
-    using std::distance;
-    vector<string> &name_list = str_list_;
-    vector<string>::iterator found = find(name_list.begin(),
-      name_list.end(), name);
-    if (found == name_list.end()) {
-      return -1;
-    } else {
-      return distance(name_list.begin(), found);
-    }
-  }
-private:
-  std::vector<std::string> str_list_;
-};
-}
+#include "sora/string_code_dictionary.h"
 
 // virtual 기반으로 구현된것
 // SR_SUPER_CLASS와 SR_CHILD_CLASS가 한쌍을 구성
@@ -82,8 +30,8 @@ public: \
   virtual int GetClassType() const = 0; \
   virtual const std::string &GetClassName() const = 0;  \
 public:  \
-  static sora::StringCodeDictionary &GetCodeDictionary() {  \
-    static sora::StringCodeDictionary dict_;  \
+  static sora::StringIntCodeDictionary &GetCodeDictionary() {  \
+    static sora::StringIntCodeDictionary dict_;  \
     return dict_; \
   } \
   static const std::string &ClassTypeToName(int code) { \
@@ -122,8 +70,8 @@ public: \
   int GetClassType() const { return class_type_; }  \
   const std::string &GetClassName() const { return ClassTypeToName(class_type_); }  \
 public: \
-  static sora::StringCodeDictionary &GetCodeDictionary() {  \
-    static sora::StringCodeDictionary dict_;  \
+  static sora::StringIntCodeDictionary &GetCodeDictionary() {  \
+    static sora::StringIntCodeDictionary dict_;  \
     return dict_; \
   } \
   static const std::string &ClassTypeToName(int code) { \
