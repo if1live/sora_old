@@ -17,29 +17,26 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-// Ŭnicode pleasep
-#include "precompile.h"
-#include "karen/memory_leak_detector.h"
-int main(int argc, char *argv[])  {
-  //init gl
-	if (glfwInit() != GL_TRUE) {
-		return -1;
-	}
-	glfwOpenWindow(320, 240, 5, 6, 5, 0, 0, 0, GLFW_WINDOW);
+// Ŭnicode please
+#ifndef BASE_KAREN_MEMORY_LEAK_DETECTOR_H_
+#define BASE_KAREN_MEMORY_LEAK_DETECTOR_H_
 
-	//init glew
-	GLenum err = glewInit();
-	if (GLEW_OK != err) 	{
-		/* Problem: glewInit failed, something is seriously wrong. */
-		fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-	}
+#include "sora/platform.h"
+#if SR_WIN && DEBUG
 
-  ::testing::InitGoogleTest(&argc, argv);
-  int result = RUN_ALL_TESTS();
+#define _CRTDBG_MAP_ALLOC 
+#include <crtdbg.h>
 
-  //cleanup gl
-	glfwTerminate();
-
-  getchar();
-  return result;
+namespace karen {;
+class MemoryLeakDetector {
+public:
+  MemoryLeakDetector() {
+  ::_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
+  }
+  ~MemoryLeakDetector() {
+  }
+} memory_leak_detector;
 }
+
+#endif
+#endif  // BASE_KAREN_MEMORY_LEAK_DETECTOR_H_

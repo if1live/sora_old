@@ -76,6 +76,7 @@
     <ClInclude Include="karen\heap.h" />
     <ClInclude Include="karen\heap_alloc_header.h" />
     <ClInclude Include="karen\karen_enum.h" />
+    <ClInclude Include="karen\memory_leak_detector.h" />
     <ClInclude Include="matsu\angle.h" />
     <ClInclude Include="matsu\angle_impl.h" />
     <ClInclude Include="matsu\coordinate.h" />

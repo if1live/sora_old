@@ -147,6 +147,9 @@
     <ClInclude Include="sora\string_code_dictionary.h">
       <Filter>sora</Filter>
     </ClInclude>
+    <ClInclude Include="karen\memory_leak_detector.h">
+      <Filter>karen</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora\string_util.cc">
