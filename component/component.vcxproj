@@ -72,6 +72,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="irina\component.cc" />
+    <ClCompile Include="irina\component_list.cc" />
     <ClCompile Include="irina\entity.cc" />
     <ClCompile Include="irina\world.cc" />
     <ClCompile Include="konomi\identifier_flag_dictionary.cpp" />
@@ -84,6 +85,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="irina\component.h" />
+    <ClInclude Include="irina\component_list.h" />
     <ClInclude Include="irina\entity.h" />
     <ClInclude Include="irina\irina_enum.h" />
     <ClInclude Include="irina\world.h" />

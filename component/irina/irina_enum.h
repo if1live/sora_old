@@ -25,6 +25,7 @@ namespace irina {;
 class World;
 class Entity;
 class Component;
+class ComponentList;
 }
 
 #endif  // COMPONENT_IRINA_IRINA_ENUM_H_

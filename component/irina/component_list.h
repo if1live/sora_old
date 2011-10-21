@@ -18,46 +18,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "precompile.h"
-#include "irina/world.h"
-#include "sora/template_library.h"
-#include "irina/entity.h"
+#ifndef COMPONENT_IRINA_COMPONENT_LIST_H_
+#define COMPONENT_IRINA_COMPONENT_LIST_H_
+
+#include "irina/irina_enum.h"
 
 namespace irina {;
-World::World() {
-}
-World::~World() {
-  sora::DestroyDict(&entity_dict_);
-  entity_name_dict_.clear();
-}
-Entity *World::CreateEntity() {
-  Entity *entity = new Entity(this);
-  int id = entity->id();
-  entity_dict_[id] = entity;
-  return entity;
-}
-Entity *World::CreateEntity(const std::string &name) {
-  Entity *entity = new Entity(this, name);
-  int id = entity->id();
-  entity_dict_[id] = entity;
-  entity_name_dict_[name] = entity;
-  return entity;
-}
-bool World::DestroyEntity(Entity *entity) {
-  const std::string &name = entity->name();
-  if(name.empty() == false) {
-    EntityNameDictType::iterator name_it = entity_name_dict_.find(name);
-    SR_ASSERT(name_it != entity_name_dict_.end());
-    entity_name_dict_.erase(name_it);
-  }
+class ComponentList {
+public:
+  // 리스트를 쓴것은 넣고뺴고가 자주 발생해서이다
+  typedef std::list<Component*> ListType;
+  typedef ListType::iterator Iterator;
+  typedef ListType::const_iterator ConstIterator;
 
-  EntityDictType::iterator it = entity_dict_.find(entity->id());
-  if (it != entity_dict_.end()) {
-    entity_dict_.erase(it);
-    delete(entity);
-    return true;
-  } else {
-    return false;
-  }
+public:
+  ComponentList();
+  ~ComponentList();
+
+  void Add(Component *comp);
+  bool Remove(Component *comp);
+  bool IsExist(Component *comp) const;
+  int Count() const { return comp_list_.size(); }
+
+  Iterator Begin() { return comp_list_.begin(); }
+  Iterator End() { return comp_list_.end(); }
+  ConstIterator Begin() const { return comp_list_.begin(); }
+  ConstIterator End() const { return comp_list_.end(); }
+private:
+  ListType comp_list_;
+};
 }
-}
+
+#endif  // COMPONENT_IRINA_COMPONENT_LIST_H_

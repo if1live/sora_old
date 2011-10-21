@@ -28,6 +28,7 @@ namespace irina {;
 class Entity : public sora::IdGenerator<Entity> {
  public:
   Entity(World *world);
+  Entity(World *world, const std::string &name);
   ~Entity();
 
   World *world();
@@ -38,8 +39,12 @@ class Entity : public sora::IdGenerator<Entity> {
   T GetUserDataAs();
   void *user_data;
 
+ public:
+  const std::string &name() const;
+
  private:
   World *world_;
+  std::string name_;
 };
 }
 

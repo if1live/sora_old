@@ -28,16 +28,20 @@ namespace irina {;
 class World {
  public:
   typedef std::tr1::unordered_map<int, Entity*> EntityDictType;
+  typedef std::tr1::unordered_map<std::string, Entity*> EntityNameDictType;
  public:
   World();
   ~World();
 
   Entity *CreateEntity();
+  Entity *CreateEntity(const std::string &name);
   bool DestroyEntity(Entity *entity);
+
+  int EntityCount() const { return entity_dict_.size(); }
 
  private:
   EntityDictType entity_dict_;
-  
+  EntityNameDictType entity_name_dict_;
 };
 }
 

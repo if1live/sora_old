@@ -19,45 +19,48 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "precompile.h"
-#include "irina/world.h"
+#include "irina/component_list.h"
+#include "irina/component.h"
 #include "sora/template_library.h"
-#include "irina/entity.h"
 
 namespace irina {;
-World::World() {
+ComponentList::ComponentList() {
 }
-World::~World() {
-  sora::DestroyDict(&entity_dict_);
-  entity_name_dict_.clear();
+ComponentList::~ComponentList() {
+  sora::DestroyList(&comp_list_);  
 }
-Entity *World::CreateEntity() {
-  Entity *entity = new Entity(this);
-  int id = entity->id();
-  entity_dict_[id] = entity;
-  return entity;
-}
-Entity *World::CreateEntity(const std::string &name) {
-  Entity *entity = new Entity(this, name);
-  int id = entity->id();
-  entity_dict_[id] = entity;
-  entity_name_dict_[name] = entity;
-  return entity;
-}
-bool World::DestroyEntity(Entity *entity) {
-  const std::string &name = entity->name();
-  if(name.empty() == false) {
-    EntityNameDictType::iterator name_it = entity_name_dict_.find(name);
-    SR_ASSERT(name_it != entity_name_dict_.end());
-    entity_name_dict_.erase(name_it);
-  }
-
-  EntityDictType::iterator it = entity_dict_.find(entity->id());
-  if (it != entity_dict_.end()) {
-    entity_dict_.erase(it);
-    delete(entity);
-    return true;
-  } else {
+bool ComponentList::IsExist(Component *comp) const {
+  ConstIterator found = std::find(comp_list_.begin(), comp_list_.end(), comp);
+  if (found == comp_list_.end()) {
     return false;
+  } else {
+    return true;
+  }
+}
+void ComponentList::Add(Component *comp) {
+  if (comp == NULL) {
+    return;
+  }
+  // 넣는것은 맨 앞에 넣자. 왜냐하면 보통 나중에 넣은 컴포넌트가 빠질 확률이 높으니까
+  // 중복삽입을 막기 위해서 검사를 하자
+  Iterator found = std::find(comp_list_.begin(), comp_list_.end(), comp);
+  if (found == comp_list_.end()) {
+    comp_list_.push_front(comp);
+  } else {
+    SR_ASSERT(!"alreay added");
+  }
+}
+bool ComponentList::Remove(Component *comp) {
+  // 나중에 넣은 컴포넌트일수록 사라질 확률이 높으니까 앞부터 검색
+  using std::find;
+  Iterator found = find(comp_list_.begin(), comp_list_.end(), comp);
+  if (found == comp_list_.end()) {
+    return false;
+  } else {
+    // 소멸의 책임까지 소유
+    delete(comp);
+    comp_list_.erase(found);
+    return true;
   }
 }
 }

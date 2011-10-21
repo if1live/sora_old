@@ -16,6 +16,9 @@
     <Filter Include="konomi">
       <UniqueIdentifier>{33c6a9ed-a40a-4b49-be30-c3d6dffbfb78}</UniqueIdentifier>
     </Filter>
+    <Filter Include="irina">
+      <UniqueIdentifier>{f166d4da-fdfd-43de-bfac-cfc92c9a7db1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="konomi\identifier_flag_dictionary_test.cc">
@@ -35,6 +38,9 @@
     </ClCompile>
     <ClCompile Include="testmain.cc">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="irina\entity_test.cc">
+      <Filter>irina</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

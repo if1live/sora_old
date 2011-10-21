@@ -42,6 +42,9 @@
     <ClCompile Include="irina\world.cc">
       <Filter>irina</Filter>
     </ClCompile>
+    <ClCompile Include="irina\component_list.cc">
+      <Filter>irina</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="konomi\identifier_flag_dictionary.h">
@@ -84,6 +87,9 @@
       <Filter>irina</Filter>
     </ClInclude>
     <ClInclude Include="irina\irina_enum.h">
+      <Filter>irina</Filter>
+    </ClInclude>
+    <ClInclude Include="irina\component_list.h">
       <Filter>irina</Filter>
     </ClInclude>
   </ItemGroup>

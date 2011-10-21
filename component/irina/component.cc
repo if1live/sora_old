@@ -22,4 +22,10 @@
 #include "irina/component.h"
 
 namespace irina {;
+Component::Component(int class_type) {
+  set_class_type(class_type);   // 자동화된 컴포넌트 타입 생성에 필요
+}
+Component::~Component() {
+}
+
 }

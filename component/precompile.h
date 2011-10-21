@@ -6,6 +6,9 @@
 
 #include <string>
 #include <vector>
+#include <map>
+#include <list>
+#include <algorithm>
 
 #include <boost/foreach.hpp>
 

@@ -22,11 +22,18 @@
 #include "irina/entity.h"
 
 namespace irina {;
-Entity::Entity(World *world) : world_(world), user_data(NULL) {
+Entity::Entity(World *world)
+  : world_(world), user_data(NULL) {
+}
+Entity::Entity(World *world, const std::string &name)
+  : world_(world), user_data(NULL), name_(name) {
 }
 Entity::~Entity() {
 }
 World *Entity::world() {
   return world_;
+}
+const std::string &Entity::name() const {
+  return name_;
 }
 }

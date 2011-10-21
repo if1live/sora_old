@@ -22,10 +22,13 @@
 #define COMPONENT_IRINA_COMPONENT_H_
 
 #include "irina/irina_enum.h"
+#include "sora/class_type.h"
 namespace irina {;
 class Component {
  public:
-  Component();
+  SR_SUPER_CLASS_2(Component);
+ public:
+  Component(int class_type);
   virtual ~Component();
 
  private:

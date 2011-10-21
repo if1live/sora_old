@@ -19,45 +19,38 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "precompile.h"
-#include "irina/world.h"
-#include "sora/template_library.h"
 #include "irina/entity.h"
+#include "irina/world.h"
 
-namespace irina {;
-World::World() {
+TEST(Entity, CreateEntity) {
+  using irina::World;
+  using irina::Entity;
+  using std::string;
+  World world;
+  Entity *e1 = world.CreateEntity();
+  Entity *e2 = world.CreateEntity(string("asdf"));
+  EXPECT_EQ(true, e1->world() == &world);
+  EXPECT_EQ(true, e2->world() == &world);
+  EXPECT_STREQ("asdf", e2->name().c_str());
 }
-World::~World() {
-  sora::DestroyDict(&entity_dict_);
-  entity_name_dict_.clear();
-}
-Entity *World::CreateEntity() {
-  Entity *entity = new Entity(this);
-  int id = entity->id();
-  entity_dict_[id] = entity;
-  return entity;
-}
-Entity *World::CreateEntity(const std::string &name) {
-  Entity *entity = new Entity(this, name);
-  int id = entity->id();
-  entity_dict_[id] = entity;
-  entity_name_dict_[name] = entity;
-  return entity;
-}
-bool World::DestroyEntity(Entity *entity) {
-  const std::string &name = entity->name();
-  if(name.empty() == false) {
-    EntityNameDictType::iterator name_it = entity_name_dict_.find(name);
-    SR_ASSERT(name_it != entity_name_dict_.end());
-    entity_name_dict_.erase(name_it);
-  }
 
-  EntityDictType::iterator it = entity_dict_.find(entity->id());
-  if (it != entity_dict_.end()) {
-    entity_dict_.erase(it);
-    delete(entity);
-    return true;
-  } else {
-    return false;
-  }
-}
+TEST(Entity, DestroyEntity) {
+  using irina::World;
+  using irina::Entity;
+  using std::string;
+
+  World world;
+  EXPECT_EQ(0, world.EntityCount());
+  
+  Entity *e1 = world.CreateEntity();
+  EXPECT_EQ(1, world.EntityCount());
+
+  Entity *e2 = world.CreateEntity(string("asdf"));
+  EXPECT_EQ(2, world.EntityCount());
+
+  e2->world()->DestroyEntity(e2);
+  EXPECT_EQ(1, world.EntityCount());
+
+  world.DestroyEntity(e1);
+  EXPECT_EQ(0, world.EntityCount());
 }
