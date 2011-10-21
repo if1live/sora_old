@@ -31,6 +31,8 @@ World::World() {
 World::~World() {
   sora::DestroyDict(&entity_dict_);
   entity_name_dict_.clear();
+
+  sora::DestroyDict(&complist_dict_);
 }
 Entity *World::CreateEntity() {
   Entity *entity = new Entity(this);

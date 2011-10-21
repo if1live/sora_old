@@ -27,6 +27,7 @@ namespace irina {;
 ComponentList::ComponentList() {
 }
 ComponentList::~ComponentList() {
+  SR_ASSERT(comp_list_.size() == 0);
   sora::DestroyList(&comp_list_);  
 }
 bool ComponentList::IsExist(Component *comp) const {

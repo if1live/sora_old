@@ -85,9 +85,9 @@ bool Entity::RemoveComponent(int comp_type) {
     return false;
   } else {
     Component *comp = *found;
-    delete(comp);
     world()->UnregisterComponent(comp);
     comp_list_.erase(found);
+    delete(comp);
     return true;
   }
 }

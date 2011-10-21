@@ -44,6 +44,7 @@
       <AdditionalIncludeDirectories>..\devel;..\third_party\glfw\include;..\third_party\soil\src;..\third_party\glew\include;..\third_party\freeglut\include;..\third_party\boost;..\base;.;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>precompile.h</PrecompiledHeaderFile>
+      <PreprocessorDefinitions>DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
