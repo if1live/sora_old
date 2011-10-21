@@ -18,39 +18,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "precompile.h"
-#include "irina/entity.h"
-#include "irina/world.h"
+#ifndef COMPONENT_TEST_IRINA_SAMPLE_COMPONENT_H_
+#define COMPONENT_TEST_IRINA_SAMPLE_COMPONENT_H_
 
-TEST(Entity, CreateEntity) {
-  using irina::World;
-  using irina::Entity;
-  using std::string;
-  World world;
-  Entity *e1 = world.CreateEntity();
-  Entity *e2 = world.CreateEntity(string("asdf"));
-  EXPECT_EQ(true, e1->world() == &world);
-  EXPECT_EQ(true, e2->world() == &world);
-  EXPECT_STREQ("asdf", e2->name().c_str());
+#include "irina/component.h"
+
+namespace {;
+class Sample1Component : public irina::Component {
+public:
+  SR_CHILD_CLASS_2("sample1");
+  Sample1Component() : irina::Component(ClassType()) {}
+};
+
+class Sample2Component : public irina::Component {
+public:
+  SR_CHILD_CLASS_2("sample2");
+  Sample2Component() : irina::Component(ClassType()) {}
+};
 }
 
-TEST(Entity, DestroyEntity) {
-  using irina::World;
-  using irina::Entity;
-  using std::string;
-
-  World world;
-  EXPECT_EQ(0, world.EntityCount());
-  
-  Entity *e1 = world.CreateEntity();
-  EXPECT_EQ(1, world.EntityCount());
-
-  Entity *e2 = world.CreateEntity(string("asdf"));
-  EXPECT_EQ(2, world.EntityCount());
-
-  e2->world()->DestroyEntity(e2);
-  EXPECT_EQ(1, world.EntityCount());
-
-  world.DestroyEntity(e1);
-  EXPECT_EQ(0, world.EntityCount());
-}
+#endif  // COMPONENT_TEST_IRINA_SAMPLE_COMPONENT_H_
