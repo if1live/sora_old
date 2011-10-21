@@ -21,31 +21,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="konomi\identifier_flag_dictionary_test.cc">
-      <Filter>konomi</Filter>
-    </ClCompile>
-    <ClCompile Include="konomi\message_decorator_test.cc">
-      <Filter>konomi</Filter>
-    </ClCompile>
-    <ClCompile Include="konomi\message_test.cc">
-      <Filter>konomi</Filter>
-    </ClCompile>
-    <ClCompile Include="konomi\variant_test.cc">
-      <Filter>konomi</Filter>
-    </ClCompile>
     <ClCompile Include="precompile.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="testmain.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="irina\entity_test.cc">
+    <ClCompile Include="irina\world_test.cc">
       <Filter>irina</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="precompile.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="irina\sample_component.h">
+      <Filter>irina</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

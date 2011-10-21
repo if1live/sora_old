@@ -22,6 +22,8 @@
 #include "irina/world.h"
 #include "sora/template_library.h"
 #include "irina/entity.h"
+#include "irina/component_list.h"
+#include "irina/component.h"
 
 namespace irina {;
 World::World() {
@@ -59,5 +61,24 @@ bool World::DestroyEntity(Entity *entity) {
   } else {
     return false;
   }
+}
+ComponentList &World::GetComponentList(int comp_type) {
+  ComponentListDictType::iterator found = complist_dict_.find(comp_type);
+  ComponentList *complist = NULL;
+  if (found == complist_dict_.end()) {
+    complist = new ComponentList();
+    complist_dict_[comp_type] = complist;
+  } else {
+    complist = found->second;
+  }
+  return *complist;
+}
+bool World::RegisterComponent(Component *comp) {
+  ComponentList &complist = GetComponentList(comp->GetClassType());
+  return complist.Add(comp);
+}
+bool World::UnregisterComponent(Component *comp) {
+  ComponentList &complist = GetComponentList(comp->GetClassType());
+  return complist.Remove(comp);
 }
 }

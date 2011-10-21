@@ -35,7 +35,7 @@ public:
   ComponentList();
   ~ComponentList();
 
-  void Add(Component *comp);
+  bool Add(Component *comp);
   bool Remove(Component *comp);
   bool IsExist(Component *comp) const;
   int Count() const { return comp_list_.size(); }

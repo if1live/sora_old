@@ -70,11 +70,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="irina\entity_test.cc" />
-    <ClCompile Include="konomi\identifier_flag_dictionary_test.cc" />
-    <ClCompile Include="konomi\message_decorator_test.cc" />
-    <ClCompile Include="konomi\message_test.cc" />
-    <ClCompile Include="konomi\variant_test.cc" />
+    <ClCompile Include="irina\world_test.cc" />
     <ClCompile Include="precompile.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -82,6 +78,7 @@
     <ClCompile Include="testmain.cc" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="irina\sample_component.h" />
     <ClInclude Include="precompile.h" />
   </ItemGroup>
   <ItemGroup>

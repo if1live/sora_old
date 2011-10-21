@@ -35,9 +35,19 @@ class Entity : public sora::IdGenerator<Entity> {
 
  ///custom data
  public:
-  template<typename T>
-  T GetUserDataAs();
+  template<typename T>  T GetUserDataAs();
   void *user_data;
+
+  // component
+ public:
+  bool AddComponent(Component *comp);
+  bool HasComponent(int comp_type) const;
+  bool RemoveComponent(int comp_type);
+  Component *GetComponent(int comp_type);
+  int ComponentCount() const { return comp_list_.size(); }
+  template<typename T>  bool HasComponent() const;
+  template<typename T>  bool RemoveComponent();
+  template<typename T>  T *GetComponent();
 
  public:
   const std::string &name() const;
@@ -45,6 +55,8 @@ class Entity : public sora::IdGenerator<Entity> {
  private:
   World *world_;
   std::string name_;
+  typedef std::vector<Component*> ComponentListType;
+  ComponentListType comp_list_;
 };
 }
 
@@ -52,6 +64,18 @@ namespace irina {;
 template<typename T>
 T Entity::GetUserDataAs() {
   return reinterpret_cast<T>(user_data);
+}
+template<typename T>
+bool Entity::HasComponent() const {
+  return HasComponent(T::ClassType());
+}
+template<typename T>
+bool Entity::RemoveComponent() {
+  return RemoveComponent(T::ClassType());
+}
+template<typename T>
+T *Entity::GetComponent() {
+  return static_cast<T*>(GetComponent(T::ClassType()));
 }
 }
 

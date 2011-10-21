@@ -96,12 +96,14 @@ TEST(Entity, component) {
   EXPECT_EQ(0, e1->ComponentCount());
   EXPECT_EQ(false, e1->HasComponent<Sample1Component>());
   EXPECT_EQ(false, e1->RemoveComponent<Sample1Component>());
+  EXPECT_EQ(true, NULL == e1->GetComponent<Sample1Component>());
 
   e1->AddComponent(new Sample1Component());
   EXPECT_EQ(1, e1->ComponentCount());
   EXPECT_EQ(true, e1->HasComponent<Sample1Component>());
   EXPECT_EQ(false, e1->HasComponent<Sample2Component>());
   EXPECT_EQ(false, e1->RemoveComponent<Sample2Component>());
+  EXPECT_EQ(true, NULL != e1->GetComponent<Sample1Component>());
 
   e1->AddComponent(new Sample2Component());
   EXPECT_EQ(2, e1->ComponentCount());

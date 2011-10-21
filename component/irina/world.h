@@ -23,12 +23,14 @@
 
 #include "irina/irina_enum.h"
 #include "sora/tr1_include.h"
+#include "irina/component.h"
 
 namespace irina {;
 class World {
  public:
   typedef std::tr1::unordered_map<int, Entity*> EntityDictType;
   typedef std::tr1::unordered_map<std::string, Entity*> EntityNameDictType;
+  typedef std::tr1::unordered_map<int, ComponentList*> ComponentListDictType;
  public:
   World();
   ~World();
@@ -36,12 +38,20 @@ class World {
   Entity *CreateEntity();
   Entity *CreateEntity(const std::string &name);
   bool DestroyEntity(Entity *entity);
-
   int EntityCount() const { return entity_dict_.size(); }
+
+ public:
+  bool RegisterComponent(Component *comp);
+  bool UnregisterComponent(Component *comp);
+  ComponentList &GetComponentList(int comp_type);
+  template<typename T>  ComponentList &GetComponentList() {
+    return GetComponentList(T::ClassType());
+  }
 
  private:
   EntityDictType entity_dict_;
   EntityNameDictType entity_name_dict_;
+  ComponentListDictType complist_dict_;
 };
 }
 

@@ -37,17 +37,19 @@ bool ComponentList::IsExist(Component *comp) const {
     return true;
   }
 }
-void ComponentList::Add(Component *comp) {
+bool ComponentList::Add(Component *comp) {
   if (comp == NULL) {
-    return;
+    return false;
   }
   // 넣는것은 맨 앞에 넣자. 왜냐하면 보통 나중에 넣은 컴포넌트가 빠질 확률이 높으니까
   // 중복삽입을 막기 위해서 검사를 하자
   Iterator found = std::find(comp_list_.begin(), comp_list_.end(), comp);
   if (found == comp_list_.end()) {
     comp_list_.push_front(comp);
+    return true;
   } else {
     SR_ASSERT(!"alreay added");
+    return false;
   }
 }
 bool ComponentList::Remove(Component *comp) {
@@ -57,8 +59,6 @@ bool ComponentList::Remove(Component *comp) {
   if (found == comp_list_.end()) {
     return false;
   } else {
-    // 소멸의 책임까지 소유
-    delete(comp);
     comp_list_.erase(found);
     return true;
   }
