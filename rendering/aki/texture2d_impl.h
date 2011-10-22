@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef RENDERING_AKI_TEXTURE_IMPL_H_
+#ifndef RENDERING_AKI_TEXTURE2D_IMPL_H_
 #define RENDERING_AKI_TEXTURE_IMPL_H_
 #include "aki/image.h"
 #include "matsu/math.h"
@@ -26,7 +26,7 @@
 
 namespace aki {;
 template<unsigned int N>
-TextureGroup<N>::TextureGroup()
+Texture2DGroup<N>::Texture2DGroup()
 : texture_count_(0) {
   BOOST_STATIC_ASSERT(N >= 1);
   for(int i = 0 ; i < N ; i++) {
@@ -34,19 +34,19 @@ TextureGroup<N>::TextureGroup()
   }
 }
 template<unsigned int N>
-TextureGroup<N>::~TextureGroup() {
+Texture2DGroup<N>::~Texture2DGroup() {
   Deinitialize();
 }
 
 template<unsigned int N>
-bool TextureGroup<N>::Initialize() {
+bool Texture2DGroup<N>::Initialize() {
   GLuint *ptr = reinterpret_cast<GLuint*>(&handle_);
   glGenTextures(N, ptr);
   texture_count_ = N;
   return true;
 }
 template<unsigned int N>
-bool TextureGroup<N>::Deinitialize() {
+bool Texture2DGroup<N>::Deinitialize() {
   bool retval = false;
   if (texture_count_ > 0) {
     GLuint *ptr = reinterpret_cast<GLuint*>(&handle_);
@@ -60,24 +60,24 @@ bool TextureGroup<N>::Deinitialize() {
   return retval;
 }
 template<unsigned int N>
-GLuint TextureGroup<N>::handle(int index) const {
+GLuint Texture2DGroup<N>::handle(int index) const {
   SR_ASSERT(index >= 0 && index < N);
   return handle_[index];
 }
 
 template<unsigned int N>
-GLuint TextureGroup<N>::handle() const {
+GLuint Texture2DGroup<N>::handle() const {
   return handle_[0];
 }
 template<unsigned int N>
 template<int index>
-GLuint TextureGroup<N>::handle() const {
+GLuint Texture2DGroup<N>::handle() const {
   BOOST_STATIC_ASSERT(index >= 0 && index < N);
   return handle(index);
 }
 
 template<unsigned int N>
-bool TextureGroup<N>::SetTexture(GLuint tex_id, const TextureSize &size) {
+bool Texture2DGroup<N>::SetTexture(GLuint tex_id, const TextureSize &size) {
   // 기존에 생성된것이 있으면 파기
   Deinitialize();
   handle_[0] = tex_id;
@@ -87,30 +87,30 @@ bool TextureGroup<N>::SetTexture(GLuint tex_id, const TextureSize &size) {
 }
 
 template<unsigned int N>
-const TextureSize &TextureGroup<N>::size() const {
+const TextureSize &Texture2DGroup<N>::size() const {
   return tex_size_[0];
 }
 
 template<unsigned int N>
-const TextureSize &TextureGroup<N>::size(int index) const {
+const TextureSize &Texture2DGroup<N>::size(int index) const {
   SR_ASSERT(index >= 0 && index < N);
   return tex_size_[index];
 }
 
 template<unsigned int N>
 template<int index>
-const TextureSize &TextureGroup<N>::size() const {
+const TextureSize &Texture2DGroup<N>::size() const {
   BOOST_STATIC_ASSERT(index >= 0 && index < N);
   return size(index);
 }
 
 template<unsigned int N>
-bool TextureGroup<N>::IsLoaded() const {
+bool Texture2DGroup<N>::IsLoaded() const {
   return IsLoaded<0>();
 }
 
 template<unsigned int N>
-bool TextureGroup<N>::IsLoaded(int index) const {
+bool Texture2DGroup<N>::IsLoaded(int index) const {
   SR_ASSERT(index >= 0 && index < N);
   const TextureSize &size = size();
   if (size.getTexWidth() == 0 && size.getTexHeight() == 0) {
@@ -121,15 +121,15 @@ bool TextureGroup<N>::IsLoaded(int index) const {
 }
 template<unsigned int N>
 template<int index>
-bool TextureGroup<N>::IsLoaded() const {
+bool Texture2DGroup<N>::IsLoaded() const {
   BOOST_STATIC_ASSERT(index >= 0 && index < N);
   return IsLoaded(index);
 }
 
 template<unsigned int N>
-void TextureGroup<N>::Bind() const {
+void Texture2DGroup<N>::Bind() const {
   glBindTexture(GL_TEXTURE_2D, handle());
 }
 
 }
-#endif  // RENDERING_AKI_TEXTURE_IMPL_H_
+#endif  // RENDERING_AKI_TEXTURE2D_IMPL_H_

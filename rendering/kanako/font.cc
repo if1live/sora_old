@@ -23,7 +23,7 @@
 #include "kanako/vincent.h"
 #include "aki/image.h"
 #include "aki/image_description.h"
-#include "aki/texture.h"
+#include "aki/texture2d.h"
 #include "aki/texture_loader.h"
 #include "matsu/matrix.h"
 #include "matsu/vector.h"
@@ -33,7 +33,7 @@
 #include "runa/basic_texture_shader.h"
 
 using std::auto_ptr;
-using aki::Texture;
+using aki::Texture2D;
 using runa::BasicTextureShader;
 
 namespace kanako {;
@@ -72,7 +72,7 @@ Font::Font() {
   img_desc.internal_format = aki::kInternalFormatLuminance;
   aki::Image img(img_desc, data);   // data의 메모리 관리책임까지 가져감
   img.InverseY();   //이미지를 뒤집어야 계산이 쉽다
-  font_texture_.reset(new Texture());
+  font_texture_.reset(new Texture2D());
 
   GLuint tex_id;
   aki::TextureSize tex_size;

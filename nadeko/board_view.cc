@@ -27,7 +27,7 @@
 #include "matsu/matrix.h"
 #include "matsu/vector.h"
 #include "aki/image_loader.h"
-#include "aki/texture.h"
+#include "aki/texture2d.h"
 #include "aki/texture_loader.h"
 #include "aki/image.h"
 #include "mio/path.h"
@@ -61,7 +61,7 @@ tile_size_(tile_size) {
   string bg_file = "testdata/nadeko/nadeko_01.jpg";
   bg_file = Path::AppPath(bg_file);
   //aki::ImagePtr img = aki::ImageLoader::Load(bg_file);
-  texture_.reset(new aki::Texture());
+  texture_.reset(new aki::Texture2D());
   GLuint tex_id;
   aki::TextureSize tex_size;
   aki::TextureLoader::LoadTexture2D(bg_file, &tex_id, &tex_size);

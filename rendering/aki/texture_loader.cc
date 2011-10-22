@@ -20,7 +20,7 @@
 // Ŭnicode please
 #include "precompile.h"
 #include "aki/texture_loader.h"
-#include "aki/texture.h"
+#include "aki/texture2d.h"
 #include "sora/platform.h"
 
 #if SR_WIN

@@ -50,7 +50,7 @@ class BoardView {
   int tile_size_;
   int win_width_;
   int win_height_;
-  aki::TexturePtr texture_;
+  aki::Texture2DPtr texture_;
 
   //몸통을 그릴때 사용하는 쉐이더
   std::auto_ptr<runa::ShaderProgram> body_shader_prog;

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 // Ŭnicode pleasep
 #include "precompile.h"
-#include "aki/texture.h"
+#include "aki/texture2d.h"
 #include "aki/image.h"
 #include "mio/path.h"
 #include "aki/texture_loader.h"
@@ -30,14 +30,14 @@ using aki::TextureSize;
 using aki::TextureLoader;
 using aki::Image;
 using aki::ImagePtr;
-using aki::Texture;
+using aki::Texture2D;
 
 TEST(AkiTexture, test) {
   // load sample image
   string path1 = Path::AppPath("testdata/aki/c.png");
   ImagePtr img = Image::Create(path1);
 
-  Texture tex;
+  Texture2D tex;
   GLuint tex_id;
   TextureSize tex_size;
   TextureLoader::LoadTexture2D(*img, &tex_id, &tex_size);

@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef RENDERING_AKI_TEXTURE_H_
-#define RENDERING_AKI_TEXTURE_H_
+#ifndef RENDERING_AKI_TEXTURE2D_H_
+#define RENDERING_AKI_TEXTURE2D_H_
 
 #include "aki/aki_enum.h"
 #include "sora/id_generator.h"
@@ -41,10 +41,10 @@ class TextureSize {
 
 // opengl texture
 template<unsigned int N>
-class TextureGroup : public sora::IdGenerator<int>, boost::noncopyable {
+class Texture2DGroup : public sora::IdGenerator<int>, boost::noncopyable {
  public:
-  TextureGroup();
-  ~TextureGroup();
+  Texture2DGroup();
+  ~Texture2DGroup();
 
   bool Initialize();
   bool Deinitialize();
@@ -75,6 +75,6 @@ class TextureGroup : public sora::IdGenerator<int>, boost::noncopyable {
 };
 }
 
-#include "aki/texture_impl.h"
+#include "aki/texture2d_impl.h"
 
-#endif  // RENDERING_AKI_TEXTURE_H_
+#endif  // RENDERING_AKI_TEXTURE2D_H_

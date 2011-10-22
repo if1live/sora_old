@@ -48,9 +48,6 @@
     <ClCompile Include="aki\image.cc">
       <Filter>aki</Filter>
     </ClCompile>
-    <ClCompile Include="aki\texture.cc">
-      <Filter>aki</Filter>
-    </ClCompile>
     <ClCompile Include="runa\gl_tool.cc">
       <Filter>runa</Filter>
     </ClCompile>
@@ -73,6 +70,9 @@
       <Filter>runa</Filter>
     </ClCompile>
     <ClCompile Include="aki\texture_loader.cc">
+      <Filter>aki</Filter>
+    </ClCompile>
+    <ClCompile Include="aki\texture2d.cc">
       <Filter>aki</Filter>
     </ClCompile>
   </ItemGroup>
@@ -108,9 +108,6 @@
       <Filter>runa</Filter>
     </ClInclude>
     <ClInclude Include="aki\image_description.h">
-      <Filter>aki</Filter>
-    </ClInclude>
-    <ClInclude Include="aki\texture_impl.h">
       <Filter>aki</Filter>
     </ClInclude>
     <ClInclude Include="runa\gl_tool.h">
@@ -149,7 +146,10 @@
     <ClInclude Include="aki\texture_loader.h">
       <Filter>aki</Filter>
     </ClInclude>
-    <ClInclude Include="aki\texture.h">
+    <ClInclude Include="aki\texture2d.h">
+      <Filter>aki</Filter>
+    </ClInclude>
+    <ClInclude Include="aki\texture2d_impl.h">
       <Filter>aki</Filter>
     </ClInclude>
   </ItemGroup>

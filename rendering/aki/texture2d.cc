@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "precompile.h"
-#include "aki/texture.h"
+#include "aki/texture2d.h"
 
 namespace aki {;
 TextureSize::TextureSize()

@@ -44,8 +44,9 @@ public:
   void GetCharacterTextureQuad(unsigned char ch,
     float *left, float *right, float *top, float *bottom) const;
   void BindFontTexture() const;
+
 private:
-  std::auto_ptr<aki::Texture> font_texture_;
+  std::auto_ptr<aki::Texture2D> font_texture_;
 };
 }
 

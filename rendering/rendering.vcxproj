@@ -70,7 +70,7 @@
     <ClCompile Include="aki\image.cc" />
     <ClCompile Include="aki\image_description.cc" />
     <ClCompile Include="aki\image_loader_soil.cc" />
-    <ClCompile Include="aki\texture.cc" />
+    <ClCompile Include="aki\texture2d.cc" />
     <ClCompile Include="aki\texture_loader.cc" />
     <ClCompile Include="kanako\font.cc" />
     <ClCompile Include="kanako\label.cc" />
@@ -93,8 +93,8 @@
     <ClInclude Include="aki\image.h" />
     <ClInclude Include="aki\image_description.h" />
     <ClInclude Include="aki\image_loader.h" />
-    <ClInclude Include="aki\texture.h" />
-    <ClInclude Include="aki\texture_impl.h" />
+    <ClInclude Include="aki\texture2d.h" />
+    <ClInclude Include="aki\texture2d_impl.h" />
     <ClInclude Include="aki\texture_loader.h" />
     <ClInclude Include="kanako\font.h" />
     <ClInclude Include="kanako\kanako_enum.h" />

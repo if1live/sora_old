@@ -47,8 +47,8 @@ typedef enum {
 
 // texture
 class TextureSize;
-template<unsigned int N>  class TextureGroup;
-typedef TextureGroup<1> Texture;
-typedef std::tr1::shared_ptr<Texture> TexturePtr;
+template<unsigned int N>  class Texture2DGroup;
+typedef Texture2DGroup<1> Texture2D;
+typedef std::tr1::shared_ptr<Texture2D> Texture2DPtr;
 }
 #endif  // RENDERING_AKI_AKI_ENUM_H_
