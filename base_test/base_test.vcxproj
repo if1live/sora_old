@@ -86,6 +86,7 @@
     <ClCompile Include="matsu\matrix_test.cc" />
     <ClCompile Include="matsu\matrix_template_test.cc" />
     <ClCompile Include="matsu\quaternion_test.cc" />
+    <ClCompile Include="matsu\range_test.cc" />
     <ClCompile Include="matsu\vector_test.cc" />
     <ClCompile Include="precompile.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -72,5 +72,8 @@ template<typename T> class Rectangle;
 typedef Rectangle<int> Recti;
 typedef Rectangle<float> Rectf;
 
+template<typename T>  class Range;
+typedef Range<int> Rangei;
+typedef Range<float> Rangef;
 }
 #endif  // BASE_MATSU_MATSU_ENUM_H_

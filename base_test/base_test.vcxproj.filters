@@ -87,6 +87,9 @@
     <ClCompile Include="sora\property_test.cc">
       <Filter>sora</Filter>
     </ClCompile>
+    <ClCompile Include="matsu\range_test.cc">
+      <Filter>matsu</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="precompile.h">

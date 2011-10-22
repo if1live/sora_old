@@ -18,51 +18,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef BASE_MATSU_RANGE_H_
-#define BASE_MATSU_RANGE_H_
+#include "precompile.h"
+#include "matsu/range.h"
 
-#include "sora/macro.h"
+TEST(Range, Clamp) {
+  using matsu::Range;
+  Range<float> r1(-1, 2);
+  EXPECT_EQ(-1, r1.Clamp(-2));
+  EXPECT_EQ(2, r1.Clamp(4));
+  EXPECT_EQ(0.4f, r1.Clamp(0.4f));
 
-namespace matsu {;
-template<typename T>
-class Range {
- public:
-  static const Range &ZeroOne() {
-    static Range r(0, 1);
-    return r;
-  }
-  static const Range &PlusMinus05() {
-    T min_value = static_cast<T>(-0.5);
-    T max_value = -min_value;
-    static Range r(min_value, max_value);
-    return r;
-  }
-
- public:
-  explicit Range(T v1, T v2) 
-    : minimum(0), maximum(0) {
-      if (v1 < v2) {
-        minimum = v1;
-        maximum = v2;
-      } else {
-        minimum = v2;
-        maximum = v1;
-      }
-  }
-  ~Range() {}
-  T Clamp(T value) {
-    if(value < minimum) {
-      return minimum;
-    } else if(value > maximum) {
-      return maximum;
-    } else {
-      return value;
-    }
-  }
-public:
-  T minimum;
-  T maximum;
-};
+  Range<float> r2(2, -1);
+  EXPECT_EQ(-1, r2.Clamp(-2));
+  EXPECT_EQ(2, r2.Clamp(4));
+  EXPECT_EQ(0.4f, r2.Clamp(0.4f));
 }
-
-#endif  // BASE_MATSU_RANGE_H_
