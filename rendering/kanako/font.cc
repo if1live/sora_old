@@ -107,7 +107,10 @@ void Font::Draw() const {
   shader.SetMatrix(projection.Pointer());
 
   //색 설정
-  shader.SetColorToWhite();
+  std::vector<matsu::vec4> color_list(4, matsu::vec4(1, 1, 1, 1));
+  GLint color_location = shader.color_location();
+  glEnableVertexAttribArray(color_location);
+  glVertexAttribPointer(color_location, 4, GL_FLOAT, GL_FALSE, 0, color_list[0].Pointer());
 
   //3 2
   //0 1

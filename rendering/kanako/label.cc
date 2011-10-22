@@ -108,8 +108,6 @@ void Label::Draw() const {
   // 적절히 그리기
   BasicTextureShader &shader = BasicTextureShader::GetInstance();
   shader.Use();
-  GLint position_location = shader.position_location();
-  GLint texcoord_location = shader.texcoord_location();
 
   glEnable(GL_TEXTURE_2D);
   font.BindFontTexture();
@@ -124,11 +122,16 @@ void Label::Draw() const {
   shader.SetMatrix(projection.Pointer());
 
   //색 설정
-  shader.SetColor4fv(color.Pointer());
+  std::vector<matsu::vec4> color_list(vertex_list.size(), color);
+  GLuint color_location = shader.color_location();
+  glVertexAttribPointer(color_location, 4, GL_FLOAT, GL_FALSE, 0, color_list[0].Pointer());
+  glEnableVertexAttribArray(color_location);
 
-  
+  GLint position_location = shader.position_location();
   glVertexAttribPointer(position_location, 3, GL_FLOAT, GL_FALSE, sizeof(runa::TextureVertex), &vertex_list[0].vertex[0]);
   glEnableVertexAttribArray(position_location);
+
+  GLint texcoord_location = shader.texcoord_location();
   glVertexAttribPointer(texcoord_location, 2, GL_FLOAT, GL_FALSE, sizeof(runa::TextureVertex), &vertex_list[0].texcoord[0]);
   glEnableVertexAttribArray(texcoord_location);
 

@@ -27,11 +27,11 @@ using runa::ShaderProgram;
 namespace runa {;
 const char basic_vertex_src[] = "uniform mat4 u_mvp;  "
     "attribute vec4 a_position;  "
-    "uniform vec4 u_color;  "
+    "attribute vec4 a_color;  "
     "varying vec4 v_color;  "
     "void main()  "
     "{  "
-    "v_color = u_color; "
+    "v_color = a_color; "
     "gl_Position = u_mvp * a_position;"
     "}";
 const char basic_fragment_src[] = ""
@@ -54,7 +54,7 @@ void BasicColorShader::Initialize() {
   program_.reset(new ShaderProgram(basic_vertex_src, basic_fragment_src));
 
   position_location_ = program_->GetAttribLocation("a_position");
-  color_location_ = program_->GetUniformLocation("u_color");
+  color_location_ = program_->GetAttribLocation("a_color");
   mvp_location_ = program_->GetUniformLocation("u_mvp");
   SR_ASSERT(position_location_ != -1);
   SR_ASSERT(color_location_ != -1);
@@ -84,9 +84,6 @@ int BasicColorShader::color_location() const {
 }
 int BasicColorShader::mvp_location() const {
   return mvp_location_;
-}
-void BasicColorShader::SetColor4fv(const float *ptr) {
-  glUniform4fv(color_location_, 1, ptr);
 }
 void BasicColorShader::SetMatrix(const float *m) {
   glUniformMatrix4fv(mvp_location_, 1, GL_FALSE, m);

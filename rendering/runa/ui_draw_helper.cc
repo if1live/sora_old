@@ -45,8 +45,6 @@ void UIDrawHelper::DrawLine(const std::vector<matsu::vec2> &ui_point_list,
   BasicColorShader &shader = BasicColorShader::GetInstance();
   shader.Use();
 
-  shader.SetColor4fv(color.Pointer());
-
   // apply projection
   matsu::mat4 projection;
   int win_w = runa::Window::GetInstance().width();
@@ -56,6 +54,7 @@ void UIDrawHelper::DrawLine(const std::vector<matsu::vec2> &ui_point_list,
   shader.SetMatrix(projection.Pointer());
 
   vector<vec2> gl_point_list;
+  vector<vec4> gl_color_list(ui_point_list.size(), color);
   gl_point_list.reserve(ui_point_list.size());
 
   BOOST_FOREACH(const vec2 &ui_point, ui_point_list) {
@@ -66,13 +65,17 @@ void UIDrawHelper::DrawLine(const std::vector<matsu::vec2> &ui_point_list,
 
   GLint position_location = shader.position_location();
   glVertexAttribPointer(position_location, 2, GL_FLOAT, GL_FALSE, 0, gl_point_list[0].Pointer());
+  glEnableVertexAttribArray(position_location);
+
+  GLint color_location = shader.color_location();
+  glVertexAttribPointer(color_location, 4, GL_FLOAT, GL_FALSE, 0, gl_color_list[0].Pointer());
+  glEnableVertexAttribArray(color_location);
+
   glDrawArrays(GL_LINE_STRIP, 0, gl_point_list.size());
 }
 void UIDrawHelper::DrawLineRect(const matsu::Rectf &rect, const matsu::vec4 &color) {
   BasicColorShader &shader = BasicColorShader::GetInstance();
   shader.Use();
-
-  shader.SetColor4fv(color.Pointer());
 
   // apply projection
   matsu::mat4 projection;
@@ -95,6 +98,11 @@ void UIDrawHelper::DrawLineRect(const matsu::Rectf &rect, const matsu::vec4 &col
   GLint position_location = shader.position_location();
   glVertexAttribPointer(position_location, 2, GL_FLOAT, GL_FALSE, 0, vertex);
   glEnableVertexAttribArray(position_location);
+
+  vector<vec4> color_list(4, color);
+  GLint color_location = shader.color_location();
+  glVertexAttribPointer(color_location, 4, GL_FLOAT, GL_FALSE, 0, color_list[0].Pointer());
+  glEnableVertexAttribArray(color_location);
 
   unsigned char index[] = {
     0, 1,
@@ -110,8 +118,6 @@ void UIDrawHelper::DrawRect(const matsu::Rectf &rect, const matsu::vec4 &color) 
   BasicColorShader &shader = BasicColorShader::GetInstance();
   shader.Use();
 
-  shader.SetColor4fv(color.Pointer());
-
   // apply projection
   matsu::mat4 projection;
   int win_w = runa::Window::GetInstance().width();
@@ -133,6 +139,11 @@ void UIDrawHelper::DrawRect(const matsu::Rectf &rect, const matsu::vec4 &color) 
   GLint position_location = shader.position_location();
   glVertexAttribPointer(position_location, 2, GL_FLOAT, GL_FALSE, 0, vertex);
   glEnableVertexAttribArray(position_location);
+
+  vector<vec4> color_list(4, color);
+  GLint color_location = shader.color_location();
+  glVertexAttribPointer(color_location, 4, GL_FLOAT, GL_FALSE, 0, color_list[0].Pointer());
+  glEnableVertexAttribArray(color_location);
 
   unsigned char index[] = {
     0, 1, 2,

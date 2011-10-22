@@ -102,7 +102,10 @@ void BoardView::DrawBackground() const {
   //색 설정
   //matsu::vec4 color(0.2, 0.2, 0.2, 0.2);
   matsu::vec4 color(1, 1, 1, 1);
-  shader.SetColor4fv(color.Pointer());
+  vector<vec4> color_list(4, color);
+  GLint color_location = shader.color_location();
+  glEnableVertexAttribArray(color_location);
+  glVertexAttribPointer(color_location, 4, GL_FLOAT, GL_FALSE, 0, color_list[0].Pointer());
 
   //3 2
   //0 1
@@ -191,7 +194,10 @@ void BoardView::DrawColorTile(int x, int y, const matsu::vec4 &color) const {
   shader.SetMatrix(projection.Pointer());
 
   //색 설정
-  shader.SetColor4fv(color.Pointer());
+  vector<vec4> color_list(4, color);
+  GLint color_location = shader.color_location();
+  glVertexAttribPointer(color_location, 4, GL_FLOAT, GL_FALSE, 0, color_list[0].Pointer());
+  glEnableVertexAttribArray(color_location);
 
   //3 2
   //0 1

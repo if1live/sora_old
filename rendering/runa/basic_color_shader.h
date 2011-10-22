@@ -39,7 +39,6 @@ class BasicColorShader : public sora::Singleton<BasicColorShader>,
   const runa::ShaderProgram &program() const;
   runa::ShaderProgram &program();
 
-  void SetColor4fv(const float *ptr);
   void SetMatrix(const float *m);
 
   int position_location() const;

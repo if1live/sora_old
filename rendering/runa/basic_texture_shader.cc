@@ -29,13 +29,13 @@ namespace runa {;
 const char texture_vertex_src[] = "uniform mat4 u_mvp;  "
     "attribute vec4 a_position; "
     "attribute vec2 a_texcoord; "
-    "uniform vec4 u_color;  "    
+    "attribute vec4 a_color;  "    
     "varying vec4 v_color;  "
     "varying vec2 v_texcoord; "
     "void main()  "
     "{  "
     "v_texcoord = a_texcoord; "
-    "v_color = u_color; "
+    "v_color = a_color; "
     "gl_Position = u_mvp * a_position;"
     "}";
 const char texture_fragment_src[] = ""
@@ -64,7 +64,7 @@ void BasicTextureShader::Initialize() {
   program_.reset(new ShaderProgram(texture_vertex_src, texture_fragment_src));
 
   position_location_ = program_->GetAttribLocation("a_position");
-  color_location_ = program_->GetUniformLocation("u_color");
+  color_location_ = program_->GetAttribLocation("a_color");
   texcoord_location_ = program_->GetAttribLocation("a_texcoord");
   mvp_location_ = program_->GetUniformLocation("u_mvp");
   SR_ASSERT(position_location_ != -1);
@@ -86,23 +86,10 @@ runa::ShaderProgram &BasicTextureShader::program() {
   return *program_;
 }
 
-void BasicTextureShader::SetColorToWhite() {
-  float color[] = {1, 1, 1, 1};
-  SetColor4fv(color);
-}
-void BasicTextureShader::SetColor4fv(const float *ptr) {
-  glUniform4fv(color_location_, 1, ptr);
-}
 void BasicTextureShader::SetMatrix(const float *m) {
   glUniformMatrix4fv(mvp_location_, 1, GL_FALSE, m);
 }
 
-int BasicTextureShader::position_location() const {
-  return position_location_;
-}
-int BasicTextureShader::texcoord_location() const {
-  return texcoord_location_;
-}
 void BasicTextureShader::Use() {
   program_->Use();
 }

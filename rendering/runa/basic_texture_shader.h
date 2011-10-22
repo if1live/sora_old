@@ -37,12 +37,11 @@ class BasicTextureShader : public sora::Singleton<BasicTextureShader>,
   const runa::ShaderProgram &program() const;
   runa::ShaderProgram &program();
 
-  void SetColorToWhite();
-  void SetColor4fv(const float *ptr);
   void SetMatrix(const float *m);
 
-  int position_location() const;
-  int texcoord_location() const;
+  int position_location() const { return position_location_; }
+  int texcoord_location() const { return texcoord_location_; }
+  int color_location() const { return color_location_; }
   void Use();
 
  private:
