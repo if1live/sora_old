@@ -81,6 +81,7 @@
     <ClCompile Include="runa\basic_color_shader.cc" />
     <ClCompile Include="runa\basic_texture_shader.cc" />
     <ClCompile Include="runa\gl_tool.cc" />
+    <ClCompile Include="runa\matrix_stack.cpp" />
     <ClCompile Include="runa\shader_location.cc" />
     <ClCompile Include="runa\shader_program.cc" />
     <ClCompile Include="runa\uber_shader.cc" />
@@ -103,6 +104,7 @@
     <ClInclude Include="precompile.h" />
     <ClInclude Include="runa\basic_color_shader.h" />
     <ClInclude Include="runa\basic_texture_shader.h" />
+    <ClInclude Include="runa\matrix_stack.h" />
     <ClInclude Include="runa\ui_draw_helper.h" />
     <ClInclude Include="runa\gl_tool.h" />
     <ClInclude Include="runa\runa_enum.h" />

@@ -75,6 +75,9 @@
     <ClCompile Include="aki\texture2d.cc">
       <Filter>aki</Filter>
     </ClCompile>
+    <ClCompile Include="runa\matrix_stack.cpp">
+      <Filter>runa</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aki\aki_enum.h">
@@ -151,6 +154,9 @@
     </ClInclude>
     <ClInclude Include="aki\texture2d_impl.h">
       <Filter>aki</Filter>
+    </ClInclude>
+    <ClInclude Include="runa\matrix_stack.h">
+      <Filter>runa</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

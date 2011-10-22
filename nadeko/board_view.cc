@@ -24,6 +24,7 @@
 #include "runa/basic_texture_shader.h"
 #include "runa/shader_program.h"
 #include "runa/gl_tool.h"
+#include "runa/matrix_stack.h"
 #include "matsu/matrix.h"
 #include "matsu/vector.h"
 #include "aki/image_loader.h"
@@ -43,6 +44,8 @@ using matsu::vec2;
 using matsu::vec4;
 using matsu::ivec2;
 using mio::Path;
+using matsu::Matrix;
+using runa::MatrixStack;
 
 namespace nadeko {;
 BoardView::BoardView(int win_width, int win_height, int tile_size)
@@ -94,10 +97,10 @@ void BoardView::DrawBackground() const {
   texture_->Bind();
 
   // apply projection
-  matsu::mat4 projection;
-  projection = matsu::Matrix::Ortho<float>(0, 1, 0, 1, 0.1f, 10.0f);
-  projection *= matsu::Matrix::Translate<float>(0, 0, -1);
-  shader.SetMatrix(projection.Pointer());
+  runa::MatrixStack projection_stack;
+  projection_stack.MultiplyMatrix(matsu::Matrix::Ortho<float>(0, 1, 0, 1, 0.1f, 10.0f));
+  projection_stack.MultiplyMatrix(matsu::Matrix::Translate<float>(0, 0, -1));
+  shader.SetMatrix(projection_stack.Pointer());
 
   //색 설정
   //matsu::vec4 color(0.2, 0.2, 0.2, 0.2);
@@ -152,12 +155,12 @@ void BoardView::DrawGrid() const {
   glUniform4fv(color_location, 1, gray.Pointer());
 
   // apply projection
-  matsu::mat4 projection;
-  projection = matsu::Matrix::Ortho<float>(0.0f, 
-    (float)win_width_, 0.0f, (float)win_height_, 0.1f, 10.0f);
-  projection *= matsu::Matrix::Translate<float>(0, 0, -1);
-  projection *= matsu::Matrix::Scale<float>(tile_size_, tile_size_, 1);
-  glUniformMatrix4fv(mvp_location, 1, GL_FALSE, projection.Pointer());
+  MatrixStack projection_stack;
+  projection_stack.MultiplyMatrix(Matrix::Ortho<float>(0.0f, 
+    win_width_, 0.0f, win_height_, 0.1f, 10.0f));
+  projection_stack.MultiplyMatrix(Matrix::Translate<float>(0, 0, -1));
+  projection_stack.MultiplyMatrix(Matrix::Scale<float>(tile_size_, tile_size_, 1));
+  glUniformMatrix4fv(mvp_location, 1, GL_FALSE, projection_stack.Pointer());
 
   // 세로줄 
   int board_width = win_width_ / tile_size_;
@@ -186,12 +189,12 @@ void BoardView::DrawColorTile(int x, int y, const matsu::vec4 &color) const {
   shader.Use();
 
   // apply projection
-  matsu::mat4 projection;
-  projection = matsu::Matrix::Ortho<float>(0.0f, 
-    (float)win_width_, 0.0f, (float)win_height_, 0.1f, 10.0f);
-  projection *= matsu::Matrix::Translate<float>(0, 0, -1);
-  projection *= matsu::Matrix::Scale<float>(tile_size_, tile_size_, 1);
-  shader.SetMatrix(projection.Pointer());
+  MatrixStack projection_stack;
+  projection_stack.MultiplyMatrix(Matrix::Ortho<float>(0.0f, 
+    win_width_, 0.0f, win_height_, 0.1f, 10.0f));
+  projection_stack.Translate(0, 0, -1);
+  projection_stack.Scale(tile_size_, tile_size_, 1);
+  shader.SetMatrix(projection_stack.Pointer());
 
   //색 설정
   vector<vec4> color_list(4, color);
@@ -235,12 +238,12 @@ void BoardView::DrawBodyTile(int x, int y, const matsu::vec4 &color) const {
   texture_->Bind();
 
   // apply projection
-  matsu::mat4 projection;
-  projection = matsu::Matrix::Ortho<float>(0.0f, 
-    (float)win_width_, 0.0f, (float)win_height_, 0.1f, 10.0f);
-  projection *= matsu::Matrix::Translate<float>(0, 0, -1);
-  projection *= matsu::Matrix::Scale<float>(tile_size_, tile_size_, 1);
-  glUniformMatrix4fv(mvp_location, 1, GL_FALSE, projection.Pointer());
+  MatrixStack projection_stack;
+  projection_stack.MultiplyMatrix(Matrix::Ortho<float>(0.0f, 
+    (float)win_width_, 0.0f, (float)win_height_, 0.1f, 10.0f));
+  projection_stack.Translate(0, 0, -1);
+  projection_stack.Scale(tile_size_, tile_size_, 1);
+  glUniformMatrix4fv(mvp_location, 1, GL_FALSE, projection_stack.Pointer());
 
   //색 설정
   glUniform4fv(color_location, 1, color.Pointer());
