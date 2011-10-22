@@ -22,6 +22,9 @@
     <Filter Include="kanako">
       <UniqueIdentifier>{ab483874-24c8-4497-86f1-8b36a433d456}</UniqueIdentifier>
     </Filter>
+    <Filter Include="kurisu">
+      <UniqueIdentifier>{7ee72fa4-76fc-4dc5-8591-624f79f6ae4b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="precompile.cpp">
@@ -66,9 +69,6 @@
     <ClCompile Include="kanako\label.cc">
       <Filter>kanako</Filter>
     </ClCompile>
-    <ClCompile Include="runa\ui_draw_helper.cc">
-      <Filter>runa</Filter>
-    </ClCompile>
     <ClCompile Include="aki\texture_loader.cc">
       <Filter>aki</Filter>
     </ClCompile>
@@ -77,6 +77,12 @@
     </ClCompile>
     <ClCompile Include="runa\matrix_stack.cpp">
       <Filter>runa</Filter>
+    </ClCompile>
+    <ClCompile Include="runa\ui_draw_helper.cc">
+      <Filter>runa</Filter>
+    </ClCompile>
+    <ClCompile Include="kurisu\debug_draw.cc">
+      <Filter>kurisu</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -143,9 +149,6 @@
     <ClInclude Include="kanako\kanako_enum.h">
       <Filter>kanako</Filter>
     </ClInclude>
-    <ClInclude Include="runa\ui_draw_helper.h">
-      <Filter>runa</Filter>
-    </ClInclude>
     <ClInclude Include="aki\texture_loader.h">
       <Filter>aki</Filter>
     </ClInclude>
@@ -156,6 +159,18 @@
       <Filter>aki</Filter>
     </ClInclude>
     <ClInclude Include="runa\matrix_stack.h">
+      <Filter>runa</Filter>
+    </ClInclude>
+    <ClInclude Include="kurisu\kurisu_enum.h">
+      <Filter>kurisu</Filter>
+    </ClInclude>
+    <ClInclude Include="runa\ui_draw_helper.h">
+      <Filter>runa</Filter>
+    </ClInclude>
+    <ClInclude Include="kurisu\debug_draw.h">
+      <Filter>kurisu</Filter>
+    </ClInclude>
+    <ClInclude Include="runa\color.h">
       <Filter>runa</Filter>
     </ClInclude>
   </ItemGroup>

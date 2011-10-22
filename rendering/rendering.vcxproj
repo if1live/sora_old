@@ -74,6 +74,7 @@
     <ClCompile Include="aki\texture_loader.cc" />
     <ClCompile Include="kanako\font.cc" />
     <ClCompile Include="kanako\label.cc" />
+    <ClCompile Include="kurisu\debug_draw.cc" />
     <ClCompile Include="precompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -101,11 +102,13 @@
     <ClInclude Include="kanako\kanako_enum.h" />
     <ClInclude Include="kanako\label.h" />
     <ClInclude Include="kanako\vincent.h" />
+    <ClInclude Include="kurisu\debug_draw.h" />
+    <ClInclude Include="kurisu\kurisu_enum.h" />
     <ClInclude Include="precompile.h" />
     <ClInclude Include="runa\basic_color_shader.h" />
     <ClInclude Include="runa\basic_texture_shader.h" />
+    <ClInclude Include="runa\color.h" />
     <ClInclude Include="runa\matrix_stack.h" />
-    <ClInclude Include="runa\ui_draw_helper.h" />
     <ClInclude Include="runa\gl_tool.h" />
     <ClInclude Include="runa\runa_enum.h" />
     <ClInclude Include="runa\shader.h" />
@@ -113,6 +116,7 @@
     <ClInclude Include="runa\shader_location.h" />
     <ClInclude Include="runa\shader_program.h" />
     <ClInclude Include="runa\uber_shader.h" />
+    <ClInclude Include="runa\ui_draw_helper.h" />
     <ClInclude Include="runa\vbo.h" />
     <ClInclude Include="runa\vertex.h" />
     <ClInclude Include="runa\window.h" />

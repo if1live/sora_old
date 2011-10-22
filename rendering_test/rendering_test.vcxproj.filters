@@ -41,5 +41,8 @@
     <ClCompile Include="runa\shader_test.cc">
       <Filter>runa</Filter>
     </ClCompile>
+    <ClCompile Include="runa\color_test.cc">
+      <Filter>runa</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

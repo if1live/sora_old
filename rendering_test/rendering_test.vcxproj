@@ -79,6 +79,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="precompile.h" />
+    <ClCompile Include="runa\color_test.cc">
+      <FileType>CppHeader</FileType>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="aki\image_test.cc" />

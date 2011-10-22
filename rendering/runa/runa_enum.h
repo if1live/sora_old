@@ -51,6 +51,13 @@ template<typename VertexType,
 struct Vertex;
 typedef Vertex<float, 3, float, 4, float, 2> TextureVertex;
 typedef Vertex<float, 3, float, 4, bool, 1> ColorVertex;
+
+// for color
+template<typename T, unsigned int D>  struct Color;
+typedef Color<unsigned char, 3> Color3ub;
+typedef Color<float, 3> Color3f;
+typedef Color<unsigned char, 4> Color4ub;
+typedef Color<float, 4> Color4f;
 }
 
 #endif  // RENDERING_RUNA_RUNA_ENUM_H_
