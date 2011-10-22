@@ -17,39 +17,20 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-// Ŭnicode pleasep
-#include "precompile.h"
-#include "aki/texture.h"
-#include "aki/image.h"
-#include "mio/path.h"
-#include "aki/texture_loader.h"
+// Ŭnicode please
+#ifndef RENDERING_AKI_TEXTURE_LOADER_H_
+#define RENDERING_AKI_TEXTURE_LOADER_H_
 
-using std::string;
-using mio::Path;
-using aki::TextureSize;
-using aki::TextureLoader;
-using aki::Image;
-using aki::ImagePtr;
-using aki::Texture;
+#include "aki/aki_enum.h"
 
-TEST(AkiTexture, test) {
-  // load sample image
-  string path1 = Path::AppPath("testdata/aki/c.png");
-  ImagePtr img = Image::Create(path1);
-
-  Texture tex;
-  GLuint tex_id;
-  TextureSize tex_size;
-  TextureLoader::LoadTexture2D(*img, &tex_id, &tex_size);
-  tex.SetTexture(tex_id, tex_size);
-  
-  // 원본 이미지 크기 정보
-  EXPECT_EQ(500, img->desc().width);
-  EXPECT_EQ(282, img->desc().height);
-
-  const TextureSize &size = tex.size();
-  EXPECT_EQ(500, size.orig_width);
-  EXPECT_EQ(282, size.orig_height);
-  EXPECT_EQ(512, size.tex_width);
-  EXPECT_EQ(512, size.tex_height);
+namespace aki {;
+class TextureLoader {
+public:
+  static bool LoadTexture2D(const std::string &filename,
+    GLuint *tex_id, TextureSize *tex_size);
+  static bool LoadTexture2D(const Image &img, GLuint *tex_id, TextureSize *tex_size);
+  static bool SetTexture2DLoadEnv();
+};
 }
+
+#endif  // RENDERING_AKI_TEXTURE_LOADER_H_

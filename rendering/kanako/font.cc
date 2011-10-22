@@ -24,6 +24,7 @@
 #include "aki/image.h"
 #include "aki/image_description.h"
 #include "aki/texture.h"
+#include "aki/texture_loader.h"
 #include "matsu/matrix.h"
 #include "matsu/vector.h"
 #include "runa/window.h"
@@ -72,7 +73,12 @@ Font::Font() {
   aki::Image img(img_desc, data);   // data의 메모리 관리책임까지 가져감
   img.InverseY();   //이미지를 뒤집어야 계산이 쉽다
   font_texture_.reset(new Texture());
-  font_texture_->LoadImage(&img);
+
+  GLuint tex_id;
+  aki::TextureSize tex_size;
+  aki::TextureLoader::LoadTexture2D(img, &tex_id, &tex_size);
+  font_texture_->SetTexture(tex_id, tex_size);
+
 
   // init shader
   BasicTextureShader &shader = BasicTextureShader::GetInstance();

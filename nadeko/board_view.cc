@@ -28,6 +28,7 @@
 #include "matsu/vector.h"
 #include "aki/image_loader.h"
 #include "aki/texture.h"
+#include "aki/texture_loader.h"
 #include "aki/image.h"
 #include "mio/path.h"
 #include "mio/reader.h"
@@ -59,9 +60,13 @@ tile_size_(tile_size) {
   // reload texture
   string bg_file = "testdata/nadeko/nadeko_01.jpg";
   bg_file = Path::AppPath(bg_file);
-  aki::ImagePtr img = aki::ImageLoader::Load(bg_file);
+  //aki::ImagePtr img = aki::ImageLoader::Load(bg_file);
   texture_.reset(new aki::Texture());
-  texture_->LoadImage(img.get());
+  GLuint tex_id;
+  aki::TextureSize tex_size;
+  aki::TextureLoader::LoadTexture2D(bg_file, &tex_id, &tex_size);
+  //aki::TextureLoader::LoadTexture2D(*img, &tex_id, &tex_size);
+  texture_->SetTexture(tex_id, tex_size);
 
   // body texture test shader
   string vertex_file = Path::AppPath("testdata/nadeko/snake_body.vsh");
@@ -95,7 +100,8 @@ void BoardView::DrawBackground() const {
   shader.SetMatrix(projection.Pointer());
 
   //색 설정
-  matsu::vec4 color(0.2, 0.2, 0.2, 0.2);
+  //matsu::vec4 color(0.2, 0.2, 0.2, 0.2);
+  matsu::vec4 color(1, 1, 1, 1);
   shader.SetColor4fv(color.Pointer());
 
   //3 2

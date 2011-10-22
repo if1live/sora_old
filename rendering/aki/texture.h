@@ -22,6 +22,7 @@
 #define RENDERING_AKI_TEXTURE_H_
 
 #include "aki/aki_enum.h"
+#include "sora/id_generator.h"
 
 namespace aki {;
 class TextureSize {
@@ -29,33 +30,33 @@ class TextureSize {
   TextureSize();
   TextureSize(int orig_width, int orig_height, int tex_width, int tex_height);
   ~TextureSize();
+  void SetZero();
 
-  SR_GETTER(int, orig_width);
-  SR_GETTER(int, orig_height);
-  SR_GETTER(int, tex_width);
-  SR_GETTER(int, tex_height);
+ public:
+  int orig_width;
+  int orig_height;
+  int tex_width;
+  int tex_height;
 };
 
 // opengl texture
 template<unsigned int N>
-class TextureGroup {
+class TextureGroup : public sora::IdGenerator<int>, boost::noncopyable {
  public:
   TextureGroup();
   ~TextureGroup();
 
-  int id() const;
+  bool Initialize();
+  bool Deinitialize();
 
   GLuint handle() const;
   GLuint handle(int index) const;
-  template<int index>
-  GLuint handle() const;
+  template<int index> GLuint handle() const;
 
   void Bind() const;
 
-  bool LoadImage(Image *img);
-  bool LoadImage(int index, Image *img);
-  template<int index>
-  bool LoadImage(Image *img);
+  /// @brief 단일텍스쳐의 경우 외부라이브러리에 의해서 생성된 텍스쳐 정보를 바로 갖다쓰기위한거
+  bool SetTexture(GLuint tex_id, const TextureSize &size);
 
   const TextureSize &size() const;
   const TextureSize &size(int index) const;
@@ -68,11 +69,9 @@ class TextureGroup {
   bool IsLoaded() const;
 
  private:
-  int id_;
   GLuint handle_[N];
   TextureSize tex_size_[N];
-
-  static int next_id_;
+  int texture_count_;
 };
 }
 

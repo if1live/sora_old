@@ -72,11 +72,11 @@
     <ClCompile Include="runa\ui_draw_helper.cc">
       <Filter>runa</Filter>
     </ClCompile>
+    <ClCompile Include="aki\texture_loader.cc">
+      <Filter>aki</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="aki\texture.h">
-      <Filter>aki</Filter>
-    </ClInclude>
     <ClInclude Include="aki\aki_enum.h">
       <Filter>aki</Filter>
     </ClInclude>
@@ -145,6 +145,12 @@
     </ClInclude>
     <ClInclude Include="runa\ui_draw_helper.h">
       <Filter>runa</Filter>
+    </ClInclude>
+    <ClInclude Include="aki\texture_loader.h">
+      <Filter>aki</Filter>
+    </ClInclude>
+    <ClInclude Include="aki\texture.h">
+      <Filter>aki</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

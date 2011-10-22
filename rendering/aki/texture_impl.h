@@ -26,24 +26,38 @@
 
 namespace aki {;
 template<unsigned int N>
-int TextureGroup<N>::next_id_ = 0;
-
-template<unsigned int N>
 TextureGroup<N>::TextureGroup()
-  : id_(next_id_++) {
+: texture_count_(0) {
   BOOST_STATIC_ASSERT(N >= 1);
-  GLuint *ptr = reinterpret_cast<GLuint*>(&handle_);
-  glGenTextures(N, ptr);
+  for(int i = 0 ; i < N ; i++) {
+    handle_[i] = 0;
+  }
 }
 template<unsigned int N>
 TextureGroup<N>::~TextureGroup() {
-  GLuint *ptr = reinterpret_cast<GLuint*>(&handle_);
-  glDeleteTextures(N, ptr);
+  Deinitialize();
 }
 
 template<unsigned int N>
-int TextureGroup<N>::id() const {
-  return id_;
+bool TextureGroup<N>::Initialize() {
+  GLuint *ptr = reinterpret_cast<GLuint*>(&handle_);
+  glGenTextures(N, ptr);
+  texture_count_ = N;
+  return true;
+}
+template<unsigned int N>
+bool TextureGroup<N>::Deinitialize() {
+  bool retval = false;
+  if (texture_count_ > 0) {
+    GLuint *ptr = reinterpret_cast<GLuint*>(&handle_);
+    glDeleteTextures(texture_count_, ptr);
+    retval = true;
+  }
+  for(int i = 0 ; i < N ; i++) {
+    handle_[i] = 0;
+  }
+  texture_count_ = 0;
+  return retval;
 }
 template<unsigned int N>
 GLuint TextureGroup<N>::handle(int index) const {
@@ -61,63 +75,15 @@ GLuint TextureGroup<N>::handle() const {
   BOOST_STATIC_ASSERT(index >= 0 && index < N);
   return handle(index);
 }
-template<unsigned int N>
-bool TextureGroup<N>::LoadImage(Image *img) {
-  return LoadImage(0, img);
-}
 
 template<unsigned int N>
-bool TextureGroup<N>::LoadImage(int index, Image *img) {
-  SR_ASSERT(index >= 0 && index < N);
-  const ImageDescription &desc = img->desc();
-  int width = desc.width;
-  int height = desc.height;
-  int tex_width = matsu::CeilPower(2, width);
-  int tex_height = matsu::CeilPower(2, height);
-
-  TextureSize size(width, height, tex_width, tex_height);
-  tex_size_[index] = size;
-
-  // bind+set tex param
-  // glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-  glBindTexture(GL_TEXTURE_2D, handle_[index]);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-  // load image
-  // 텍스쳐 크기 보정때문에 여기부터는 약간 달라진다
-  if (width != tex_width || height != tex_height) {
-    // 2의 승수로 보정한 이미지 생성
-    Image newImg(tex_width, tex_height);
-    newImg.Overwrite(*img);
-
-    const void *data = newImg.data();
-    SR_ASSERT(data != NULL);
-
-    int internal_format = newImg.desc().internal_format;
-    int pixel_type = newImg.desc().pixel_type;
-    glTexImage2D(GL_TEXTURE_2D, 0, internal_format, tex_width, tex_height,
-      0, internal_format, pixel_type, data);
-  } else {
-    const void *data = img->data();
-    SR_ASSERT(data != NULL);
-
-    int internal_format = img->desc().internal_format;
-    int pixel_type = img->desc().pixel_type;
-    glTexImage2D(GL_TEXTURE_2D, 0, internal_format, tex_width, tex_height,
-      0, internal_format, pixel_type, data);
-  }
-
+bool TextureGroup<N>::SetTexture(GLuint tex_id, const TextureSize &size) {
+  // 기존에 생성된것이 있으면 파기
+  Deinitialize();
+  handle_[0] = tex_id;
+  tex_size_[0] = size;
+  texture_count_ = 0;
   return true;
-}
-
-template<unsigned int N>
-template<int index>
-bool TextureGroup<N>::LoadImage(Image *img) {
-  BOOST_STATIC_ASSERT(index >= 0 && index < N);
-  return LoadImage(index, img);
 }
 
 template<unsigned int N>
@@ -164,5 +130,6 @@ template<unsigned int N>
 void TextureGroup<N>::Bind() const {
   glBindTexture(GL_TEXTURE_2D, handle());
 }
+
 }
 #endif  // RENDERING_AKI_TEXTURE_IMPL_H_
