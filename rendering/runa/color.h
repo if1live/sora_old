@@ -77,9 +77,9 @@ struct Color {
     }
 
     if (D == 4) {
-      if (b < MinValue()) {
+      if (a < MinValue()) {
         data[3] = MinValue();
-      } else if(b > MaxValue()) {
+      } else if(a > MaxValue()) {
         data[3] = MaxValue();
       } else {
         data[3] = a;
