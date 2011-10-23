@@ -33,6 +33,8 @@ class Window : public sora::Singleton<Window> {
   int width() const;
   int height() const;
 
+  void InitializeGLEnv();
+
  private:
    int width_;
    int height_;

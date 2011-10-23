@@ -84,6 +84,9 @@
     <ClCompile Include="kurisu\debug_draw.cc">
       <Filter>kurisu</Filter>
     </ClCompile>
+    <ClCompile Include="runa\window.cc">
+      <Filter>runa</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="aki\aki_enum.h">

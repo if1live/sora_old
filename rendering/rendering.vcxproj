@@ -88,6 +88,7 @@
     <ClCompile Include="runa\uber_shader.cc" />
     <ClCompile Include="runa\ui_draw_helper.cc" />
     <ClCompile Include="runa\vbo.cc" />
+    <ClCompile Include="runa\window.cc" />
     <ClCompile Include="runa\window_glfw.cc" />
   </ItemGroup>
   <ItemGroup>

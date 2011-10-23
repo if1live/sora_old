@@ -109,22 +109,21 @@ void Label::Draw() const {
   BasicTextureShader &shader = BasicTextureShader::GetInstance();
   shader.Use();
 
-  glEnable(GL_TEXTURE_2D);
   font.BindFontTexture();
 
   // apply projection
   matsu::mat4 projection;
   int win_w = runa::Window::GetInstance().width();
   int win_h = runa::Window::GetInstance().height();
-  projection = matsu::Matrix::Ortho<float>(0, win_w, 0, win_h, 0.1f, 10.0f);
-  projection *= matsu::Matrix::Translate<float>(position.x(), win_h - position.y(), -1);
+  projection = matsu::Matrix::Ortho<float>(0, win_w, 0, win_h, -10.0f, 10.0f);
+  projection *= matsu::Matrix::Translate<float>(position.x(), win_h - position.y(), 0);
   projection *= matsu::Matrix::Scale<float>(scale, scale, 1);
   shader.SetMatrix(projection.Pointer());
 
   //색 설정
-  std::vector<matsu::vec4> color_list(vertex_list.size(), color);
+  std::vector<runa::Color4ub> color_list(vertex_list.size(), color);
   GLuint color_location = shader.color_location();
-  glVertexAttribPointer(color_location, 4, GL_FLOAT, GL_FALSE, 0, color_list[0].Pointer());
+  glVertexAttribPointer(color_location, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, color_list[0].data);
   glEnableVertexAttribArray(color_location);
 
   GLint position_location = shader.position_location();
@@ -136,8 +135,6 @@ void Label::Draw() const {
   glEnableVertexAttribArray(texcoord_location);
 
   glDrawElements(GL_TRIANGLES, index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
-
-  glDisable(GL_TEXTURE_2D);
 
   SR_ASSERT(runa::GLTool::CheckError("draw label"));
 }

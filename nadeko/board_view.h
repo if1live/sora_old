@@ -41,8 +41,8 @@ class BoardView {
   ~BoardView();
 
   void DrawBackground() const;
-  void DrawColorTile(int x, int y, const matsu::vec4 &color) const;
-  void DrawBodyTile(int x, int y, const matsu::vec4 &color) const;
+  void DrawColorTile(int x, int y, const runa::Color4ub &color) const;
+  void DrawBodyTile(int x, int y, const runa::Color4ub &color) const;
   void DrawApple(int x, int y) const;
   void DrawPlayer(const Player &player) const;
  private:

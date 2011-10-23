@@ -95,7 +95,6 @@ void Font::Draw() const {
   GLint position_location = shader.position_location();
   GLint texcoord_location = shader.texcoord_location();
 
-  glEnable(GL_TEXTURE_2D);
   shader.Use();
   font_texture_->Bind();
 
@@ -142,7 +141,6 @@ void Font::Draw() const {
     0, 2, 3,
   };
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, index);
-  glDisable(GL_TEXTURE_2D);
 
   SR_ASSERT(runa::GLTool::CheckError("draw font"));
 }

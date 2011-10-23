@@ -30,6 +30,7 @@
 #include "runa/shader.h"
 #include "runa/shader_program.h"
 #include "runa/window.h"
+#include "runa/color.h"
 
 #include "mio/path.h"
 
@@ -156,7 +157,7 @@ void Update(float dt) {
   }
 }
 void Draw() {
-  glClear(GL_COLOR_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   if (show_bg == true) {
     board_view->DrawBackground();
@@ -165,7 +166,6 @@ void Draw() {
   //draw apple
   const matsu::vec2 &apple_pos = board->apple_position();
   board_view->DrawApple(apple_pos.x(), apple_pos.y());
-  //board_view->DrawGrid();
 
   //점수를 적당히 그리기
   char score_buffer[64];
@@ -173,10 +173,12 @@ void Draw() {
   std::string score_text = score_buffer;
   kanako::Label label(score_text);
   label.scale = 1.3;
-  label.color = matsu::vec4(1, 1, 1, 1);
+  label.color = runa::Color4ub::White();
   label.position = matsu::vec2(10, 10);
 
+  glDisable(GL_DEPTH_TEST);
   label.Draw();
+  glEnable(GL_DEPTH_TEST);
   //label.DrawBorder(matsu::vec4(1, 1, 1, 1));
   /// ui test
   //runa::UIDrawHelper::DrawLine(vec2(100, 100), vec2(150, 120), vec4(1, 1, 1, 1));

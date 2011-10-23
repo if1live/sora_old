@@ -18,29 +18,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef RENDERING_KANAKO_LABEL_H_
-#define RENDERING_KANAKO_LABEL_H_
+#include "precompile.h"
+#include "runa/window.h"
 
-#include "kanako/kanako_enum.h"
-#include "matsu/vector.h"
-#include "runa/color.h"
+namespace runa {;
+void Window::InitializeGLEnv() {
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
 
-namespace kanako {;
-class Label {
-public:
-  Label();
-  explicit Label(const std::string &msg);
-  ~Label();
-
-  void Draw() const;
-  void DrawBorder(const matsu::vec4 &color) const;
-
-  float scale;
-  matsu::vec2 position;
-  runa::Color4ub color;
-  std::string text;
-};
-
+  glEnable(GL_DEPTH_TEST);  //2d대응인 상태에서는 깊이를 끄지만 3d에서는 필요하다
+  glDepthFunc(GL_LEQUAL);
+  
+  //http://www.opengl.org/resources/faq/technical/transparency.htm
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
-
-#endif  // RENDERING_KANAKO_LABEL_H_
+}

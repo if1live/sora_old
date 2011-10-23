@@ -65,12 +65,10 @@ tile_size_(tile_size) {
   // reload texture
   string bg_file = "testdata/nadeko/nadeko_01.jpg";
   bg_file = Path::AppPath(bg_file);
-  //aki::ImagePtr img = aki::ImageLoader::Load(bg_file);
   texture_.reset(new aki::Texture2D());
   GLuint tex_id;
   aki::TextureSize tex_size;
   aki::TextureLoader::LoadTexture2D(bg_file, &tex_id, &tex_size);
-  //aki::TextureLoader::LoadTexture2D(*img, &tex_id, &tex_size);
   texture_->SetTexture(tex_id, tex_size);
 
   // body texture test shader
@@ -94,18 +92,15 @@ void BoardView::DrawBackground() const {
   GLint position_location = shader.position_location();
   GLint texcoord_location = shader.texcoord_location();
 
-  glEnable(GL_TEXTURE_2D);
   shader.Use();
   texture_->Bind();
 
   // apply projection
   runa::MatrixStack projection_stack;
-  projection_stack.MultiplyMatrix(matsu::Matrix::Ortho<float>(0, 1, 0, 1, 0.1f, 10.0f));
-  projection_stack.MultiplyMatrix(matsu::Matrix::Translate<float>(0, 0, -1));
+  projection_stack.MultiplyMatrix(matsu::Matrix::Ortho<float>(0, 1, 0, 1, -10.0f, 10.0f));
   shader.SetMatrix(projection_stack.Pointer());
 
   //색 설정
-  //matsu::vec4 color(0.2, 0.2, 0.2, 0.2);
   Color4ub color(100, 100, 100, 100);
   vector<Color4ub> color_list(4, color);
   GLint color_location = shader.color_location();
@@ -139,12 +134,11 @@ void BoardView::DrawBackground() const {
     0, 2, 3,
   };
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, index);
-  glDisable(GL_TEXTURE_2D);
 
   SR_ASSERT(runa::GLTool::CheckError("draw background"));
 }
 
-void BoardView::DrawColorTile(int x, int y, const matsu::vec4 &color) const {
+void BoardView::DrawColorTile(int x, int y, const runa::Color4ub &color) const {
   BasicColorShader &shader = BasicColorShader::GetInstance();
   GLint position_location = shader.position_location();
   
@@ -153,15 +147,14 @@ void BoardView::DrawColorTile(int x, int y, const matsu::vec4 &color) const {
   // apply projection
   MatrixStack projection_stack;
   projection_stack.MultiplyMatrix(Matrix::Ortho<float>(0.0f, 
-    win_width_, 0.0f, win_height_, 0.1f, 10.0f));
-  projection_stack.Translate(0, 0, -1);
+    win_width_, 0.0f, win_height_, -10.0f, 10.0f));
   projection_stack.Scale(tile_size_, tile_size_, 1);
   shader.SetMatrix(projection_stack.Pointer());
 
   //색 설정
-  vector<vec4> color_list(4, color);
+  vector<Color4ub> color_list(4, color);
   GLint color_location = shader.color_location();
-  glVertexAttribPointer(color_location, 4, GL_FLOAT, GL_FALSE, 0, color_list[0].Pointer());
+  glVertexAttribPointer(color_location, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, color_list[0].data);
   glEnableVertexAttribArray(color_location);
 
   //3 2
@@ -184,10 +177,10 @@ void BoardView::DrawColorTile(int x, int y, const matsu::vec4 &color) const {
 
   SR_ASSERT(runa::GLTool::CheckError("draw color tile"));
 }
-void BoardView::DrawBodyTile(int x, int y, const matsu::vec4 &color) const {
+void BoardView::DrawBodyTile(int x, int y, const runa::Color4ub &color) const {
   GLint position_location = body_shader_prog->GetAttribLocation("a_position");
   GLint texcoord_location = body_shader_prog->GetAttribLocation("a_texcoord");
-  GLint color_location = body_shader_prog->GetUniformLocation("u_color");
+  GLint color_location = body_shader_prog->GetAttribLocation("a_color");
   GLint mvp_location = body_shader_prog->GetUniformLocation("u_mvp");
   SR_ASSERT(position_location != -1);
   SR_ASSERT(texcoord_location != -1);
@@ -195,20 +188,20 @@ void BoardView::DrawBodyTile(int x, int y, const matsu::vec4 &color) const {
   SR_ASSERT(mvp_location != -1);
 
 
-  glEnable(GL_TEXTURE_2D);
   body_shader_prog->Use();
   texture_->Bind();
 
   // apply projection
   MatrixStack projection_stack;
   projection_stack.MultiplyMatrix(Matrix::Ortho<float>(0.0f, 
-    (float)win_width_, 0.0f, (float)win_height_, 0.1f, 10.0f));
-  projection_stack.Translate(0, 0, -1);
+    (float)win_width_, 0.0f, (float)win_height_, -10.0f, 10.0f));
   projection_stack.Scale(tile_size_, tile_size_, 1);
   glUniformMatrix4fv(mvp_location, 1, GL_FALSE, projection_stack.Pointer());
 
   //색 설정
-  glUniform4fv(color_location, 1, color.Pointer());
+  vector<Color4ub> color_list(4, color);
+  glVertexAttribPointer(color_location, color.Dimension, GL_UNSIGNED_BYTE, GL_TRUE, 0, color_list[0].data);
+  glEnableVertexAttribArray(color_location);
 
   //3 2
   //0 1
@@ -241,12 +234,11 @@ void BoardView::DrawBodyTile(int x, int y, const matsu::vec4 &color) const {
     0, 2, 3,
   };
   glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, index);
-  glDisable(GL_TEXTURE_2D);
 
   SR_ASSERT(runa::GLTool::CheckError("draw body tile"));
 }
 void BoardView::DrawApple(int x, int y) const {
-  matsu::vec4 color(0, 0, 1, 1);
+  const Color4ub &color = Color4ub::Blue();
   DrawColorTile(x, y, color);
 
   SR_ASSERT(runa::GLTool::CheckError("draw apple"));
@@ -259,12 +251,13 @@ void BoardView::DrawPlayer(const Player &player) const {
     const ivec2 &pos = *it;
     if (it == player.Begin()) {
       //첫번째는 머리
-      vec4 head_color(1, 0, 0, 1);
+      const Color4ub &head_color = Color4ub::Red();
       DrawColorTile(pos.x(), pos.y(), head_color);
     } else {
       //body
       //vec4 body_color(0, 1, 0, 1);
-      vec4 body_color(0.9, 0.9, 0.9, 0.8);
+      //Color4ub body_color(150, 150, 150, 150);
+      Color4ub body_color(255, 255, 255, 255);
       DrawBodyTile(pos.x(), pos.y(), body_color);
     }
   }

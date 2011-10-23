@@ -44,6 +44,8 @@ void Window::Initialize(int w, int h) {
 
   //use glew
   glewInit();
+
+  InitializeGLEnv();
 }
 void Window::Deinitialize() {
   // Close window and terminate GLFW
