@@ -27,6 +27,9 @@
     <ClInclude Include="mio\reader.h">
       <Filter>mio</Filter>
     </ClInclude>
+    <ClInclude Include="chizuru\keyboard.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="mio\path_ios.mm">
@@ -42,6 +45,9 @@
     </ClCompile>
     <ClCompile Include="mio\reader.cc">
       <Filter>mio</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\keyboard_glfw.cc">
+      <Filter>chizuru</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

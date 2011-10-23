@@ -18,54 +18,57 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef BASE_SORA_SINGLETON_H_
-#define BASE_SORA_SINGLETON_H_
+#include "chizuru/keyboard.h"
+#include "sora/platform.h"
+#if SR_WIN
+#include <GL/glfw.h>
 
-#include "sora/macro.h"
-
-namespace sora {;
-template<typename T>
-class Singleton {
- public:
-  static T& GetInstance() {
-    if (ctx_ == 0) {
-      ctx_ = new T;
-    }
-    return *ctx_;
-  }
-
-  static void DestroyInstance() {
-    if (ctx_ != 0) {
-      delete(ctx_);
-      ctx_ = 0;
-    }
-  }
-  static bool IsCreated() {
-    if (ctx_ == 0) {
-      return false;
-    } else {
-      return true;
-    }
-  }
-
- protected:
-  Singleton() {
-    SR_ASSERT(ctx_ == 0);
-    long offset = (long)(T*)(1) - (long)(Singleton*)(T*)(1);
-    ctx_ = (T*)((long)(this + offset));
-  }
-  ~Singleton() {
-    SR_ASSERT(ctx_ != 0);
-    ctx_ = 0;
-  }
-  Singleton(const Singleton &o);
-  Singleton operator=(const Singleton &o);
-
-  static T *ctx_;
-};
-
-template<typename T>
-T* Singleton<T>::ctx_ = 0;
+namespace chizuru {;
+Keyboard::Keyboard() {
 }
-
-#endif  // BASE_SORA_SINGLETON_H_
+Keyboard::~Keyboard() {
+}
+void Keyboard::Update() {
+}
+KeyState Keyboard::GetKeyState(int key) {
+  int state;
+  switch(key) {
+  case KeyIdentifierSpace:
+    state = glfwGetKey(GLFW_KEY_SPACE);
+    break;
+  case KeyIdentifierEsc:
+    state = glfwGetKey(GLFW_KEY_ESC);
+    break;
+  case KeyIdentifierUp:
+    state = glfwGetKey(GLFW_KEY_UP);
+    break;
+  case KeyIdentifierDown:
+    state = glfwGetKey(GLFW_KEY_DOWN);
+    break;
+  case KeyIdentifierLeft:
+    state = glfwGetKey(GLFW_KEY_LEFT);
+    break;
+  case KeyIdentifierRight:
+    state = glfwGetKey(GLFW_KEY_RIGHT);
+    break;
+  default:
+    state = glfwGetKey(key);
+    break;
+  }
+  if (state == GLFW_RELEASE) {
+    return KeyStateRelease;
+  } else if(state == GLFW_PRESS) {
+    return KeyStatePress;
+  } else {
+    SR_ASSERT(!"not valid");
+    return KeyStateRelease;
+  }
+}
+bool Keyboard::IsPressed(int key) {
+  return (KeyStatePress == GetKeyState(key));
+}
+bool Keyboard::IsReleased(int key) {
+  return (KeyStateRelease == GetKeyState(key));
+}
+}
+#endif

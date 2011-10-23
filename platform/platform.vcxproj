@@ -41,7 +41,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..;.;..\base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\third_party\glfw\include;..;.;..\base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -54,7 +54,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..;.;..\base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\third_party\glfw\include;..;.;..\base;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -63,6 +63,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="chizuru\keyboard.h" />
     <ClInclude Include="mio\path.h" />
     <ClInclude Include="mio\reader.h" />
   </ItemGroup>
@@ -70,6 +71,7 @@
     <None Include="mio\path_ios.mm" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="chizuru\keyboard_glfw.cc" />
     <ClCompile Include="mio\path.cc" />
     <ClCompile Include="mio\path_win.cc" />
     <ClCompile Include="mio\reader.cc" />

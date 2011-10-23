@@ -44,6 +44,8 @@
 #include "kanako/label.h"
 #include "runa/ui_draw_helper.h"
 
+#include "chizuru/keyboard.h"
+
 const int kTileSize = 16;
 const float kMoveDelay = 0.2f;
 
@@ -51,6 +53,7 @@ void Update(float dt);
 void Draw();
 void Init();
 
+using chizuru::Keyboard;
 using matsu::Matrix;
 using matsu::vec4;
 using matsu::vec2;
@@ -128,23 +131,23 @@ void Init() {
 
 void Update(float dt) {
   // check key
-  if (glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS) {
+  if(Keyboard::GetInstance().IsPressed(chizuru::KeyIdentifierLeft)) {
     player->SetNextDirection(kDirection2Left);
-  } else if (glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS) {
+  } else if(Keyboard::GetInstance().IsPressed(chizuru::KeyIdentifierRight)) {
     player->SetNextDirection(kDirection2Right);
-  } else if (glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS) {
+  } else if(Keyboard::GetInstance().IsPressed(chizuru::KeyIdentifierUp)) {
     player->SetNextDirection(kDirection2Up);
-  } else if(glfwGetKey(GLFW_KEY_DOWN) == GLFW_PRESS) {
+  } else if(Keyboard::GetInstance().IsPressed(chizuru::KeyIdentifierDown)) {
     player->SetNextDirection(kDirection2Down);
   }
 
-  if (glfwGetKey('B') == GLFW_PRESS) {
+  if(Keyboard::GetInstance().IsPressed('B')) {
     show_bg = true;
   } else {
     show_bg = false;
   }
 
-  if(glfwGetKey('R') == GLFW_PRESS) {
+  if(Keyboard::GetInstance().IsPressed('R')) {
     player->Reset();
   }
 

@@ -18,54 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef BASE_SORA_SINGLETON_H_
-#define BASE_SORA_SINGLETON_H_
+#ifndef PLATFORM_CHIZURU_KEYBOARD_H_
+#define PLATFORM_CHIZURU_KEYBOARD_H_
 
-#include "sora/macro.h"
+#include "sora/singleton.h"
 
-namespace sora {;
-template<typename T>
-class Singleton {
- public:
-  static T& GetInstance() {
-    if (ctx_ == 0) {
-      ctx_ = new T;
-    }
-    return *ctx_;
-  }
+namespace chizuru {;
+// 특수키. glut, glfw에 따라서 이 부분이 달라질수있으니까 따로 enum을 분리함
+typedef enum {
+  KeyIdentifierSpace = 256, //이거보다 아래쪽은 기본 아스키로 연결될테니까
+  KeyIdentifierEsc,
+  KeyIdentifierUp,
+  KeyIdentifierDown,
+  KeyIdentifierLeft,
+  KeyIdentifierRight,
+} KeyIdentifier;
 
-  static void DestroyInstance() {
-    if (ctx_ != 0) {
-      delete(ctx_);
-      ctx_ = 0;
-    }
-  }
-  static bool IsCreated() {
-    if (ctx_ == 0) {
-      return false;
-    } else {
-      return true;
-    }
-  }
+typedef enum {
+  KeyStatePress,
+  KeyStateRelease
+} KeyState;
 
- protected:
-  Singleton() {
-    SR_ASSERT(ctx_ == 0);
-    long offset = (long)(T*)(1) - (long)(Singleton*)(T*)(1);
-    ctx_ = (T*)((long)(this + offset));
-  }
-  ~Singleton() {
-    SR_ASSERT(ctx_ != 0);
-    ctx_ = 0;
-  }
-  Singleton(const Singleton &o);
-  Singleton operator=(const Singleton &o);
-
-  static T *ctx_;
+class Keyboard : public sora::Singleton<Keyboard> {
+public:
+  Keyboard();
+  ~Keyboard();
+  void Update();
+  KeyState GetKeyState(int key);
+  bool IsPressed(int key);
+  bool IsReleased(int key);
 };
-
-template<typename T>
-T* Singleton<T>::ctx_ = 0;
 }
 
-#endif  // BASE_SORA_SINGLETON_H_
+#endif  // PLATFORM_CHIZURU_KEYBOARD_H_
