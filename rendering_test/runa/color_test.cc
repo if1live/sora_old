@@ -80,3 +80,44 @@ TEST(Color, Dimension) {
   EXPECT_EQ(4, c1.Dimension);
   EXPECT_EQ(4, Color4f::Dimension);
 }
+
+TEST(Color, construct) {
+  using runa::Color3ub;
+  using runa::Color4ub;
+  using runa::Color3f;
+  {
+    // color3ub -> color4ub(up casting)
+    Color3ub c1(10, 20, 30);
+    Color4ub c2(c1);
+    EXPECT_EQ(10, c2.r);
+    EXPECT_EQ(20, c2.g);
+    EXPECT_EQ(30, c2.b);
+    EXPECT_EQ(255, c2.alpha());
+  }
+  {
+    // color4ub -> color3ub(down casting)
+    Color4ub c1(1, 2, 3, 4);
+    Color3ub c2(c1);
+    EXPECT_EQ(1, c2.r);
+    EXPECT_EQ(2, c2.g);
+    EXPECT_EQ(3, c2.b);
+    EXPECT_EQ(255, c2.alpha());
+  }
+  {
+    // type convert
+    Color3ub c1(10, 20, 30);
+    Color3f c2(c1);
+    EXPECT_EQ(10.0f/255.0f, c2.r);
+    Color3ub c3(c2);
+    EXPECT_EQ(true, c3 == c1);
+  }
+}
+
+TEST(Color, eq) {
+  using runa::Color3ub;
+  Color3ub c1(1, 2, 3);
+  Color3ub c2(1, 2, 3);
+  Color3ub c3(1, 2, 4);
+  EXPECT_EQ(true, c1 == c2);
+  EXPECT_EQ(true, c1 != c3);
+}

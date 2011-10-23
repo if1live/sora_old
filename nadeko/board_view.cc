@@ -25,6 +25,7 @@
 #include "runa/shader_program.h"
 #include "runa/gl_tool.h"
 #include "runa/matrix_stack.h"
+#include "runa/color.h"
 #include "matsu/matrix.h"
 #include "matsu/vector.h"
 #include "aki/image_loader.h"
@@ -38,6 +39,7 @@
 
 using runa::BasicColorShader;
 using runa::BasicTextureShader;
+using runa::Color4ub;
 using std::string;
 using std::vector;
 using matsu::vec2;
@@ -104,11 +106,11 @@ void BoardView::DrawBackground() const {
 
   //색 설정
   //matsu::vec4 color(0.2, 0.2, 0.2, 0.2);
-  matsu::vec4 color(1, 1, 1, 1);
-  vector<vec4> color_list(4, color);
+  Color4ub color(100, 100, 100, 100);
+  vector<Color4ub> color_list(4, color);
   GLint color_location = shader.color_location();
   glEnableVertexAttribArray(color_location);
-  glVertexAttribPointer(color_location, 4, GL_FLOAT, GL_FALSE, 0, color_list[0].Pointer());
+  glVertexAttribPointer(color_location, 4, GL_UNSIGNED_BYTE, GL_TRUE, 0, color_list[0].data);
 
   //3 2
   //0 1
@@ -140,46 +142,6 @@ void BoardView::DrawBackground() const {
   glDisable(GL_TEXTURE_2D);
 
   SR_ASSERT(runa::GLTool::CheckError("draw background"));
-}
-
-void BoardView::DrawGrid() const {
-  BasicColorShader &shader = BasicColorShader::GetInstance();
-  GLint position_location = shader.position_location();
-  GLint color_location = shader.color_location();
-  GLint mvp_location = shader.mvp_location();
-  
-  shader.Use();
-
-  //set color
-  matsu::vec4 gray(0.5, 0.5, 0.5, 1.0);
-  glUniform4fv(color_location, 1, gray.Pointer());
-
-  // apply projection
-  MatrixStack projection_stack;
-  projection_stack.MultiplyMatrix(Matrix::Ortho<float>(0.0f, 
-    win_width_, 0.0f, win_height_, 0.1f, 10.0f));
-  projection_stack.MultiplyMatrix(Matrix::Translate<float>(0, 0, -1));
-  projection_stack.MultiplyMatrix(Matrix::Scale<float>(tile_size_, tile_size_, 1));
-  glUniformMatrix4fv(mvp_location, 1, GL_FALSE, projection_stack.Pointer());
-
-  // 세로줄 
-  int board_width = win_width_ / tile_size_;
-  int board_height = win_height_ / tile_size_;
-  vector<matsu::vec2> grid_line_;
-  for (int i = 0 ; i < board_width ; i++) {
-    grid_line_.push_back(vec2(i, 0));
-    grid_line_.push_back(vec2(i, board_height));
-  }
-  // 가로줄
-  for (int i = 0 ; i < board_height ; i++) {
-    grid_line_.push_back(vec2(0, i));
-    grid_line_.push_back(vec2(board_width, i));
-  }
-  glVertexAttribPointer(position_location, 2, GL_FLOAT, GL_FALSE, 0, grid_line_[0].Pointer());
-  glEnableVertexAttribArray(position_location);
-  glDrawArrays(GL_LINES, 0, grid_line_.size());
-
-  SR_ASSERT(runa::GLTool::CheckError("draw grid"));
 }
 
 void BoardView::DrawColorTile(int x, int y, const matsu::vec4 &color) const {

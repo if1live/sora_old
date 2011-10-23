@@ -22,6 +22,7 @@
 #define RENDERING_RUNA_COLOR_H_
 
 #include "runa/runa_enum.h"
+#include <boost/static_assert.hpp>
 
 namespace runa {;
 template<typename T, unsigned int D>
@@ -41,6 +42,7 @@ struct Color {
       T data[D];
   };
   Color() {
+    BOOST_STATIC_ASSERT(D == 3 || D == 4);
     for (unsigned int i = 0 ; i < D ; i++) {
       data[i] = MaxValue();
     }
@@ -49,6 +51,18 @@ struct Color {
     Set(r, g, b);
   }
   Color(T r, T g, T b, T a) {
+    Set(r, g, b, a);
+  }
+  template<unsigned int D2>
+  Color(const Color<T, D2> &o) {
+    Set(o.r, o.g, o.b, o.alpha());
+  }
+  template<typename T2>
+  Color(const Color<T2, D> &o) {
+    T r = o.r / (float)o.MaxValue() * MaxValue();
+    T g = o.g / (float)o.MaxValue() * MaxValue();
+    T b = o.b / (float)o.MaxValue() * MaxValue();
+    T a = o.alpha() / (float)o.MaxValue() * MaxValue();
     Set(r, g, b, a);
   }
   void Set(T r, T g, T b, T a) {
@@ -89,6 +103,16 @@ struct Color {
   void Set(T r, T g, T b) {
     Set(r, g, b, MaxValue());
   }
+  bool operator==(const Color &o) {
+    if( memcmp(data, o.data, sizeof(T) * D) == 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  bool operator!=(const Color &o) {
+    return !(*this == o);
+  }
   static T MinValue() { return 0; }
   static T MaxValue() { return static_cast<T>(1.0f); }
 
@@ -104,6 +128,26 @@ struct Color {
     if (D == 4) {
       data[3] = a;
     }
+  }
+  static const Color &White() {
+    static Color color(MaxValue(), MaxValue(), MaxValue(), MaxValue());
+    return color;
+  }
+  static const Color &Black() {
+    static Color color(0, 0, 0, MaxValue());
+    return color;
+  }
+  static const Color &Red() {
+    static Color color(MaxValue(), 0, 0, MaxValue());
+    return color;
+  }
+  static const Color &Green() {
+    static Color color(0, MaxValue(), 0, MaxValue());
+    return color;
+  }
+  static const Color &Blue() {
+    static Color color(0, 0, MaxValue(), MaxValue());
+    return color;
   }
 };
 
