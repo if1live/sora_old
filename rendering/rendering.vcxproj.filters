@@ -25,6 +25,9 @@
     <Filter Include="kurisu">
       <UniqueIdentifier>{7ee72fa4-76fc-4dc5-8591-624f79f6ae4b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lynette">
+      <UniqueIdentifier>{fc282f03-cb39-440f-b97c-b59b30a990bd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="precompile.cpp">
@@ -86,6 +89,9 @@
     </ClCompile>
     <ClCompile Include="runa\window.cc">
       <Filter>runa</Filter>
+    </ClCompile>
+    <ClCompile Include="lynette\model.cc">
+      <Filter>lynette</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -175,6 +181,18 @@
     </ClInclude>
     <ClInclude Include="runa\color.h">
       <Filter>runa</Filter>
+    </ClInclude>
+    <ClInclude Include="lynette\lynette_enum.h">
+      <Filter>lynette</Filter>
+    </ClInclude>
+    <ClInclude Include="lynette\model.h">
+      <Filter>lynette</Filter>
+    </ClInclude>
+    <ClInclude Include="lynette\teapot.h">
+      <Filter>lynette</Filter>
+    </ClInclude>
+    <ClInclude Include="lynette\bounding_volume.h">
+      <Filter>lynette</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

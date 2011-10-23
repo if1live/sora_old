@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="precompile.h" />
+    <ClCompile Include="lynette\model_test.cc" />
     <ClCompile Include="runa\color_test.cc">
       <FileType>CppHeader</FileType>
     </ClCompile>

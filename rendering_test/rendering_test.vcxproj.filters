@@ -19,6 +19,9 @@
     <Filter Include="aki">
       <UniqueIdentifier>{e8f457ec-1693-42c4-9866-7ba8e6a1bc7f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="lynette">
+      <UniqueIdentifier>{f44eea59-a5c3-4345-8a26-5c33d08bba7b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="precompile.h">
@@ -43,6 +46,9 @@
     </ClCompile>
     <ClCompile Include="runa\color_test.cc">
       <Filter>runa</Filter>
+    </ClCompile>
+    <ClCompile Include="lynette\model_test.cc">
+      <Filter>lynette</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -75,6 +75,7 @@
     <ClCompile Include="kanako\font.cc" />
     <ClCompile Include="kanako\label.cc" />
     <ClCompile Include="kurisu\debug_draw.cc" />
+    <ClCompile Include="lynette\model.cc" />
     <ClCompile Include="precompile.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -105,6 +106,10 @@
     <ClInclude Include="kanako\vincent.h" />
     <ClInclude Include="kurisu\debug_draw.h" />
     <ClInclude Include="kurisu\kurisu_enum.h" />
+    <ClInclude Include="lynette\bounding_volume.h" />
+    <ClInclude Include="lynette\lynette_enum.h" />
+    <ClInclude Include="lynette\model.h" />
+    <ClInclude Include="lynette\teapot.h" />
     <ClInclude Include="precompile.h" />
     <ClInclude Include="runa\basic_color_shader.h" />
     <ClInclude Include="runa\basic_texture_shader.h" />
