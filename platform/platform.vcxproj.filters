@@ -30,6 +30,18 @@
     <ClInclude Include="chizuru\keyboard.h">
       <Filter>chizuru</Filter>
     </ClInclude>
+    <ClInclude Include="chizuru\touch_event.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\touch_device.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\chizuru_enum.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
+    <ClInclude Include="chizuru\mouse_glfw.h">
+      <Filter>chizuru</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="mio\path_ios.mm">
@@ -47,6 +59,12 @@
       <Filter>mio</Filter>
     </ClCompile>
     <ClCompile Include="chizuru\keyboard_glfw.cc">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\mouse_glfw.cc">
+      <Filter>chizuru</Filter>
+    </ClCompile>
+    <ClCompile Include="chizuru\touch_device.cc">
       <Filter>chizuru</Filter>
     </ClCompile>
   </ItemGroup>

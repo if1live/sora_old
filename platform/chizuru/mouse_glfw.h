@@ -18,57 +18,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "chizuru/keyboard.h"
-#include "sora/platform.h"
-#if SR_WIN
-#include <GL/glfw.h>
+#ifndef PLATFORM_CHIZURU_MOUSE_GLFW_H_
+#define PLATFORM_CHIZURU_MOUSE_GLFW_H_
+
+#include "sora/singleton.h"
 
 namespace chizuru {;
-Keyboard::Keyboard() {
+/// @brief 마우스같은 UI장치의 좌표계는 왼쪽위가 0, 0
+class MouseGlfw : public sora::Singleton<MouseGlfw> {
+ public:
+  MouseGlfw();
+  ~MouseGlfw();
+
+  void Update();
+ private:
+  int prev_x_;
+  int prev_y_;
+  int prev_state_;
+
+  static int next_id_;
+};
 }
-Keyboard::~Keyboard() {
-}
-void Keyboard::Update() {
-}
-ButtonState Keyboard::GetButtonState(int key) {
-  int state;
-  switch(key) {
-  case kKeyIdentifierSpace:
-    state = glfwGetKey(GLFW_KEY_SPACE);
-    break;
-  case kKeyIdentifierEsc:
-    state = glfwGetKey(GLFW_KEY_ESC);
-    break;
-  case kKeyIdentifierUp:
-    state = glfwGetKey(GLFW_KEY_UP);
-    break;
-  case kKeyIdentifierDown:
-    state = glfwGetKey(GLFW_KEY_DOWN);
-    break;
-  case kKeyIdentifierLeft:
-    state = glfwGetKey(GLFW_KEY_LEFT);
-    break;
-  case kKeyIdentifierRight:
-    state = glfwGetKey(GLFW_KEY_RIGHT);
-    break;
-  default:
-    state = glfwGetKey(key);
-    break;
-  }
-  if (state == GLFW_RELEASE) {
-    return kButtonStateRelease;
-  } else if(state == GLFW_PRESS) {
-    return kButtonStatePress;
-  } else {
-    SR_ASSERT(!"not valid");
-    return kButtonStateRelease;
-  }
-}
-bool Keyboard::IsPressed(int key) {
-  return (kButtonStatePress == GetButtonState(key));
-}
-bool Keyboard::IsReleased(int key) {
-  return (kButtonStateRelease == GetButtonState(key));
-}
-}
-#endif
+#endif  // PLATFORM_CHIZURU_MOUSE_GLFW_H_

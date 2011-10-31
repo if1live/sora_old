@@ -45,6 +45,7 @@
 #include "runa/ui_draw_helper.h"
 
 #include "chizuru/keyboard.h"
+#include "chizuru/mouse_glfw.h"
 
 const int kTileSize = 16;
 const float kMoveDelay = 0.2f;
@@ -130,14 +131,16 @@ void Init() {
 }
 
 void Update(float dt) {
+  chizuru::MouseGlfw::GetInstance().Update();
+
   // check key
-  if(Keyboard::GetInstance().IsPressed(chizuru::KeyIdentifierLeft)) {
+  if(Keyboard::GetInstance().IsPressed(chizuru::kKeyIdentifierLeft)) {
     player->SetNextDirection(kDirection2Left);
-  } else if(Keyboard::GetInstance().IsPressed(chizuru::KeyIdentifierRight)) {
+  } else if(Keyboard::GetInstance().IsPressed(chizuru::kKeyIdentifierRight)) {
     player->SetNextDirection(kDirection2Right);
-  } else if(Keyboard::GetInstance().IsPressed(chizuru::KeyIdentifierUp)) {
+  } else if(Keyboard::GetInstance().IsPressed(chizuru::kKeyIdentifierUp)) {
     player->SetNextDirection(kDirection2Up);
-  } else if(Keyboard::GetInstance().IsPressed(chizuru::KeyIdentifierDown)) {
+  } else if(Keyboard::GetInstance().IsPressed(chizuru::kKeyIdentifierDown)) {
     player->SetNextDirection(kDirection2Down);
   }
 

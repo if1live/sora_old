@@ -63,7 +63,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="chizuru\chizuru_enum.h" />
     <ClInclude Include="chizuru\keyboard.h" />
+    <ClInclude Include="chizuru\mouse_glfw.h" />
+    <ClInclude Include="chizuru\touch_device.h" />
+    <ClInclude Include="chizuru\touch_event.h" />
     <ClInclude Include="mio\path.h" />
     <ClInclude Include="mio\reader.h" />
   </ItemGroup>
@@ -72,6 +76,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="chizuru\keyboard_glfw.cc" />
+    <ClCompile Include="chizuru\mouse_glfw.cc" />
+    <ClCompile Include="chizuru\touch_device.cc" />
     <ClCompile Include="mio\path.cc" />
     <ClCompile Include="mio\path_win.cc" />
     <ClCompile Include="mio\reader.cc" />

@@ -22,29 +22,15 @@
 #define PLATFORM_CHIZURU_KEYBOARD_H_
 
 #include "sora/singleton.h"
+#include "chizuru/chizuru_enum.h"
 
 namespace chizuru {;
-// 특수키. glut, glfw에 따라서 이 부분이 달라질수있으니까 따로 enum을 분리함
-typedef enum {
-  KeyIdentifierSpace = 256, //이거보다 아래쪽은 기본 아스키로 연결될테니까
-  KeyIdentifierEsc,
-  KeyIdentifierUp,
-  KeyIdentifierDown,
-  KeyIdentifierLeft,
-  KeyIdentifierRight,
-} KeyIdentifier;
-
-typedef enum {
-  KeyStatePress,
-  KeyStateRelease
-} KeyState;
-
 class Keyboard : public sora::Singleton<Keyboard> {
 public:
   Keyboard();
   ~Keyboard();
   void Update();
-  KeyState GetKeyState(int key);
+  ButtonState GetButtonState(int key);
   bool IsPressed(int key);
   bool IsReleased(int key);
 };

@@ -18,57 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "chizuru/keyboard.h"
-#include "sora/platform.h"
-#if SR_WIN
-#include <GL/glfw.h>
+#ifndef PLATFORM_CHIZURU_CHIZURU_ENUM_H_
+#define PLATFORM_CHIZURU_CHIZURU_ENUM_H_
 
 namespace chizuru {;
-Keyboard::Keyboard() {
+class TouchListener;
+
+
+typedef enum {
+  kTouchEventBegan,
+  kTouchEventMoved,
+  kTouchEventEnded,
+  kTouchEventCancelled,
+  kTouchEventInvalid,
+} TouchEventType;
+
+// 특수키. glut, glfw에 따라서 이 부분이 달라질수있으니까 따로 enum을 분리함
+typedef enum {
+  kKeyIdentifierSpace = 256, //이거보다 아래쪽은 기본 아스키로 연결될테니까
+  kKeyIdentifierEsc,
+  kKeyIdentifierUp,
+  kKeyIdentifierDown,
+  kKeyIdentifierLeft,
+  kKeyIdentifierRight,
+} KeyIdentifier;
+
+typedef enum {
+  kButtonStatePress,
+  kButtonStateRelease
+} ButtonState;
+
 }
-Keyboard::~Keyboard() {
-}
-void Keyboard::Update() {
-}
-ButtonState Keyboard::GetButtonState(int key) {
-  int state;
-  switch(key) {
-  case kKeyIdentifierSpace:
-    state = glfwGetKey(GLFW_KEY_SPACE);
-    break;
-  case kKeyIdentifierEsc:
-    state = glfwGetKey(GLFW_KEY_ESC);
-    break;
-  case kKeyIdentifierUp:
-    state = glfwGetKey(GLFW_KEY_UP);
-    break;
-  case kKeyIdentifierDown:
-    state = glfwGetKey(GLFW_KEY_DOWN);
-    break;
-  case kKeyIdentifierLeft:
-    state = glfwGetKey(GLFW_KEY_LEFT);
-    break;
-  case kKeyIdentifierRight:
-    state = glfwGetKey(GLFW_KEY_RIGHT);
-    break;
-  default:
-    state = glfwGetKey(key);
-    break;
-  }
-  if (state == GLFW_RELEASE) {
-    return kButtonStateRelease;
-  } else if(state == GLFW_PRESS) {
-    return kButtonStatePress;
-  } else {
-    SR_ASSERT(!"not valid");
-    return kButtonStateRelease;
-  }
-}
-bool Keyboard::IsPressed(int key) {
-  return (kButtonStatePress == GetButtonState(key));
-}
-bool Keyboard::IsReleased(int key) {
-  return (kButtonStateRelease == GetButtonState(key));
-}
-}
-#endif
+
+#endif  // PLATFORM_CHIZURU_CHIZURU_ENUM_H_
