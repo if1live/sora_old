@@ -46,22 +46,22 @@ TEST(SphericalPoint, Create)
 	Rectangular3Point<float> orig(1, 0, 0);
 	SphericalPoint<float> conv = SphericalPoint<float>::Create(orig);
 	EXPECT_EQ(1.0f, conv.radius());
-	EXPECT_TRUE(EqualAbsoluteError(90.0f, conv.theta_degree(), 1.0f));
-	EXPECT_TRUE(EqualAbsoluteError(0.0f, conv.pi_degree(), 1.0f));
+	EXPECT_TRUE(MathHelper::EqualAbsoluteError(90.0f, conv.theta_degree(), 1.0f));
+	EXPECT_TRUE(MathHelper::EqualAbsoluteError(0.0f, conv.pi_degree(), 1.0f));
 	
 	//(0, 2, 0) -> (2, 90deg, 90deg);
 	orig = Rectangular3Point<float>(0, 2, 0);
 	conv = SphericalPoint<float>::Create(orig);
 	EXPECT_EQ(2.0f, conv.radius());
-	EXPECT_TRUE(EqualAbsoluteError(90.0f, conv.theta_degree(), 1.0f));
-	EXPECT_TRUE(EqualAbsoluteError(90.0f, conv.pi_degree(), 1.0f));
+	EXPECT_TRUE(MathHelper::EqualAbsoluteError(90.0f, conv.theta_degree(), 1.0f));
+	EXPECT_TRUE(MathHelper::EqualAbsoluteError(90.0f, conv.pi_degree(), 1.0f));
 	
 	//(0, 0, 1) -> (1, 0deg, 0deg);
 	orig = Rectangular3Point<float>(0, 0, 1);
 	conv = SphericalPoint<float>::Create(orig);
 	EXPECT_EQ(1.0f, conv.radius());
-	EXPECT_TRUE(EqualAbsoluteError(0.0f, conv.theta_degree(), 1.0f));
-	EXPECT_TRUE(EqualAbsoluteError(0.0f, conv.pi_degree(), 1.0f));
+	EXPECT_TRUE(MathHelper::EqualAbsoluteError(0.0f, conv.theta_degree(), 1.0f));
+	EXPECT_TRUE(MathHelper::EqualAbsoluteError(0.0f, conv.pi_degree(), 1.0f));
 	
 	//radius > 0
 	orig = Rectangular3Point<float>(0.161136568f, 0.247228201f, -0.944041371f);

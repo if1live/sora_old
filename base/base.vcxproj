@@ -81,8 +81,8 @@
     <ClInclude Include="matsu\angle_impl.h" />
     <ClInclude Include="matsu\coordinate.h" />
     <ClInclude Include="matsu\coordinate_impl.h" />
-    <ClInclude Include="matsu\math.h" />
-    <ClInclude Include="matsu\math_impl.h" />
+    <ClInclude Include="matsu\math_helper.h" />
+    <ClInclude Include="matsu\math_helper_impl.h" />
     <ClInclude Include="matsu\matrix.h" />
     <ClInclude Include="matsu\matrix_impl.h" />
     <ClInclude Include="matsu\matrix_template.h" />

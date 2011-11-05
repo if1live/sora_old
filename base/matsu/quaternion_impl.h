@@ -21,7 +21,7 @@
 #ifndef BASE_MATSU_QUATERNION_IMPL_H_
 #define BASE_MATSU_QUATERNION_IMPL_H_
 
-#include "matsu/math.h"
+#include "matsu/math_helper.h"
 
 namespace matsu {;
 template <typename T>

@@ -90,8 +90,8 @@ bool TextureLoader::LoadTexture2D(const Image &img,
   const ImageDescription &desc = img.desc();
   int width = desc.width;
   int height = desc.height;
-  int tex_width = matsu::CeilPower(2, width);
-  int tex_height = matsu::CeilPower(2, height);
+  int tex_width = matsu::MathHelper::CeilPower(2, width);
+  int tex_height = matsu::MathHelper::CeilPower(2, height);
 
   TextureSize size(width, height, tex_width, tex_height);
   *tex_size = size;

@@ -60,9 +60,6 @@
     <ClInclude Include="matsu\quaternion.h">
       <Filter>matsu</Filter>
     </ClInclude>
-    <ClInclude Include="matsu\math.h">
-      <Filter>matsu</Filter>
-    </ClInclude>
     <ClInclude Include="matsu\rectangle.h">
       <Filter>matsu</Filter>
     </ClInclude>
@@ -103,9 +100,6 @@
       <Filter>matsu</Filter>
     </ClInclude>
     <ClInclude Include="matsu\coordinate_impl.h">
-      <Filter>matsu</Filter>
-    </ClInclude>
-    <ClInclude Include="matsu\math_impl.h">
       <Filter>matsu</Filter>
     </ClInclude>
     <ClInclude Include="matsu\matrix_impl.h">
@@ -149,6 +143,12 @@
     </ClInclude>
     <ClInclude Include="karen\memory_leak_detector.h">
       <Filter>karen</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\math_helper.h">
+      <Filter>matsu</Filter>
+    </ClInclude>
+    <ClInclude Include="matsu\math_helper_impl.h">
+      <Filter>matsu</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -18,15 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef BASE_MATSU_MATH_IMPL_H_
-#define BASE_MATSU_MATH_IMPL_H_
+#ifndef BASE_MATSU_MATH_HELPER_IMPL_H_
+#define BASE_MATSU_MATH_HELPER_IMPL_H_
 
 #include <limits>
 #include <string>
 
 namespace matsu {;
 template<typename T>
-bool EqualAbsoluteError(T a, T b, T maxError) {
+bool MathHelperTemplate<T>::EqualAbsoluteError(T a, T b, T maxError) {
   if (a == b) {
     return true;
   }
@@ -37,7 +37,7 @@ bool EqualAbsoluteError(T a, T b, T maxError) {
 }
 
 template<typename T>
-bool EqualRelativeError(T a, T b, T maxError) {
+bool MathHelperTemplate<T>::EqualRelativeError(T a, T b, T maxError) {
   if (fabs(a - b) < maxError) {
     return true;
   }
@@ -54,7 +54,7 @@ bool EqualRelativeError(T a, T b, T maxError) {
 }
 
 template<typename T>
-bool EqualUlps(T a, T b, int maxUlps) {
+bool MathHelperTemplate<T>::EqualUlps(T a, T b, int maxUlps) {
   // http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
   int tmp;
   SR_ASSERT(sizeof(a) == sizeof(tmp));
@@ -69,7 +69,7 @@ bool EqualUlps(T a, T b, int maxUlps) {
 }
 
 template<typename T>
-bool IsPower(T base, T target) {
+bool MathHelperTemplate<T>::IsPower(T base, T target) {
   if (target < 1) {
     // 2*-1=0.5인데 이런 경우는 쓰지 않을듯해서 신경쓰지 않는다
     // 어차피 위와같이 분수로 내려가는 경우, 정밀도 문제로
@@ -87,7 +87,7 @@ bool IsPower(T base, T target) {
 }
 
 template<typename T>
-T CeilPower(T base, T target) {
+T MathHelperTemplate<T>::CeilPower(T base, T target) {
   if (target < 1) {
     // 소수점이하는 계산무시
     return base;
@@ -100,12 +100,12 @@ T CeilPower(T base, T target) {
 }
 
 template<typename T>
-bool IsNaN(T num) {
+bool MathHelperTemplate<T>::IsNaN(T num) {
   return (num != num);
 }
 
 template<typename T>
-bool IsINF(T num) {
+bool MathHelperTemplate<T>::IsINF(T num) {
   if (std::numeric_limits<T>::has_infinity == false) {
     return false;
   }
@@ -116,7 +116,7 @@ bool IsINF(T num) {
 }
 
 template<typename T>
-bool IsNormalNumber(T num) {
+bool MathHelperTemplate<T>::IsNormalNumber(T num) {
   if (IsNaN(num) || IsINF(num)) {
     return false;
   }
@@ -124,27 +124,27 @@ bool IsNormalNumber(T num) {
 }
 
 template<typename T>
-T StringToInt(const std::string &str) {
+int MathHelperTemplate<T>::StringToInt(const std::string &str) {
   int result = atoi(str.c_str());
-  return static_cast<T>(result);
+  return static_cast<int>(result);
 }
 
 template<typename T>
-T StringToFloat(const std::string &str) {
+float MathHelperTemplate<T>::StringToFloat(const std::string &str) {
   // double이 큰 형태이고 원래 atof의 타입이 double더라
   double result = atof(str.c_str());
-  return static_cast<T>(result);
+  return static_cast<float>(result);
 }
 
 template<typename T>
-T CalculateIncludeAngleDegree(T src, T dst) {
+T MathHelperTemplate<T>::CalculateIncludeAngleDegree(T src, T dst) {
   T radResult = CalculateIncludeAngleRadian(DegreeToRadian(src),
     DegreeToRadian(dst));
   return rad2deg(radResult);
 }
 
 template<typename T>
-T CalculateIncludeAngleRadian(T src, T dst) {
+T MathHelperTemplate<T>::CalculateIncludeAngleRadian(T src, T dst) {
   vec2 srcVec2(cos(src), sin(src));
   vec2 dstVec2(cos(dst), sin(dst));
   float vecDot = srcVec2.Dot(dstVec2);
@@ -168,6 +168,11 @@ T CalculateIncludeAngleRadian(T src, T dst) {
   } else {
     return -rawAbsRadian;
   }
+}
+template<typename T>
+template<typename T2>
+T2 MathHelperTemplate<T>::Lerp(T2 from, T2 to, float t) {
+  return from * (1-t) + to * t;
 }
 /*	
 template<typename T>
@@ -238,9 +243,5 @@ T atanDeg(T value)
 	return atanRad(DegreeToRadian(value));
 }
  */
-template<typename T>
-T Lerp(T from, T to, float t) {
-  return from * (1-t) + to * t;
 }
-}
-#endif  // BASE_MATSU_MATH_IMPL_H_
+#endif  // BASE_MATSU_MATH_HELPER_IMPL_H_

@@ -20,7 +20,7 @@
 // Ŭnicode please
 #ifndef BASE_MATSU_COORDINATE_IMPL_H_
 #define BASE_MATSU_COORDINATE_IMPL_H_
-#include "matsu/math.h"
+#include "matsu/math_helper.h"
 #include "matsu/angle.h"
 
 namespace matsu {

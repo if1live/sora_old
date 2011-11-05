@@ -1,6 +1,6 @@
 #include "precompile.h"
 #include "matsu/angle.h"
-#include "matsu/math.h"
+#include "matsu/math_helper.h"
 
 using namespace matsu;
 
@@ -20,15 +20,15 @@ TEST(Angle, test)
 TEST(Angle, DegreeToRadian)
 {
 	//180degree = pi rad
-	EXPECT_TRUE(EqualAbsoluteError(kPi, Angle<float>::DegreeToRadian(180.0f), 0.1f));
+	EXPECT_TRUE(MathHelper::EqualAbsoluteError(kPi, Angle<float>::DegreeToRadian(180.0f), 0.1f));
 	//90degree = 1/2 pi rad
-	EXPECT_TRUE(EqualAbsoluteError(kPi/2, Angle<float>::DegreeToRadian(90.0f), 0.1f));
+	EXPECT_TRUE(MathHelper::EqualAbsoluteError(kPi/2, Angle<float>::DegreeToRadian(90.0f), 0.1f));
 }
 
 TEST(Angle, RadianToDegree)
 {
 	//pi rad = 180degree
-	EXPECT_TRUE(EqualAbsoluteError(180.0f, Angle<float>::RadianToDegree(kPi), 0.1f));
+	EXPECT_TRUE(MathHelper::EqualAbsoluteError(180.0f, Angle<float>::RadianToDegree(kPi), 0.1f));
 	//1/2pi rad = 90degree
-	EXPECT_TRUE(EqualAbsoluteError(90.0f, Angle<float>::RadianToDegree(kPi/2), 0.1f));
+	EXPECT_TRUE(MathHelper::EqualAbsoluteError(90.0f, Angle<float>::RadianToDegree(kPi/2), 0.1f));
 }

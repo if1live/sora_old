@@ -21,7 +21,7 @@
 #ifndef RENDERING_AKI_TEXTURE2D_IMPL_H_
 #define RENDERING_AKI_TEXTURE_IMPL_H_
 #include "aki/image.h"
-#include "matsu/math.h"
+#include "matsu/math_helper.h"
 #include <boost/static_assert.hpp>
 
 namespace aki {;
