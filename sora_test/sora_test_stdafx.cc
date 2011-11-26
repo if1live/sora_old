@@ -1,0 +1,1 @@
+#include "sora_test_stdafx.h"

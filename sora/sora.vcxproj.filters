@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="assert_inc.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="class_type.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="logger.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="math_helper.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="platform.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="shared_ptr_inc.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="string_code_dictionary.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="string_hash_functor.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="string_util.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="template_library.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="unordered_map_inc.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="vector.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="sora_stdafx.h" />
+    <ClInclude Include="low_level_c_file.h">
+      <Filter>base</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="string_util.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="sora_stdafx.cpp" />
+    <ClCompile Include="low_level_c_file.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="base">
+      <UniqueIdentifier>{499db5ef-e963-444b-b728-66dfba5f2a59}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

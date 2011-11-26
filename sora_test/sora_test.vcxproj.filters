@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="testmain.cc" />
+    <ClCompile Include="sora_test_stdafx.cc" />
+    <ClCompile Include="class_type_test.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="vector_test.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="string_util_test.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix_test.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="math_helper_test.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="low_level_c_file_test.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="sora_test_stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="base">
+      <UniqueIdentifier>{d56732c6-659d-445e-b0a0-b59f83f2c8d3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
