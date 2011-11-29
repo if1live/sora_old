@@ -24,6 +24,9 @@
 
 namespace sora {;
 i32 GetFileSize(int fd);
+
+std::string app_root_path;
+std::string doc_root_path;
 }
 
 #endif  // SORA_FILESYSTEM_H_

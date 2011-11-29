@@ -21,22 +21,7 @@
 #include "sora_test_stdafx.h"
 #include "sora/low_level_c_file.h"
 
-#if SR_WIN
-#include <Windows.h>
-#include <tchar.h>
-#endif
-
 TEST(LowLevelCFile, test) {
-  // 윈도우에서 실행프로그램이 있는 경로 얻기
-  // 이것을 이용해서 경로 변경후 파일을 열자
-  TCHAR path[MAX_PATH];
-  ::GetModuleFileName(0, path, _MAX_PATH);
-  TCHAR* p = _tcsrchr(path, '\\');
-  path[p - path] = 0;
-  std::string root_path = path;
-  chdir(root_path.c_str());
-  ////////////////////////////////////
-
   using sora::LowLevelCFile;
   const char *path1 = "testdata/low_level_c_file.txt";
 
@@ -51,16 +36,6 @@ TEST(LowLevelCFile, test) {
 }
 
 TEST(ReadonlyFile_WriteonlyFile, test) {
-  // 윈도우에서 실행프로그램이 있는 경로 얻기
-  // 이것을 이용해서 경로 변경후 파일을 열자
-  TCHAR path[MAX_PATH];
-  ::GetModuleFileName(0, path, _MAX_PATH);
-  TCHAR* p = _tcsrchr(path, '\\');
-  path[p - path] = 0;
-  std::string root_path = path;
-  chdir(root_path.c_str());
-  ////////////////////////////////////
-
   using sora::WriteonlyCFile;
   using sora::ReadonlyCFile;
   const char path1[] = "testdata/asdf.txt";

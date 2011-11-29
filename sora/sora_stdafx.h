@@ -29,6 +29,7 @@
 #include <cstdlib>
 #include <cstring>
 #include <cstdarg>
+#include <cerrno>
 
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -48,6 +49,11 @@
 // boost
 #include <boost/noncopyable.hpp>
 
+#if SR_WIN
+#include <Windows.h>
+#include <tchar.h>
+#include <direct.h>
+#endif
 
 #include "sora/shared_ptr_inc.h"
 #include "sora/unordered_map_inc.h"

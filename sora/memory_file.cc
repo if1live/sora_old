@@ -20,6 +20,7 @@
 // Ŭnicode please
 #include "sora_stdafx.h"
 #include "sora/memory_file.h"
+#include "sora/filesystem.h"
 
 namespace sora {;
 MemoryFile::MemoryFile(const char *filepath)
@@ -38,11 +39,23 @@ MemoryFile::~MemoryFile() {
   Close();
 }
 void MemoryFile::Open() {
-  FILE *file = fopen(filepath_.c_str(), "rb");
-  SR_ASSERT(file != NULL && "file is not exist");
+  int fd = open(filepath_.c_str(), O_RDONLY);
+  SR_ASSERT(fd != -1 && "file is not exist");
 
+  int length = GetFileSize(fd);
+  start_ = (u8*)MM_MALLOC(length);
+  read(fd, start_, length);
+
+  curr_ = start_;
+  end_ = curr_ + length;
+
+  close(fd);
 }
 void MemoryFile::Close() {
+  MM_FREE(start_);
+  start_ = NULL;
+  curr_ = NULL;
+  end_ = NULL;
 }
 
 }
