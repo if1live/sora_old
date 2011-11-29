@@ -30,6 +30,7 @@
 #include <cstring>
 #include <cstdarg>
 #include <cerrno>
+#include <ctime>
 
 #include <sys/types.h>
 #include <sys/stat.h>

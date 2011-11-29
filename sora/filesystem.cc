@@ -27,6 +27,9 @@
 #endif
 
 namespace sora {;
+std::string app_root_path;
+std::string doc_root_path;
+
 int InitFileSystem();
 int init_filesystem = InitFileSystem();
 int InitFileSystem() {

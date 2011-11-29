@@ -18,14 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_FILESYSTEM_H_
-#define SORA_FILESYSTEM_H_
+#ifndef SORA_CLOCK_H_
+#define SORA_CLOCK_H_
 
 namespace sora {;
-i32 GetFileSize(int fd);
-
-extern std::string app_root_path;
-extern std::string doc_root_path;
+class Clock {
+public:
+  static i32 curtime;	// time returned by last Sys_Milliseconds()
+  static i32 GetMilliSecond();
+};
 }
 
-#endif  // SORA_FILESYSTEM_H_
+#endif  // SORA_CLOCK_H_

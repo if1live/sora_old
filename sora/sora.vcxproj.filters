@@ -53,6 +53,9 @@
     <ClInclude Include="filesystem.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="clock.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="low_level_c_file.cc">
@@ -74,10 +77,16 @@
     <ClCompile Include="filesystem.cc">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="clock.cc">
+      <Filter>base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
       <UniqueIdentifier>{499db5ef-e963-444b-b728-66dfba5f2a59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer">
+      <UniqueIdentifier>{9a6c4513-3657-43a5-88d9-ef98b15adcf6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

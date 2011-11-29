@@ -68,6 +68,7 @@
   <ItemGroup>
     <ClInclude Include="assert_inc.h" />
     <ClInclude Include="class_type.h" />
+    <ClInclude Include="clock.h" />
     <ClInclude Include="common_string.h" />
     <ClInclude Include="filesystem.h" />
     <ClInclude Include="logger.h" />
@@ -87,6 +88,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cc" />
+    <ClCompile Include="clock.cc" />
     <ClCompile Include="filesystem.cc" />
     <ClCompile Include="low_level_c_file.cc" />
     <ClCompile Include="mem.cc" />
