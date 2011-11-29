@@ -32,34 +32,27 @@ class ReadonlyCFile;
 class WriteonlyCFile;
 class LowLevelCFile;
 
-enum {
-  kSeekSet = SEEK_SET,
-  kSeekCur = SEEK_CUR,
-  kSeekEnd = SEEK_END,
-};
-
 class LowLevelCFile : boost::noncopyable {
 public:
   LowLevelCFile(const std::string &filepath);
   LowLevelCFile(const char *filepath);
   ~LowLevelCFile();
 
-  bool Open(const char *mode);
-  bool Close();
-  bool IsOpened() const;
+  boolean Open(int flag);
+  boolean Close();
+  boolean IsOpened() const;
 
-  int Read(void *buf, int size);
-  int Seek(int offset, int origin);
-  int Write(const void *buf, int size);
+  i32 Read(void *buf, i32 size);
+  i32 Seek(i32 offset, i32 origin);
+  i32 Write(const void *buf, i32 size);
 
   const void *GetBuffer();
-  int GetLength() const;
-  int GetRemainLength() const;
+  i32 GetLength() const;
+  i32 GetRemainLength() const;
   const std::string &filepath() const { return filepath_; }
 
 private:
-  FILE *file_;
-  std::string mode_;
+  int fd_;
   std::string filepath_;
   void *buffer_;
 };
@@ -70,16 +63,16 @@ public:
   ReadonlyCFile(const char *filepath) : file_(filepath) {}
   ~ReadonlyCFile() { file_.Close(); }
 
-  bool Open() { return file_.Open("rb"); }
-  bool Close() { return file_.Close(); }
-  bool IsOpened() const { return file_.IsOpened(); }
+  boolean Open() { return file_.Open(O_RDONLY); }
+  boolean Close() { return file_.Close(); }
+  boolean IsOpened() const { return file_.IsOpened(); }
 
-  int Read(void *buf, int size) { return file_.Read(buf, size); }
-  int Seek(int offset, int origin) { return file_.Seek(offset, origin); }
+  i32 Read(void *buf, i32 size) { return file_.Read(buf, size); }
+  i32 Seek(i32 offset, i32 origin) { return file_.Seek(offset, origin); }
   const void *GetBuffer() { return file_.GetBuffer(); }
 
-  int GetLength() const { return file_.GetLength(); }
-  int GetRemainLength() const { return file_.GetRemainLength(); }
+  i32 GetLength() const { return file_.GetLength(); }
+  i32 GetRemainLength() const { return file_.GetRemainLength(); }
   const std::string &filepath() const { return file_.filepath(); }
 
 private:
@@ -92,12 +85,12 @@ public:
   WriteonlyCFile(const char *filepath) : file_(filepath) {}
   ~WriteonlyCFile() { file_.Close(); }
 
-  bool Open() { return file_.Open("wb"); }
-  bool Close() { return file_.Close(); }
-  bool IsOpened() const { return file_.IsOpened(); }
-  int Write(const void *buf, int size) { return file_.Write(buf, size); }
-  int GetLength() const { return file_.GetLength(); }
-  int GetRemainLength() const { return file_.GetRemainLength(); }
+  boolean Open() { return file_.Open(O_WRONLY); }
+  boolean Close() { return file_.Close(); }
+  boolean IsOpened() const { return file_.IsOpened(); }
+  i32 Write(const void *buf, i32 size) { return file_.Write(buf, size); }
+  i32 GetLength() const { return file_.GetLength(); }
+  i32 GetRemainLength() const { return file_.GetRemainLength(); }
   const std::string &filepath() const { return file_.filepath(); }
 
 private:

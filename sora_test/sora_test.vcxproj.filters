@@ -3,22 +3,25 @@
   <ItemGroup>
     <ClCompile Include="testmain.cc" />
     <ClCompile Include="sora_test_stdafx.cc" />
+    <ClCompile Include="mem_test.cc">
+      <Filter>base</Filter>
+    </ClCompile>
     <ClCompile Include="class_type_test.cc">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="vector_test.cc">
+    <ClCompile Include="common_string_test.cc">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="string_util_test.cc">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="matrix_test.cc">
+    <ClCompile Include="low_level_c_file_test.cc">
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="math_helper_test.cc">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="low_level_c_file_test.cc">
+    <ClCompile Include="matrix_test.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="vector_test.cc">
       <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>

@@ -25,11 +25,11 @@ TEST(Matrix, GetRow) {
   using namespace sora;
   //1 0 3
 	//0 1 4
-	int data1[] = {1, 0,	0, 1,	3, 4};
-	Matrix<int,2,3> m1(data1);
-  int row_data_0[3];
+	i32 data1[] = {1, 0,	0, 1,	3, 4};
+	Matrix<i32,2,3> m1(data1);
+  i32 row_data_0[3];
 	m1.GetRow(0, row_data_0);
-  int row_data_1[3];
+  i32 row_data_1[3];
 	m1.GetRow(1, row_data_1);
 	
 	ivec3 t1(1, 0, 3);

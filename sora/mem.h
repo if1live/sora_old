@@ -1,4 +1,4 @@
-/*  Copyright (C) 2011 by if1live */
+﻿/*  Copyright (C) 2011 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,29 +18,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_STRING_UTIL_H_
-#define SORA_STRING_UTIL_H_
-
-#if SR_USE_PCH == 0
-#include <vector>
-#include <string>
-#endif
+#ifndef SORA_MEM_H_
+#define SORA_MEM_H_
 
 namespace sora {;
-class StringUtil {
- public:
-  static std::string Trim(const std::string &str);
-  static std::string LeftTrim(const std::string &str);
-  static std::string RightTrim(const std::string &str);
+// low level alloc, support only simple log
+void *BasicMalloc(size_t size);
+void BasicFree(void *ptr);
+void *BasicCalloc( size_t num, size_t size );
+void *BasicRealloc( void *memblock, size_t size );
 
-  static int Split(
-    const std::string &str,
-    char ch, std::vector<std::string> *retval);
+// add header alloc
+void *Malloc(size_t size);
+void Free(void *ptr);
+void *TagMalloc(size_t size, i32 tag);
+void TagFree(i32 tag);
 
-  static std::string Join(
-    const std::string &str,
-    const std::vector<std::string> &tokenlist);
+// memory alloc stat
+struct AllocState {
+  i32 bytes;
+  i32 count;
 };
+void AllocStat(AllocState *data);
 }
 
-#endif  // SORA_STRING_UTIL_H_
+#define MM_MALLOC(X) sora::BasicMalloc(X)
+#define MM_FREE(X)  sora::BasicFree(X)
+#define MM_CALLOC(NUM, SIZE)  sora::BasicCalloc(NUM, SIZE)
+#define MM_REALLOC(MEMBLOCK, SIZE)  sora::BasicRealloc(MEMBLOCK, SIZE)
+
+#define SR_MALLOC(X) sora::Malloc(X)
+#define SR_FREE(X)  sora::Free(X)
+#define SR_TAG_MALLOC(SIZE, TAG)  sora::TagMalloc(SIZE, TAG)
+#define SR_TAG_FREE(TAG)  sora::TagFree(TAG)
+
+#endif  // SORA_MEM_H_

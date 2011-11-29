@@ -27,25 +27,25 @@
 // SR_SUPER_CLASS와 SR_CHILD_CLASS가 한쌍을 구성
 #define SR_SUPER_CLASS()  \
 public: \
-  virtual int GetClassType() const = 0; \
+  virtual sora::i32 GetClassType() const = 0; \
   virtual const std::string &GetClassName() const = 0;  \
 public:  \
   static sora::StringIntCodeDictionary &GetCodeDictionary() {  \
     static sora::StringIntCodeDictionary dict_;  \
     return dict_; \
   } \
-  static const std::string &ClassTypeToName(int code) { \
+  static const std::string &ClassTypeToName(sora::i32 code) { \
     return GetCodeDictionary().CodeToName(code);  \
   } \
-  static int ClassNameToType(const std::string &name) { \
+  static sora::i32 ClassNameToType(const std::string &name) { \
     return GetCodeDictionary().NameToCode(name);  \
   }
 
 #define SR_CHILD_CLASS(CLASS_TYPE)  \
 public: \
-  static int ClassType() {  \
-    static bool first_run = true; \
-    static int code = -1; \
+  static sora::i32 ClassType() {  \
+    static sora::boolean first_run = true; \
+    static sora::i32 code = -1; \
     if (first_run == true) {  \
       first_run = true; \
       code = GetCodeDictionary().Register(std::string(CLASS_TYPE));  \
@@ -53,12 +53,12 @@ public: \
     return code;  \
   } \
   static const std::string &ClassName() { \
-    static int code = ClassType();  \
+    static sora::i32 code = ClassType();  \
     static std::string name(CLASS_TYPE);  \
     return name;  \
   } \
 public: \
-  virtual int GetClassType() const { return ClassType(); }  \
+  virtual sora::i32 GetClassType() const { return ClassType(); }  \
   virtual const std::string &GetClassName() const { return ClassName(); }
 
 // virtual 기반이 아닌것
@@ -67,28 +67,28 @@ public: \
 // 기본생성자와 같은 곳에서 인자로 받은 class_type를 초기화 시켜줄수있어야한다
 #define SR_SUPER_CLASS_2(CLASS_NAME)  \
 public: \
-  int GetClassType() const { return class_type_; }  \
+  sora::i32 GetClassType() const { return class_type_; }  \
   const std::string &GetClassName() const { return ClassTypeToName(class_type_); }  \
 public: \
   static sora::StringIntCodeDictionary &GetCodeDictionary() {  \
     static sora::StringIntCodeDictionary dict_;  \
     return dict_; \
   } \
-  static const std::string &ClassTypeToName(int code) { \
+  static const std::string &ClassTypeToName(sora::i32 code) { \
     return GetCodeDictionary().CodeToName(code);  \
   } \
-  static int ClassNameToType(const std::string &name) { \
+  static sora::i32 ClassNameToType(const std::string &name) { \
     return GetCodeDictionary().NameToCode(name);  \
   } \
 private:  \
-  void set_class_type(int class_type) { class_type_ = class_type; } \
-  int class_type_;
+  void set_class_type(sora::i32 class_type) { class_type_ = class_type; } \
+  sora::i32 class_type_;
 
 #define SR_CHILD_CLASS_2(CLASS_TYPE)  \
 public: \
-  static int ClassType() {  \
-    static bool first_run = true; \
-    static int code = -1; \
+  static sora::i32 ClassType() {  \
+    static sora::boolean first_run = true; \
+    static sora::i32 code = -1; \
     if (first_run == true) {  \
       first_run = true; \
       code = GetCodeDictionary().Register(std::string(CLASS_TYPE));  \
@@ -96,7 +96,7 @@ public: \
     return code;  \
   } \
   static const std::string &ClassName() { \
-    static int code = ClassType();  \
+    static sora::i32 code = ClassType();  \
     static std::string name(CLASS_TYPE);  \
     return name;  \
   }

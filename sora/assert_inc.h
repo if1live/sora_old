@@ -21,7 +21,7 @@
 #ifndef SORA_ASSERT_INC_H_
 #define SORA_ASSERT_INC_H_
 
-#include "sora/platform.h"
+#include "sora/arch.h"
 #include <cassert>
 
 #if SR_WIN

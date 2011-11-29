@@ -28,29 +28,29 @@
 #include "sora/matrix.h"
 
 namespace sora {;
-const float kPi = 3.141592f;
-const float kPiOver2 = kPi / 2;
-const float kPiOver4 = kPi / 4;
+const f32 kPi = 3.141592f;
+const f32 kPiOver2 = kPi / 2;
+const f32 kPiOver4 = kPi / 4;
 
-float DegreeToRadian(float degree) {
+f32 DegreeToRadian(f32 degree) {
   return degree * kPi / 180.0f;
 }
-float RadianToDegree(float radian) {
+f32 RadianToDegree(f32 radian) {
   return radian * 180.0f / kPi;
 }
 
-template<typename T, int D>
+template<typename T, i32 D>
 void SetIdentity(Matrix<T, D, D> *m) {
   memset(m->value, 0, sizeof(T) * D * D);
-  for (int i = 0 ; i < D ; i++) {
+  for (i32 i = 0 ; i < D ; i++) {
     m->Set(i, i, 1);
   }
 }
 
-template<typename T, int D>
-bool IsIdentity(const Matrix<T, D, D> &m) {
-  for (int x = 0 ; x < D ; x++) {
-    for (int y = 0 ; y < D ; y++) {
+template<typename T, i32 D>
+boolean IsIdentity(const Matrix<T, D, D> &m) {
+  for (i32 x = 0 ; x < D ; x++) {
+    for (i32 y = 0 ; y < D ; y++) {
       T elem = m.Get(x, y);
       if (x == y) {
         if (elem != 1) {

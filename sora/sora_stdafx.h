@@ -20,14 +20,24 @@
 #ifndef SORA_SORA_STDAFX_H_
 #define SORA_SORA_STDAFX_H_
 // 사실상 모든 소스에서 필요한건 미리 인클루드
-#include "sora/platform.h"
+#include "sora/arch.h"
 #include "sora/assert_inc.h"
+#include "sora/mem.h"
 
 #if SR_USE_PCH
 #include <cmath>
 #include <cstdlib>
 #include <cstring>
 #include <cstdarg>
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#if SR_WIN
+// open, close...
+#include <io.h>
+#endif
+// #include <unistd.h>
 
 #include <sstream>
 #include <vector>

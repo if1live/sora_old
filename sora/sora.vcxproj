@@ -68,26 +68,33 @@
   <ItemGroup>
     <ClInclude Include="assert_inc.h" />
     <ClInclude Include="class_type.h" />
+    <ClInclude Include="common_string.h" />
+    <ClInclude Include="filesystem.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="math_helper.h" />
     <ClInclude Include="matrix.h" />
-    <ClInclude Include="platform.h" />
+    <ClInclude Include="mem.h" />
+    <ClInclude Include="memory_file.h" />
+    <ClInclude Include="arch.h" />
     <ClInclude Include="low_level_c_file.h" />
     <ClInclude Include="shared_ptr_inc.h" />
     <ClInclude Include="sora_stdafx.h" />
     <ClInclude Include="string_code_dictionary.h" />
     <ClInclude Include="string_hash_functor.h" />
-    <ClInclude Include="string_util.h" />
     <ClInclude Include="template_library.h" />
     <ClInclude Include="unordered_map_inc.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="arch.cc" />
+    <ClCompile Include="filesystem.cc" />
     <ClCompile Include="low_level_c_file.cc" />
-    <ClCompile Include="sora_stdafx.cpp">
+    <ClCompile Include="mem.cc" />
+    <ClCompile Include="memory_file.cc" />
+    <ClCompile Include="sora_stdafx.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="string_util.cc" />
+    <ClCompile Include="common_string.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

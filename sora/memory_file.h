@@ -1,4 +1,5 @@
-﻿// Copyright (C) 2011 by if1live
+﻿/*  Copyright (C) 2011 by if1live */
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -17,26 +18,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_test_stdafx.h"
+#ifndef SORA_MEMORY_FILE_H_
+#define SORA_MEMORY_FILE_H_
 
-#include "sora/math_helper.h"
+#if SR_USE_PCH == 0
+#include <string>
+#endif
 
-TEST(MathHelper, IsIdentity) {
-  using namespace sora;
-  f32 data1[] = {1, 0, 0, 1};
-  mat2 m1(data1);
-  EXPECT_EQ(true, sora::IsIdentity(m1));
+namespace sora {;
+class MemoryFile {
+public:
+  MemoryFile(const char *filepath);
+  MemoryFile(const std::string &filepath);
+  ~MemoryFile();
 
-  f32 data2[] = {1, 0, 1, 2};
-  mat2 m2(data2);
-  EXPECT_EQ(false, sora::IsIdentity(m2));
+  void Open();
+  void Close();
+  
+  const std::string &filepath() const { return filepath_; }
+
+public:
+  // data
+  u8 *start_;
+  u8 *curr_;
+  u8 *end_;
+  u8 *data_;
+
+  std::string filepath_;
+};
+
 }
 
-TEST(MathHelper, SetIdentity) {
-  using namespace sora;
-  mat2 m1;
-  EXPECT_EQ(false, sora::IsIdentity(m1));
-
-  SetIdentity(&m1);
-  EXPECT_EQ(true, sora::IsIdentity(m1));
-}
+#endif  // SORA_MEMORY_FILE_H_

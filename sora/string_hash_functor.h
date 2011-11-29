@@ -27,10 +27,10 @@
 namespace sora {;
 struct RSHash {
   // RS Hash Function
-  unsigned int operator()(const std::string& str) const {
-    unsigned int b    = 378551;
-    unsigned int a    = 63689;
-    unsigned int hash = 0;
+  u32 operator()(const std::string& str) const {
+    u32 b    = 378551;
+    u32 a    = 63689;
+    u32 hash = 0;
 
     for(std::size_t i = 0; i < str.length(); i++) {
       hash = hash * a + str[i];
@@ -42,8 +42,8 @@ struct RSHash {
 
 struct JSHash {
   // JS Hash Function
-  unsigned int operator()(const std::string& str) const {
-    unsigned int hash = 1315423911;
+  u32 operator()(const std::string& str) const {
+    u32 hash = 1315423911;
     for(std::size_t i = 0; i < str.length(); i++) {
       hash ^= ((hash << 5) + str[i] + (hash >> 2));
     }
@@ -53,13 +53,13 @@ struct JSHash {
 
 struct PJWHash {
   // P. J. Weinberger Hash Function
-  unsigned int operator()(const std::string& str) const {
-    unsigned int BitsInUnsignedInt = (unsigned int)(sizeof(unsigned int) * 8);
-    unsigned int ThreeQuarters     = (unsigned int)((BitsInUnsignedInt  * 3) / 4);
-    unsigned int OneEighth         = (unsigned int)(BitsInUnsignedInt / 8);
-    unsigned int HighBits          = (unsigned int)(0xFFFFFFFF) << (BitsInUnsignedInt - OneEighth);
-    unsigned int hash              = 0;
-    unsigned int test              = 0;
+  u32 operator()(const std::string& str) const {
+    u32 BitsInUnsignedInt = (u32)(sizeof(u32) * 8);
+    u32 ThreeQuarters     = (u32)((BitsInUnsignedInt  * 3) / 4);
+    u32 OneEighth         = (u32)(BitsInUnsignedInt / 8);
+    u32 HighBits          = (u32)(0xFFFFFFFF) << (BitsInUnsignedInt - OneEighth);
+    u32 hash              = 0;
+    u32 test              = 0;
 
     for(std::size_t i = 0; i < str.length(); i++) {
       hash = (hash << OneEighth) + str[i];
@@ -73,9 +73,9 @@ struct PJWHash {
 
 struct ELFHash {
   // ELF Hash Function
-  unsigned int operator()(const std::string& str) const {
-    unsigned int hash = 0;
-    unsigned int x    = 0;
+  u32 operator()(const std::string& str) const {
+    u32 hash = 0;
+    u32 x    = 0;
     for(std::size_t i = 0; i < str.length(); i++) {
       hash = (hash << 4) + str[i];
       if((x = hash & 0xF0000000L) != 0) {
@@ -89,9 +89,9 @@ struct ELFHash {
 
 struct BKDRHash {
   // BKDR Hash Function
-  unsigned int operator()(const std::string& str) const {
-    unsigned int seed = 131; // 31 131 1313 13131 131313 etc..
-    unsigned int hash = 0;
+  u32 operator()(const std::string& str) const {
+    u32 seed = 131; // 31 131 1313 13131 131313 etc..
+    u32 hash = 0;
 
     for(std::size_t i = 0; i < str.length(); i++) {
       hash = (hash * seed) + str[i];
@@ -102,8 +102,8 @@ struct BKDRHash {
 
 struct SDBMHash {
   // SDBM Hash Function
-  unsigned int operator()(const std::string& str) const {
-    unsigned int hash = 0;
+  u32 operator()(const std::string& str) const {
+    u32 hash = 0;
     for(std::size_t i = 0; i < str.length(); i++) {
       hash = str[i] + (hash << 6) + (hash << 16) - hash;
     }
@@ -113,8 +113,8 @@ struct SDBMHash {
 
 struct DJBHash {
   // DJB Hash Function
-  unsigned int operator()(const std::string& str) const {
-    unsigned int hash = 5381;
+  u32 operator()(const std::string& str) const {
+    u32 hash = 5381;
     for(std::size_t i = 0; i < str.length(); i++) {
       hash = ((hash << 5) + hash) + str[i];
     }
@@ -124,8 +124,8 @@ struct DJBHash {
 
 struct DEKHash {
   // DEK Hash Function
-  unsigned int operator()(const std::string& str) const {
-    unsigned int hash = static_cast<unsigned int>(str.length());
+  u32 operator()(const std::string& str) const {
+    u32 hash = static_cast<u32>(str.length());
     for(std::size_t i = 0; i < str.length(); i++) {
       hash = ((hash << 5) ^ (hash >> 27)) ^ str[i];
     }
@@ -135,8 +135,8 @@ struct DEKHash {
 
 struct APHash {
   // AP Hash Function
-  unsigned int operator()(const std::string& str) const {
-    unsigned int hash = 0;
+  u32 operator()(const std::string& str) const {
+    u32 hash = 0;
     for(std::size_t i = 0; i < str.length(); i++) {
       hash ^= ((i & 1) == 0) ? (  (hash <<  7) ^ str[i] ^ (hash >> 3)) :
         (~((hash << 11) ^ str[i] ^ (hash >> 5)));

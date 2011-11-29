@@ -1,4 +1,4 @@
-﻿// Copyright (C) 2011 by if1live
+// Copyright (C) 2011 by if1live
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -17,26 +17,65 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_test_stdafx.h"
+#ifndef SORA_ARCH_H_
+#define SORA_ARCH_H_
 
-#include "sora/math_helper.h"
+// platform detect code
+#undef SR_IOS
+#undef SR_WIN
+#undef SR_ANDROID
+#define SR_IOS 0
+#define SR_WIN 0
+#define SR_ANDROID 0
 
-TEST(MathHelper, IsIdentity) {
-  using namespace sora;
-  f32 data1[] = {1, 0, 0, 1};
-  mat2 m1(data1);
-  EXPECT_EQ(true, sora::IsIdentity(m1));
+// platform check macro
+#if __APPLE__
+// iphone check
+// 이것은 가장 밑바닥에 인클루드될 헤더이므로
+// 다른 헤더를 include하지 않는다.
+// #import <Availability.h>
+// #if __IPHONE_2_0
+#undef SR_IOS
+#define SR_IOS 1
+// #endif
+#endif
 
-  f32 data2[] = {1, 0, 1, 2};
-  mat2 m2(data2);
-  EXPECT_EQ(false, sora::IsIdentity(m2));
+// android check
+#ifdef __ANDROID__
+#undef SR_ANDROID
+#define SR_ANDROID 1
+#endif
+
+#if (defined _WIN32) || (defined _W64)
+#undef SR_WIN
+#define SR_WIN 1
+#endif
+
+#if SR_IOS == 1 || SR_WIN == 1
+#define SR_USE_PCH 1
+#else
+#define SR_USE_PCH 0
+#endif
+
+namespace sora {;
+//custom type
+typedef char i8;
+typedef unsigned char u8;
+typedef short i16;
+typedef unsigned short u16;
+typedef int i32;
+typedef unsigned int u32;
+typedef bool boolean;
+typedef float f32;
+typedef double f64;
+
+//file position
+enum {
+  kPositionStart,
+  kPositionCurrent,
+  kPositionEnd
+};
+int PositionToWhere(int pos);
 }
 
-TEST(MathHelper, SetIdentity) {
-  using namespace sora;
-  mat2 m1;
-  EXPECT_EQ(false, sora::IsIdentity(m1));
-
-  SetIdentity(&m1);
-  EXPECT_EQ(true, sora::IsIdentity(m1));
-}
+#endif  // SORA_ARCH_H_

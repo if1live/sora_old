@@ -19,62 +19,64 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_test_stdafx.h"
-#include "sora/string_util.h"
+#include "sora/common_string.h"
 
-using std::string;
-using std::vector;
-using sora::StringUtil;
-
-TEST(StringUtil, Trim) {
+TEST(CommonString, Trim) {
+  using std::string;
+  using namespace sora;
 	string a("as df");
-	EXPECT_TRUE(StringUtil::Trim(a) == "as df");
+	EXPECT_TRUE(Trim(a) == "as df");
 	string b("  as df");
-	EXPECT_TRUE(StringUtil::Trim(b) == "as df");
+	EXPECT_TRUE(Trim(b) == "as df");
 	string c("as df  ");
-	EXPECT_TRUE(StringUtil::Trim(c) == "as df");
+	EXPECT_TRUE(Trim(c) == "as df");
 	string d("  as df  ");
-	EXPECT_TRUE(StringUtil::Trim(d) == "as df");
+	EXPECT_TRUE(Trim(d) == "as df");
 }
 
-TEST(StringUtil, LeftTrim) {
+TEST(CommonString, LeftTrim) {
+  using std::string;
 	string a("as df");
-	EXPECT_TRUE(StringUtil::LeftTrim(a) == "as df");
+	EXPECT_TRUE(sora::LeftTrim(a) == "as df");
 	string b("  as df");
-	EXPECT_TRUE(StringUtil::LeftTrim(b) == "as df");
+	EXPECT_TRUE(sora::LeftTrim(b) == "as df");
 	string c("as df  ");
-	EXPECT_TRUE(StringUtil::LeftTrim(c) == "as df  ");
+	EXPECT_TRUE(sora::LeftTrim(c) == "as df  ");
 	string d("  as df  ");
-	EXPECT_TRUE(StringUtil::LeftTrim(d) == "as df  ");
+	EXPECT_TRUE(sora::LeftTrim(d) == "as df  ");
 }
 
-TEST(StringUtil, RightTrim)
-{
+TEST(CommonString, RightTrim) {
+  using std::string;
 	string a("as df");
-	EXPECT_TRUE(StringUtil::RightTrim(a) == "as df");
+	EXPECT_TRUE(sora::RightTrim(a) == "as df");
 	string b("  as df");
-	EXPECT_TRUE(StringUtil::RightTrim(b) == "  as df");
+	EXPECT_TRUE(sora::RightTrim(b) == "  as df");
 	string c("as df  ");
-	EXPECT_TRUE(StringUtil::RightTrim(c) == "as df");
+	EXPECT_TRUE(sora::RightTrim(c) == "as df");
 	string d("  as df  ");
-	EXPECT_TRUE(StringUtil::RightTrim(d) == "  as df");
+	EXPECT_TRUE(sora::RightTrim(d) == "  as df");
 }
 
 
-TEST(StringUtil, Split) {
+TEST(CommonString, Split) {
+  using std::vector;
+  using std::string;
+  using sora::i32;
 	vector<string> result;
-	int retval;
+	i32 retval;
 	
 	//없는거 쪼개기 시도
 	string test0("kldp.org");
-	retval = StringUtil::Split(test0, 'z', &result);
+	retval = sora::Split(test0, 'z', &result);
 	EXPECT_EQ(1, retval);
 
 	//1글자로 자르기
 	string test1("kldp.org/node/11");
   result.clear();
-	retval = StringUtil::Split(test1, '/', &result);
+	retval = sora::Split(test1, '/', &result);
 	EXPECT_EQ(3, retval);
-	ASSERT_EQ(3, (int)result.size());
+	ASSERT_EQ(3, (i32)result.size());
 	EXPECT_TRUE(result[0] == "kldp.org");
 	EXPECT_TRUE(result[1] == "node");
 	EXPECT_TRUE(result[2] == "11");
@@ -83,9 +85,9 @@ TEST(StringUtil, Split) {
   /*
 	//여러글자를 받아서 한개라도 등장하면 자르기
 	//strtok의 delim같은 느낌?
-	retval = StringUtil::Split(test1, result, "node");
+	retval = sora::Split(test1, result, "node");
 	EXPECT_EQ(4, retval);
-	ASSERT_EQ(4, (int)result.size());
+	ASSERT_EQ(4, (i32)result.size());
 	EXPECT_TRUE(result[0] == "kl");
 	EXPECT_TRUE(result[1] == "p.");
 	EXPECT_TRUE(result[2] == "rg/");
@@ -93,7 +95,10 @@ TEST(StringUtil, Split) {
   */
 }
 
-TEST(StringUtil, Join) {
+TEST(sora, Join) {
+  using std::string;
+  using std::vector;
+
 	string delim("::");
 	string result;
 
@@ -101,34 +106,34 @@ TEST(StringUtil, Join) {
 	strlist0.push_back("a");
 	strlist0.push_back("b");
 	strlist0.push_back("c");
-	result = StringUtil::Join(delim, strlist0);
+	result = sora::Join(delim, strlist0);
 	EXPECT_TRUE(result == "a::b::c");
 }
 
 /*
-TEST(StringUtil, Tokenize)
+TEST(sora, Tokenize)
 {
 	string test1("kldp.org/node/11");
 	vector<String> result;
-	int retval;
+	i32 retval;
 
 	///정상적으로 잘린 경우
-	retval = StringUtil::Tokenize(test1, result, "node");
+	retval = sora::Tokenize(test1, result, "node");
 	EXPECT_EQ(2, retval);
-	ASSERT_EQ(2, (int)result.size());
+	ASSERT_EQ(2, (i32)result.size());
 	EXPECT_TRUE(result[0] == "kldp.org/");
 	EXPECT_TRUE(result[1] == "/11");
 
 	//정상적으로 잘린경우 2
-	retval = StringUtil::Tokenize(test1, result, "/");
+	retval = sora::Tokenize(test1, result, "/");
 	EXPECT_EQ(3, retval);
-	ASSERT_EQ(3, (int)result.size());
+	ASSERT_EQ(3, (i32)result.size());
 	EXPECT_TRUE(result[0] == "kldp.org");
 	EXPECT_TRUE(result[1] == "node");
 	EXPECT_TRUE(result[2] == "11");
 
 	//글자는 있지만 문자열이 없어서 못자른 경우
-	retval = StringUtil::Tokenize(test1, result, "onde");
+	retval = sora::Tokenize(test1, result, "onde");
 	EXPECT_EQ(1, retval);
 	EXPECT_TRUE(result[0] == "kldp.org/node/11");
 

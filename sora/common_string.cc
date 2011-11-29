@@ -19,22 +19,20 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_stdafx.h"
-#include "sora/string_util.h"
+#include "sora/common_string.h"
 #if SR_USE_PCH == 0
-#include <vector>
-#include <string>
 #include <sstream>
 #endif
 
 namespace sora {;
-std::string StringUtil::Trim(const std::string &str) {
+std::string Trim(const std::string &str) {
   using std::string;
 
   // do no use boost to compile speed + dependenty
   const char *whitespace = "\t\n\x0b\x0c\r ";
 
-  int leftFound = str.find_first_not_of(whitespace);
-  int rightFound = str.find_last_not_of(whitespace);
+  i32 leftFound = str.find_first_not_of(whitespace);
+  i32 rightFound = str.find_last_not_of(whitespace);
 
   if (leftFound == string::npos) {
     leftFound = 0;
@@ -46,20 +44,20 @@ std::string StringUtil::Trim(const std::string &str) {
   return result;
 }
 
-std::string StringUtil::LeftTrim(const std::string &str) {
+std::string LeftTrim(const std::string &str) {
   using std::string;
-  int n = str.find_first_not_of("\t\n\x0b\x0c\r ");
+  i32 n = str.find_first_not_of("\t\n\x0b\x0c\r ");
   string left(n == string::npos ? str : str.substr(n, str.length()));
   return left;
 }
 
-std::string StringUtil::RightTrim(const std::string &str) {
+std::string RightTrim(const std::string &str) {
   using std::string;
-  int n = str.find_last_not_of("\t\n\x0b\x0c\r ");
+  i32 n = str.find_last_not_of("\t\n\x0b\x0c\r ");
   string right(n == string::npos ? str : str.substr(0, n + 1));
   return right;
 }
-int StringUtil::Split(const std::string &str,
+i32 Split(const std::string &str,
   char ch, std::vector<std::string> *retval) {
   using std::string;
   //SR_ASSERT(retval->empty() == true);
@@ -75,7 +73,7 @@ int StringUtil::Split(const std::string &str,
   for (size_t i = 0 ; i < str.length() ; i++) {
     char str_ch = str[i];
     if (str_ch == ch) {
-      // split point
+      // split poi32
       retval->push_back(tmp_token);
       tmp_token.clear();
     } else {
@@ -86,8 +84,7 @@ int StringUtil::Split(const std::string &str,
   return retval->size();
 }
 
-std::string StringUtil::Join(
-    const std::string &str,
+std::string Join(const std::string &str,
     const std::vector<std::string> &tokenlist) {
   using std::ostringstream;
   ostringstream oss;
@@ -98,5 +95,21 @@ std::string StringUtil::Join(
     }
   }
   return oss.str();
+}
+i32 StringToInt(const char *str) {
+  i32 value = 0;
+  value = atoi(str);
+  return value;
+}
+f32 StringToFloat(const char *str) {
+  f32 value = 0;
+  value = atof(str);
+  return value;
+}
+i32 StringToInt(const std::string &str) {
+  return StringToInt(str.c_str());
+}
+f32 StringToFloat(const std::string &str) {
+  return StringToFloat(str.c_str());
 }
 }

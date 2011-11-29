@@ -1,4 +1,5 @@
-﻿// Copyright (C) 2011 by if1live
+﻿/*  Copyright (C) 2011 by if1live */
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -17,26 +18,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_test_stdafx.h"
+#include "sora_stdafx.h"
+#include "sora/arch.h"
 
-#include "sora/math_helper.h"
+#if SR_USE_PCH == 0
+#include <cstdlib>
+#include <cstdio>
+#endif
 
-TEST(MathHelper, IsIdentity) {
-  using namespace sora;
-  f32 data1[] = {1, 0, 0, 1};
-  mat2 m1(data1);
-  EXPECT_EQ(true, sora::IsIdentity(m1));
-
-  f32 data2[] = {1, 0, 1, 2};
-  mat2 m2(data2);
-  EXPECT_EQ(false, sora::IsIdentity(m2));
+namespace sora {;
+int PositionToWhere(int pos) {
+  if (pos == kPositionStart) {
+    return SEEK_SET;
+  } else if (pos == kPositionCurrent) {
+    return SEEK_CUR;
+  } else if (pos == kPositionEnd) {
+    return SEEK_END;
+  } else {
+    SR_ASSERT(!"do not reach");
+    return -1;
+  }
 }
-
-TEST(MathHelper, SetIdentity) {
-  using namespace sora;
-  mat2 m1;
-  EXPECT_EQ(false, sora::IsIdentity(m1));
-
-  SetIdentity(&m1);
-  EXPECT_EQ(true, sora::IsIdentity(m1));
 }

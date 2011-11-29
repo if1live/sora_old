@@ -16,9 +16,6 @@
     <ClInclude Include="matrix.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="platform.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="shared_ptr_inc.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -26,9 +23,6 @@
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="string_hash_functor.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="string_util.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="template_library.h">
@@ -44,13 +38,40 @@
     <ClInclude Include="low_level_c_file.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="common_string.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="memory_file.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="arch.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="mem.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="filesystem.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="string_util.cc">
+    <ClCompile Include="low_level_c_file.cc">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="sora_stdafx.cpp" />
-    <ClCompile Include="low_level_c_file.cc">
+    <ClCompile Include="common_string.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="arch.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="sora_stdafx.cc" />
+    <ClCompile Include="memory_file.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="mem.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="filesystem.cc">
       <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>

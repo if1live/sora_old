@@ -24,12 +24,12 @@ namespace sora {;
 template<typename T>  struct Vector2;
 template<typename T>  struct Vector3;
 template<typename T>  struct Vector4;
-typedef Vector2<float> vec2;
-typedef Vector2<float> ivec2;
-typedef Vector3<float> vec3;
-typedef Vector3<int> ivec3;
-typedef Vector4<float> vec4;
-typedef Vector4<int> ivec4;
+typedef Vector2<f32> vec2;
+typedef Vector2<f32> ivec2;
+typedef Vector3<f32> vec3;
+typedef Vector3<i32> ivec3;
+typedef Vector4<f32> vec4;
+typedef Vector4<i32> ivec4;
 
 template<typename T>
 struct Vector2 {
@@ -89,8 +89,8 @@ struct Vector4 {
 };
 
 template<typename VecType>
-bool operator==(const VecType &a, const VecType &b) {
-  for (int i = 0 ; i < VecType::Dimension ; i++) {
+boolean operator==(const VecType &a, const VecType &b) {
+  for (i32 i = 0 ; i < VecType::Dimension ; i++) {
     if (a.value[i] != b.value[i]) {
       return false;
     }
@@ -98,12 +98,12 @@ bool operator==(const VecType &a, const VecType &b) {
   return true;
 }
 template<typename VecType>
-bool operator!=(const VecType &a, const VecType &b) {
+boolean operator!=(const VecType &a, const VecType &b) {
   return !(a == b);
 }
 template<typename VecType>
 VecType& operator+=(VecType &a, const VecType &b) {
-  for (int i = 0 ; i < VecType::Dimension ; i++) {
+  for (i32 i = 0 ; i < VecType::Dimension ; i++) {
     a.value[i] += b.value[i];
   }
   return a;
@@ -116,7 +116,7 @@ VecType operator+(const VecType &a, const VecType &b) {
 }
 template<typename VecType>
 VecType& operator-=(VecType &a, const VecType &b) {
-  for (int i = 0 ; i < VecType::Dimension; i++) {
+  for (i32 i = 0 ; i < VecType::Dimension; i++) {
     a.value[i] -= b.value[i];
   }
   return a;
@@ -129,7 +129,7 @@ VecType operator-(const VecType &a, const VecType &b) {
 }
 template<typename VecType>
 VecType& operator*=(VecType &a, typename VecType::ElemType t) {
-  for (int i = 0 ; i < VecType::Dimension ; i++) {
+  for (i32 i = 0 ; i < VecType::Dimension ; i++) {
     a.value[i] *= t;
   }
   return a;
@@ -145,7 +145,7 @@ VecType& operator/=(VecType &a, typename VecType::ElemType t) {
   if (t == 0) {
     t = 1;
   }
-  for (int i = 0 ; i < VecType::Dimension ; i++) {
+  for (i32 i = 0 ; i < VecType::Dimension ; i++) {
     a.value[i] /= t;
   }
   return a;
@@ -159,7 +159,7 @@ VecType operator/(const VecType &a, typename VecType::ElemType t) {
 template<typename VecType>
 typename VecType::ElemType LengthSquare(const VecType &a) {
   typename VecType::ElemType retval = 0;
-  for (int i = 0 ; i < VecType::Dimension ; i++) {
+  for (i32 i = 0 ; i < VecType::Dimension ; i++) {
     retval += a.value[i] * a.value[i];
   }
   return retval;
@@ -172,7 +172,7 @@ typename VecType::ElemType Length(const VecType &a) {
 template<typename VecType>
 typename VecType::ElemType Dot(const VecType &a, const VecType &b) {
   typename VecType::ElemType retval = 0;
-  for (int i = 0 ; i < VecType::Dimension ; i++) {
+  for (i32 i = 0 ; i < VecType::Dimension ; i++) {
     retval += a.value[i] * b.value[i];
   }
   return retval;

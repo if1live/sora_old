@@ -20,7 +20,7 @@
 #ifndef SORA_SHARED_PTR_INC_H_
 #define SORA_SHARED_PTR_INC_H_
 
-#include "sora/platform.h"
+#include "sora/arch.h"
 
 #if SR_WIN
 #include <memory>

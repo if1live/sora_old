@@ -29,8 +29,8 @@
 #if SR_ANDROID
 // 안드로이드의 경우는 printf가 먹히지 않는다. 그리고 콘솔 출력도 다르다
 #include <android/log.h>
-//#define LOGI(...)  __android_log_print(ANDROID_LOG_INFO,"LOGI",__VA_ARGS__)
-//#define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,"LOGE",__VA_ARGS__)
+//#define LOGI(...)  __android_log_pri32(ANDROID_LOG_INFO,"LOGI",__VA_ARGS__)
+//#define LOGE(...)  __android_log_pri32(ANDROID_LOG_ERROR,"LOGE",__VA_ARGS__)
 #endif
 
 #define LOGI(...)  { sora::SharedConsoleLogger().Infof(__VA_ARGS__); }
@@ -58,7 +58,7 @@ public:
 
   void WriteLog(const char *logger_name, LogLevel log_level, const char *msg) {
 #if SR_ANDROID
-  int level = 0;
+  i32 level = 0;
   switch(log_level) {
   case kLogLevelSilent:
     level = ANDROID_LOG_SILENT;
@@ -85,7 +85,7 @@ public:
     level = ANDROID_LOG_UNKNOWN;
     break;
   }
-	__android_log_print(level, logger_name, msg);
+	__android_log_pri32(level, logger_name, msg);
 #else
     printf("[%s] %s\n", logger_name, msg);
 #endif
@@ -114,7 +114,7 @@ public:
   void NAME(const char *msg) {  \
   WriteLog(kLogLevel##NAME, std::string(msg));  \
   } \
-  void NAME##f(const char *fmt, ...) { /*print'f'같은 느낌으로 f넣음*/ \
+  void NAME##f(const char *fmt, ...) { /*pri32'f'같은 느낌으로 f넣음*/ \
   char buffer[4096];  \
   va_list argptr; \
   va_start(argptr, fmt);  \

@@ -33,6 +33,7 @@ class TypeTest2 : public TypeTest {
 
 TEST(ClassType, test) {
   using std::string;
+  using sora::i32;
 
   TypeTest1 obj1;
   EXPECT_EQ(true, obj1.GetClassType() == TypeTest1::ClassType());
@@ -42,8 +43,8 @@ TEST(ClassType, test) {
   TypeTest2 obj2;
   const string &name1 = obj1.GetClassName();
   const string &name2 = obj2.GetClassName();
-  int code1 = obj1.GetClassType();
-  int code2 = obj2.GetClassType();
+  i32 code1 = obj1.GetClassType();
+  i32 code2 = obj2.GetClassType();
   EXPECT_EQ(true, name1 != name2);
   EXPECT_EQ(true, code1 != code2);
 
@@ -56,7 +57,7 @@ class Type2Test {
   SR_SUPER_CLASS_2(Type2Test);
 public:
   // virtual을 사용하지 않는 버전은 타입을 받아서 설정해줘야돌아간다
-  Type2Test(int class_type) {
+  Type2Test(sora::i32 class_type) {
     set_class_type(class_type);
   }
 };
@@ -73,6 +74,7 @@ public:
 
 TEST(ClassType2, test) {
   using std::string;
+  using sora::i32;
 
   Type2Test1 obj1;
   EXPECT_EQ(true, obj1.GetClassType() == Type2Test1::ClassType());
@@ -82,8 +84,8 @@ TEST(ClassType2, test) {
   Type2Test2 obj2;
   const string &name1 = obj1.GetClassName();
   const string &name2 = obj2.GetClassName();
-  int code1 = obj1.GetClassType();
-  int code2 = obj2.GetClassType();
+  i32 code1 = obj1.GetClassType();
+  i32 code2 = obj2.GetClassType();
   EXPECT_EQ(true, name1 != name2);
   EXPECT_EQ(true, code1 != code2);
 

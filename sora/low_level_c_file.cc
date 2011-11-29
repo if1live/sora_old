@@ -20,13 +20,14 @@
 // Ŭnicode please
 #include "sora_stdafx.h"
 #include "sora/low_level_c_file.h"
+#include "sora/filesystem.h"
 
 namespace sora {;
 LowLevelCFile::LowLevelCFile(const std::string &filepath)
-  : file_(NULL), filepath_(filepath), buffer_(NULL) {
+  : fd_(-1), filepath_(filepath), buffer_(NULL) {
 }
 LowLevelCFile::LowLevelCFile(const char *filepath)
- : file_(NULL), filepath_(filepath), buffer_(NULL) {
+ : fd_(-1), filepath_(filepath), buffer_(NULL) {
 }
 LowLevelCFile::~LowLevelCFile() {
   if (IsOpened()) {
@@ -34,85 +35,81 @@ LowLevelCFile::~LowLevelCFile() {
   }
 }
 
-bool LowLevelCFile::Open(const char *mode) {
-  if (file_ != NULL) {
+boolean LowLevelCFile::Open(int flag) {
+  if (fd_ != -1) {
     return false;
   }
-  file_ = fopen(filepath_.c_str(), mode);
-  if (file_ == NULL) {
+  fd_ = open(filepath_.c_str(), flag);
+  if (fd_ == -1) {
     return false;
   } else {
     return true;
   }
 }
-bool LowLevelCFile::Close() {
+boolean LowLevelCFile::Close() {
   if (buffer_ != NULL) {
-    free(buffer_);
+    SR_FREE(buffer_);
     buffer_ = NULL;
   }
-  if (file_ != NULL) {
-    fclose(file_);
-    file_ = NULL;
+  if (fd_ != -1) {
+    close(fd_);
+    fd_ = -1;
     return true;
   } else {
     return false;
   }
 }
-bool LowLevelCFile::IsOpened() const {
-  if (file_ == NULL) {
+boolean LowLevelCFile::IsOpened() const {
+  if (fd_ == -1) {
     return false;
   } else {
     return true;
   }
 }
 
-int LowLevelCFile::Read(void *buf, int size) {
-  if (file_ == NULL) {
+i32 LowLevelCFile::Read(void *buf, i32 size) {
+  if (fd_ == -1) {
     return -1;
   }
-  return fread(buf, size, 1, file_);
+  return read(fd_, buf, size);
 }
-int LowLevelCFile::Seek(int offset, int origin) {
-  if (file_ == NULL) {
+i32 LowLevelCFile::Seek(i32 offset, i32 origin) {
+  if (fd_ == -1) {
     return -1;
   }
-  return fseek(file_, offset, origin);
+  return lseek(fd_, offset, origin);
 }
-int LowLevelCFile::Write(const void *buf, int size) {
-  if (file_ == NULL) {
+i32 LowLevelCFile::Write(const void *buf, i32 size) {
+  if (fd_ == -1) {
     return -1;
   }
-  return fwrite(buf, size, 1, file_);
+  return write(fd_, buf, size);
 }
 
-int LowLevelCFile::GetLength() const {
-  if (file_ == NULL) {
+i32 LowLevelCFile::GetLength() const {
+  if (fd_ == -1) {
     return 0;
   }
-  long curr_pos = ftell(file_);
-  fseek(file_, 0, kSeekEnd);
-  int length = ftell(file_);
-  fseek(file_, curr_pos, kSeekSet);
-  return length;
+  return GetFileSize(fd_);
 }
-int LowLevelCFile::GetRemainLength() const {
-  if (file_ == NULL) {
+i32 LowLevelCFile::GetRemainLength() const {
+  if (fd_ == NULL) {
     return 0;
   }
-  int length = GetLength();
-  int curr_pos = ftell(file_);
+  i32 length = GetLength();
+  i32 curr_pos = tell(fd_);
   return length - curr_pos;
 }
 const void *LowLevelCFile::GetBuffer() {
   if (buffer_ == NULL) {
-    int length = GetLength();
+    i32 length = GetLength();
     // 1바이트 더 할당해서 \0로 넣어놓자
-    buffer_ = malloc(length + 1);
+    buffer_ = SR_MALLOC(length + 1);
 
-    long curr_pos = ftell(file_);
-    fseek(file_, 0, kSeekSet);
-    fread(buffer_, 1, length, file_);
-    fseek(file_, curr_pos, kSeekSet);
+    long curr_pos = tell(fd_);
+    lseek(fd_, 0, SEEK_SET);
+    read(fd_, buffer_, length);
+    lseek(fd_, curr_pos, SEEK_SET);
 
     ((char*)buffer_)[length] = '\0';
   }

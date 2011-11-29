@@ -1,4 +1,5 @@
-// Copyright (C) 2011 by if1live
+﻿/*  Copyright (C) 2011 by if1live */
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -17,44 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_PLATFORM_H_
-#define SORA_PLATFORM_H_
 
-// platform detect code
-#undef SR_IOS
-#undef SR_WIN
-#undef SR_ANDROID
-#define SR_IOS 0
-#define SR_WIN 0
-#define SR_ANDROID 0
+#ifndef SORA_FILESYSTEM_H_
+#define SORA_FILESYSTEM_H_
 
-// platform check macro
-#if __APPLE__
-// iphone check
-// 이것은 가장 밑바닥에 인클루드될 헤더이므로
-// 다른 헤더를 include하지 않는다.
-// #import <Availability.h>
-// #if __IPHONE_2_0
-#undef SR_IOS
-#define SR_IOS 1
-// #endif
-#endif
+namespace sora {;
+i32 GetFileSize(int fd);
+}
 
-// android check
-#ifdef __ANDROID__
-#undef SR_ANDROID
-#define SR_ANDROID 1
-#endif
-
-#if (defined _WIN32) || (defined _W64)
-#undef SR_WIN
-#define SR_WIN 1
-#endif
-
-#if SR_IOS == 1 || SR_WIN == 1
-#define SR_USE_PCH 1
-#else
-#define SR_USE_PCH 0
-#endif
-
-#endif  // SORA_PLATFORM_H_
+#endif  // SORA_FILESYSTEM_H_

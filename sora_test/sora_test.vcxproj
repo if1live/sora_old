@@ -12,14 +12,15 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="class_type_test.cc" />
+    <ClCompile Include="common_string_test.cc" />
     <ClCompile Include="low_level_c_file_test.cc" />
     <ClCompile Include="math_helper_test.cc" />
     <ClCompile Include="matrix_test.cc" />
+    <ClCompile Include="mem_test.cc" />
     <ClCompile Include="sora_test_stdafx.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="string_util_test.cc" />
     <ClCompile Include="testmain.cc" />
     <ClCompile Include="vector_test.cc" />
   </ItemGroup>

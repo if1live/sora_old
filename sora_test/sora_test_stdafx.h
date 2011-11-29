@@ -1,4 +1,4 @@
-#include "sora/platform.h"
+#include "sora/arch.h"
 
 #if SR_USE_PCH
 #if SR_WIN

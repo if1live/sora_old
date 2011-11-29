@@ -20,7 +20,7 @@
 #ifndef SORA_UNORDERED_MAP_INC_H_
 #define SORA_UNORDERED_MAP_INC_H_
 
-#include "sora/platform.h"
+#include "sora/arch.h"
 
 #if SR_WIN
 #include <unordered_map>

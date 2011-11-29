@@ -30,7 +30,7 @@
 namespace sora {;
 
 template<typename T>  class StringCodeDictionary;
-typedef StringCodeDictionary<int> StringIntCodeDictionary;
+typedef StringCodeDictionary<i32> StringIntCodeDictionary;
 
 template<typename T>
 class StringCodeDictionary {

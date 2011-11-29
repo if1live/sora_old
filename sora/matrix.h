@@ -25,15 +25,15 @@
 #endif
 
 namespace sora {;
-template<typename T, int R, int C>  struct Matrix;
-typedef Matrix<int, 2, 2> imat2;
-typedef Matrix<int, 3, 3> imat3;
-typedef Matrix<int, 4, 4> imat4;
-typedef Matrix<float, 2, 2> mat2;
-typedef Matrix<float, 3, 3> mat3;
-typedef Matrix<float, 4, 4> mat4;
+template<typename T, i32 R, i32 C>  struct Matrix;
+typedef Matrix<i32, 2, 2> imat2;
+typedef Matrix<i32, 3, 3> imat3;
+typedef Matrix<i32, 4, 4> imat4;
+typedef Matrix<f32, 2, 2> mat2;
+typedef Matrix<f32, 3, 3> mat3;
+typedef Matrix<f32, 4, 4> mat4;
 
-template<typename T, int R, int C>
+template<typename T, i32 R, i32 C>
 struct Matrix {
   typedef T ElemType;
   enum {
@@ -46,34 +46,34 @@ struct Matrix {
   Matrix() {
     memset(value, 0, sizeof(T) * R * C);
   }
-  template<unsigned int N>
+  template<u32 N>
   Matrix(const T(&data)[N]) {
     Set(data);
   }
-  template<int R2, int C2>
+  template<i32 R2, i32 C2>
   Matrix(const Matrix<T, R2, C2> &o) {
     memset(value, 0, sizeof(T) * R * C);
-    for (int i = 0 ; i < R2 && i < R ; i++) {
-      for (int j = 0 ; j < C && j < C2 ; j++) {
+    for (i32 i = 0 ; i < R2 && i < R ; i++) {
+      for (i32 j = 0 ; j < C && j < C2 ; j++) {
         Set(i, j, o.Get(i, j));
       }
     }
   }
   template<typename T2>
   Matrix(const Matrix<T2, R, C> &o) {
-    for (int i = 0 ; i < R * C; i++) {
+    for (i32 i = 0 ; i < R * C; i++) {
       value[i] = static_cast<T> (o.value[i]);
     }
   }
   ~Matrix() { }
 
-  T Get(int r, int c) const {
+  T Get(i32 r, i32 c) const {
     return value[GetIndex(r, c)];
   }
-  void Set(int r, int c, T value) {
+  void Set(i32 r, i32 c, T value) {
     this->value[GetIndex(r, c)] = value;
   }
-  template<unsigned int N>
+  template<u32 N>
   void Set(const T(&data)[N]) {
     /// @TODO check size?
     memcpy(value, data, sizeof(T) * R * C);
@@ -89,7 +89,7 @@ struct Matrix {
     return tmp;
   }
   Matrix<T, R, C> &operator+=(const Matrix<T, R, C> &o)  {
-    for (int i = 0 ; i < R*C ; i++) {
+    for (i32 i = 0 ; i < R*C ; i++) {
       value[i] += o.value[i];
     }
   }
@@ -99,23 +99,23 @@ struct Matrix {
     return tmp;
   }
   Matrix<T, R, C> &operator-=(const Matrix<T, R, C> &o) {
-    for (int i = 0 ; i < R*C ; i++) {
+    for (i32 i = 0 ; i < R*C ; i++) {
       value[i] -= o.value[i];
     }
   }
   /// @brief *=는 자신의 값 자체가 바뀌므로 행렬이 정행렬일때만 가능하다
-  template<int S>
+  template<i32 S>
   Matrix<T, S, S> &operator*=(const Matrix<T, S, S> &o) {
     Matrix<T, S, S> result;
-    for (int i = 0 ; i < S ; i++) {
-      for (int j = 0 ; j < S ; j++) {
+    for (i32 i = 0 ; i < S ; i++) {
+      for (i32 j = 0 ; j < S ; j++) {
         T row_data[S];
         T col_data[S];
         GetRow(i, row_data);
         GetCol(j, col_data);
 
         T dot_value = 0;
-        for (int x = 0 ; x < S ; x++) {
+        for (i32 x = 0 ; x < S ; x++) {
           dot_value += row_data[x] * col_data[x];
         }
         result.Set(i, j, dot_value);
@@ -125,11 +125,11 @@ struct Matrix {
     return *this;
   }
 
-  template<int C2>
+  template<i32 C2>
   Matrix<T, R, C2> operator*(const Matrix<T, C, C2> &o) const {
     Matrix<T, R, C2> result;
-    for (int i = 0 ; i < R ; i++) {
-      for (int j = 0 ; j < C2 ; j++) {
+    for (i32 i = 0 ; i < R ; i++) {
+      for (i32 j = 0 ; j < C2 ; j++) {
 
         VectorTemplate<T, C> rowVec = GetRow(i);
         VectorTemplate<T, C> colVec = o.GetCol(j);
@@ -146,49 +146,49 @@ struct Matrix {
     return tmp;
   }
   Matrix<T, R, C> &operator*=(T s) {
-    for (int i = 0 ; i < R*C ; i++) {
+    for (i32 i = 0 ; i < R*C ; i++) {
       value[i] *= s;
     }
   }
 
   //VectorTemplate<T, row> operator*(const VectorTemplate<T, col> &o) const;
 
-  bool operator==(const Matrix<T, R, C> &o) const {
+  boolean operator==(const Matrix<T, R, C> &o) const {
     if (memcmp(value, o.value, sizeof(T) * R * C) == 0) {
       return true;
     } else {
       return false;
     }
   }
-  bool operator!=(const Matrix<T, R, C> &o) const {
+  boolean operator!=(const Matrix<T, R, C> &o) const {
     return !(*this == o);
   }
 
-  void GetRow(int r, T retval[C]) const {
-    for (int i = 0 ; i < C ; i++) {
+  void GetRow(i32 r, T retval[C]) const {
+    for (i32 i = 0 ; i < C ; i++) {
       retval[i] = Get(r, i);
     }
   }
-  void GetCol(int c, T retval[R]) const {
-    for (int i = 0 ; i < R ; i++) {
+  void GetCol(i32 c, T retval[R]) const {
+    for (i32 i = 0 ; i < R ; i++) {
       retval[i] = Get(i, c);
     }
   }
-  void SetRow(int r, T data[C]) {
-    for (int i = 0 ; i < C ; i++) {
+  void SetRow(i32 r, T data[C]) {
+    for (i32 i = 0 ; i < C ; i++) {
       Set(r, i, data[i]);
     }
   }
-  void SetCol(int c, T data[R]) {
-    for (int i = 0 ; i < R ; i++) {
+  void SetCol(i32 c, T data[R]) {
+    for (i32 i = 0 ; i < R ; i++) {
       Set(i, c, data[i]);
     }
   }
   
   Matrix<T, C, R> Transpose() const {
     Matrix<T, C, R> result;
-    for (int i = 0 ; i < R ; i++) {
-      for (int j = 0 ; j < C ; j++) {
+    for (i32 i = 0 ; i < R ; i++) {
+      for (i32 j = 0 ; j < C ; j++) {
         result.Set(j, i, Get(i, j));
       }
     }
@@ -196,8 +196,8 @@ struct Matrix {
   }
 
 
-  int GetIndex(int r, int c) const {
-    int index = c*R + r;
+  i32 GetIndex(i32 r, i32 c) const {
+    i32 index = c*R + r;
     return index;
   }
 };
