@@ -25,15 +25,17 @@
 namespace sora {;
 MemoryFile::MemoryFile(const char *filepath)
   : filepath_(filepath),
-  start_(NULL),
-  end_(NULL),
-  curr_(NULL) {
+  start(NULL),
+  end(NULL),
+  curr(NULL),
+  data(NULL) {
 }
 MemoryFile::MemoryFile(const std::string &filepath)
   : filepath_(filepath),
-  start_(NULL),
-  end_(NULL),
-  curr_(NULL) {
+  start(NULL),
+  end(NULL),
+  curr(NULL),
+  data(NULL) {
 }
 MemoryFile::~MemoryFile() {
   Close();
@@ -43,19 +45,21 @@ void MemoryFile::Open() {
   SR_ASSERT(fd != -1 && "file is not exist");
 
   int length = GetFileSize(fd);
-  start_ = (u8*)MM_MALLOC(length);
-  read(fd, start_, length);
+  start = (u8*)MM_MALLOC(length);
+  data = start;
+  read(fd, start, length);
 
-  curr_ = start_;
-  end_ = curr_ + length;
+  curr = start;
+  end = curr + length;
 
   close(fd);
 }
 void MemoryFile::Close() {
-  MM_FREE(start_);
-  start_ = NULL;
-  curr_ = NULL;
-  end_ = NULL;
+  MM_FREE(data);
+  start = NULL;
+  curr = NULL;
+  end = NULL;
+  data = NULL;
 }
 
 }

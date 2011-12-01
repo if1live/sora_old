@@ -23,6 +23,7 @@
 
 namespace sora {;
 i32 GetFileSize(int fd);
+i32 GetFileSize(FILE *file);
 
 extern std::string app_root_path;
 extern std::string doc_root_path;

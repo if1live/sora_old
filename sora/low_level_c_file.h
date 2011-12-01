@@ -38,7 +38,7 @@ public:
   LowLevelCFile(const char *filepath);
   ~LowLevelCFile();
 
-  boolean Open(int flag);
+  boolean Open(const char *mode);
   boolean Close();
   boolean IsOpened() const;
 
@@ -52,7 +52,7 @@ public:
   const std::string &filepath() const { return filepath_; }
 
 private:
-  int fd_;
+  FILE *file_;
   std::string filepath_;
   void *buffer_;
 };
@@ -63,7 +63,7 @@ public:
   ReadonlyCFile(const char *filepath) : file_(filepath) {}
   ~ReadonlyCFile() { file_.Close(); }
 
-  boolean Open() { return file_.Open(O_RDONLY); }
+  boolean Open() { return file_.Open("rb"); }
   boolean Close() { return file_.Close(); }
   boolean IsOpened() const { return file_.IsOpened(); }
 
@@ -85,7 +85,7 @@ public:
   WriteonlyCFile(const char *filepath) : file_(filepath) {}
   ~WriteonlyCFile() { file_.Close(); }
 
-  boolean Open() { return file_.Open(O_WRONLY); }
+  boolean Open() { return file_.Open("w"); }
   boolean Close() { return file_.Close(); }
   boolean IsOpened() const { return file_.IsOpened(); }
   i32 Write(const void *buf, i32 size) { return file_.Write(buf, size); }

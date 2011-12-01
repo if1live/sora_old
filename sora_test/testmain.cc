@@ -29,8 +29,21 @@ int main(int argc, char *argv[]) {
   LOGE("LOGE %s", "args");
   //SR_ASSERT(true == false);
 
+  if( !glfwInit() ) {
+    exit( EXIT_FAILURE );
+  }
+  // Open an OpenGL window
+  if( !glfwOpenWindow( 300,300, 0,0,0,0,0,0, GLFW_WINDOW ) ) {
+    glfwTerminate();
+    exit( EXIT_FAILURE );
+  }
+  // init glew
+  glewInit();
+
 	::testing::InitGoogleTest(&argc, argv);
 	int result = RUN_ALL_TESTS();
+
+  glfwTerminate();
 	getchar();
 	return result;
 }

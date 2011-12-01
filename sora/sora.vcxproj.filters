@@ -10,12 +10,6 @@
     <ClInclude Include="logger.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="math_helper.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="matrix.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="shared_ptr_inc.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -31,53 +25,68 @@
     <ClInclude Include="unordered_map_inc.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="vector.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="sora_stdafx.h" />
-    <ClInclude Include="low_level_c_file.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="common_string.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="memory_file.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="arch.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="mem.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="filesystem.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="clock.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="vector.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="math_helper.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_inc.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="memory_file.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="common_string.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="filesystem.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="low_level_c_file.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="mem.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="low_level_c_file.cc">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="common_string.cc">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="arch.cc">
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="sora_stdafx.cc" />
-    <ClCompile Include="memory_file.cc">
+    <ClCompile Include="clock.cc">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="mem.cc">
+    <ClCompile Include="shader.cc">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="common_string.cc">
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="filesystem.cc">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="clock.cc">
+    <ClCompile Include="low_level_c_file.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="mem.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="memory_file.cc">
       <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
@@ -87,6 +96,9 @@
     </Filter>
     <Filter Include="renderer">
       <UniqueIdentifier>{9a6c4513-3657-43a5-88d9-ef98b15adcf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{83a419fe-6df0-4a88-8203-699bfee3fc0b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -27,7 +27,7 @@ TEST(LowLevelCFile, test) {
 
   LowLevelCFile file1(path1);
   EXPECT_EQ(false, file1.IsOpened());
-  EXPECT_EQ(true, file1.Open(O_RDONLY));
+  EXPECT_EQ(true, file1.Open("rb"));
   
   EXPECT_EQ(28, file1.GetLength());
   const char *content = "this is line1.this is line2.";

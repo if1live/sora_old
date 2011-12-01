@@ -26,7 +26,7 @@
 #endif
 
 namespace sora {;
-class MemoryFile {
+class MemoryFile : boost::noncopyable {
 public:
   MemoryFile(const char *filepath);
   MemoryFile(const std::string &filepath);
@@ -39,10 +39,10 @@ public:
 
 public:
   // data
-  u8 *start_;
-  u8 *curr_;
-  u8 *end_;
-  u8 *data_;
+  u8 *start;
+  u8 *curr;
+  u8 *end;
+  void *data;
 
   std::string filepath_;
 };

@@ -41,7 +41,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\sdk\boost;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\sdk\glfw\include;..\sdk\glew\include;..\sdk\boost;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>sora_stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -55,7 +55,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\sdk\boost;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\sdk\glfw\include;..\sdk\glew\include;..\sdk\boost;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>sora_stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -71,6 +71,7 @@
     <ClInclude Include="clock.h" />
     <ClInclude Include="common_string.h" />
     <ClInclude Include="filesystem.h" />
+    <ClInclude Include="gl_inc.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="math_helper.h" />
     <ClInclude Include="matrix.h" />
@@ -78,6 +79,7 @@
     <ClInclude Include="memory_file.h" />
     <ClInclude Include="arch.h" />
     <ClInclude Include="low_level_c_file.h" />
+    <ClInclude Include="shader.h" />
     <ClInclude Include="shared_ptr_inc.h" />
     <ClInclude Include="sora_stdafx.h" />
     <ClInclude Include="string_code_dictionary.h" />
@@ -93,6 +95,7 @@
     <ClCompile Include="low_level_c_file.cc" />
     <ClCompile Include="mem.cc" />
     <ClCompile Include="memory_file.cc" />
+    <ClCompile Include="shader.cc" />
     <ClCompile Include="sora_stdafx.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>

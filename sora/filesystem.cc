@@ -57,4 +57,11 @@ i32 GetFileSize(int fd) {
   int result = fstat(fd, &s);
   return s.st_size;
 }
+i32 GetFileSize(FILE *file) {
+  int curr_pos = ftell(file);
+  fseek(file, 0, SEEK_END);
+  int length = ftell(file);
+  fseek(file, curr_pos, SEEK_SET);
+  return length;
+}
 }

@@ -24,10 +24,10 @@
 
 namespace sora {;
 LowLevelCFile::LowLevelCFile(const std::string &filepath)
-  : fd_(-1), filepath_(filepath), buffer_(NULL) {
+  : file_(NULL), filepath_(filepath), buffer_(NULL) {
 }
 LowLevelCFile::LowLevelCFile(const char *filepath)
- : fd_(-1), filepath_(filepath), buffer_(NULL) {
+ : file_(NULL), filepath_(filepath), buffer_(NULL) {
 }
 LowLevelCFile::~LowLevelCFile() {
   if (IsOpened()) {
@@ -35,12 +35,12 @@ LowLevelCFile::~LowLevelCFile() {
   }
 }
 
-boolean LowLevelCFile::Open(int flag) {
-  if (fd_ != -1) {
+boolean LowLevelCFile::Open(const char *mode) {
+  if (file_ != NULL) {
     return false;
   }
-  fd_ = open(filepath_.c_str(), flag);
-  if (fd_ == -1) {
+  file_ = fopen(filepath_.c_str(), mode);
+  if (file_ == NULL) {
     return false;
   } else {
     return true;
@@ -51,16 +51,16 @@ boolean LowLevelCFile::Close() {
     SR_FREE(buffer_);
     buffer_ = NULL;
   }
-  if (fd_ != -1) {
-    close(fd_);
-    fd_ = -1;
+  if (file_ != NULL) {
+    fclose(file_);
+    file_ = NULL;
     return true;
   } else {
     return false;
   }
 }
 boolean LowLevelCFile::IsOpened() const {
-  if (fd_ == -1) {
+  if (file_ == NULL) {
     return false;
   } else {
     return true;
@@ -68,36 +68,36 @@ boolean LowLevelCFile::IsOpened() const {
 }
 
 i32 LowLevelCFile::Read(void *buf, i32 size) {
-  if (fd_ == -1) {
+  if (file_ == NULL) {
     return -1;
   }
-  return read(fd_, buf, size);
+  return fread(buf, size, 1, file_);
 }
 i32 LowLevelCFile::Seek(i32 offset, i32 origin) {
-  if (fd_ == -1) {
+  if (file_ == NULL) {
     return -1;
   }
-  return lseek(fd_, offset, origin);
+  return fseek(file_, offset, origin);
 }
 i32 LowLevelCFile::Write(const void *buf, i32 size) {
-  if (fd_ == -1) {
+  if (file_ == NULL) {
     return -1;
   }
-  return write(fd_, buf, size);
+  return fwrite(buf, size, 1, file_);
 }
 
 i32 LowLevelCFile::GetLength() const {
-  if (fd_ == -1) {
+  if (file_ == NULL) {
     return 0;
   }
-  return GetFileSize(fd_);
+  return GetFileSize(file_);
 }
 i32 LowLevelCFile::GetRemainLength() const {
-  if (fd_ == NULL) {
+  if (file_ == NULL) {
     return 0;
   }
   i32 length = GetLength();
-  i32 curr_pos = tell(fd_);
+  i32 curr_pos = ftell(file_);
   return length - curr_pos;
 }
 const void *LowLevelCFile::GetBuffer() {
@@ -106,10 +106,10 @@ const void *LowLevelCFile::GetBuffer() {
     // 1바이트 더 할당해서 \0로 넣어놓자
     buffer_ = SR_MALLOC(length + 1);
 
-    long curr_pos = tell(fd_);
-    lseek(fd_, 0, SEEK_SET);
-    read(fd_, buffer_, length);
-    lseek(fd_, curr_pos, SEEK_SET);
+    long curr_pos = ftell(file_);
+    fseek(file_, 0, SEEK_SET);
+    fread(buffer_, length, 1, file_);
+    fseek(file_, curr_pos, SEEK_SET);
 
     ((char*)buffer_)[length] = '\0';
   }

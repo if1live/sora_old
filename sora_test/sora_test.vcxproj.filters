@@ -15,14 +15,17 @@
     <ClCompile Include="low_level_c_file_test.cc">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="math_helper_test.cc">
-      <Filter>base</Filter>
+    <ClCompile Include="vector_test.cc">
+      <Filter>math</Filter>
     </ClCompile>
     <ClCompile Include="matrix_test.cc">
-      <Filter>base</Filter>
+      <Filter>math</Filter>
     </ClCompile>
-    <ClCompile Include="vector_test.cc">
-      <Filter>base</Filter>
+    <ClCompile Include="math_helper_test.cc">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="shader_test.cc">
+      <Filter>renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -31,6 +34,12 @@
   <ItemGroup>
     <Filter Include="base">
       <UniqueIdentifier>{d56732c6-659d-445e-b0a0-b59f83f2c8d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{ad796c37-a1b3-4401-83cb-4b593280137f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer">
+      <UniqueIdentifier>{ef933348-198a-4e84-a261-40f6d525ac70}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
