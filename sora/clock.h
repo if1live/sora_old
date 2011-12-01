@@ -24,8 +24,9 @@
 namespace sora {;
 class Clock {
 public:
-  static i32 curtime;	// time returned by last Sys_Milliseconds()
+  static i32 currtime;	// time returned by last Sys_Milliseconds()
   static i32 GetMilliSecond();
+  static i32 Tick();
 };
 }
 

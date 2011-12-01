@@ -40,19 +40,24 @@ MemoryFile::MemoryFile(const std::string &filepath)
 MemoryFile::~MemoryFile() {
   Close();
 }
-void MemoryFile::Open() {
+boolean MemoryFile::Open() {
   int fd = open(filepath_.c_str(), O_RDONLY);
   SR_ASSERT(fd != -1 && "file is not exist");
+  if (fd == -1) {
+    return false;
+  }
 
   int length = GetFileSize(fd);
-  start = (u8*)MM_MALLOC(length);
+  start = (u8*)MM_MALLOC(length + 1);
   data = start;
   read(fd, start, length);
 
   curr = start;
   end = curr + length;
+  *end = '\0';
 
   close(fd);
+  return true;
 }
 void MemoryFile::Close() {
   MM_FREE(data);

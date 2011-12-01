@@ -74,7 +74,19 @@ int gettimeofday(struct timeval *tv, struct timezone *tz) {
 #endif
 
 namespace sora {;
+
+bool InitClock();
+bool InitClock() {
+  Clock::currtime = Clock::GetMilliSecond();
+  return true;
+}
+bool run_init_clck = InitClock();
+
 i32 Clock::GetMilliSecond() {
+#if SR_WIN
+  currtime = timeGetTime();
+  return currtime;
+#else
   //ref wolf3d timer
   struct timeval tp;
 	struct timezone tzp;
@@ -87,8 +99,13 @@ i32 Clock::GetMilliSecond() {
 		return tp.tv_usec / 1000;
 	}
 
-	curtime = (tp.tv_sec - secbase) * 1000 + tp.tv_usec / 1000;
-	return curtime;
+	currtime = (tp.tv_sec - secbase) * 1000 + tp.tv_usec / 1000;
+	return currtime;
+#endif
 }
-i32 Clock::curtime = 0;
+i32 Clock::currtime = 0;
+i32 Clock::Tick() {
+  return GetMilliSecond();
+}
+
 }

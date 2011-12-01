@@ -32,8 +32,10 @@ public:
   MemoryFile(const std::string &filepath);
   ~MemoryFile();
 
-  void Open();
+  boolean Open();
+  boolean IsOpened() const { return (data != NULL); }
   void Close();
+  i32 GetLength() const { return end - start; }
   
   const std::string &filepath() const { return filepath_; }
 

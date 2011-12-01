@@ -62,6 +62,9 @@
     <ClInclude Include="mem.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="gl_helper.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cc">
@@ -87,6 +90,12 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="memory_file.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="gl_helper.cc">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="logger.cc">
       <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>

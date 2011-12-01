@@ -49,7 +49,7 @@ public:
 
 class Program {
 public:
-  boolean Validate(GLuint prog);
+  static boolean Validate(GLuint prog);
  
 public:
   Program();
@@ -62,6 +62,9 @@ public:
   void Deinit();
   boolean Link();
   bool IsInit() const { return (prog != 0); }
+
+  GLint GetAttribLocation(const char *name);
+  GLint GetUniformLocation(const char *name);
 
 public:
   GLuint prog;

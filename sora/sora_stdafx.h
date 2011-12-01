@@ -23,6 +23,7 @@
 #include "sora/arch.h"
 #include "sora/assert_inc.h"
 #include "sora/mem.h"
+#include "sora/logger.h"
 
 #if SR_USE_PCH
 #include <cmath>

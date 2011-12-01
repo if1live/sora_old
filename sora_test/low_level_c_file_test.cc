@@ -21,6 +21,8 @@
 #include "sora_test_stdafx.h"
 #include "sora/low_level_c_file.h"
 
+#include "sora/memory_file.h"
+
 TEST(LowLevelCFile, test) {
   using sora::LowLevelCFile;
   const char *path1 = "testdata/low_level_c_file.txt";
@@ -53,4 +55,17 @@ TEST(ReadonlyFile_WriteonlyFile, test) {
   EXPECT_EQ(sizeof(content), file2.GetLength());
   const char *buffer = (const char *)file2.GetBuffer();
   EXPECT_STREQ(content, buffer);
+}
+
+TEST(MemoryFile, test) {
+  using sora::MemoryFile;
+  const char *path1 = "testdata/low_level_c_file.txt";
+
+  MemoryFile file1(path1);
+  EXPECT_EQ(false, file1.IsOpened());
+  EXPECT_EQ(true, file1.Open());
+  
+  EXPECT_EQ(28, file1.GetLength());
+  const char *content = "this is line1.this is line2.";
+  EXPECT_STREQ(content, (const char*)file1.start);
 }

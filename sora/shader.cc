@@ -56,8 +56,9 @@ boolean Shader::InitShader(GLenum shader_type, const char *src) {
   if (status == GL_FALSE) {
     GLchar msg[1024];
     glGetShaderInfoLog(handle, sizeof(msg), 0, &msg[0]);
-    const char *srccode = src;
 
+    LOGE("ShaderError : %s", msg);
+    LOGE("ShaderSrc : %s", src);
     SR_ASSERT(!msg);
     return false;
   }
@@ -73,7 +74,7 @@ Program::~Program() {
 void Program::Deinit() {
   if (prog != 0) {
     glDeleteProgram(prog);
-    prog == 0;
+    prog = 0;
   }
   if (vert_shader_.IsInit()) {
     vert_shader_.Deinit();
@@ -128,4 +129,12 @@ boolean Program::Validate(GLuint prog) {
   }
   return true;
 }
+GLint Program::GetAttribLocation(const char *name) {
+  return glGetAttribLocation(prog, name);
+}
+
+GLint Program::GetUniformLocation(const char *name) {
+  return glGetUniformLocation(prog, name);
+}
+
 }

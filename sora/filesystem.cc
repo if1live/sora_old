@@ -53,9 +53,15 @@ i32 GetFileSize(int fd) {
   if (fd == -1) {
     return -1;
   }
-  struct stat s;
-  int result = fstat(fd, &s);
-  return s.st_size;
+  // library하고 꼬여서 자구 죽네... 다른 방법으로 얻어야될듯
+  // struct stat s;
+  // int result = fstat(fd, &s);
+  // return s.st_size;
+  int curr_pos = tell(fd);
+  lseek(fd, 0, SEEK_END);
+  int length = tell(fd);
+  lseek(fd, curr_pos, SEEK_SET);
+  return length;
 }
 i32 GetFileSize(FILE *file) {
   int curr_pos = ftell(file);

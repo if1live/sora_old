@@ -21,6 +21,9 @@
 #ifndef SORA_LOGGER_H_
 #define SORA_LOGGER_H_
 
+#include <string>
+#include <cstdarg>
+
 #if SR_USE_PCH == 0
 #include <cstdio>
 #include <cstdarg>
@@ -152,15 +155,7 @@ public:
 };
 
 
-sora::Logger<ConsoleLogStream> &SharedConsoleLogger() {
-  // 템플릿 클래스 안에 대충 넣으니까 템플릿 인자가 없어서 안된다
-  // 그래서 명시적으로 함수를 분리했다
-  // 콘솔에 뭘 찍는 로그는 매크로와 연결되서 사실상
-  // 공유해도 문제가 없고 그것이 더 추적하기 편할거같아서
-  // 공용으로 접근할수있는거 하나 만들었다
-  static sora::Logger<ConsoleLogStream> logger("Shared");
-  return logger;
-}
+sora::Logger<ConsoleLogStream> &SharedConsoleLogger();
 
 }
 

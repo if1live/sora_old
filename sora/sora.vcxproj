@@ -79,6 +79,7 @@
     <ClInclude Include="memory_file.h" />
     <ClInclude Include="arch.h" />
     <ClInclude Include="low_level_c_file.h" />
+    <ClInclude Include="gl_helper.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="shared_ptr_inc.h" />
     <ClInclude Include="sora_stdafx.h" />
@@ -92,9 +93,11 @@
     <ClCompile Include="arch.cc" />
     <ClCompile Include="clock.cc" />
     <ClCompile Include="filesystem.cc" />
+    <ClCompile Include="logger.cc" />
     <ClCompile Include="low_level_c_file.cc" />
     <ClCompile Include="mem.cc" />
     <ClCompile Include="memory_file.cc" />
+    <ClCompile Include="gl_helper.cc" />
     <ClCompile Include="shader.cc" />
     <ClCompile Include="sora_stdafx.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

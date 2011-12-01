@@ -44,6 +44,55 @@ void DestroyList(SeqType *list) {
   }
   list->clear();
 }
+/////////////////////////////////////////
+template<typename T>
+class Singleton {
+ public:
+  static T& GetInstance() {
+    if (ctx_ == 0) { ctx_ = new T; }
+    return *ctx_;
+  }
+
+  static void DestroyInstance() {
+    if (ctx_ != 0) { delete(ctx_); ctx_ = 0; }
+  }
+  static bool IsCreated() { return (ctx_ != 0); }
+
+ protected:
+  Singleton() {
+    SR_ASSERT(ctx_ == 0);
+    long offset = (long)(T*)(1) - (long)(Singleton*)(T*)(1);
+    ctx_ = (T*)((long)(this + offset));
+  }
+  ~Singleton() {
+    SR_ASSERT(ctx_ != 0);
+    ctx_ = 0;
+  }
+  Singleton(const Singleton &o);
+  Singleton operator=(const Singleton &o);
+  static T *ctx_;
+};
+template<typename T>
+T* Singleton<T>::ctx_ = 0;
+////////////////////////////////////////////
+template<typename T>
+class SharedObject {
+ public:
+  static T& GetInstance() {
+    if (ctx_ == NULL) { ctx_ = new T; }
+      return *ctx_;
+    }
+  static void DestoryInstance() {
+    if (ctx_ != NULL) { delete(ctx_); ctx_ = NULL; }
+  }
+  static bool IsCreated() { return (ctx_ != NULL); }
+  SharedObject() {}
+  ~SharedObject() {}
+ private:
+  static T *ctx_;
+};
+template<typename T>
+T *SharedObject<T>::ctx_ = NULL;
 }
 
 #endif  // SORA_TEMPLATE_LIBRARY_H_
