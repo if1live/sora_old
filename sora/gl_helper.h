@@ -28,6 +28,15 @@ public:
   static boolean CheckError(const std::string &name) {
     return CheckError(name.c_str());
   }
+  // gl information
+  static const std::string &GetVersion();
+  static const std::string &GetVender();
+  static const std::string &GetRenderer();
+  static const std::vector<std::string> &GetExtensionList();
+  static boolean IsExtensionSupport(const char *ext) {
+    return IsExtensionSupport(std::string(ext));
+  }
+  static boolean IsExtensionSupport(const std::string &ext);
 };
 
 }

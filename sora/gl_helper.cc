@@ -20,6 +20,7 @@
 // Ŭnicode please
 #include "sora_stdafx.h"
 #include "sora/gl_helper.h"
+#include "sora/common_string.h"
 
 namespace sora {;
 boolean GLHelper::CheckError(const char *name) {
@@ -51,5 +52,62 @@ boolean GLHelper::CheckError(const char *name) {
     return false;
   }
   return true;
+}
+const std::vector<std::string> &GLHelper::GetExtensionList() {
+  using std::vector;
+  using std::string;
+
+  static vector<string> ext_list;
+  static bool run = false;
+  if (run == false) {
+    run = true;
+    const char *str = (const char*)glGetString(GL_EXTENSIONS);
+    string ext_str = str;
+
+    Split(ext_str, ' ', &ext_list);
+  }
+  return ext_list;
+}
+
+const std::string &GLHelper::GetVersion() {
+  static bool run = false;
+  static std::string version;
+  if (run == false) {
+    run = true;
+    const char *str = (const char *)glGetString(GL_VERSION);
+    version = str;
+  }
+  return version;
+}
+const std::string &GLHelper::GetVender() {
+  static bool run = false;
+  static std::string version;
+  if (run == false) {
+    run = true;
+    const char *str = (const char *)glGetString(GL_VENDOR);
+    version = str;
+  }
+  return version;
+}
+const std::string &GLHelper::GetRenderer() {
+  static bool run = false;
+  static std::string version;
+  if (run == false) {
+    run = true;
+    const char *str = (const char *)glGetString(GL_RENDERER);
+    version = str;
+  }
+  return version;
+}
+boolean GLHelper::IsExtensionSupport(const std::string &ext) {
+  using std::vector;
+  using std::string;
+  const vector<string> &ext_list = GetExtensionList();
+  for (int i = 0 ; i < ext_list.size() ; i++) {
+    if (ext == ext_list[i]) {
+      return true;
+    }
+  }
+  return false;
 }
 }

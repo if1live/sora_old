@@ -4,9 +4,26 @@
     <ClCompile Include="main.cc" />
     <ClCompile Include="yukino_stdafx.cc" />
     <ClCompile Include="renderer.cc" />
+    <ClCompile Include="xml_node.cpp">
+      <Filter>mio</Filter>
+    </ClCompile>
+    <ClCompile Include="xml_reader.cpp">
+      <Filter>mio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="yukino_stdafx.h" />
     <ClInclude Include="renderer.h" />
+    <ClInclude Include="xml_reader.h">
+      <Filter>mio</Filter>
+    </ClInclude>
+    <ClInclude Include="xml_node.h">
+      <Filter>mio</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="mio">
+      <UniqueIdentifier>{d2a83f47-8b9b-4da3-a9d4-78875f9a3746}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

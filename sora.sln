@@ -6,6 +6,13 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sora", "sora\sora.vcxproj", "{6451C89B-1FEF-4BC5-812A-BF84A8C21919}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yukino", "yukino\yukino.vcxproj", "{41F353A9-85AB-4C73-A1CC-9FB7AC2B762B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C406DAEC-0886-4771-8DEA-9D7329B46CC1} = {C406DAEC-0886-4771-8DEA-9D7329B46CC1}
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "third_party", "third_party", "{252805BD-0AE4-4FDA-8E2F-E9471A555A7B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tinyxml", "sdk\tinyxml\tinyxml_lib.vcxproj", "{C406DAEC-0886-4771-8DEA-9D7329B46CC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,8 +32,15 @@ Global
 		{41F353A9-85AB-4C73-A1CC-9FB7AC2B762B}.Debug|Win32.Build.0 = Debug|Win32
 		{41F353A9-85AB-4C73-A1CC-9FB7AC2B762B}.Release|Win32.ActiveCfg = Release|Win32
 		{41F353A9-85AB-4C73-A1CC-9FB7AC2B762B}.Release|Win32.Build.0 = Release|Win32
+		{C406DAEC-0886-4771-8DEA-9D7329B46CC1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C406DAEC-0886-4771-8DEA-9D7329B46CC1}.Debug|Win32.Build.0 = Debug|Win32
+		{C406DAEC-0886-4771-8DEA-9D7329B46CC1}.Release|Win32.ActiveCfg = Release|Win32
+		{C406DAEC-0886-4771-8DEA-9D7329B46CC1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C406DAEC-0886-4771-8DEA-9D7329B46CC1} = {252805BD-0AE4-4FDA-8E2F-E9471A555A7B}
 	EndGlobalSection
 EndGlobal

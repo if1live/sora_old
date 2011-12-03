@@ -52,6 +52,19 @@ int main(int argc, char *argv) {
   }
   fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 
+  // gl 관련 정보 출력
+  printf("GLVersion:%s\n", sora::GLHelper::GetVersion().c_str());
+  printf("GLVender:%s\n", sora::GLHelper::GetVender().c_str());
+  printf("GLRenderer:%s\n", sora::GLHelper::GetRenderer().c_str());
+  using std::vector;
+  using std::string;
+  printf("GLExtension:");
+  const vector<string> &ext_list = sora::GLHelper::GetExtensionList();
+  for (int i = 0 ; i < ext_list.size() ; i++) {
+    printf("%s ", ext_list[i].c_str());
+  }
+  printf("\n");
+
 
   Init();
   // Main loop
@@ -87,12 +100,12 @@ void Draw(int ms) {
   
   glEnable(GL_TEXTURE_2D);
   
-  glBegin(GL_TRIANGLE_FAN);
-  glTexCoord2f(0, 0); glVertex3f(-0.5, -0.5, 0);
-  glTexCoord2f(1, 0); glVertex3f(0.5, -0.5, 0);
-  glTexCoord2f(1, 1); glVertex3f(0.5, 0.5, 0);
-  glTexCoord2f(0, 1); glVertex3f(-0.5, 0.5, 0);
-  glEnd();
+  srglBegin(GL_QUADS);
+  srglTexCoord2f(0, 0); srglVertex3f(-0.5, -0.5, 0);
+  srglTexCoord2f(1, 0); srglVertex3f(0.5, -0.5, 0);
+  srglTexCoord2f(1, 1); srglVertex3f(0.5, 0.5, 0);
+  srglTexCoord2f(0, 1); srglVertex3f(-0.5, 0.5, 0);
+  srglEnd();
   
   sora::GLHelper::CheckError("DrawEnd");
 }

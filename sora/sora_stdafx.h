@@ -47,6 +47,7 @@
 #include <string>
 #include <algorithm>
 #include <memory>
+#include <map>
 
 // boost
 #include <boost/noncopyable.hpp>

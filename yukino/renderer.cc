@@ -155,7 +155,7 @@ void Renderer::End() {
   RendererPimpl *renderer = Renderer::GetInstance().impl_;
   if (renderer->mode == GL_QUADS) {
     glDrawElements(GL_TRIANGLES, 
-      RendererPimpl::kVertexCount * 3 / 2, 
+      renderer->curr_index * 3 / 2,
       GL_UNSIGNED_SHORT, 
       renderer->index_list);
   } else {

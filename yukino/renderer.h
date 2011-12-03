@@ -26,6 +26,9 @@
 namespace yukino {;
 class RendererPimpl;
 
+// position 3float + texcoord 2float 를 받아서 적절히 그리는거
+// 기존 asuna포팅 및 대부분의 경우는 이거로 충분할듯함
+// sora가 아니라 따로 둔 것은 이것은 라이브러리라고 하기에는 사용 용도가 너무 한정되니까
 class Renderer : public sora::Singleton<Renderer> {
 public:
   Renderer();
@@ -44,10 +47,10 @@ private:
 };
 }
 
-#define glBegin       yukino::Renderer::Begin
-#define glEnd         yukino::Renderer::End
-#define glVertex3f    yukino::Renderer::Vertex3f
-#define glVertex2f    yukino::Renderer::Vertex2f
-#define glTexCoord2f  yukino::Renderer::TexCoord2f
+#define srglBegin       yukino::Renderer::Begin
+#define srglEnd         yukino::Renderer::End
+#define srglVertex3f    yukino::Renderer::Vertex3f
+#define srglVertex2f    yukino::Renderer::Vertex2f
+#define srglTexCoord2f  yukino::Renderer::TexCoord2f
 
 #endif  // YUKINO_RENDERER_H_
