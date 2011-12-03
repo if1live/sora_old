@@ -88,6 +88,7 @@
     <ClInclude Include="string_code_dictionary.h" />
     <ClInclude Include="string_hash_functor.h" />
     <ClInclude Include="template_library.h" />
+    <ClInclude Include="texture.h" />
     <ClInclude Include="unordered_map_inc.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>
@@ -105,6 +106,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="common_string.cc" />
+    <ClCompile Include="texture.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

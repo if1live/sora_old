@@ -97,7 +97,7 @@ void Renderer::Init() {
   
   using sora::Program;
   Program &prog = impl_->prog;
-  glUseProgram(prog.prog);
+  srglUseProgram(prog.prog);
   GLint mvp_location = prog.GetUniformLocation("u_mvp");
   GLint texcoord_location = prog.GetAttribLocation("a_texcoord");
   GLint position_location = prog.GetAttribLocation("a_position");
@@ -105,14 +105,14 @@ void Renderer::Init() {
   SR_ASSERT(texcoord_location != -1);
   SR_ASSERT(position_location != -1);
   
-  glEnableVertexAttribArray(texcoord_location);
-  glEnableVertexAttribArray(position_location);
+  srglEnableVertexAttribArray(texcoord_location);
+  srglEnableVertexAttribArray(position_location);
   
   const void *position_ptr = impl_->vertex_list[0].xyz;
   const void *texcoord_ptr = impl_->vertex_list[0].st;
-  glVertexAttribPointer(position_location, 3, GL_FLOAT,
+  srglVertexAttribPointer(position_location, 3, GL_FLOAT,
     GL_FALSE, sizeof(Vertex), position_ptr);
-  glVertexAttribPointer(texcoord_location, 2, GL_FLOAT,
+  srglVertexAttribPointer(texcoord_location, 2, GL_FLOAT,
     GL_FALSE, sizeof(Vertex), texcoord_ptr);
 
   //test mvp
@@ -121,7 +121,7 @@ void Renderer::Init() {
   sora::SetIdentity(&mvp);
   sora::SetScale(0.5f, &mvp);
 
-  glUniformMatrix4fv(mvp_location, 1, GL_FALSE, mvp.value);
+  srglUniformMatrix4fv(mvp_location, 1, GL_FALSE, mvp.value);
 }
 void Renderer::Begin(GLenum mode) {
   SR_ASSERT(Renderer::GetInstance().impl_ != NULL);
@@ -154,12 +154,12 @@ void Renderer::End() {
 
   RendererPimpl *renderer = Renderer::GetInstance().impl_;
   if (renderer->mode == GL_QUADS) {
-    glDrawElements(GL_TRIANGLES, 
+    srglDrawElements(GL_TRIANGLES, 
       renderer->curr_index * 3 / 2,
       GL_UNSIGNED_SHORT, 
       renderer->index_list);
   } else {
-    glDrawArrays(renderer->mode, 0, renderer->curr_index);
+    srglDrawArrays(renderer->mode, 0, renderer->curr_index);
   }
 }
 }

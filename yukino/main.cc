@@ -22,6 +22,7 @@
 #include "sora/clock.h"
 #include "renderer.h"
 #include "sora/gl_helper.h"
+#include "sora/texture.h"
 
 const int win_width = 480;
 const int win_height = 320;
@@ -96,9 +97,11 @@ void Update(int ms) {
 }
 void Draw(int ms) {
   // OpenGL rendering goes here...
-  glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  srglClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   
-  glEnable(GL_TEXTURE_2D);
+  srglEnable(GL_TEXTURE_2D);
+  sora::Texture &tex = sora::Texture::Sample();
+  srglBindTexture(GL_TEXTURE_2D, tex.handle);
   
   srglBegin(GL_QUADS);
   srglTexCoord2f(0, 0); srglVertex3f(-0.5, -0.5, 0);
@@ -112,24 +115,5 @@ void Draw(int ms) {
 void Init() {
   yukino::Renderer::GetInstance().Init();
 
-  glViewport(0, 0, win_width, win_height);
-  
-  //sample texture
-  unsigned char texture_data[] = {
-    255, 0, 0, 255,
-    0, 255, 0, 255,
-    0, 0, 255, 255,
-    255, 255, 255, 255,
-  };
-  GLuint tex_id;
-  glActiveTexture(GL_TEXTURE0);
-  glGenTextures(1, &tex_id);
-  glBindTexture(GL_TEXTURE_2D, tex_id);
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 2, 2, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture_data);
-  
+  srglViewport(0, 0, win_width, win_height);
 }

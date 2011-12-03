@@ -65,6 +65,9 @@
     <ClInclude Include="gl_helper.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="texture.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cc">
@@ -97,6 +100,9 @@
     </ClCompile>
     <ClCompile Include="logger.cc">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="texture.cc">
+      <Filter>renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -30,7 +30,7 @@ Shader::~Shader() {
 }
 void Shader::Deinit() {
   if (handle != 0) {
-    glDeleteShader(handle);
+    srglDeleteShader(handle);
     handle = 0;
     type = 0;
   }
@@ -47,15 +47,15 @@ boolean Shader::InitShader(GLenum shader_type, const char *src) {
   this->src = src;
   this->type = shader_type;
 
-  handle = glCreateShader(shader_type);
-  glShaderSource(handle, 1, &src, 0);
-  glCompileShader(handle);
+  handle = srglCreateShader(shader_type);
+  srglShaderSource(handle, 1, &src, 0);
+  srglCompileShader(handle);
 
   GLint status;
-  glGetShaderiv(handle, GL_COMPILE_STATUS, &status);
+  srglGetShaderiv(handle, GL_COMPILE_STATUS, &status);
   if (status == GL_FALSE) {
     GLchar msg[1024];
-    glGetShaderInfoLog(handle, sizeof(msg), 0, &msg[0]);
+    srglGetShaderInfoLog(handle, sizeof(msg), 0, &msg[0]);
 
     LOGE("ShaderError : %s", msg);
     LOGE("ShaderSrc : %s", src);
@@ -73,7 +73,7 @@ Program::~Program() {
 }
 void Program::Deinit() {
   if (prog != 0) {
-    glDeleteProgram(prog);
+    srglDeleteProgram(prog);
     prog = 0;
   }
   if (vert_shader_.IsInit()) {
@@ -84,26 +84,26 @@ void Program::Deinit() {
   }
 }
 boolean Program::Link() {
-  glLinkProgram(prog);
+  srglLinkProgram(prog);
 
   GLint status;
-  glGetProgramiv(prog, GL_LINK_STATUS, &status);
+  srglGetProgramiv(prog, GL_LINK_STATUS, &status);
   if (status == GL_FALSE) {
     GLchar msg[256];
-    glGetProgramInfoLog(prog, sizeof(msg), 0, &msg[0]);
+    srglGetProgramInfoLog(prog, sizeof(msg), 0, &msg[0]);
     return false;
   }
   return true;
 }
 boolean Program::Init(const char *v_src, const char *f_src) {
   SR_ASSERT(prog == 0);
-  prog = glCreateProgram();
+  prog = srglCreateProgram();
 
   SR_ASSERT(true == vert_shader_.InitVertexShader(v_src));
   SR_ASSERT(true == frag_shader_.InitFragmentShader(f_src));
 
-  glAttachShader(prog, vert_shader_.handle);
-  glAttachShader(prog, frag_shader_.handle);
+  srglAttachShader(prog, vert_shader_.handle);
+  srglAttachShader(prog, frag_shader_.handle);
 
   if (Link() == false) {
     return false;
@@ -113,16 +113,16 @@ boolean Program::Init(const char *v_src, const char *f_src) {
 boolean Program::Validate(GLuint prog) {
     GLint logLength, status;
 
-  glValidateProgram(prog);
-  glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &logLength);
+  srglValidateProgram(prog);
+  srglGetProgramiv(prog, GL_INFO_LOG_LENGTH, &logLength);
   if (logLength > 0) {
     GLchar *log = static_cast<GLchar *>(malloc(logLength));
-    glGetProgramInfoLog(prog, logLength, &logLength, log);
+    srglGetProgramInfoLog(prog, logLength, &logLength, log);
     free(log);
     //SR_ASSERT(false);
   }
 
-  glGetProgramiv(prog, GL_VALIDATE_STATUS, &status);
+  srglGetProgramiv(prog, GL_VALIDATE_STATUS, &status);
   if (status == 0) {
     SR_ASSERT(!"validate fail");
     return false;
@@ -130,11 +130,11 @@ boolean Program::Validate(GLuint prog) {
   return true;
 }
 GLint Program::GetAttribLocation(const char *name) {
-  return glGetAttribLocation(prog, name);
+  return srglGetAttribLocation(prog, name);
 }
 
 GLint Program::GetUniformLocation(const char *name) {
-  return glGetUniformLocation(prog, name);
+  return srglGetUniformLocation(prog, name);
 }
 
 }

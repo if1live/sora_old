@@ -27,4 +27,44 @@
 #else
 #error "not support gl"
 #endif
+
+// gl함수 전부 갈아치울수 있도록 하기
+// 이름만 다르게 쓸수있도록해놓으면 나중에 함수로 교체하든지하는 편법이 가능
+// gl함수 썡으로 쓰면 확장하기 힘들다(원본 함수와 구분이 안되나까)
+#define srglClear         glClear
+#define srglEnable        glEnable
+#define srglViewport      glViewport
+
+#define srglDrawElements    glDrawElements
+#define srglDrawArrays    glDrawArrays
+
+// 텍스쳐 관련
+#define srglBindTexture   glBindTexture
+#define srglGenTextures   glGenTextures
+#define srglDeleteTextures  glDeleteTextures
+#define srglPixelStorei   glPixelStorei
+#define srglTexParameteri glTexParameteri
+#define srglTexImage2D    glTexImage2D
+
+// shader 관련
+#define srglDeleteShader  glDeleteShader
+#define srglShaderSource  glShaderSource
+#define srglCompileShader glCompileShader
+#define srglDeleteProgram glDeleteProgram
+#define srglCreateProgram glCreateProgram
+#define srglAttachShader  glAttachShader
+#define srglLinkProgram   glLinkProgram
+#define srglCreateShader  glCreateShader
+#define srglGetShaderiv   glGetShaderiv
+#define srglGetShaderInfoLog  glGetShaderInfoLog
+#define srglGetProgramiv  glGetProgramiv
+#define srglGetProgramInfoLog glGetProgramInfoLog
+#define srglValidateProgram glValidateProgram
+#define srglUseProgram    glUseProgram
+
+#define srglGetUniformLocation  glGetUniformLocation
+#define srglGetAttribLocation   glGetAttribLocation
+#define srglVertexAttribPointer glVertexAttribPointer
+#define srglEnableVertexAttribArray glEnableVertexAttribArray
+#define srglUniformMatrix4fv    glUniformMatrix4fv
 #endif  // SORA_GL_INC_H_
