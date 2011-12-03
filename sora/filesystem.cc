@@ -27,8 +27,8 @@
 #endif
 
 namespace sora {;
-std::string app_root_path;
-std::string doc_root_path;
+std::string Filesystem::app_root_path;
+std::string Filesystem::doc_root_path;
 
 int InitFileSystem();
 int init_filesystem = InitFileSystem();
@@ -40,16 +40,16 @@ int InitFileSystem() {
   ::GetModuleFileName(0, path, _MAX_PATH);
   TCHAR* p = _tcsrchr(path, '\\');
   path[p - path] = 0;
-  doc_root_path = path;
-  app_root_path = path;
-  chdir(app_root_path.c_str());
+  Filesystem::doc_root_path = path;
+  Filesystem::app_root_path = path;
+  chdir(Filesystem::app_root_path.c_str());
   return 1;
 #else
   return 0;
 #endif
 }
 
-i32 GetFileSize(int fd) {
+i32 Filesystem::GetFileSize(int fd) {
   if (fd == -1) {
     return -1;
   }
@@ -63,11 +63,41 @@ i32 GetFileSize(int fd) {
   lseek(fd, curr_pos, SEEK_SET);
   return length;
 }
-i32 GetFileSize(FILE *file) {
+i32 Filesystem::GetFileSize(FILE *file) {
   int curr_pos = ftell(file);
   fseek(file, 0, SEEK_END);
   int length = ftell(file);
   fseek(file, curr_pos, SEEK_SET);
   return length;
+}
+std::string Filesystem::GetExtension(const std::string &str) {
+  using std::string;
+  // 경로 쪼개느거는 2개다 동시 지원할수 있도록함
+  // /. \\를 하나로 합치면 되겠지
+  string filename = str;
+  char *data = (char*)filename.c_str();
+  for (int i = 0 ; i < filename.size() ; i++) {
+    if (data[i] == '\\') {
+      data[i] = '/';
+    }
+  }
+
+  size_t comma_found = filename.rfind(".");
+  size_t separator_found = filename.rfind('/');
+
+  if (comma_found == string::npos) {
+		//.을 못찾은 경우, 아마도 확장자 없다
+		return string("");
+	}
+  if (comma_found != string::npos && separator_found == string::npos) {
+    string name = filename.substr(comma_found+1);
+		return name;
+  }
+  if (comma_found > separator_found) {
+		string name = filename.substr(comma_found+1);
+		return name;
+  } else {
+    return string("");
+  }
 }
 }

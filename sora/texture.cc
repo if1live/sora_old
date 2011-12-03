@@ -179,4 +179,7 @@ void Texture::InitSimpleTexture(i32 width, i32 height, TexFormat fmt,
     SR_ASSERT(!"not support yet");
   }
 }
+void Texture::LoadFromPNG(const char *filepath, Texture *tex) {
+  // use libpng
+}
 }

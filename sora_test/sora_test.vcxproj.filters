@@ -27,6 +27,9 @@
     <ClCompile Include="shader_test.cc">
       <Filter>renderer</Filter>
     </ClCompile>
+    <ClCompile Include="filesystem_test.cc">
+      <Filter>base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h" />

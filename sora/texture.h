@@ -80,9 +80,15 @@ public:
   static GLenum ConvertToGLenum(TexMagFilter orig);
   static GLenum ConvertToGLenum(TexWrapMode orig);
   
+  static void LoadFromPNG(const std::string &filepath, Texture *tex) {
+    return LoadFromPNG(filepath.c_str(), tex);
+  }
+  static void LoadFromPNG(const char *filepath, Texture *tex);
+
 private:
   static void InitSimpleTexture(i32 width, i32 height, TexFormat fmt,
     void *data, Texture *tex);
+
 public:
   Texture();
   ~Texture();

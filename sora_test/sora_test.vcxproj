@@ -13,6 +13,7 @@
   <ItemGroup>
     <ClCompile Include="class_type_test.cc" />
     <ClCompile Include="common_string_test.cc" />
+    <ClCompile Include="filesystem_test.cc" />
     <ClCompile Include="low_level_c_file_test.cc" />
     <ClCompile Include="math_helper_test.cc" />
     <ClCompile Include="matrix_test.cc" />

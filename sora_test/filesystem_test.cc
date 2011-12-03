@@ -18,53 +18,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_stdafx.h"
-#include "sora/memory_file.h"
+#include "sora_test_stdafx.h"
 #include "sora/filesystem.h"
 
-namespace sora {;
-MemoryFile::MemoryFile(const char *filepath)
-  : filepath_(filepath),
-  start(NULL),
-  end(NULL),
-  curr(NULL),
-  data(NULL) {
-}
-MemoryFile::MemoryFile(const std::string &filepath)
-  : filepath_(filepath),
-  start(NULL),
-  end(NULL),
-  curr(NULL),
-  data(NULL) {
-}
-MemoryFile::~MemoryFile() {
-  Close();
-}
-boolean MemoryFile::Open() {
-  int fd = open(filepath_.c_str(), O_RDONLY);
-  SR_ASSERT(fd != -1 && "file is not exist");
-  if (fd == -1) {
-    return false;
-  }
+TEST(Filesystem, GetExtension) {
+  using std::string;
+  using sora::Filesystem;
 
-  int length = Filesystem::GetFileSize(fd);
-  start = (u8*)MM_MALLOC(length + 1);
-  data = start;
-  read(fd, start, length);
-
-  curr = start;
-  end = curr + length;
-  *end = '\0';
-
-  close(fd);
-  return true;
-}
-void MemoryFile::Close() {
-  MM_FREE(data);
-  start = NULL;
-  curr = NULL;
-  end = NULL;
-  data = NULL;
-}
-
+  const char file1[] = "asdf.txt";
+  EXPECT_STREQ("txt", Filesystem::GetExtension(file1).c_str());
+  const char file2[] = "ad/sdf/asdf.txt";
+  EXPECT_STREQ("txt", Filesystem::GetExtension(file2).c_str());
+  const char file3[] = "ad\\sdf\\asdf.txt";
+  EXPECT_STREQ("txt", Filesystem::GetExtension(file3).c_str());
+  const char file4[] = "sdf";
+  EXPECT_STREQ("", Filesystem::GetExtension(file4).c_str());
+  const char file5[] = "ad/sd.f/asdf.txt";
+  EXPECT_STREQ("txt", Filesystem::GetExtension(file5).c_str());
+  const char file6[] = "ad/sd.f/asdf";
+  EXPECT_STREQ("", Filesystem::GetExtension(file6).c_str());
 }

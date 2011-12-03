@@ -21,12 +21,24 @@
 #ifndef SORA_FILESYSTEM_H_
 #define SORA_FILESYSTEM_H_
 
+#if SR_WIN
+#define PATH_SEPARATOR  '\\'
+#else
+#define PATH_SEPARATOR  '/'
+#endif
 namespace sora {;
-i32 GetFileSize(int fd);
-i32 GetFileSize(FILE *file);
+class Filesystem {
+public:
+  static i32 GetFileSize(int fd);
+  static i32 GetFileSize(FILE *file);
+  static std::string GetExtension(const char *filename) {
+    return GetExtension(std::string(filename));
+  }
+  static std::string GetExtension(const std::string &str);
 
-extern std::string app_root_path;
-extern std::string doc_root_path;
+  static std::string app_root_path;
+  static std::string doc_root_path;
+};
 }
 
 #endif  // SORA_FILESYSTEM_H_

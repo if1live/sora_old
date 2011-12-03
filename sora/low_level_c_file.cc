@@ -90,7 +90,7 @@ i32 LowLevelCFile::GetLength() const {
   if (file_ == NULL) {
     return 0;
   }
-  return GetFileSize(file_);
+  return Filesystem::GetFileSize(file_);
 }
 i32 LowLevelCFile::GetRemainLength() const {
   if (file_ == NULL) {
