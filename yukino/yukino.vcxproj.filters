@@ -10,6 +10,7 @@
     <ClCompile Include="xml_reader.cpp">
       <Filter>mio</Filter>
     </ClCompile>
+    <ClCompile Include="touch.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="yukino_stdafx.h" />
@@ -20,6 +21,7 @@
     <ClInclude Include="xml_node.h">
       <Filter>mio</Filter>
     </ClInclude>
+    <ClInclude Include="touch.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="mio">

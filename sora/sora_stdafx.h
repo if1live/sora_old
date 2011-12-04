@@ -51,6 +51,7 @@
 
 // boost
 #include <boost/noncopyable.hpp>
+#include <boost/foreach.hpp>
 
 #if SR_WIN
 #include <Windows.h>

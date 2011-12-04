@@ -30,4 +30,7 @@
 #error "not support"
 #endif
 
+// math
+#include "sora/vector.h"
+
 #endif

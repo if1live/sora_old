@@ -20,10 +20,12 @@
 // Ŭnicode please
 #include "yukino_stdafx.h"
 #include "sora/clock.h"
-#include "renderer.h"
 #include "sora/gl_helper.h"
 #include "sora/texture.h"
 #include "sora/filesystem.h"
+
+#include "renderer.h"
+#include "touch.h"
 
 const int win_width = 480;
 const int win_height = 320;
@@ -96,6 +98,7 @@ int main(int argc, char *argv) {
 
 sora::Texture tex;
 void Update(int ms) {
+  yukino::glfwMouseUpdate(win_width, win_height);
 }
 void Draw(int ms) {
   // OpenGL rendering goes here...

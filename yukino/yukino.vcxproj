@@ -79,6 +79,7 @@
   <ItemGroup>
     <ClCompile Include="main.cc" />
     <ClCompile Include="renderer.cc" />
+    <ClCompile Include="touch.cc" />
     <ClCompile Include="xml_node.cpp" />
     <ClCompile Include="xml_reader.cpp" />
     <ClCompile Include="yukino_stdafx.cc">
@@ -88,6 +89,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="renderer.h" />
+    <ClInclude Include="touch.h" />
     <ClInclude Include="xml_node.h" />
     <ClInclude Include="xml_reader.h" />
     <ClInclude Include="yukino_stdafx.h" />
