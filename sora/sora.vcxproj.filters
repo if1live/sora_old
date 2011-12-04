@@ -104,6 +104,9 @@
     <ClCompile Include="texture.cc">
       <Filter>renderer</Filter>
     </ClCompile>
+    <ClCompile Include="math_helper.cc">
+      <Filter>math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">

@@ -119,9 +119,17 @@ void Renderer::Init() {
   using sora::mat4;
   mat4 mvp;
   sora::SetIdentity(&mvp);
-  sora::SetScale(0.5f, &mvp);
+  //sora::SetScale(0.5f, &mvp)
+  mat4 tmp;
+  mvp *= sora::SetPerspective(60.0f, 480.0f / 320.0f, 0.1f, 1000.0f, &tmp);
+  mvp *= sora::SetLookAt(1.0f, 2.0f, 2.0f,    0.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f,    &tmp);
 
   srglUniformMatrix4fv(mvp_location, 1, GL_FALSE, mvp.value);
+
+  // GL환경 설정
+  srglEnable(GL_TEXTURE_2D);
+  srglEnable(GL_BLEND);
+  srglBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 void Renderer::Begin(GLenum mode) {
   SR_ASSERT(Renderer::GetInstance().impl_ != NULL);

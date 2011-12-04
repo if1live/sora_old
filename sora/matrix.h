@@ -23,6 +23,7 @@
 #if SR_USE_PCH == 0
 #include <cstring>
 #endif
+#include "sora/vector.h"
 
 namespace sora {;
 template<typename T, i32 R, i32 C>  struct Matrix;
@@ -112,7 +113,7 @@ struct Matrix {
         T row_data[S];
         T col_data[S];
         GetRow(i, row_data);
-        GetCol(j, col_data);
+        o.GetCol(j, col_data);
 
         T dot_value = 0;
         for (i32 x = 0 ; x < S ; x++) {
@@ -131,9 +132,15 @@ struct Matrix {
     for (i32 i = 0 ; i < R ; i++) {
       for (i32 j = 0 ; j < C2 ; j++) {
 
-        VectorTemplate<T, C> rowVec = GetRow(i);
-        VectorTemplate<T, C> colVec = o.GetCol(j);
-        T value = rowVec.Dot(colVec);
+        T row_data[C];
+        T col_data[C];
+        GetRow(i, row_data);
+        o.GetCol(j, col_data);
+        
+        T value = 0;
+        for (int i = 0 ; i < C ; i++) {
+          value += row_data[i] * col_data[i];
+        }
         result.Set(i, j, value);
       }
     }
@@ -151,7 +158,14 @@ struct Matrix {
     }
   }
 
-  //VectorTemplate<T, row> operator*(const VectorTemplate<T, col> &o) const;
+  Vector4<T> operator*(const Vector4<T> &b) const {
+    Vector4<T> v;
+    v.x = Get(0, 0)*b.x + Get(1, 0)*b.y + Get(2, 0)*b.z + Get(3, 0)*b.w;
+		v.y = Get(0, 1)*b.x + Get(1, 1)*b.y + Get(2, 1)*b.z + Get(3, 1)*b.w;
+		v.z = Get(0, 2)*b.x + Get(1, 2)*b.y + Get(2, 2)*b.z + Get(3, 2)*b.w;
+		v.w = Get(0, 3)*b.x + Get(1, 3)*b.y + Get(2, 3)*b.z + Get(3, 3)*b.w;
+		return v;
+  }
 
   boolean operator==(const Matrix<T, R, C> &o) const {
     if (memcmp(value, o.value, sizeof(T) * R * C) == 0) {

@@ -86,6 +86,7 @@ struct Vector4 {
   Vector4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
   Vector4() : x(0), y(0), z(0), w(0) {}
   Vector4(const T(&data)[4]) : x(data[0]), y(data[1]), z(data[2]), w(data[3]) {}
+  Vector4(const Vector3<T> &v, T w) : x(v.x), y(v.y), z(v.z), w(w) {}
 };
 
 template<typename VecType>
@@ -125,6 +126,14 @@ template<typename VecType>
 VecType operator-(const VecType &a, const VecType &b) {
   VecType tmp = a;
   tmp -= b;
+  return tmp;
+}
+template<typename VecType>
+VecType operator-(const VecType &a) {
+  VecType tmp;
+  for (int i = 0 ; i < VecType::Dimension ; i++) {
+    tmp.value[i] = -a.value[i];
+  }
   return tmp;
 }
 template<typename VecType>

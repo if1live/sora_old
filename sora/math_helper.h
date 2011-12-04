@@ -32,10 +32,10 @@ const f32 kPi = 3.141592f;
 const f32 kPiOver2 = kPi / 2;
 const f32 kPiOver4 = kPi / 4;
 
-f32 DegreeToRadian(f32 degree) {
+inline f32 DegreeToRadian(f32 degree) {
   return degree * kPi / 180.0f;
 }
-f32 RadianToDegree(f32 radian) {
+inline f32 RadianToDegree(f32 radian) {
   return radian * 180.0f / kPi;
 }
 
@@ -132,8 +132,12 @@ void SetRotateZ(T degrees, Matrix<T, 4, 4> *m) {
   m->Set(data);
 }
 
-
-
+mat4 &SetOrtho(float left, float right, float bottom, float top, float near_val, float far_val, mat4 *m);
+mat4 &SetFrustum(float left, float right, float bottom, float top, float near_val, float far_val, mat4 *m);
+mat4 &SetLookAt(float eye_x, float eye_y, float eye_z,
+  float target_x, float target_y, float target_z,
+  float up_x, float up_y, float up_z, mat4 *m);
+mat4 &SetPerspective(float fovy, float aspect, float zNear, float zFar, mat4 *m);
 }
 
 #endif  // SORA_MATH_HELPER_H_

@@ -38,6 +38,8 @@
 #define srglDrawElements    glDrawElements
 #define srglDrawArrays    glDrawArrays
 
+#define srglBlendFunc     glBlendFunc
+
 // 텍스쳐 관련
 #define srglBindTexture   glBindTexture
 #define srglGenTextures   glGenTextures

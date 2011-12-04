@@ -41,7 +41,11 @@ MemoryFile::~MemoryFile() {
   Close();
 }
 boolean MemoryFile::Open() {
-  int fd = open(filepath_.c_str(), O_RDONLY);
+  int flag = O_RDONLY;
+#if SR_WIN
+  flag |= O_BINARY;
+#endif
+  int fd = open(filepath_.c_str(), flag);
   SR_ASSERT(fd != -1 && "file is not exist");
   if (fd == -1) {
     return false;
@@ -66,5 +70,18 @@ void MemoryFile::Close() {
   end = NULL;
   data = NULL;
 }
-
+i32 MemoryFile::Read(void *buf, i32 size) {
+  int curr_pos = curr - start;
+  int length = GetLength();
+  int remain = length - curr_pos;
+  if (remain < size) {
+    memcpy((unsigned char*)buf, curr, remain);
+    curr += remain;
+    return remain;
+  } else {
+    memcpy((unsigned char*)buf, curr, size);
+    curr += size;
+    return size;
+  }
+}
 }

@@ -23,6 +23,7 @@
 #include "renderer.h"
 #include "sora/gl_helper.h"
 #include "sora/texture.h"
+#include "sora/filesystem.h"
 
 const int win_width = 480;
 const int win_height = 320;
@@ -93,14 +94,14 @@ int main(int argc, char *argv) {
   return 0;
 }
 
+sora::Texture tex;
 void Update(int ms) {
 }
 void Draw(int ms) {
   // OpenGL rendering goes here...
   srglClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   
-  srglEnable(GL_TEXTURE_2D);
-  sora::Texture &tex = sora::Texture::Sample();
+  //sora::Texture &tex = sora::Texture::Sample();
   srglBindTexture(GL_TEXTURE_2D, tex.handle);
   
   srglBegin(GL_QUADS);
@@ -116,4 +117,10 @@ void Init() {
   yukino::Renderer::GetInstance().Init();
 
   srglViewport(0, 0, win_width, win_height);
+
+  using std::string;
+  string filename = "\\res\\res\\Scene10.png";
+  //string filename = "\\res\\test.png";
+  filename = sora::Filesystem::app_root_path + filename;
+  sora::Texture::LoadFromPNG(filename, &tex);
 }

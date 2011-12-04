@@ -37,3 +37,16 @@ TEST(Matrix, GetRow) {
 	EXPECT_TRUE(ivec3(row_data_0) == t1);
 	EXPECT_TRUE(ivec3(row_data_1) == t2);
 }
+
+TEST(Matrix, Multiple) {
+  using namespace sora;
+  i32 data1[] = {1, 2,  3, 4};
+  i32 data2[] = {1, 0,  0, 2};
+  imat2 m1(data1);
+  imat2 m2(data2);
+  imat2 result = m1 * m2;
+
+  i32 data3[] = {1, 2,  6, 8};
+  imat2 m3(data3);
+  EXPECT_TRUE(m3 == result);
+}

@@ -43,7 +43,6 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\sdk\glfw\include;..\sdk\glew\include;..\sdk\boost;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>sora_stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -57,7 +56,6 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>..\sdk\glfw\include;..\sdk\glew\include;..\sdk\boost;..;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>sora_stdafx.h</PrecompiledHeaderFile>
     </ClCompile>
@@ -98,6 +96,7 @@
     <ClCompile Include="filesystem.cc" />
     <ClCompile Include="logger.cc" />
     <ClCompile Include="low_level_c_file.cc" />
+    <ClCompile Include="math_helper.cc" />
     <ClCompile Include="mem.cc" />
     <ClCompile Include="memory_file.cc" />
     <ClCompile Include="gl_helper.cc" />
