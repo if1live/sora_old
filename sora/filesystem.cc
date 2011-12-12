@@ -100,4 +100,13 @@ std::string Filesystem::GetExtension(const std::string &str) {
     return string("");
   }
 }
+
+std::string Filesystem::GetAppPath(const char *filename) {
+  char last_ch = app_root_path[app_root_path.size()-1];
+  if (last_ch == '/' || last_ch == '\\') {
+    return app_root_path + filename;
+  } else {
+    return app_root_path + PATH_SEPARATOR + filename;
+  }
+}
 }

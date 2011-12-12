@@ -4,13 +4,32 @@
     <ClCompile Include="main.cc" />
     <ClCompile Include="yukino_stdafx.cc" />
     <ClCompile Include="renderer.cc" />
-    <ClCompile Include="xml_node.cpp">
-      <Filter>mio</Filter>
-    </ClCompile>
-    <ClCompile Include="xml_reader.cpp">
-      <Filter>mio</Filter>
-    </ClCompile>
     <ClCompile Include="touch.cc" />
+    <ClCompile Include="xml_node.cc">
+      <Filter>mio</Filter>
+    </ClCompile>
+    <ClCompile Include="xml_reader.cc">
+      <Filter>mio</Filter>
+    </ClCompile>
+    <ClCompile Include="book.cc">
+      <Filter>book</Filter>
+    </ClCompile>
+    <ClCompile Include="book_paper.cc">
+      <Filter>book</Filter>
+    </ClCompile>
+    <ClCompile Include="texture_atlas.cc" />
+    <ClCompile Include="book_paper_builder.cc">
+      <Filter>book</Filter>
+    </ClCompile>
+    <ClCompile Include="book_scene.cc">
+      <Filter>book</Filter>
+    </ClCompile>
+    <ClCompile Include="glassless3d.cc">
+      <Filter>book</Filter>
+    </ClCompile>
+    <ClCompile Include="camera.cc">
+      <Filter>book</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="yukino_stdafx.h" />
@@ -22,10 +41,32 @@
       <Filter>mio</Filter>
     </ClInclude>
     <ClInclude Include="touch.h" />
+    <ClInclude Include="book.h">
+      <Filter>book</Filter>
+    </ClInclude>
+    <ClInclude Include="book_paper.h">
+      <Filter>book</Filter>
+    </ClInclude>
+    <ClInclude Include="texture_atlas.h" />
+    <ClInclude Include="book_paper_builder.h">
+      <Filter>book</Filter>
+    </ClInclude>
+    <ClInclude Include="book_scene.h">
+      <Filter>book</Filter>
+    </ClInclude>
+    <ClInclude Include="glassless3d.h">
+      <Filter>book</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
+      <Filter>book</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="mio">
       <UniqueIdentifier>{d2a83f47-8b9b-4da3-a9d4-78875f9a3746}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="book">
+      <UniqueIdentifier>{f8127a02-d301-4c7a-a89d-0fc9b45a2a9a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -77,18 +77,32 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="book.cc" />
+    <ClCompile Include="book_paper.cc" />
+    <ClCompile Include="book_paper_builder.cc" />
+    <ClCompile Include="book_scene.cc" />
+    <ClCompile Include="camera.cc" />
+    <ClCompile Include="glassless3d.cc" />
     <ClCompile Include="main.cc" />
     <ClCompile Include="renderer.cc" />
+    <ClCompile Include="texture_atlas.cc" />
     <ClCompile Include="touch.cc" />
-    <ClCompile Include="xml_node.cpp" />
-    <ClCompile Include="xml_reader.cpp" />
+    <ClCompile Include="xml_node.cc" />
+    <ClCompile Include="xml_reader.cc" />
     <ClCompile Include="yukino_stdafx.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="book.h" />
+    <ClInclude Include="book_paper.h" />
+    <ClInclude Include="book_paper_builder.h" />
+    <ClInclude Include="book_scene.h" />
+    <ClInclude Include="camera.h" />
+    <ClInclude Include="glassless3d.h" />
     <ClInclude Include="renderer.h" />
+    <ClInclude Include="texture_atlas.h" />
     <ClInclude Include="touch.h" />
     <ClInclude Include="xml_node.h" />
     <ClInclude Include="xml_reader.h" />

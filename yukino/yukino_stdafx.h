@@ -30,6 +30,9 @@
 #error "not support"
 #endif
 
+#include "sora/unordered_map_inc.h"
+#include "sora/shared_ptr_inc.h"
+
 // math
 #include "sora/vector.h"
 

@@ -38,6 +38,11 @@ public:
 
   static std::string app_root_path;
   static std::string doc_root_path;
+
+  static std::string GetAppPath(const std::string &str) {
+    return GetAppPath(str.c_str());
+  }
+  static std::string GetAppPath(const char *filename);
 };
 }
 

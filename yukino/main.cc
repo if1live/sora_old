@@ -27,6 +27,8 @@
 #include "renderer.h"
 #include "touch.h"
 
+#include "glassless3d.h"
+
 const int win_width = 480;
 const int win_height = 320;
 
@@ -70,11 +72,15 @@ int main(int argc, char *argv) {
 sora::Texture tex;
 void Update(int ms) {
   yukino::glfwMouseUpdate(win_width, win_height);
+
+  yukino::Glassless3d::GetInstance().update(ms * 0.001);
 }
 void Draw(int ms) {
   // OpenGL rendering goes here...
   srglClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   
+  yukino::Glassless3d::GetInstance().draw();
+  /*
   //sora::Texture &tex = sora::Texture::Sample();
   srglBindTexture(GL_TEXTURE_2D, tex.handle);
 
@@ -95,7 +101,7 @@ void Draw(int ms) {
   srglTexCoord2f(1, 1); srglVertex3f(0.5, 0.5, 0);
   srglTexCoord2f(0, 1); srglVertex3f(-0.5, 0.5, 0);
   srglEnd();
-  
+  */
   sora::GLHelper::CheckError("DrawEnd");
 }
 void Init() {
@@ -104,10 +110,12 @@ void Init() {
   srglViewport(0, 0, win_width, win_height);
 
   using std::string;
-  string filename = "\\res\\res\\Scene10.png";
+  string filename = "\\res\\Scene10.png";
   //string filename = "\\res\\test.png";
-  filename = sora::Filesystem::app_root_path + filename;
+  filename = sora::Filesystem::GetAppPath(filename);
   sora::Texture::LoadFromPNG(filename, &tex);
+
+  yukino::Glassless3d::GetInstance().init();
 }
 
 void InitWindow(int w, int h) {

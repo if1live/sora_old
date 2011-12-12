@@ -33,6 +33,7 @@
 // gl함수 썡으로 쓰면 확장하기 힘들다(원본 함수와 구분이 안되나까)
 #define srglClear         glClear
 #define srglEnable        glEnable
+#define srglDisable       glDisable
 #define srglViewport      glViewport
 
 #define srglDrawElements    glDrawElements

@@ -50,6 +50,7 @@ public:
   static void PopMatrix();
   static void Scale(float x, float y, float z);
   static void Translate(float x, float y, float z);
+  static void Rotate(float degree, float x, float y, float z);
   static void MultMatrix(float *m);
   static void MatrixMode(int matrix_mode);
 
@@ -72,7 +73,9 @@ private:
 #define srglPushMatrix  yukino::Renderer::PushMatrix
 #define srglPopMatrix   yukino::Renderer::PopMatrix
 #define srglScalef      yukino::Renderer::Scale
-#define srglTranslagef  yukino::Renderer::Translate
+#define srglTranslatef  yukino::Renderer::Translate
+#define srglRotatef     yukino::Renderer::Rotate
+
 #define srglLoadIdentity  yukino::Renderer::SetMatrixToIdentity
 #define srglMultMatrix  yukino::Renderer::MultMatrix
 #define srglMatrixMode  yukino::Renderer::MatrixMode

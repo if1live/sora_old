@@ -240,6 +240,19 @@ void Renderer::Translate(float x, float y, float z) {
   sora::SetTranslate(x, y, z, &translate);
   MultMatrix(translate.value);
 }
+void Renderer::Rotate(float degree, float x, float y, float z) {
+  sora::mat4 rotate;
+  if (x == 0 && y == 0 && z == 1) {
+    sora::SetRotateZ(degree, &rotate);
+  } else if (x == 0 && y == 1 && z == 0) {
+    sora::SetRotateY(degree, &rotate);
+  } else if (x == 1 && y == 0 && z == 0) {
+    sora::SetRotateX(degree, &rotate);
+  } else {
+    SR_ASSERT(!"not support rotation");
+  }
+  MultMatrix(rotate.value);
+}
 void Renderer::MultMatrix(float *m) {
   RendererPimpl *renderer = Renderer::GetInstance().impl_;
   sora::mat4 &curr_mat = renderer->GetCurrMatrix();
