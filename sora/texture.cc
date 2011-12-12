@@ -214,6 +214,8 @@ void png_asset_read(png_structp png_ptr, png_bytep data, png_size_t length) {
 	file->Read((char*)data, length);
 }
 boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
+  LOGI("Load PNG Texture Start : %s", filepath);
+
   const int PngSigSize = 8;
 	//png 로딩된 메모리
 	png_bytep* row_ptrs = NULL;
@@ -423,7 +425,9 @@ boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
 	//And don't forget to clean up the read and info structs !
 	png_destroy_read_struct(&png_ptr, &info_ptr,(png_infopp)0);
 	//////////////////////////////////
-	return tex;
 
+  LOGI("Load PNG Texture End");
+
+	return tex;
 }
 }

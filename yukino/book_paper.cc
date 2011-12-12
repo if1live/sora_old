@@ -65,6 +65,7 @@ void BookPaper::draw()
       }
     }
     float height = max_y - min_y;
+    SR_ASSERT(height > 0);
     
     float bookHeight = Book::GetInstance().getHeight();
 
@@ -81,7 +82,15 @@ void BookPaper::draw()
       srglVertex3f(v.x, v.y, v.z);
     }
     srglEnd();
-
+    /*
+    srglBegin(GL_LINE_LOOP);
+    for (int i = 0 ; i < point_list.size() ; i++) {
+      const BookVertex &v = point_list[i];
+      srglTexCoord2f(0, 0);
+      srglVertex3f(v.x, v.y, v.z);
+    }
+    srglEnd();
+    */
     srglPopMatrix();
 
   } else {

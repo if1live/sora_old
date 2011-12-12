@@ -51,8 +51,11 @@ void Tech48Camera::apply(float xRad, float yRad)
   //shear.z.y = tan(yTranslateRad);
   //srMultMatrix(shear);
 
-  //카메라를 박스 안쪽으로 밀어넣기
+  //카메라를 박스 안쪽으로 밀어넣기...의 수치를 좀 조정할수 있어야될듯?
   srglTranslatef(0, 0, camRadius);
+
+  srglMatrixMode   ( SR_MODELVIEW );  /* Select The Model View Matrix*/
+  srglLoadIdentity ( );    /* Reset The Model View Matrix*/
 }
 void Tech48Camera::setView(float w, float h)
 {
@@ -100,9 +103,6 @@ void Tech48Camera::setView(float w, float h)
   //하지만 윈도우의 경우는 이것없이 해상도조절로 에뮬레이팅 할수있으니까 이건 뺸다
   //srRotatef(90, 0, 0, 1);
 #endif
-
-  srglMatrixMode   ( SR_MODELVIEW );  /* Select The Model View Matrix*/
-  srglLoadIdentity ( );    /* Reset The Model View Matrix*/
 }
 }
 

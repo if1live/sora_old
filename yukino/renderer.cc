@@ -34,7 +34,7 @@ attribute vec2 a_texcoord;    \
 varying vec2 v_texcoord;  \
 void main() { \
 	v_texcoord = a_texcoord;  \
-  gl_Position = u_projection * u_modelview * vec4(a_position, 0.5);   \
+  gl_Position = u_projection * u_modelview * vec4(a_position, 1.0);   \
 }";
 
 const char frag_src[] = " \

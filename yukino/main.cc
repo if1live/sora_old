@@ -29,8 +29,8 @@
 
 #include "glassless3d.h"
 
-const int win_width = 480;
-const int win_height = 320;
+const int win_width = 960;
+const int win_height = 640;
 
 void Update(int ms);
 void Draw(int ms);
@@ -88,7 +88,7 @@ void Draw(int ms) {
   srglMatrixMode(SR_PROJECTION);
   srglLoadIdentity();
   srglPerspective(60.0f, 480.0f / 320.0f, 0.1f, 1000.0f);
-  srglLookAt(1.0f, 2.0f, 2.0f,    0.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f);
+  srglLookAt(0.0f, 0.0f, 4.0f,    0.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f);
 
   srglMatrixMode(SR_MODELVIEW);
   srglLoadIdentity();

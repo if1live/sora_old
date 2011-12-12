@@ -70,8 +70,10 @@ void BookScene::parseSpriteNode(mio::XmlNodePtr node)
     texPtr = TextureManager::GetInstance().create(texDesc, res);
   }
   */
-  string resPath = sora::Filesystem::GetAppPath(res);
-  sora::Texture::LoadFromPNG(resPath, &tex);
+  if(tex.handle == 0) {
+    string resPath = sora::Filesystem::GetAppPath(res);
+    sora::Texture::LoadFromPNG(resPath, &tex);
+  }
 
 
   //텍스쳐의 정보를 사용해서 x, y, w, h를 구성하기
