@@ -51,6 +51,9 @@ struct Matrix {
   Matrix(const T(&data)[N]) {
     Set(data);
   }
+  Matrix(const T *data) {
+    Set(data);
+  }
   template<i32 R2, i32 C2>
   Matrix(const Matrix<T, R2, C2> &o) {
     memset(value, 0, sizeof(T) * R * C);
@@ -156,6 +159,7 @@ struct Matrix {
     for (i32 i = 0 ; i < R*C ; i++) {
       value[i] *= s;
     }
+    return *this;
   }
 
   Vector4<T> operator*(const Vector4<T> &b) const {

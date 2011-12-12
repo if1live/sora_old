@@ -34,44 +34,15 @@ void Update(int ms);
 void Draw(int ms);
 void Init();
 
+void InitWindow(int w, int h);
+
 int main(int argc, char *argv) {
   // init glfw
-  int running = true;
-  // Initialize GLFW
-  if( !glfwInit() ) {
-    exit( EXIT_FAILURE );
-  }
-  // Open an OpenGL window
-  if( !glfwOpenWindow( win_width,win_height, 0,0,0,0,0,0, GLFW_WINDOW ) ) {
-    glfwTerminate();
-    exit( EXIT_FAILURE );
-  }
-  // init glew(for GLES 2.0 support)
-  GLenum err = glewInit();
-  if (GLEW_OK != err) {
-    /* Problem: glewInit failed, something is seriously wrong. */
-    fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-    glfwTerminate();
-    exit( EXIT_FAILURE );
-  }
-  fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
-
-  // gl 관련 정보 출력
-  printf("GLVersion:%s\n", sora::GLHelper::GetVersion().c_str());
-  printf("GLVender:%s\n", sora::GLHelper::GetVender().c_str());
-  printf("GLRenderer:%s\n", sora::GLHelper::GetRenderer().c_str());
-  using std::vector;
-  using std::string;
-  printf("GLExtension:");
-  const vector<string> &ext_list = sora::GLHelper::GetExtensionList();
-  for (int i = 0 ; i < ext_list.size() ; i++) {
-    printf("%s ", ext_list[i].c_str());
-  }
-  printf("\n");
-
-
+  InitWindow(win_width, win_height);
   Init();
+
   // Main loop
+  int running = true;
   int prev_runtime = sora::Clock::currtime;
   while( running ) {
     int curr_ms = sora::Clock::Tick();
@@ -106,7 +77,18 @@ void Draw(int ms) {
   
   //sora::Texture &tex = sora::Texture::Sample();
   srglBindTexture(GL_TEXTURE_2D, tex.handle);
-  
+
+  //set matrix
+  srglMatrixMode(SR_PROJECTION);
+  srglLoadIdentity();
+  srglPerspective(60.0f, 480.0f / 320.0f, 0.1f, 1000.0f);
+  srglLookAt(1.0f, 2.0f, 2.0f,    0.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f);
+
+  srglMatrixMode(SR_MODELVIEW);
+  srglLoadIdentity();
+  srglScalef(0.5, 0.5, 0.5);
+
+  ////////////////////////////
   srglBegin(GL_QUADS);
   srglTexCoord2f(0, 0); srglVertex3f(-0.5, -0.5, 0);
   srglTexCoord2f(1, 0); srglVertex3f(0.5, -0.5, 0);
@@ -126,4 +108,39 @@ void Init() {
   //string filename = "\\res\\test.png";
   filename = sora::Filesystem::app_root_path + filename;
   sora::Texture::LoadFromPNG(filename, &tex);
+}
+
+void InitWindow(int w, int h) {
+  // Initialize GLFW
+  if( !glfwInit() ) {
+    exit( EXIT_FAILURE );
+  }
+  // Open an OpenGL window
+  if( !glfwOpenWindow(w, h, 0,0,0,0,0,0, GLFW_WINDOW ) ) {
+    glfwTerminate();
+    exit( EXIT_FAILURE );
+  }
+  // init glew(for GLES 2.0 support)
+  GLenum err = glewInit();
+  if (GLEW_OK != err) {
+    /* Problem: glewInit failed, something is seriously wrong. */
+    fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
+    glfwTerminate();
+    exit( EXIT_FAILURE );
+  }
+  fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
+
+  // gl 관련 정보 출력
+  printf("GLVersion:%s\n", sora::GLHelper::GetVersion().c_str());
+  printf("GLVender:%s\n", sora::GLHelper::GetVender().c_str());
+  printf("GLRenderer:%s\n", sora::GLHelper::GetRenderer().c_str());
+  using std::vector;
+  using std::string;
+  printf("GLExtension:");
+  const vector<string> &ext_list = sora::GLHelper::GetExtensionList();
+  for (int i = 0 ; i < ext_list.size() ; i++) {
+    printf("%s ", ext_list[i].c_str());
+  }
+  printf("\n");
+
 }

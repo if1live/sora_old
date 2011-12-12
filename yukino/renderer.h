@@ -42,6 +42,22 @@ public:
   static void Vertex2f(float x, float y) { Vertex3f(x, y, 0); }
   static void TexCoord2f(float s, float t);
   static void End();
+
+  static void UseProjectionMatrixMode();
+  static void UseModelviewMatrixMode();
+  static void SetMatrixToIdentity();
+  static void PushMatrix();
+  static void PopMatrix();
+  static void Scale(float x, float y, float z);
+  static void Translate(float x, float y, float z);
+  static void MultMatrix(float *m);
+  static void MatrixMode(int matrix_mode);
+
+  static void LookAt(float eye_x, float eye_y, float eye_z,
+    float target_x, float target_y, float target_z,
+    float up_x, float up_y, float up_z);
+  static void Perspective(float fovy, float aspect, float zNear, float zFar);
+
 private:
   RendererPimpl *impl_;
 };
@@ -52,5 +68,18 @@ private:
 #define srglVertex3f    yukino::Renderer::Vertex3f
 #define srglVertex2f    yukino::Renderer::Vertex2f
 #define srglTexCoord2f  yukino::Renderer::TexCoord2f
+
+#define srglPushMatrix  yukino::Renderer::PushMatrix
+#define srglPopMatrix   yukino::Renderer::PopMatrix
+#define srglScalef      yukino::Renderer::Scale
+#define srglTranslagef  yukino::Renderer::Translate
+#define srglLoadIdentity  yukino::Renderer::SetMatrixToIdentity
+#define srglMultMatrix  yukino::Renderer::MultMatrix
+#define srglMatrixMode  yukino::Renderer::MatrixMode
+#define srglPerspective yukino::Renderer::Perspective
+#define srglLookAt      yukino::Renderer::LookAt
+
+#define SR_PROJECTION 1
+#define SR_MODELVIEW  2
 
 #endif  // YUKINO_RENDERER_H_

@@ -27,13 +27,14 @@
 
 namespace yukino {;
 const char vert_src[] = " \
-  uniform mat4 u_mvp; \
+  uniform mat4 u_projection;  \
+  uniform mat4 u_modelview; \
 attribute vec3 a_position;  \
 attribute vec2 a_texcoord;    \
 varying vec2 v_texcoord;  \
 void main() { \
 	v_texcoord = a_texcoord;  \
-  gl_Position = u_mvp * vec4(a_position, 0.5);   \
+  gl_Position = u_projection * u_modelview * vec4(a_position, 0.5);   \
 }";
 
 const char frag_src[] = " \
@@ -52,7 +53,7 @@ struct Vertex {
 class RendererPimpl {
 public:
   RendererPimpl()
-  : mode(0), curr_index(0) {
+    : mode(0), curr_index(0), matrix_mode(kProjection) {
     // initialize program
     prog.Init(vert_src, frag_src);
 
@@ -70,6 +71,9 @@ public:
 
       base_index += 6;
     }
+    // matrix stack를 적절히 초기화
+    sora::SetIdentity(&projection_mat);
+    sora::SetIdentity(&modelview_mat);
   }
 
   sora::Program prog;
@@ -81,6 +85,28 @@ public:
   Vertex vert;
   int curr_index;
   GLenum mode;
+
+  //matrix stack
+  typedef std::vector<sora::mat4> MatrixStackType;
+  enum {
+    kProjection,
+    kModelview,
+  };
+  int matrix_mode;
+  sora::mat4 &GetCurrMatrix() {
+    if (matrix_mode == kProjection) {
+      return projection_mat;
+    } else {
+      return modelview_mat;
+    }
+  }
+  MatrixStackType matrix_stack;
+  sora::mat4 projection_mat;
+  sora::mat4 modelview_mat;
+
+  // shader location
+  int modelview_location;
+  int projection_location;
 };
 
 Renderer::Renderer()
@@ -98,12 +124,16 @@ void Renderer::Init() {
   using sora::Program;
   Program &prog = impl_->prog;
   srglUseProgram(prog.prog);
-  GLint mvp_location = prog.GetUniformLocation("u_mvp");
+  GLint modelview_location = prog.GetUniformLocation("u_modelview");
+  GLint projection_location = prog.GetUniformLocation("u_projection");
   GLint texcoord_location = prog.GetAttribLocation("a_texcoord");
   GLint position_location = prog.GetAttribLocation("a_position");
-  SR_ASSERT(mvp_location != -1);
+  SR_ASSERT(modelview_location != -1);
+  SR_ASSERT(projection_location != -1);
   SR_ASSERT(texcoord_location != -1);
   SR_ASSERT(position_location != -1);
+  impl_->projection_location = projection_location;
+  impl_->modelview_location =modelview_location;
   
   srglEnableVertexAttribArray(texcoord_location);
   srglEnableVertexAttribArray(position_location);
@@ -115,16 +145,11 @@ void Renderer::Init() {
   srglVertexAttribPointer(texcoord_location, 2, GL_FLOAT,
     GL_FALSE, sizeof(Vertex), texcoord_ptr);
 
-  //test mvp
-  using sora::mat4;
-  mat4 mvp;
-  sora::SetIdentity(&mvp);
-  //sora::SetScale(0.5f, &mvp)
-  mat4 tmp;
-  mvp *= sora::SetPerspective(60.0f, 480.0f / 320.0f, 0.1f, 1000.0f, &tmp);
-  mvp *= sora::SetLookAt(1.0f, 2.0f, 2.0f,    0.0f, 0.0f, 0.0f,    0.0f, 1.0f, 0.0f,    &tmp);
-
-  srglUniformMatrix4fv(mvp_location, 1, GL_FALSE, mvp.value);
+  // default set
+  sora::mat4 identity;
+  sora::SetIdentity(&identity);
+  srglUniformMatrix4fv(projection_location, 1, GL_FALSE, identity.value);
+  srglUniformMatrix4fv(modelview_location, 1, GL_FALSE, identity.value);
 
   // GL환경 설정
   srglEnable(GL_TEXTURE_2D);
@@ -160,7 +185,15 @@ void Renderer::TexCoord2f(float s, float t) {
 void Renderer::End() {
   SR_ASSERT(Renderer::GetInstance().impl_ != NULL);
 
+  // modelview, projection을 적절히 적용
   RendererPimpl *renderer = Renderer::GetInstance().impl_;
+  using sora::mat4;
+  mat4 &projection = renderer->projection_mat;
+  mat4 &modelview = renderer->modelview_mat;
+  srglUniformMatrix4fv(renderer->projection_location, 1, GL_FALSE, projection.value);
+  srglUniformMatrix4fv(renderer->modelview_location, 1, GL_FALSE, modelview.value);
+
+  // draw mesh
   if (renderer->mode == GL_QUADS) {
     srglDrawElements(GL_TRIANGLES, 
       renderer->curr_index * 3 / 2,
@@ -170,4 +203,83 @@ void Renderer::End() {
     srglDrawArrays(renderer->mode, 0, renderer->curr_index);
   }
 }
+
+void Renderer::UseProjectionMatrixMode() {
+  RendererPimpl *renderer = Renderer::GetInstance().impl_;
+  renderer->matrix_mode = RendererPimpl::kProjection;
+}
+void Renderer::UseModelviewMatrixMode() {
+  RendererPimpl *renderer = Renderer::GetInstance().impl_;
+  renderer->matrix_mode = RendererPimpl::kModelview;
+}
+void Renderer::SetMatrixToIdentity() {
+  RendererPimpl *renderer = Renderer::GetInstance().impl_;
+  sora::mat4 &m = renderer->GetCurrMatrix();
+  sora::SetIdentity(&m);
+}
+void Renderer::PushMatrix() {
+  RendererPimpl *renderer = Renderer::GetInstance().impl_;
+  sora::mat4 &m = renderer->GetCurrMatrix();
+  renderer->matrix_stack.push_back(m);
+}
+void Renderer::PopMatrix() {
+  RendererPimpl *renderer = Renderer::GetInstance().impl_;
+  SR_ASSERT(renderer->matrix_stack.empty() == false);
+  sora::mat4 &back = renderer->matrix_stack.back();
+  renderer->matrix_stack.pop_back();
+  sora::mat4 &m = renderer->GetCurrMatrix();
+  m = back;
+}
+void Renderer::Scale(float x, float y, float z) {
+  sora::mat4 scale;
+  sora::SetScale(x, y, z, &scale);
+  MultMatrix(scale.value);
+}
+void Renderer::Translate(float x, float y, float z) {
+  sora::mat4 translate;
+  sora::SetTranslate(x, y, z, &translate);
+  MultMatrix(translate.value);
+}
+void Renderer::MultMatrix(float *m) {
+  RendererPimpl *renderer = Renderer::GetInstance().impl_;
+  sora::mat4 &curr_mat = renderer->GetCurrMatrix();
+  sora::mat4 tmp(m);
+  curr_mat *= tmp;
+}
+void Renderer::MatrixMode(int matrix_mode) {
+  switch (matrix_mode) {
+  case SR_PROJECTION:
+#ifdef GL_PROJECTION
+  case GL_PROJECTION:
+#endif
+    UseProjectionMatrixMode();
+    break;
+  case SR_MODELVIEW:
+#ifdef GL_MODELVIEW
+  case GL_MODELVIEW:
+#endif
+    UseModelviewMatrixMode();
+    break;
+  }
+}
+
+void Renderer::LookAt(float eye_x, float eye_y, float eye_z,
+  float target_x, float target_y, float target_z,
+  float up_x, float up_y, float up_z) {
+  sora::mat4 lookat;
+  sora::SetLookAt(eye_x, eye_y, eye_z,
+    target_x, target_y, target_z,
+    up_x, up_y, up_z, &lookat);
+  RendererPimpl *renderer = Renderer::GetInstance().impl_;
+  sora::mat4 &curr_mat = renderer->GetCurrMatrix();
+  curr_mat *= lookat;
+}
+void Renderer::Perspective(float fovy, float aspect, float zNear, float zFar) {
+  sora::mat4 tmp;
+  sora::SetPerspective(fovy, aspect, zNear, zFar, &tmp);
+  RendererPimpl *renderer = Renderer::GetInstance().impl_;
+  sora::mat4 &curr_mat = renderer->GetCurrMatrix();
+  curr_mat *= tmp;
+}
+
 }
