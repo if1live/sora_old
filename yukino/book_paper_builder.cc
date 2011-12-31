@@ -3,7 +3,7 @@
 #include "book_paper.h"
 #include "book_paper_builder.h"
 #include "book.h"
-#include "texture_atlas.h"
+#include "sora/texture_atlas.h"
 #include "sora/texture.h"
 
 using namespace std;
@@ -44,10 +44,10 @@ void BookPaperBuilder::createFloorModel() {
   //float baseY = (float)(tex->getDesc().texHeight - tex->getDesc().origHeight) / tex->getDesc().texHeight;
   //float width = (float)(tex->getDesc().origWidth) / tex->getDesc().texWidth;
   //float height = 1.0 - baseY;
-  float texBaseX = sprite_->GetAtlasX();
-  float texBaseY = sprite_->GetAtlasY();
-  float texWidth = sprite_->GetAtlasW();
-  float texHeight = sprite_->GetAtlasH();
+  float texBaseX = sprite_->GetTexCoordX();
+  float texBaseY = sprite_->GetTexCoordY();
+  float texWidth = sprite_->GetTexCoordWidth();
+  float texHeight = sprite_->GetTexCoordHeight();
 
   float xGap = globalXGap;
   float zGap = globalZGap;
@@ -80,10 +80,10 @@ void BookPaperBuilder::createFloorModel() {
 
 void BookPaperBuilder::createLeftModel() 
 {
-  float texBaseX = sprite_->GetAtlasX();
-  float texBaseY = sprite_->GetAtlasY();
-  float texWidth = sprite_->GetAtlasW();
-  float texHeight = sprite_->GetAtlasH();
+  float texBaseX = sprite_->GetTexCoordX();
+  float texBaseY = sprite_->GetTexCoordY();
+  float texWidth = sprite_->GetTexCoordWidth();
+  float texHeight = sprite_->GetTexCoordHeight();
 
   //좌우벽은 gap를 신경쓰지 말자
   float yGap = 0;
@@ -104,10 +104,10 @@ void BookPaperBuilder::createLeftModel()
 }
 void BookPaperBuilder::createRightModel() 
 {
-  float texBaseX = sprite_->GetAtlasX();
-  float texBaseY = sprite_->GetAtlasY();
-  float texWidth = sprite_->GetAtlasW();
-  float texHeight = sprite_->GetAtlasH();
+  float texBaseX = sprite_->GetTexCoordX();
+  float texBaseY = sprite_->GetTexCoordY();
+  float texWidth = sprite_->GetTexCoordWidth();
+  float texHeight = sprite_->GetTexCoordHeight();
 
   //좌우벽은 gap를 신경쓰지 말자
   float yGap = 0;
@@ -127,10 +127,10 @@ void BookPaperBuilder::createRightModel()
 }
 void BookPaperBuilder::createCeilModel() 
 {
-  float texBaseX = sprite_->GetAtlasX();
-  float texBaseY = sprite_->GetAtlasY();
-  float texWidth = sprite_->GetAtlasW();
-  float texHeight = sprite_->GetAtlasH();
+  float texBaseX = sprite_->GetTexCoordX();
+  float texBaseY = sprite_->GetTexCoordY();
+  float texWidth = sprite_->GetTexCoordWidth();
+  float texHeight = sprite_->GetTexCoordHeight();
 
   float xGap = globalXGap;
   float zGap = globalZGap;
@@ -149,10 +149,10 @@ void BookPaperBuilder::createCeilModel()
 }
 void BookPaperBuilder::createForwardModel() 
 {
-  float texBaseX = sprite_->GetAtlasX();
-  float texBaseY = sprite_->GetAtlasY();
-  float texWidth = sprite_->GetAtlasW();
-  float texHeight = sprite_->GetAtlasH();
+  float texBaseX = sprite_->GetTexCoordX();
+  float texBaseY = sprite_->GetTexCoordY();
+  float texWidth = sprite_->GetTexCoordWidth();
+  float texHeight = sprite_->GetTexCoordHeight();
 
   float xGap = globalXGap;
   float yGap = globalYGap;
@@ -201,8 +201,8 @@ void BookPaperBuilder::createNormalModel(float width, float height)
   - texCoord.right = texCoord.left + (rect.size.width*2-2)/(texture.wide*2);
   */
 
-  float tex_width = sprite_->parent->tex->tex_header.tex_width;
-  float tex_height = sprite_->parent->tex->tex_header.tex_height;
+  float tex_width = sprite_->tex->tex_header.tex_width;
+  float tex_height = sprite_->tex->tex_header.tex_height;
 
   float texLeft = (float)(sprite_->x * 2 + 1) / (tex_width * 2);
   float texRight = texLeft + (float)(sprite_->w * 2 - 2) / (tex_width * 2);
@@ -302,7 +302,7 @@ BookPaperBuilder& BookPaperBuilder::setRotate(float pitch, float roll, float yaw
   yaw_ = yaw;
   return *this;
 }
-BookPaperBuilder& BookPaperBuilder::setSprite(TextureAtlasSegment *sprite)
+BookPaperBuilder& BookPaperBuilder::setSprite(TextureSubImage *sprite)
 {
   sprite_ = sprite;
   return *this;

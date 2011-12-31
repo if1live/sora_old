@@ -13,14 +13,6 @@ public:
   Book();
   ~Book();
 
-  float getWidth() const { return width_; }
-  float getHeight() const { return height_; }
-  float getDepth() const { return depth_; }
-
-  void setWidth(float w) { width_ = w; }
-  void setHeight(float h) { height_ = h; }
-  void setDepth(float d) { depth_ = d; }
-
   float getMaxPanDegree() const { return maxPanDegree_; }
   float getMaxTiltDegree() const { return maxTiltDegree_; }
   float getCamRadius() const { return camRadius_; }
@@ -40,14 +32,17 @@ public:
   void movePrevScene();
   bool isNextSceneExist() const;
   bool isPrevScenExist() const;
+
+public:
+  float width;
+  float height;
+  float depth;
+
 private:
   //xml node별 파싱코드
   void loadConfigList(sora::XmlNode *node);
   void loadSceneList(sora::XmlNode *node);
-
-  float width_;
-  float height_;
-  float depth_;
+  
 
   float maxPanDegree_;
   float maxTiltDegree_;

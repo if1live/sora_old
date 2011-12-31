@@ -5,6 +5,7 @@
 
 namespace sora {;
 class XmlNode;
+class TextureSubImage;
 }
 
 namespace yukino {;
@@ -16,7 +17,7 @@ class BookPaperBuilder;
 typedef std::tr1::shared_ptr<BookScene> BookScenePtr;
 class BookScene {
 public:
-  typedef std::tr1::unordered_map<std::string, TextureAtlasSegment*> SpriteDictType;
+  typedef std::tr1::unordered_map<std::string, sora::TextureSubImage> SpriteDictType;
 
 public:
   BookScene();
@@ -33,7 +34,7 @@ public:
 
   void parseSpriteNode(sora::XmlNode *node);
   void parseSpriteListNode(sora::XmlNode *node);
-  TextureAtlasSegment *getSprite(const std::string &name) const;
+  sora::TextureSubImage *getSprite(const std::string &name);
 
   void parseSceneNode(sora::XmlNode *node);
   void parsePaperNode(sora::XmlNode *node);

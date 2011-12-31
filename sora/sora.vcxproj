@@ -89,6 +89,7 @@
     <ClInclude Include="string_hash_functor.h" />
     <ClInclude Include="template_library.h" />
     <ClInclude Include="texture.h" />
+    <ClInclude Include="texture_atlas.h" />
     <ClInclude Include="touch.h" />
     <ClInclude Include="unordered_map_inc.h" />
     <ClInclude Include="vector.h" />
@@ -113,6 +114,7 @@
     </ClCompile>
     <ClCompile Include="common_string.cc" />
     <ClCompile Include="texture.cc" />
+    <ClCompile Include="texture_atlas.cc" />
     <ClCompile Include="touch.cc" />
     <ClCompile Include="xml_node.cc" />
     <ClCompile Include="xml_reader.cc" />

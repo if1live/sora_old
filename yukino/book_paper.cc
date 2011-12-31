@@ -2,7 +2,7 @@
 #include "yukino_stdafx.h"
 #include "book.h"
 #include "book_paper.h"
-#include "texture_atlas.h"
+#include "sora/texture_atlas.h"
 #include "sora/immediate_mode_emulator.h"
 #include "sora/texture.h"
 #include "book_paper_builder.h"
@@ -11,7 +11,7 @@ using namespace std;
 using namespace sora;
 
 namespace yukino {;
-BookPaper::BookPaper(TextureAtlasSegment *sprite, BookPaperType type)
+BookPaper::BookPaper(TextureSubImage *sprite, BookPaperType type)
   : sprite_(sprite), type_(type), posX_(0), posY_(0), posZ_(0),
   pitch_(0), roll_(0), yaw_(0)
 {
@@ -42,7 +42,7 @@ BookPaperType BookPaper::getType() const
 void BookPaper::draw()
 {
   //텍스쳐 활성화
-  sora::Texture *tex = sprite_->parent->tex;
+  sora::Texture *tex = sprite_->tex;
   srglBindTexture(GL_TEXTURE_2D, tex->handle);
 
 
@@ -67,7 +67,7 @@ void BookPaper::draw()
     float height = max_y - min_y;
     SR_ASSERT(height > 0);
     
-    float bookHeight = Book::GetInstance().getHeight();
+    float bookHeight = Book::GetInstance().height;
 
     srglPushMatrix();
     srglTranslatef(posX_, posY_ - bookHeight/2 + height/2, posZ_);
@@ -119,7 +119,7 @@ BookPaperFactory::BookPaperFactory(float cubeWidth, float cubeHeight, float cube
 BookPaperFactory::~BookPaperFactory()
 {
 }
-BookPaperPtr BookPaperFactory::createFloor(TextureAtlasSegment *sprite)
+BookPaperPtr BookPaperFactory::createFloor(TextureSubImage *sprite)
 {
   builder_->setSprite(sprite);
   builder_->setType(BookPaperTypeFloor);
@@ -127,35 +127,35 @@ BookPaperPtr BookPaperFactory::createFloor(TextureAtlasSegment *sprite)
   return builder_->build();
 }
 
-BookPaperPtr BookPaperFactory::createLeft(TextureAtlasSegment *sprite)
+BookPaperPtr BookPaperFactory::createLeft(TextureSubImage *sprite)
 {
   builder_->setSprite(sprite);
   builder_->setType(BookPaperTypeLeft);
   builder_->createLeftModel();
   return builder_->build();
 }
-BookPaperPtr BookPaperFactory::createRight(TextureAtlasSegment *sprite)
+BookPaperPtr BookPaperFactory::createRight(TextureSubImage *sprite)
 {
   builder_->setSprite(sprite);
   builder_->setType(BookPaperTypeRight);
   builder_->createRightModel();
   return builder_->build();
 }
-BookPaperPtr BookPaperFactory::createCeil(TextureAtlasSegment *sprite)
+BookPaperPtr BookPaperFactory::createCeil(TextureSubImage *sprite)
 {
   builder_->setSprite(sprite);
   builder_->setType(BookPaperTypeCeil);
   builder_->createCeilModel();
   return builder_->build();
 }
-BookPaperPtr BookPaperFactory::createForward(TextureAtlasSegment *sprite)
+BookPaperPtr BookPaperFactory::createForward(TextureSubImage *sprite)
 {
   builder_->setSprite(sprite);
   builder_->setType(BookPaperTypeForward);
   builder_->createForwardModel();
   return builder_->build();
 }
-BookPaperPtr BookPaperFactory::createNormal(TextureAtlasSegment *sprite, float x, float y, float z, float w, float h)
+BookPaperPtr BookPaperFactory::createNormal(TextureSubImage *sprite, float x, float y, float z, float w, float h)
 {
   builder_->setSprite(sprite);
   builder_->setType(BookPaperTypeNormal);
@@ -164,7 +164,7 @@ BookPaperPtr BookPaperFactory::createNormal(TextureAtlasSegment *sprite, float x
   return builder_->build();
 }
 
-BookPaperPtr BookPaperFactory::createNormalWithRoll(TextureAtlasSegment *sprite, float x, float y, float z, float w, float h, float roll)
+BookPaperPtr BookPaperFactory::createNormalWithRoll(TextureSubImage *sprite, float x, float y, float z, float w, float h, float roll)
 {
   builder_->setSprite(sprite);
   builder_->setType(BookPaperTypeNormal);
@@ -174,7 +174,7 @@ BookPaperPtr BookPaperFactory::createNormalWithRoll(TextureAtlasSegment *sprite,
   return builder_->build();
 }
 
-BookPaperPtr BookPaperFactory::createNormalWithPitch(TextureAtlasSegment *sprite, float x, float y, float z, float w, float h, float pitch)
+BookPaperPtr BookPaperFactory::createNormalWithPitch(TextureSubImage *sprite, float x, float y, float z, float w, float h, float pitch)
 {
   builder_->setSprite(sprite);
   builder_->setType(BookPaperTypeNormal);
@@ -183,7 +183,7 @@ BookPaperPtr BookPaperFactory::createNormalWithPitch(TextureAtlasSegment *sprite
   builder_->setRotate(pitch, 0, 0);
   return builder_->build();
 }
-BookPaperPtr BookPaperFactory::createNormalWithYaw(TextureAtlasSegment *sprite, float x, float y, float z, float w, float h, float yaw)
+BookPaperPtr BookPaperFactory::createNormalWithYaw(TextureSubImage *sprite, float x, float y, float z, float w, float h, float yaw)
 {
   builder_->setSprite(sprite);
   builder_->setType(BookPaperTypeNormal);

@@ -3,9 +3,11 @@
 
 #include "sora/vector.h"
 
-namespace yukino {;
-class TextureAtlasSegment;
+namespace sora {;
+struct TextureSubImage;
+}
 
+namespace yukino {;
 class BookPaperFactory;
 class BookPaperBuilder;
 class BookPaper;
@@ -44,7 +46,7 @@ struct BookVertex {
 
 class BookPaper {
 public:
-  BookPaper(TextureAtlasSegment *sprite, BookPaperType type);
+  BookPaper(sora::TextureSubImage *sprite, BookPaperType type);
   ~BookPaper();
   BookPaperType getType() const;
   void draw();
@@ -64,7 +66,7 @@ public:
   BookVertex v4;
 
 private:
-  TextureAtlasSegment *sprite_;
+  sora::TextureSubImage *sprite_;
   const BookPaperType type_;
 
 
@@ -83,16 +85,16 @@ class BookPaperFactory {
 public:
   BookPaperFactory(float cubeWidth, float cubeHeight, float cubeDepth);
   ~BookPaperFactory();
-  BookPaperPtr createFloor(TextureAtlasSegment *sprite);
-  BookPaperPtr createLeft(TextureAtlasSegment *sprite);
-  BookPaperPtr createRight(TextureAtlasSegment *sprite);
-  BookPaperPtr createCeil(TextureAtlasSegment *sprite);
-  BookPaperPtr createForward(TextureAtlasSegment *sprite);
-  BookPaperPtr createNormal(TextureAtlasSegment *sprite, float x, float y, float z, float w, float h);
+  BookPaperPtr createFloor(sora::TextureSubImage *sprite);
+  BookPaperPtr createLeft(sora::TextureSubImage *sprite);
+  BookPaperPtr createRight(sora::TextureSubImage *sprite);
+  BookPaperPtr createCeil(sora::TextureSubImage *sprite);
+  BookPaperPtr createForward(sora::TextureSubImage *sprite);
+  BookPaperPtr createNormal(sora::TextureSubImage *sprite, float x, float y, float z, float w, float h);
 
-  BookPaperPtr createNormalWithRoll(TextureAtlasSegment *sprite, float x, float y, float z, float w, float h, float roll);
-  BookPaperPtr createNormalWithPitch(TextureAtlasSegment *sprite, float x, float y, float z, float w, float h, float pitch);
-  BookPaperPtr createNormalWithYaw(TextureAtlasSegment *sprite, float x, float y, float z, float w, float h, float yaw);
+  BookPaperPtr createNormalWithRoll(sora::TextureSubImage *sprite, float x, float y, float z, float w, float h, float roll);
+  BookPaperPtr createNormalWithPitch(sora::TextureSubImage *sprite, float x, float y, float z, float w, float h, float pitch);
+  BookPaperPtr createNormalWithYaw(sora::TextureSubImage *sprite, float x, float y, float z, float w, float h, float yaw);
 private:
   std::auto_ptr<BookPaperBuilder> builder_;
 };

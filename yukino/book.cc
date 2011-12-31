@@ -12,9 +12,9 @@ using namespace std;
 
 namespace yukino {;
 Book::Book()
-  :	width_(480), 
-  height_(320), 
-  depth_(320), 
+  :	width(480), 
+  height(320), 
+  depth(320), 
   maxPanDegree_(60),
   maxTiltDegree_(60),
   currScenePage_(0),
@@ -64,15 +64,15 @@ void Book::loadConfigList(sora::XmlNode *node) {
     if(key == "width") {
       int width = sora::StringToInt(value);
       SR_ASSERT(width > 0);
-      setWidth(width);
+      this->width = width;
     } else if(key == "height") {
       int height = sora::StringToInt(value);
       SR_ASSERT(height > 0);
-      setHeight(height);
+      this->height = height;
     } else if(key == "depth") {
       int depth = sora::StringToInt(value);
       SR_ASSERT(depth > 0);
-      setDepth(depth);
+      this->depth = depth;
     } else if(key == "max_pan_degree") {
       float deg = sora::StringToFloat(value);
       SR_ASSERT(deg > 0);

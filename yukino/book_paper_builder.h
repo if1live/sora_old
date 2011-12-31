@@ -3,9 +3,11 @@
 
 #include "book_scene.h"
 
-namespace yukino {;
-class TextureAtlasSegment;
+namespace sora {;
+struct TextureSubImage;
+}
 
+namespace yukino {;
 class BookPaperBuilder {
 public:
   BookPaperBuilder(float cubeWidth, float cubeHeight, float cubeDepth);
@@ -14,7 +16,7 @@ public:
   BookPaperPtr build();
 
   //set attribute
-  BookPaperBuilder& setSprite(TextureAtlasSegment *sprite);
+  BookPaperBuilder& setSprite(sora::TextureSubImage *sprite);
   BookPaperBuilder& setType(BookPaperType type);
   BookPaperBuilder& setPos(const sora::vec3 &pos);
   BookPaperBuilder& setFold(AxisDirection axis, float degree);
@@ -45,7 +47,7 @@ private:
   const float cubeHeight_;
   const float cubeDepth_;
 
-  TextureAtlasSegment *sprite_;
+  sora::TextureSubImage *sprite_;
   BookPaperType type_;
 
   float pitch_;

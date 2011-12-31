@@ -9,7 +9,6 @@
     <ClCompile Include="book_paper.cc">
       <Filter>book</Filter>
     </ClCompile>
-    <ClCompile Include="texture_atlas.cc" />
     <ClCompile Include="book_paper_builder.cc">
       <Filter>book</Filter>
     </ClCompile>
@@ -31,7 +30,6 @@
     <ClInclude Include="book_paper.h">
       <Filter>book</Filter>
     </ClInclude>
-    <ClInclude Include="texture_atlas.h" />
     <ClInclude Include="book_paper_builder.h">
       <Filter>book</Filter>
     </ClInclude>

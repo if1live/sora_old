@@ -83,6 +83,9 @@
     <ClInclude Include="xml_node.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="texture_atlas.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cc">
@@ -136,6 +139,9 @@
     </ClCompile>
     <ClCompile Include="xml_reader.cc">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="texture_atlas.cc">
+      <Filter>renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
