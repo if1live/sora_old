@@ -241,6 +241,8 @@ void Texture::InitSimpleTexture(i32 width, i32 height, TexFormat fmt,
     srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, default_param.gl_wrap_s());
     srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, default_param.gl_wrap_t());
     srglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    //use mipmap
+    glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, default_param.IsMipMap());
 
     tex->format = fmt;
     tex->handle = tex_id;
@@ -462,9 +464,7 @@ boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
   glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, tex->param_.gl_wrap_s());
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, tex->param_.gl_wrap_t());
 	//use mipmap
-  if(tex->param_.IsMipMap()) {
-	  glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
-  }
+  glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, tex->param_.IsMipMap());
   
   tex->handle = texture;
   
@@ -483,5 +483,15 @@ boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
   LOGI("Load PNG Texture End");
 
 	return tex;
+}
+void Texture::SetTextureParameter(const TextureParameter &param) {
+  param_ = param;
+
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, param_.gl_mag_filter());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, param_.gl_min_filter());
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, param_.gl_wrap_s());
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, param_.gl_wrap_t());
+  //use mipmap
+	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, param_.IsMipMap());
 }
 }

@@ -120,9 +120,7 @@ public:
   ~Texture();
 
   void Cleanup();
-  void SetTextureParameter(const TextureParameter &param) {
-    param_ = param;
-  }
+  void SetTextureParameter(const TextureParameter &param);
  
 public:
   TexWrapMode wrap_s() const { return param_.wrap_s; }
