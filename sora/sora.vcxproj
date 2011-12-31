@@ -74,6 +74,7 @@
     <ClInclude Include="gl_inc.h" />
     <ClInclude Include="gl_window.h" />
     <ClInclude Include="immediate_mode_emulator.h" />
+    <ClInclude Include="locale.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="math_helper.h" />
     <ClInclude Include="matrix.h" />
@@ -102,6 +103,7 @@
     <ClCompile Include="filesystem.cc" />
     <ClCompile Include="gl_window.cc" />
     <ClCompile Include="immediate_mode_emulator.cc" />
+    <ClCompile Include="locale.cc" />
     <ClCompile Include="logger.cc" />
     <ClCompile Include="low_level_c_file.cc" />
     <ClCompile Include="math_helper.cc" />

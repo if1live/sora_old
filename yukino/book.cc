@@ -111,11 +111,9 @@ void Book::Load(const std::string &cfgfile) {
   */
   sora::MemoryFile file(cfgfile);
   file.Open();
-  char *buffer = (char*)file.start;
-  string content(buffer);
   XmlReader reader;
   XmlNode root;
-  bool read_result = reader.Read(&root, content);
+  bool read_result = reader.Read(&root, (char*)file.start);
   if(!read_result) {
     LOGE("Book xml syntax error, ctrl+c is quit");
     LOGE(reader.GetError()->str().c_str());

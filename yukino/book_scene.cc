@@ -311,10 +311,9 @@ void BookScene::parseSceneNode(sora::XmlNode *node) {
 void BookScene::load(const std::string &path) {
   sora::MemoryFile file(path);
   file.Open();
-  string content((char*)file.start);
   XmlReader xmlreader;
   XmlNode root;
-  bool read_result = xmlreader.Read(&root, content);
+  bool read_result = xmlreader.Read(&root, (char*)file.start);
   if(!read_result) {
     LOGI("Book scene xml syntax error");
     LOGI(xmlreader.GetError()->str().c_str());

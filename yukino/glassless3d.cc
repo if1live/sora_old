@@ -31,7 +31,7 @@ void Glassless3d::reloadBook()
   string book_path = sora::Filesystem::GetAppPath("res/book_en.xml");
   //@XXX
   /*
-  if(Locale::sharedLocale().getLanguage() == LanguageTypeKorean)
+  if(Locale::sharedLocale().language() == kLanguageKorean)
   {
   book_path = Path::appPath("res/book_kr.xml");
   }
@@ -47,7 +47,7 @@ void Glassless3d::init()
   //book 불러오기. 언어에 따라서 다른 파일을 가져온다
   string book_path = sora::Filesystem::GetAppPath("res/book_en.xml");
   /*
-  if(Locale::sharedLocale().getLanguage() == LanguageTypeKorean)
+  if(Locale::sharedLocale().language() == kLanguageKorean)
   {
   book_path = Path::appPath("res/book_kr.xml");
   }
@@ -180,12 +180,9 @@ void Glassless3d::draw()
 }
 
 Glassless3d::Glassless3d()
-  : visible_(true)
-{
-
+  : visible_(true) {
 }
-Glassless3d::~Glassless3d()
-{
+Glassless3d::~Glassless3d() {
 }
 
 void Glassless3d::update(float dt)
@@ -199,8 +196,7 @@ void Glassless3d::update(float dt)
   ///@XXX
   //handler_->updateEvent();
   int nextPage = Book::GetInstance().curr_scene_page();
-  if(currPage != nextPage)
-  {
+  if(currPage != nextPage) {
     onSceneChangeOccur();
   }
 }

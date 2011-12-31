@@ -39,6 +39,9 @@
     <ClCompile Include="xml_reader_test.cc">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="locale_test.cc">
+      <Filter>base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h" />
