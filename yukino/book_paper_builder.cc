@@ -17,10 +17,10 @@ float globalXGap = 2;
 float globalYGap = 2;
 float globalZGap = 4;
 
-BookPaperBuilder::BookPaperBuilder(float cubeWidth, float cubeHeight, float cubeDepth)
-  : cube_width_(cubeWidth), cube_height_(cubeHeight), cube_depth_(cubeDepth) {
+BookPaperBuilder::BookPaperBuilder(float cube_width, float cube_height, float cube_depth)
+  : cube_width_(cube_width), cube_height_(cube_height), cube_depth_(cube_depth) {
   SR_ASSERT(cube_width_ > 0 && cube_height_ > 0 && cube_depth_ > 0);
-  clear();
+  Clear();
 }
 
 BookPaperBuilder::~BookPaperBuilder() {
@@ -230,13 +230,16 @@ void BookPaperBuilder::CreateNormalModel(float width, float height) {
   v4.Vertex3(-width/2, height/2, 0);
 }
 
+BookPaper BookPaperBuilder::Build() {
+  BookPaper paper;
+  Build(&paper);
+  return paper;
+}
 
-BookPaperPtr BookPaperBuilder::build()
-{	
-  BookPaper *paper = NULL;
+void BookPaperBuilder::Build(BookPaper *paper) {	
   switch(type_) {
   case kBookPaperNormal:
-    paper = new BookPaper(sprite_, type_);
+    paper->SetBaseAttribute(sprite_, type_);
     paper->v1 = v1;
     paper->v2 = v2;
     paper->v3 = v3;
@@ -254,7 +257,7 @@ BookPaperPtr BookPaperBuilder::build()
   case kBookPaperRight:
   case kBookPaperCeil:
   case kBookPaperForward:
-    paper = new BookPaper(sprite_, type_);
+    paper->SetBaseAttribute(sprite_, type_);
     paper->v1 = v1;
     paper->v2 = v2;
     paper->v3 = v3;
@@ -265,10 +268,7 @@ BookPaperPtr BookPaperBuilder::build()
     SR_ASSERT(false);
     break;
   }
-
-  clear();
-
-  return BookPaperPtr(paper);
+  Clear();
 }
 
 BookPaperBuilder& BookPaperBuilder::set_type(BookPaperType type) {
@@ -301,7 +301,7 @@ BookPaperBuilder& BookPaperBuilder::set_sprite(TextureSubImage *sprite)
   sprite_ = sprite;
   return *this;
 }
-void BookPaperBuilder::clear() {
+void BookPaperBuilder::Clear() {
   sprite_ = NULL;
   type_ = kBookPaperNormal;
 
@@ -319,5 +319,79 @@ void BookPaperBuilder::clear() {
   axis_ = kAxisDirectionY;
   angle_ = 0;
 }
+/////////////////////////////////
 
+BookPaper BookPaperBuilder::CreateFloor(TextureSubImage *sprite) {
+  Clear();
+  set_sprite(sprite);
+  set_type(kBookPaperFloor);
+  CreateFloorModel();
+  return Build();
+}
+
+BookPaper BookPaperBuilder::CreateLeft(TextureSubImage *sprite) {
+  Clear();
+  set_sprite(sprite);
+  set_type(kBookPaperLeft);
+  CreateLeftModel();
+  return Build();
+}
+BookPaper BookPaperBuilder::CreateRight(TextureSubImage *sprite) {
+  Clear();
+  set_sprite(sprite);
+  set_type(kBookPaperRight);
+  CreateRightModel();
+  return Build();
+}
+BookPaper BookPaperBuilder::CreateCeil(TextureSubImage *sprite) {
+  Clear();
+  set_sprite(sprite);
+  set_type(kBookPaperCeil);
+  CreateCeilModel();
+  return Build();
+}
+BookPaper BookPaperBuilder::CreateForward(TextureSubImage *sprite) {
+  Clear();
+  set_sprite(sprite);
+  set_type(kBookPaperForward);
+  CreateForwardModel();
+  return Build();
+}
+BookPaper BookPaperBuilder::CreateNormal(TextureSubImage *sprite, float x, float y, float z, float w, float h) {
+  Clear();
+  set_sprite(sprite);
+  set_type(kBookPaperNormal);
+  set_pos(vec3(x, y, z));
+  CreateNormalModel(w, h);
+  return Build();
+}
+
+BookPaper BookPaperBuilder::CreateNormalWithRoll(TextureSubImage *sprite, float x, float y, float z, float w, float h, float roll) {
+  Clear();
+  set_sprite(sprite);
+  set_type(kBookPaperNormal);
+  set_pos(vec3(x, y, z));
+  CreateNormalModel(w, h);
+  set_rotate(0, roll, 0);
+  return Build();
+}
+
+BookPaper BookPaperBuilder::CreateNormalWithPitch(TextureSubImage *sprite, float x, float y, float z, float w, float h, float pitch) {
+  Clear();
+  set_sprite(sprite);
+  set_type(kBookPaperNormal);
+  set_pos(vec3(x, y, z));
+  CreateNormalModel(w, h);
+  set_rotate(pitch, 0, 0);
+  return Build();
+}
+BookPaper BookPaperBuilder::CreateNormalWithYaw(TextureSubImage *sprite, float x, float y, float z, float w, float h, float yaw) {
+  Clear();
+  set_sprite(sprite);
+  set_type(kBookPaperNormal);
+  set_pos(vec3(x, y, z));
+  CreateNormalModel(w, h);
+  set_rotate(0, 0, yaw);
+  return Build();
+}
 }

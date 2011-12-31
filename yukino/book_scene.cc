@@ -26,13 +26,11 @@ TextureAtlas tex_atlas;
 
 ////////////////
 BookScene::BookScene()
-  : useGrid_(true)
-{
+  : useGrid_(true) {
 }
 BookScene::~BookScene() {
 }
-TextureSubImage *BookScene::getSprite(const std::string &name)
-{
+TextureSubImage *BookScene::getSprite(const std::string &name) {
   SpriteDictType::iterator it = spriteDict_.find(name);
   if(it == spriteDict_.end()) {
     return NULL;
@@ -110,20 +108,20 @@ void BookScene::parseSpriteListNode(sora::XmlNode *node) {
     parseSpriteNode(spriteNode);
   }
 }
-void BookScene::add(BookPaperPtr paper) {
+void BookScene::Add(const BookPaper &paper) {
   paperList_.push_back(paper);
 }
 void BookScene::draw() {
   //등록된 장면을 적절히 그리기 
-  BOOST_FOREACH(BookPaperPtr paper, paperList_) {
-    paper->draw();
+  BOOST_FOREACH(BookPaper &paper, paperList_) {
+    paper.draw();
   }
 }
 void BookScene::sortPaper() {
   //배경과 관련된것은 무조건 먼저 그린다
   //남은것은 z를 기준으로 정렬
   //오름차순으로 정렬하기
-  std::sort(paperList_.begin(), paperList_.end(), BookPaperPtrCompare);
+  std::sort(paperList_.begin(), paperList_.end(), BookPaperCompare);
 }
 
 void BookScene::parsePaperNode(sora::XmlNode *node) {
@@ -139,10 +137,10 @@ void BookScene::parsePaperNode(sora::XmlNode *node) {
   }
 }
 void BookScene::parseNormalPaperNode(sora::XmlNode *node) {
-  float cubeWidth = Book::GetInstance().width;
-  float cubeHeight = Book::GetInstance().height;
-  float cubeDepth = Book::GetInstance().depth;
-  BookPaperFactory factory(cubeWidth, cubeHeight, cubeDepth);
+  float cube_width = Book::GetInstance().width;
+  float cube_height = Book::GetInstance().height;
+  float cube_depth = Book::GetInstance().depth;
+  BookPaperBuilder factory(cube_width, cube_height, cube_depth);
 
   float x = 0;
   float y = 0;
@@ -210,56 +208,51 @@ void BookScene::parseNormalPaperNode(sora::XmlNode *node) {
   TextureSubImage &sprite = spriteDict_[spriteName];
 
   //Create
-  BookPaperPtr paper;
   if(rotateFlag == 0) {
-    paper = factory.CreateNormal(&sprite, x, y, z, w, h);
+    paperList_.push_back(factory.CreateNormal(&sprite, x, y, z, w, h));
   } else if(rotateFlag == useYaw) {
-    paper = factory.CreateNormalWithYaw(&sprite, x, y, z, w, h, yaw);
+    paperList_.push_back(factory.CreateNormalWithYaw(&sprite, x, y, z, w, h, yaw));
   } else if(rotateFlag == useRoll) {
-    paper = factory.CreateNormalWithRoll(&sprite, x, y, z, w, h, roll);
+    paperList_.push_back(factory.CreateNormalWithRoll(&sprite, x, y, z, w, h, roll));
   } else if(rotateFlag == usePitch) {
-    paper = factory.CreateNormalWithPitch(&sprite, x, y, z, w, h, pitch);
+    paperList_.push_back(factory.CreateNormalWithPitch(&sprite, x, y, z, w, h, pitch));
   } else {
     SR_ASSERT(!"not valid");
   }
-
-  paperList_.push_back(paper);
 }
 void BookScene::parseWallPaperNode(sora::XmlNode *node) {
   const string &typeStr = node->GetAttribute("type");
   BookPaperType type = typeStr2type(typeStr);
 
-  float cubeWidth = Book::GetInstance().width;
-  float cubeHeight = Book::GetInstance().height;
-  float cubeDepth = Book::GetInstance().depth;
-  BookPaperFactory factory(cubeWidth, cubeHeight, cubeDepth);
+  float cube_width = Book::GetInstance().width;
+  float cube_height = Book::GetInstance().height;
+  float cube_depth = Book::GetInstance().depth;
+  BookPaperBuilder factory(cube_width, cube_height, cube_depth);
 
   //sprite 얻기
   const string &spriteName = node->GetAttribute("sprite");
   SR_ASSERT(spriteName.size() > 0);
   TextureSubImage *sprite = &(spriteDict_[spriteName]);
 
-  BookPaperPtr paper;
   switch(type) {
   case kBookPaperLeft:
-    paper = factory.CreateLeft(sprite);
+    paperList_.push_back(factory.CreateLeft(sprite));
     break;
   case kBookPaperRight:
-    paper = factory.CreateRight(sprite);
+    paperList_.push_back(factory.CreateRight(sprite));
     break;
   case kBookPaperFloor:
-    paper = factory.CreateFloor(sprite);
+    paperList_.push_back(factory.CreateFloor(sprite));
     break;
   case kBookPaperCeil:
-    paper = factory.CreateCeil(sprite);
+    paperList_.push_back(factory.CreateCeil(sprite));
     break;
   case kBookPaperForward:
-    paper = factory.CreateForward(sprite);
+    paperList_.push_back(factory.CreateForward(sprite));
     break;
   default:
     SR_ASSERT(!"not valid paper type");
   }
-  paperList_.push_back(paper);
 }
 BookPaperType BookScene::typeStr2type(const std::string &str) {
   if(str == "left") {
@@ -292,8 +285,7 @@ void BookScene::parsePaperListNode(sora::XmlNode *node) {
     parsePaperNode(paper);
   }
 }
-void BookScene::parseSceneNode(sora::XmlNode *node)
-{
+void BookScene::parseSceneNode(sora::XmlNode *node) {
   //grid 정보 얻기
   const string &gridStr = node->GetAttribute("grid");
   if(gridStr.size() == 0 || gridStr == "0") {
@@ -343,22 +335,22 @@ void BookScene::load(const std::string &path) {
   sortPaper();
 }
 
-bool BookPaperPtrCompare(BookPaperPtr a, BookPaperPtr b) {
-  BookPaperType aType = a->type();
-  BookPaperType bType = b->type();
-  if(aType == kBookPaperNormal && bType == kBookPaperNormal) {
+bool BookPaperCompare(const BookPaper &a, const BookPaper &b) {
+  BookPaperType a_type = a.type();
+  BookPaperType b_type = b.type();
+  if(a_type == kBookPaperNormal && b_type == kBookPaperNormal) {
     //둘다 normal
     //z축 비교return (a->getZ() < b->getZ());
-    return (a->pos_z < b->pos_z);
-  } else if(aType == kBookPaperNormal && bType != kBookPaperNormal) {
+    return (a.pos_z < b.pos_z);
+  } else if(a_type == kBookPaperNormal && b_type != kBookPaperNormal) {
     //a만 normal
-    return (a->pos_z < -100000000);
-  } else if(aType != kBookPaperNormal && bType == kBookPaperNormal) {
+    return (a.pos_z < -100000000);
+  } else if(a_type != kBookPaperNormal && b_type == kBookPaperNormal) {
     //b만 normal
-    return (-10000000< b->pos_z);
+    return (-10000000< b.pos_z);
   } else {
     //우선순위는 enum에 있는것을 따라가자
-    return aType < bType;
+    return a_type < b_type;
   }
 }
 }

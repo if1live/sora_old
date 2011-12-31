@@ -8,7 +8,6 @@ struct TextureSubImage;
 }
 
 namespace yukino {;
-class BookPaperFactory;
 class BookPaperBuilder;
 class BookPaper;
 
@@ -35,8 +34,6 @@ typedef enum {
   kBookPaperFoldAxisY,		///y축을 기준으로 반으로 접힌 팝업
 } BookPaperType;
 
-typedef std::tr1::shared_ptr<BookPaper> BookPaperPtr;
-
 struct BookVertex {
   float x, y, z;
   float s, t;
@@ -44,13 +41,18 @@ struct BookVertex {
   void Vertex3(float x, float y, float z) { this->x = x; this->y = y; this->z = z; }
 };
 
+//복사해도 문제없는 속성만 남기자
+//그래야 메모리 관리 생각없이 다루기 편하다
 class BookPaper {
 public:
+  BookPaper();
   BookPaper(sora::TextureSubImage *sprite, BookPaperType type);
   ~BookPaper();
+  void SetBaseAttribute(sora::TextureSubImage *sprite, BookPaperType type);
   BookPaperType type() const { return type_; }
   void draw();
 
+public:
   //model info
   //4 3
   //1 2
@@ -71,25 +73,6 @@ public:
 
 private:
   sora::TextureSubImage *sprite_;
-  const BookPaperType type_;
-};
-
-///@brief book paper builder를 기반으로 쉽게 뭔가를 만들어낼떄 사용하는 클래스
-class BookPaperFactory {
-public:
-  BookPaperFactory(float cubeWidth, float cubeHeight, float cubeDepth);
-  ~BookPaperFactory();
-  BookPaperPtr CreateFloor(sora::TextureSubImage *sprite);
-  BookPaperPtr CreateLeft(sora::TextureSubImage *sprite);
-  BookPaperPtr CreateRight(sora::TextureSubImage *sprite);
-  BookPaperPtr CreateCeil(sora::TextureSubImage *sprite);
-  BookPaperPtr CreateForward(sora::TextureSubImage *sprite);
-  BookPaperPtr CreateNormal(sora::TextureSubImage *sprite, float x, float y, float z, float w, float h);
-
-  BookPaperPtr CreateNormalWithRoll(sora::TextureSubImage *sprite, float x, float y, float z, float w, float h, float roll);
-  BookPaperPtr CreateNormalWithPitch(sora::TextureSubImage *sprite, float x, float y, float z, float w, float h, float pitch);
-  BookPaperPtr CreateNormalWithYaw(sora::TextureSubImage *sprite, float x, float y, float z, float w, float h, float yaw);
-private:
-  std::auto_ptr<BookPaperBuilder> builder_;
+  BookPaperType type_;
 };
 }

@@ -221,10 +221,10 @@ void Glassless3d::onSceneChangeOccur()
 void Glassless3d::initGrid()
 {
 #if 0
-  const float CubeWidth = Book::GetInstance().getWidth();
-  const float CubeHeight = Book::GetInstance().getHeight();
-  const float CubeDepth = Book::GetInstance().getDepth();
-  const float maxDepth = -CubeDepth;
+  const float cube_width = Book::GetInstance().getWidth();
+  const float cube_height = Book::GetInstance().getHeight();
+  const float cube_depth = Book::GetInstance().getDepth();
+  const float maxDepth = -cube_depth;
 
   sora::model::SimpleModelBuilder builder(SORA_LINES, SORA_USE_COLOR);
 
@@ -232,54 +232,54 @@ void Glassless3d::initGrid()
 
   //10픽셀 기준으로 선을 긋자
   const float gridSize = 20;
-  for(float z = 0 ; z >= -CubeDepth ; z-=gridSize)
+  for(float z = 0 ; z >= -cube_depth ; z-=gridSize)
   {
-    builder.vertex3( CubeWidth/2.0f, CubeHeight/2.0f, z);		
-    builder.vertex3(-CubeWidth/2.0f, CubeHeight/2.0f, z);
+    builder.vertex3( cube_width/2.0f, cube_height/2.0f, z);		
+    builder.vertex3(-cube_width/2.0f, cube_height/2.0f, z);
 
-    builder.vertex3(-CubeWidth/2.0f, CubeHeight/2.0f, z);
-    builder.vertex3(-CubeWidth/2.0f,-CubeHeight/2.0f, z);
+    builder.vertex3(-cube_width/2.0f, cube_height/2.0f, z);
+    builder.vertex3(-cube_width/2.0f,-cube_height/2.0f, z);
 
-    builder.vertex3(-CubeWidth/2.0f,-CubeHeight/2.0f, z);
-    builder.vertex3(CubeWidth/2.0f,-CubeHeight/2.0f, z);
+    builder.vertex3(-cube_width/2.0f,-cube_height/2.0f, z);
+    builder.vertex3(cube_width/2.0f,-cube_height/2.0f, z);
 
-    builder.vertex3(CubeWidth/2.0f,-CubeHeight/2.0f, z);
-    builder.vertex3( CubeWidth/2.0f, CubeHeight/2.0f, z);
+    builder.vertex3(cube_width/2.0f,-cube_height/2.0f, z);
+    builder.vertex3( cube_width/2.0f, cube_height/2.0f, z);
   }
 
   //현재지점에서 안으로 들어가는 선을 그려서 깊이를 더 자세하게 표현
   const int gridSplit = 10;	
-  for(float x = -CubeWidth/2 ; x <= CubeWidth/2 ; x += gridSize)
+  for(float x = -cube_width/2 ; x <= cube_width/2 ; x += gridSize)
   {
     /*top*/
-    builder.vertex3(x, CubeHeight/2.0f, 0);
-    builder.vertex3(x, CubeHeight/2.0f, maxDepth);
+    builder.vertex3(x, cube_height/2.0f, 0);
+    builder.vertex3(x, cube_height/2.0f, maxDepth);
     /*bottom*/
-    builder.vertex3(x, -CubeHeight/2.0f, 0);
-    builder.vertex3(x, -CubeHeight/2.0f, maxDepth);
+    builder.vertex3(x, -cube_height/2.0f, 0);
+    builder.vertex3(x, -cube_height/2.0f, maxDepth);
   }
-  for(float y = -CubeHeight/2 ; y <= CubeHeight/2 ; y += gridSize)
+  for(float y = -cube_height/2 ; y <= cube_height/2 ; y += gridSize)
   {
     /*left*/
-    builder.vertex3(-CubeWidth/2.0f, y, 0);
-    builder.vertex3(-CubeWidth/2.0f, y, maxDepth);
+    builder.vertex3(-cube_width/2.0f, y, 0);
+    builder.vertex3(-cube_width/2.0f, y, maxDepth);
     /*right*/
-    builder.vertex3(CubeWidth/2.0f, y, 0);
-    builder.vertex3(CubeWidth/2.0f, y, maxDepth);
+    builder.vertex3(cube_width/2.0f, y, 0);
+    builder.vertex3(cube_width/2.0f, y, maxDepth);
   }
 
   /*맨 뒤에 존재하는 격자 */
-  for(float x = -CubeWidth/2 ; x <= CubeWidth/2 ; x += gridSize)
+  for(float x = -cube_width/2 ; x <= cube_width/2 ; x += gridSize)
   {
     /*세로 */
-    builder.vertex3(x, +CubeHeight/2.0f, maxDepth);
-    builder.vertex3(x, -CubeHeight/2.0f, maxDepth);	
+    builder.vertex3(x, +cube_height/2.0f, maxDepth);
+    builder.vertex3(x, -cube_height/2.0f, maxDepth);	
   }
-  for(float y = -CubeHeight/2 ; y <= CubeHeight/2 ; y += gridSize)
+  for(float y = -cube_height/2 ; y <= cube_height/2 ; y += gridSize)
   {
     /*가로선 */
-    builder.vertex3(-CubeWidth/2.0f, y, maxDepth);
-    builder.vertex3(+CubeWidth/2.0f, y, maxDepth);
+    builder.vertex3(-cube_width/2.0f, y, maxDepth);
+    builder.vertex3(+cube_width/2.0f, y, maxDepth);
   }	
   gridModel_ = builder.build();
 #endif

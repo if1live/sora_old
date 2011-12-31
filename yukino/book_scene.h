@@ -11,7 +11,6 @@ class TextureSubImage;
 namespace yukino {;
 class BookPaper;
 class BookScene;
-class BookPaperFactory;
 class BookPaperBuilder;
 
 typedef std::tr1::shared_ptr<BookScene> BookScenePtr;
@@ -22,7 +21,7 @@ public:
 public:
   BookScene();
   ~BookScene();
-  void add(BookPaperPtr paper);
+  void Add(const BookPaper &paper);
   void sortPaper();
   void draw();
 
@@ -45,12 +44,13 @@ public:
   BookPaperType typeStr2type(const std::string &str);
 private:
   bool useGrid_;
-  std::vector<BookPaperPtr> paperList_;
+  std::vector<BookPaper> paperList_;
 
   SpriteDictType spriteDict_;
   
   //텍스쳐 아틀라스 관리용
   //TextureAtlasManager texAtlasMgr_;
 };
-bool BookPaperPtrCompare(BookPaperPtr a, BookPaperPtr b);
+
+bool BookPaperCompare(const BookPaper &a, const BookPaper &b);
 }

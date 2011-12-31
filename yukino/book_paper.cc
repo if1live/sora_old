@@ -15,10 +15,17 @@ BookPaper::BookPaper(TextureSubImage *sprite, BookPaperType type)
   : sprite_(sprite), type_(type), pos_x(0), pos_y(0), pos_z(0),
   pitch(0), roll(0), yaw(0) {
 }
+BookPaper::BookPaper() 
+  : sprite_(NULL), type_(kBookPaperNormal), pos_x(0), pos_y(0), pos_z(0),
+  pitch(0), roll(0), yaw(0) {
+}
 BookPaper::~BookPaper() {
 }
-void BookPaper::draw()
-{
+void BookPaper::SetBaseAttribute(sora::TextureSubImage *sprite, BookPaperType type) {
+  sprite_ = sprite;
+  type_ = type;
+}
+void BookPaper::draw() {
   //텍스쳐 활성화
   sora::Texture *tex = sprite_->tex;
   srglBindTexture(GL_TEXTURE_2D, tex->handle);
@@ -89,74 +96,5 @@ void BookPaper::draw()
   }
 }
 /////////////////
-////////////
-BookPaperFactory::BookPaperFactory(float cubeWidth, float cubeHeight, float cubeDepth)
-  : builder_(new BookPaperBuilder(cubeWidth, cubeHeight, cubeDepth)) {
-}
-BookPaperFactory::~BookPaperFactory() {
-}
-BookPaperPtr BookPaperFactory::CreateFloor(TextureSubImage *sprite) {
-  builder_->set_sprite(sprite);
-  builder_->set_type(kBookPaperFloor);
-  builder_->CreateFloorModel();
-  return builder_->build();
-}
 
-BookPaperPtr BookPaperFactory::CreateLeft(TextureSubImage *sprite) {
-  builder_->set_sprite(sprite);
-  builder_->set_type(kBookPaperLeft);
-  builder_->CreateLeftModel();
-  return builder_->build();
-}
-BookPaperPtr BookPaperFactory::CreateRight(TextureSubImage *sprite) {
-  builder_->set_sprite(sprite);
-  builder_->set_type(kBookPaperRight);
-  builder_->CreateRightModel();
-  return builder_->build();
-}
-BookPaperPtr BookPaperFactory::CreateCeil(TextureSubImage *sprite) {
-  builder_->set_sprite(sprite);
-  builder_->set_type(kBookPaperCeil);
-  builder_->CreateCeilModel();
-  return builder_->build();
-}
-BookPaperPtr BookPaperFactory::CreateForward(TextureSubImage *sprite) {
-  builder_->set_sprite(sprite);
-  builder_->set_type(kBookPaperForward);
-  builder_->CreateForwardModel();
-  return builder_->build();
-}
-BookPaperPtr BookPaperFactory::CreateNormal(TextureSubImage *sprite, float x, float y, float z, float w, float h) {
-  builder_->set_sprite(sprite);
-  builder_->set_type(kBookPaperNormal);
-  builder_->set_pos(vec3(x, y, z));
-  builder_->CreateNormalModel(w, h);
-  return builder_->build();
-}
-
-BookPaperPtr BookPaperFactory::CreateNormalWithRoll(TextureSubImage *sprite, float x, float y, float z, float w, float h, float roll) {
-  builder_->set_sprite(sprite);
-  builder_->set_type(kBookPaperNormal);
-  builder_->set_pos(vec3(x, y, z));
-  builder_->CreateNormalModel(w, h);
-  builder_->set_rotate(0, roll, 0);
-  return builder_->build();
-}
-
-BookPaperPtr BookPaperFactory::CreateNormalWithPitch(TextureSubImage *sprite, float x, float y, float z, float w, float h, float pitch) {
-  builder_->set_sprite(sprite);
-  builder_->set_type(kBookPaperNormal);
-  builder_->set_pos(vec3(x, y, z));
-  builder_->CreateNormalModel(w, h);
-  builder_->set_rotate(pitch, 0, 0);
-  return builder_->build();
-}
-BookPaperPtr BookPaperFactory::CreateNormalWithYaw(TextureSubImage *sprite, float x, float y, float z, float w, float h, float yaw) {
-  builder_->set_sprite(sprite);
-  builder_->set_type(kBookPaperNormal);
-  builder_->set_pos(vec3(x, y, z));
-  builder_->CreateNormalModel(w, h);
-  builder_->set_rotate(0, 0, yaw);
-  return builder_->build();
-}
 }
