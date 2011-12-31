@@ -26,13 +26,17 @@
 #include "sora/vector.h"
 
 namespace sora {;
+
+typedef int i32;
+typedef unsigned int u32;
+
 template<typename T, i32 R, i32 C>  struct Matrix;
-typedef Matrix<i32, 2, 2> imat2;
-typedef Matrix<i32, 3, 3> imat3;
-typedef Matrix<i32, 4, 4> imat4;
-typedef Matrix<f32, 2, 2> mat2;
-typedef Matrix<f32, 3, 3> mat3;
-typedef Matrix<f32, 4, 4> mat4;
+typedef Matrix<int, 2, 2> imat2;
+typedef Matrix<int, 3, 3> imat3;
+typedef Matrix<int, 4, 4> imat4;
+typedef Matrix<float, 2, 2> mat2;
+typedef Matrix<float, 3, 3> mat3;
+typedef Matrix<float, 4, 4> mat4;
 
 template<typename T, i32 R, i32 C>
 struct Matrix {

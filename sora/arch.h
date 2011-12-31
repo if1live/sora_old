@@ -78,4 +78,19 @@ enum {
 int PositionToWhere(int pos);
 }
 
+// platform define
+#define SR_ARCH_IOS 0x01
+#define SR_ARCH_ANDROID 0x02
+#define SR_ARCH_WIN 0x03
+
+#if SR_IOS
+#define SR_CURR_ARCH SR_ARCH_IOS
+#elif SR_ANDROID
+#define SR_CURR_ARCH SR_ARCH_ANDROID
+#elif SR_WIN
+#define SR_CURR_ARCH SR_ARCH_WIN
+#else
+#error "not valid architecture"
+#endif
+
 #endif  // SORA_ARCH_H_

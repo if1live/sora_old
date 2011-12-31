@@ -24,12 +24,48 @@ namespace sora {;
 template<typename T>  struct Vector2;
 template<typename T>  struct Vector3;
 template<typename T>  struct Vector4;
-typedef Vector2<f32> vec2;
-typedef Vector2<f32> ivec2;
-typedef Vector3<f32> vec3;
-typedef Vector3<i32> ivec3;
-typedef Vector4<f32> vec4;
-typedef Vector4<i32> ivec4;
+typedef Vector2<float> vec2;
+typedef Vector2<int> ivec2;
+typedef Vector3<float> vec3;
+typedef Vector3<int> ivec3;
+typedef Vector4<float> vec4;
+typedef Vector4<int> ivec4;
+
+// define shared vector operator overloading
+#define SR_VECTOR_OPERATOR_OVERLOADING(CLASS) \
+boolean operator==(const CLASS &o) const {  \
+  return VectorEqual(*this, o); \
+} \
+boolean operator!=(const CLASS &o) const {  \
+  return VectorNotEqual(*this, o);  \
+} \
+CLASS& operator+=(const CLASS &o) { \
+  return VectorAddThis(*this, o); \
+} \
+CLASS operator+(const CLASS &o) const { \
+  return VectorAdd(*this, o); \
+} \
+CLASS& operator-=(const CLASS &o) { \
+  return VectorSubstractThis(*this, o); \
+} \
+CLASS operator-(const CLASS &o) const { \
+  return VectorSubstract(*this, o); \
+} \
+CLASS operator-() const { \
+  return VectorMinus(*this);  \
+} \
+CLASS& operator*=(const ElemType t) { \
+  return VectorMultiplyThis(*this, t);  \
+} \
+CLASS operator*(const ElemType t) { \
+  return VectorMultiply(*this, t);  \
+} \
+CLASS& operator/=(const ElemType t) { \
+  return VectorDivideThis(*this, t);  \
+} \
+CLASS operator/(const ElemType t) { \
+  return VectorDivide(*this, t);  \
+}
 
 template<typename T>
 struct Vector2 {
@@ -47,6 +83,8 @@ struct Vector2 {
   Vector2(T x, T y) : x(x), y(y) {}
   Vector2() : x(0), y(0) {}
   Vector2(const T(&data)[2]) : x(data[0]), y(data[1]) {}
+
+  SR_VECTOR_OPERATOR_OVERLOADING(Vector2);
 };
 
 template<typename T>
@@ -66,6 +104,8 @@ struct Vector3 {
   Vector3(T x, T y, T z) : x(x), y(y), z(z) {}
   Vector3() : x(0), y(0), z(0) {}
   Vector3(const T(&data)[3]) : x(data[0]), y(data[1]), z(data[2]) {}
+
+  SR_VECTOR_OPERATOR_OVERLOADING(Vector3);
 };
 
 template<typename T>
@@ -87,10 +127,12 @@ struct Vector4 {
   Vector4() : x(0), y(0), z(0), w(0) {}
   Vector4(const T(&data)[4]) : x(data[0]), y(data[1]), z(data[2]), w(data[3]) {}
   Vector4(const Vector3<T> &v, T w) : x(v.x), y(v.y), z(v.z), w(w) {}
+
+  SR_VECTOR_OPERATOR_OVERLOADING(Vector4);
 };
 
 template<typename VecType>
-boolean operator==(const VecType &a, const VecType &b) {
+boolean VectorEqual(const VecType &a, const VecType &b) {
   for (i32 i = 0 ; i < VecType::Dimension ; i++) {
     if (a.value[i] != b.value[i]) {
       return false;
@@ -98,38 +140,40 @@ boolean operator==(const VecType &a, const VecType &b) {
   }
   return true;
 }
+
 template<typename VecType>
-boolean operator!=(const VecType &a, const VecType &b) {
+boolean VectorNotEqual(const VecType &a, const VecType &b) {
   return !(a == b);
 }
+
 template<typename VecType>
-VecType& operator+=(VecType &a, const VecType &b) {
+VecType& VectorAddThis(VecType &a, const VecType &b) {
   for (i32 i = 0 ; i < VecType::Dimension ; i++) {
     a.value[i] += b.value[i];
   }
   return a;
 }
 template<typename VecType>
-VecType operator+(const VecType &a, const VecType &b) {
+VecType VectorAdd(const VecType &a, const VecType &b) {
   VecType tmp = a;
   tmp += b;
   return tmp;
 }
 template<typename VecType>
-VecType& operator-=(VecType &a, const VecType &b) {
+VecType& VectorSubstractThis(VecType &a, const VecType &b) {
   for (i32 i = 0 ; i < VecType::Dimension; i++) {
     a.value[i] -= b.value[i];
   }
   return a;
 }
 template<typename VecType>
-VecType operator-(const VecType &a, const VecType &b) {
+VecType VectorSubstract(const VecType &a, const VecType &b) {
   VecType tmp = a;
   tmp -= b;
   return tmp;
 }
 template<typename VecType>
-VecType operator-(const VecType &a) {
+VecType VectorMinus(const VecType &a) {
   VecType tmp;
   for (int i = 0 ; i < VecType::Dimension ; i++) {
     tmp.value[i] = -a.value[i];
@@ -137,20 +181,20 @@ VecType operator-(const VecType &a) {
   return tmp;
 }
 template<typename VecType>
-VecType& operator*=(VecType &a, typename VecType::ElemType t) {
+VecType& VectorMultiplyThis(VecType &a, typename VecType::ElemType t) {
   for (i32 i = 0 ; i < VecType::Dimension ; i++) {
     a.value[i] *= t;
   }
   return a;
 }
 template<typename VecType>
-VecType operator*(const VecType &a, typename VecType::ElemType t) {
+VecType VectorMultiply(const VecType &a, typename VecType::ElemType t) {
   VecType tmp = a;
   tmp *= t;
   return tmp;
 }
 template<typename VecType>
-VecType& operator/=(VecType &a, typename VecType::ElemType t) {
+VecType& VectorDivideThis(VecType &a, typename VecType::ElemType t) {
   if (t == 0) {
     t = 1;
   }
@@ -160,7 +204,7 @@ VecType& operator/=(VecType &a, typename VecType::ElemType t) {
   return a;
 }
 template<typename VecType>
-VecType operator/(const VecType &a, typename VecType::ElemType t) {
+VecType VectorDivide(const VecType &a, typename VecType::ElemType t) {
   VecType tmp = a;
   tmp /= t;
   return tmp;
