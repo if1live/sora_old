@@ -24,6 +24,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="testmain.cc" />
+    <ClCompile Include="texture_test.cc" />
     <ClCompile Include="vector_test.cc" />
   </ItemGroup>
   <ItemGroup>

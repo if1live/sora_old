@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="main.cc" />
     <ClCompile Include="yukino_stdafx.cc" />
-    <ClCompile Include="touch.cc" />
     <ClCompile Include="xml_node.cc">
       <Filter>mio</Filter>
     </ClCompile>
@@ -38,7 +37,6 @@
     <ClInclude Include="xml_node.h">
       <Filter>mio</Filter>
     </ClInclude>
-    <ClInclude Include="touch.h" />
     <ClInclude Include="book.h">
       <Filter>book</Filter>
     </ClInclude>

@@ -85,7 +85,6 @@
     <ClCompile Include="glassless3d.cc" />
     <ClCompile Include="main.cc" />
     <ClCompile Include="texture_atlas.cc" />
-    <ClCompile Include="touch.cc" />
     <ClCompile Include="xml_node.cc" />
     <ClCompile Include="xml_reader.cc" />
     <ClCompile Include="yukino_stdafx.cc">
@@ -101,7 +100,6 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="glassless3d.h" />
     <ClInclude Include="texture_atlas.h" />
-    <ClInclude Include="touch.h" />
     <ClInclude Include="xml_node.h" />
     <ClInclude Include="xml_reader.h" />
     <ClInclude Include="yukino_stdafx.h" />

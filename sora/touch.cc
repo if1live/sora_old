@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "yukino_stdafx.h"
-#include "yukino/touch.h"
+#include "sora_stdafx.h"
+#include "sora/touch.h"
 
 #define USE_TOUCH_LOG 1
 #if USE_TOUCH_LOG
@@ -28,7 +28,7 @@
 #define TOUCH_LOG(...)
 #endif
 
-namespace yukino {;
+namespace sora {;
 TouchDevice::TouchDevice()
   : prev_pos_count(0),
   curr_pos_count(0) {

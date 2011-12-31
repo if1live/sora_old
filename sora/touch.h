@@ -18,12 +18,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef YUKINO_TOUCH_H_
-#define YUKINO_TOUCH_H_
+#ifndef SORA_TOUCH_H_
+#define SORA_TOUCH_H_
 
-#include "sora/template_library.h"
+#include "template_library.h"
 
-namespace yukino {;
+namespace sora {;
 typedef enum {
   kTouchBegan,
   kTouchMoved,
@@ -73,4 +73,4 @@ void glfwMouseUpdate(int win_width, int win_height);
 #endif
 }
 
-#endif  // YUKINO_TOUCH_H_
+#endif  // SORA_TOUCH_H_

@@ -24,75 +24,123 @@
 #include "sora/memory_file.h"
 
 namespace sora {;
-GLenum Texture::ConvertToGLenum(TexMinFilter orig) {
-  switch (orig) {
-  case kTexMinLinearMipMapLinear:
-    return GL_LINEAR_MIPMAP_LINEAR;
-  case kTexMinLinearMipMapNearest:
-    return GL_LINEAR_MIPMAP_NEAREST;
-  case kTexMinLinearMipMapOff:
-    return GL_LINEAR;
-  case kTexMinNearestMipMapLinear:
-    return GL_NEAREST_MIPMAP_LINEAR;
-  case kTexMinNearestMipMapNearest:
-    return GL_NEAREST_MIPMAP_NEAREST;
-  case kTexMinNearestMipMapOff:
-    return GL_NEAREST;
-  default:
-    SR_ASSERT(!"do not reach");
-    return GL_NEAREST;
+
+// 0 : sora enum
+// 1 : gl enum
+// 2 : use mipmap?
+int tex_min_filter_table[][3] = {
+  { kTexMinLinearMipMapLinear, GL_LINEAR_MIPMAP_LINEAR, 1 },
+  { kTexMinLinearMipMapNearest, GL_LINEAR_MIPMAP_NEAREST, 1 },
+  { kTexMinLinearMipMapOff, GL_LINEAR, 0 },
+  { kTexMinNearestMipMapLinear, GL_NEAREST_MIPMAP_LINEAR, 1 },
+  { kTexMinNearestMipMapNearest, GL_NEAREST_MIPMAP_NEAREST, 1 },
+  { kTexMinNearestMipMapOff, GL_NEAREST, 0 },
+};
+int tex_mag_filter_table[][2] = {
+  { kTexMagLinear, GL_LINEAR },
+  { kTexMagNearest, GL_NEAREST },
+};
+int tex_wrap_mode_table[][2] = {
+  { kTexWrapClamp, GL_CLAMP_TO_EDGE },
+  { kTexWrapRepeat, GL_REPEAT }, 
+  { kTexWrapMirroredRepeat, GL_MIRRORED_REPEAT },
+};
+int tex_format_table[][2] = {
+  { kTexFormatAuto, GL_RGBA },
+  { kTexFormatRGBA8888, GL_RGBA },
+  { kTexFormatRGBA4444, GL_RGBA },
+  { kTexFormatRGBA5551, GL_RGBA },
+  { kTexFormatRGB888, GL_RGB },
+  { kTexFormatRGB565, GL_RGB },
+  { kTexFormatLuminance, GL_LUMINANCE },
+  { kTexFormatAlpha, GL_ALPHA },
+  { kTexFormatLuminanceAlpha, GL_LUMINANCE_ALPHA },
+};
+
+int TextureParameter::SearchTable(int table[][2], int count, int in_index, int out_index, int target) {
+  for (int i = 0 ; i < count ; i++) {
+    if (table[i][in_index] == target) {
+      return table[i][out_index];
+    }
+  }
+  return -1;  //not valid
+}
+GLenum TextureParameter::ConvertToGLenum(TexMinFilter orig) {
+  for (int i = 0 ; i < kTexMinCount ; i++) {
+    if (tex_min_filter_table[i][0] == orig) {
+      return tex_min_filter_table[i][1];
+    }
+  }
+  SR_ASSERT(!"not valid");
+  return tex_min_filter_table[0][1];
+}
+
+GLenum TextureParameter::ConvertToGLenum(TexMagFilter orig) {
+  int result = SearchTable(tex_mag_filter_table, kTexMagCount, 0, 1, orig);
+  if (result != -1) {
+    return result;
+  } else {
+    SR_ASSERT(!"not valid");
+    return tex_mag_filter_table[0][1];
   }
 }
-GLenum Texture::ConvertToGLenum(TexMagFilter orig) {
-  switch (orig) {
-  case kTexMagLinear:
-    return GL_LINEAR;
-  case kTexMagNearest:
-    return GL_NEAREST;
-  default:
-    SR_ASSERT(!"do not reach");
-    return GL_NEAREST;
+GLenum TextureParameter::ConvertToGLenum(TexWrapMode orig) {
+  int result = SearchTable(tex_wrap_mode_table, kTexWrapCount, 0, 1, orig);
+  if (result != -1) {
+    return result;
+  } else {
+    SR_ASSERT(!"not valid");
+    return tex_wrap_mode_table[0][1];
   }
 }
-GLenum Texture::ConvertToGLenum(TexWrapMode orig) {
-  switch (orig) {
-  case kTexWrapClamp:
-    return GL_CLAMP_TO_EDGE;
-  case kTexWrapRepeat:
-    return GL_REPEAT;
-  case kTexWrapMirroredRepeat:
-    return GL_MIRRORED_REPEAT;
-  default:
-    SR_ASSERT(!"do not reach");
-    return GL_REPEAT;
+GLenum TextureParameter::ConvertToGLenum(TexFormat orig) {
+  int result = SearchTable(tex_format_table, kTexFormatCount, 0, 1, orig);
+  if (result != -1) {
+    return result;
+  } else {
+    SR_ASSERT(!"not valid");
+    return GL_RGBA;
   }
 }
-GLenum Texture::ConvertToGLenum(TexFormat orig) {
-  switch (orig) {
-    case kTexFormatAuto:
-      SR_ASSERT(!"auto???");
-      return GL_RGBA;
-    case kTexFormatRGBA8888:
-      return GL_RGBA;
-    case kTexFormatRGBA4444:
-      return GL_RGBA;
-    case kTexFormatRGBA5551:
-      return GL_RGBA;
-    case kTexFormatRGB888:
-      return GL_RGB;
-    case kTexFormatRGB565:
-      return GL_RGB;
-    case kTexFormatLuminance:
-      return GL_LUMINANCE;
-    case kTexFormatAlpha:
-      return GL_ALPHA;
-    case kTexFormatLuminanceAlpha:
-      return GL_LUMINANCE_ALPHA;
-    default:
-      SR_ASSERT(!"do not reach");
-      return GL_RGBA;
+TexMinFilter TextureParameter::ConvertToTexMinFilter(GLenum orig) {
+  for (int i = 0 ; i < kTexMinCount ; i++) {
+    if (tex_min_filter_table[i][1] == orig) {
+      return (TexMinFilter)tex_min_filter_table[i][0];
+    }
+  }
+  SR_ASSERT(!"not valid");
+  return (TexMinFilter)tex_min_filter_table[0][0];
+}
+TexMagFilter TextureParameter::ConvertToTexMagFilter(GLenum orig) {
+  int result = SearchTable(tex_mag_filter_table, kTexMagCount, 1, 0, orig);
+  if (result != -1) {
+    return (TexMagFilter)result;
+  } else {
+    SR_ASSERT(!"not valid");
+    return (TexMagFilter)tex_mag_filter_table[0][0];
   }
 }
+TexWrapMode TextureParameter::ConvertToTexWrapMode(GLenum orig) {
+  int result = SearchTable(tex_wrap_mode_table, kTexWrapCount, 1, 0, orig);
+  if (result != -1) {
+    return (TexWrapMode)result;
+  } else {
+    SR_ASSERT(!"not valid");
+    return (TexWrapMode)tex_wrap_mode_table[0][0];
+  }
+}
+boolean TextureParameter::IsMipMap(TexMinFilter min_filter) {
+  for (int i = 0 ; i < kTexMinCount ; i++) {
+    if (tex_min_filter_table[i][0] == min_filter) {
+      return tex_min_filter_table[i][2];
+    }
+  }
+  SR_ASSERT(!"not valid");
+  return false;
+}
+
+/////////////////////////
+
 Texture::Texture()
   : handle(0) {
   // 초기화 코드 공유를 위해서
@@ -102,11 +150,11 @@ Texture::~Texture() {
   Cleanup();
 }
 void Texture::Cleanup() {
-  wrap_s = kTexWrapRepeat;
-  wrap_t = kTexWrapRepeat;
-  min_filter = kTexMinNearestMipMapOff;
-  mag_filter = kTexMagNearest;
-  mipmap = false;
+  param_.wrap_s = kTexWrapRepeat;
+  param_.wrap_t = kTexWrapRepeat;
+  param_.min_filter = kTexMinNearestMipMapOff;
+  param_.mag_filter = kTexMagNearest;
+  
   format = kTexFormatAuto;
 
   if (handle == 0) {
@@ -176,25 +224,27 @@ Texture &Texture::Gray() {
 }
 void Texture::InitSimpleTexture(i32 width, i32 height, TexFormat fmt,
   void *data, Texture *tex) {
+
+  static TextureParameter default_param;
+  default_param.min_filter = kTexMinNearestMipMapOff;
+  default_param.mag_filter = kTexMagNearest;
+  default_param.wrap_s = kTexWrapRepeat;
+  default_param.wrap_t = kTexWrapRepeat;
   
   if (fmt == kTexFormatRGBA8888) {
     GLuint tex_id;
     srglGenTextures(1, &tex_id);
     srglBindTexture(GL_TEXTURE_2D, tex_id);
     srglPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
-    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); 
-    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, default_param.gl_min_filter()); 
+    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, default_param.gl_mag_filter()); 
+    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, default_param.gl_wrap_s());
+    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, default_param.gl_wrap_t());
     srglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
     tex->format = fmt;
     tex->handle = tex_id;
-    tex->mag_filter = kTexMagNearest;
-    tex->min_filter = kTexMinNearestMipMapOff;
-    tex->wrap_s = kTexWrapRepeat;
-    tex->wrap_t = kTexWrapRepeat;
-    tex->mipmap = false;
+    tex->param_ = default_param;
 
     tex->tex_header.bpp = 32;
     tex->tex_header.src_width = 2;
@@ -400,22 +450,26 @@ boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
 	glGenTextures(1, &texture);
   glBindTexture(GL_TEXTURE_2D, texture);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+  //set texture default parameter;
+  tex->param_.mag_filter = kTexMagLinear;
+  tex->param_.min_filter = kTexMinLinearMipMapNearest;
+  tex->param_.wrap_s = kTexWrapRepeat;
+  tex->param_.wrap_t = kTexWrapRepeat;
 	
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, tex->param_.gl_mag_filter());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, tex->param_.gl_min_filter());
+  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, tex->param_.gl_wrap_s());
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, tex->param_.gl_wrap_t());
 	//use mipmap
-	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+  if(tex->param_.IsMipMap()) {
+	  glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, GL_TRUE);
+  }
   
   tex->handle = texture;
-  tex->mag_filter = kTexMagLinear;
-  tex->min_filter = kTexMinLinearMipMapNearest;
-  tex->wrap_s = kTexWrapRepeat;
-  tex->wrap_t = kTexWrapRepeat;
-  tex->mipmap = true;
+  
 
-  GLenum gl_format = ConvertToGLenum(format);
+  GLenum gl_format = TextureParameter::ConvertToGLenum(format);
 	glTexImage2D(GL_TEXTURE_2D, 0, gl_format, img_width, img_height, 0, gl_format, GL_UNSIGNED_BYTE, (GLvoid*) data);
 	
 	//clean up

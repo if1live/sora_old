@@ -27,11 +27,13 @@ typedef enum {
   kTexWrapRepeat,
   kTexWrapClamp,
   kTexWrapMirroredRepeat,
+  kTexWrapCount,
 } TexWrapMode;
 
 typedef enum {
   kTexMagNearest,
   kTexMagLinear,
+  kTexMagCount,
 } TexMagFilter;
 
 typedef enum {
@@ -41,6 +43,7 @@ typedef enum {
 	kTexMinLinearMipMapOff,
 	kTexMinLinearMipMapNearest,
 	kTexMinLinearMipMapLinear,
+  kTexMinCount,
 } TexMinFilter;
 
 typedef enum {
@@ -53,6 +56,7 @@ typedef enum {
   kTexFormatLuminance,
   kTexFormatAlpha,
   kTexFormatLuminanceAlpha,
+  kTexFormatCount,
 } TexFormat;
 
 struct TextureHeader {
@@ -69,17 +73,38 @@ struct TextureHeader {
   i8 bpp;
 };
 
+class TextureParameter {
+public:
+  static GLenum ConvertToGLenum(TexMinFilter orig);
+  static GLenum ConvertToGLenum(TexMagFilter orig);
+  static GLenum ConvertToGLenum(TexWrapMode orig);
+  static GLenum ConvertToGLenum(TexFormat orig);
+  static TexMinFilter ConvertToTexMinFilter(GLenum orig);
+  static TexMagFilter ConvertToTexMagFilter(GLenum orig);
+  static TexWrapMode ConvertToTexWrapMode(GLenum orig);
+  static boolean IsMipMap(TexMinFilter min_filter);
+
+  static int SearchTable(int table[][2], int count, int in_index, int out_index, int target);
+
+public:
+  TexMinFilter min_filter;
+  TexMagFilter mag_filter;
+  TexWrapMode wrap_s;
+  TexWrapMode wrap_t;
+
+  GLenum gl_min_filter() const { return ConvertToGLenum(min_filter); }
+  GLenum gl_mag_filter() const { return ConvertToGLenum(mag_filter); }
+  GLenum gl_wrap_s() const { return ConvertToGLenum(wrap_s); }
+  GLenum gl_wrap_t() const { return ConvertToGLenum(wrap_t); }
+  boolean IsMipMap() const { return IsMipMap(min_filter); }
+};
+
 class Texture {
 public:
   static Texture &Sample();
   static Texture &White();
   static Texture &Black();
   static Texture &Gray();
-
-  static GLenum ConvertToGLenum(TexMinFilter orig);
-  static GLenum ConvertToGLenum(TexMagFilter orig);
-  static GLenum ConvertToGLenum(TexWrapMode orig);
-  static GLenum ConvertToGLenum(TexFormat orig);
   
   static boolean LoadFromPNG(const std::string &filepath, Texture *tex) {
     return LoadFromPNG(filepath.c_str(), tex);
@@ -95,17 +120,23 @@ public:
   ~Texture();
 
   void Cleanup();
-
+  void SetTextureParameter(const TextureParameter &param) {
+    param_ = param;
+  }
+ 
 public:
-  TexWrapMode wrap_s;
-  TexWrapMode wrap_t;
-  TexMinFilter min_filter;
-  TexMagFilter mag_filter;
-  boolean mipmap;
+  TexWrapMode wrap_s() const { return param_.wrap_s; }
+  TexWrapMode wrap_t() const { return param_.wrap_t; }
+  TexMinFilter min_filter() const { return param_.min_filter; }
+  TexMagFilter mag_filter() const { return param_.mag_filter; }
+  boolean mipmap() const { return param_.IsMipMap(); }
+  
   TexFormat format;
   TextureHeader tex_header;
 
   GLuint handle;  // 텍스쳐 여러개를 그룹화로 쓰는건 아마도 당분간 필요없겠지
+private:
+  TextureParameter param_;
 };
 }
 

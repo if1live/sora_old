@@ -25,7 +25,7 @@
 #include "sora/filesystem.h"
 
 #include "sora/immediate_mode_emulator.h"
-#include "touch.h"
+#include "sora/touch.h"
 
 #include "glassless3d.h"
 
@@ -72,7 +72,7 @@ int main(int argc, char *argv) {
 
 sora::Texture tex;
 void Update(int ms) {
-  yukino::glfwMouseUpdate(win_width, win_height);
+  //sora::glfwMouseUpdate(win_width, win_height); ???
 
   yukino::Glassless3d::GetInstance().update(ms * 0.001);
 }

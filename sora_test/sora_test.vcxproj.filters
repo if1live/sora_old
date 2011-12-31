@@ -30,6 +30,9 @@
     <ClCompile Include="filesystem_test.cc">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="texture_test.cc">
+      <Filter>renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h" />
