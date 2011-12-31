@@ -2,7 +2,7 @@
 #include "yukino_stdafx.h"
 
 #include "glassless3d.h"
-#include "renderer.h"
+#include "sora/immediate_mode_emulator.h"
 
 #include "camera.h"
 #include "book_scene.h"

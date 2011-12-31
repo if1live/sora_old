@@ -24,7 +24,7 @@
 #include "sora/texture.h"
 #include "sora/filesystem.h"
 
-#include "renderer.h"
+#include "sora/immediate_mode_emulator.h"
 #include "touch.h"
 
 #include "glassless3d.h"
@@ -61,7 +61,8 @@ int main(int argc, char *argv) {
     prev_runtime = sora::Clock::currtime;
   }
   // Close window and terminate GLFW
-  yukino::Renderer::DestroyInstance();
+  sora::ImmediateModeEmulator::DestroyInstance();
+  
   glfwTerminate();  /////
   // Exit program
   exit( EXIT_SUCCESS );
@@ -105,7 +106,8 @@ void Draw(int ms) {
   sora::GLHelper::CheckError("DrawEnd");
 }
 void Init() {
-  yukino::Renderer::GetInstance().Init();
+  sora::ImmediateModeEmulator::GetInstance().Init();
+
 
   srglViewport(0, 0, win_width, win_height);
 

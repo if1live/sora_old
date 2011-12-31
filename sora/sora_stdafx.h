@@ -62,6 +62,7 @@
 #include "sora/shared_ptr_inc.h"
 #include "sora/unordered_map_inc.h"
 #include "sora/gl_inc.h"
+#include "sora/assert_inc.h"
 
 #endif
 

@@ -3,7 +3,7 @@
 #include "book.h"
 #include "book_paper.h"
 #include "texture_atlas.h"
-#include "renderer.h"
+#include "sora/immediate_mode_emulator.h"
 #include "sora/texture.h"
 #include "book_paper_builder.h"
 

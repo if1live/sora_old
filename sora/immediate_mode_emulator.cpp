@@ -18,14 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "yukino_stdafx.h"
-#include "renderer.h"
+#include "sora_stdafx.h"
+#include "immediate_mode_emulator.h"
 
-#include "sora/matrix.h"
-#include "sora/math_helper.h"
-#include "sora/shader.h"
+#include "matrix.h"
+#include "math_helper.h"
+#include "shader.h"
+#include "gl_inc.h"
 
-namespace yukino {;
+namespace sora {;
 const char vert_src[] = " \
   uniform mat4 u_projection;  \
   uniform mat4 u_modelview; \
@@ -50,9 +51,9 @@ struct Vertex {
   float st[2];
 };
 
-class RendererPimpl {
+class ImmediateModeEmulatorImpl {
 public:
-  RendererPimpl()
+  ImmediateModeEmulatorImpl()
     : mode(0), curr_index(0), matrix_mode(kProjection) {
     // initialize program
     prog.Init(vert_src, frag_src);
@@ -72,11 +73,11 @@ public:
       base_index += 6;
     }
     // matrix stack를 적절히 초기화
-    sora::SetIdentity(&projection_mat);
-    sora::SetIdentity(&modelview_mat);
+    SetIdentity(&projection_mat);
+    SetIdentity(&modelview_mat);
   }
 
-  sora::Program prog;
+  Program prog;
   static const int kTriangleCount = 2048;
   static const int kVertexCount = kTriangleCount * 3;
   Vertex vertex_list[kVertexCount];
@@ -87,13 +88,13 @@ public:
   GLenum mode;
 
   //matrix stack
-  typedef std::vector<sora::mat4> MatrixStackType;
+  typedef std::vector<mat4> MatrixStackType;
   enum {
     kProjection,
     kModelview,
   };
   int matrix_mode;
-  sora::mat4 &GetCurrMatrix() {
+  mat4 &GetCurrMatrix() {
     if (matrix_mode == kProjection) {
       return projection_mat;
     } else {
@@ -101,27 +102,26 @@ public:
     }
   }
   MatrixStackType matrix_stack;
-  sora::mat4 projection_mat;
-  sora::mat4 modelview_mat;
+  mat4 projection_mat;
+  mat4 modelview_mat;
 
   // shader location
   int modelview_location;
   int projection_location;
 };
 
-Renderer::Renderer()
+ImmediateModeEmulator::ImmediateModeEmulator()
 : impl_(NULL) {
 }
-Renderer::~Renderer() {
+ImmediateModeEmulator::~ImmediateModeEmulator() {
   if (impl_ != NULL) {
     delete(impl_);
     impl_ = NULL;
   }
 }
-void Renderer::Init() {
-  impl_ = new RendererPimpl();
+void ImmediateModeEmulator::Init() {
+  impl_ = new ImmediateModeEmulatorImpl();
   
-  using sora::Program;
   Program &prog = impl_->prog;
   srglUseProgram(prog.prog);
   GLint modelview_location = prog.GetUniformLocation("u_modelview");
@@ -146,8 +146,8 @@ void Renderer::Init() {
     GL_FALSE, sizeof(Vertex), texcoord_ptr);
 
   // default set
-  sora::mat4 identity;
-  sora::SetIdentity(&identity);
+  mat4 identity;
+  SetIdentity(&identity);
   srglUniformMatrix4fv(projection_location, 1, GL_FALSE, identity.value);
   srglUniformMatrix4fv(modelview_location, 1, GL_FALSE, identity.value);
 
@@ -156,18 +156,21 @@ void Renderer::Init() {
   srglEnable(GL_BLEND);
   srglBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
-void Renderer::Begin(GLenum mode) {
-  SR_ASSERT(Renderer::GetInstance().impl_ != NULL);
 
-  RendererPimpl *renderer = Renderer::GetInstance().impl_;
+ImmediateModeEmulatorImpl *ImmediateModeEmulator::impl() {
+  ImmediateModeEmulatorImpl *impl = ImmediateModeEmulator::GetInstance().impl_;
+  SR_ASSERT(impl != NULL);
+  return impl;
+}
+
+void ImmediateModeEmulator::Begin(GLenum mode) {
+  ImmediateModeEmulatorImpl *renderer = impl();
   renderer->mode = mode;
   renderer->curr_index = 0;
   memset(&renderer->vert, 0, sizeof(Vertex));
 }
-void Renderer::Vertex3f(float x, float y, float z) {
-  SR_ASSERT(Renderer::GetInstance().impl_ != NULL);
-
-  RendererPimpl *renderer = Renderer::GetInstance().impl_;
+void ImmediateModeEmulator::Vertex3f(float x, float y, float z) {
+  ImmediateModeEmulatorImpl *renderer = impl();
   renderer->vert.xyz[0] = x;
   renderer->vert.xyz[1] = y;
   renderer->vert.xyz[2] = z;
@@ -175,19 +178,15 @@ void Renderer::Vertex3f(float x, float y, float z) {
   renderer->vertex_list[renderer->curr_index] = renderer->vert;
   renderer->curr_index++;
 }
-void Renderer::TexCoord2f(float s, float t) {
-  SR_ASSERT(Renderer::GetInstance().impl_ != NULL);
-
-  RendererPimpl *renderer = Renderer::GetInstance().impl_;
+void ImmediateModeEmulator::TexCoord2f(float s, float t) {
+  ImmediateModeEmulatorImpl *renderer = impl();
   renderer->vert.st[0] = s;
   renderer->vert.st[1] = t;
 }
-void Renderer::End() {
-  SR_ASSERT(Renderer::GetInstance().impl_ != NULL);
+void ImmediateModeEmulator::End() {
+  ImmediateModeEmulatorImpl *renderer = impl();
 
   // modelview, projection을 적절히 적용
-  RendererPimpl *renderer = Renderer::GetInstance().impl_;
-  using sora::mat4;
   mat4 &projection = renderer->projection_mat;
   mat4 &modelview = renderer->modelview_mat;
   srglUniformMatrix4fv(renderer->projection_location, 1, GL_FALSE, projection.value);
@@ -204,62 +203,62 @@ void Renderer::End() {
   }
 }
 
-void Renderer::UseProjectionMatrixMode() {
-  RendererPimpl *renderer = Renderer::GetInstance().impl_;
-  renderer->matrix_mode = RendererPimpl::kProjection;
+void ImmediateModeEmulator::UseProjectionMatrixMode() {
+  ImmediateModeEmulatorImpl *renderer = impl();
+  renderer->matrix_mode = ImmediateModeEmulatorImpl::kProjection;
 }
-void Renderer::UseModelviewMatrixMode() {
-  RendererPimpl *renderer = Renderer::GetInstance().impl_;
-  renderer->matrix_mode = RendererPimpl::kModelview;
+void ImmediateModeEmulator::UseModelviewMatrixMode() {
+  ImmediateModeEmulatorImpl *renderer = impl();
+  renderer->matrix_mode = ImmediateModeEmulatorImpl::kModelview;
 }
-void Renderer::SetMatrixToIdentity() {
-  RendererPimpl *renderer = Renderer::GetInstance().impl_;
-  sora::mat4 &m = renderer->GetCurrMatrix();
-  sora::SetIdentity(&m);
+void ImmediateModeEmulator::SetMatrixToIdentity() {
+  ImmediateModeEmulatorImpl *renderer = impl();
+  mat4 &m = renderer->GetCurrMatrix();
+  SetIdentity(&m);
 }
-void Renderer::PushMatrix() {
-  RendererPimpl *renderer = Renderer::GetInstance().impl_;
-  sora::mat4 &m = renderer->GetCurrMatrix();
+void ImmediateModeEmulator::PushMatrix() {
+  ImmediateModeEmulatorImpl *renderer = impl();
+  mat4 &m = renderer->GetCurrMatrix();
   renderer->matrix_stack.push_back(m);
 }
-void Renderer::PopMatrix() {
-  RendererPimpl *renderer = Renderer::GetInstance().impl_;
+void ImmediateModeEmulator::PopMatrix() {
+  ImmediateModeEmulatorImpl *renderer = impl();
   SR_ASSERT(renderer->matrix_stack.empty() == false);
-  sora::mat4 &back = renderer->matrix_stack.back();
+  mat4 &back = renderer->matrix_stack.back();
   renderer->matrix_stack.pop_back();
-  sora::mat4 &m = renderer->GetCurrMatrix();
+  mat4 &m = renderer->GetCurrMatrix();
   m = back;
 }
-void Renderer::Scale(float x, float y, float z) {
-  sora::mat4 scale;
-  sora::SetScale(x, y, z, &scale);
+void ImmediateModeEmulator::Scale(float x, float y, float z) {
+  mat4 scale;
+  SetScale(x, y, z, &scale);
   MultMatrix(scale.value);
 }
-void Renderer::Translate(float x, float y, float z) {
-  sora::mat4 translate;
-  sora::SetTranslate(x, y, z, &translate);
+void ImmediateModeEmulator::Translate(float x, float y, float z) {
+  mat4 translate;
+  SetTranslate(x, y, z, &translate);
   MultMatrix(translate.value);
 }
-void Renderer::Rotate(float degree, float x, float y, float z) {
-  sora::mat4 rotate;
+void ImmediateModeEmulator::Rotate(float degree, float x, float y, float z) {
+  mat4 rotate;
   if (x == 0 && y == 0 && z == 1) {
-    sora::SetRotateZ(degree, &rotate);
+    SetRotateZ(degree, &rotate);
   } else if (x == 0 && y == 1 && z == 0) {
-    sora::SetRotateY(degree, &rotate);
+    SetRotateY(degree, &rotate);
   } else if (x == 1 && y == 0 && z == 0) {
-    sora::SetRotateX(degree, &rotate);
+    SetRotateX(degree, &rotate);
   } else {
     SR_ASSERT(!"not support rotation");
   }
   MultMatrix(rotate.value);
 }
-void Renderer::MultMatrix(float *m) {
-  RendererPimpl *renderer = Renderer::GetInstance().impl_;
-  sora::mat4 &curr_mat = renderer->GetCurrMatrix();
-  sora::mat4 tmp(m);
+void ImmediateModeEmulator::MultMatrix(float *m) {
+  ImmediateModeEmulatorImpl *renderer = impl();
+  mat4 &curr_mat = renderer->GetCurrMatrix();
+  mat4 tmp(m);
   curr_mat *= tmp;
 }
-void Renderer::MatrixMode(int matrix_mode) {
+void ImmediateModeEmulator::MatrixMode(int matrix_mode) {
   switch (matrix_mode) {
   case SR_PROJECTION:
 #ifdef GL_PROJECTION
@@ -276,22 +275,22 @@ void Renderer::MatrixMode(int matrix_mode) {
   }
 }
 
-void Renderer::LookAt(float eye_x, float eye_y, float eye_z,
+void ImmediateModeEmulator::LookAt(float eye_x, float eye_y, float eye_z,
   float target_x, float target_y, float target_z,
   float up_x, float up_y, float up_z) {
-  sora::mat4 lookat;
-  sora::SetLookAt(eye_x, eye_y, eye_z,
+  mat4 lookat;
+  SetLookAt(eye_x, eye_y, eye_z,
     target_x, target_y, target_z,
     up_x, up_y, up_z, &lookat);
-  RendererPimpl *renderer = Renderer::GetInstance().impl_;
-  sora::mat4 &curr_mat = renderer->GetCurrMatrix();
+  ImmediateModeEmulatorImpl *renderer = impl();
+  mat4 &curr_mat = renderer->GetCurrMatrix();
   curr_mat *= lookat;
 }
-void Renderer::Perspective(float fovy, float aspect, float zNear, float zFar) {
-  sora::mat4 tmp;
-  sora::SetPerspective(fovy, aspect, zNear, zFar, &tmp);
-  RendererPimpl *renderer = Renderer::GetInstance().impl_;
-  sora::mat4 &curr_mat = renderer->GetCurrMatrix();
+void ImmediateModeEmulator::Perspective(float fovy, float aspect, float zNear, float zFar) {
+  mat4 tmp;
+  SetPerspective(fovy, aspect, zNear, zFar, &tmp);
+  ImmediateModeEmulatorImpl *renderer = impl();
+  mat4 &curr_mat = renderer->GetCurrMatrix();
   curr_mat *= tmp;
 }
 

@@ -4,19 +4,19 @@
 
 namespace yukino {;
 float TextureAtlasSegment::GetAtlasX() const {
-  float tex_width = parent->tex->tex_header.tex_width;
+  float tex_width = (float)parent->tex->tex_header.tex_width;
   return x / tex_width;
 }
 float TextureAtlasSegment::GetAtlasY() const {
-  float tex_height = parent->tex->tex_header.tex_height;
+  float tex_height = (float)parent->tex->tex_header.tex_height;
   return y / tex_height;
 }
 float TextureAtlasSegment::GetAtlasW() const {
-  float tex_width = parent->tex->tex_header.tex_width;
+  float tex_width = (float)parent->tex->tex_header.tex_width;
   return w / tex_width;
 }
 float TextureAtlasSegment::GetAtlasH() const {
-  float tex_height = parent->tex->tex_header.tex_height;
+  float tex_height = (float)parent->tex->tex_header.tex_height;
   return h / tex_height;
 }
 

@@ -68,6 +68,9 @@
     <ClInclude Include="texture.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="immediate_mode_emulator.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cc">
@@ -106,6 +109,9 @@
     </ClCompile>
     <ClCompile Include="math_helper.cc">
       <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="immediate_mode_emulator.cpp">
+      <Filter>renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

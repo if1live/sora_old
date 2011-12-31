@@ -3,7 +3,6 @@
   <ItemGroup>
     <ClCompile Include="main.cc" />
     <ClCompile Include="yukino_stdafx.cc" />
-    <ClCompile Include="renderer.cc" />
     <ClCompile Include="touch.cc" />
     <ClCompile Include="xml_node.cc">
       <Filter>mio</Filter>
@@ -33,7 +32,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="yukino_stdafx.h" />
-    <ClInclude Include="renderer.h" />
     <ClInclude Include="xml_reader.h">
       <Filter>mio</Filter>
     </ClInclude>

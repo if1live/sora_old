@@ -4,7 +4,7 @@
 #include "book.h"
 #include "camera.h"
 
-#include "renderer.h"
+#include "sora/immediate_mode_emulator.h"
 
 using namespace sora;
 
