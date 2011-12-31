@@ -2,7 +2,10 @@
 #pragma once
 
 #include "sora/template_library.h"
-#include "sora/xml_node.h"
+
+namespace sora {;
+class XmlNode;
+}
 
 namespace yukino {;
 class Book : public sora::Singleton<Book> {
@@ -39,8 +42,8 @@ public:
   bool isPrevScenExist() const;
 private:
   //xml node별 파싱코드
-  void loadConfigList(sora::XmlNodePtr node);
-  void loadSceneList(sora::XmlNodePtr node);
+  void loadConfigList(sora::XmlNode *node);
+  void loadSceneList(sora::XmlNode *node);
 
   float width_;
   float height_;

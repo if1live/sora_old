@@ -37,8 +37,8 @@ void DestroyDict(AssocType *dict) {
 /// @brief 포인터를 저장하는 컨테이너의 내용 delete 및 비우기
 template<typename SeqType>
 void DestroyList(SeqType *list) {
-  typename SequenceType::iterator it = list->begin();
-  typename SequenceType::iterator endit = list->end();
+  typename SeqType::iterator it = list->begin();
+  typename SeqType::iterator endit = list->end();
   for ( ; it != endit ; it++) {
     delete(*it);
   }

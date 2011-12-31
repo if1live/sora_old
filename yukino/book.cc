@@ -54,13 +54,13 @@ const std::string &Book::getSceneFile(int index) const {
 const std::string &Book::getCurrSceneFile() const {
   return sceneFileList_[currScenePage_];
 }
-void Book::loadConfigList(sora::XmlNodePtr node) {
-  XmlNodePtrIter it = node->childBegin();
-  XmlNodePtrIter endit = node->childEnd();
+void Book::loadConfigList(sora::XmlNode *node) {
+  XmlNodeListIterator it = node->ChildBegin();
+  XmlNodeListIterator endit = node->ChildEnd();
   for( ; it != endit ; it++) {
-    XmlNodePtr node = *it;
-    const std::string &key = node->getAttribute("key");
-    const std::string &value = node->getAttribute("value");
+    XmlNode *node = *it;
+    const std::string &key = node->GetAttribute("key");
+    const std::string &value = node->GetAttribute("value");
     if(key == "width") {
       int width = sora::StringToInt(value);
       SR_ASSERT(width > 0);
@@ -90,14 +90,14 @@ void Book::loadConfigList(sora::XmlNodePtr node) {
     }
   }
 }
-void Book::loadSceneList(sora::XmlNodePtr node) {
+void Book::loadSceneList(sora::XmlNode *node) {
   sceneFileList_.clear();
 
-  XmlNodePtrIter it = node->childBegin();
-  XmlNodePtrIter endit = node->childEnd();
+  XmlNodeListIterator it = node->ChildBegin();
+  XmlNodeListIterator endit = node->ChildEnd();
   for( ; it != endit ; it++) {
-    XmlNodePtr sceneNode = *it;
-    const string &file = sceneNode->getAttribute("file");
+    XmlNode *sceneNode = *it;
+    const string &file = sceneNode->GetAttribute("file");
     SR_ASSERT(file.size() > 0 && "no file error");
     sceneFileList_.push_back(file);
   }
@@ -120,20 +120,21 @@ void Book::load(const std::string &cfgfile) {
   char *buffer = (char*)file.start;
   string content(buffer);
   XmlReader reader;
-  XmlNodePtr root = reader.Read(content);
-  if(root->isNull()) {
+  XmlNode root;
+  bool read_result = reader.Read(&root, content);
+  if(!read_result) {
     LOGE("Book xml syntax error, ctrl+c is quit");
     LOGE(reader.GetError()->str().c_str());
     getchar();
     exit(-1);
   }
-  XmlNodePtrIter it = root->childBegin();
-  XmlNodePtrIter endit = root->childEnd();
+  XmlNodeListIterator it = root.ChildBegin();
+  XmlNodeListIterator endit = root.ChildEnd();
   for( ; it != endit ; it++) {
-    XmlNodePtr node = *it;
-    if(node->getName() == "config_list") {
+    XmlNode *node = *it;
+    if(node->name() == "config_list") {
       loadConfigList(node);
-    } else if(node->getName() == "scene_list") {
+    } else if(node->name() == "scene_list") {
       loadSceneList(node);
     } else {
       SR_ASSERT(!"not valid xml");

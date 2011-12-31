@@ -13,11 +13,11 @@ class XmlReaderImpl {
 public:
   XmlReaderImpl() {}
   ~XmlReaderImpl() {}
-  XmlNodePtr Read(const char *content);
+  bool Read(XmlNode *root, const char *content);
   bool IsErrorOccur() const;
   XmlReaderError *GetError();
 private:
-  XmlNode *Parse(TiXmlNode *node);
+  void Parse(XmlNode *self, TiXmlNode *node);
   std::auto_ptr<XmlReaderError> error_;
 };
 
@@ -27,7 +27,7 @@ bool XmlReaderImpl::IsErrorOccur() const {
 XmlReaderError *XmlReaderImpl::GetError() {
   return error_.get();
 }
-XmlNodePtr XmlReaderImpl::Read(const char *content) {
+bool XmlReaderImpl::Read(XmlNode *root, const char *content) {
   //error초기화
   error_.reset();
 
@@ -44,33 +44,31 @@ XmlNodePtr XmlReaderImpl::Read(const char *content) {
     int row = doc.ErrorRow();
     int col = doc.ErrorCol();
     error_ = auto_ptr<XmlReaderError>(new XmlReaderError(errorMsg, row, col));
-    XmlNodePtr &null = NullXmlNode::null();
-    return null;
+    return false;
   }
 
   //root + construct custom xml tree
-  TiXmlNode *root = doc.RootElement();
+  TiXmlNode *ti_root = doc.RootElement();
   SR_ASSERT(root);
 
-  XmlNode *result = this->Parse(root);
-  return XmlNodePtr(result);
+  this->Parse(root, ti_root);
+  return true;
 }
-XmlNode *XmlReaderImpl::Parse(TiXmlNode *node) {
+void XmlReaderImpl::Parse(XmlNode *self, TiXmlNode *node) {
   if(node->Type() != TiXmlNode::TINYXML_ELEMENT) {
     SR_ASSERT(!"Not valid recursive call");
   }
 
   //casting
   TiXmlElement *elem = static_cast<TiXmlElement*>(node);
-  string name(elem->Value());
-  XmlNode *result = new XmlNode(name);
+  self->set_name(elem->Value());
 
   //attribute
   TiXmlAttribute *attr = elem->FirstAttribute();
   for( ; attr != NULL ; attr = attr->Next()) {
     string key(attr->Name());
     string value(attr->Value());
-    result->setAttribute(key, value);
+    self->SetAttribute(key, value);
   }
 
   //get child
@@ -78,8 +76,9 @@ XmlNode *XmlReaderImpl::Parse(TiXmlNode *node) {
   for( ; child != NULL ; child = child->NextSibling()) {
     if(child->Type() == TiXmlNode::TINYXML_ELEMENT) {
       //일반 노드인 경우
-      XmlNode *childnode = Parse(child);
-      result->addChild(childnode);
+      XmlNode *child_node = new XmlNode();
+      Parse(child_node, child);
+      self->AddChild(child_node);
     }
 
   }
@@ -90,11 +89,10 @@ XmlNode *XmlReaderImpl::Parse(TiXmlNode *node) {
     if(child->Type() == TiXmlNode::TINYXML_TEXT) {
       //text content인 경우 뺴내기
       string content(child->Value());
-      result->setContent(content.c_str());
+      self->set_content(content.c_str());
       break;	//text content는 1개 존재햐야한다
     }
   }
-  return result;
 }
 
 /////////////////////////////////////////////
@@ -108,8 +106,8 @@ XmlReader::~XmlReader() {
     impl_ = NULL;
   }
 }
-XmlNodePtr XmlReader::Read(const char *content) {
-  return impl_->Read(content);
+bool XmlReader::Read(XmlNode *root, const char *content) {
+  return impl_->Read(root, content);
 }
 bool XmlReader::IsErrorOccur() const {
   return impl_->IsErrorOccur();

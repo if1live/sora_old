@@ -8,6 +8,7 @@
 #include "glassless3d.h"
 #include "book_scene.h"
 #include "sora/xml_reader.h"
+#include "sora/xml_node.h"
 
 #include "sora/memory_file.h"
 #include "sora/common_string.h"
@@ -44,14 +45,14 @@ TextureAtlasSegment *BookScene::getSprite(const std::string &name) const
     return it->second;
   }
 }
-void BookScene::parseSpriteNode(sora::XmlNodePtr node)
+void BookScene::parseSpriteNode(sora::XmlNode *node)
 {
-  const string &name = node->getAttribute("name");
-  const string &res = node->getAttribute("res");
-  const string &xStr = node->getAttribute("x");
-  const string &yStr = node->getAttribute("y");
-  const string &wStr = node->getAttribute("w");
-  const string &hStr = node->getAttribute("h");
+  const string &name = node->GetAttribute("name");
+  const string &res = node->GetAttribute("res");
+  const string &xStr = node->GetAttribute("x");
+  const string &yStr = node->GetAttribute("y");
+  const string &wStr = node->GetAttribute("w");
+  const string &hStr = node->GetAttribute("h");
 
   SR_ASSERT(name.size() > 0);
   SR_ASSERT(res.size() > 0);
@@ -115,13 +116,12 @@ void BookScene::parseSpriteNode(sora::XmlNodePtr node)
   TextureAtlasSegment *segment = tex_atlas.AddSegment(name, x, y, w, h);
   spriteDict_[name] = segment;
 }
-void BookScene::parseSpriteListNode(sora::XmlNodePtr node)
+void BookScene::parseSpriteListNode(sora::XmlNode *node)
 {
-  XmlNodePtrIter it = node->childBegin();
-  XmlNodePtrIter endit = node->childEnd();
-  for( ; it != endit ; it++)
-  {
-    XmlNodePtr spriteNode = *it;
+  XmlNodeListConstIterator it = node->ChildBegin();
+  XmlNodeListConstIterator endit = node->ChildEnd();
+  for( ; it != endit ; it++) {
+    XmlNode *spriteNode = *it;
     parseSpriteNode(spriteNode);
   }
 }
@@ -145,10 +145,10 @@ void BookScene::sortPaper()
   std::sort(paperList_.begin(), paperList_.end(), BookPaperPtrCompare);
 }
 
-void BookScene::parsePaperNode(sora::XmlNodePtr node)
+void BookScene::parsePaperNode(sora::XmlNode *node)
 {
-  SR_ASSERT(node->getName() == "paper");
-  const string &typeStr = node->getAttribute("type");
+  SR_ASSERT(node->name() == "paper");
+  const string &typeStr = node->GetAttribute("type");
   SR_ASSERT(typeStr.length() > 0);
   BookPaperType paperType = typeStr2type(typeStr);
 
@@ -161,7 +161,7 @@ void BookScene::parsePaperNode(sora::XmlNodePtr node)
     parseWallPaperNode(node);
   }
 }
-void BookScene::parseNormalPaperNode(sora::XmlNodePtr node)
+void BookScene::parseNormalPaperNode(sora::XmlNode *node)
 {
   float cubeWidth = Book::GetInstance().getWidth();
   float cubeHeight = Book::GetInstance().getHeight();
@@ -182,17 +182,17 @@ void BookScene::parseNormalPaperNode(sora::XmlNodePtr node)
   const int useRoll = 0x04;
   int rotateFlag = 0;
 
-  XmlNodePtrIter it = node->childBegin();
-  XmlNodePtrIter endit = node->childEnd();
+  XmlNodeListConstIterator it = node->ChildBegin();
+  XmlNodeListConstIterator endit = node->ChildEnd();
   for( ; it != endit ; it++)
   {
-    XmlNodePtr attr = *it;
-    if(attr->getName() == "pos")
+    XmlNode *attr = *it;
+    if(attr->name() == "pos")
     {
       //pos node
-      const string &xStr = attr->getAttribute("x");
-      const string &yStr = attr->getAttribute("y");
-      const string &zStr = attr->getAttribute("z");
+      const string &xStr = attr->GetAttribute("x");
+      const string &yStr = attr->GetAttribute("y");
+      const string &zStr = attr->GetAttribute("z");
       SR_ASSERT(xStr.length() > 0);
       SR_ASSERT(yStr.length() > 0);
       SR_ASSERT(zStr.length() > 0);
@@ -201,23 +201,23 @@ void BookScene::parseNormalPaperNode(sora::XmlNodePtr node)
       y = atof(yStr.c_str());
       z = atof(zStr.c_str());
     }
-    else if(attr->getName() == "size")
+    else if(attr->name() == "size")
     {
       //size node
-      const string &wStr = attr->getAttribute("w");
-      const string &hStr = attr->getAttribute("h");
+      const string &wStr = attr->GetAttribute("w");
+      const string &hStr = attr->GetAttribute("h");
       SR_ASSERT(wStr.length() > 0);
       SR_ASSERT(hStr.length() > 0);
 
       w = atof(wStr.c_str());
       h = atof(hStr.c_str());
     }
-    else if(attr->getName() == "rotate")
+    else if(attr->name() == "rotate")
     {
       //rotate node
-      const string &yawStr = attr->getAttribute("yaw");
-      const string &rollStr = attr->getAttribute("roll");
-      const string &pitchStr = attr->getAttribute("pitch");
+      const string &yawStr = attr->GetAttribute("yaw");
+      const string &rollStr = attr->GetAttribute("roll");
+      const string &pitchStr = attr->GetAttribute("pitch");
 
       if(yawStr.length() > 0)
       {
@@ -242,7 +242,7 @@ void BookScene::parseNormalPaperNode(sora::XmlNodePtr node)
   }
 
   //sprite 얻기
-  const string &spriteName = node->getAttribute("sprite");
+  const string &spriteName = node->GetAttribute("sprite");
   SR_ASSERT(spriteName.size() > 0);
   TextureAtlasSegment *sprite = spriteDict_[spriteName];
 
@@ -271,9 +271,9 @@ void BookScene::parseNormalPaperNode(sora::XmlNodePtr node)
 
   paperList_.push_back(paper);
 }
-void BookScene::parseWallPaperNode(sora::XmlNodePtr node)
+void BookScene::parseWallPaperNode(sora::XmlNode *node)
 {
-  const string &typeStr = node->getAttribute("type");
+  const string &typeStr = node->GetAttribute("type");
   BookPaperType type = typeStr2type(typeStr);
 
   float cubeWidth = Book::GetInstance().getWidth();
@@ -282,7 +282,7 @@ void BookScene::parseWallPaperNode(sora::XmlNodePtr node)
   BookPaperFactory factory(cubeWidth, cubeHeight, cubeDepth);
 
   //sprite 얻기
-  const string &spriteName = node->getAttribute("sprite");
+  const string &spriteName = node->GetAttribute("sprite");
   SR_ASSERT(spriteName.size() > 0);
   TextureAtlasSegment *sprite = spriteDict_[spriteName];
 
@@ -347,20 +347,20 @@ void BookScene::setUseGrid(bool b)
 {
   useGrid_ = b;
 }
-void BookScene::parsePaperListNode(sora::XmlNodePtr node)
+void BookScene::parsePaperListNode(sora::XmlNode *node)
 {
-  XmlNodePtrIter it = node->childBegin();
-  XmlNodePtrIter endit = node->childEnd();
+  XmlNodeListIterator it = node->ChildBegin();
+  XmlNodeListIterator endit = node->ChildEnd();
   for( ; it != endit ; it++)
   {
-    XmlNodePtr paper = *it;
+    XmlNode *paper = *it;
     parsePaperNode(paper);
   }
 }
-void BookScene::parseSceneNode(sora::XmlNodePtr node)
+void BookScene::parseSceneNode(sora::XmlNode *node)
 {
   //grid 정보 얻기
-  const string &gridStr = node->getAttribute("grid");
+  const string &gridStr = node->GetAttribute("grid");
   if(gridStr.size() == 0 || gridStr == "0")
   {
     useGrid_ = false;
@@ -370,16 +370,16 @@ void BookScene::parseSceneNode(sora::XmlNodePtr node)
     useGrid_ = true;
   }
 
-  XmlNodePtrIter it = node->childBegin();
-  XmlNodePtrIter endit = node->childEnd();
+  XmlNodeListIterator it = node->ChildBegin();
+  XmlNodeListIterator endit = node->ChildEnd();
   for( ; it != endit ; it++)
   {
-    XmlNodePtr child = *it;
-    if(child->getName() == "sprite_list")
+    XmlNode *child = *it;
+    if(child->name() == "sprite_list")
     {
       parseSpriteListNode(child);
     }
-    else if(child->getName() == "paper_list")
+    else if(child->name() == "paper_list")
     {
       parsePaperListNode(child);
     }
@@ -396,8 +396,9 @@ void BookScene::load(const std::string &path)
   file.Open();
   string content((char*)file.start);
   XmlReader xmlreader;
-  XmlNodePtr root = xmlreader.Read(content);
-  if(root->isNull()) {
+  XmlNode root;
+  bool read_result = xmlreader.Read(&root, content);
+  if(!read_result) {
     LOGI("Book scene xml syntax error");
     LOGI(xmlreader.GetError()->str().c_str());
     getchar();
@@ -411,7 +412,7 @@ void BookScene::load(const std::string &path)
   //texAtlasMgr_.clear();
   paperList_.clear();
   useGrid_ = true;
-  parseSceneNode(root);
+  parseSceneNode(&root);
 
   //불러온 종이를 정렬하기
   sortPaper();

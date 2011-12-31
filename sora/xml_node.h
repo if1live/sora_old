@@ -2,94 +2,58 @@
 
 namespace sora {;
 class XmlNode;
-class NullXmlNode;
 class XmlNodeList;
 
-//typedef
-typedef std::tr1::shared_ptr<XmlNode> XmlNodePtr;
-typedef std::vector<XmlNodePtr>::const_iterator XmlNodePtrIter;
+typedef std::vector<XmlNode*> XmlNodeListType;
+typedef XmlNodeListType::iterator XmlNodeListIterator;
+typedef XmlNodeListType::const_iterator XmlNodeListConstIterator;
+typedef std::map<std::string, std::string> XmlAttributeDictType;
 
 class XmlNode {
 public:
+  XmlNode();
   XmlNode(const char *name);
   XmlNode(const std::string &name);
-  virtual ~XmlNode();
+  ~XmlNode();
 
   //attribute
-  virtual void setAttribute(const char *key, const char *value);
-  virtual void setAttribute(const std::string &key, const std::string &value);
-  virtual const std::string &getAttribute(const char *key) const;
-  virtual bool hasAttribute(const char *key) const;
+  void SetAttribute(const char *key, const char *value);
+  void SetAttribute(const std::string &key, const std::string &value);
+  const std::string &GetAttribute(const char *key) const;
+  bool HasAttribute(const char *key) const;
 
   //children
-  virtual void addChild(XmlNode *child);
-  virtual XmlNodePtr child(int index) const;
-  virtual int childSize() const;
-  virtual XmlNodePtr firstChild() const;
-  virtual XmlNodePtr lastChild() const;
+  void AddChild(XmlNode *child);
+  XmlNode *Child(int index) const;
+  int ChildCount() const { return children_.size(); }
+  XmlNode *FirstChild() const;
+  XmlNode *LastChild() const;
 
-  virtual XmlNodePtrIter childBegin() const;
-  virtual XmlNodePtrIter childEnd() const;
+  XmlNodeListIterator ChildBegin() { return children_.begin(); }
+  XmlNodeListIterator ChildEnd() { return children_.end(); }
+  XmlNodeListConstIterator ChildBegin() const { return children_.begin(); }
+  XmlNodeListConstIterator ChildEnd() const { return children_.end(); }
 
   //getter + setter
-  void setContent(const char *content);
-  void setContent(const std::string &content);
-  const std::string &getContent() const;
+  void set_content(const char *content) { content_ = content; }
+  void set_content(const std::string &content) { content_ = content; }
+  const std::string &content() const { return content_; }
 
-  const std::string &getName() const;
-  XmlNode *parent() const;
-  virtual bool isNull() const;
+  const std::string &name() const { return name_; }
+  void set_name(const std::string &name) { name_ = name; }
+  void set_name(const char *name) { name_ = name; }
 
-  //search
-  XmlNodeList getElementsByName(const char *name) const;
-  XmlNodePtr getElementById(const char *id) const;
+  XmlNode *parent() const { return parent_; }
 
 protected:
   //setter
-  void setParent(XmlNode *parent);
+  void set_parent(XmlNode *parent) { parent_ = parent; }
 
   std::string name_;
-  std::map<std::string, std::string> attribute_;
+  XmlAttributeDictType attribute_;
   XmlNode *parent_;
-  std::auto_ptr<XmlNodeList> children_;
+
+  XmlNodeListType children_;
   std::string content_;
-};
-
-class NullXmlNode : public XmlNode {
-public:
-  static XmlNode *nullPtr();
-  static XmlNodePtr &null();
-  virtual ~NullXmlNode();
-
-  //attribute
-  virtual void setAttribute(const char *key, const char *value);
-  virtual const std::string &getAttribute(const char *key) const;
-  virtual bool hasAttribute(const char *key) const;
-
-  //children
-  virtual void addChild(XmlNode *child);
-  virtual XmlNodePtr child(int index) const;
-  virtual int childSize() const;
-  virtual XmlNodePtr firstChild() const;
-  virtual XmlNodePtr lastChild() const;
-
-  virtual bool isNull() const;
-
-private:
-  NullXmlNode();
-};
-
-class XmlNodeList {
-public:
-  XmlNodeList();
-  void add(XmlNode *node);
-  void add(XmlNodePtr nodeptr);
-  XmlNodePtr get(int index) const;
-  int size() const;
-  std::vector<XmlNodePtr>::const_iterator begin() const;
-  std::vector<XmlNodePtr>::const_iterator end() const;
-
-private:
-  std::vector<XmlNodePtr> nodelist_;
 };
 }
