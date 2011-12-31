@@ -92,6 +92,8 @@
     <ClInclude Include="touch.h" />
     <ClInclude Include="unordered_map_inc.h" />
     <ClInclude Include="vector.h" />
+    <ClInclude Include="xml_node.h" />
+    <ClInclude Include="xml_reader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cc" />
@@ -112,6 +114,8 @@
     <ClCompile Include="common_string.cc" />
     <ClCompile Include="texture.cc" />
     <ClCompile Include="touch.cc" />
+    <ClCompile Include="xml_node.cc" />
+    <ClCompile Include="xml_reader.cc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

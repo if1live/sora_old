@@ -19,7 +19,6 @@
 
 using namespace sora;
 using namespace std;
-using namespace mio;
 
 namespace yukino {;
 void Glassless3d::SetVisible(bool b)

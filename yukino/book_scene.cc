@@ -7,7 +7,7 @@
 #include "book_paper_builder.h"
 #include "glassless3d.h"
 #include "book_scene.h"
-#include "xml_reader.h"
+#include "sora/xml_reader.h"
 
 #include "sora/memory_file.h"
 #include "sora/common_string.h"
@@ -16,7 +16,6 @@
 #include "texture_atlas.h"
 
 using namespace std;
-using namespace mio;
 using namespace sora;
 
 namespace yukino {;
@@ -45,7 +44,7 @@ TextureAtlasSegment *BookScene::getSprite(const std::string &name) const
     return it->second;
   }
 }
-void BookScene::parseSpriteNode(mio::XmlNodePtr node)
+void BookScene::parseSpriteNode(sora::XmlNodePtr node)
 {
   const string &name = node->getAttribute("name");
   const string &res = node->getAttribute("res");
@@ -116,7 +115,7 @@ void BookScene::parseSpriteNode(mio::XmlNodePtr node)
   TextureAtlasSegment *segment = tex_atlas.AddSegment(name, x, y, w, h);
   spriteDict_[name] = segment;
 }
-void BookScene::parseSpriteListNode(mio::XmlNodePtr node)
+void BookScene::parseSpriteListNode(sora::XmlNodePtr node)
 {
   XmlNodePtrIter it = node->childBegin();
   XmlNodePtrIter endit = node->childEnd();
@@ -146,7 +145,7 @@ void BookScene::sortPaper()
   std::sort(paperList_.begin(), paperList_.end(), BookPaperPtrCompare);
 }
 
-void BookScene::parsePaperNode(mio::XmlNodePtr node)
+void BookScene::parsePaperNode(sora::XmlNodePtr node)
 {
   SR_ASSERT(node->getName() == "paper");
   const string &typeStr = node->getAttribute("type");
@@ -162,7 +161,7 @@ void BookScene::parsePaperNode(mio::XmlNodePtr node)
     parseWallPaperNode(node);
   }
 }
-void BookScene::parseNormalPaperNode(mio::XmlNodePtr node)
+void BookScene::parseNormalPaperNode(sora::XmlNodePtr node)
 {
   float cubeWidth = Book::GetInstance().getWidth();
   float cubeHeight = Book::GetInstance().getHeight();
@@ -272,7 +271,7 @@ void BookScene::parseNormalPaperNode(mio::XmlNodePtr node)
 
   paperList_.push_back(paper);
 }
-void BookScene::parseWallPaperNode(mio::XmlNodePtr node)
+void BookScene::parseWallPaperNode(sora::XmlNodePtr node)
 {
   const string &typeStr = node->getAttribute("type");
   BookPaperType type = typeStr2type(typeStr);
@@ -348,7 +347,7 @@ void BookScene::setUseGrid(bool b)
 {
   useGrid_ = b;
 }
-void BookScene::parsePaperListNode(mio::XmlNodePtr node)
+void BookScene::parsePaperListNode(sora::XmlNodePtr node)
 {
   XmlNodePtrIter it = node->childBegin();
   XmlNodePtrIter endit = node->childEnd();
@@ -358,7 +357,7 @@ void BookScene::parsePaperListNode(mio::XmlNodePtr node)
     parsePaperNode(paper);
   }
 }
-void BookScene::parseSceneNode(mio::XmlNodePtr node)
+void BookScene::parseSceneNode(sora::XmlNodePtr node)
 {
   //grid 정보 얻기
   const string &gridStr = node->getAttribute("grid");
@@ -397,10 +396,10 @@ void BookScene::load(const std::string &path)
   file.Open();
   string content((char*)file.start);
   XmlReader xmlreader;
-  XmlNodePtr root = xmlreader.read(content);
+  XmlNodePtr root = xmlreader.Read(content);
   if(root->isNull()) {
     LOGI("Book scene xml syntax error");
-    LOGI(xmlreader.getError()->str().c_str());
+    LOGI(xmlreader.GetError()->str().c_str());
     getchar();
     exit(-1);
   } else {

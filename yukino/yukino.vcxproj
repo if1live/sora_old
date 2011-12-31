@@ -85,8 +85,6 @@
     <ClCompile Include="glassless3d.cc" />
     <ClCompile Include="main.cc" />
     <ClCompile Include="texture_atlas.cc" />
-    <ClCompile Include="xml_node.cc" />
-    <ClCompile Include="xml_reader.cc" />
     <ClCompile Include="yukino_stdafx.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -100,8 +98,6 @@
     <ClInclude Include="camera.h" />
     <ClInclude Include="glassless3d.h" />
     <ClInclude Include="texture_atlas.h" />
-    <ClInclude Include="xml_node.h" />
-    <ClInclude Include="xml_reader.h" />
     <ClInclude Include="yukino_stdafx.h" />
   </ItemGroup>
   <ItemGroup>

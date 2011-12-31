@@ -3,12 +3,6 @@
   <ItemGroup>
     <ClCompile Include="main.cc" />
     <ClCompile Include="yukino_stdafx.cc" />
-    <ClCompile Include="xml_node.cc">
-      <Filter>mio</Filter>
-    </ClCompile>
-    <ClCompile Include="xml_reader.cc">
-      <Filter>mio</Filter>
-    </ClCompile>
     <ClCompile Include="book.cc">
       <Filter>book</Filter>
     </ClCompile>
@@ -31,12 +25,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="yukino_stdafx.h" />
-    <ClInclude Include="xml_reader.h">
-      <Filter>mio</Filter>
-    </ClInclude>
-    <ClInclude Include="xml_node.h">
-      <Filter>mio</Filter>
-    </ClInclude>
     <ClInclude Include="book.h">
       <Filter>book</Filter>
     </ClInclude>
@@ -58,9 +46,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="mio">
-      <UniqueIdentifier>{d2a83f47-8b9b-4da3-a9d4-78875f9a3746}</UniqueIdentifier>
-    </Filter>
     <Filter Include="book">
       <UniqueIdentifier>{f8127a02-d301-4c7a-a89d-0fc9b45a2a9a}</UniqueIdentifier>
     </Filter>

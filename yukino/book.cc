@@ -1,13 +1,13 @@
 // Ŭnicode please
 #include "yukino_stdafx.h"
 #include "book.h"
-#include "xml_reader.h"
-#include "xml_node.h"
+#include "sora/xml_reader.h"
+#include "sora/xml_node.h"
 #include "sora/common_string.h"
 
 #include "sora/memory_file.h"
 
-using namespace mio;
+using namespace sora;
 using namespace std;
 
 namespace yukino {;
@@ -54,7 +54,7 @@ const std::string &Book::getSceneFile(int index) const {
 const std::string &Book::getCurrSceneFile() const {
   return sceneFileList_[currScenePage_];
 }
-void Book::loadConfigList(mio::XmlNodePtr node) {
+void Book::loadConfigList(sora::XmlNodePtr node) {
   XmlNodePtrIter it = node->childBegin();
   XmlNodePtrIter endit = node->childEnd();
   for( ; it != endit ; it++) {
@@ -90,7 +90,7 @@ void Book::loadConfigList(mio::XmlNodePtr node) {
     }
   }
 }
-void Book::loadSceneList(mio::XmlNodePtr node) {
+void Book::loadSceneList(sora::XmlNodePtr node) {
   sceneFileList_.clear();
 
   XmlNodePtrIter it = node->childBegin();
@@ -120,10 +120,10 @@ void Book::load(const std::string &cfgfile) {
   char *buffer = (char*)file.start;
   string content(buffer);
   XmlReader reader;
-  XmlNodePtr root = reader.read(content);
+  XmlNodePtr root = reader.Read(content);
   if(root->isNull()) {
     LOGE("Book xml syntax error, ctrl+c is quit");
-    LOGE(reader.getError()->str().c_str());
+    LOGE(reader.GetError()->str().c_str());
     getchar();
     exit(-1);
   }

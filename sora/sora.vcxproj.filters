@@ -77,6 +77,12 @@
     <ClInclude Include="gl_window.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="xml_reader.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="xml_node.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cc">
@@ -124,6 +130,12 @@
     </ClCompile>
     <ClCompile Include="immediate_mode_emulator.cc">
       <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="xml_node.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="xml_reader.cc">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

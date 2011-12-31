@@ -49,6 +49,9 @@
 #include <memory>
 #include <map>
 
+// third party library
+#include <tinyxml/tinyxml.h>
+
 // boost
 #include <boost/noncopyable.hpp>
 #include <boost/foreach.hpp>

@@ -21,6 +21,8 @@
 #ifndef SORA_GL_WINDOW_H_
 #define SORA_GL_WINDOW_H_
 
+#include "template_library.h"
+
 namespace sora {;
 
 typedef enum {
@@ -28,7 +30,7 @@ typedef enum {
   kWinModeFullscreen
 } WinMode;
 
-class GLWindow {
+class GLWindow : public SharedObject<GLWindow> {
 public:
   GLWindow(int w, int h, WinMode mode, float content_scale);
   ~GLWindow();

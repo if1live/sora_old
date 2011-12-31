@@ -79,20 +79,30 @@ template<typename T>
 class SharedObject {
  public:
   static T& GetInstance() {
-    if (ctx_ == NULL) { ctx_ = new T; }
-      return *ctx_;
+    if (ctx_ == NULL) {
+      ctx_ = new T; 
+      inner_allcated_ = true;
     }
+    return *ctx_;
+  }
   static void DestoryInstance() {
-    if (ctx_ != NULL) { delete(ctx_); ctx_ = NULL; }
+    if (ctx_ != NULL && inner_allcated_) {
+      delete(ctx_);
+      inner_allcated_ = false;
+    }
+    ctx_ = NULL;
   }
   static bool IsCreated() { return (ctx_ != NULL); }
   SharedObject() {}
   ~SharedObject() {}
  private:
   static T *ctx_;
+  static bool inner_allcated_;
 };
 template<typename T>
 T *SharedObject<T>::ctx_ = NULL;
+template<typename T>
+bool SharedObject<T>::inner_allcated_ = false;
 }
 
 #endif  // SORA_TEMPLATE_LIBRARY_H_
