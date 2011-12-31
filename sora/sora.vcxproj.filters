@@ -74,6 +74,9 @@
     <ClInclude Include="touch.h">
       <Filter>ui</Filter>
     </ClInclude>
+    <ClInclude Include="gl_window.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cc">
@@ -113,11 +116,14 @@
     <ClCompile Include="math_helper.cc">
       <Filter>math</Filter>
     </ClCompile>
-    <ClCompile Include="immediate_mode_emulator.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
     <ClCompile Include="touch.cc">
       <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="gl_window.cc">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="immediate_mode_emulator.cc">
+      <Filter>renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

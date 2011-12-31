@@ -23,6 +23,7 @@
 #include "sora/gl_helper.h"
 #include "sora/texture.h"
 #include "sora/filesystem.h"
+#include "sora/gl_window.h"
 
 #include "sora/immediate_mode_emulator.h"
 #include "sora/touch.h"
@@ -40,7 +41,9 @@ void InitWindow(int w, int h);
 
 int main(int argc, char *argv) {
   // init glfw
-  InitWindow(win_width, win_height);
+  sora::GLWindow win(win_width, win_height, sora::kWinModeWindow, 1);
+  win.Init();
+
   Init();
 
   // Main loop
@@ -118,39 +121,4 @@ void Init() {
   sora::Texture::LoadFromPNG(filename, &tex);
 
   yukino::Glassless3d::GetInstance().init();
-}
-
-void InitWindow(int w, int h) {
-  // Initialize GLFW
-  if( !glfwInit() ) {
-    exit( EXIT_FAILURE );
-  }
-  // Open an OpenGL window
-  if( !glfwOpenWindow(w, h, 0,0,0,0,0,0, GLFW_WINDOW ) ) {
-    glfwTerminate();
-    exit( EXIT_FAILURE );
-  }
-  // init glew(for GLES 2.0 support)
-  GLenum err = glewInit();
-  if (GLEW_OK != err) {
-    /* Problem: glewInit failed, something is seriously wrong. */
-    fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-    glfwTerminate();
-    exit( EXIT_FAILURE );
-  }
-  fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
-
-  // gl 관련 정보 출력
-  printf("GLVersion:%s\n", sora::GLHelper::GetVersion().c_str());
-  printf("GLVender:%s\n", sora::GLHelper::GetVender().c_str());
-  printf("GLRenderer:%s\n", sora::GLHelper::GetRenderer().c_str());
-  using std::vector;
-  using std::string;
-  printf("GLExtension:");
-  const vector<string> &ext_list = sora::GLHelper::GetExtensionList();
-  for (int i = 0 ; i < ext_list.size() ; i++) {
-    printf("%s ", ext_list[i].c_str());
-  }
-  printf("\n");
-
 }
