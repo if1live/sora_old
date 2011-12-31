@@ -61,7 +61,7 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
   } else {
     string resPath = Path::appPath(res);
     TextureDescPtr texDesc = ImageLoader::loader().loadPng2Tex(resPath);
-    texPtr = TextureManager::GetInstance().create(texDesc, res);
+    texPtr = TextureManager::GetInstance().Create(texDesc, res);
   }
   */
   if(tex.handle == 0) {
@@ -132,7 +132,7 @@ void BookScene::parsePaperNode(sora::XmlNode *node) {
   SR_ASSERT(typeStr.length() > 0);
   BookPaperType paperType = typeStr2type(typeStr);
 
-  if(paperType == BookPaperTypeNormal) {
+  if(paperType == kBookPaperNormal) {
     parseNormalPaperNode(node);
   } else {
     parseWallPaperNode(node);
@@ -209,16 +209,16 @@ void BookScene::parseNormalPaperNode(sora::XmlNode *node) {
   SR_ASSERT(spriteName.size() > 0);
   TextureSubImage &sprite = spriteDict_[spriteName];
 
-  //create
+  //Create
   BookPaperPtr paper;
   if(rotateFlag == 0) {
-    paper = factory.createNormal(&sprite, x, y, z, w, h);
+    paper = factory.CreateNormal(&sprite, x, y, z, w, h);
   } else if(rotateFlag == useYaw) {
-    paper = factory.createNormalWithYaw(&sprite, x, y, z, w, h, yaw);
+    paper = factory.CreateNormalWithYaw(&sprite, x, y, z, w, h, yaw);
   } else if(rotateFlag == useRoll) {
-    paper = factory.createNormalWithRoll(&sprite, x, y, z, w, h, roll);
+    paper = factory.CreateNormalWithRoll(&sprite, x, y, z, w, h, roll);
   } else if(rotateFlag == usePitch) {
-    paper = factory.createNormalWithPitch(&sprite, x, y, z, w, h, pitch);
+    paper = factory.CreateNormalWithPitch(&sprite, x, y, z, w, h, pitch);
   } else {
     SR_ASSERT(!"not valid");
   }
@@ -241,20 +241,20 @@ void BookScene::parseWallPaperNode(sora::XmlNode *node) {
 
   BookPaperPtr paper;
   switch(type) {
-  case BookPaperTypeLeft:
-    paper = factory.createLeft(sprite);
+  case kBookPaperLeft:
+    paper = factory.CreateLeft(sprite);
     break;
-  case BookPaperTypeRight:
-    paper = factory.createRight(sprite);
+  case kBookPaperRight:
+    paper = factory.CreateRight(sprite);
     break;
-  case BookPaperTypeFloor:
-    paper = factory.createFloor(sprite);
+  case kBookPaperFloor:
+    paper = factory.CreateFloor(sprite);
     break;
-  case BookPaperTypeCeil:
-    paper = factory.createCeil(sprite);
+  case kBookPaperCeil:
+    paper = factory.CreateCeil(sprite);
     break;
-  case BookPaperTypeForward:
-    paper = factory.createForward(sprite);
+  case kBookPaperForward:
+    paper = factory.CreateForward(sprite);
     break;
   default:
     SR_ASSERT(!"not valid paper type");
@@ -263,17 +263,17 @@ void BookScene::parseWallPaperNode(sora::XmlNode *node) {
 }
 BookPaperType BookScene::typeStr2type(const std::string &str) {
   if(str == "left") {
-    return BookPaperTypeLeft;
+    return kBookPaperLeft;
   } else if(str == "right") {
-    return BookPaperTypeRight;
+    return kBookPaperRight;
   } else if(str == "floor") {
-    return BookPaperTypeFloor;
+    return kBookPaperFloor;
   } else if(str == "ceil") {
-    return BookPaperTypeCeil;
+    return kBookPaperCeil;
   } else if(str == "forward") {
-    return BookPaperTypeForward;
+    return kBookPaperForward;
   } else if(str == "normal") {
-    return BookPaperTypeNormal;
+    return kBookPaperNormal;
   } else {
     SR_ASSERT(!"not support yet");
   }
@@ -344,18 +344,18 @@ void BookScene::load(const std::string &path) {
 }
 
 bool BookPaperPtrCompare(BookPaperPtr a, BookPaperPtr b) {
-  BookPaperType aType = a->getType();
-  BookPaperType bType = b->getType();
-  if(aType == BookPaperTypeNormal && bType == BookPaperTypeNormal) {
+  BookPaperType aType = a->type();
+  BookPaperType bType = b->type();
+  if(aType == kBookPaperNormal && bType == kBookPaperNormal) {
     //둘다 normal
     //z축 비교return (a->getZ() < b->getZ());
-    return (a->getZ() < b->getZ());
-  } else if(aType == BookPaperTypeNormal && bType != BookPaperTypeNormal) {
+    return (a->pos_z < b->pos_z);
+  } else if(aType == kBookPaperNormal && bType != kBookPaperNormal) {
     //a만 normal
-    return (a->getZ() < -100000000);
-  } else if(aType != BookPaperTypeNormal && bType == BookPaperTypeNormal) {
+    return (a->pos_z < -100000000);
+  } else if(aType != kBookPaperNormal && bType == kBookPaperNormal) {
     //b만 normal
-    return (-10000000< b->getZ());
+    return (-10000000< b->pos_z);
   } else {
     //우선순위는 enum에 있는것을 따라가자
     return aType < bType;

@@ -15,46 +15,40 @@ Book::Book()
   :	width(480), 
   height(320), 
   depth(320), 
-  maxPanDegree_(60),
-  maxTiltDegree_(60),
-  currScenePage_(0),
-  camRadius_(1) {
+  max_pan_deg_(60),
+  max_tilt_deg_(60),
+  curr_scene_page_(0),
+  cam_radius_(1) {
 }
 Book::~Book() {
 }
 
 
-float Book::calcPanDegree(float rawDegree) {
-  if(rawDegree > maxPanDegree_) {
-    return maxPanDegree_;
-  } else if(rawDegree < -maxPanDegree_)   {
-    return -maxPanDegree_;
+float Book::CalcPanDeg(float raw_degree) {
+  if(raw_degree > max_pan_deg_) {
+    return max_pan_deg_;
+  } else if(raw_degree < -max_pan_deg_)   {
+    return -max_pan_deg_;
   }
   //else..
-  return rawDegree;
+  return raw_degree;
 }
-float Book::calcTiltDegree(float rawDegree) {
-  if(rawDegree > maxTiltDegree_) {
-    return maxTiltDegree_;
-  } else if(rawDegree < -maxTiltDegree_) {
-    return -maxTiltDegree_;
+float Book::CalcTiltDeg(float raw_degree) {
+  if(raw_degree > max_tilt_deg_) {
+    return max_tilt_deg_;
+  } else if(raw_degree < -max_tilt_deg_) {
+    return -max_tilt_deg_;
   }
   //else..
-  return rawDegree;
+  return raw_degree;
 }
-const std::vector<std::string> &Book::getSceneFileList() const {
-  return sceneFileList_;
+const std::string &Book::GetSceneFile(int index) const {
+  return scene_file_list_[index];
 }
-int Book::getSceneCount() const {
-  return sceneFileList_.size();
+const std::string &Book::GetCurrSceneFile() const {
+  return scene_file_list_[curr_scene_page_];
 }
-const std::string &Book::getSceneFile(int index) const {
-  return sceneFileList_[index];
-}
-const std::string &Book::getCurrSceneFile() const {
-  return sceneFileList_[currScenePage_];
-}
-void Book::loadConfigList(sora::XmlNode *node) {
+void Book::LoadConfigList(sora::XmlNode *node) {
   XmlNodeListIterator it = node->ChildBegin();
   XmlNodeListIterator endit = node->ChildEnd();
   for( ; it != endit ; it++) {
@@ -76,22 +70,22 @@ void Book::loadConfigList(sora::XmlNode *node) {
     } else if(key == "max_pan_degree") {
       float deg = sora::StringToFloat(value);
       SR_ASSERT(deg > 0);
-      maxPanDegree_ = deg;
+      max_pan_deg_ = deg;
     } else if(key == "max_tilt_degree") {
       float deg = sora::StringToFloat(value);
       SR_ASSERT(deg > 0);
-      maxTiltDegree_ = deg;
+      max_tilt_deg_ = deg;
     } else if(key == "cam_radius") {
       float radius = sora::StringToFloat(value);
       SR_ASSERT(radius > 0);
-      camRadius_ = radius;
+      cam_radius_ = radius;
     } else {
       SR_ASSERT(!"not valid cube config xml node");
     }
   }
 }
-void Book::loadSceneList(sora::XmlNode *node) {
-  sceneFileList_.clear();
+void Book::LoadSceneList(sora::XmlNode *node) {
+  scene_file_list_.clear();
 
   XmlNodeListIterator it = node->ChildBegin();
   XmlNodeListIterator endit = node->ChildEnd();
@@ -99,10 +93,10 @@ void Book::loadSceneList(sora::XmlNode *node) {
     XmlNode *sceneNode = *it;
     const string &file = sceneNode->GetAttribute("file");
     SR_ASSERT(file.size() > 0 && "no file error");
-    sceneFileList_.push_back(file);
+    scene_file_list_.push_back(file);
   }
 }
-void Book::load(const std::string &cfgfile) {
+void Book::Load(const std::string &cfgfile) {
   /*
   <?xml version="1.0"?>
   <cube>
@@ -133,9 +127,9 @@ void Book::load(const std::string &cfgfile) {
   for( ; it != endit ; it++) {
     XmlNode *node = *it;
     if(node->name() == "config_list") {
-      loadConfigList(node);
+      LoadConfigList(node);
     } else if(node->name() == "scene_list") {
-      loadSceneList(node);
+      LoadSceneList(node);
     } else {
       SR_ASSERT(!"not valid xml");
     }
@@ -144,37 +138,34 @@ void Book::load(const std::string &cfgfile) {
   file.Close();
 }
 
-int Book::getCurrScenePage() const {
-  return currScenePage_;
-}
-void Book::moveNextScene() {
-  if(isNextSceneExist() == true) {
-    currScenePage_++;
+void Book::MoveNextScene() {
+  if(IsNextSceneExist() == true) {
+    curr_scene_page_++;
   }
 }
-void Book::movePrevScene() {
-  if(isPrevScenExist() == true) {
-    currScenePage_--;
+void Book::MovePrevScene() {
+  if(IsPrevScenExist() == true) {
+    curr_scene_page_--;
   }
 }
-bool Book::isNextSceneExist() const {
-  if(getCurrScenePage() >= sceneFileList_.size()-1) {
+bool Book::IsNextSceneExist() const {
+  if(curr_scene_page() >= scene_file_list_.size()-1) {
     return false;
   } else {
     return true;
   }
 }
-bool Book::isPrevScenExist() const {
-  if(getCurrScenePage() == 0) {
+bool Book::IsPrevScenExist() const {
+  if(curr_scene_page() == 0) {
     return false;
   } else {
     return true;
   }
 }
 
-void Book::moveScene(int index) {
-  SR_ASSERT(index >= 0 && index < sceneFileList_.size());
-  currScenePage_ = index;
+void Book::MoveScene(int index) {
+  SR_ASSERT(index >= 0 && index < scene_file_list_.size());
+  curr_scene_page_ = index;
 }
 
 }

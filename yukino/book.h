@@ -13,25 +13,25 @@ public:
   Book();
   ~Book();
 
-  float getMaxPanDegree() const { return maxPanDegree_; }
-  float getMaxTiltDegree() const { return maxTiltDegree_; }
-  float getCamRadius() const { return camRadius_; }
+  float max_pan_deg() const { return max_pan_deg_; }
+  float max_tilt_deg() const { return max_tilt_deg_; }
+  float cam_radius() const { return cam_radius_; }
 
-  void load(const std::string &cfgfile);
-  float calcPanDegree(float rawDegree);
-  float calcTiltDegree(float rawDegree);
+  void Load(const std::string &cfgfile);
+  float CalcPanDeg(float raw_degree);
+  float CalcTiltDeg(float raw_degree);
 
-  const std::vector<std::string> &getSceneFileList() const;
-  int getSceneCount() const;
-  const std::string &getSceneFile(int index) const;
-  const std::string &getCurrSceneFile() const;
+  const std::vector<std::string> &GetSceneFileList() const { return scene_file_list_; }
+  int GetSceneCount() const { return scene_file_list_.size(); }
+  const std::string &GetSceneFile(int index) const;
+  const std::string &GetCurrSceneFile() const;
 
-  int getCurrScenePage() const;
-  void moveScene(int index);
-  void moveNextScene();
-  void movePrevScene();
-  bool isNextSceneExist() const;
-  bool isPrevScenExist() const;
+  int curr_scene_page() const { return curr_scene_page_; }
+  void MoveScene(int index);
+  void MoveNextScene();
+  void MovePrevScene();
+  bool IsNextSceneExist() const;
+  bool IsPrevScenExist() const;
 
 public:
   float width;
@@ -40,16 +40,16 @@ public:
 
 private:
   //xml node별 파싱코드
-  void loadConfigList(sora::XmlNode *node);
-  void loadSceneList(sora::XmlNode *node);
+  void LoadConfigList(sora::XmlNode *node);
+  void LoadSceneList(sora::XmlNode *node);
   
 
-  float maxPanDegree_;
-  float maxTiltDegree_;
-  float camRadius_;
+  float max_pan_deg_;
+  float max_tilt_deg_;
+  float cam_radius_;
 
-  std::vector<std::string> sceneFileList_;
+  std::vector<std::string> scene_file_list_;
 
-  int currScenePage_;	//현재 몇번쨰 페이를 보는중인가
+  int curr_scene_page_;	//현재 몇번쨰 페이를 보는중인가
 };
 }

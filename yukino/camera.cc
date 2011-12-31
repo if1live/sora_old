@@ -9,25 +9,22 @@
 using namespace sora;
 
 namespace yukino {;
-Tech48Camera::Tech48Camera()
-{
+Tech48Camera::Tech48Camera() {
 }
-Tech48Camera::~Tech48Camera()
-{
+Tech48Camera::~Tech48Camera() {
 
 }
-void Tech48Camera::apply(float xRad, float yRad)
-{
+void Tech48Camera::Apply(float x_rad, float y_rad) {
   //구면위를 따라서 움직이는 느낌의 카메라 도입하기
-  float camRadius = Book::GetInstance().getCamRadius();
-  float posX = camRadius * sin(xRad) * cos(yRad);
-  float posY = camRadius * sin(yRad);
-  float posZ = camRadius * cos(xRad) * cos(yRad);
+  float cam_radius = Book::GetInstance().cam_radius();
+  float posX = cam_radius * sin(x_rad) * cos(y_rad);
+  float posY = cam_radius * sin(y_rad);
+  float posZ = cam_radius * cos(x_rad) * cos(y_rad);
 
   //원점을 중심으로 오른쪽 방향벡터. 이것을 이용해ㅓ up를 계산한다
-  float rightX = cos(xRad);
+  float rightX = cos(x_rad);
   float rightY = 0;
-  float rightZ = -sin(xRad);
+  float rightZ = -sin(x_rad);
 
   vec3 posVec(posX, posY, posZ);
   vec3 rightVec(rightX, rightY, rightZ);
@@ -52,12 +49,12 @@ void Tech48Camera::apply(float xRad, float yRad)
   //srMultMatrix(shear);
 
   //카메라를 박스 안쪽으로 밀어넣기...의 수치를 좀 조정할수 있어야될듯?
-  srglTranslatef(0, 0, camRadius);
+  srglTranslatef(0, 0, cam_radius);
 
   srglMatrixMode   ( SR_MODELVIEW );  /* Select The Model View Matrix*/
   srglLoadIdentity ( );    /* Reset The Model View Matrix*/
 }
-void Tech48Camera::setView(float w, float h)
+void Tech48Camera::SetView(float w, float h)
 {
 #if _WIN_
   //윈도우 에뮬의 경우는 강제로 뒤집고 시작
@@ -69,12 +66,10 @@ void Tech48Camera::setView(float w, float h)
 
   srglMatrixMode   ( SR_PROJECTION );  /* Select The Projection Matrix*/
   srglLoadIdentity ( );                /* Reset The Projection Matrix*/
-  if ( h==0 )  /* Calculate The Aspect Ratio Of The Window*/
-  {
+  if ( h==0 ) {
+    /* Calculate The Aspect Ratio Of The Window*/
     srglPerspective ( 80, ( float ) w, 0.1, 100.0 );
-  }
-  else
-  {
+  } else {
     //srPerspective ( 80, ( float ) w / ( float ) h, 0.1, 100.0 );
     srglPerspective ( 60, ( float ) w / ( float ) h, 0.1, 1000 );
   }

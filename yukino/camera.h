@@ -12,9 +12,9 @@ public:
 
   ///@brief 최초에 화면을 그리지 전에 어떻게 그릴지에 대한 기본 명세
   ///예를 들면, viewport, projection을 설정하는 함수 
-  void setView(float w, float h);
+  void SetView(float w, float h);
   ///@brief gluLookAt를 호출하는 메소드 
-  void apply(float xRad, float yRad);
+  void Apply(float x_rad, float y_rad);
 private:
 };
 }

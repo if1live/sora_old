@@ -28,32 +28,32 @@ void Glassless3d::SetVisible(bool b)
 void Glassless3d::reloadBook()
 {
   //book 불러오기. 언어에 따라서 다른 파일을 가져온다
-  string bookPath = sora::Filesystem::GetAppPath("res/book_en.xml");
+  string book_path = sora::Filesystem::GetAppPath("res/book_en.xml");
   //@XXX
   /*
   if(Locale::sharedLocale().getLanguage() == LanguageTypeKorean)
   {
-  bookPath = Path::appPath("res/book_kr.xml");
+  book_path = Path::appPath("res/book_kr.xml");
   }
   */
   Book &book = Book::GetInstance();
 
-  int currPage = book.getCurrScenePage();
-  book.load(bookPath);
-  book.moveScene(currPage);
+  int currPage = book.curr_scene_page();
+  book.Load(book_path);
+  book.MoveScene(currPage);
 }
 void Glassless3d::init()
 {
   //book 불러오기. 언어에 따라서 다른 파일을 가져온다
-  string bookPath = sora::Filesystem::GetAppPath("res/book_en.xml");
+  string book_path = sora::Filesystem::GetAppPath("res/book_en.xml");
   /*
   if(Locale::sharedLocale().getLanguage() == LanguageTypeKorean)
   {
-  bookPath = Path::appPath("res/book_kr.xml");
+  book_path = Path::appPath("res/book_kr.xml");
   }
   */
   Book &book = Book::GetInstance();
-  book.load(bookPath);
+  book.Load(book_path);
 
   /*여기에서 사용할 모델을 미리 만들어놓자 */
   initGrid();
@@ -86,7 +86,7 @@ void Glassless3d::init()
 #endif
 
   //테스트용 scene 생성
-  string path = sora::Filesystem::GetAppPath(book.getCurrSceneFile());
+  string path = sora::Filesystem::GetAppPath(book.GetCurrSceneFile());
   scene_ = BookScenePtr(new BookScene());
   scene_->load(path);
 }
@@ -112,7 +112,7 @@ void Glassless3d::draw()
   {
     //카메라 설정..
     Tech48Camera cam;
-    cam.setView(w, h);
+    cam.SetView(w, h);
 
     ///vertex없이 z값에 따라서 x,y를 움직이게 하는 행렬을 쓰면 적절히 그릴수있다
     //일정각도 이상으로는 안넘어가도록 하자
@@ -120,15 +120,15 @@ void Glassless3d::draw()
     //float tiltDegree = handler_->getTiltDegree();
     float panDegree = 15;
     float tiltDegree = 15;
-    panDegree = Book::GetInstance().calcPanDegree(panDegree);
-    tiltDegree = Book::GetInstance().calcTiltDegree(tiltDegree);
+    panDegree = Book::GetInstance().CalcPanDeg(panDegree);
+    tiltDegree = Book::GetInstance().CalcTiltDeg(tiltDegree);
 
     float panRad = DegreeToRadian(panDegree);
     float tiltRad = DegreeToRadian(tiltDegree);
 
     //구면위를 따라서 움직이는 느낌의 카메라 도입하기
     //화면을 landscape로 ui쪽에서 설정하면서 방향이 뒤틀렸다. 가장 간단한 편법으로 x,y를 뒤바꿨다
-    cam.apply(panRad, tiltRad);
+    cam.Apply(panRad, tiltRad);
   }
 
   srglMatrixMode(SR_MODELVIEW);
@@ -194,11 +194,11 @@ void Glassless3d::update(float dt)
     return;
   }
   //윈도우의 경우는 키보드 입력 이벤트로 화면이 전환된다. 그래서 updateEvent함수전후의 페이지 번호로 이전/다음 페이지 이동을 할수있다
-  int currPage = Book::GetInstance().getCurrScenePage();
+  int currPage = Book::GetInstance().curr_scene_page();
 
   ///@XXX
   //handler_->updateEvent();
-  int nextPage = Book::GetInstance().getCurrScenePage();
+  int nextPage = Book::GetInstance().curr_scene_page();
   if(currPage != nextPage)
   {
     onSceneChangeOccur();
@@ -208,7 +208,7 @@ void Glassless3d::onSceneChangeOccur()
 {
 #if 0
   //create new scene
-  string path = Path::appPath(Book::GetInstance().getCurrSceneFile());
+  string path = Path::appPath(Book::GetInstance().GetCurrSceneFile());
   scene_ = BookScenePtr(new BookScene());
   scene_->load(path);
 

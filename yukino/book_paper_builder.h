@@ -16,23 +16,23 @@ public:
   BookPaperPtr build();
 
   //set attribute
-  BookPaperBuilder& setSprite(sora::TextureSubImage *sprite);
-  BookPaperBuilder& setType(BookPaperType type);
-  BookPaperBuilder& setPos(const sora::vec3 &pos);
-  BookPaperBuilder& setFold(AxisDirection axis, float degree);
-  BookPaperBuilder& setRotate(float pitch, float roll, float yaw);
+  BookPaperBuilder& set_sprite(sora::TextureSubImage *sprite);
+  BookPaperBuilder& set_type(BookPaperType type);
+  BookPaperBuilder& set_pos(const sora::vec3 &pos);
+  BookPaperBuilder& set_fold(AxisDirection axis, float degree);
+  BookPaperBuilder& set_rotate(float pitch, float roll, float yaw);
   //BookPaperBuilder& setModel(sora::model::SoraModelPtr model);
 
-  void createFloorModel();
-  void createLeftModel();
-  void createRightModel();
-  void createCeilModel();
-  void createForwardModel();
-  void createNormalModel(float width, float height);
+  void CreateFloorModel();
+  void CreateLeftModel();
+  void CreateRightModel();
+  void CreateCeilModel();
+  void CreateForwardModel();
+  void CreateNormalModel(float width, float height);
 
-  float getCubeWidth() const;
-  float getCubeHeight() const;
-  float getCubeDepth() const;
+  float cube_width() const { return cube_width_; }
+  float cube_height() const { return cube_height_; }
+  float cube_depth() const { return cube_depth_; }
 
 public:
   BookVertex v1;
@@ -43,9 +43,9 @@ public:
 private:
   void clear();
 
-  const float cubeWidth_;
-  const float cubeHeight_;
-  const float cubeDepth_;
+  const float cube_width_;
+  const float cube_height_;
+  const float cube_depth_;
 
   sora::TextureSubImage *sprite_;
   BookPaperType type_;

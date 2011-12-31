@@ -18,23 +18,21 @@ float globalYGap = 2;
 float globalZGap = 4;
 
 BookPaperBuilder::BookPaperBuilder(float cubeWidth, float cubeHeight, float cubeDepth)
-  : cubeWidth_(cubeWidth), cubeHeight_(cubeHeight), cubeDepth_(cubeDepth)
-{
-  SR_ASSERT(cubeWidth_ > 0 && cubeHeight_ > 0 && cubeDepth_ > 0);
+  : cube_width_(cubeWidth), cube_height_(cubeHeight), cube_depth_(cubeDepth) {
+  SR_ASSERT(cube_width_ > 0 && cube_height_ > 0 && cube_depth_ > 0);
   clear();
 }
 
-BookPaperBuilder::~BookPaperBuilder()
-{
+BookPaperBuilder::~BookPaperBuilder() {
 }
 
-void BookPaperBuilder::createFloorModel() {
+void BookPaperBuilder::CreateFloorModel() {
   //string cubeFile = Path::appPath("res/floor01.jpg");
   //string cubeFile = Path::appPath("res/img_test.bmp");
   //string cubeFile = Path::appPath("res/small_test_2x2.png");
   //string cubeFile = Path::appPath("res/small_test_2x1.png");
   //TextureDescPtr texDesc = ImageLoader::loader().loadJpg2Tex(cubeFile);
-  //TexturePtr tex = TextureManager::GetInstance().create(texDesc, string("floor"));
+  //TexturePtr tex = TextureManager::GetInstance().Create(texDesc, string("floor"));
 
   /*cube model 적당히 생성*/
   /*모델을 생성*/
@@ -55,31 +53,30 @@ void BookPaperBuilder::createFloorModel() {
   //gap=크기*0.01		
   v1.s = texBaseX;
   v1.t = texBaseY+texHeight;
-  v1.x = -cubeWidth_/2-xGap;
-  v1.y = -cubeHeight_/2;
+  v1.x = -cube_width_/2-xGap;
+  v1.y = -cube_height_/2;
   v1.z = 0;
 
   v2.s = texBaseX + texWidth;
   v2.t = texBaseY+texHeight;
-  v2.x = cubeWidth_/2+xGap;
-  v2.y = -cubeHeight_/2;
+  v2.x = cube_width_/2+xGap;
+  v2.y = -cube_height_/2;
   v2.z = 0;
 
   v3.s = texBaseX + texWidth;
   v3.t = texBaseY;
-  v3.x = cubeWidth_/2+xGap;
-  v3.y = -cubeHeight_/2;
-  v3.z = -cubeDepth_-zGap;		
+  v3.x = cube_width_/2+xGap;
+  v3.y = -cube_height_/2;
+  v3.z = -cube_depth_-zGap;		
 
   v4.s = texBaseX;
   v4.t = texBaseY;
-  v4.x = -cubeWidth_/2-xGap;
-  v4.y = -cubeHeight_/2;
-  v4.z = -cubeDepth_-zGap;
+  v4.x = -cube_width_/2-xGap;
+  v4.y = -cube_height_/2;
+  v4.z = -cube_depth_-zGap;
 }
 
-void BookPaperBuilder::createLeftModel() 
-{
+void BookPaperBuilder::CreateLeftModel() {
   float texBaseX = sprite_->GetTexCoordX();
   float texBaseY = sprite_->GetTexCoordY();
   float texWidth = sprite_->GetTexCoordWidth();
@@ -91,19 +88,18 @@ void BookPaperBuilder::createLeftModel()
 
   v1.s = texBaseX;
   v1.t = texBaseY+texHeight;
-  v1.vertex3(-cubeWidth_/2, -cubeHeight_/2-yGap, 0);
+  v1.Vertex3(-cube_width_/2, -cube_height_/2-yGap, 0);
 
-  v2.texCoord2(texBaseX + texWidth, texBaseY+texHeight);
-  v2.vertex3(-cubeWidth_/2, -cubeHeight_/2-yGap, -cubeDepth_-zGap);		
+  v2.TexCoord2(texBaseX + texWidth, texBaseY+texHeight);
+  v2.Vertex3(-cube_width_/2, -cube_height_/2-yGap, -cube_depth_-zGap);		
 
-  v3.texCoord2(texBaseX + texWidth, texBaseY);
-  v3.vertex3(-cubeWidth_/2, cubeHeight_/2+yGap, -cubeDepth_-zGap);		
+  v3.TexCoord2(texBaseX + texWidth, texBaseY);
+  v3.Vertex3(-cube_width_/2, cube_height_/2+yGap, -cube_depth_-zGap);		
 
-  v4.texCoord2(texBaseX, texBaseY);
-  v4.vertex3(-cubeWidth_/2, cubeHeight_/2+yGap, 0);
+  v4.TexCoord2(texBaseX, texBaseY);
+  v4.Vertex3(-cube_width_/2, cube_height_/2+yGap, 0);
 }
-void BookPaperBuilder::createRightModel() 
-{
+void BookPaperBuilder::CreateRightModel()  {
   float texBaseX = sprite_->GetTexCoordX();
   float texBaseY = sprite_->GetTexCoordY();
   float texWidth = sprite_->GetTexCoordWidth();
@@ -113,20 +109,19 @@ void BookPaperBuilder::createRightModel()
   float yGap = 0;
   float zGap = 0;
 
-  v1.texCoord2(texBaseX, texBaseY+texHeight);
-  v1.vertex3(cubeWidth_/2, -cubeHeight_/2-yGap, -cubeDepth_-zGap);
+  v1.TexCoord2(texBaseX, texBaseY+texHeight);
+  v1.Vertex3(cube_width_/2, -cube_height_/2-yGap, -cube_depth_-zGap);
 
-  v2.texCoord2(texBaseX + texWidth, texBaseY+texHeight);
-  v2.vertex3(cubeWidth_/2, -cubeHeight_/2-yGap, 0);		
+  v2.TexCoord2(texBaseX + texWidth, texBaseY+texHeight);
+  v2.Vertex3(cube_width_/2, -cube_height_/2-yGap, 0);		
 
-  v3.texCoord2(texBaseX + texWidth, texBaseY);
-  v3.vertex3(cubeWidth_/2, cubeHeight_/2+yGap, 0);		
+  v3.TexCoord2(texBaseX + texWidth, texBaseY);
+  v3.Vertex3(cube_width_/2, cube_height_/2+yGap, 0);		
 
-  v4.texCoord2(texBaseX, texBaseY);
-  v4.vertex3(cubeWidth_/2, cubeHeight_/2+yGap, -cubeDepth_-zGap);
+  v4.TexCoord2(texBaseX, texBaseY);
+  v4.Vertex3(cube_width_/2, cube_height_/2+yGap, -cube_depth_-zGap);
 }
-void BookPaperBuilder::createCeilModel() 
-{
+void BookPaperBuilder::CreateCeilModel() {
   float texBaseX = sprite_->GetTexCoordX();
   float texBaseY = sprite_->GetTexCoordY();
   float texWidth = sprite_->GetTexCoordWidth();
@@ -135,19 +130,19 @@ void BookPaperBuilder::createCeilModel()
   float xGap = globalXGap;
   float zGap = globalZGap;
 
-  v1.texCoord2(texBaseX, texBaseY);
-  v1.vertex3(-cubeWidth_/2-xGap, cubeHeight_/2, -cubeDepth_-zGap);
+  v1.TexCoord2(texBaseX, texBaseY);
+  v1.Vertex3(-cube_width_/2-xGap, cube_height_/2, -cube_depth_-zGap);
 
-  v2.texCoord2(texBaseX + texWidth, texBaseY);
-  v2.vertex3(cubeWidth_/2+xGap, cubeHeight_/2, -cubeDepth_-zGap);		
+  v2.TexCoord2(texBaseX + texWidth, texBaseY);
+  v2.Vertex3(cube_width_/2+xGap, cube_height_/2, -cube_depth_-zGap);		
 
-  v3.texCoord2(texBaseX + texWidth, texBaseY + texHeight);
-  v3.vertex3(cubeWidth_/2+xGap, cubeHeight_/2, 0);
+  v3.TexCoord2(texBaseX + texWidth, texBaseY + texHeight);
+  v3.Vertex3(cube_width_/2+xGap, cube_height_/2, 0);
 
-  v4.texCoord2(texBaseX, texBaseY + texHeight);
-  v4.vertex3(-cubeWidth_/2-xGap, cubeHeight_/2, 0);
+  v4.TexCoord2(texBaseX, texBaseY + texHeight);
+  v4.Vertex3(-cube_width_/2-xGap, cube_height_/2, 0);
 }
-void BookPaperBuilder::createForwardModel() 
+void BookPaperBuilder::CreateForwardModel() 
 {
   float texBaseX = sprite_->GetTexCoordX();
   float texBaseY = sprite_->GetTexCoordY();
@@ -157,21 +152,20 @@ void BookPaperBuilder::createForwardModel()
   float xGap = globalXGap;
   float yGap = globalYGap;
 
-  v1.texCoord2(texBaseX, texBaseY+texHeight);
-  v1.vertex3(-cubeWidth_/2-xGap, -cubeHeight_/2-yGap, -cubeDepth_);
+  v1.TexCoord2(texBaseX, texBaseY+texHeight);
+  v1.Vertex3(-cube_width_/2-xGap, -cube_height_/2-yGap, -cube_depth_);
 
-  v2.texCoord2(texBaseX + texWidth, texBaseY+texHeight);
-  v2.vertex3(cubeWidth_/2+xGap, -cubeHeight_/2-yGap, -cubeDepth_);		
+  v2.TexCoord2(texBaseX + texWidth, texBaseY+texHeight);
+  v2.Vertex3(cube_width_/2+xGap, -cube_height_/2-yGap, -cube_depth_);		
 
-  v3.texCoord2(texBaseX + texWidth, texBaseY);
-  v3.vertex3(cubeWidth_/2+xGap, cubeHeight_/2+yGap, -cubeDepth_);		
+  v3.TexCoord2(texBaseX + texWidth, texBaseY);
+  v3.Vertex3(cube_width_/2+xGap, cube_height_/2+yGap, -cube_depth_);		
 
-  v4.texCoord2(texBaseX, texBaseY);
-  v4.vertex3(-cubeWidth_/2-xGap, cubeHeight_/2+yGap, -cubeDepth_);
+  v4.TexCoord2(texBaseX, texBaseY);
+  v4.Vertex3(-cube_width_/2-xGap, cube_height_/2+yGap, -cube_depth_);
 }
 
-void BookPaperBuilder::createNormalModel(float width, float height) 
-{
+void BookPaperBuilder::CreateNormalModel(float width, float height) {
   SR_ASSERT(sprite_ != NULL);
 
   //스프라이트의 크기와 크기비율을 곱해서 적절한 모델 크기를 만든다 
@@ -210,30 +204,30 @@ void BookPaperBuilder::createNormalModel(float width, float height)
   float texBottom = texTop + (float)(sprite_->h * 2 - 2) / (tex_height * 2);
   /*
   //left bottom
-  builder.texCoord2(texBaseX, texBaseY+texHeight);
-  builder.vertex3(-width/2, -height/2, 0);
+  builder.TexCoord2(texBaseX, texBaseY+texHeight);
+  builder.Vertex3(-width/2, -height/2, 0);
   //right bottom
-  builder.texCoord2(texWidth+texBaseX, texBaseY+texHeight);
-  builder.vertex3(width/2, -height/2, 0);	
+  builder.TexCoord2(texWidth+texBaseX, texBaseY+texHeight);
+  builder.Vertex3(width/2, -height/2, 0);	
   //right top
-  builder.texCoord2(texWidth+texBaseX, texBaseY);
-  builder.vertex3(width/2, height/2, 0);	
+  builder.TexCoord2(texWidth+texBaseX, texBaseY);
+  builder.Vertex3(width/2, height/2, 0);	
   //left top
-  builder.texCoord2(texBaseX, texBaseY);
-  builder.vertex3(-width/2, height/2, 0);
+  builder.TexCoord2(texBaseX, texBaseY);
+  builder.Vertex3(-width/2, height/2, 0);
   */
   //left bottom
-  v1.texCoord2(texLeft, texBottom);
-  v1.vertex3(-width/2, -height/2, 0);
+  v1.TexCoord2(texLeft, texBottom);
+  v1.Vertex3(-width/2, -height/2, 0);
   //right bottom
-  v2.texCoord2(texRight, texBottom);
-  v2.vertex3(width/2, -height/2, 0);	
+  v2.TexCoord2(texRight, texBottom);
+  v2.Vertex3(width/2, -height/2, 0);	
   //right top
-  v3.texCoord2(texRight, texTop);
-  v3.vertex3(width/2, height/2, 0);	
+  v3.TexCoord2(texRight, texTop);
+  v3.Vertex3(width/2, height/2, 0);	
   //left top
-  v4.texCoord2(texLeft, texTop);
-  v4.vertex3(-width/2, height/2, 0);
+  v4.TexCoord2(texLeft, texTop);
+  v4.Vertex3(-width/2, height/2, 0);
 }
 
 
@@ -241,21 +235,25 @@ BookPaperPtr BookPaperBuilder::build()
 {	
   BookPaper *paper = NULL;
   switch(type_) {
-  case BookPaperTypeNormal:
+  case kBookPaperNormal:
     paper = new BookPaper(sprite_, type_);
     paper->v1 = v1;
     paper->v2 = v2;
     paper->v3 = v3;
     paper->v4 = v4;
 
-    paper->setPos(x_, y_, z_);
-    paper->setRotate(pitch_, roll_, yaw_);
+    paper->pos_x = x_;
+    paper->pos_y = y_;
+    paper->pos_z = z_;
+    paper->pitch = pitch_;
+    paper->roll = roll_;
+    paper->yaw = yaw_;
     break;
-  case BookPaperTypeFloor:
-  case BookPaperTypeLeft:
-  case BookPaperTypeRight:
-  case BookPaperTypeCeil:
-  case BookPaperTypeForward:
+  case kBookPaperFloor:
+  case kBookPaperLeft:
+  case kBookPaperRight:
+  case kBookPaperCeil:
+  case kBookPaperForward:
     paper = new BookPaper(sprite_, type_);
     paper->v1 = v1;
     paper->v2 = v2;
@@ -263,7 +261,7 @@ BookPaperPtr BookPaperBuilder::build()
     paper->v4 = v4;
 
     break;
-  case BookPaperTypeFoldAxisY:
+  case kBookPaperFoldAxisY:
     SR_ASSERT(false);
     break;
   }
@@ -273,44 +271,39 @@ BookPaperPtr BookPaperBuilder::build()
   return BookPaperPtr(paper);
 }
 
-BookPaperBuilder& BookPaperBuilder::setType(BookPaperType type)
-{
+BookPaperBuilder& BookPaperBuilder::set_type(BookPaperType type) {
   type_ = type;
   return *this;
 }
 
-BookPaperBuilder& BookPaperBuilder::setPos(const sora::vec3 &pos)
-{
+BookPaperBuilder& BookPaperBuilder::set_pos(const sora::vec3 &pos) {
   x_ = pos.x;
   y_ = pos.y;
   z_ = pos.z;
   return *this;
 }
 
-BookPaperBuilder& BookPaperBuilder::setFold(AxisDirection axis, float degree)
-{
-  SR_ASSERT(axis == AxisDirectionY && "only support y axis");
+BookPaperBuilder& BookPaperBuilder::set_fold(AxisDirection axis, float degree) {
+  SR_ASSERT(axis == kAxisDirectionY && "only support y axis");
   axis_ = axis;
   angle_ = degree;
   return *this;
 }
 
-BookPaperBuilder& BookPaperBuilder::setRotate(float pitch, float roll, float yaw)
-{
+BookPaperBuilder& BookPaperBuilder::set_rotate(float pitch, float roll, float yaw) {
   pitch_ = pitch;
   roll_ = roll;
   yaw_ = yaw;
   return *this;
 }
-BookPaperBuilder& BookPaperBuilder::setSprite(TextureSubImage *sprite)
+BookPaperBuilder& BookPaperBuilder::set_sprite(TextureSubImage *sprite)
 {
   sprite_ = sprite;
   return *this;
 }
-void BookPaperBuilder::clear()
-{
+void BookPaperBuilder::clear() {
   sprite_ = NULL;
-  type_ = BookPaperTypeNormal;
+  type_ = kBookPaperNormal;
 
   pitch_ = 0;
   roll_ = 0;
@@ -323,20 +316,8 @@ void BookPaperBuilder::clear()
   width_ = 1;
   height_ = 1;
 
-  axis_ = AxisDirectionY;
+  axis_ = kAxisDirectionY;
   angle_ = 0;
 }
 
-float BookPaperBuilder::getCubeWidth() const
-{
-  return cubeWidth_;
-}
-float BookPaperBuilder::getCubeHeight() const
-{
-  return cubeHeight_;
-}
-float BookPaperBuilder::getCubeDepth() const
-{
-  return cubeDepth_;
-}
 }
