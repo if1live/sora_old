@@ -33,6 +33,12 @@
     <ClCompile Include="texture_test.cc">
       <Filter>renderer</Filter>
     </ClCompile>
+    <ClCompile Include="xml_node_test.cc">
+      <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="xml_reader_test.cc">
+      <Filter>base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h" />

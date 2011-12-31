@@ -26,11 +26,19 @@
     <ClCompile Include="testmain.cc" />
     <ClCompile Include="texture_test.cc" />
     <ClCompile Include="vector_test.cc" />
+    <ClCompile Include="xml_node_test.cc" />
+    <ClCompile Include="xml_reader_test.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\sdk\libpng\libpng.vcxproj">
+      <Project>{36a51249-1bc1-4f34-bf97-7c64b857e92f}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\sdk\tinyxml\tinyxml_lib.vcxproj">
+      <Project>{c406daec-0886-4771-8dea-9d7329b46cc1}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\sora\sora.vcxproj">
       <Project>{6451c89b-1fef-4bc5-812a-bf84a8c21919}</Project>
     </ProjectReference>

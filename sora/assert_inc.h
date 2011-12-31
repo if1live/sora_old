@@ -25,7 +25,8 @@
 #include <cassert>
 
 #if SR_WIN
-#define SR_ASSERT(EXPR) do { assert(EXPR); } while(0);
+//#define SR_ASSERT(EXPR) do { assert(EXPR); } while(0);
+#define SR_ASSERT(EXPR) if(!(EXPR)) { __asm{ int 3 }; }
 
 #elif SR_IOS
 #define SR_ASSERT(EXPR) do { assert(EXPR); } while(0);
