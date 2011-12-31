@@ -33,6 +33,7 @@ typedef enum {
 class GLWindow : public SharedObject<GLWindow> {
 public:
   GLWindow(int w, int h, WinMode mode, float content_scale);
+  GLWindow();
   ~GLWindow();
 
   void Init();

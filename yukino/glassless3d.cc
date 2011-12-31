@@ -10,6 +10,8 @@
 
 #include "sora/filesystem.h"
 #include "sora/math_helper.h"
+#include "sora/locale.h"
+#include "sora/gl_window.h"
 
 //input
 //#include "ASInputHandler.h"
@@ -21,54 +23,41 @@ using namespace sora;
 using namespace std;
 
 namespace yukino {;
-void Glassless3d::SetVisible(bool b)
-{
-  visible_ = b;
-}
-void Glassless3d::reloadBook()
-{
+void Glassless3d::ReloadBook() {
+  using namespace sora;
   //book 불러오기. 언어에 따라서 다른 파일을 가져온다
-  string book_path = sora::Filesystem::GetAppPath("res/book_en.xml");
-  //@XXX
-  /*
-  if(Locale::sharedLocale().language() == kLanguageKorean)
-  {
-  book_path = Path::appPath("res/book_kr.xml");
+  string book_path = Filesystem::GetAppPath("res/book_en.xml");
+  if(Locale::GetInstance().language() == kLanguageKorean) {
+    book_path = Filesystem::GetAppPath("res/book_kr.xml");
   }
-  */
   Book &book = Book::GetInstance();
 
   int currPage = book.curr_scene_page();
   book.Load(book_path);
   book.MoveScene(currPage);
 }
-void Glassless3d::init()
-{
+void Glassless3d::Init() {
+  using namespace sora;
   //book 불러오기. 언어에 따라서 다른 파일을 가져온다
-  string book_path = sora::Filesystem::GetAppPath("res/book_en.xml");
-  /*
-  if(Locale::sharedLocale().language() == kLanguageKorean)
-  {
-  book_path = Path::appPath("res/book_kr.xml");
+  string book_path = Filesystem::GetAppPath("res/book_en.xml");
+  if(Locale::GetInstance().language() == kLanguageKorean) {
+    book_path = Filesystem::GetAppPath("res/book_kr.xml");
   }
-  */
+
   Book &book = Book::GetInstance();
   book.Load(book_path);
 
   /*여기에서 사용할 모델을 미리 만들어놓자 */
-  initGrid();
+  InitGrid();
   //initBookScene();	//book scene로딩은 밖에서 결정하도록 고치자
   /*initTargetModel();*/
 
   //event handler 생성 
 #if SR_IOS
-  if(Device::GetInstance().isAttitudeAvailable())
-  {
+  if(Device::GetInstance().isAttitudeAvailable()) {
     handler_ = auto_ptr<InputHandler>(new GyroInputHandler());
     //handler_ = auto_ptr<InputHandler>(new AccelerometerInputHandler());
-  }
-  else
-  {		
+  } else {		
     handler_ = auto_ptr<InputHandler>(new AccelerometerInputHandler());
   }
 #elif SR_WIN
@@ -91,21 +80,23 @@ void Glassless3d::init()
   scene_->load(path);
 }
 
-void Glassless3d::draw()
-{
+void Glassless3d::Draw() {
   if(visible_ == false) {
     return;
   }
 
+  using namespace sora;
+
   /*기본 색 정보 날리기*/
-  glClearColor (0, 0, 0, 1);
+  srglClearColor (0, 0, 0, 1);
   /* Clear the color buffer*/
-  glClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  srglClear ( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   //viewing 최초 설정
   ///@TODO retina나 기타 다른 기계때문에 해상도는 잘 처리해야한다
-  int w = 960;
-  int h = 640;
+  GLWindow &win = GLWindow::GetInstance();
+  int w = win.width();
+  int h = win.height();
   //const Viewport &vp = Window::GetInstance().getViewport(1);	//사용하고자하는 glview의 크기
 
   //카메라 적용
@@ -118,17 +109,17 @@ void Glassless3d::draw()
     //일정각도 이상으로는 안넘어가도록 하자
     //float panDegree = handler_->getPanDegree();
     //float tiltDegree = handler_->getTiltDegree();
-    float panDegree = 15;
-    float tiltDegree = 15;
-    panDegree = Book::GetInstance().CalcPanDeg(panDegree);
-    tiltDegree = Book::GetInstance().CalcTiltDeg(tiltDegree);
+    float pan_deg = 15;
+    float tilt_deg = 15;
+    pan_deg = Book::GetInstance().CalcPanDeg(pan_deg);
+    tilt_deg = Book::GetInstance().CalcTiltDeg(tilt_deg);
 
-    float panRad = DegreeToRadian(panDegree);
-    float tiltRad = DegreeToRadian(tiltDegree);
+    float pan_rad = DegreeToRadian(pan_deg);
+    float tilt_rad = DegreeToRadian(tilt_deg);
 
     //구면위를 따라서 움직이는 느낌의 카메라 도입하기
     //화면을 landscape로 ui쪽에서 설정하면서 방향이 뒤틀렸다. 가장 간단한 편법으로 x,y를 뒤바꿨다
-    cam.Apply(panRad, tiltRad);
+    cam.Apply(pan_rad, tilt_rad);
   }
 
   srglMatrixMode(SR_MODELVIEW);
@@ -140,8 +131,7 @@ void Glassless3d::draw()
     //이렇게 화면의 의도적으로 작게 그리게 하고
     //큐브내부에서 뭘 그리거나할때는 일반적으로 사용하는 픽셀같은 느낌의
     //크기로 만들자
-    //srScalef(0.1, 0.1, 0.1);	
-
+    //srScalef(0.1, 0.1, 0.1);
 
     srglBlendFunc (GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -150,8 +140,7 @@ void Glassless3d::draw()
 
     srglPushMatrix();
     //grid정의 있으면 그리기
-    if(scene_.get() != NULL && scene_->isUseGrid() == true)
-    {
+    if(scene_.get() != NULL && scene_->isUseGrid() == true) {
       //grid를 약간 작게 그려야 z-fighting문제가 없다
       srglScalef(0.99, 0.99, 0.99);
       //grid 그리기..어차피 디버깅모드에서만 쓰는거니까 그리는 순서는 신경쓰지 말자 
@@ -185,8 +174,7 @@ Glassless3d::Glassless3d()
 Glassless3d::~Glassless3d() {
 }
 
-void Glassless3d::update(float dt)
-{
+void Glassless3d::Update(float dt) {
   if(visible_ == false) {
     return;
   }
@@ -197,11 +185,10 @@ void Glassless3d::update(float dt)
   //handler_->updateEvent();
   int nextPage = Book::GetInstance().curr_scene_page();
   if(currPage != nextPage) {
-    onSceneChangeOccur();
+    OnSceneChangeOccur();
   }
 }
-void Glassless3d::onSceneChangeOccur()
-{
+void Glassless3d::OnSceneChangeOccur() {
 #if 0
   //create new scene
   string path = Path::appPath(Book::GetInstance().GetCurrSceneFile());
@@ -214,8 +201,7 @@ void Glassless3d::onSceneChangeOccur()
 #endif
 }
 
-void Glassless3d::initGrid()
-{
+void Glassless3d::InitGrid() {
 #if 0
   const float cube_width = Book::GetInstance().getWidth();
   const float cube_height = Book::GetInstance().getHeight();

@@ -16,20 +16,24 @@ class BookScene;
 
 class Glassless3d : public sora::Singleton<Glassless3d> {
 public:
-  void init();
-  void initGrid();
+  void Init();
+  void InitGrid();
 
-  void draw();
+  void Draw();
 
-  void update(float dt);
-  void onSceneChangeOccur();
+  void Update(float dt);
+  
 
   Glassless3d();
   ~Glassless3d();
 
-  void SetVisible(bool b);
+  void set_visible(bool b) { visible_ = b; }
 
-  void reloadBook();
+  void ReloadBook();
+
+  //event
+  void OnSceneChangeOccur();
+
 private:
   //sora::model::SoraModelPtr gridModel_;
   //sora::model::SoraModelPtr targetModel_;

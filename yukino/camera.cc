@@ -17,19 +17,19 @@ Tech48Camera::~Tech48Camera() {
 void Tech48Camera::Apply(float x_rad, float y_rad) {
   //구면위를 따라서 움직이는 느낌의 카메라 도입하기
   float cam_radius = Book::GetInstance().cam_radius();
-  float posX = cam_radius * sin(x_rad) * cos(y_rad);
-  float posY = cam_radius * sin(y_rad);
-  float posZ = cam_radius * cos(x_rad) * cos(y_rad);
+  float pos_x = cam_radius * sin(x_rad) * cos(y_rad);
+  float pos_y = cam_radius * sin(y_rad);
+  float pos_z = cam_radius * cos(x_rad) * cos(y_rad);
 
   //원점을 중심으로 오른쪽 방향벡터. 이것을 이용해ㅓ up를 계산한다
-  float rightX = cos(x_rad);
-  float rightY = 0;
-  float rightZ = -sin(x_rad);
+  float right_x = cos(x_rad);
+  float right_y = 0;
+  float right_z = -sin(x_rad);
 
-  vec3 posVec(posX, posY, posZ);
-  vec3 rightVec(rightX, rightY, rightZ);
-  vec3 upVec = sora::Cross(posVec, rightVec);
-  Normalized(upVec);
+  vec3 pos_vec(pos_z, pos_y, pos_z);
+  vec3 right_vec(right_x, right_y, right_z);
+  vec3 up_vec = sora::Cross(pos_vec, right_vec);
+  Normalized(up_vec);
 
   //@XXX nan?
   /*
@@ -41,7 +41,7 @@ void Tech48Camera::Apply(float x_rad, float y_rad) {
   MT_ASSET(isNaN(upVec.z) == false);
   */
 
-  srglLookAt(posX, posY, posZ, 0, 0, 0, upVec.x, upVec.y, upVec.z);
+  srglLookAt(pos_x, pos_y, pos_z, 0, 0, 0, up_vec.x, up_vec.y, up_vec.z);
   //printf("%f,%f,%f - %f,%f,%f\n", posX, posY, posZ, upVec.x, upVec.y, upVec.z);
   //mat4 shear;
   //shear.z.x = tan(xTranslateRad);
@@ -54,14 +54,7 @@ void Tech48Camera::Apply(float x_rad, float y_rad) {
   srglMatrixMode   ( SR_MODELVIEW );  /* Select The Model View Matrix*/
   srglLoadIdentity ( );    /* Reset The Model View Matrix*/
 }
-void Tech48Camera::SetView(float w, float h)
-{
-#if _WIN_
-  //윈도우 에뮬의 경우는 강제로 뒤집고 시작
-  float tmp = w;
-  w = h;
-  h = tmp;
-#endif
+void Tech48Camera::SetView(float w, float h) {
   glViewport     ( 0, 0, w, h );
 
   srglMatrixMode   ( SR_PROJECTION );  /* Select The Projection Matrix*/

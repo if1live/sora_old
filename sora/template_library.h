@@ -80,8 +80,8 @@ class SharedObject {
  public:
   static T& GetInstance() {
     if (ctx_ == NULL) {
-      ctx_ = new T; 
       inner_allcated_ = true;
+      ctx_ = new T; 
     }
     return *ctx_;
   }
@@ -93,8 +93,16 @@ class SharedObject {
     ctx_ = NULL;
   }
   static bool IsCreated() { return (ctx_ != NULL); }
-  SharedObject() {}
-  ~SharedObject() {}
+  SharedObject() {
+    if (SharedObject::ctx_ == NULL) {
+      SharedObject::ctx_ = static_cast<T*>(this);
+    } else {
+      SR_ASSERT(!"shared obj cannot exist 2 obj");
+    }
+  }
+  ~SharedObject() {
+    SharedObject::ctx_ = NULL;
+  }
  private:
   static T *ctx_;
   static bool inner_allcated_;

@@ -29,6 +29,9 @@ height_(h),
 win_mode_(mode), 
 content_scale_(content_scale) {
 }
+GLWindow::GLWindow()
+  : width_(480), height_(320), win_mode_(kWinModeWindow), content_scale_(1) {}
+
 GLWindow::~GLWindow() {
 }
 

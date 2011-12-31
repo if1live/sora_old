@@ -77,13 +77,13 @@ sora::Texture tex;
 void Update(int ms) {
   //sora::glfwMouseUpdate(win_width, win_height); ???
 
-  yukino::Glassless3d::GetInstance().update(ms * 0.001);
+  yukino::Glassless3d::GetInstance().Update(ms * 0.001);
 }
 void Draw(int ms) {
   // OpenGL rendering goes here...
   srglClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   
-  yukino::Glassless3d::GetInstance().draw();
+  yukino::Glassless3d::GetInstance().Draw();
   /*
   //sora::Texture &tex = sora::Texture::Sample();
   srglBindTexture(GL_TEXTURE_2D, tex.handle);
@@ -120,5 +120,5 @@ void Init() {
   filename = sora::Filesystem::GetAppPath(filename);
   sora::Texture::LoadFromPNG(filename, &tex);
 
-  yukino::Glassless3d::GetInstance().init();
+  yukino::Glassless3d::GetInstance().Init();
 }

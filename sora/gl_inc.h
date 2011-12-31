@@ -31,6 +31,7 @@
 // gl함수 전부 갈아치울수 있도록 하기
 // 이름만 다르게 쓸수있도록해놓으면 나중에 함수로 교체하든지하는 편법이 가능
 // gl함수 썡으로 쓰면 확장하기 힘들다(원본 함수와 구분이 안되나까)
+#define srglClearColor    glClearColor
 #define srglClear         glClear
 #define srglEnable        glEnable
 #define srglDisable       glDisable
