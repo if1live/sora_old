@@ -44,8 +44,19 @@ TEST(Vector2, Operator) {
   }
   {
     vec2 v1(1, 2);
+    vec2 v2 = -v1;
+    EXPECT_EQ(true, v2 == vec2(-1, -2));
+  }
+  {
+    vec2 v1(1, 2);
     vec2 v2(2, 4);
     vec2 v3 = v1 * 2.0f;
+    EXPECT_EQ(true, v3 == v2);
+  }
+  {
+    vec2 v1(1, 2);
+    vec2 v2(2, 4);
+    vec2 v3 = 2.0f * v1;
     EXPECT_EQ(true, v3 == v2);
   }
   {

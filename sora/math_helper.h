@@ -20,12 +20,9 @@
 #ifndef SORA_MATH_HELPER_H_
 #define SORA_MATH_HELPER_H_
 
-#if SR_USE_PCH == 0
-#include <cmath>
-#endif
-
-#include "sora/vector.h"
-#include "sora/matrix.h"
+#include "vector.h"
+#include "matrix.h"
+#include "arch.h"
 
 namespace sora {;
 const f32 kPi = 3.141592f;

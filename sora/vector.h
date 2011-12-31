@@ -193,6 +193,15 @@ VecType VectorMultiply(const VecType &a, typename VecType::ElemType t) {
   tmp *= t;
   return tmp;
 }
+
+// for 2.0f * vec
+template<typename VecType>
+VecType operator*(typename VecType::ElemType t, const VecType &a) {
+  VecType tmp = a;
+  tmp *= t;
+  return tmp;
+}
+
 template<typename VecType>
 VecType& VectorDivideThis(VecType &a, typename VecType::ElemType t) {
   if (t == 0) {
