@@ -33,6 +33,13 @@ public:
 typedef void (Selector::*Selector_CallFunc)();
 typedef void (Selector::*Selector_UICallback)(UIComponent*);
 
+struct CallFuncFuctor {
+  CallFuncFuctor(Selector *target, Selector_CallFunc func) : target(target), func(func) {}
+  void operator()() { (target->*func)(); }
+  Selector *target;
+  Selector_CallFunc func;
+};
+
 #define SR_CALL_FUNC_SEL(SELECTOR) (sora::Selector_CallFunc)(&SELECTOR)
 #define SR_UI_CALLBACK_SEL(SELECTOR) (sora::Selector_UICallback)(&SELECTOR)
 }
