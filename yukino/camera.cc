@@ -9,10 +9,10 @@
 using namespace sora;
 
 namespace yukino {;
-Tech48Camera::Tech48Camera() {
+Tech48Camera::Tech48Camera()
+: pos_x_(0), pos_y_(0), pos_z_(0) {
 }
 Tech48Camera::~Tech48Camera() {
-
 }
 void Tech48Camera::Apply(float x_rad, float y_rad) {
   //구면위를 따라서 움직이는 느낌의 카메라 도입하기
@@ -49,7 +49,8 @@ void Tech48Camera::Apply(float x_rad, float y_rad) {
   //srMultMatrix(shear);
 
   //카메라를 박스 안쪽으로 밀어넣기...의 수치를 좀 조정할수 있어야될듯?
-  srglTranslatef(0, 0, cam_radius);
+  //카메라가 이동되어야되는 경우, 게임같은것을 구현하게되면 아마도 쓰겠지?
+  srglTranslatef(-pos_x_, -pos_y_, -pos_z_ + cam_radius);
 
   srglMatrixMode   ( SR_MODELVIEW );  /* Select The Model View Matrix*/
   srglLoadIdentity ( );    /* Reset The Model View Matrix*/
@@ -92,5 +93,9 @@ void Tech48Camera::SetView(float w, float h) {
   //srRotatef(90, 0, 0, 1);
 #endif
 }
+void Tech48Camera::SetPosition(float x, float y, float z) {
+  pos_x_ = x;
+  pos_y_ = y;
+  pos_z_ = z;
 }
-
+}

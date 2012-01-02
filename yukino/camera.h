@@ -15,6 +15,11 @@ public:
   void SetView(float w, float h);
   ///@brief gluLookAt를 호출하는 메소드 
   void Apply(float x_rad, float y_rad);
+
+  void SetPosition(float x, float y, float z);
 private:
+  float pos_x_;
+  float pos_y_;
+  float pos_z_;
 };
 }
