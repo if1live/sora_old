@@ -53,20 +53,6 @@ public:
   const mat4 &modelview_mat() const { return modelview_mat_; }
   const mat4 &projection_mat() const { return projection_mat_; }
 
-public:
-  // stack method
-
-  static void StaticMultMatrix(float *m);
-  static void StaticMatrixMode(int matrix_mode);
-
-  static void StaticUseProjectionMatrixMode();
-  static void StaticUseModelviewMatrixMode();
- 
-  static void StaticLookAt(float eye_x, float eye_y, float eye_z,
-    float target_x, float target_y, float target_z,
-    float up_x, float up_y, float up_z);
-  static void StaticPerspective(float fovy, float aspect, float zNear, float zFar);
-
 private:
   //matrix stack
   typedef std::vector<mat4> MatrixStackType;
