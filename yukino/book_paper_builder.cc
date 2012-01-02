@@ -195,8 +195,8 @@ void BookPaperBuilder::CreateNormalModel(float width, float height) {
   - texCoord.right = texCoord.left + (rect.size.width*2-2)/(texture.wide*2);
   */
 
-  float tex_width = sprite_->tex->tex_header.tex_width;
-  float tex_height = sprite_->tex->tex_header.tex_height;
+  float tex_width = sprite_->tex_width;
+  float tex_height = sprite_->tex_height;
 
   float texLeft = (float)(sprite_->x * 2 + 1) / (tex_width * 2);
   float texRight = texLeft + (float)(sprite_->w * 2 - 2) / (tex_width * 2);

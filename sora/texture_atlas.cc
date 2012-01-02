@@ -24,20 +24,25 @@
 #include "texture.h"
 
 namespace sora {;
+TextureSubImage::TextureSubImage()
+  : x(0), y(0), w(0), h(0), tex_id(0), tex_width(2), tex_height(2) {
+}
+TextureSubImage::TextureSubImage(f32 x, f32 y, f32 w, f32 h, Texture *tex)
+  : x(x), y(y), w(w), h(h), tex_id(tex->handle),
+  tex_width(tex->tex_header.tex_width),
+  tex_height(tex->tex_header.tex_height) {
+}
+
 f32 TextureSubImage::GetTexCoordX() const {
-  f32 tex_width = tex->tex_header.tex_width;
   return x / tex_width;
 }
 f32 TextureSubImage::GetTexCoordY() const {
-  f32 tex_height = tex->tex_header.tex_height;
   return y / tex_height;
 }
 f32 TextureSubImage::GetTexCoordWidth() const {
-  f32 tex_width = tex->tex_header.tex_width;
   return width / tex_width;
 }
 f32 TextureSubImage::GetTexCoordHeight() const {
-  f32 tex_height = tex->tex_header.tex_height;
   return height / tex_height;
 }
 ////////////////////////////////

@@ -83,6 +83,7 @@
     <ClInclude Include="arch.h" />
     <ClInclude Include="low_level_c_file.h" />
     <ClInclude Include="gl_helper.h" />
+    <ClInclude Include="selector.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="shared_ptr_inc.h" />
     <ClInclude Include="sora_stdafx.h" />
@@ -92,6 +93,7 @@
     <ClInclude Include="texture.h" />
     <ClInclude Include="texture_atlas.h" />
     <ClInclude Include="touch.h" />
+    <ClInclude Include="uicomponent.h" />
     <ClInclude Include="unordered_map_inc.h" />
     <ClInclude Include="vector.h" />
     <ClInclude Include="xml_node.h" />

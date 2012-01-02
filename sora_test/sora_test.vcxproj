@@ -19,6 +19,7 @@
     <ClCompile Include="math_helper_test.cc" />
     <ClCompile Include="matrix_test.cc" />
     <ClCompile Include="mem_test.cc" />
+    <ClCompile Include="selector_test.cc" />
     <ClCompile Include="shader_test.cc" />
     <ClCompile Include="sora_test_stdafx.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -57,6 +57,9 @@ public:
     float up_x, float up_y, float up_z);
   static void Perspective(float fovy, float aspect, float zNear, float zFar);
 
+  // 점을 낱개로 찍는것도 허용하지만 vbo같은 느낌으로 한방에 그리는것도
+  // 가능하도록 뚫어놓자
+
 private:
   ImmediateModeEmulatorImpl *impl_;
   static ImmediateModeEmulatorImpl *impl();

@@ -29,10 +29,8 @@ struct TextureSubImage;
 // 텍스쳐 아틀라스에서의 좌표계 원점은 왼쪽위이다
 // 왜냐하면 일반적으로 이미지 좌표계를 사용할때는 왼쪽위를 기준으로 쓰니까
 struct TextureSubImage {
-  TextureSubImage()
-    : x(0), y(0), width(0), height(0), tex(NULL) {}
-  TextureSubImage(f32 x, f32 y, f32 w, f32 h, Texture *tex)
-    : x(x), y(y), width(w), height(h), tex(tex) {}
+  TextureSubImage();
+  TextureSubImage(f32 x, f32 y, f32 w, f32 h, Texture *tex);
 
   // 텍스쳐 이미지에서의 좌표(이미지 크기 기준)
   f32 x;
@@ -48,8 +46,9 @@ struct TextureSubImage {
   };
 
   // opengl texture
-  // subimage에서 texture atlas로 접근할 일은 없을테니까 이렇게함
-  Texture *tex;
+  GLuint tex_id;
+  float tex_width;
+  float tex_height;
 
   // 텍스쳐 좌표기준(0~1로 보정된 값)
   f32 GetTexCoordX() const;
