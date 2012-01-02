@@ -25,6 +25,7 @@
 #include "math_helper.h"
 #include "shader.h"
 #include "gl_inc.h"
+#include "matrix_stack.h"
 
 namespace sora {;
 const char vert_src[] = " \
@@ -54,7 +55,7 @@ struct Vertex {
 class ImmediateModeEmulatorImpl {
 public:
   ImmediateModeEmulatorImpl()
-    : mode(0), curr_index(0), matrix_mode(kProjection) {
+    : mode(0), curr_index(0) {
     // initialize program
     prog.Init(vert_src, frag_src);
 
@@ -72,9 +73,6 @@ public:
 
       base_index += 6;
     }
-    // matrix stack를 적절히 초기화
-    SetIdentity(&projection_mat);
-    SetIdentity(&modelview_mat);
   }
 
   Program prog;
@@ -86,24 +84,6 @@ public:
   Vertex vert;
   int curr_index;
   GLenum mode;
-
-  //matrix stack
-  typedef std::vector<mat4> MatrixStackType;
-  enum {
-    kProjection,
-    kModelview,
-  };
-  int matrix_mode;
-  mat4 &GetCurrMatrix() {
-    if (matrix_mode == kProjection) {
-      return projection_mat;
-    } else {
-      return modelview_mat;
-    }
-  }
-  MatrixStackType matrix_stack;
-  mat4 projection_mat;
-  mat4 modelview_mat;
 
   // shader location
   int modelview_location;
@@ -187,8 +167,9 @@ void ImmediateModeEmulator::End() {
   ImmediateModeEmulatorImpl *renderer = impl();
 
   // modelview, projection을 적절히 적용
-  mat4 &projection = renderer->projection_mat;
-  mat4 &modelview = renderer->modelview_mat;
+  MatrixStack &mat_stack = MatrixStack::GetInstance();
+  const mat4 &projection = mat_stack.projection_mat();
+  const mat4 &modelview = mat_stack.modelview_mat();
   srglUniformMatrix4fv(renderer->projection_location, 1, GL_FALSE, projection.value);
   srglUniformMatrix4fv(renderer->modelview_location, 1, GL_FALSE, modelview.value);
 
@@ -203,95 +184,5 @@ void ImmediateModeEmulator::End() {
   }
 }
 
-void ImmediateModeEmulator::UseProjectionMatrixMode() {
-  ImmediateModeEmulatorImpl *renderer = impl();
-  renderer->matrix_mode = ImmediateModeEmulatorImpl::kProjection;
-}
-void ImmediateModeEmulator::UseModelviewMatrixMode() {
-  ImmediateModeEmulatorImpl *renderer = impl();
-  renderer->matrix_mode = ImmediateModeEmulatorImpl::kModelview;
-}
-void ImmediateModeEmulator::SetMatrixToIdentity() {
-  ImmediateModeEmulatorImpl *renderer = impl();
-  mat4 &m = renderer->GetCurrMatrix();
-  SetIdentity(&m);
-}
-void ImmediateModeEmulator::PushMatrix() {
-  ImmediateModeEmulatorImpl *renderer = impl();
-  mat4 &m = renderer->GetCurrMatrix();
-  renderer->matrix_stack.push_back(m);
-}
-void ImmediateModeEmulator::PopMatrix() {
-  ImmediateModeEmulatorImpl *renderer = impl();
-  SR_ASSERT(renderer->matrix_stack.empty() == false);
-  mat4 &back = renderer->matrix_stack.back();
-  renderer->matrix_stack.pop_back();
-  mat4 &m = renderer->GetCurrMatrix();
-  m = back;
-}
-void ImmediateModeEmulator::Scale(float x, float y, float z) {
-  mat4 scale;
-  SetScale(x, y, z, &scale);
-  MultMatrix(scale.value);
-}
-void ImmediateModeEmulator::Translate(float x, float y, float z) {
-  mat4 translate;
-  SetTranslate(x, y, z, &translate);
-  MultMatrix(translate.value);
-}
-void ImmediateModeEmulator::Rotate(float degree, float x, float y, float z) {
-  mat4 rotate;
-  if (x == 0 && y == 0 && z == 1) {
-    SetRotateZ(degree, &rotate);
-  } else if (x == 0 && y == 1 && z == 0) {
-    SetRotateY(degree, &rotate);
-  } else if (x == 1 && y == 0 && z == 0) {
-    SetRotateX(degree, &rotate);
-  } else {
-    SR_ASSERT(!"not support rotation");
-  }
-  MultMatrix(rotate.value);
-}
-void ImmediateModeEmulator::MultMatrix(float *m) {
-  ImmediateModeEmulatorImpl *renderer = impl();
-  mat4 &curr_mat = renderer->GetCurrMatrix();
-  mat4 tmp(m);
-  curr_mat *= tmp;
-}
-void ImmediateModeEmulator::MatrixMode(int matrix_mode) {
-  switch (matrix_mode) {
-  case SR_PROJECTION:
-#ifdef GL_PROJECTION
-  case GL_PROJECTION:
-#endif
-    UseProjectionMatrixMode();
-    break;
-  case SR_MODELVIEW:
-#ifdef GL_MODELVIEW
-  case GL_MODELVIEW:
-#endif
-    UseModelviewMatrixMode();
-    break;
-  }
-}
-
-void ImmediateModeEmulator::LookAt(float eye_x, float eye_y, float eye_z,
-  float target_x, float target_y, float target_z,
-  float up_x, float up_y, float up_z) {
-  mat4 lookat;
-  SetLookAt(eye_x, eye_y, eye_z,
-    target_x, target_y, target_z,
-    up_x, up_y, up_z, &lookat);
-  ImmediateModeEmulatorImpl *renderer = impl();
-  mat4 &curr_mat = renderer->GetCurrMatrix();
-  curr_mat *= lookat;
-}
-void ImmediateModeEmulator::Perspective(float fovy, float aspect, float zNear, float zFar) {
-  mat4 tmp;
-  SetPerspective(fovy, aspect, zNear, zFar, &tmp);
-  ImmediateModeEmulatorImpl *renderer = impl();
-  mat4 &curr_mat = renderer->GetCurrMatrix();
-  curr_mat *= tmp;
-}
 
 }

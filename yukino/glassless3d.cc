@@ -3,6 +3,7 @@
 
 #include "glassless3d.h"
 #include "sora/immediate_mode_emulator.h"
+#include "sora/matrix_stack.h"
 
 #include "camera.h"
 #include "book_scene.h"

@@ -95,6 +95,9 @@
     <ClInclude Include="uicomponent.h">
       <Filter>ui</Filter>
     </ClInclude>
+    <ClInclude Include="matrix_stack.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cc">
@@ -154,6 +157,9 @@
     </ClCompile>
     <ClCompile Include="locale.cc">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix_stack.cc">
+      <Filter>renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

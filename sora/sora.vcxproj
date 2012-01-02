@@ -78,6 +78,7 @@
     <ClInclude Include="logger.h" />
     <ClInclude Include="math_helper.h" />
     <ClInclude Include="matrix.h" />
+    <ClInclude Include="matrix_stack.h" />
     <ClInclude Include="mem.h" />
     <ClInclude Include="memory_file.h" />
     <ClInclude Include="arch.h" />
@@ -109,6 +110,7 @@
     <ClCompile Include="logger.cc" />
     <ClCompile Include="low_level_c_file.cc" />
     <ClCompile Include="math_helper.cc" />
+    <ClCompile Include="matrix_stack.cc" />
     <ClCompile Include="mem.cc" />
     <ClCompile Include="memory_file.cc" />
     <ClCompile Include="gl_helper.cc" />
