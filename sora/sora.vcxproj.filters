@@ -98,6 +98,9 @@
     <ClInclude Include="matrix_stack.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="basic_shader.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cc">
@@ -159,6 +162,9 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="matrix_stack.cc">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="basic_shader.cc">
       <Filter>renderer</Filter>
     </ClCompile>
   </ItemGroup>

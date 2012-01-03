@@ -23,33 +23,11 @@
 
 #include "matrix.h"
 #include "math_helper.h"
-#include "shader.h"
 #include "gl_inc.h"
 #include "matrix_stack.h"
+#include "basic_shader.h"
 
 namespace sora {;
-const char vert_src[] = " \
-  uniform mat4 u_projection;  \
-  uniform mat4 u_modelview; \
-attribute vec3 a_position;  \
-attribute vec2 a_texcoord;    \
-attribute vec4 a_color; \
-varying vec2 v_texcoord;  \
-varying vec4 v_color; \
-void main() { \
-	v_texcoord = a_texcoord;  \
-  v_color = a_color;  \
-  gl_Position = u_projection * u_modelview * vec4(a_position, 1.0);   \
-}";
-
-const char frag_src[] = " \
-precision mediump float;  \
-varying lowp vec2 v_texcoord; \
-varying lowp vec4 v_color; \
-uniform sampler2D s_texture;  \
-void main() { \
-gl_FragColor = v_color * texture2D(s_texture, v_texcoord);  \
-}";
 
 struct Vertex {
   float xyz[3];
@@ -61,9 +39,6 @@ class ImmediateModeEmulatorImpl {
 public:
   ImmediateModeEmulatorImpl()
     : mode(0), curr_index(0) {
-    // initialize program
-    prog.Init(vert_src, frag_src);
-
     // make quad index
     int base_index = 0;
     for (int i = 0 ; i < kTriangleCount / 2; i++) {
@@ -84,7 +59,6 @@ public:
     }
   }
 
-  Program prog;
   static const int kTriangleCount = 2048;
   static const int kVertexCount = kTriangleCount * 3;
   Vertex vertex_list[kVertexCount];
@@ -96,10 +70,6 @@ public:
 
   //color값은 1회 설정한것이 지속된다
   float color[4];
-
-  // shader location
-  int modelview_location;
-  int projection_location;
 };
 
 ImmediateModeEmulator::ImmediateModeEmulator()
@@ -114,40 +84,28 @@ ImmediateModeEmulator::~ImmediateModeEmulator() {
 void ImmediateModeEmulator::Init() {
   impl_ = new ImmediateModeEmulatorImpl();
   
-  Program &prog = impl_->prog;
-  srglUseProgram(prog.prog);
-  GLint modelview_location = prog.GetUniformLocation("u_modelview");
-  GLint projection_location = prog.GetUniformLocation("u_projection");
-  SR_ASSERT(modelview_location != -1);
-  SR_ASSERT(projection_location != -1);
-  impl_->projection_location = projection_location;
-  impl_->modelview_location =modelview_location;
+  BasicShader &basic_shader = BasicShader::GetInstance();
+  basic_shader.Use();
   
-  GLint texcoord_location = prog.GetAttribLocation("a_texcoord");
-  GLint position_location = prog.GetAttribLocation("a_position");
-  GLint color_location = prog.GetAttribLocation("a_color");
-  SR_ASSERT(texcoord_location != -1);
-  SR_ASSERT(position_location != -1);
-  SR_ASSERT(color_location != -1);
-  srglEnableVertexAttribArray(texcoord_location);
-  srglEnableVertexAttribArray(position_location);
-  srglEnableVertexAttribArray(color_location);
+  srglEnableVertexAttribArray(basic_shader.texcoord_location);
+  srglEnableVertexAttribArray(basic_shader.position_location);
+  srglEnableVertexAttribArray(basic_shader.color_location);
   
   const void *position_ptr = impl_->vertex_list[0].xyz;
   const void *texcoord_ptr = impl_->vertex_list[0].st;
   const void *color_ptr = impl_->vertex_list[0].rgba;
-  srglVertexAttribPointer(position_location, 3, GL_FLOAT,
+  srglVertexAttribPointer(basic_shader.position_location, 3, GL_FLOAT,
     GL_FALSE, sizeof(Vertex), position_ptr);
-  srglVertexAttribPointer(texcoord_location, 2, GL_FLOAT,
+  srglVertexAttribPointer(basic_shader.texcoord_location, 2, GL_FLOAT,
     GL_FALSE, sizeof(Vertex), texcoord_ptr);
-  srglVertexAttribPointer(color_location, 4, GL_FLOAT,
+  srglVertexAttribPointer(basic_shader.color_location, 4, GL_FLOAT,
     GL_FALSE, sizeof(Vertex), color_ptr);
 
   // default set
   mat4 identity;
   SetIdentity(&identity);
-  srglUniformMatrix4fv(projection_location, 1, GL_FALSE, identity.value);
-  srglUniformMatrix4fv(modelview_location, 1, GL_FALSE, identity.value);
+  srglUniformMatrix4fv(basic_shader.projection_location, 1, GL_FALSE, identity.value);
+  srglUniformMatrix4fv(basic_shader.modelview_location, 1, GL_FALSE, identity.value);
 
   // GL환경 설정
   srglEnable(GL_TEXTURE_2D);
@@ -191,8 +149,10 @@ void ImmediateModeEmulator::End() {
   MatrixStack &mat_stack = MatrixStack::GetInstance();
   const mat4 &projection = mat_stack.projection_mat();
   const mat4 &modelview = mat_stack.modelview_mat();
-  srglUniformMatrix4fv(renderer->projection_location, 1, GL_FALSE, projection.value);
-  srglUniformMatrix4fv(renderer->modelview_location, 1, GL_FALSE, modelview.value);
+
+  BasicShader &basic_shader = BasicShader::GetInstance();
+  srglUniformMatrix4fv(basic_shader.projection_location, 1, GL_FALSE, projection.value);
+  srglUniformMatrix4fv(basic_shader.modelview_location, 1, GL_FALSE, modelview.value);
 
   // draw mesh
   if (renderer->mode == GL_QUADS) {
