@@ -39,6 +39,8 @@ void Init();
 
 void InitWindow(int w, int h);
 
+sora::Texture *tex = NULL;
+
 int main(int argc, char *argv) {
   // init glfw
   sora::GLWindow win(win_width, win_height, sora::kWinModeWindow, 1);
@@ -73,7 +75,6 @@ int main(int argc, char *argv) {
   return 0;
 }
 
-sora::Texture tex;
 void Update(int ms) {
   //sora::glfwMouseUpdate(win_width, win_height); ???
 
@@ -114,11 +115,13 @@ void Init() {
 
   srglViewport(0, 0, win_width, win_height);
 
+  //텍스쳐 떄려박는건 좀 무식한거같은데...
   using std::string;
   string filename = "\\res\\Scene10.png";
   //string filename = "\\res\\test.png";
   filename = sora::Filesystem::GetAppPath(filename);
-  sora::Texture::LoadFromPNG(filename, &tex);
+  tex = new sora::Texture();
+  sora::Texture::LoadFromPNG(filename, tex);
 
   yukino::Glassless3d::GetInstance().Init();
 }

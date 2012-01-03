@@ -21,7 +21,7 @@ using namespace sora;
 
 namespace yukino {;
 
-sora::Texture tex;
+sora::Texture *tex = NULL;
 TextureAtlas tex_atlas;
 
 ////////////////
@@ -62,9 +62,10 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
     texPtr = TextureManager::GetInstance().Create(texDesc, res);
   }
   */
-  if(tex.handle == 0) {
+  if(tex == NULL) {
     string resPath = sora::Filesystem::GetAppPath(res);
-    sora::Texture::LoadFromPNG(resPath, &tex);
+    tex = new Texture();
+    sora::Texture::LoadFromPNG(resPath, tex);
   }
 
 
@@ -84,19 +85,19 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
   if(wStr.size() > 0) {
     w = StringToInt(wStr);
   } else {
-    w = tex.tex_header.src_width;
+    w = tex->tex_header.src_width;
   }
   if(hStr.size() > 0) {
     h = StringToInt(hStr);
   } else {
-    h = tex.tex_header.src_height;
+    h = tex->tex_header.src_height;
   }
   SR_ASSERT(w > 0);
   SR_ASSERT(h > 0);
 
   //텍스쳐+크기로 atlas 구성하기. 텍스쳐 아틀라스에 등록시의 이름은
   //res자체의 이름으로 쓰자
-  tex_atlas.tex = &tex; ///@FIXME texture 대충 연결
+  tex_atlas.tex = tex; ///@FIXME texture 대충 연결
   TextureSubImage &segment = tex_atlas.AddSubImage(name, x, y, w, h);
   spriteDict_[name] = segment;
 }

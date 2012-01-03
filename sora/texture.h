@@ -101,6 +101,7 @@ public:
 
 class Texture {
 public:
+  static GLuint GetSampleTexture(int *width, int *height);
   static Texture &Sample();
   static Texture &White();
   static Texture &Black();
@@ -112,8 +113,8 @@ public:
   static boolean LoadFromPNG(const char *filepath, Texture *tex);
 
 private:
-  static void InitSimpleTexture(i32 width, i32 height, TexFormat fmt,
-    void *data, Texture *tex);
+  void InitSimpleTexture(i32 width, i32 height, const TexFormat &fmt, void *data);
+  void Init(const TexFormat &fmt, const TextureHeader &header, const TextureParameter &param, void *data);
 
 public:
   Texture();

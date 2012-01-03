@@ -19,12 +19,14 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_stdafx.h"
-#include "sora/texture.h"
+#include "texture.h"
 #include <png.h>
-#include "sora/memory_file.h"
+#include "memory_file.h"
+#include "gl_helper.h"
 
 namespace sora {;
 
+///////////////
 // 0 : sora enum
 // 1 : gl enum
 // 2 : use mipmap?
@@ -143,40 +145,84 @@ boolean TextureParameter::IsMipMap(TexMinFilter min_filter) {
 
 Texture::Texture()
   : handle(0) {
-  // 초기화 코드 공유를 위해서
-  Cleanup();
+  // 최초에 텍스쳐가 할당되어있지 않으면 sample을 대신 띄운다
+  handle = GetSampleTexture(&tex_header.tex_width, &tex_header.tex_height);
+  tex_header.src_width = tex_header.tex_width;
+  tex_header.src_height = tex_header.tex_height;
+  format = kTexFormatRGB888;
+
+  param_.wrap_s = kTexWrapRepeat;
+  param_.wrap_t = kTexWrapRepeat;
+  param_.min_filter = kTexMinNearestMipMapOff;
+  param_.mag_filter = kTexMagNearest;
 }
 Texture::~Texture() {
   Cleanup();
 }
 void Texture::Cleanup() {
-  param_.wrap_s = kTexWrapRepeat;
-  param_.wrap_t = kTexWrapRepeat;
-  param_.min_filter = kTexMinNearestMipMapOff;
-  param_.mag_filter = kTexMagNearest;
-  
-  format = kTexFormatAuto;
-
   if (handle == 0) {
     return;
   }
-  srglDeleteTextures(1, &handle);
+
+  int w, h;
+  GLuint sample_tex_id = GetSampleTexture(&w, &h);
+  if(sample_tex_id != handle) {
+    // sample텍스쳐는 공유하므로 삭제하지 않는다
+    srglDeleteTextures(1, &handle);
+    handle = 0;
+  }
 }
-Texture &Texture::Sample() {
+//테스트로 쓰이는 샘플 텍스쳐는 gl함수를 썡으로 해서 생성이 가능하게 하자. 이것을 통하면
+//glint로된 핸들을 직접 받아서 다룰수 있으니 디버깅에 더 유리할 것이다
+GLuint Texture::GetSampleTexture(int *width, int *height) {
   static bool run = false;
-  static Texture tex;
+  static GLuint tex_id = -1;
+
+  const int w = 2;
+  const int h = 2;
+  if (!width) {
+    *width = w;
+  }
+  if (!height) {
+    *height = h;
+  }
+
   if (run == false) {
     run = true;
+
     unsigned char tex_data[] = {
       255, 0, 0, 255,
       0, 255, 0, 255,
       0, 0, 255, 255,
       255, 255, 255, 255,
     };
-    InitSimpleTexture(2, 2, kTexFormatRGBA8888, tex_data, &tex);
+
+    srglGenTextures(1, &tex_id);
+    srglBindTexture(GL_TEXTURE_2D, tex_id);
+    srglPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
+    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); 
+    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    srglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex_data);
+  }
+  return tex_id;
+}
+
+Texture &Texture::Sample() {
+  static bool run = false;
+  static Texture tex;
+  if (run == false) {
+    run = true;
+    tex.handle = GetSampleTexture(&tex.tex_header.tex_width, &tex.tex_header.tex_height);
+    tex.tex_header.src_width = tex.tex_header.tex_width;
+    tex.tex_header.src_height = tex.tex_header.tex_height;
+    tex.format = kTexFormatRGB888;
   }
   return tex;
 }
+
 Texture &Texture::White() {
   static bool run = false;
   static Texture tex;
@@ -188,7 +234,7 @@ Texture &Texture::White() {
       255, 255, 255, 255,
       255, 255, 255, 255,
     };
-    InitSimpleTexture(2, 2, kTexFormatRGBA8888, tex_data, &tex);
+    tex.InitSimpleTexture(2, 2, kTexFormatRGBA8888, tex_data);
   }
   return tex;
 }
@@ -203,7 +249,7 @@ Texture &Texture::Black() {
       0, 0, 0, 255,
       0, 0, 0, 255,
     };
-    InitSimpleTexture(2, 2, kTexFormatRGBA8888, tex_data, &tex);
+    tex.InitSimpleTexture(2, 2, kTexFormatRGBA8888, tex_data);
   }
   return tex;
 }
@@ -218,45 +264,28 @@ Texture &Texture::Gray() {
       128, 128, 128, 255,
       128, 128, 128, 255,
     };
-    InitSimpleTexture(2, 2, kTexFormatRGBA8888, tex_data, &tex);
+    tex.InitSimpleTexture(2, 2, kTexFormatRGBA8888, tex_data);
   }
   return tex;
 }
-void Texture::InitSimpleTexture(i32 width, i32 height, TexFormat fmt,
-  void *data, Texture *tex) {
+void Texture::InitSimpleTexture(i32 width, i32 height, const TexFormat &fmt, void *data) {
+  Cleanup();
 
   static TextureParameter default_param;
   default_param.min_filter = kTexMinNearestMipMapOff;
   default_param.mag_filter = kTexMagNearest;
   default_param.wrap_s = kTexWrapRepeat;
   default_param.wrap_t = kTexWrapRepeat;
+
+  SR_ASSERT(fmt == kTexFormatRGBA8888 && "not support other yet");
+  TextureHeader header;
+  header.bpp = 32;
+  header.src_width = width;
+  header.src_height = height;
+  header.tex_width = width;
+  header.tex_height = height;
   
-  if (fmt == kTexFormatRGBA8888) {
-    GLuint tex_id;
-    srglGenTextures(1, &tex_id);
-    srglBindTexture(GL_TEXTURE_2D, tex_id);
-    srglPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, default_param.gl_min_filter()); 
-    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, default_param.gl_mag_filter()); 
-    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, default_param.gl_wrap_s());
-    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, default_param.gl_wrap_t());
-    srglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-    //use mipmap
-    glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, default_param.IsMipMap());
-
-    tex->format = fmt;
-    tex->handle = tex_id;
-    tex->param_ = default_param;
-
-    tex->tex_header.bpp = 32;
-    tex->tex_header.src_width = 2;
-    tex->tex_header.src_height = 2;
-    tex->tex_header.tex_width = 2;
-    tex->tex_header.tex_height = 2;
-
-  } else {
-    SR_ASSERT(!"not support yet");
-  }
+  Init(fmt, header, default_param, data);
 }
 
 void png_asset_read(png_structp png_ptr, png_bytep data, png_size_t length);
@@ -444,6 +473,12 @@ boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
 		}
 	}
   */
+
+  // clean png data
+  delete[]((png_bytep)row_ptrs);
+  //And don't forget to clean up the read and info structs !
+	png_destroy_read_struct(&png_ptr, &info_ptr,(png_infopp)0);
+
 	//load complete, create texture
 	//////////////////////////////////////////
 	
@@ -473,11 +508,9 @@ boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
 	glTexImage2D(GL_TEXTURE_2D, 0, gl_format, img_width, img_height, 0, gl_format, GL_UNSIGNED_BYTE, (GLvoid*) data);
 	
 	//clean up
-	//Delete the row pointers array....
-	delete[]((png_bytep)row_ptrs);
+	//픽셀데이터는 나중에 따로 처리한다
 	delete[](data);
-	//And don't forget to clean up the read and info structs !
-	png_destroy_read_struct(&png_ptr, &info_ptr,(png_infopp)0);
+	
 	//////////////////////////////////
 
   LOGI("Load PNG Texture End");
@@ -493,5 +526,30 @@ void Texture::SetTextureParameter(const TextureParameter &param) {
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, param_.gl_wrap_t());
   //use mipmap
 	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, param_.IsMipMap());
+}
+
+void Texture::Init(const TexFormat &fmt, const TextureHeader &header, const TextureParameter &param, void *data) {
+  this->format = fmt;
+  this->tex_header = header;
+  this->param_ = param;
+
+  if (fmt == kTexFormatRGBA8888) {
+    GLuint tex_id;
+    srglGenTextures(1, &tex_id);
+    srglBindTexture(GL_TEXTURE_2D, tex_id);
+    srglPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, param.gl_min_filter()); 
+    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, param.gl_mag_filter()); 
+    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, param.gl_wrap_s());
+    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, param.gl_wrap_t());
+    srglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, header.tex_width, header.tex_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    //use mipmap
+    glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, param.IsMipMap());
+
+    this->handle = tex_id;
+
+  } else {
+    SR_ASSERT(!"not support yet");
+  }
 }
 }
