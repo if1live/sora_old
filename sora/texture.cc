@@ -228,13 +228,7 @@ Texture &Texture::White() {
   static Texture tex;
   if (run == false) {
     run = true;
-    unsigned char tex_data[] = {
-      255, 255, 255, 255,
-      255, 255, 255, 255,
-      255, 255, 255, 255,
-      255, 255, 255, 255,
-    };
-    tex.InitSimpleTexture(2, 2, kTexFormatRGBA8888, tex_data);
+    ColorTexture(255, 255, 255, &tex);
   }
   return tex;
 }
@@ -243,13 +237,7 @@ Texture &Texture::Black() {
   static Texture tex;
   if (run == false) {
     run = true;
-    unsigned char tex_data[] = {
-      0, 0, 0, 255,
-      0, 0, 0, 255,
-      0, 0, 0, 255,
-      0, 0, 0, 255,
-    };
-    tex.InitSimpleTexture(2, 2, kTexFormatRGBA8888, tex_data);
+    ColorTexture(0, 0, 0, &tex);
   }
   return tex;
 }
@@ -258,16 +246,48 @@ Texture &Texture::Gray() {
   static Texture tex;
   if (run == false) {
     run = true;
-    unsigned char tex_data[] = {
-      128, 128, 128, 255,
-      128, 128, 128, 255,
-      128, 128, 128, 255,
-      128, 128, 128, 255,
-    };
-    tex.InitSimpleTexture(2, 2, kTexFormatRGBA8888, tex_data);
+    ColorTexture(128, 128, 128, &tex);
   }
   return tex;
 }
+Texture &Texture::Red() {
+  static bool run = false;
+  static Texture tex;
+  if (run == false) {
+    run = true;
+    ColorTexture(255, 0, 0, &tex);
+  }
+  return tex;
+}
+Texture &Texture::Green() {
+  static bool run = false;
+  static Texture tex;
+  if (run == false) {
+    run = true;
+    ColorTexture(0, 255, 0, &tex);
+  }
+  return tex;
+}
+Texture &Texture::Blue() {
+  static bool run = false;
+  static Texture tex;
+  if (run == false) {
+    run = true;
+    ColorTexture(0, 0, 255, &tex);
+  }
+  return tex;
+}
+
+void Texture::ColorTexture(u32 r, u32 g, u32 b, Texture *tex) {
+  unsigned char tex_data[] = {
+    r, g, b, 255,
+    r, g, b, 255,
+    r, g, b, 255,
+    r, g, b, 255,
+  };
+  tex->InitSimpleTexture(2, 2, kTexFormatRGBA8888, tex_data);
+}
+
 void Texture::InitSimpleTexture(i32 width, i32 height, const TexFormat &fmt, void *data) {
   Cleanup();
 

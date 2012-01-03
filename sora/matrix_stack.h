@@ -49,6 +49,7 @@ public:
     float target_x, float target_y, float target_z,
     float up_x, float up_y, float up_z);
   void Perspective(float fovy, float aspect, float zNear, float zFar);
+  void Ortho(float left, float right, float bottom, float top, float near_val, float far_val);
 
   const mat4 &modelview_mat() const { return modelview_mat_; }
   const mat4 &projection_mat() const { return projection_mat_; }
@@ -102,6 +103,9 @@ inline void srglLookAt(float eye_x, float eye_y, float eye_z,
   float up_x, float up_y, float up_z) {
   sora::MatrixStack::GetInstance().LookAt(eye_x, eye_y, eye_z,
     target_x, target_y, target_z, up_x, up_y, up_z); 
+}
+inline void srglOrtho(float left, float right, float bottom, float top, float near_val, float far_val) {
+  sora::MatrixStack::GetInstance().Ortho(left, right, bottom, top, near_val, far_val);
 }
 
 #define SR_PROJECTION 1

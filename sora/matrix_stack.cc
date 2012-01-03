@@ -127,5 +127,11 @@ void MatrixStack::Perspective(float fovy, float aspect, float zNear, float zFar)
   mat4 &curr_mat = GetCurrMatrix();
   curr_mat *= tmp;
 }
+void MatrixStack::Ortho(float left, float right, float bottom, float top, float near_val, float far_val) {
+  mat4 tmp;
+  SetOrtho(left, right, bottom, top, near_val, far_val, &tmp);
+  mat4 &curr_mat = GetCurrMatrix();
+  curr_mat *= tmp;
+}
 
 }

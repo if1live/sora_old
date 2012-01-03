@@ -103,10 +103,16 @@ class Texture {
 public:
   static GLuint GetSampleTexture(int *width, int *height);
   static Texture &Sample();
+  //테스트용 텍스쳐는 색깔별로
   static Texture &White();
   static Texture &Black();
   static Texture &Gray();
+  static Texture &Red();
+  static Texture &Blue();
+  static Texture &Green();
+  static void ColorTexture(u32 r, u32 g, u32 b, Texture *tex);
   
+public:
   static boolean LoadFromPNG(const std::string &filepath, Texture *tex) {
     return LoadFromPNG(filepath.c_str(), tex);
   }

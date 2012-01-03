@@ -107,6 +107,24 @@ void Draw(int ms) {
   srglTexCoord2f(0, 1); srglVertex3f(-0.5, 0.5, 0);
   srglEnd();
   */
+  {
+    sora::Texture &color_tex = sora::Texture::Green();
+    glBindTexture(GL_TEXTURE_2D, color_tex.handle);
+    //2d test
+    srglMatrixMode(SR_PROJECTION);
+    srglLoadIdentity();
+    srglOrtho(0, 100, 0, 100, -1, 1);
+
+    srglMatrixMode(SR_MODELVIEW);
+    srglLoadIdentity();
+
+    srglBegin(GL_LINE_LOOP);
+    srglTexCoord2f(0, 0); srglVertex2f(10, 10);
+    srglTexCoord2f(1, 0); srglVertex2f(90, 10);
+    srglTexCoord2f(1, 1); srglVertex2f(90, 90);
+    srglTexCoord2f(0, 1); srglVertex2f(10, 90);
+    srglEnd();
+  }
   sora::GLHelper::CheckError("DrawEnd");
 }
 void Init() {
