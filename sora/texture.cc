@@ -395,10 +395,11 @@ boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
 	}
 
 	//format으로 헤더 초기화
-  tex->tex_header.src_width = img_width;
-  tex->tex_header.src_height = img_height;
-  tex->tex_header.tex_width = img_width;
-  tex->tex_header.tex_height = img_height;
+  TextureHeader tex_header;
+  tex_header.src_width = img_width;
+  tex_header.src_height = img_height;
+  tex_header.tex_width = img_width;
+  tex_header.tex_height = img_height;
 
   TexFormat format = kTexFormatRGBA8888;
 	switch(color_type) {
@@ -426,8 +427,6 @@ boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
 	default: 
     SR_ASSERT(!"do not reach");
 	}
-  tex->format = format;
-
 
 	//Here's one of the pointers we've defined in the error handler section:
 	//Array of row pointers. One for every row.
@@ -483,30 +482,13 @@ boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
 	//////////////////////////////////////////
 	
 	//텍스쳐 생성하기
-	GLuint texture;
-	glGenTextures(1, &texture);
-  glBindTexture(GL_TEXTURE_2D, texture);
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  TextureParameter param;
+  param.mag_filter = kTexMagLinear;
+  param.min_filter = kTexMinLinearMipMapNearest;
+  param.wrap_s = kTexWrapRepeat;
+  param.wrap_t = kTexWrapRepeat;
+  tex->Init(format, tex_header, param, data);
 
-  //set texture default parameter;
-  tex->param_.mag_filter = kTexMagLinear;
-  tex->param_.min_filter = kTexMinLinearMipMapNearest;
-  tex->param_.wrap_s = kTexWrapRepeat;
-  tex->param_.wrap_t = kTexWrapRepeat;
-	
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, tex->param_.gl_mag_filter());
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, tex->param_.gl_min_filter());
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, tex->param_.gl_wrap_s());
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, tex->param_.gl_wrap_t());
-	//use mipmap
-  glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, tex->param_.IsMipMap());
-  
-  tex->handle = texture;
-  
-
-  GLenum gl_format = TextureParameter::ConvertToGLenum(format);
-	glTexImage2D(GL_TEXTURE_2D, 0, gl_format, img_width, img_height, 0, gl_format, GL_UNSIGNED_BYTE, (GLvoid*) data);
-	
 	//clean up
 	//픽셀데이터는 나중에 따로 처리한다
 	delete[](data);
@@ -514,7 +496,6 @@ boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
 	//////////////////////////////////
 
   LOGI("Load PNG Texture End");
-
 	return tex;
 }
 void Texture::SetTextureParameter(const TextureParameter &param) {
