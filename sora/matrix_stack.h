@@ -69,27 +69,40 @@ private:
 };
 }
 
-#define srglPushMatrix()  \
-{ sora::MatrixStack::GetInstance().PushMatrix(); }
-#define srglPopMatrix()   \
-{ sora::MatrixStack::GetInstance().PopMatrix(); }
-#define srglScalef(X, Y, Z)      \
-{ sora::MatrixStack::GetInstance().Scale(X, Y, Z); }
-#define srglTranslatef(X, Y, Z)  \
-{ sora::MatrixStack::GetInstance().Translate(X, Y, Z); }
-#define srglRotatef(DEG, X, Y, Z)   \
-{ sora::MatrixStack::GetInstance().Rotate(DEG, X, Y, Z); }
+inline void srglPushMatrix() { 
+  sora::MatrixStack::GetInstance().PushMatrix(); 
+}
+inline void srglPopMatrix() {
+  sora::MatrixStack::GetInstance().PopMatrix(); 
+}
+inline void srglScalef(float x, float y, float z) {
+  sora::MatrixStack::GetInstance().Scale(x, y, z); 
+}
+inline void srglTranslatef(float x, float y, float z)  {
+  sora::MatrixStack::GetInstance().Translate(x, y, z); 
+}
+inline void srglRotatef(float deg, float x, float y, float z) {
+  sora::MatrixStack::GetInstance().Rotate(deg, x, y, z); 
+}
 
-#define srglLoadIdentity()  \
-{ sora::MatrixStack::GetInstance().SetMatrixToIdentity(); }
-#define srglMultMatrix(M) \
-{ sora::MatrixStack::GetInstance().MultMatrix(M); }
-#define srglMatrixMode(MODE)  \
-{ sora::MatrixStack::GetInstance().MatrixMode(MODE); }
-#define srglPerspective(fovy, aspect, zNear, zFar)  \
-{ sora::MatrixStack::GetInstance().Perspective(fovy, aspect, zNear, zFar); }
-#define srglLookAt(eye_x, eye_y, eye_z, target_x, target_y, target_z, up_x, up_y, up_z) \
-{ sora::MatrixStack::GetInstance().LookAt(eye_x, eye_y, eye_z, target_x, target_y, target_z, up_x, up_y, up_z); }
+inline void srglLoadIdentity() {
+  sora::MatrixStack::GetInstance().SetMatrixToIdentity(); 
+}
+inline void srglMultMatrix(float *m) {
+  sora::MatrixStack::GetInstance().MultMatrix(m); 
+}
+inline void srglMatrixMode(int mode) {
+  sora::MatrixStack::GetInstance().MatrixMode(mode); 
+}
+inline void srglPerspective(float fovy, float aspect, float zNear, float zFar) {
+  sora::MatrixStack::GetInstance().Perspective(fovy, aspect, zNear, zFar); 
+}
+inline void srglLookAt(float eye_x, float eye_y, float eye_z,
+  float target_x, float target_y, float target_z, 
+  float up_x, float up_y, float up_z) {
+  sora::MatrixStack::GetInstance().LookAt(eye_x, eye_y, eye_z,
+    target_x, target_y, target_z, up_x, up_y, up_z); 
+}
 
 #define SR_PROJECTION 1
 #define SR_MODELVIEW  2

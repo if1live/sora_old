@@ -37,25 +37,35 @@ public:
   void Init();
 
   //immediate mode
-  static void Begin(GLenum mode);
-  static void Vertex3f(float x, float y, float z);
-  static void Vertex2f(float x, float y) { Vertex3f(x, y, 0); }
-  static void TexCoord2f(float s, float t);
-  static void End();
+  void Begin(GLenum mode);
+  void Vertex3f(float x, float y, float z);
+  void Vertex2f(float x, float y) { Vertex3f(x, y, 0); }
+  void TexCoord2f(float s, float t);
+  void End();
 
   // 점을 낱개로 찍는것도 허용하지만 vbo같은 느낌으로 한방에 그리는것도
   // 가능하도록 뚫어놓자
 
 private:
   ImmediateModeEmulatorImpl *impl_;
-  static ImmediateModeEmulatorImpl *impl();
+  ImmediateModeEmulatorImpl *impl();
 };
 }
 
-#define srglBegin       sora::ImmediateModeEmulator::Begin
-#define srglEnd         sora::ImmediateModeEmulator::End
-#define srglVertex3f    sora::ImmediateModeEmulator::Vertex3f
-#define srglVertex2f    sora::ImmediateModeEmulator::Vertex2f
-#define srglTexCoord2f  sora::ImmediateModeEmulator::TexCoord2f
+inline void srglBegin(int mode) {
+  sora::ImmediateModeEmulator::GetInstance().Begin(mode);
+}
+inline void srglEnd() {
+  sora::ImmediateModeEmulator::GetInstance().End();
+}
+inline void srglVertex3f(float x, float y, float z) {
+  sora::ImmediateModeEmulator::GetInstance().Vertex3f(x, y, z);
+}
+inline void srglVertex2f(float x, float y) {
+  sora::ImmediateModeEmulator::GetInstance().Vertex2f(x, y);
+}
+inline void srglTexCoord2f(float s, float t) {
+  sora::ImmediateModeEmulator::GetInstance().TexCoord2f(s, t);
+}
 
 #endif  // SORA_IMMEDIATE_MODE_EMULATOR_H_
