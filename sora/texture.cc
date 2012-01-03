@@ -295,6 +295,28 @@ void png_asset_read(png_structp png_ptr, png_bytep data, png_size_t length) {
 	file->Read((char*)data, length);
 }
 boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
+  TexFormat fmt;
+  TextureHeader header;
+  void *data = LoadPNG(filepath, &fmt, &header);
+
+	//load complete, create texture
+  TextureParameter param;
+  param.mag_filter = kTexMagLinear;
+  param.min_filter = kTexMinLinearMipMapNearest;
+  param.wrap_s = kTexWrapRepeat;
+  param.wrap_t = kTexWrapRepeat;
+  tex->Init(fmt, header, param, data);
+
+	//clean up
+	//픽셀데이터는 나중에 따로 처리한다
+	delete[](data);
+	
+	//////////////////////////////////
+
+  LOGI("Load PNG Texture End");
+	return tex;
+}
+void* Texture::LoadPNG(const char *filepath, TexFormat *fmt, TextureHeader *tex_header) {
   LOGI("Load PNG Texture Start : %s", filepath);
 
   const int PngSigSize = 8;
@@ -394,35 +416,34 @@ boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
 		png_set_packing(png_ptr);
 	}
 
-	//format으로 헤더 초기화
-  TextureHeader tex_header;
-  tex_header.src_width = img_width;
-  tex_header.src_height = img_height;
-  tex_header.tex_width = img_width;
-  tex_header.tex_height = img_height;
+	//텍스쳐 크기같은 정보 설정
+  tex_header->src_width = img_width;
+  tex_header->src_height = img_height;
+  tex_header->tex_width = img_width;
+  tex_header->tex_height = img_height;
 
-  TexFormat format = kTexFormatRGBA8888;
+  *fmt = kTexFormatRGBA8888;
 	switch(color_type) {
 	case PNG_COLOR_TYPE_PALETTE:
 		//위에서 팔레트는 RGB변환했으니
-    format = kTexFormatRGB888;
-    tex->tex_header.bpp = 24;
+    *fmt = kTexFormatRGB888;
+    tex_header->bpp = 24;
 		break;
 	case PNG_COLOR_TYPE_GRAY:
-    format = kTexFormatLuminance;
-    tex->tex_header.bpp = 8;
+    *fmt = kTexFormatLuminance;
+    tex_header->bpp = 8;
 		break;
 	case PNG_COLOR_TYPE_GRAY_ALPHA:
-    format = kTexFormatLuminanceAlpha;
-    tex->tex_header.bpp = 16;
+    *fmt = kTexFormatLuminanceAlpha;
+    tex_header->bpp = 16;
 		break;
 	case PNG_COLOR_TYPE_RGB:
-		format = kTexFormatRGB888;
-    tex->tex_header.bpp = 24;
+		*fmt = kTexFormatRGB888;
+    tex_header->bpp = 24;
 		break;
 	case PNG_COLOR_TYPE_RGB_ALPHA:
-    format = kTexFormatRGBA8888;
-    tex->tex_header.bpp = 32;
+    *fmt = kTexFormatRGBA8888;
+    tex_header->bpp = 32;
 		break;
 	default: 
     SR_ASSERT(!"do not reach");
@@ -478,26 +499,9 @@ boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
   //And don't forget to clean up the read and info structs !
 	png_destroy_read_struct(&png_ptr, &info_ptr,(png_infopp)0);
 
-	//load complete, create texture
-	//////////////////////////////////////////
-	
-	//텍스쳐 생성하기
-  TextureParameter param;
-  param.mag_filter = kTexMagLinear;
-  param.min_filter = kTexMinLinearMipMapNearest;
-  param.wrap_s = kTexWrapRepeat;
-  param.wrap_t = kTexWrapRepeat;
-  tex->Init(format, tex_header, param, data);
-
-	//clean up
-	//픽셀데이터는 나중에 따로 처리한다
-	delete[](data);
-	
-	//////////////////////////////////
-
-  LOGI("Load PNG Texture End");
-	return tex;
+  return data;
 }
+
 void Texture::SetTextureParameter(const TextureParameter &param) {
   param_ = param;
 

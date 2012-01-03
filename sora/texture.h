@@ -112,9 +112,12 @@ public:
   }
   static boolean LoadFromPNG(const char *filepath, Texture *tex);
 
+  // png파일을 불러서 픽셀 데이터로 반환. 동적할당된것이 던져지니 알아서 적절히 처리
+  static void* LoadPNG(const char *filepath, TexFormat *fmt, TextureHeader *header);
+
 private:
   void InitSimpleTexture(i32 width, i32 height, const TexFormat &fmt, void *data);
-  void Init(const TexFormat &fmt, const TextureHeader &header, const TextureParameter &param, void *data);
+  void Init(const TexFormat &fmt, const TextureHeader &tex_header, const TextureParameter &param, void *data);
 
 public:
   Texture();
