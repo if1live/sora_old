@@ -42,6 +42,8 @@ public:
   void Vertex2f(float x, float y) { Vertex3f(x, y, 0); }
   void TexCoord2f(float s, float t);
   void End();
+  void Color4f(float r, float g, float b, float a);
+  void Color3f(float r, float g, float b) { Color4f(r, g, b, 1); }
 
   // 점을 낱개로 찍는것도 허용하지만 vbo같은 느낌으로 한방에 그리는것도
   // 가능하도록 뚫어놓자
@@ -66,6 +68,14 @@ inline void srglVertex2f(float x, float y) {
 }
 inline void srglTexCoord2f(float s, float t) {
   sora::ImmediateModeEmulator::GetInstance().TexCoord2f(s, t);
+}
+inline void srglColor4f(float r, float g, float b, float a) {
+  sora::ImmediateModeEmulator::GetInstance().Color4f(r, g, b, a);
+  //glColor4f(r, g, b, a);  //필요할 경우 원본도 호출. 양쪽의 값을 다 바꿔준다
+}
+inline void srglColor3f(float r, float g, float b) {
+  sora::ImmediateModeEmulator::GetInstance().Color3f(r, g, b);
+  //glColor3f(r, g, b);  //원본도 호출. 양쪽의 값을 다 바꿔준다
 }
 
 #endif  // SORA_IMMEDIATE_MODE_EMULATOR_H_
