@@ -27,6 +27,11 @@
 namespace sora {;
 class Texture;
 
+struct TextureManagerThreadRunner {
+  void operator()();
+  static bool run_thread;
+};
+
 // 쓰레드를 써서 텍스쳐를 로딩하기 위해서 이와 같은 방식을 사용함
 struct TextureLoadRequest {
   std::string filename;

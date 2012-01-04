@@ -24,6 +24,18 @@
 #include "filesystem.h"
 
 namespace sora {;
+bool TextureManagerThreadRunner::run_thread = true;
+void TextureManagerThreadRunner::operator()() {
+  //텍스쳐 로딩작업이 그렇게 자주 발생하는것도 아니니까 가끔씩만 확인하자
+  boost::posix_time::time_duration td = boost::posix_time::milliseconds(100);
+  while(run_thread) {
+    sora::TextureManager::GetInstance().ProcessRequest();
+    boost::this_thread::sleep(td);
+    //printf("texture thread run...\n");
+  }
+  printf("texture thread exit...\n");
+}
+
 void TextureManager::PushRequest(const TextureLoadRequest &request) {
   request_stack_.push_back(request);
 }

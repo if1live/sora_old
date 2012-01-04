@@ -42,12 +42,25 @@ void InitWindow(int w, int h);
 
 sora::Texture *tex = NULL;
 
+
 int main(int argc, char *argv) {
+  //쓰레드 테스트
+  //t.timed_join(boost::posix_time::seconds(1));  // 1초 동안 쓰레드 종료 대기
+  //for(int i = 0 ; i < 10 ; i++) {
+  //  printf("thead 1 %d\n", i);
+  //  boost::this_thread::sleep(boost::posix_time::seconds(1)); 
+  //}
+  //t.join();  
+  //return 0;
+
   // init glfw
   sora::GLWindow win(win_width, win_height, sora::kWinModeWindow, 1);
   win.Init();
 
   Init();
+
+  sora::TextureManagerThreadRunner texture_thd_runner;
+  boost::thread texture_thd(texture_thd_runner);
 
   // Main loop
   int running = true;
@@ -68,9 +81,13 @@ int main(int argc, char *argv) {
 
     //////////
     // engine logic
-    sora::TextureManager::GetInstance().ProcessRequest();
     sora::TextureManager::GetInstance().ProcessResponse();
   }
+
+  //texture thread stop
+  sora::TextureManagerThreadRunner::run_thread = false;
+  texture_thd.join();
+
   // Close window and terminate GLFW
   sora::ImmediateModeEmulator::DestroyInstance();
   
