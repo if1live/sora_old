@@ -24,6 +24,8 @@
 #include "memory_file.h"
 #include "gl_helper.h"
 
+#include "filesystem.h"
+
 namespace sora {;
 
 ///////////////
@@ -145,8 +147,8 @@ boolean TextureParameter::IsMipMap(TexMinFilter min_filter) {
 
 Texture::Texture()
   : handle(0) {
-  // 최초에 텍스쳐가 할당되어있지 않으면 sample을 대신 띄운다
-  handle = GetSampleTexture(&tex_header.tex_width, &tex_header.tex_height);
+  // 최초에 텍스쳐가 할당되어있지 않으면 임시 텍스쳐를 대신 띄운다
+  handle = GetLoadingTexture(&tex_header.tex_width, &tex_header.tex_height);
   tex_header.src_width = tex_header.tex_width;
   tex_header.src_height = tex_header.tex_height;
   format = kTexFormatRGB888;
@@ -165,8 +167,8 @@ void Texture::Cleanup() {
   }
 
   int w, h;
-  GLuint sample_tex_id = GetSampleTexture(&w, &h);
-  if(sample_tex_id != handle) {
+  GLuint default_tex_id = GetLoadingTexture(&w, &h);
+  if(default_tex_id != handle) {
     // sample텍스쳐는 공유하므로 삭제하지 않는다
     srglDeleteTextures(1, &handle);
     handle = 0;
@@ -206,6 +208,41 @@ GLuint Texture::GetSampleTexture(int *width, int *height) {
     srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     srglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex_data);
+  }
+  return tex_id;
+}
+
+GLuint Texture::GetLoadingTexture(int *width, int *height) {
+  static bool run = false;
+  static GLuint tex_id = -1;
+  
+  if (run == false) {
+    run = true;
+
+    //텍스쳐 떄려박는건 좀 무식한거같은데...
+    using std::string;
+    string filename = "\\resource\\loading.png";
+    //string filename = "\\res\\test.png";
+    filename = sora::Filesystem::GetAppPath(filename);
+    TexFormat fmt;
+    TextureHeader tex_header;
+    void *data = LoadPNG(filename.c_str(), &fmt, &tex_header);
+    
+    srglGenTextures(1, &tex_id);
+    srglBindTexture(GL_TEXTURE_2D, tex_id);
+    srglPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    *width = tex_header.tex_width;
+    *height = tex_header.tex_height;
+    SR_ASSERT(fmt == kTexFormatRGBA8888);
+
+    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
+    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); 
+    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    srglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, *width, *height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+
+    delete[](data);
   }
   return tex_id;
 }
@@ -274,6 +311,19 @@ Texture &Texture::Blue() {
   if (run == false) {
     run = true;
     ColorTexture(0, 0, 255, &tex);
+  }
+  return tex;
+}
+
+Texture &Texture::LoadingTexture() {
+  static bool run = false;
+  static Texture tex;
+  if (run == false) {
+    run = true;
+    tex.handle = GetLoadingTexture(&tex.tex_header.tex_width, &tex.tex_header.tex_height);
+    tex.tex_header.src_width = tex.tex_header.tex_width;
+    tex.tex_header.src_height = tex.tex_header.tex_height;
+    tex.format = kTexFormatRGB888;
   }
   return tex;
 }

@@ -101,7 +101,8 @@ public:
 
 class Texture {
 public:
-  static GLuint GetSampleTexture(int *width, int *height);
+  static GLuint GetSampleTexture(int *width = NULL, int *height = NULL);
+  static GLuint GetLoadingTexture(int *width = NULL, int *height = NULL);
   static Texture &Sample();
   //테스트용 텍스쳐는 색깔별로
   static Texture &White();
@@ -110,6 +111,7 @@ public:
   static Texture &Red();
   static Texture &Blue();
   static Texture &Green();
+  static Texture &LoadingTexture();
   static void ColorTexture(u32 r, u32 g, u32 b, Texture *tex);
   
 public:

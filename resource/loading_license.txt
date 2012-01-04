@@ -1,0 +1,14 @@
+http://www.easyicon.cn/language.en/icondetail/7636/
+
+Icon Size
+32¡¿32PX
+Icon Categories
+gnomeicontheme
+Icon Author
+Gnome Project
+Icon Author Website
+http://art.gnome.org/themes/icon
+Icon instructions
+GPL
+Icon Copyright
+http://www.gnu.org/copyleft/gpl.html

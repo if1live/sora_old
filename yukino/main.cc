@@ -107,24 +107,29 @@ void Draw(int ms) {
   srglTexCoord2f(0, 1); srglVertex3f(-0.5, 0.5, 0);
   srglEnd();
   */
+  /*
   {
-    sora::Texture &color_tex = sora::Texture::Green();
+    sora::Texture &color_tex = sora::Texture::White();
     glBindTexture(GL_TEXTURE_2D, color_tex.handle);
     //2d test
     srglMatrixMode(SR_PROJECTION);
     srglLoadIdentity();
-    srglOrtho(0, 100, 0, 100, -1, 1);
+    srglOrtho(-100, 100, -100, 100, -1, 1);
 
     srglMatrixMode(SR_MODELVIEW);
     srglLoadIdentity();
 
-    srglBegin(GL_LINE_LOOP);
-    srglTexCoord2f(0, 0); srglVertex2f(10, 10);
-    srglTexCoord2f(1, 0); srglVertex2f(90, 10);
-    srglTexCoord2f(1, 1); srglVertex2f(90, 90);
-    srglTexCoord2f(0, 1); srglVertex2f(10, 90);
+    srglTranslatef(30, 0, 0);
+    srglScalef(0.5, 0.5, 1);
+    srglRotatef(15, 0, 0, 1);
+    srglBegin(GL_QUADS);
+    srglColor3f(1, 0, 0); srglTexCoord2f(0, 0); srglVertex2f(-50, -50);
+    srglColor3f(0, 1, 0); srglTexCoord2f(1, 0); srglVertex2f(50, -50);
+    srglColor3f(0, 0, 1); srglTexCoord2f(1, 1); srglVertex2f(50, 50);
+    srglColor3f(1, 1, 1); srglTexCoord2f(0, 1); srglVertex2f(-50, 50);
     srglEnd();
   }
+  */
   sora::GLHelper::CheckError("DrawEnd");
 }
 void Init() {
@@ -134,12 +139,12 @@ void Init() {
   srglViewport(0, 0, win_width, win_height);
 
   //텍스쳐 떄려박는건 좀 무식한거같은데...
-  using std::string;
-  string filename = "\\res\\Scene10.png";
+  //using std::string;
+  //string filename = "\\res\\Scene10.png";
   //string filename = "\\res\\test.png";
-  filename = sora::Filesystem::GetAppPath(filename);
-  tex = new sora::Texture();
-  sora::Texture::LoadFromPNG(filename, tex);
+  //filename = sora::Filesystem::GetAppPath(filename);
+  //tex = new sora::Texture();
+  //sora::Texture::LoadFromPNG(filename, tex);
 
   yukino::Glassless3d::GetInstance().Init();
 }
