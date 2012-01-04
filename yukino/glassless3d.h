@@ -40,7 +40,7 @@ private:
   //std::auto_ptr<InputHandler> handler_;
 
   //unsigned int texId_;
-  BookScenePtr scene_;
+  std::auto_ptr<BookScene> scene_;
 
   bool visible_;
 };

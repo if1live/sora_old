@@ -24,6 +24,8 @@
 #include "texture_info.h"
 
 namespace sora {;
+class Texture;
+typedef std::tr1::shared_ptr<Texture> TexturePtr;
 
 class Texture {
 public:

@@ -77,7 +77,7 @@ void Glassless3d::Init() {
 
   //테스트용 scene 생성
   string path = sora::Filesystem::GetAppPath(book.GetCurrSceneFile());
-  scene_ = BookScenePtr(new BookScene());
+  scene_.reset(new BookScene());
   scene_->load(path);
 }
 

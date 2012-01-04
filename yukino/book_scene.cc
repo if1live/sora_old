@@ -21,7 +21,6 @@ using namespace sora;
 
 namespace yukino {;
 
-sora::Texture *tex = NULL;
 TextureAtlas tex_atlas;
 
 ////////////////
@@ -49,21 +48,10 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
   SR_ASSERT(name.size() > 0);
   SR_ASSERT(res.size() > 0);
 
-  //텍스쳐 불러오기. TODO: 텍스쳐를 쌩으로 매번 부르지말고, 일단 생성된 텍스쳐 목록에 존재하는지 확인하고 없으면 부르자
-  //@XXX
-  /*
-  bool texExist = TextureManager::GetInstance().has(res);
-  TexturePtr texPtr;
-  if(texExist == true) {
-    texPtr = TextureManager::GetInstance().get(res);
-  } else {
-    string resPath = Path::appPath(res);
-    TextureDescPtr texDesc = ImageLoader::loader().loadPng2Tex(resPath);
-    texPtr = TextureManager::GetInstance().Create(texDesc, res);
-  }
-  */
+  //텍스쳐 불러오기. 생성된 텍스쳐 목록에 존재하는지 확인하고 없으면 생성
+  Texture *tex = TextureManager::GetInstance().GetTexture(res);
   if(tex == NULL) {
-    //string resPath = sora::Filesystem::GetAppPath(res);
+    //새로운텍스쳐를 만들기. 모든 처리가 완료되면 TextureManager내부에 등록된다
     tex = new Texture();
 
     TextureParameter param;
@@ -73,16 +61,13 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
     param.wrap_t = kTexWrapRepeat;
 
     TextureLoadRequest request;
+    request.register_to_manager = true;
     request.filename = res;
     request.tex = tex;
     request.param = param;
 
     TextureManager::GetInstance().PushRequest(request);
-    //sora::Texture::LoadFromPNG(resPath, tex);
-
-
   }
-
 
   //텍스쳐의 정보를 사용해서 x, y, w, h를 구성하기
   float x = 0;

@@ -13,8 +13,6 @@ class BookPaper;
 class BookScene;
 class BookPaperBuilder;
 
-///@TODO book scene 의 메모리 관리를 더 단순화 하기
-typedef std::tr1::shared_ptr<BookScene> BookScenePtr;
 class BookScene {
 public:
   typedef std::tr1::unordered_map<std::string, sora::TextureSubImage> SpriteDictType;

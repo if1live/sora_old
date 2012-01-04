@@ -43,6 +43,14 @@ void TextureManagerThreadRunner::operator()() {
 
 void TextureManager::PushRequest(const TextureLoadRequest &request) {
   request_stack_lock.lock();
+  // 생성요청이 들어오면 바로 등록하자. 이 함수는 메인쓰레드에 의해서 호출되는데
+  // 등록을 다른 쓰레드에서 처리하는 경우, 시간차로 2번 요청해버릴수있다
+  // 같은 텍스쳐를 2번 만들어버릴수있다
+  if (request.register_to_manager) {
+    TexturePtr tex_ptr(request.tex);
+    tex_dict_[request.filename] = tex_ptr;
+  }
+
   request_stack_.push_back(request);
   request_stack_lock.unlock();
 }
@@ -72,6 +80,7 @@ void TextureManager::ProcessRequest() {
   RequestStackType::iterator endit = cpy_request_stack.end();
   for ( ; it != endit ; it++) {
     const TextureLoadRequest &request = *it;
+
     string fullpath = Filesystem::GetAppPath(request.filename);
     TexFormat fmt;
     TextureHeader tex_header;
@@ -85,11 +94,8 @@ void TextureManager::ProcessRequest() {
     response.param = request.param;
     response.data = data;
 
-    //TODO dict에는 어떻게 저장?
-
     //락거는 횟수를 줄이기 위해서 임시목록에 넣었다가 한번에 완료목록에 등록하자
     created_request_list.push_back(response);
-    
   }
 
   if (!created_request_list.empty()) {
@@ -125,12 +131,31 @@ void TextureManager::ProcessResponse() {
 TextureManager::TextureManager() {
 }
 TextureManager::~TextureManager() {
-  TextureDictType::iterator it = tex_dict_.begin();
-  TextureDictType::iterator endit = tex_dict_.end();
-  for ( ; it != endit ; it++) {
-    Texture *tex = it->second;
-    delete(tex);
-  }
 }
 
+Texture *TextureManager::GetTexture(const std::string &name) {
+  TextureDictType::iterator found = tex_dict_.find(name);
+  if (found == tex_dict_.end()) {
+    return NULL;
+  } else {
+    return found->second.get();
+  }
+}
+TexturePtr TextureManager::GetTexturePtr(const std::string &name) {
+  TextureDictType::iterator found = tex_dict_.find(name);
+  if (found == tex_dict_.end()) {
+    TexturePtr empty;
+    return empty;
+  } else {
+    return found->second;
+  }
+}
+bool TextureManager::IsExist(const std::string &name) const {
+  TextureDictType::const_iterator found = tex_dict_.find(name);
+  if (found == tex_dict_.end()) {
+    return false;
+  } else {
+    return true;
+  }
+}
 }

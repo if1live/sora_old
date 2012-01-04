@@ -26,6 +26,7 @@
 
 namespace sora {;
 class Texture;
+typedef std::tr1::shared_ptr<Texture> TexturePtr;
 
 struct TextureManagerThreadRunner {
   void operator()();
@@ -37,6 +38,8 @@ struct TextureLoadRequest {
   std::string filename;
   Texture *tex;
   TextureParameter param;
+  // 텍스쳐 매니저에 등록할것인가. 동적할당일때만 사용가능하다
+  boolean register_to_manager;
 };
 
 // png파일같은것을 읽은 결과 내용이다. 텍스쳐 생성은
@@ -53,7 +56,7 @@ struct TextureLoadResponse {
 
 class TextureManager : public Singleton<TextureManager> {
 public:
-  typedef std::tr1::unordered_map<std::string, Texture*> TextureDictType;
+  typedef std::tr1::unordered_map<std::string, TexturePtr> TextureDictType;
   typedef std::vector<TextureLoadRequest>   RequestStackType;
   typedef std::vector<TextureLoadResponse>  ResponseStackType;
 
@@ -63,6 +66,10 @@ public:
   TextureLoadResponse PopResponse();
   void ProcessRequest();
   void ProcessResponse();
+  
+  bool IsExist(const std::string &name) const;
+  Texture *GetTexture(const std::string &name);
+  TexturePtr GetTexturePtr(const std::string &name);
 
   TextureManager();
 protected:
