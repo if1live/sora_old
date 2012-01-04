@@ -38,7 +38,7 @@ void TextureManagerThreadRunner::operator()() {
     boost::this_thread::sleep(td);
     //printf("texture thread run...\n");
   }
-  printf("texture thread exit...\n");
+  //printf("texture thread exit...\n");
 }
 
 void TextureManager::PushRequest(const TextureLoadRequest &request) {
@@ -47,11 +47,10 @@ void TextureManager::PushRequest(const TextureLoadRequest &request) {
   request_stack_lock.unlock();
 }
 boolean TextureManager::IsResponseExist() const {
-  if (response_stack_.empty()) {
-    return false;
-  } else {
-    return true;
-  }
+  response_stack_lock.lock();
+  bool empty = response_stack_.empty();
+  response_stack_lock.unlock();
+  return !empty;
 }
 TextureLoadResponse TextureManager::PopResponse() {
   response_stack_lock.lock();
@@ -68,6 +67,7 @@ void TextureManager::ProcessRequest() {
   request_stack_.clear();
   request_stack_lock.unlock();
 
+  ResponseStackType created_request_list;
   RequestStackType::iterator it = cpy_request_stack.begin();
   RequestStackType::iterator endit = cpy_request_stack.end();
   for ( ; it != endit ; it++) {
@@ -87,8 +87,21 @@ void TextureManager::ProcessRequest() {
 
     //TODO dict에는 어떻게 저장?
 
+    //락거는 횟수를 줄이기 위해서 임시목록에 넣었다가 한번에 완료목록에 등록하자
+    created_request_list.push_back(response);
+    
+  }
+
+  if (!created_request_list.empty()) {
     response_stack_lock.lock();
-    response_stack_.push_back(response);
+    int curr_response_stack_size = response_stack_.size();
+    int target_size = curr_response_stack_size + created_request_list.size();
+    if (response_stack_.capacity() < target_size) {
+      response_stack_.resize(target_size);
+    }
+    ResponseStackType::iterator insert_it = response_stack_.begin();
+    std::advance(insert_it, curr_response_stack_size);
+    std::copy(created_request_list.begin(), created_request_list.end(), insert_it);
     response_stack_lock.unlock();
   }
 }
