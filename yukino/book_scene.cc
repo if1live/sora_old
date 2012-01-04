@@ -13,8 +13,8 @@
 #include "sora/memory_file.h"
 #include "sora/common_string.h"
 #include "sora/texture.h"
-#include "sora/filesystem.h"
 #include "sora/texture_atlas.h"
+#include "sora/texture_manager.h"
 
 using namespace std;
 using namespace sora;
@@ -63,9 +63,24 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
   }
   */
   if(tex == NULL) {
-    string resPath = sora::Filesystem::GetAppPath(res);
+    //string resPath = sora::Filesystem::GetAppPath(res);
     tex = new Texture();
-    sora::Texture::LoadFromPNG(resPath, tex);
+
+    TextureParameter param;
+    param.mag_filter = kTexMagLinear;
+    param.min_filter = kTexMinLinearMipMapNearest;
+    param.wrap_s = kTexWrapRepeat;
+    param.wrap_t = kTexWrapRepeat;
+
+    TextureLoadRequest request;
+    request.filename = res;
+    request.tex = tex;
+    request.param = param;
+
+    TextureManager::GetInstance().PushRequest(request);
+    //sora::Texture::LoadFromPNG(resPath, tex);
+
+
   }
 
 

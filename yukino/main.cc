@@ -29,6 +29,7 @@
 #include "sora/touch.h"
 
 #include "glassless3d.h"
+#include "sora/texture_manager.h"
 
 const int win_width = 960;
 const int win_height = 640;
@@ -64,6 +65,11 @@ int main(int argc, char *argv) {
     running = !glfwGetKey( GLFW_KEY_ESC ) && glfwGetWindowParam( GLFW_OPENED );
 
     prev_runtime = sora::Clock::currtime;
+
+    //////////
+    // engine logic
+    sora::TextureManager::GetInstance().ProcessRequest();
+    sora::TextureManager::GetInstance().ProcessResponse();
   }
   // Close window and terminate GLFW
   sora::ImmediateModeEmulator::DestroyInstance();

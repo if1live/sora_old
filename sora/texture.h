@@ -21,83 +21,9 @@
 #ifndef SORA_TEXTURE_H_
 #define SORA_TEXTURE_H_
 
+#include "texture_info.h"
+
 namespace sora {;
-
-typedef enum {
-  kTexWrapRepeat,
-  kTexWrapClamp,
-  kTexWrapMirroredRepeat,
-  kTexWrapCount,
-} TexWrapMode;
-
-typedef enum {
-  kTexMagNearest,
-  kTexMagLinear,
-  kTexMagCount,
-} TexMagFilter;
-
-typedef enum {
-  kTexMinNearestMipMapOff,
-	kTexMinNearestMipMapNearest,
-	kTexMinNearestMipMapLinear,
-	kTexMinLinearMipMapOff,
-	kTexMinLinearMipMapNearest,
-	kTexMinLinearMipMapLinear,
-  kTexMinCount,
-} TexMinFilter;
-
-typedef enum {
-  kTexFormatAuto = 0,
-  kTexFormatRGBA8888,
-  kTexFormatRGBA4444,
-  kTexFormatRGBA5551,
-  kTexFormatRGB888,
-  kTexFormatRGB565,
-  kTexFormatLuminance,
-  kTexFormatAlpha,
-  kTexFormatLuminanceAlpha,
-  kTexFormatCount,
-} TexFormat;
-
-struct TextureHeader {
-  TextureHeader()
-    : src_width(0),
-    src_height(0),
-    tex_width(0),
-    tex_height(0),
-    bpp(0) {}
-  i32 src_width;
-  i32 src_height;
-  i32 tex_width;
-  i32 tex_height;
-  i8 bpp;
-};
-
-class TextureParameter {
-public:
-  static GLenum ConvertToGLenum(TexMinFilter orig);
-  static GLenum ConvertToGLenum(TexMagFilter orig);
-  static GLenum ConvertToGLenum(TexWrapMode orig);
-  static GLenum ConvertToGLenum(TexFormat orig);
-  static TexMinFilter ConvertToTexMinFilter(GLenum orig);
-  static TexMagFilter ConvertToTexMagFilter(GLenum orig);
-  static TexWrapMode ConvertToTexWrapMode(GLenum orig);
-  static boolean IsMipMap(TexMinFilter min_filter);
-
-  static int SearchTable(int table[][2], int count, int in_index, int out_index, int target);
-
-public:
-  TexMinFilter min_filter;
-  TexMagFilter mag_filter;
-  TexWrapMode wrap_s;
-  TexWrapMode wrap_t;
-
-  GLenum gl_min_filter() const { return ConvertToGLenum(min_filter); }
-  GLenum gl_mag_filter() const { return ConvertToGLenum(mag_filter); }
-  GLenum gl_wrap_s() const { return ConvertToGLenum(wrap_s); }
-  GLenum gl_wrap_t() const { return ConvertToGLenum(wrap_t); }
-  boolean IsMipMap() const { return IsMipMap(min_filter); }
-};
 
 class Texture {
 public:
@@ -122,10 +48,10 @@ public:
 
   // png파일을 불러서 픽셀 데이터로 반환. 동적할당된것이 던져지니 알아서 적절히 처리
   static void* LoadPNG(const char *filepath, TexFormat *fmt, TextureHeader *header);
+  void Init(const TexFormat &fmt, const TextureHeader &tex_header, const TextureParameter &param, void *data);
 
 private:
   void InitSimpleTexture(i32 width, i32 height, const TexFormat &fmt, void *data);
-  void Init(const TexFormat &fmt, const TextureHeader &tex_header, const TextureParameter &param, void *data);
 
 public:
   Texture();

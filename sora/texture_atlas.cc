@@ -25,24 +25,39 @@
 
 namespace sora {;
 TextureSubImage::TextureSubImage()
-  : x(0), y(0), w(0), h(0), tex_id(0), tex_width(2), tex_height(2) {
+  : x(0), y(0), w(0), h(0), tex(NULL) {
 }
 TextureSubImage::TextureSubImage(f32 x, f32 y, f32 w, f32 h, Texture *tex)
-  : x(x), y(y), w(w), h(h), tex_id(tex->handle),
-  tex_width(tex->tex_header.tex_width),
-  tex_height(tex->tex_header.tex_height) {
+  : x(x), y(y), w(w), h(h), tex(tex) {
 }
-
+GLuint TextureSubImage::GetHandle() const {
+  SR_ASSERT(tex != NULL);
+  return tex->handle;
+}
+f32 TextureSubImage::GetTexWidth() const {
+  SR_ASSERT(tex != NULL);
+  float tex_width = tex->tex_header.tex_width;
+  return tex_width;
+}
+f32 TextureSubImage::GetTexHeight() const {
+  SR_ASSERT(tex != NULL);
+  float tex_height = tex->tex_header.tex_height;
+  return tex_height;
+}
 f32 TextureSubImage::GetTexCoordX() const {
+  float tex_width = GetTexWidth();
   return x / tex_width;
 }
 f32 TextureSubImage::GetTexCoordY() const {
+  float tex_height = GetTexHeight();
   return y / tex_height;
 }
 f32 TextureSubImage::GetTexCoordWidth() const {
+  float tex_width = GetTexWidth();
   return width / tex_width;
 }
 f32 TextureSubImage::GetTexCoordHeight() const {
+  float tex_height = GetTexHeight();
   return height / tex_height;
 }
 ////////////////////////////////

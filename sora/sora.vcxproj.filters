@@ -101,6 +101,12 @@
     <ClInclude Include="basic_shader.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="texture_manager.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="texture_info.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cc">
@@ -165,6 +171,15 @@
       <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="basic_shader.cc">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="texture_manager.cc">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="gl_inc.cc">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="texture_info.cc">
       <Filter>renderer</Filter>
     </ClCompile>
   </ItemGroup>

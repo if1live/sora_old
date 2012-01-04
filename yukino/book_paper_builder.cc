@@ -42,10 +42,15 @@ void BookPaperBuilder::CreateFloorModel() {
   //float baseY = (float)(tex->getDesc().texHeight - tex->getDesc().origHeight) / tex->getDesc().texHeight;
   //float width = (float)(tex->getDesc().origWidth) / tex->getDesc().texWidth;
   //float height = 1.0 - baseY;
-  float texBaseX = sprite_->GetTexCoordX();
-  float texBaseY = sprite_->GetTexCoordY();
-  float texWidth = sprite_->GetTexCoordWidth();
-  float texHeight = sprite_->GetTexCoordHeight();
+  //float texBaseX = sprite_->GetTexCoordX();
+  //float texBaseY = sprite_->GetTexCoordY();
+  //float texWidth = sprite_->GetTexCoordWidth();
+  //float texHeight = sprite_->GetTexCoordHeight();
+  ///@TODO
+  float texBaseX = sprite_->x / 2048.0f;
+  float texBaseY = sprite_->y / 2048.0f;
+  float texWidth = sprite_->w / 2048.0f;
+  float texHeight = sprite_->h / 2048.0f;
 
   float xGap = globalXGap;
   float zGap = globalZGap;
@@ -77,10 +82,15 @@ void BookPaperBuilder::CreateFloorModel() {
 }
 
 void BookPaperBuilder::CreateLeftModel() {
-  float texBaseX = sprite_->GetTexCoordX();
-  float texBaseY = sprite_->GetTexCoordY();
-  float texWidth = sprite_->GetTexCoordWidth();
-  float texHeight = sprite_->GetTexCoordHeight();
+  //float texBaseX = sprite_->GetTexCoordX();
+  //float texBaseY = sprite_->GetTexCoordY();
+  //float texWidth = sprite_->GetTexCoordWidth();
+  //float texHeight = sprite_->GetTexCoordHeight();
+  ///@TODO
+  float texBaseX = sprite_->x / 2048.0f;
+  float texBaseY = sprite_->y / 2048.0f;
+  float texWidth = sprite_->w / 2048.0f;
+  float texHeight = sprite_->h / 2048.0f;
 
   //좌우벽은 gap를 신경쓰지 말자
   float yGap = 0;
@@ -100,10 +110,15 @@ void BookPaperBuilder::CreateLeftModel() {
   v4.Vertex3(-cube_width_/2, cube_height_/2+yGap, 0);
 }
 void BookPaperBuilder::CreateRightModel()  {
-  float texBaseX = sprite_->GetTexCoordX();
-  float texBaseY = sprite_->GetTexCoordY();
-  float texWidth = sprite_->GetTexCoordWidth();
-  float texHeight = sprite_->GetTexCoordHeight();
+  //float texBaseX = sprite_->GetTexCoordX();
+  //float texBaseY = sprite_->GetTexCoordY();
+  //float texWidth = sprite_->GetTexCoordWidth();
+  //float texHeight = sprite_->GetTexCoordHeight();
+  ///@TODO
+  float texBaseX = sprite_->x / 2048.0f;
+  float texBaseY = sprite_->y / 2048.0f;
+  float texWidth = sprite_->w / 2048.0f;
+  float texHeight = sprite_->h / 2048.0f;
 
   //좌우벽은 gap를 신경쓰지 말자
   float yGap = 0;
@@ -122,10 +137,15 @@ void BookPaperBuilder::CreateRightModel()  {
   v4.Vertex3(cube_width_/2, cube_height_/2+yGap, -cube_depth_-zGap);
 }
 void BookPaperBuilder::CreateCeilModel() {
-  float texBaseX = sprite_->GetTexCoordX();
-  float texBaseY = sprite_->GetTexCoordY();
-  float texWidth = sprite_->GetTexCoordWidth();
-  float texHeight = sprite_->GetTexCoordHeight();
+  //float texBaseX = sprite_->GetTexCoordX();
+  //float texBaseY = sprite_->GetTexCoordY();
+  //float texWidth = sprite_->GetTexCoordWidth();
+  //float texHeight = sprite_->GetTexCoordHeight();
+  ///@TODO
+  float texBaseX = sprite_->x / 2048.0f;
+  float texBaseY = sprite_->y / 2048.0f;
+  float texWidth = sprite_->w / 2048.0f;
+  float texHeight = sprite_->h / 2048.0f;
 
   float xGap = globalXGap;
   float zGap = globalZGap;
@@ -144,10 +164,15 @@ void BookPaperBuilder::CreateCeilModel() {
 }
 void BookPaperBuilder::CreateForwardModel() 
 {
-  float texBaseX = sprite_->GetTexCoordX();
-  float texBaseY = sprite_->GetTexCoordY();
-  float texWidth = sprite_->GetTexCoordWidth();
-  float texHeight = sprite_->GetTexCoordHeight();
+  //float texBaseX = sprite_->GetTexCoordX();
+  //float texBaseY = sprite_->GetTexCoordY();
+  //float texWidth = sprite_->GetTexCoordWidth();
+  //float texHeight = sprite_->GetTexCoordHeight();
+  ///@TODO
+  float texBaseX = sprite_->x / 2048.0f;
+  float texBaseY = sprite_->y / 2048.0f;
+  float texWidth = sprite_->w / 2048.0f;
+  float texHeight = sprite_->h / 2048.0f;
 
   float xGap = globalXGap;
   float yGap = globalYGap;
@@ -195,8 +220,12 @@ void BookPaperBuilder::CreateNormalModel(float width, float height) {
   - texCoord.right = texCoord.left + (rect.size.width*2-2)/(texture.wide*2);
   */
 
-  float tex_width = sprite_->tex_width;
-  float tex_height = sprite_->tex_height;
+  //float tex_width = sprite_->GetTexWidth();
+  //float tex_height = sprite_->GetTexHeight();
+  //@TODO 임시 텍스쳐를 사용해서 뭔가의 작업을 할 경우, 이런식으로 텍스쳐 크기를 제대로 못얻는 경우가 많다
+  //텍스쳐 크기 정보는 진짜 텍스쳐가 로딩되기 전에 알수있도록하자
+  float tex_width = 2048;
+  float tex_height = 2048;
 
   float texLeft = (float)(sprite_->x * 2 + 1) / (tex_width * 2);
   float texRight = texLeft + (float)(sprite_->w * 2 - 2) / (tex_width * 2);

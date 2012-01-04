@@ -43,7 +43,10 @@
 #define srglBlendFunc     glBlendFunc
 
 // 텍스쳐 관련
-#define srglBindTexture   glBindTexture
+// #define srglBindTexture   glBindTexture
+// 텍스쳐 bind는 최적화를 위해서 함수로 처리. 소프트웨어적으로 중복해결함
+void srglBindTexture(GLenum target, GLuint texture);
+
 #define srglGenTextures   glGenTextures
 #define srglDeleteTextures  glDeleteTextures
 #define srglPixelStorei   glPixelStorei

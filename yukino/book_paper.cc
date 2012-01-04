@@ -27,7 +27,7 @@ void BookPaper::SetBaseAttribute(sora::TextureSubImage *sprite, BookPaperType ty
 }
 void BookPaper::draw() {
   //텍스쳐 활성화
-  srglBindTexture(GL_TEXTURE_2D, sprite_->tex_id);
+  srglBindTexture(GL_TEXTURE_2D, sprite_->GetHandle());
 
 
   if(type_ == kBookPaperNormal) {

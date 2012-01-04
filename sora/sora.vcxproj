@@ -94,6 +94,8 @@
     <ClInclude Include="template_library.h" />
     <ClInclude Include="texture.h" />
     <ClInclude Include="texture_atlas.h" />
+    <ClInclude Include="texture_info.h" />
+    <ClInclude Include="texture_manager.h" />
     <ClInclude Include="touch.h" />
     <ClInclude Include="uicomponent.h" />
     <ClInclude Include="unordered_map_inc.h" />
@@ -106,6 +108,7 @@
     <ClCompile Include="basic_shader.cc" />
     <ClCompile Include="clock.cc" />
     <ClCompile Include="filesystem.cc" />
+    <ClCompile Include="gl_inc.cc" />
     <ClCompile Include="gl_window.cc" />
     <ClCompile Include="immediate_mode_emulator.cc" />
     <ClCompile Include="locale.cc" />
@@ -123,6 +126,8 @@
     <ClCompile Include="common_string.cc" />
     <ClCompile Include="texture.cc" />
     <ClCompile Include="texture_atlas.cc" />
+    <ClCompile Include="texture_info.cc" />
+    <ClCompile Include="texture_manager.cc" />
     <ClCompile Include="touch.cc" />
     <ClCompile Include="xml_node.cc" />
     <ClCompile Include="xml_reader.cc" />

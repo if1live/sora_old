@@ -28,6 +28,8 @@ struct TextureSubImage;
 
 // 텍스쳐 아틀라스에서의 좌표계 원점은 왼쪽위이다
 // 왜냐하면 일반적으로 이미지 좌표계를 사용할때는 왼쪽위를 기준으로 쓰니까
+// 텍스쳐를 쓰레드로 로딩하면 텍스쳐 id가 중간에 바뀐다
+// 그래서 텍스쳐는 썡gltexid가 아니라 포인터(또는 엔진용핸들)로 갖고있어야한다
 struct TextureSubImage {
   TextureSubImage();
   TextureSubImage(f32 x, f32 y, f32 w, f32 h, Texture *tex);
@@ -46,15 +48,16 @@ struct TextureSubImage {
   };
 
   // opengl texture
-  GLuint tex_id;
-  float tex_width;
-  float tex_height;
+  Texture *tex;
 
   // 텍스쳐 좌표기준(0~1로 보정된 값)
   f32 GetTexCoordX() const;
   f32 GetTexCoordY() const;
   f32 GetTexCoordWidth() const;
   f32 GetTexCoordHeight() const;
+  f32 GetTexWidth() const;
+  f32 GetTexHeight() const;
+  GLuint GetHandle() const;
 };
 
 class TextureAtlas {

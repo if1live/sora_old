@@ -1,4 +1,5 @@
-﻿/* Copyright (C) 2011 by if1live */
+﻿/*  Copyright (C) 2011 by if1live */
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -17,57 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_SORA_STDAFX_H_
-#define SORA_SORA_STDAFX_H_
-// 사실상 모든 소스에서 필요한건 미리 인클루드
-#include "sora/arch.h"
-#include "sora/assert_inc.h"
-#include "sora/mem.h"
-#include "sora/logger.h"
+#include "sora_stdafx.h"
+#include "gl_inc.h"
 
-#if SR_USE_PCH
-#include <cmath>
-#include <cstdlib>
-#include <cstring>
-#include <cstdarg>
-#include <cerrno>
-#include <ctime>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#if SR_WIN
-// open, close...
-#include <io.h>
-#endif
-// #include <unistd.h>
-
-#include <sstream>
-#include <vector>
-#include <string>
-#include <algorithm>
-#include <memory>
-#include <map>
-
-// third party library
-#include <tinyxml/tinyxml.h>
-
-// boost
-#include <boost/noncopyable.hpp>
-#include <boost/foreach.hpp>
-#include <boost/thread.hpp>
-
-#if SR_WIN
-#include <Windows.h>
-#include <tchar.h>
-#include <direct.h>
-#endif
-
-#include "sora/shared_ptr_inc.h"
-#include "sora/unordered_map_inc.h"
-#include "sora/gl_inc.h"
-#include "sora/assert_inc.h"
-
-#endif
-
-#endif  // SORA_SORA_STDAFX_H_
+void srglBindTexture(GLenum target, GLuint texture) {
+  GLuint prev_tex_2d = 0;
+  if (target == GL_TEXTURE_2D) {
+    static bool first_run = false;
+    if (first_run == false) {
+      // texture handle는 unsigned int니까 0으로 기본값쓰고
+      // 최초 시행시 무조건 bind
+      first_run = true;
+      glBindTexture(target, texture);
+      prev_tex_2d = texture;
+    } else if (prev_tex_2d != texture) {
+      glBindTexture(target, texture);
+      prev_tex_2d = texture;
+    }
+  } else {
+    glBindTexture(target, texture);
+  }
+}

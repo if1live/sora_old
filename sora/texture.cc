@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_stdafx.h"
+#include "texture_info.h"
 #include "texture.h"
 #include <png.h>
 #include "memory_file.h"
@@ -27,124 +28,6 @@
 #include "filesystem.h"
 
 namespace sora {;
-
-///////////////
-// 0 : sora enum
-// 1 : gl enum
-// 2 : use mipmap?
-int tex_min_filter_table[][3] = {
-  { kTexMinLinearMipMapLinear, GL_LINEAR_MIPMAP_LINEAR, 1 },
-  { kTexMinLinearMipMapNearest, GL_LINEAR_MIPMAP_NEAREST, 1 },
-  { kTexMinLinearMipMapOff, GL_LINEAR, 0 },
-  { kTexMinNearestMipMapLinear, GL_NEAREST_MIPMAP_LINEAR, 1 },
-  { kTexMinNearestMipMapNearest, GL_NEAREST_MIPMAP_NEAREST, 1 },
-  { kTexMinNearestMipMapOff, GL_NEAREST, 0 },
-};
-int tex_mag_filter_table[][2] = {
-  { kTexMagLinear, GL_LINEAR },
-  { kTexMagNearest, GL_NEAREST },
-};
-int tex_wrap_mode_table[][2] = {
-  { kTexWrapClamp, GL_CLAMP_TO_EDGE },
-  { kTexWrapRepeat, GL_REPEAT }, 
-  { kTexWrapMirroredRepeat, GL_MIRRORED_REPEAT },
-};
-int tex_format_table[][2] = {
-  { kTexFormatAuto, GL_RGBA },
-  { kTexFormatRGBA8888, GL_RGBA },
-  { kTexFormatRGBA4444, GL_RGBA },
-  { kTexFormatRGBA5551, GL_RGBA },
-  { kTexFormatRGB888, GL_RGB },
-  { kTexFormatRGB565, GL_RGB },
-  { kTexFormatLuminance, GL_LUMINANCE },
-  { kTexFormatAlpha, GL_ALPHA },
-  { kTexFormatLuminanceAlpha, GL_LUMINANCE_ALPHA },
-};
-
-int TextureParameter::SearchTable(int table[][2], int count, int in_index, int out_index, int target) {
-  for (int i = 0 ; i < count ; i++) {
-    if (table[i][in_index] == target) {
-      return table[i][out_index];
-    }
-  }
-  return -1;  //not valid
-}
-GLenum TextureParameter::ConvertToGLenum(TexMinFilter orig) {
-  for (int i = 0 ; i < kTexMinCount ; i++) {
-    if (tex_min_filter_table[i][0] == orig) {
-      return tex_min_filter_table[i][1];
-    }
-  }
-  SR_ASSERT(!"not valid");
-  return tex_min_filter_table[0][1];
-}
-
-GLenum TextureParameter::ConvertToGLenum(TexMagFilter orig) {
-  int result = SearchTable(tex_mag_filter_table, kTexMagCount, 0, 1, orig);
-  if (result != -1) {
-    return result;
-  } else {
-    SR_ASSERT(!"not valid");
-    return tex_mag_filter_table[0][1];
-  }
-}
-GLenum TextureParameter::ConvertToGLenum(TexWrapMode orig) {
-  int result = SearchTable(tex_wrap_mode_table, kTexWrapCount, 0, 1, orig);
-  if (result != -1) {
-    return result;
-  } else {
-    SR_ASSERT(!"not valid");
-    return tex_wrap_mode_table[0][1];
-  }
-}
-GLenum TextureParameter::ConvertToGLenum(TexFormat orig) {
-  int result = SearchTable(tex_format_table, kTexFormatCount, 0, 1, orig);
-  if (result != -1) {
-    return result;
-  } else {
-    SR_ASSERT(!"not valid");
-    return GL_RGBA;
-  }
-}
-TexMinFilter TextureParameter::ConvertToTexMinFilter(GLenum orig) {
-  for (int i = 0 ; i < kTexMinCount ; i++) {
-    if (tex_min_filter_table[i][1] == orig) {
-      return (TexMinFilter)tex_min_filter_table[i][0];
-    }
-  }
-  SR_ASSERT(!"not valid");
-  return (TexMinFilter)tex_min_filter_table[0][0];
-}
-TexMagFilter TextureParameter::ConvertToTexMagFilter(GLenum orig) {
-  int result = SearchTable(tex_mag_filter_table, kTexMagCount, 1, 0, orig);
-  if (result != -1) {
-    return (TexMagFilter)result;
-  } else {
-    SR_ASSERT(!"not valid");
-    return (TexMagFilter)tex_mag_filter_table[0][0];
-  }
-}
-TexWrapMode TextureParameter::ConvertToTexWrapMode(GLenum orig) {
-  int result = SearchTable(tex_wrap_mode_table, kTexWrapCount, 1, 0, orig);
-  if (result != -1) {
-    return (TexWrapMode)result;
-  } else {
-    SR_ASSERT(!"not valid");
-    return (TexWrapMode)tex_wrap_mode_table[0][0];
-  }
-}
-boolean TextureParameter::IsMipMap(TexMinFilter min_filter) {
-  for (int i = 0 ; i < kTexMinCount ; i++) {
-    if (tex_min_filter_table[i][0] == min_filter) {
-      return tex_min_filter_table[i][2];
-    }
-  }
-  SR_ASSERT(!"not valid");
-  return false;
-}
-
-/////////////////////////
-
 Texture::Texture()
   : handle(0) {
   // 최초에 텍스쳐가 할당되어있지 않으면 임시 텍스쳐를 대신 띄운다
@@ -584,6 +467,8 @@ void Texture::SetTextureParameter(const TextureParameter &param) {
 }
 
 void Texture::Init(const TexFormat &fmt, const TextureHeader &header, const TextureParameter &param, void *data) {
+  Cleanup();
+
   this->format = fmt;
   this->tex_header = header;
   this->param_ = param;
