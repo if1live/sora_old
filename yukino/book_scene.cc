@@ -21,13 +21,20 @@ using namespace sora;
 
 namespace yukino {;
 
-TextureAtlas tex_atlas;
+
 
 ////////////////
 BookScene::BookScene()
-  : useGrid_(true) {
+  : useGrid_(true), root_node_(NULL) {
+}
+BookScene::BookScene(sora::XmlNode *node)
+  : useGrid_(true), root_node_(node) {
 }
 BookScene::~BookScene() {
+  if (root_node_ != NULL) {
+    delete(root_node_);
+    root_node_ = NULL;
+  }
 }
 TextureSubImage *BookScene::getSprite(const std::string &name) {
   SpriteDictType::iterator it = spriteDict_.find(name);
@@ -67,6 +74,9 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
     request.param = param;
 
     TextureManager::GetInstance().PushRequest(request);
+
+    //현재 씬을 표현하는데 사용되는 텍스쳐 목록에 넣기
+    used_tex_name_list_.insert(res);
   }
 
   //텍스쳐의 정보를 사용해서 x, y, w, h를 구성하기
@@ -97,9 +107,13 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
 
   //텍스쳐+크기로 atlas 구성하기. 텍스쳐 아틀라스에 등록시의 이름은
   //res자체의 이름으로 쓰자
-  tex_atlas.tex = tex; ///@FIXME texture 대충 연결
-  TextureSubImage &segment = tex_atlas.AddSubImage(name, x, y, w, h);
-  spriteDict_[name] = segment;
+  TextureSubImage subimg;
+  subimg.x = x;
+  subimg.y = y;
+  subimg.w = w;
+  subimg.h = h;
+  subimg.tex = tex;
+  spriteDict_[name] = subimg;
 }
 void BookScene::parseSpriteListNode(sora::XmlNode *node) {
   XmlNodeListConstIterator it = node->ChildBegin();
@@ -309,30 +323,25 @@ void BookScene::parseSceneNode(sora::XmlNode *node) {
   }
 }
 
-void BookScene::load(const std::string &path) {
-  sora::MemoryFile file(path);
-  file.Open();
-  XmlReader xmlreader;
-  XmlNode root;
-  bool read_result = xmlreader.Read(&root, (char*)file.start);
-  if(!read_result) {
-    LOGI("Book scene xml syntax error");
-    LOGI(xmlreader.GetError()->str().c_str());
-    getchar();
-    exit(-1);
-  } else {
-    LOGI("%s load complete", path.c_str());
+void BookScene::load() {
+  //xml node를 가지고 있으면 필요할때 바로 재생성 가능
+  //xml은 가지고 있고 텍스쳐나 기타 자료를 내렸다 올렸다하자
+
+  if (spriteDict_.empty()) {
+    //불러오기전에 기본속성 비우기
+    spriteDict_.clear();
+    paperList_.clear();
+
+    useGrid_ = true;
+    parseSceneNode(root_node_);
+
+    //불러온 종이를 정렬하기
+    sortPaper();
   }
-
-  //불러오기전에 기본속성 비우기
-  spriteDict_.clear();
-  //texAtlasMgr_.clear();
+}
+void BookScene::unload() {
   paperList_.clear();
-  useGrid_ = true;
-  parseSceneNode(&root);
-
-  //불러온 종이를 정렬하기
-  sortPaper();
+  spriteDict_.clear();
 }
 
 bool BookPaperCompare(const BookPaper &a, const BookPaper &b) {

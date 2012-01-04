@@ -83,7 +83,7 @@ struct Matrix {
   }
   template<u32 N>
   void Set(const T(&data)[N]) {
-    /// @TODO check size?
+    BOOST_STATIC_ASSERT(N == R * C);
     memcpy(value, data, sizeof(T) * R * C);
   }
   void Set(const T *data) {

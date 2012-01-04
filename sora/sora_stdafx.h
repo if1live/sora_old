@@ -44,6 +44,7 @@
 
 #include <sstream>
 #include <vector>
+#include <set>
 #include <string>
 #include <algorithm>
 #include <memory>

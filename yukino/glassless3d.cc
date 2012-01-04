@@ -76,9 +76,8 @@ void Glassless3d::Init() {
 #endif
 
   //테스트용 scene 생성
-  string path = sora::Filesystem::GetAppPath(book.GetCurrSceneFile());
-  scene_.reset(new BookScene());
-  scene_->load(path);
+  scene_ = book.GetCurrScene();
+  scene_->load();
 }
 
 void Glassless3d::Draw() {
@@ -147,7 +146,7 @@ void Glassless3d::Draw() {
 
     srglPushMatrix();
     //grid정의 있으면 그리기
-    if(scene_.get() != NULL && scene_->isUseGrid() == true) {
+    if(scene_ != NULL && scene_->isUseGrid() == true) {
       //grid를 약간 작게 그려야 z-fighting문제가 없다
       srglScalef(0.99, 0.99, 0.99);
       //grid 그리기..어차피 디버깅모드에서만 쓰는거니까 그리는 순서는 신경쓰지 말자 
@@ -161,7 +160,7 @@ void Glassless3d::Draw() {
     glEnable(GL_BLEND);
     //book scene 적절히 그리기 
     //glDisable(GL_DEPTH_TEST); 
-    if(scene_.get() != NULL) {
+    if(scene_ != NULL) {
       scene_->draw();
     }
 

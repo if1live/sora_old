@@ -19,6 +19,7 @@ public:
 
 public:
   BookScene();
+  BookScene(sora::XmlNode *node);
   ~BookScene();
   void Add(const BookPaper &paper);
   void sortPaper();
@@ -28,7 +29,8 @@ public:
   void setUseGrid(bool b);
 
   //장면에 필요한 스프라이트 목록을 로딩해서 여기에서 관리한다
-  void load(const std::string &path);
+  void load();
+  void unload();
 
   void parseSpriteNode(sora::XmlNode *node);
   void parseSpriteListNode(sora::XmlNode *node);
@@ -41,14 +43,18 @@ public:
   void parseWallPaperNode(sora::XmlNode *node);
 
   BookPaperType typeStr2type(const std::string &str);
+
+  const std::set<std::string> &used_tex_name_list() const { return used_tex_name_list_; }
 private:
   bool useGrid_;
   std::vector<BookPaper> paperList_;
 
   SpriteDictType spriteDict_;
-  
-  //텍스쳐 아틀라스 관리용
-  //TextureAtlasManager texAtlasMgr_;
+
+  sora::XmlNode *root_node_;
+
+  //해당씬을 표현하는데 사용되는 텍스쳐 목록
+  std::set<std::string> used_tex_name_list_;
 };
 
 bool BookPaperCompare(const BookPaper &a, const BookPaper &b);

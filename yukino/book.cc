@@ -4,8 +4,10 @@
 #include "sora/xml_reader.h"
 #include "sora/xml_node.h"
 #include "sora/common_string.h"
-
 #include "sora/memory_file.h"
+#include "sora/template_library.h"
+#include "sora/filesystem.h"
+#include "book_scene.h"
 
 using namespace sora;
 using namespace std;
@@ -21,6 +23,7 @@ Book::Book()
   cam_radius_(1) {
 }
 Book::~Book() {
+  DestroyList(&scene_list_);
 }
 
 
@@ -94,6 +97,24 @@ void Book::LoadSceneList(sora::XmlNode *node) {
     const string &file = sceneNode->GetAttribute("file");
     SR_ASSERT(file.size() > 0 && "no file error");
     scene_file_list_.push_back(file);
+  }
+
+  //scene 파일 전부 로딩하기
+  BOOST_FOREACH(const std::string &file, scene_file_list_) {
+    string path = sora::Filesystem::GetAppPath(file);
+    sora::MemoryFile mem_file(path);
+    mem_file.Open();
+
+    const char *content = (const char*)mem_file.start;
+    XmlReader xml_reader;
+    XmlNode *node = new XmlNode();
+    bool read_result = xml_reader.Read(node, content);
+    SR_ASSERT(read_result == true);
+
+    BookScene *scene = new BookScene(node);
+    scene_list_.push_back(scene);
+
+    mem_file.Close();
   }
 }
 void Book::Load(const std::string &cfgfile) {
