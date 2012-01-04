@@ -110,8 +110,14 @@ void Glassless3d::Draw() {
     //일정각도 이상으로는 안넘어가도록 하자
     //float panDegree = handler_->getPanDegree();
     //float tiltDegree = handler_->getTiltDegree();
-    float pan_deg = 15;
+    //float pan_deg = 15;
+    float pan_deg = 0;
     float tilt_deg = 15;
+    static float dynamic_pan_dt = 0;
+    dynamic_pan_dt += 0.1;
+    pan_deg = 15 * sin(DegreeToRadian(dynamic_pan_dt));
+
+
     pan_deg = Book::GetInstance().CalcPanDeg(pan_deg);
     tilt_deg = Book::GetInstance().CalcTiltDeg(tilt_deg);
 

@@ -24,6 +24,11 @@
 #include "filesystem.h"
 
 namespace sora {;
+
+// texture manager에는 쓰레드가 들어가고 공유 영역이 있으니 락을 쓰자
+boost::mutex request_stack_lock;
+boost::mutex response_stack_lock;
+
 bool TextureManagerThreadRunner::run_thread = true;
 void TextureManagerThreadRunner::operator()() {
   //텍스쳐 로딩작업이 그렇게 자주 발생하는것도 아니니까 가끔씩만 확인하자
@@ -37,7 +42,9 @@ void TextureManagerThreadRunner::operator()() {
 }
 
 void TextureManager::PushRequest(const TextureLoadRequest &request) {
+  request_stack_lock.lock();
   request_stack_.push_back(request);
+  request_stack_lock.unlock();
 }
 boolean TextureManager::IsResponseExist() const {
   if (response_stack_.empty()) {
@@ -47,15 +54,22 @@ boolean TextureManager::IsResponseExist() const {
   }
 }
 TextureLoadResponse TextureManager::PopResponse() {
+  response_stack_lock.lock();
   TextureLoadResponse response = response_stack_.back();
   response_stack_.pop_back();
+  response_stack_lock.unlock();
   return response;
 }
 
 void TextureManager::ProcessRequest() {
   using std::string;
-  RequestStackType::iterator it = request_stack_.begin();
-  RequestStackType::iterator endit = request_stack_.end();
+  request_stack_lock.lock();
+  RequestStackType cpy_request_stack = request_stack_;
+  request_stack_.clear();
+  request_stack_lock.unlock();
+
+  RequestStackType::iterator it = cpy_request_stack.begin();
+  RequestStackType::iterator endit = cpy_request_stack.end();
   for ( ; it != endit ; it++) {
     const TextureLoadRequest &request = *it;
     string fullpath = Filesystem::GetAppPath(request.filename);
@@ -73,21 +87,26 @@ void TextureManager::ProcessRequest() {
 
     //TODO dict에는 어떻게 저장?
 
+    response_stack_lock.lock();
     response_stack_.push_back(response);
+    response_stack_lock.unlock();
   }
-  request_stack_.clear();
 }
 
 void TextureManager::ProcessResponse() {
-  ResponseStackType::iterator it = response_stack_.begin();
-  ResponseStackType::iterator endit = response_stack_.end();
+  response_stack_lock.lock();
+  ResponseStackType cpy_response_stack_ = response_stack_;
+  response_stack_.clear();
+  response_stack_lock.unlock();
+
+  ResponseStackType::iterator it = cpy_response_stack_.begin();
+  ResponseStackType::iterator endit = cpy_response_stack_.end();
   for ( ; it != endit ; it++) {
     const TextureLoadResponse &response = *it;
 
     response.tex->Init(response.fmt, response.tex_header, response.param, response.data);
     delete[](response.data);
   }
-  response_stack_.clear();
 }
 
 TextureManager::TextureManager() {
