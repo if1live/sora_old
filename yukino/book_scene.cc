@@ -21,9 +21,6 @@ using namespace sora;
 
 namespace yukino {;
 
-
-
-////////////////
 BookScene::BookScene()
   : useGrid_(true), root_node_(NULL) {
 }
@@ -323,7 +320,7 @@ void BookScene::parseSceneNode(sora::XmlNode *node) {
   }
 }
 
-void BookScene::load() {
+void BookScene::Load() {
   //xml node를 가지고 있으면 필요할때 바로 재생성 가능
   //xml은 가지고 있고 텍스쳐나 기타 자료를 내렸다 올렸다하자
 
@@ -339,9 +336,40 @@ void BookScene::load() {
     sortPaper();
   }
 }
-void BookScene::unload() {
+void BookScene::Unload() {
   paperList_.clear();
   spriteDict_.clear();
+}
+void BookScene::LoadTexture() {
+  BOOST_FOREACH(const string &res, used_tex_name_list_) {
+    Texture *tex = TextureManager::GetInstance().GetTexture(res);
+    if(tex == NULL) {
+      //새로운텍스쳐를 만들기. 모든 처리가 완료되면 TextureManager내부에 등록된다
+      tex = new Texture();
+
+      TextureParameter param;
+      param.mag_filter = kTexMagLinear;
+      param.min_filter = kTexMinLinearMipMapNearest;
+      param.wrap_s = kTexWrapRepeat;
+      param.wrap_t = kTexWrapRepeat;
+
+      TextureLoadRequest request;
+      request.register_to_manager = true;
+      request.filename = res;
+      request.tex = tex;
+      request.param = param;
+
+      TextureManager::GetInstance().PushRequest(request);
+    }
+  }
+}
+void BookScene::UnloadTexture() {
+  //@TODO texture unload 시점은 언제?
+  BOOST_FOREACH(const string &tex_name, used_tex_name_list_) {
+    TextureManager &mgr = TextureManager::GetInstance();
+    bool result = mgr.RemoveTexture(tex_name);
+    SR_ASSERT(result == true);
+  }
 }
 
 bool BookPaperCompare(const BookPaper &a, const BookPaper &b) {

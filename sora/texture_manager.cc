@@ -150,11 +150,20 @@ TexturePtr TextureManager::GetTexturePtr(const std::string &name) {
     return found->second;
   }
 }
-bool TextureManager::IsExist(const std::string &name) const {
+boolean TextureManager::IsExist(const std::string &name) const {
   TextureDictType::const_iterator found = tex_dict_.find(name);
   if (found == tex_dict_.end()) {
     return false;
   } else {
+    return true;
+  }
+}
+boolean TextureManager::RemoveTexture(const std::string &name) {
+  TextureDictType::iterator found = tex_dict_.find(name);
+  if (found == tex_dict_.end()) {
+    return false;
+  } else {
+    tex_dict_.erase(found);
     return true;
   }
 }

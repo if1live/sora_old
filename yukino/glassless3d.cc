@@ -77,7 +77,7 @@ void Glassless3d::Init() {
 
   //테스트용 scene 생성
   scene_ = book.GetCurrScene();
-  scene_->load();
+  scene_->Load();
 }
 
 void Glassless3d::Draw() {

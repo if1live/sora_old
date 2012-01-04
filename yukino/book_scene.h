@@ -29,8 +29,10 @@ public:
   void setUseGrid(bool b);
 
   //장면에 필요한 스프라이트 목록을 로딩해서 여기에서 관리한다
-  void load();
-  void unload();
+  void Load();
+  void Unload();
+  void LoadTexture();
+  void UnloadTexture();
 
   void parseSpriteNode(sora::XmlNode *node);
   void parseSpriteListNode(sora::XmlNode *node);

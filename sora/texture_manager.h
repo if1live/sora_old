@@ -67,9 +67,10 @@ public:
   void ProcessRequest();
   void ProcessResponse();
   
-  bool IsExist(const std::string &name) const;
+  boolean IsExist(const std::string &name) const;
   Texture *GetTexture(const std::string &name);
   TexturePtr GetTexturePtr(const std::string &name);
+  boolean RemoveTexture(const std::string &name);
 
   TextureManager();
 protected:
