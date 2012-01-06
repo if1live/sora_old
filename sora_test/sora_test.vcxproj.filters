@@ -45,6 +45,9 @@
     <ClCompile Include="selector_test.cc">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="handle_manager_test.cc">
+      <Filter>base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h" />

@@ -107,6 +107,9 @@
     <ClInclude Include="texture_info.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="handle_manager.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cc">
