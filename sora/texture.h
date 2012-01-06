@@ -50,6 +50,11 @@ public:
   // png파일을 불러서 픽셀 데이터로 반환. 동적할당된것이 던져지니 알아서 적절히 처리
   static void* LoadPNG(const char *filepath, TexFormat *fmt, TextureHeader *header);
   void Init(const TexFormat &fmt, const TextureHeader &tex_header, const TextureParameter &param, void *data);
+  // 현재 올려져있는 텍스쳐를 내리고 sample로 교체하기
+  void Deinit();
+
+  void SetAsSample();
+  void SetAsLoading();
 
 private:
   void InitSimpleTexture(i32 width, i32 height, const TexFormat &fmt, void *data);
@@ -58,8 +63,10 @@ public:
   Texture();
   ~Texture();
 
+  // 텍스쳐만 내리기. 텍스쳐는 비어있다
   void Cleanup();
   void SetTextureParameter(const TextureParameter &param);
+  const TextureParameter &param() const { return param_; }
  
 public:
   TexWrapMode wrap_s() const { return param_.wrap_s; }

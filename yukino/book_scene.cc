@@ -65,14 +65,10 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
     param.min_filter = kTexMinLinearMipMapNearest;
     param.wrap_s = kTexWrapRepeat;
     param.wrap_t = kTexWrapRepeat;
+    tex->SetTextureParameter(param);
 
-    TextureLoadRequest request;
-    request.register_to_manager = true;
-    request.filename = res;
-    request.handle = handle;
-    request.param = param;
-
-    TextureManager::GetInstance().PushRequest(request);
+    TextureManager::GetInstance().AsyncLoad(handle);
+    
 
     //현재 씬을 표현하는데 사용되는 텍스쳐 목록에 넣기
     used_tex_name_list_.insert(res);
@@ -356,14 +352,9 @@ void BookScene::LoadTexture() {
       param.min_filter = kTexMinLinearMipMapNearest;
       param.wrap_s = kTexWrapRepeat;
       param.wrap_t = kTexWrapRepeat;
+      tex->SetTextureParameter(param);
 
-      TextureLoadRequest request;
-      request.register_to_manager = true;
-      request.filename = res;
-      request.handle = handle;
-      request.param = param;
-
-      TextureManager::GetInstance().PushRequest(request);
+      TextureManager::GetInstance().AsyncLoad(handle);
     }
   }
 }

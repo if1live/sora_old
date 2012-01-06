@@ -41,7 +41,7 @@ void TextureManagerThreadRunner::operator()() {
   //printf("texture thread exit...\n");
 }
 
-void TextureManager::PushRequest(const TextureLoadRequest &request) {
+void TextureManager::AsyncLoad(const TextureHandle &request) {
   request_stack_lock.lock();
   request_stack_.push_back(request);
   request_stack_lock.unlock();
@@ -71,19 +71,18 @@ void TextureManager::ProcessRequest() {
   RequestStackType::iterator it = cpy_request_stack.begin();
   RequestStackType::iterator endit = cpy_request_stack.end();
   for ( ; it != endit ; it++) {
-    const TextureLoadRequest &request = *it;
-
-    string fullpath = Filesystem::GetAppPath(request.filename);
+    TextureHandle &handle = *it;
+    Texture *tex = GetTexture(handle);
+    SR_ASSERT(!tex->filename().empty() && "no file defined?");
+    string fullpath = Filesystem::GetAppPath(tex->filename());
     TexFormat fmt;
     TextureHeader tex_header;
     void *data = Texture::LoadPNG(fullpath.c_str(), &fmt, &tex_header);
     
     TextureLoadResponse response;
-    response.filename = request.filename;
-    response.handle = request.handle;
+    response.handle = handle;
     response.fmt = fmt;
     response.tex_header = tex_header;
-    response.param = request.param;
     response.data = data;
 
     //락거는 횟수를 줄이기 위해서 임시목록에 넣었다가 한번에 완료목록에 등록하자
@@ -116,7 +115,7 @@ void TextureManager::ProcessResponse() {
     TextureLoadResponse &response = *it;
 
     Texture *tex = GetTexture(response.handle);
-    tex->Init(response.fmt, response.tex_header, response.param, response.data);
+    tex->Init(response.fmt, response.tex_header, tex->param(), response.data);
     delete[](response.data);
   }
 }

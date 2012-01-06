@@ -31,6 +31,32 @@ namespace sora {;
 Texture::Texture()
   : handle(0) {
   // 최초에 텍스쳐가 할당되어있지 않으면 임시 텍스쳐를 대신 띄운다
+  SetAsLoading();
+}
+Texture::~Texture() {
+  Cleanup();
+}
+void Texture::Deinit() {
+  Cleanup();
+  SetAsLoading();
+}
+
+void Texture::SetAsSample() {
+  Cleanup();  //기존에 뭔가 있으면 해제
+
+  handle = GetSampleTexture(&tex_header.tex_width, &tex_header.tex_height);
+  tex_header.src_width = tex_header.tex_width;
+  tex_header.src_height = tex_header.tex_height;
+  format = kTexFormatRGB888;
+
+  param_.wrap_s = kTexWrapRepeat;
+  param_.wrap_t = kTexWrapRepeat;
+  param_.min_filter = kTexMinNearestMipMapOff;
+  param_.mag_filter = kTexMagNearest;
+}
+void Texture::SetAsLoading() {
+  Cleanup();  //기존에 뭔가 있으면 해제
+
   handle = GetLoadingTexture(&tex_header.tex_width, &tex_header.tex_height);
   tex_header.src_width = tex_header.tex_width;
   tex_header.src_height = tex_header.tex_height;
@@ -41,17 +67,14 @@ Texture::Texture()
   param_.min_filter = kTexMinNearestMipMapOff;
   param_.mag_filter = kTexMagNearest;
 }
-Texture::~Texture() {
-  Cleanup();
-}
 void Texture::Cleanup() {
   if (handle == 0) {
     return;
   }
 
-  int w, h;
-  GLuint default_tex_id = GetLoadingTexture(&w, &h);
-  if(default_tex_id != handle) {
+  GLuint loading_tex_id = GetLoadingTexture();
+  GLuint sample_tex_id = GetSampleTexture();
+  if(loading_tex_id != handle && sample_tex_id != handle) {
     // sample텍스쳐는 공유하므로 삭제하지 않는다
     srglDeleteTextures(1, &handle);
     handle = 0;
@@ -65,10 +88,10 @@ GLuint Texture::GetSampleTexture(int *width, int *height) {
 
   const int w = 2;
   const int h = 2;
-  if (!width) {
+  if (width) {
     *width = w;
   }
-  if (!height) {
+  if (height) {
     *height = h;
   }
 
@@ -115,8 +138,12 @@ GLuint Texture::GetLoadingTexture(int *width, int *height) {
     srglBindTexture(GL_TEXTURE_2D, tex_id);
     srglPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    *width = tex_header.tex_width;
-    *height = tex_header.tex_height;
+    if (width) {
+      *width = tex_header.tex_width;
+    }
+    if (height) {
+      *height = tex_header.tex_height;
+    }
     SR_ASSERT(fmt == kTexFormatRGBA8888);
 
     srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
@@ -458,12 +485,14 @@ void* Texture::LoadPNG(const char *filepath, TexFormat *fmt, TextureHeader *tex_
 void Texture::SetTextureParameter(const TextureParameter &param) {
   param_ = param;
 
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, param_.gl_mag_filter());
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, param_.gl_min_filter());
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, param_.gl_wrap_s());
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, param_.gl_wrap_t());
-  //use mipmap
-	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, param_.IsMipMap());
+  if (handle != 0) {
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, param_.gl_mag_filter());
+	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, param_.gl_min_filter());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, param_.gl_wrap_s());
+	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, param_.gl_wrap_t());
+    //use mipmap?
+	  glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, param_.IsMipMap());
+  }
 }
 
 void Texture::Init(const TexFormat &fmt, const TextureHeader &header, const TextureParameter &param, void *data) {

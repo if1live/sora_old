@@ -37,35 +37,24 @@ struct TextureManagerThreadRunner {
   static bool run_thread;
 };
 
-// 쓰레드를 써서 텍스쳐를 로딩하기 위해서 이와 같은 방식을 사용함
-struct TextureLoadRequest {
-  std::string filename;
-  TextureHandle handle;
-  TextureParameter param;
-  // 텍스쳐 매니저에 등록할것인가. 동적할당일때만 사용가능하다
-  boolean register_to_manager;
-};
-
 // png파일같은것을 읽은 결과 내용이다. 텍스쳐 생성은
 // opengl을 생성한 쓰레드인 메인 쓰레드에서 작업해야하므로 이렇게 다시 넘기도록했다
 struct TextureLoadResponse {
-  std::string filename;
   TextureHandle handle;
 
   TexFormat fmt;
   TextureHeader tex_header;
-  TextureParameter param;
   void *data;
 };
 
 class TextureManager : public Singleton<TextureManager> {
 public:
-  typedef std::vector<TextureLoadRequest>   RequestStackType;
+  typedef std::vector<TextureHandle>   RequestStackType;
   typedef std::vector<TextureLoadResponse>  ResponseStackType;
   typedef DynamicHandleManager<Texture, TextureHandle> HandleMgrType;
 
 public:
-  void PushRequest(const TextureLoadRequest &request);
+  void AsyncLoad(const TextureHandle &request);
   boolean IsResponseExist() const;
   TextureLoadResponse PopResponse();
   void ProcessRequest();
