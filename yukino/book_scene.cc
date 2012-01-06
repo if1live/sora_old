@@ -67,11 +67,18 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
     param.wrap_t = kTexWrapRepeat;
     tex->SetTextureParameter(param);
 
+    // 편법으로 텍스쳐 크기를 2048*2048로 설정. 텍스쳐 읽기전에
+    // 기반 정보로 일반 객체가 생성되어야하니 어쩔수가 없다
+    // @XXX나중에는 텍스쳐 기본 메타 정보를 메모리에 올려놓도록 고치자
+    tex->tex_header.src_width = 2048;
+    tex->tex_header.src_height = 2048;
+    tex->tex_header.tex_width = 2048;
+    tex->tex_header.tex_height = 2048;
+
     TextureManager::GetInstance().AsyncLoad(handle);
     
-
     //현재 씬을 표현하는데 사용되는 텍스쳐 목록에 넣기
-    used_tex_name_list_.insert(res);
+    tex_handle_list_.push_back(handle);
   }
 
   //텍스쳐의 정보를 사용해서 x, y, w, h를 구성하기
@@ -339,31 +346,18 @@ void BookScene::Unload() {
   spriteDict_.clear();
 }
 void BookScene::LoadTexture() {
-  BOOST_FOREACH(const string &res, used_tex_name_list_) {
-    Texture *tex = TextureManager::GetInstance().GetTexture(res);
-    if(tex == NULL) {
-      //새로운텍스쳐를 만들기. 모든 처리가 완료되면 TextureManager내부에 등록된다
-      TextureHandle handle;
-      tex = TextureManager::GetInstance().CreateTexture(handle);
-      tex->set_filename(res);
-
-      TextureParameter param;
-      param.mag_filter = kTexMagLinear;
-      param.min_filter = kTexMinLinearMipMapNearest;
-      param.wrap_s = kTexWrapRepeat;
-      param.wrap_t = kTexWrapRepeat;
-      tex->SetTextureParameter(param);
-
+  BOOST_FOREACH(TextureHandle &handle, tex_handle_list_) {
+    Texture *tex = TextureManager::GetInstance().GetTexture(handle);
+    if (tex->IsSystemTexture()) {
+      // 아직 안불러져있는 경우, 로드하기
       TextureManager::GetInstance().AsyncLoad(handle);
     }
   }
 }
 void BookScene::UnloadTexture() {
-  //@TODO texture unload 시점은 언제?
-  BOOST_FOREACH(const string &tex_name, used_tex_name_list_) {
-    TextureManager &mgr = TextureManager::GetInstance();
-    bool result = mgr.RemoveTexture(tex_name);
-    SR_ASSERT(result == true);
+  BOOST_FOREACH(TextureHandle &handle, tex_handle_list_) {
+    Texture *tex = TextureManager::GetInstance().GetTexture(handle);
+    tex->SetAsSample();
   }
 }
 

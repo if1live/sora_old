@@ -56,6 +56,10 @@ public:
   void SetAsSample();
   void SetAsLoading();
 
+  // loading, sample, color texture 같이 시스템을 위해서 만든 텍스쳐인가?
+  // 자체적으로 구현한 텍스쳐인가?
+  bool IsSystemTexture() const;
+
 private:
   void InitSimpleTexture(i32 width, i32 height, const TexFormat &fmt, void *data);
 

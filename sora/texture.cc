@@ -521,4 +521,31 @@ void Texture::Init(const TexFormat &fmt, const TextureHeader &header, const Text
     SR_ASSERT(!"not support yet");
   }
 }
+bool Texture::IsSystemTexture() const {
+  using std::set;
+
+  static set<u32> system_tex_list;
+  static bool run = false;
+  if (run == false) {
+    run = true;
+    system_tex_list.insert(GetSampleTexture());
+    system_tex_list.insert(GetLoadingTexture());
+    system_tex_list.insert(White().handle);
+    system_tex_list.insert(Black().handle);
+    system_tex_list.insert(Gray().handle);
+    system_tex_list.insert(Red().handle);
+    system_tex_list.insert(Blue().handle);
+    system_tex_list.insert(Green().handle);
+    system_tex_list.insert(Sample().handle);
+    system_tex_list.insert(LoadingTexture().handle);
+  }
+
+  set<u32>::iterator found = system_tex_list.find(handle);
+  if (found == system_tex_list.end()) {
+    return false;
+  } else {
+    return true;
+  }
 }
+}
+

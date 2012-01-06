@@ -2,6 +2,7 @@
 #pragma once
 
 #include "book_paper.h"
+#include "sora/texture_manager.h"
 
 namespace sora {;
 class XmlNode;
@@ -46,7 +47,6 @@ public:
 
   BookPaperType typeStr2type(const std::string &str);
 
-  const std::set<std::string> &used_tex_name_list() const { return used_tex_name_list_; }
 private:
   bool useGrid_;
   std::vector<BookPaper> paperList_;
@@ -56,7 +56,7 @@ private:
   sora::XmlNode *root_node_;
 
   //해당씬을 표현하는데 사용되는 텍스쳐 목록
-  std::set<std::string> used_tex_name_list_;
+  std::vector<sora::TextureHandle> tex_handle_list_;
 };
 
 bool BookPaperCompare(const BookPaper &a, const BookPaper &b);
