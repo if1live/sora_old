@@ -36,6 +36,9 @@ public:
 public:
   Handle() : handle_(0) { }
   Handle(int index) : handle_(0) { Init(index); }
+  // 원하는 핸들을 강제로 만들기. 수동으로 뭔가를 얻어서 그 정보를 다시 핸들로 써야될떄 쓴다
+  // 나중에는 타입안정성을 박살내는 원인이 될지도?
+  Handle(u16 index, u16 magic) : res_index_(index), res_magic_(magic) {}
   ~Handle() { }
  
   u32 res_index() const { return res_index_; }

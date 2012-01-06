@@ -47,6 +47,12 @@ struct OnNullHandlePolicy_CreateOrGet {
     DynamicHandleManager<DataType, HandleType> *mgr);
 };
 
+template<typename DataType>
+struct DataTuple {
+  u16 magic;
+  DataType data;
+};
+
 template<
   typename DataType,
   typename HandleType
@@ -57,14 +63,19 @@ private:
   friend struct OnNullHandlePolicy_Get<DataType, HandleType>;
 public:
   // 동적할당된 객체와 그것의 magic는 같이 붙어서 움직인다
-  typedef std::pair<u16, DataType*> DataPairType;
+  typedef DataTuple<DataType*> DataPairType;
   typedef std::vector<DataPairType> DataListType;
 private:
   DataListType data_list_;    //실제 자원을 넣는것
 public:
   DynamicHandleManager() { }
-
   ~DynamicHandleManager();
+
+  // 존재하는 DataType에 대해서 뭔가 특별한 작업읋 해야될때는 iterator로 돌려야할때가있다
+  typename DataListType::iterator Begin() { return data_list_.begin(); }
+  typename DataListType::iterator End() { return data_list_.end(); }
+  typename DataListType::const_iterator Begin() const { return data_list_.begin(); }
+  typename DataListType::const_iterator End() const { return data_list_.end(); }
 
   // 핸들에 해당되는것이 존재하지 않으면 NULL
   DataType *Get(HandleType &handle);
@@ -74,7 +85,7 @@ public:
   // 내부의 자료구조가 변경되서 handle의 인덱스가 invalid가 된경우, 그것을 다시
   // 올바르게 바꿔주는 기능이 있기떄문
   DataType *CreateOrGet(HandleType &handle);
-  void Remove(HandleType &handle);
+  bool Remove(HandleType &handle);
 
   int GetHandleCount() const { return data_list_.size(); }
 
@@ -109,7 +120,7 @@ DataType *OnNullHandlePolicy_CreateOrGet<DataType, HandleType>::OnNullHandle(Han
   DataType *data = new DataType();
   handle.Init(mgr->data_list_.size());
   u16 magic = handle.res_magic();
-  MgrType::DataPairType data_pair = std::make_pair(magic, data);
+  MgrType::DataPairType data_pair = { magic, data };
   mgr->data_list_.push_back(data_pair);
   return data;
 }
@@ -121,7 +132,7 @@ DynamicHandleManager<DataType, HandleType>::~DynamicHandleManager() {
   DataListType::iterator endit = data_list_.end();
   for ( ; it != endit ; it++) {
     const DataPairType &data_pair = *it;
-    DataType *data = data_pair.second;
+    DataType *data = data_pair.data;
     delete(data);
   }
 }
@@ -142,19 +153,19 @@ DataType *DynamicHandleManager<DataType, HandleType>::CreateOrGet(HandleType &ha
 }
 
 template<typename DataType, typename HandleType>
-void DynamicHandleManager<DataType, HandleType>::Remove(HandleType &handle) {
+bool DynamicHandleManager<DataType, HandleType>::Remove(HandleType &handle) {
   // 핸들을 써서 바로 접근 가능한 상황의 경우. 즉, invalid아닌 경우
   // 해당 인덱스로 접근이 가능하고
   if (handle.res_index() < data_list_.size()) {
     // 올바른 magic이면 객체를 삭제
     const DataPairType &candidate_pair = data_list_[handle.res_index()];
-    if (candidate_pair.first == handle.res_magic()) {
+    if (candidate_pair.magic == handle.res_magic()) {
       DataListType::iterator it = data_list_.begin();
       std::advance(it, handle.res_index());
-      DataType *data = candidate_pair.second;
+      DataType *data = candidate_pair.data;
       delete(data);
       data_list_.erase(it);
-      return;
+      return true;
     }
   }
 
@@ -163,13 +174,15 @@ void DynamicHandleManager<DataType, HandleType>::Remove(HandleType &handle) {
   DataListType::iterator endit = data_list_.end();
   for ( ; it != endit ; it++) {
     const DataPairType &candidate_pair = *it;
-    if (candidate_pair.first == handle.res_magic()) {
-      DataType *data = candidate_pair.second;
+    if (candidate_pair.magic == handle.res_magic()) {
+      DataType *data = candidate_pair.data;
       delete(data);
       data_list_.erase(it);
-      return;
+      return true;
     }
   }
+
+  return false;
 }
 
 template<typename DataType, typename HandleType>
@@ -184,8 +197,8 @@ DataType *DynamicHandleManager<DataType, HandleType>::GetWithOnNullHandlePolicy(
   if (handle.res_index() < data_list_.size()) {
     // handle 인덱스에 있는 객체가 magic이 동일하면 그 객체 맞을거다
     const DataPairType &candidate_pair = data_list_[handle.res_index()];
-    if (candidate_pair.first == handle.res_magic()) {
-      return candidate_pair.second;
+    if (candidate_pair.magic == handle.res_magic()) {
+      return candidate_pair.data;
     }
   }
 
@@ -193,9 +206,9 @@ DataType *DynamicHandleManager<DataType, HandleType>::GetWithOnNullHandlePolicy(
   // 올바른게 있으면 그것을 반환하고 핸들도 올바르게 고친다
   for (size_t i = 0 ; i < data_list_.size() ; i++) {
     const DataPairType &candidate_pair = data_list_[i];
-    if (candidate_pair.first == handle.res_magic()) {
+    if (candidate_pair.magic == handle.res_magic()) {
       handle.set_res_index(i);
-      return candidate_pair.second;
+      return candidate_pair.data;
     }
   }
 

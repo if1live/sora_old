@@ -43,14 +43,6 @@ void TextureManagerThreadRunner::operator()() {
 
 void TextureManager::PushRequest(const TextureLoadRequest &request) {
   request_stack_lock.lock();
-  // 생성요청이 들어오면 바로 등록하자. 이 함수는 메인쓰레드에 의해서 호출되는데
-  // 등록을 다른 쓰레드에서 처리하는 경우, 시간차로 2번 요청해버릴수있다
-  // 같은 텍스쳐를 2번 만들어버릴수있다
-  if (request.register_to_manager) {
-    TexturePtr tex_ptr(request.tex);
-    tex_dict_[request.filename] = tex_ptr;
-  }
-
   request_stack_.push_back(request);
   request_stack_lock.unlock();
 }
@@ -88,7 +80,7 @@ void TextureManager::ProcessRequest() {
     
     TextureLoadResponse response;
     response.filename = request.filename;
-    response.tex = request.tex;
+    response.handle = request.handle;
     response.fmt = fmt;
     response.tex_header = tex_header;
     response.param = request.param;
@@ -121,9 +113,10 @@ void TextureManager::ProcessResponse() {
   ResponseStackType::iterator it = cpy_response_stack_.begin();
   ResponseStackType::iterator endit = cpy_response_stack_.end();
   for ( ; it != endit ; it++) {
-    const TextureLoadResponse &response = *it;
+    TextureLoadResponse &response = *it;
 
-    response.tex->Init(response.fmt, response.tex_header, response.param, response.data);
+    Texture *tex = GetTexture(response.handle);
+    tex->Init(response.fmt, response.tex_header, response.param, response.data);
     delete[](response.data);
   }
 }
@@ -134,37 +127,53 @@ TextureManager::~TextureManager() {
 }
 
 Texture *TextureManager::GetTexture(const std::string &name) {
-  TextureDictType::iterator found = tex_dict_.find(name);
-  if (found == tex_dict_.end()) {
-    return NULL;
-  } else {
-    return found->second.get();
-  }
-}
-TexturePtr TextureManager::GetTexturePtr(const std::string &name) {
-  TextureDictType::iterator found = tex_dict_.find(name);
-  if (found == tex_dict_.end()) {
-    TexturePtr empty;
-    return empty;
-  } else {
-    return found->second;
-  }
+  TextureHandle handle = CreateHandle(name);
+  return GetTexture(handle);
 }
 boolean TextureManager::IsExist(const std::string &name) const {
-  TextureDictType::const_iterator found = tex_dict_.find(name);
-  if (found == tex_dict_.end()) {
+  TextureHandle handle = CreateHandle(name);
+  if (handle.IsNull()) {
     return false;
   } else {
     return true;
   }
 }
 boolean TextureManager::RemoveTexture(const std::string &name) {
-  TextureDictType::iterator found = tex_dict_.find(name);
-  if (found == tex_dict_.end()) {
-    return false;
+  TextureHandle handle = CreateHandle(name);
+  return RemoveTexture(handle);
+}
+
+boolean TextureManager::IsExist(TextureHandle &handle) {
+  Texture *tex = handle_mgr_.Get(handle);
+  return (tex != NULL);
+}
+Texture *TextureManager::GetTexture(TextureHandle &handle) {
+  return handle_mgr_.Get(handle);
+}
+boolean TextureManager::RemoveTexture(TextureHandle &handle) {
+  return handle_mgr_.Remove(handle);
+}
+Texture *TextureManager::CreateTexture(TextureHandle &handle) {
+  if (handle.IsNull()) {
+    return handle_mgr_.CreateOrGet(handle);
   } else {
-    tex_dict_.erase(found);
-    return true;
+    return NULL;
   }
+}
+
+TextureHandle TextureManager::CreateHandle(const std::string &name) const {
+  HandleMgrType::DataListType::const_iterator it = handle_mgr_.Begin();
+  HandleMgrType::DataListType::const_iterator endit = handle_mgr_.End();
+  for ( ; it != endit ; it++) {
+    const HandleMgrType::DataPairType &data_pair = *it;
+    if (it->data->filename() == name) {
+      u16 index = std::distance(handle_mgr_.Begin(), it);
+      u16 magic = it->magic;
+      TextureHandle handle(index, magic);
+      return handle;
+    }
+  }
+  TextureHandle null_handle;
+  return null_handle;
 }
 }

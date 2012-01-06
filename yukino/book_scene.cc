@@ -56,7 +56,9 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
   Texture *tex = TextureManager::GetInstance().GetTexture(res);
   if(tex == NULL) {
     //새로운텍스쳐를 만들기. 모든 처리가 완료되면 TextureManager내부에 등록된다
-    tex = new Texture();
+    TextureHandle handle;
+    tex = TextureManager::GetInstance().CreateTexture(handle);
+    tex->set_filename(res);
 
     TextureParameter param;
     param.mag_filter = kTexMagLinear;
@@ -67,7 +69,7 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
     TextureLoadRequest request;
     request.register_to_manager = true;
     request.filename = res;
-    request.tex = tex;
+    request.handle = handle;
     request.param = param;
 
     TextureManager::GetInstance().PushRequest(request);
@@ -345,7 +347,9 @@ void BookScene::LoadTexture() {
     Texture *tex = TextureManager::GetInstance().GetTexture(res);
     if(tex == NULL) {
       //새로운텍스쳐를 만들기. 모든 처리가 완료되면 TextureManager내부에 등록된다
-      tex = new Texture();
+      TextureHandle handle;
+      tex = TextureManager::GetInstance().CreateTexture(handle);
+      tex->set_filename(res);
 
       TextureParameter param;
       param.mag_filter = kTexMagLinear;
@@ -356,7 +360,7 @@ void BookScene::LoadTexture() {
       TextureLoadRequest request;
       request.register_to_manager = true;
       request.filename = res;
-      request.tex = tex;
+      request.handle = handle;
       request.param = param;
 
       TextureManager::GetInstance().PushRequest(request);

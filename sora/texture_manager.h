@@ -23,10 +23,14 @@
 
 #include "template_library.h"
 #include "texture_info.h"
+#include "handle.h"
+#include "handle_manager.h"
 
 namespace sora {;
 class Texture;
-typedef std::tr1::shared_ptr<Texture> TexturePtr;
+
+struct TextureTag { };
+typedef Handle<TextureTag> TextureHandle;
 
 struct TextureManagerThreadRunner {
   void operator()();
@@ -36,7 +40,7 @@ struct TextureManagerThreadRunner {
 // 쓰레드를 써서 텍스쳐를 로딩하기 위해서 이와 같은 방식을 사용함
 struct TextureLoadRequest {
   std::string filename;
-  Texture *tex;
+  TextureHandle handle;
   TextureParameter param;
   // 텍스쳐 매니저에 등록할것인가. 동적할당일때만 사용가능하다
   boolean register_to_manager;
@@ -46,7 +50,7 @@ struct TextureLoadRequest {
 // opengl을 생성한 쓰레드인 메인 쓰레드에서 작업해야하므로 이렇게 다시 넘기도록했다
 struct TextureLoadResponse {
   std::string filename;
-  Texture *tex;
+  TextureHandle handle;
 
   TexFormat fmt;
   TextureHeader tex_header;
@@ -56,9 +60,9 @@ struct TextureLoadResponse {
 
 class TextureManager : public Singleton<TextureManager> {
 public:
-  typedef std::tr1::unordered_map<std::string, TexturePtr> TextureDictType;
   typedef std::vector<TextureLoadRequest>   RequestStackType;
   typedef std::vector<TextureLoadResponse>  ResponseStackType;
+  typedef DynamicHandleManager<Texture, TextureHandle> HandleMgrType;
 
 public:
   void PushRequest(const TextureLoadRequest &request);
@@ -67,18 +71,27 @@ public:
   void ProcessRequest();
   void ProcessResponse();
   
+  // filename based
   boolean IsExist(const std::string &name) const;
   Texture *GetTexture(const std::string &name);
-  TexturePtr GetTexturePtr(const std::string &name);
   boolean RemoveTexture(const std::string &name);
+
+  // handle based
+  boolean IsExist(TextureHandle &handle);
+  Texture *GetTexture(TextureHandle &handle);
+  boolean RemoveTexture(TextureHandle &handle);
+
+  Texture *CreateTexture(TextureHandle &handle);
 
   TextureManager();
 protected:
   ~TextureManager();
 
-  TextureDictType tex_dict_;
+  HandleMgrType handle_mgr_;
   RequestStackType    request_stack_;
   ResponseStackType   response_stack_;
+
+  TextureHandle CreateHandle(const std::string &name) const;
 };
 }
 
