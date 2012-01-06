@@ -110,6 +110,9 @@
     <ClInclude Include="handle_manager.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="handle.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cc">

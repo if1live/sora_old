@@ -73,8 +73,13 @@ public:
   TextureHeader tex_header;
 
   GLuint handle;  // 텍스쳐 여러개를 그룹화로 쓰는건 아마도 당분간 필요없겠지
+
+  const std::string filename() const { return filename_; }
+  void set_filename(const char *file) { filename_ = file; }
+  void set_filename(const std::string &file) { filename_ = file; }
 private:
   TextureParameter param_;
+  std::string filename_;  // 내렸던 텍스쳐를 다시 올리거나 할때 사용
 };
 }
 

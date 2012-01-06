@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_test_stdafx.h"
+#include "sora/handle.h"
 #include "sora/handle_manager.h"
 
 class SampleClass {
