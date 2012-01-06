@@ -99,7 +99,6 @@
     <ClInclude Include="texture_info.h" />
     <ClInclude Include="texture_manager.h" />
     <ClInclude Include="touch.h" />
-    <ClInclude Include="uicomponent.h" />
     <ClInclude Include="unordered_map_inc.h" />
     <ClInclude Include="vector.h" />
     <ClInclude Include="xml_node.h" />

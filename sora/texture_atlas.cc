@@ -22,47 +22,52 @@
 #include "texture_atlas.h"
 
 #include "texture.h"
+#include "texture_manager.h"
 
 namespace sora {;
 TextureSubImage::TextureSubImage()
-  : x(0), y(0), w(0), h(0), tex(NULL) {
+  : x(0), y(0), w(0), h(0) {
 }
-TextureSubImage::TextureSubImage(f32 x, f32 y, f32 w, f32 h, Texture *tex)
-  : x(x), y(y), w(w), h(h), tex(tex) {
+TextureSubImage::TextureSubImage(f32 x, f32 y, f32 w, f32 h, const TextureHandle &tex)
+  : x(x), y(y), w(w), h(h), tex_handle(tex) {
 }
-GLuint TextureSubImage::GetHandle() const {
+GLuint TextureSubImage::GetHandle() {
+  Texture *tex = TextureManager::GetInstance().GetTexture(tex_handle);
   SR_ASSERT(tex != NULL);
   return tex->handle;
 }
-f32 TextureSubImage::GetTexWidth() const {
+f32 TextureSubImage::GetTexWidth() {
+  Texture *tex = TextureManager::GetInstance().GetTexture(tex_handle);
   SR_ASSERT(tex != NULL);
   float tex_width = static_cast<f32>(tex->tex_header.tex_width);
   return tex_width;
 }
-f32 TextureSubImage::GetTexHeight() const {
+f32 TextureSubImage::GetTexHeight() {
+  Texture *tex = TextureManager::GetInstance().GetTexture(tex_handle);
   SR_ASSERT(tex != NULL);
   float tex_height = static_cast<f32>(tex->tex_header.tex_height);
   return tex_height;
 }
-f32 TextureSubImage::GetTexCoordX() const {
+f32 TextureSubImage::GetTexCoordX() {
+  Texture *tex = TextureManager::GetInstance().GetTexture(tex_handle);
   float tex_width = GetTexWidth();
   return x / tex_width;
 }
-f32 TextureSubImage::GetTexCoordY() const {
+f32 TextureSubImage::GetTexCoordY() {
   float tex_height = GetTexHeight();
   return y / tex_height;
 }
-f32 TextureSubImage::GetTexCoordWidth() const {
+f32 TextureSubImage::GetTexCoordWidth() {
   float tex_width = GetTexWidth();
   return width / tex_width;
 }
-f32 TextureSubImage::GetTexCoordHeight() const {
+f32 TextureSubImage::GetTexCoordHeight() {
   float tex_height = GetTexHeight();
   return height / tex_height;
 }
 ////////////////////////////////
-TextureAtlas::TextureAtlas() : tex(NULL) {}
-TextureAtlas::TextureAtlas(Texture *tex) : tex(tex) {}
+TextureAtlas::TextureAtlas() {}
+TextureAtlas::TextureAtlas(const TextureHandle &handle) : tex_handle(handle) {}
 TextureAtlas::~TextureAtlas() {}
 
 const TextureSubImage *TextureAtlas::GetSubImage(const char *key) const {
@@ -86,7 +91,7 @@ TextureSubImage *TextureAtlas::GetSubImage(const char *key) {
   return NULL;
 }
 TextureSubImage &TextureAtlas::AddSubImage(const std::string &key, f32 x, f32 y, f32 w, f32 h) {
-  TextureSubImage img(x, y, w, h, tex);
+  TextureSubImage img(x, y, w, h, tex_handle);
   sub_img_list_[key] = img;
   return sub_img_list_[key];
 }

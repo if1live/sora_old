@@ -21,6 +21,8 @@
 #ifndef SORA_TEXTURE_INFO_H_
 #define SORA_TEXTURE_INFO_H_
 
+#include "handle.h"
+
 namespace sora {;
 typedef enum {
   kTexWrapRepeat,
@@ -97,6 +99,9 @@ public:
   GLenum gl_wrap_t() const { return ConvertToGLenum(wrap_t); }
   boolean IsMipMap() const { return IsMipMap(min_filter); }
 };
+
+struct TextureTag { };
+typedef Handle<TextureTag> TextureHandle;
 }
 
 #endif

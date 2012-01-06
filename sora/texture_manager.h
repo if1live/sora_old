@@ -23,14 +23,10 @@
 
 #include "template_library.h"
 #include "texture_info.h"
-#include "handle.h"
 #include "handle_manager.h"
 
 namespace sora {;
 class Texture;
-
-struct TextureTag { };
-typedef Handle<TextureTag> TextureHandle;
 
 struct TextureManagerThreadRunner {
   void operator()();

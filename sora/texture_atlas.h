@@ -21,6 +21,8 @@
 #ifndef SORA_TEXTURE_ATLAS_H_
 #define SORA_TEXTURE_ATLAS_H_
 
+#include "texture_info.h"
+
 namespace sora {;
 class Texture;
 class TextureAtlas;
@@ -32,7 +34,7 @@ struct TextureSubImage;
 // 그래서 텍스쳐는 썡gltexid가 아니라 포인터(또는 엔진용핸들)로 갖고있어야한다
 struct TextureSubImage {
   TextureSubImage();
-  TextureSubImage(f32 x, f32 y, f32 w, f32 h, Texture *tex);
+  TextureSubImage(f32 x, f32 y, f32 w, f32 h, const TextureHandle &tex);
 
   // 텍스쳐 이미지에서의 좌표(이미지 크기 기준)
   f32 x;
@@ -48,22 +50,22 @@ struct TextureSubImage {
   };
 
   // opengl texture
-  Texture *tex;
+  TextureHandle tex_handle;
 
   // 텍스쳐 좌표기준(0~1로 보정된 값)
-  f32 GetTexCoordX() const;
-  f32 GetTexCoordY() const;
-  f32 GetTexCoordWidth() const;
-  f32 GetTexCoordHeight() const;
-  f32 GetTexWidth() const;
-  f32 GetTexHeight() const;
-  GLuint GetHandle() const;
+  f32 GetTexCoordX();
+  f32 GetTexCoordY();
+  f32 GetTexCoordWidth();
+  f32 GetTexCoordHeight();
+  f32 GetTexWidth();
+  f32 GetTexHeight();
+  GLuint GetHandle();
 };
 
 class TextureAtlas {
 public:
   TextureAtlas();
-  TextureAtlas(Texture *tex);
+  TextureAtlas(const TextureHandle &handle);
   ~TextureAtlas();
 
   const TextureSubImage *GetSubImage(const char *key) const;
@@ -78,7 +80,7 @@ public:
   TextureSubImage &AddSubImage(const std::string &key, f32 x, f32 y, f32 w, f32 h);
 
 public:
-  Texture *tex;
+  TextureHandle tex_handle;
 
 private:
   typedef std::tr1::unordered_map<std::string, TextureSubImage> SubImageDictType;
