@@ -25,7 +25,6 @@
 
 namespace sora {;
 class Texture;
-typedef std::tr1::shared_ptr<Texture> TexturePtr;
 
 class Texture {
 public:
@@ -74,9 +73,11 @@ public:
 
   GLuint handle;  // 텍스쳐 여러개를 그룹화로 쓰는건 아마도 당분간 필요없겠지
 
+  // 파일명을 적절히 저장해놓으면 내려놨던 텍스쳐 다시 불러오는게 가능하겠지?
   const std::string filename() const { return filename_; }
   void set_filename(const char *file) { filename_ = file; }
   void set_filename(const std::string &file) { filename_ = file; }
+
 private:
   TextureParameter param_;
   std::string filename_;  // 내렸던 텍스쳐를 다시 올리거나 할때 사용

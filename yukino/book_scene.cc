@@ -82,22 +82,22 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
   float w = 0;
   float h = 0;
   if(xStr.size() > 0) {
-    x = StringToInt(xStr);
+    x = (float)StringToInt(xStr);
     SR_ASSERT(x >= 0);
   }
   if(yStr.size() > 0) {
-    y = StringToInt(yStr);
+    y = (float)StringToInt(yStr);
     SR_ASSERT(y >= 0);
   }
   if(wStr.size() > 0) {
-    w = StringToInt(wStr);
+    w = (float)StringToInt(wStr);
   } else {
-    w = tex->tex_header.src_width;
+    w = (float)tex->tex_header.src_width;
   }
   if(hStr.size() > 0) {
-    h = StringToInt(hStr);
+    h = (float)StringToInt(hStr);
   } else {
-    h = tex->tex_header.src_height;
+    h = (float)tex->tex_header.src_height;
   }
   SR_ASSERT(w > 0);
   SR_ASSERT(h > 0);
@@ -181,9 +181,9 @@ void BookScene::parseNormalPaperNode(sora::XmlNode *node) {
       SR_ASSERT(yStr.length() > 0);
       SR_ASSERT(zStr.length() > 0);
 
-      x = atof(xStr.c_str());
-      y = atof(yStr.c_str());
-      z = atof(zStr.c_str());
+      x = (float)atof(xStr.c_str());
+      y = (float)atof(yStr.c_str());
+      z = (float)atof(zStr.c_str());
     } else if(attr->name() == "size") {
       //size node
       const string &wStr = attr->GetAttribute("w");
@@ -191,8 +191,8 @@ void BookScene::parseNormalPaperNode(sora::XmlNode *node) {
       SR_ASSERT(wStr.length() > 0);
       SR_ASSERT(hStr.length() > 0);
 
-      w = atof(wStr.c_str());
-      h = atof(hStr.c_str());
+      w = (float)atof(wStr.c_str());
+      h = (float)atof(hStr.c_str());
     }  else if(attr->name() == "rotate") {
       //rotate node
       const string &yawStr = attr->GetAttribute("yaw");
@@ -200,13 +200,13 @@ void BookScene::parseNormalPaperNode(sora::XmlNode *node) {
       const string &pitchStr = attr->GetAttribute("pitch");
 
       if(yawStr.length() > 0) {
-        yaw = atof(yawStr.c_str());
+        yaw = (float)atof(yawStr.c_str());
         rotateFlag = useYaw;
       } else if(rollStr.length() > 0) {
-        roll = atof(rollStr.c_str());
+        roll = (float)atof(rollStr.c_str());
         rotateFlag = useRoll;
       } else if(pitchStr.length() > 0) {
-        pitch = atof(pitchStr.c_str());
+        pitch = (float)atof(pitchStr.c_str());
         rotateFlag = usePitch;
       } else {
         SR_ASSERT(!"not valid rotation");

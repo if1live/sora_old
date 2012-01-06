@@ -100,8 +100,8 @@ void TextureManager::ProcessRequest() {
 
   if (!created_request_list.empty()) {
     response_stack_lock.lock();
-    int curr_response_stack_size = response_stack_.size();
-    int target_size = curr_response_stack_size + created_request_list.size();
+    size_t curr_response_stack_size = response_stack_.size();
+    size_t target_size = curr_response_stack_size + created_request_list.size();
     if (response_stack_.capacity() < target_size) {
       response_stack_.resize(target_size);
     }

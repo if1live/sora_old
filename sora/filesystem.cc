@@ -76,7 +76,7 @@ std::string Filesystem::GetExtension(const std::string &str) {
   // /. \\를 하나로 합치면 되겠지
   string filename = str;
   char *data = (char*)filename.c_str();
-  for (int i = 0 ; i < filename.size() ; i++) {
+  for (size_t i = 0 ; i < filename.size() ; i++) {
     if (data[i] == '\\') {
       data[i] = '/';
     }

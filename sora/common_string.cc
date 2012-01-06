@@ -103,7 +103,7 @@ i32 StringToInt(const char *str) {
 }
 f32 StringToFloat(const char *str) {
   f32 value = 0;
-  value = atof(str);
+  value = static_cast<f32>(atof(str));
   return value;
 }
 i32 StringToInt(const std::string &str) {

@@ -103,7 +103,7 @@ void Glassless3d::Draw() {
   {
     //카메라 설정..
     Tech48Camera cam;
-    cam.SetView(w, h);
+    cam.SetView((float)w, (float)h);
 
     ///vertex없이 z값에 따라서 x,y를 움직이게 하는 행렬을 쓰면 적절히 그릴수있다
     //일정각도 이상으로는 안넘어가도록 하자
@@ -113,7 +113,7 @@ void Glassless3d::Draw() {
     float pan_deg = 0;
     float tilt_deg = 15;
     static float dynamic_pan_dt = 0;
-    dynamic_pan_dt += 0.1;
+    dynamic_pan_dt += 0.1f;
     pan_deg = 15 * sin(DegreeToRadian(dynamic_pan_dt));
 
 
@@ -148,7 +148,7 @@ void Glassless3d::Draw() {
     //grid정의 있으면 그리기
     if(scene_ != NULL && scene_->isUseGrid() == true) {
       //grid를 약간 작게 그려야 z-fighting문제가 없다
-      srglScalef(0.99, 0.99, 0.99);
+      srglScalef(0.99f, 0.99f, 0.99f);
       //grid 그리기..어차피 디버깅모드에서만 쓰는거니까 그리는 순서는 신경쓰지 말자 
       //sora::model::ModelUtil::util().draw(gridModel_);
     }

@@ -56,16 +56,16 @@ void Tech48Camera::Apply(float x_rad, float y_rad) {
   srglLoadIdentity ( );    /* Reset The Model View Matrix*/
 }
 void Tech48Camera::SetView(float w, float h) {
-  glViewport     ( 0, 0, w, h );
+  glViewport     ( 0.0f, 0.0f, w, h );
 
   srglMatrixMode   ( SR_PROJECTION );  /* Select The Projection Matrix*/
   srglLoadIdentity ( );                /* Reset The Projection Matrix*/
   if ( h==0 ) {
     /* Calculate The Aspect Ratio Of The Window*/
-    srglPerspective ( 80, ( float ) w, 0.1, 100.0 );
+    srglPerspective ( 80.0f, ( float ) w, 0.1f, 100.0f );
   } else {
     //srPerspective ( 80, ( float ) w / ( float ) h, 0.1, 100.0 );
-    srglPerspective ( 60, ( float ) w / ( float ) h, 0.1, 1000 );
+    srglPerspective ( 60.0f, ( float ) w / ( float ) h, 0.1f, 1000.0f );
   }
 
   /*아이폰의 경우는 일단 화면을 90도 돌려놓고 진행하자*/

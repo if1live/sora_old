@@ -131,7 +131,7 @@ TexWrapMode TextureParameter::ConvertToTexWrapMode(GLenum orig) {
 boolean TextureParameter::IsMipMap(TexMinFilter min_filter) {
   for (int i = 0 ; i < kTexMinCount ; i++) {
     if (tex_min_filter_table[i][0] == min_filter) {
-      return tex_min_filter_table[i][2];
+      return static_cast<boolean>(tex_min_filter_table[i][2]);
     }
   }
   SR_ASSERT(!"not valid");

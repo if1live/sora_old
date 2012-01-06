@@ -191,7 +191,7 @@ DataType *DynamicHandleManager<DataType, HandleType>::GetWithOnNullHandlePolicy(
 
   // 핸들이 invalid발생했을 가능성이 있다. 리소스 목록을 전부 뒤져본다
   // 올바른게 있으면 그것을 반환하고 핸들도 올바르게 고친다
-  for (int i = 0 ; i < data_list_.size() ; i++) {
+  for (size_t i = 0 ; i < data_list_.size() ; i++) {
     const DataPairType &candidate_pair = data_list_[i];
     if (candidate_pair.first == handle.res_magic()) {
       handle.set_res_index(i);

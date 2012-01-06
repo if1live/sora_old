@@ -44,11 +44,14 @@ const i16 NoTag = 0;
 
 struct AllocHeader {
   AllocHeader()
-    : prev(this),
-    next(this),
+    : prev(NULL),
+    next(NULL),
     magic(MagicNumber),
     tag(0),
-    size(0) { }
+    size(0) {
+    prev = this;
+    next = this;
+  }
 
   AllocHeader *prev;
   AllocHeader *next;

@@ -267,7 +267,7 @@ boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
 	//////////////////////////////////
 
   LOGI("Load PNG Texture End");
-	return tex;
+	return true;
 }
 void* Texture::LoadPNG(const char *filepath, TexFormat *fmt, TextureHeader *tex_header) {
   LOGI("Load PNG Texture Start : %s", filepath);
@@ -460,8 +460,8 @@ void Texture::SetTextureParameter(const TextureParameter &param) {
 
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, param_.gl_mag_filter());
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, param_.gl_min_filter());
-  glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, param_.gl_wrap_s());
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, param_.gl_wrap_t());
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, param_.gl_wrap_s());
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, param_.gl_wrap_t());
   //use mipmap
 	glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, param_.IsMipMap());
 }

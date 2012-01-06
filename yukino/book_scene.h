@@ -5,7 +5,7 @@
 
 namespace sora {;
 class XmlNode;
-class TextureSubImage;
+struct TextureSubImage;
 }
 
 namespace yukino {;

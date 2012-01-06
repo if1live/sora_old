@@ -101,7 +101,7 @@ int main(int argc, char *argv) {
 void Update(int ms) {
   //sora::glfwMouseUpdate(win_width, win_height); ???
 
-  yukino::Glassless3d::GetInstance().Update(ms * 0.001);
+  yukino::Glassless3d::GetInstance().Update(ms * 0.001f);
 }
 void Draw(int ms) {
   // OpenGL rendering goes here...

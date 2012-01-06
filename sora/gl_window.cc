@@ -70,7 +70,7 @@ void GLWindow::Init() {
   using std::string;
   printf("GLExtension:");
   const vector<string> &ext_list = GLHelper::GetExtensionList();
-  for (int i = 0 ; i < ext_list.size() ; i++) {
+  for (size_t i = 0 ; i < ext_list.size() ; i++) {
     printf("%s ", ext_list[i].c_str());
   }
   printf("\n");

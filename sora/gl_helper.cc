@@ -103,7 +103,7 @@ boolean GLHelper::IsExtensionSupport(const std::string &ext) {
   using std::vector;
   using std::string;
   const vector<string> &ext_list = GetExtensionList();
-  for (int i = 0 ; i < ext_list.size() ; i++) {
+  for (size_t i = 0 ; i < ext_list.size() ; i++) {
     if (ext == ext_list[i]) {
       return true;
     }

@@ -145,8 +145,8 @@ struct Matrix {
         o.GetCol(j, col_data);
         
         T value = 0;
-        for (int i = 0 ; i < C ; i++) {
-          value += row_data[i] * col_data[i];
+        for (int k = 0 ; k < C ; k++) {
+          value += row_data[k] * col_data[i];
         }
         result.Set(i, j, value);
       }

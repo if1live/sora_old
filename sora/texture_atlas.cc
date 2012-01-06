@@ -36,12 +36,12 @@ GLuint TextureSubImage::GetHandle() const {
 }
 f32 TextureSubImage::GetTexWidth() const {
   SR_ASSERT(tex != NULL);
-  float tex_width = tex->tex_header.tex_width;
+  float tex_width = static_cast<f32>(tex->tex_header.tex_width);
   return tex_width;
 }
 f32 TextureSubImage::GetTexHeight() const {
   SR_ASSERT(tex != NULL);
-  float tex_height = tex->tex_header.tex_height;
+  float tex_height = static_cast<f32>(tex->tex_header.tex_height);
   return tex_height;
 }
 f32 TextureSubImage::GetTexCoordX() const {
