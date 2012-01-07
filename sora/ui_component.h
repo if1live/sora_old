@@ -22,6 +22,7 @@
 #define SORA_UI_COMPONENT_H_
 
 #include "color.h"
+#include "input_enum.h"
 
 namespace sora {;
 class UIContainer;
@@ -35,11 +36,6 @@ typedef enum {
 	kButton,
   kUIContainer,
 } UIComponentType;
-
-typedef enum {
-	kButtonPressed,
-	kButtonReleased
-} ButtonState;
 
 //ui의 좌표계는 왼쪽위가 0,0이다
 //터치 좌표계와 동일하게 맞춰서 변환 삽질을 줄였다

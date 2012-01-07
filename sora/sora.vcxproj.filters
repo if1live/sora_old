@@ -134,6 +134,12 @@
     <ClInclude Include="color.h">
       <Filter>math</Filter>
     </ClInclude>
+    <ClInclude Include="keyboard.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="input_enum.h">
+      <Filter>ui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cc">
@@ -225,6 +231,9 @@
       <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="button.cc">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="keyboard_glfw.cc">
       <Filter>ui</Filter>
     </ClCompile>
   </ItemGroup>

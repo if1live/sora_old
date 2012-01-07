@@ -18,54 +18,58 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_TOUCH_H_
-#define SORA_TOUCH_H_
-
-#include "template_library.h"
+#include "sora_stdafx.h"
 #include "input_enum.h"
+#include "keyboard.h"
+#if SR_WIN
+//#include <GL/glfw.h>
 
 namespace sora {;
-
-struct TouchEvent {
-  int prev_x;
-  int prev_y;
-  int curr_x;
-  int curr_y;
-  TouchEventType evt_type;
-};
-
-class TouchDevice : public sora::Singleton<TouchDevice> {
-public:
-  TouchDevice();
-  ~TouchDevice();
-
-  void AddBeganEvent(const TouchEvent &evt);
-  void AddMovedEvent(const TouchEvent &evt);
-  void AddEndedEvent(const TouchEvent &evt);
-  void AddCancelledEvent(const TouchEvent &evt);
-
-  void Update();
-  void PrintLog();
-
-  // 멀티터치가 5개 이상 인식될 일은 없고
-  // 마찬가지로 
-  int curr_pos_list[5][2];
-  int prev_pos_list[5][2];
-  int curr_pos_count;
-  int prev_pos_count;
-
-private:
-  typedef std::vector<TouchEvent> TouchEventListType;
-  TouchEventListType began_evt_list_;
-  TouchEventListType moved_evt_list_;
-  TouchEventListType ended_evt_list_;
-  TouchEventListType cancelled_evt_list_;
-};
-
-#if SR_WIN
-// glfw기반으로 구현된것
-void glfwMouseUpdate(int win_width, int win_height);
-#endif
+Keyboard::Keyboard() {
 }
-
-#endif  // SORA_TOUCH_H_
+Keyboard::~Keyboard() {
+}
+void Keyboard::Update() {
+}
+ButtonState Keyboard::GetButtonState(int key) {
+  int state;
+  switch(key) {
+  case kKeyIdentifierSpace:
+    state = glfwGetKey(GLFW_KEY_SPACE);
+    break;
+  case kKeyIdentifierEsc:
+    state = glfwGetKey(GLFW_KEY_ESC);
+    break;
+  case kKeyIdentifierUp:
+    state = glfwGetKey(GLFW_KEY_UP);
+    break;
+  case kKeyIdentifierDown:
+    state = glfwGetKey(GLFW_KEY_DOWN);
+    break;
+  case kKeyIdentifierLeft:
+    state = glfwGetKey(GLFW_KEY_LEFT);
+    break;
+  case kKeyIdentifierRight:
+    state = glfwGetKey(GLFW_KEY_RIGHT);
+    break;
+  default:
+    state = glfwGetKey(key);
+    break;
+  }
+  if (state == GLFW_RELEASE) {
+    return kButtonReleased;
+  } else if(state == GLFW_PRESS) {
+    return kButtonPressed;
+  } else {
+    SR_ASSERT(!"not valid");
+    return kButtonReleased;
+  }
+}
+bool Keyboard::IsPressed(int key) {
+  return (kButtonPressed == GetButtonState(key));
+}
+bool Keyboard::IsReleased(int key) {
+  return (kButtonReleased == GetButtonState(key));
+}
+}
+#endif

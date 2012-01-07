@@ -80,6 +80,8 @@
     <ClInclude Include="handle_manager.h" />
     <ClInclude Include="image_label.h" />
     <ClInclude Include="immediate_mode_emulator.h" />
+    <ClInclude Include="input_enum.h" />
+    <ClInclude Include="keyboard.h" />
     <ClInclude Include="locale.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="math_helper.h" />
@@ -122,6 +124,7 @@
     <ClCompile Include="gl_window.cc" />
     <ClCompile Include="image_label.cc" />
     <ClCompile Include="immediate_mode_emulator.cc" />
+    <ClCompile Include="keyboard_glfw.cc" />
     <ClCompile Include="locale.cc" />
     <ClCompile Include="logger.cc" />
     <ClCompile Include="low_level_c_file.cc" />

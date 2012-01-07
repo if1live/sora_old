@@ -18,54 +18,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_TOUCH_H_
-#define SORA_TOUCH_H_
+#ifndef SORA_KEYBOARD_H_
+#define SORA_KEYBOARD_H_
 
 #include "template_library.h"
-#include "input_enum.h"
 
 namespace sora {;
-
-struct TouchEvent {
-  int prev_x;
-  int prev_y;
-  int curr_x;
-  int curr_y;
-  TouchEventType evt_type;
-};
-
-class TouchDevice : public sora::Singleton<TouchDevice> {
+class Keyboard : public sora::Singleton<Keyboard> {
 public:
-  TouchDevice();
-  ~TouchDevice();
-
-  void AddBeganEvent(const TouchEvent &evt);
-  void AddMovedEvent(const TouchEvent &evt);
-  void AddEndedEvent(const TouchEvent &evt);
-  void AddCancelledEvent(const TouchEvent &evt);
-
+  Keyboard();
+  ~Keyboard();
   void Update();
-  void PrintLog();
-
-  // 멀티터치가 5개 이상 인식될 일은 없고
-  // 마찬가지로 
-  int curr_pos_list[5][2];
-  int prev_pos_list[5][2];
-  int curr_pos_count;
-  int prev_pos_count;
-
-private:
-  typedef std::vector<TouchEvent> TouchEventListType;
-  TouchEventListType began_evt_list_;
-  TouchEventListType moved_evt_list_;
-  TouchEventListType ended_evt_list_;
-  TouchEventListType cancelled_evt_list_;
+  ButtonState GetButtonState(int key);
+  bool IsPressed(int key);
+  bool IsReleased(int key);
 };
-
-#if SR_WIN
-// glfw기반으로 구현된것
-void glfwMouseUpdate(int win_width, int win_height);
-#endif
 }
 
-#endif  // SORA_TOUCH_H_
+#endif  // PLATFORM_CHIZURU_KEYBOARD_H_

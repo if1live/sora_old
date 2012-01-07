@@ -36,7 +36,6 @@ public:
 
   virtual void Draw(UIDrawer *drawer);
 
-	
 
 	void OnPressed();
 	void OnReleased();

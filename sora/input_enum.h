@@ -18,54 +18,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_TOUCH_H_
-#define SORA_TOUCH_H_
-
-#include "template_library.h"
-#include "input_enum.h"
+#ifndef SORA_INPUT_ENUM_
+#define SORA_INPUT_ENUM_
 
 namespace sora {;
 
-struct TouchEvent {
-  int prev_x;
-  int prev_y;
-  int curr_x;
-  int curr_y;
-  TouchEventType evt_type;
-};
+typedef enum {
+  kTouchBegan,
+  kTouchMoved,
+  kTouchEnded,
+  kTouchCancelled,
+} TouchEventType;
 
-class TouchDevice : public sora::Singleton<TouchDevice> {
-public:
-  TouchDevice();
-  ~TouchDevice();
+// 특수키. glut, glfw에 따라서 이 부분이 달라질수있으니까 따로 enum을 분리함
+typedef enum {
+  kKeyIdentifierSpace = 256, //이거보다 아래쪽은 기본 아스키로 연결될테니까
+  kKeyIdentifierEsc,
+  kKeyIdentifierUp,
+  kKeyIdentifierDown,
+  kKeyIdentifierLeft,
+  kKeyIdentifierRight,
+} KeyIdentifier;
 
-  void AddBeganEvent(const TouchEvent &evt);
-  void AddMovedEvent(const TouchEvent &evt);
-  void AddEndedEvent(const TouchEvent &evt);
-  void AddCancelledEvent(const TouchEvent &evt);
+typedef enum {
+  kButtonPressed,
+  kButtonReleased
+} ButtonState;
 
-  void Update();
-  void PrintLog();
-
-  // 멀티터치가 5개 이상 인식될 일은 없고
-  // 마찬가지로 
-  int curr_pos_list[5][2];
-  int prev_pos_list[5][2];
-  int curr_pos_count;
-  int prev_pos_count;
-
-private:
-  typedef std::vector<TouchEvent> TouchEventListType;
-  TouchEventListType began_evt_list_;
-  TouchEventListType moved_evt_list_;
-  TouchEventListType ended_evt_list_;
-  TouchEventListType cancelled_evt_list_;
-};
-
-#if SR_WIN
-// glfw기반으로 구현된것
-void glfwMouseUpdate(int win_width, int win_height);
-#endif
 }
 
-#endif  // SORA_TOUCH_H_
+#endif  // SORA_INPUT_ENUM_
