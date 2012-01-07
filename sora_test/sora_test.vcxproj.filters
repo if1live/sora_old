@@ -48,6 +48,9 @@
     <ClCompile Include="handle_manager_test.cc">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="sprite_sheet_manager_test.cc">
+      <Filter>renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h" />

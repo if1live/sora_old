@@ -39,3 +39,43 @@ void srglBindTexture(GLenum target, GLuint texture) {
     glBindTexture(target, texture);
   }
 }
+
+void srglClearColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha) {
+  glClearColor(red, green, blue, alpha);
+}
+void srglClear(	GLbitfield  	mask) {
+  glClear(mask);
+}
+
+void srglEnable(	GLenum  	cap) { glEnable(cap); }
+void srglDisable(	GLenum  	cap) { glDisable(cap); }
+
+void srglViewport (GLint x, GLint y, GLsizei width, GLsizei height) {
+  glViewport(x, y, width, height);
+}
+void srglDrawElements (GLenum mode, GLsizei count, GLenum type, const GLvoid *indices) {
+  glDrawElements(mode, count, type, indices);
+}
+void srglDrawArrays (GLenum mode, GLint first, GLsizei count) {
+  glDrawArrays(mode, first, count);
+}
+void srglBlendFunc (GLenum sfactor, GLenum dfactor) {
+  glBlendFunc(sfactor, dfactor);
+}
+
+void srglGenTextures (GLsizei n, GLuint *textures) {
+  glGenTextures(n, textures);
+}
+void srglDeleteTextures (GLsizei n, const GLuint *textures) {
+  glDeleteTextures(n, textures);
+}
+void srglPixelStorei (GLenum pname, GLint param) {
+  glPixelStorei(pname, param);
+}
+void srglTexParameteri (GLenum target, GLenum pname, GLint param) {
+  glTexParameteri(target, pname, param);
+}
+void srglTexImage2D (GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *pixels) {
+  glTexImage2D(target, level, internalformat, width, height, border, format, type, pixels);
+}
+

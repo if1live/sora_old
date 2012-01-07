@@ -126,11 +126,11 @@ TextureManager::~TextureManager() {
 }
 
 Texture *TextureManager::GetTexture(const std::string &name) {
-  TextureHandle handle = CreateHandle(name);
+  TextureHandle handle = FileNameToHandle(name);
   return GetTexture(handle);
 }
 boolean TextureManager::IsExist(const std::string &name) const {
-  TextureHandle handle = CreateHandle(name);
+  TextureHandle handle = FileNameToHandle(name);
   if (handle.IsNull()) {
     return false;
   } else {
@@ -138,7 +138,7 @@ boolean TextureManager::IsExist(const std::string &name) const {
   }
 }
 boolean TextureManager::RemoveTexture(const std::string &name) {
-  TextureHandle handle = CreateHandle(name);
+  TextureHandle handle = FileNameToHandle(name);
   return RemoveTexture(handle);
 }
 
@@ -160,7 +160,7 @@ Texture *TextureManager::CreateTexture(TextureHandle &handle) {
   }
 }
 
-TextureHandle TextureManager::CreateHandle(const std::string &name) const {
+TextureHandle TextureManager::FileNameToHandle(const std::string &name) const {
   HandleMgrType::DataListType::const_iterator it = handle_mgr_.Begin();
   HandleMgrType::DataListType::const_iterator endit = handle_mgr_.End();
   for ( ; it != endit ; it++) {

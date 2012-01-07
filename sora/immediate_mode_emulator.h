@@ -78,4 +78,12 @@ inline void srglColor3f(float r, float g, float b) {
   //glColor3f(r, g, b);  //원본도 호출. 양쪽의 값을 다 바꿔준다
 }
 
+#undef glBegin
+#undef glEnd
+#undef glVertex3f
+#undef glVertex2f
+#undef glTexCoord2f
+#undef glColor4f
+#undef glColor3f;
+
 #endif  // SORA_IMMEDIATE_MODE_EMULATOR_H_

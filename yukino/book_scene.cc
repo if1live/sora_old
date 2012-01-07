@@ -81,6 +81,16 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
     tex_handle_list_.push_back(handle);
   }
 
+  TextureHandle tex_handle;
+  BOOST_FOREACH(TextureHandle &handle, tex_handle_list_) {
+    Texture *created_tex = TextureManager::GetInstance().GetTexture(handle);
+    if (created_tex == tex) {
+      tex_handle = handle;
+      break;
+    }
+  }
+  SR_ASSERT(tex_handle.IsNull() == false);
+
   //텍스쳐의 정보를 사용해서 x, y, w, h를 구성하기
   float x = 0;
   float y = 0;
@@ -114,7 +124,7 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
   subimg.y = y;
   subimg.w = w;
   subimg.h = h;
-  subimg.tex = tex;
+  subimg.tex_handle = tex_handle;
   spriteDict_[name] = subimg;
 }
 void BookScene::parseSpriteListNode(sora::XmlNode *node) {

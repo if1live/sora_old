@@ -146,7 +146,7 @@ struct Matrix {
         
         T value = 0;
         for (int k = 0 ; k < C ; k++) {
-          value += row_data[k] * col_data[i];
+          value += row_data[k] * col_data[k];
         }
         result.Set(i, j, value);
       }

@@ -111,4 +111,17 @@ inline void srglOrtho(float left, float right, float bottom, float top, float ne
 #define SR_PROJECTION 1
 #define SR_MODELVIEW  2
 
+#undef glPushMatrix
+#undef glPopMatrix
+#undef glScalef
+#undef glTranslatef
+#undef glRotatef
+#undef glLoadIdentity
+#undef glMultMatrixf
+#undef glMultMatrix
+#undef glMatrixMode
+#undef gluPerspective
+#undef gluLookAt
+#undef gluOrtho2D
+
 #endif  // SORA_MATRIX_STACK_H_

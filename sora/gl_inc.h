@@ -31,27 +31,27 @@
 // gl함수 전부 갈아치울수 있도록 하기
 // 이름만 다르게 쓸수있도록해놓으면 나중에 함수로 교체하든지하는 편법이 가능
 // gl함수 썡으로 쓰면 확장하기 힘들다(원본 함수와 구분이 안되나까)
-#define srglClearColor    glClearColor
-#define srglClear         glClear
-#define srglEnable        glEnable
-#define srglDisable       glDisable
-#define srglViewport      glViewport
+void srglClearColor(GLclampf red, GLclampf green, GLclampf blue, GLclampf alpha);
+void srglClear(	GLbitfield  	mask);
 
-#define srglDrawElements    glDrawElements
-#define srglDrawArrays    glDrawArrays
+void srglEnable(	GLenum  	cap);
+void srglDisable(	GLenum  	cap);
 
-#define srglBlendFunc     glBlendFunc
+void srglViewport (GLint x, GLint y, GLsizei width, GLsizei height);
+void srglDrawElements (GLenum mode, GLsizei count, GLenum type, const GLvoid *indices);
+void srglDrawArrays (GLenum mode, GLint first, GLsizei count);
+void srglBlendFunc (GLenum sfactor, GLenum dfactor);
 
 // 텍스쳐 관련
 // #define srglBindTexture   glBindTexture
 // 텍스쳐 bind는 최적화를 위해서 함수로 처리. 소프트웨어적으로 중복해결함
 void srglBindTexture(GLenum target, GLuint texture);
 
-#define srglGenTextures   glGenTextures
-#define srglDeleteTextures  glDeleteTextures
-#define srglPixelStorei   glPixelStorei
-#define srglTexParameteri glTexParameteri
-#define srglTexImage2D    glTexImage2D
+void srglGenTextures (GLsizei n, GLuint *textures);
+void srglDeleteTextures (GLsizei n, const GLuint *textures);
+void srglPixelStorei (GLenum pname, GLint param);
+void srglTexParameteri (GLenum target, GLenum pname, GLint param);
+void srglTexImage2D (GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *pixels);
 
 // shader 관련
 #define srglDeleteShader  glDeleteShader
@@ -74,4 +74,25 @@ void srglBindTexture(GLenum target, GLuint texture);
 #define srglVertexAttribPointer glVertexAttribPointer
 #define srglEnableVertexAttribArray glEnableVertexAttribArray
 #define srglUniformMatrix4fv    glUniformMatrix4fv
+
+//기본gl함수 전부 블럭.sr계열을 쓰게 강요하기
+#undef glClearColor
+#undef glClear
+#undef glEnable
+#undef glDisable
+#undef glViewport
+
+#undef glBindTexture
+
+#undef glDrawElements
+#undef glDrawArrays
+
+#undef glBlendFunc
+
+#undef glGenTextures
+#undef glDeleteTextures
+#undef glPixelStorei
+#undef glTexParameteri
+#undef glTexImage2D
+
 #endif  // SORA_GL_INC_H_

@@ -110,6 +110,24 @@
     <ClInclude Include="handle.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="image_label.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_component.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_container.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="rect.h">
+      <Filter>base</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_drawer.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="sprite_sheet_manager.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cc">
@@ -183,6 +201,21 @@
       <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="texture_info.cc">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_drawer.cc">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="image_label.cc">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_component.cc">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_container.cc">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite_sheet_manager.cc">
       <Filter>renderer</Filter>
     </ClCompile>
   </ItemGroup>

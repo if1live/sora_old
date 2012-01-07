@@ -68,6 +68,10 @@ public:
 
   Texture *CreateTexture(TextureHandle &handle);
 
+  // 게임 내부의 구현은 핸들에 의존하는데 외부에서 읽은 파일은
+  // 파일명에 의존하니 중간 변환을 할수있도록한다
+  TextureHandle FileNameToHandle(const std::string &name) const;
+
   TextureManager();
 protected:
   ~TextureManager();
@@ -76,7 +80,6 @@ protected:
   RequestStackType    request_stack_;
   ResponseStackType   response_stack_;
 
-  TextureHandle CreateHandle(const std::string &name) const;
 };
 }
 

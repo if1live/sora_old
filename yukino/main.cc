@@ -31,6 +31,11 @@
 #include "glassless3d.h"
 #include "sora/texture_manager.h"
 
+#include "sora/ui_component.h"
+#include "sora/image_label.h"
+#include "sora/ui_drawer.h"
+#include "sora/ui_container.h"
+
 const int win_width = 960;
 const int win_height = 640;
 
@@ -41,6 +46,9 @@ void Init();
 void InitWindow(int w, int h);
 
 sora::Texture *tex = NULL;
+
+//ui test
+sora::UIContainer ui_container;
 
 
 int main(int argc, char *argv) {
@@ -153,6 +161,11 @@ void Draw(int ms) {
     srglEnd();
   }
   */
+  //테스트 UI그리기
+
+  sora::UIDrawer drawer;
+  drawer.Draw(&ui_container);
+
   sora::GLHelper::CheckError("DrawEnd");
 }
 void Init() {
@@ -170,4 +183,7 @@ void Init() {
   //sora::Texture::LoadFromPNG(filename, tex);
 
   yukino::Glassless3d::GetInstance().Init();
+
+  //테스트용 UI만들기
+  
 }

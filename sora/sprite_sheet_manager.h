@@ -17,33 +17,31 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
-#include "sora_test_stdafx.h"
-//#include "karen/memory_leak_detector.h"
+// Ŭnicode please
+#ifndef SORA_SPRITE_SHEET_MANAGER_H_
+#define SORA_SPRITE_SHEET_MANAGER_H_
 
-#include "sora/logger.h"
-#include "sora/assert_inc.h"
+#include "template_library.h"
 
-int main(int argc, char *argv[]) {
-  SHOW_LINE();
-  LOGI("LOGI");
-  LOGE("LOGE %s", "args");
-  //SR_ASSERT(true == false);
+namespace sora {;
+class TextureAtlas;
+class TextureSubImage;
 
-  if( !glfwInit() ) {
-    exit( EXIT_FAILURE );
-  }
-  // Open an OpenGL window
-  if( !glfwOpenWindow( 300,300, 0,0,0,0,0,0, GLFW_WINDOW ) ) {
-    glfwTerminate();
-    exit( EXIT_FAILURE );
-  }
-  // init glew
-  glewInit();
+class SpriteSheetManager : public Singleton<SpriteSheetManager> {
+public:
+  typedef std::vector<TextureAtlas> AtlasListType;
+public:
+  SpriteSheetManager();
+  ~SpriteSheetManager();
 
-	::testing::InitGoogleTest(&argc, argv);
-	int result = RUN_ALL_TESTS();
-
-  glfwTerminate();
-	getchar();
-	return result;
+  static TextureAtlas Load(const char *content, const char *res_path);
+  // 텍스쳐 아틀라스에는 이름을 아직 쓰지 않지만
+  // 나중에 이름을 붙여서 관리해서 메모리에 올렸다 내렸다 할수있으니까 남겨놓자
+  void Save(const TextureAtlas &atlas, const char *atlas_name = NULL);
+  TextureSubImage *GetSubImage(const char *key);
+private:
+  AtlasListType atlas_list_;
+};
 }
+
+#endif  // SORA_SPRITE_SHEET_MANAGER_H_

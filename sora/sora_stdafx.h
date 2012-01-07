@@ -69,6 +69,9 @@
 #include "sora/gl_inc.h"
 #include "sora/assert_inc.h"
 
+//vector는 뻔하니까
+#include "sora/vector.h"
+
 #endif
 
 #endif  // SORA_SORA_STDAFX_H_

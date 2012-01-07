@@ -76,6 +76,7 @@
     <ClInclude Include="gl_window.h" />
     <ClInclude Include="handle.h" />
     <ClInclude Include="handle_manager.h" />
+    <ClInclude Include="image_label.h" />
     <ClInclude Include="immediate_mode_emulator.h" />
     <ClInclude Include="locale.h" />
     <ClInclude Include="logger.h" />
@@ -87,10 +88,12 @@
     <ClInclude Include="arch.h" />
     <ClInclude Include="low_level_c_file.h" />
     <ClInclude Include="gl_helper.h" />
+    <ClInclude Include="rect.h" />
     <ClInclude Include="selector.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="shared_ptr_inc.h" />
     <ClInclude Include="sora_stdafx.h" />
+    <ClInclude Include="sprite_sheet_manager.h" />
     <ClInclude Include="string_code_dictionary.h" />
     <ClInclude Include="string_hash_functor.h" />
     <ClInclude Include="template_library.h" />
@@ -99,6 +102,9 @@
     <ClInclude Include="texture_info.h" />
     <ClInclude Include="texture_manager.h" />
     <ClInclude Include="touch.h" />
+    <ClInclude Include="ui_component.h" />
+    <ClInclude Include="ui_container.h" />
+    <ClInclude Include="ui_drawer.h" />
     <ClInclude Include="unordered_map_inc.h" />
     <ClInclude Include="vector.h" />
     <ClInclude Include="xml_node.h" />
@@ -111,6 +117,7 @@
     <ClCompile Include="filesystem.cc" />
     <ClCompile Include="gl_inc.cc" />
     <ClCompile Include="gl_window.cc" />
+    <ClCompile Include="image_label.cc" />
     <ClCompile Include="immediate_mode_emulator.cc" />
     <ClCompile Include="locale.cc" />
     <ClCompile Include="logger.cc" />
@@ -125,11 +132,15 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="common_string.cc" />
+    <ClCompile Include="sprite_sheet_manager.cc" />
     <ClCompile Include="texture.cc" />
     <ClCompile Include="texture_atlas.cc" />
     <ClCompile Include="texture_info.cc" />
     <ClCompile Include="texture_manager.cc" />
     <ClCompile Include="touch.cc" />
+    <ClCompile Include="ui_component.cc" />
+    <ClCompile Include="ui_container.cc" />
+    <ClCompile Include="ui_drawer.cc" />
     <ClCompile Include="xml_node.cc" />
     <ClCompile Include="xml_reader.cc" />
   </ItemGroup>
