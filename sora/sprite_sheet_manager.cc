@@ -33,7 +33,7 @@ SpriteSheetManager::SpriteSheetManager() {
 }
 SpriteSheetManager::~SpriteSheetManager() {
 }
-TextureAtlas SpriteSheetManager::Load(const char *content, const char *res_path) {
+TextureAtlas SpriteSheetManager::Read(const char *content, const char *res_path) {
   using namespace std;
 
   XmlNode root;

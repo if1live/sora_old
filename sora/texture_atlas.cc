@@ -65,6 +65,28 @@ f32 TextureSubImage::GetTexCoordHeight() {
   float tex_height = GetTexHeight();
   return height / tex_height;
 }
+void TextureSubImage::GetFrame(f32 *left, f32 *right, f32 *bottom, f32 *top) {
+  // http://zarpar.tistory.com/tag/cocos2d
+	//- texCoord.left = (rect.origin.x*2+1) / (texture.wide*2);
+	//- texCoord.right = texCoord.left + (rect.size.width*2-2)/(texture.wide*2);
+  float tex_width = GetTexWidth();
+  float tex_height = GetTexHeight();
+
+  float tmp_left = (x*2 + 1) / (tex_width * 2);
+  float tmp_right = tmp_left + (w * 2 - 2) / (tex_width * 2);
+  float tmp_bottom = (y*2 + 1) / (tex_height * 2);
+  float tmp_top = tmp_bottom + (h * 2 - 2) / (tex_height * 2);
+
+  SR_ASSERT(left != NULL);
+  SR_ASSERT(right != NULL);
+  SR_ASSERT(bottom != NULL);
+  SR_ASSERT(top != NULL);
+
+  *left = tmp_left;
+  *right = tmp_right;
+  *bottom = tmp_bottom;
+  *top = tmp_top;
+}
 ////////////////////////////////
 TextureAtlas::TextureAtlas() {}
 TextureAtlas::TextureAtlas(const TextureHandle &handle) : tex_handle(handle) {}

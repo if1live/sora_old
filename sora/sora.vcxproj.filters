@@ -128,6 +128,12 @@
     <ClInclude Include="sprite_sheet_manager.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="button.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="color.h">
+      <Filter>math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cc">
@@ -217,6 +223,9 @@
     </ClCompile>
     <ClCompile Include="sprite_sheet_manager.cc">
       <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="button.cpp">
+      <Filter>ui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

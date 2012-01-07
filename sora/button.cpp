@@ -18,30 +18,41 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_SPRITE_SHEET_MANAGER_H_
-#define SORA_SPRITE_SHEET_MANAGER_H_
-
-#include "template_library.h"
+#include "sora_stdafx.h"
+#include "button.h"
 
 namespace sora {;
-class TextureAtlas;
-class TextureSubImage;
-
-class SpriteSheetManager : public Singleton<SpriteSheetManager> {
-public:
-  typedef std::vector<TextureAtlas> AtlasListType;
-public:
-  SpriteSheetManager();
-  ~SpriteSheetManager();
-
-  static TextureAtlas Read(const char *content, const char *res_path);
-  // 텍스쳐 아틀라스에는 이름을 아직 쓰지 않지만
-  // 나중에 이름을 붙여서 관리해서 메모리에 올렸다 내렸다 할수있으니까 남겨놓자
-  void Save(const TextureAtlas &atlas, const char *atlas_name = NULL);
-  TextureSubImage *GetSubImage(const char *key);
-private:
-  AtlasListType atlas_list_;
-};
+UIComponent *Button::Create(ButtonHandler *handler, const Recti &touch_area) {
+	Button *btn = new Button();
+	btn->SetHandler(handler);
+	btn->set_touch_rect(touch_area);
+	return btn;
+}
+Button::Button()
+	: UIComponent(kButton),
+	button_state_(kButtonReleased) {
+}
+Button::~Button() {
 }
 
-#endif  // SORA_SPRITE_SHEET_MANAGER_H_
+void Button::SetHandler(ButtonHandler *handler) {
+	handler_.reset(handler);
+}
+void Button::OnPressed() {
+	if(handler_.get() != NULL) {
+		handler_->OnPressed();
+	}
+}
+void Button::OnReleased() {
+	if(handler_.get() != NULL) {
+		handler_->OnReleased();
+	}
+}
+TextureSubImage *Button::GetImage() {
+	if(button_state() == kButtonPressed) {
+		return &pressed_img_;
+	} else {
+		return &released_img_;
+	}
+}
+}

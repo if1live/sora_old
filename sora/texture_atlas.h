@@ -60,6 +60,8 @@ struct TextureSubImage {
   f32 GetTexWidth();
   f32 GetTexHeight();
   GLuint GetHandle();
+
+  void GetFrame(f32 *left, f32 *right, f32 *bottom, f32 *top);
 };
 
 class TextureAtlas {

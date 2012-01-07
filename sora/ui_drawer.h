@@ -18,30 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_SPRITE_SHEET_MANAGER_H_
-#define SORA_SPRITE_SHEET_MANAGER_H_
-
-#include "template_library.h"
+#ifndef SORA_UI_DRAWER_H_
+#define SORA_UI_DRAWER_H_
 
 namespace sora {;
-class TextureAtlas;
+
+class ImageLabel;
+class Button;
+class UIContainer;
+class UIComponent;
 class TextureSubImage;
 
-class SpriteSheetManager : public Singleton<SpriteSheetManager> {
+class UIDrawer {
 public:
-  typedef std::vector<TextureAtlas> AtlasListType;
-public:
-  SpriteSheetManager();
-  ~SpriteSheetManager();
+	UIDrawer() {}
+	~UIDrawer() {}
 
-  static TextureAtlas Read(const char *content, const char *res_path);
-  // 텍스쳐 아틀라스에는 이름을 아직 쓰지 않지만
-  // 나중에 이름을 붙여서 관리해서 메모리에 올렸다 내렸다 할수있으니까 남겨놓자
-  void Save(const TextureAtlas &atlas, const char *atlas_name = NULL);
-  TextureSubImage *GetSubImage(const char *key);
+  void DrawRoot(UIComponent *root);
+
+	void Draw(ImageLabel *label);
+	void Draw(Button *btn);
+
+	///@brief hud는 그릴때 행렬이 바뀌니까 잘 저장했다 복구해야한다&
+	void BeforeDraw();
+	void AfterDraw();
+	void DrawTouchArea(UIContainer *container);
+
 private:
-  AtlasListType atlas_list_;
+  void Draw(TextureSubImage *img);
 };
+
 }
 
-#endif  // SORA_SPRITE_SHEET_MANAGER_H_
+#endif

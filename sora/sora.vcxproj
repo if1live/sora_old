@@ -68,8 +68,10 @@
   <ItemGroup>
     <ClInclude Include="assert_inc.h" />
     <ClInclude Include="basic_shader.h" />
+    <ClInclude Include="button.h" />
     <ClInclude Include="class_type.h" />
     <ClInclude Include="clock.h" />
+    <ClInclude Include="color.h" />
     <ClInclude Include="common_string.h" />
     <ClInclude Include="filesystem.h" />
     <ClInclude Include="gl_inc.h" />
@@ -113,6 +115,7 @@
   <ItemGroup>
     <ClCompile Include="arch.cc" />
     <ClCompile Include="basic_shader.cc" />
+    <ClCompile Include="button.cpp" />
     <ClCompile Include="clock.cc" />
     <ClCompile Include="filesystem.cc" />
     <ClCompile Include="gl_inc.cc" />

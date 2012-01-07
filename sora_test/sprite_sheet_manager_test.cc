@@ -61,11 +61,11 @@ r => 'y' only set if sprite is rotated\
   <sprite n='PageB_S10@2x' x='2' y='580' w='200' h='133'/>\
 </TextureAtlas>";
 
-TEST(SpriteSheetManager, Load) {
+TEST(SpriteSheetManager, Read) {
   using namespace sora;
 
   const char res_path[] = "testdata/";
-  TextureAtlas tex_atlas = SpriteSheetManager::Load(content, res_path);
+  TextureAtlas tex_atlas = SpriteSheetManager::Read(content, res_path);
 
   Texture *tex = TextureManager::GetInstance().GetTexture(tex_atlas.tex_handle);
   EXPECT_EQ(512, tex->tex_header.tex_width);
@@ -90,11 +90,11 @@ TEST(SpriteSheetManager, Load) {
   EXPECT_EQ(NULL, subimg);
 }
 
-TEST(SpriteSheetManager, Save) {
+TEST(SpriteSheetManager, Read_1) {
   using namespace sora;
 
   const char res_path[] = "testdata/";
-  TextureAtlas tex_atlas = SpriteSheetManager::Load(content, res_path);
+  TextureAtlas tex_atlas = SpriteSheetManager::Read(content, res_path);
   SpriteSheetManager::GetInstance().Save(tex_atlas);
 
 

@@ -24,6 +24,7 @@
 #include "sora/texture.h"
 #include "sora/filesystem.h"
 #include "sora/gl_window.h"
+#include "sora/memory_file.h"
 
 #include "sora/immediate_mode_emulator.h"
 #include "sora/touch.h"
@@ -35,6 +36,9 @@
 #include "sora/image_label.h"
 #include "sora/ui_drawer.h"
 #include "sora/ui_container.h"
+#include "sora/texture_atlas.h"
+#include "sora/texture_manager.h"
+#include "sora/sprite_sheet_manager.h"
 
 const int win_width = 960;
 const int win_height = 640;
@@ -141,7 +145,7 @@ void Draw(int ms) {
   /*
   {
     sora::Texture &color_tex = sora::Texture::White();
-    glBindTexture(GL_TEXTURE_2D, color_tex.handle);
+    srglBindTexture(GL_TEXTURE_2D, color_tex.handle);
     //2d test
     srglMatrixMode(SR_PROJECTION);
     srglLoadIdentity();
@@ -164,7 +168,7 @@ void Draw(int ms) {
   //테스트 UI그리기
 
   sora::UIDrawer drawer;
-  drawer.Draw(&ui_container);
+  drawer.DrawRoot(&ui_container);
 
   sora::GLHelper::CheckError("DrawEnd");
 }
@@ -185,5 +189,26 @@ void Init() {
   yukino::Glassless3d::GetInstance().Init();
 
   //테스트용 UI만들기
-  
+  using namespace sora;
+
+  //ui에서 쓰이는 스프라이트 로딩
+  MemoryFile sprite_xml_file("ui/ui_sprite-hd.xml");
+  sprite_xml_file.Open();
+  TextureAtlas tex_atlas = SpriteSheetManager::Read((const char*)sprite_xml_file.start, "/ui/");
+  SpriteSheetManager::GetInstance().Save(tex_atlas);
+  TextureManager::GetInstance().AsyncLoad(tex_atlas.tex_handle);
+
+  TextureSubImage *next_img = tex_atlas.GetSubImage("BtMainNext@2x");
+  TextureSubImage *prev_img = tex_atlas.GetSubImage("BtMainPrev@2x");
+  TextureSubImage *reset_img = tex_atlas.GetSubImage("BtMainReset@2x");
+  TextureSubImage *menu_img = tex_atlas.GetSubImage("BtMainPage@2x");
+  SR_ASSERT(next_img != NULL);
+  SR_ASSERT(prev_img != NULL);
+  SR_ASSERT(reset_img != NULL);
+  SR_ASSERT(menu_img != NULL);
+
+  ImageLabel *label = new ImageLabel(*next_img);
+  label->set_position(vec2(100, 100));
+  ui_container.Add(label);
+
 }
