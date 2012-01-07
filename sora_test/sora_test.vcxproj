@@ -12,6 +12,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="class_type_test.cc" />
+    <ClCompile Include="color_test.cc" />
     <ClCompile Include="common_string_test.cc" />
     <ClCompile Include="filesystem_test.cc" />
     <ClCompile Include="handle_manager_test.cc" />

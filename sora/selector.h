@@ -36,7 +36,8 @@ typedef void (Selector::*Selector_UICallback)(UIComponent*);
 struct CallFuncFunctor {
   CallFuncFunctor(Selector *target, Selector_CallFunc func) : target(target), func(func) {}
   CallFuncFunctor() : target((Selector*)0), func(NULL) {}
-  void operator()() { if(!target) { (target->*func)(); } }
+  void operator()() { if(target) { (target->*func)(); }
+  }
   Selector *target;
   Selector_CallFunc func;
 };
@@ -44,7 +45,7 @@ struct CallFuncFunctor {
 struct UICallbackFunctor {
   UICallbackFunctor(Selector *target, Selector_UICallback func) : target(target), func(func) {}
   UICallbackFunctor() : target((Selector*)0), func(NULL) {}
-  void operator()(UIComponent *obj) { if(!target) { (target->*func)(obj); } }
+  void operator()(UIComponent *obj) { if(target) { (target->*func)(obj); } }
   Selector *target;
   Selector_UICallback func;
 };

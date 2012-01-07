@@ -51,6 +51,9 @@
     <ClCompile Include="sprite_sheet_manager_test.cc">
       <Filter>renderer</Filter>
     </ClCompile>
+    <ClCompile Include="color_test.cc">
+      <Filter>math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h" />
