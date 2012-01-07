@@ -34,6 +34,8 @@
 
 #include "sora/ui_component.h"
 #include "sora/image_label.h"
+#include "sora/button.h"
+
 #include "sora/ui_drawer.h"
 #include "sora/ui_container.h"
 #include "sora/texture_atlas.h"
@@ -169,9 +171,21 @@ void Draw(int ms) {
 
   sora::UIDrawer drawer;
   drawer.DrawRoot(&ui_container);
+  drawer.DrawTouchArea(&ui_container);
 
   sora::GLHelper::CheckError("DrawEnd");
 }
+
+class UIEventTestClass : public sora::Selector {
+public:
+  virtual void OnButtonPressed(sora::UIComponent *btn) {
+    printf("btn pressed\n");
+  }
+  virtual void OnButtonReleased(sora::UIComponent *btn) {
+    printf("btn released\n");
+  }
+};
+
 void Init() {
   sora::ImmediateModeEmulator::GetInstance().Init();
 
@@ -207,8 +221,34 @@ void Init() {
   SR_ASSERT(reset_img != NULL);
   SR_ASSERT(menu_img != NULL);
 
-  ImageLabel *label = new ImageLabel(*next_img);
-  label->set_position(vec2(100, 100));
-  ui_container.Add(label);
+  {
+    ImageLabel *label = new ImageLabel(*prev_img);
+    label->set_position(vec2(100, 100));
+    ui_container.Add(label);
+  }
+  {
+    static UIEventTestClass obj;
+    Button *btn = new Button(*next_img);
+    btn->set_position(vec2(400, 100));
 
+    UICallbackFunctor pressed_functor(&obj, SR_UI_CALLBACK_SEL(UIEventTestClass::OnButtonPressed));
+    btn->set_pressed_functor(pressed_functor);
+    UICallbackFunctor released_functor(&obj, SR_UI_CALLBACK_SEL(UIEventTestClass::OnButtonReleased));
+    btn->set_released_functor(released_functor);
+
+    btn->set_pressed_img(*prev_img);
+
+
+    ui_container.Add(btn);
+  }
+  {
+    ImageLabel *label = new ImageLabel(*reset_img);
+    label->set_position(vec2(100, 400));
+    ui_container.Add(label);
+  }
+  {
+    ImageLabel *label = new ImageLabel(*menu_img);
+    label->set_position(vec2(400, 400));
+    ui_container.Add(label);
+  }
 }

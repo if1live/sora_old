@@ -115,7 +115,7 @@
   <ItemGroup>
     <ClCompile Include="arch.cc" />
     <ClCompile Include="basic_shader.cc" />
-    <ClCompile Include="button.cpp" />
+    <ClCompile Include="button.cc" />
     <ClCompile Include="clock.cc" />
     <ClCompile Include="filesystem.cc" />
     <ClCompile Include="gl_inc.cc" />

@@ -25,10 +25,10 @@ namespace sora {;
 
 template<typename T>  struct Color3;
 template<typename T>  struct Color4;
-typedef Color3<int>  color3i;
-typedef Color3<int>  color3f;
-typedef Color4<float>  color4i;
-typedef Color4<float>  color4f;
+typedef Color3<int>  Color3ub;
+typedef Color3<int>  Color3f;
+typedef Color4<float>  Color4ub;
+typedef Color4<float>  Color4f;
 
 template<typename T>
 struct Color3 {
@@ -48,6 +48,8 @@ struct Color3 {
 
   static T max_value() { return 255; }
   static T min_value() { return 0; }
+
+  static bool HasAlpha() { return false; }
 };
 
 template<typename T>
@@ -71,6 +73,8 @@ struct Color4 {
 
   static T max_value() { return 255; }
   static T min_value() { return 0; }
+
+  static bool HasAlpha() { return true; }
 };
 
 //float 일때는 max가 바뀐다
@@ -80,6 +84,24 @@ float Color3<float>::max_value() { return 1.0f; }
 template<>
 float Color4<float>::max_value() { return 1.0f; }
 
+template<typename ColorType>
+void ToRed(ColorType &color) {
+  color.r = ColorType::max_value();
+  color.g = 0;
+  color.b = 0;
+  if (ColorType::HasAlpha()) {
+    color.value[3] = ColorType::max_value();
+  }
+}
+template<typename ColorType>
+void ToGreen(ColorType &color) {
+  color.r = 0;
+  color.g = ColorType::max_value();
+  color.b = 0;
+  if (ColorType::HasAlpha()) {
+    color.value[3] = ColorType::max_value();
+  }
+}
 
 }
 

@@ -45,7 +45,7 @@ TEST(Selector, CallFunc) {
   ((&sel1)->*func)();
   EXPECT_EQ(2, sel1.test_value1);
 
-  CallFuncFuctor func1(&sel1, SR_CALL_FUNC_SEL(TestSelector1::TestFunc));
+  CallFuncFunctor func1(&sel1, SR_CALL_FUNC_SEL(TestSelector1::TestFunc));
   func1();
   EXPECT_EQ(3, sel1.test_value1);
 }

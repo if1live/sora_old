@@ -53,6 +53,8 @@ public:
 
 	bool operator==(const Rect<T> &o) const;
 	bool operator!=(const Rect<T> &o) const;
+
+  bool IsEmpty() const;
 private:
 	sora::Vector2<T> origin_;
 	sora::Vector2<T> size_;
@@ -93,6 +95,10 @@ Rect<T>::operator Rect<T1>() const {
 	T1 h = static_cast<T1>(size_.y);
 	Rect<T1> result(x, y, w, h);
 	return result;
+}
+template<typename T>
+bool Rect<T>::IsEmpty() const {
+  return (x() == 0 && y() == 0 && width() == 0 && height() == 0);
 }
 }
 

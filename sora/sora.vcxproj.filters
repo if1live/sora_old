@@ -224,7 +224,7 @@
     <ClCompile Include="sprite_sheet_manager.cc">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="button.cpp">
+    <ClCompile Include="button.cc">
       <Filter>ui</Filter>
     </ClCompile>
   </ItemGroup>

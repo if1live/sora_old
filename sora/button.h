@@ -25,63 +25,63 @@
 
 #include "texture_atlas.h"
 #include "rect.h"
+#include "selector.h"
 
 namespace sora {;
-
-class ButtonHandler;
-
 class Button : public UIComponent {
 public:
-	static UIComponent *Create(ButtonHandler *handler, const Recti &touch_area);
-public:
 	Button();
+  Button(const TextureSubImage &img);
 	virtual ~Button();
 
-	void SetHandler(ButtonHandler *handler);
+  virtual void Draw(UIDrawer *drawer);
 
-	//button state에 맞춰서 얻기
-	TextureSubImage *GetImage();
+	
 
 	void OnPressed();
 	void OnReleased();
 
   ButtonState button_state() const { return button_state_; }
-	///@brief 터치 영역의 크기. 버튼의 좌표와 터치영역은 별개로 돌아간다
-	///두개를 따로 둔 이유는 실제로 보이는영역과 터치 영역을 같게하면
-	///버튼이 작을경우, 잘못누를 가능성이 높아지기 때문
-	///귀찮아도 잘 지정하자
-  void set_touch_rect(const Recti &rect) { touch_rect_ = rect; }
-  const Recti &touch_rect() const { return touch_rect_; }
-
 private:
 	//friend class를 사용함으로써 외부노출을 완전히 차단(제한된 클래스외에는
 	//버튼의 상태를 바꿀수없어야한다)
 	friend class Container;
   void set_button_state(ButtonState state) { button_state_ = state; }
 
-	//설마 버튼 1개에 기능이 여러개 붙진 않겠지??
-	std::auto_ptr<ButtonHandler> handler_;
 	ButtonState button_state_;
-	Recti touch_rect_;
 
+  //터치 영역은 수동으로 잡아주면 그것을 쓰고, 없으면 이미지크기르 그냥 쓴다
+public:
+  ///@brief 터치 영역의 크기. 버튼의 좌표와 터치영역은 별개로 돌아간다
+	///두개를 따로 둔 이유는 실제로 보이는영역과 터치 영역을 같게하면
+	///버튼이 작을경우, 잘못누를 가능성이 높아지기 때문
+	///귀찮아도 잘 지정하자
+  void set_touch_rect(const Recti &rect) { touch_rect_ = rect; }
+  Recti GetTouchRect();
+  void ResetTouchRect();
+private:
+  Recti touch_rect_;
+
+  
+  //어떻게 그릴것인가?
+public:
+	TextureSubImage *GetImage();  //button state에 맞춰서 얻기
+  void set_released_img(const TextureSubImage &img) { released_img_ = img; }
+  void set_pressed_img(const TextureSubImage &img) { pressed_img_ = img; }
+  void SetImage(const TextureSubImage &img) {
+    released_img_ = img;  pressed_img_ = img;
+  }
+private:
   TextureSubImage released_img_;
 	TextureSubImage pressed_img_;
-};
 
-class ButtonHandler {
+  //event, 버튼에 이벤트가 발생할떄 처리할 기능 연결시키기
 public:
-	ButtonHandler() {}
-	virtual ~ButtonHandler() {}
-	virtual void OnPressed() = 0;
-	virtual void OnReleased() = 0;
-};
-
-class TestButtonHandler : public ButtonHandler {
-public:
-	TestButtonHandler() {}
-	virtual ~TestButtonHandler() {}
-	virtual void OnPressed() { printf("pressed\n"); }
-	virtual void OnReleased() { printf("released\n"); }
+  void set_pressed_functor(const UICallbackFunctor &f) { pressed_functor_ = f; }
+  void set_released_functor(const UICallbackFunctor &f) { released_functor_ = f; }
+private:
+  UICallbackFunctor pressed_functor_;
+  UICallbackFunctor released_functor_;
 };
 }
 

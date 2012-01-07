@@ -23,6 +23,7 @@
 #include "texture_atlas.h"
 
 #include "image_label.h"
+#include "ui_drawer.h"
 
 namespace sora {;
 ImageLabel::ImageLabel(const TextureSubImage &img)
@@ -30,5 +31,8 @@ ImageLabel::ImageLabel(const TextureSubImage &img)
 	img_(img) {
 }
 ImageLabel::~ImageLabel() {
+}
+void ImageLabel::Draw(UIDrawer *drawer) {
+  drawer->Draw(this);
 }
 }

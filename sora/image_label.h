@@ -34,6 +34,8 @@ public:
 
   const TextureSubImage &img() const { return img_; }
   TextureSubImage &img() { return img_; }
+
+  virtual void Draw(UIDrawer *drawer);
 private:
 	TextureSubImage img_;
 };

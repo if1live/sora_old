@@ -58,6 +58,7 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
     //새로운텍스쳐를 만들기. 모든 처리가 완료되면 TextureManager내부에 등록된다
     TextureHandle handle;
     tex = TextureManager::GetInstance().CreateTexture(handle);
+    //printf("Texture filename : %s\n", res.c_str());
     tex->set_filename(res);
 
     TextureParameter param;

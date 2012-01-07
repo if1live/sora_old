@@ -25,6 +25,7 @@
 
 namespace sora {;
 class Button;
+class UIDrawer;
 
 template<typename T>  class Rect;
 template<typename T>  class Vector2;
@@ -43,8 +44,9 @@ public:
   virtual int ChildCount() const { return comp_list_.size(); }
   virtual UIComponent *GetChild(int index);
 
+  virtual void Draw(UIDrawer *drawer);
+
 	//디버깅용으로 터치되는 보이는 영역 보이기
-	//void DrawTouchArea();
 	//void Update(float dt, const touch::TouchEventList &evt_list);
 
 	void GetButtonList(ButtonListType &out);

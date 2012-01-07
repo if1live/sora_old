@@ -28,6 +28,7 @@
 
 #include "image_label.h"
 #include "button.h"
+#include "ui_container.h"
 
 #include "texture_atlas.h"
 #include "texture_manager.h"
@@ -50,16 +51,23 @@ void UIDrawer::Draw(TextureSubImage *img) {
 	float left, right, top, bottom;
 	img->GetFrame(&left, &right, &bottom, &top);
 
+  // ui는 y축 좌표계가 반대니까 raw gl좌표를 썡으로 그리면
+  // 텍스쳐가 반대로 나와서 잘 나올거다
+
   srglScalef(width, height, 1);
   srglBegin(GL_QUADS);
-  srglTexCoord2f(left, top);  srglVertex2f(-0.5f, -0.5f);
-  srglTexCoord2f(right, top); srglVertex2f(0.5f, -0.5f);
-  srglTexCoord2f(right, bottom);  srglVertex2f(0.5f, 0.5f);  
-  srglTexCoord2f(left, bottom);   srglVertex2f(-0.5f, 0.5f);
+  srglTexCoord2f(left, bottom);  srglVertex2f(-0.5f, -0.5f);
+  srglTexCoord2f(right, bottom); srglVertex2f(0.5f, -0.5f);
+  srglTexCoord2f(right, top);  srglVertex2f(0.5f, 0.5f);  
+  srglTexCoord2f(left, top);   srglVertex2f(-0.5f, 0.5f);
   srglEnd();
 }
 
 void UIDrawer::Draw(ImageLabel *label) {
+  if (!label->visible()) {
+    return;
+  }
+
 	//적절히 그리기
 	TextureSubImage &img = label->img();
 
@@ -70,9 +78,8 @@ void UIDrawer::Draw(ImageLabel *label) {
 	const vec2 &pos = label->position();
   float w = img.w;
   float h = img.h;
-
 	float x = w/2 + pos.x;
-  float y = win_height - pos.y - h/2;
+  float y = h/2 + pos.y;
 	srglTranslatef(x, y, 0);
 
   Draw(&img);
@@ -81,6 +88,10 @@ void UIDrawer::Draw(ImageLabel *label) {
 }
 
 void UIDrawer::Draw(Button *btn) {
+  if (!btn->visible()) {
+    return;
+  }
+
 	TextureSubImage *img = btn->GetImage();
   float win_width = GLWindow::GetInstance().width();
   float win_height = GLWindow::GetInstance().height();
@@ -92,7 +103,7 @@ void UIDrawer::Draw(Button *btn) {
 		float h = img->h;
 
 		float x = w/2 + pos.x;
-    float y = win_height - pos.y - h/2;
+    float y = h/2 + pos.y;
 		srglTranslatef(x, y, 0);
 
     Draw(img);
@@ -111,7 +122,7 @@ void UIDrawer::BeforeDraw() {
   float win_w = GLWindow::GetInstance().width();
   float win_h = GLWindow::GetInstance().height();
 
-  srglOrtho(0, win_w, 0, win_h, -100, 100);
+  srglOrtho(0, win_w, win_h, 0, -100, 100);
   
   //modelview맞춰서 그리기
 	srglMatrixMode(SR_MODELVIEW);
@@ -125,60 +136,87 @@ void UIDrawer::AfterDraw() {
 	srglPopMatrix();
 }
 
-/*
-void UIDrawer::DrawTouchArea(Container *container) {
+
+void UIDrawer::DrawTouchArea(UIContainer *container) {
 	BeforeDraw();
 
-	vec2 winsize = Device::GetInstance().GetScreenSize();
-	Container::ButtonListType btnlist;
+  float win_width = GLWindow::GetInstance().width();
+  float win_height = GLWindow::GetInstance().height();
+
+	UIContainer::ButtonListType btnlist;
 	container->GetButtonList(btnlist);
 	BOOST_FOREACH(Button *btn, btnlist) {
-		const Recti &area = btn->touch_rect();
+    const Recti &area = btn->GetTouchRect();
 
 		float x = area.origin().x;
 		float y = area.origin().y;
 		float w = area.width();
 		float h = area.height();
 
-		float centerX = x + w/2;
-		float centerY = winsize.y - y - h/2;
+		float center_x = x + w/2;
+		float center_y = y + h/2;
 
-		Color4ub color;
-		if(btn->visible) {
-			ToRed(color);
+    // 순수하게 색만 쓰고싶으면 텍스쳐를 교체해야한다
+    // 왜냐하면 즉시모드 에뮬에는 tex끄기가 아직 없어서...
+		if(btn->visible()) {
+			srglBindTexture(GL_TEXTURE_2D, Texture::Red().handle);
 		} else {
-			ToGreen(color);
+      srglBindTexture(GL_TEXTURE_2D, Texture::Green().handle);
 		}
-		DrawHelper::DrawLineRect(vec2(centerX, centerY), w, h, color);
+    
+    srglBegin(GL_LINE_LOOP);
+    srglVertex2f(center_x - w/2, center_y - h/2);
+    srglVertex2f(center_x + w/2, center_y - h/2);
+    srglVertex2f(center_x + w/2, center_y + h/2);
+    srglVertex2f(center_x - w/2, center_y + h/2);
+    srglEnd();
 	}
 
 	AfterDraw();
 }
-*/
+
 void UIDrawer::DrawRoot(UIComponent *root) {
   BeforeDraw();
 
-  for (size_t i = 0 ; i < root->ChildCount() ; i++) {
-    UIComponent *comp = root->GetChild(i);
-		if(comp->visible() == false) {
-			continue;
-		}
+  // double dispatch로 구현
+  root->Draw(this);
 
-		UIComponentType comp_type = comp->ui_component_type();
+	//행렬 복구
+	AfterDraw();
+}
+
+void UIDrawer::Draw(UIComponent *comp) {
+  if (comp->visible() == false) {
+    return;
+  }
+
+  srglPushMatrix();
+
+  float win_height = GLWindow::GetInstance().height();
+	
+	const vec2 &pos = comp->position();
+  //container는 크기라는게 미묘하니 왼쪽위를 그냥 쓰자
+	srglTranslatef(pos.x, pos.y, 0);
+
+  for (size_t i = 0 ; i < comp->ChildCount() ; i++) {
+    UIComponent *elem = comp->GetChild(i);
+		UIComponentType comp_type = elem->ui_component_type();
     switch(comp_type) {
     case kImageLabel:
-			Draw(comp->Cast<ImageLabel>());
+			Draw(elem->Cast<ImageLabel>());
       break;
     case kButton:
-			Draw(comp->Cast<Button>());
+			Draw(elem->Cast<Button>());
+      break;
+    case kUIContainer:
+      Draw(elem->Cast<UIContainer>());
       break;
     default:
       SR_ASSERT(!"todo impl");
       break;
     }
-	}
+  }
 
-	//행렬 복구
-	AfterDraw();
+	srglPopMatrix();
 }
 }

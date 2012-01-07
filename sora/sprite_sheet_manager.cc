@@ -54,11 +54,15 @@ TextureAtlas SpriteSheetManager::Read(const char *content, const char *res_path)
   SR_ASSERT(tex_height > 0);
   
   // 해당 이름에 해당하는 텍스쳐를 얻거나 만들기
-  string real_image_path = res_path + '/' + image_path;
+  string real_image_path = res_path;
+  real_image_path += '/';
+  real_image_path += image_path;
+
   Texture *tex = TextureManager::GetInstance().GetTexture(real_image_path);
   TextureHandle tex_handle;
   if (tex == NULL) {
     tex = TextureManager::GetInstance().CreateTexture(tex_handle);
+    //printf("Texture filename 2: %s\n", real_image_path.c_str());
     tex->set_filename(real_image_path);
 
   } else {

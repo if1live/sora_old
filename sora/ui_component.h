@@ -28,6 +28,7 @@ class UIContainer;
 class UIComponent;
 class ImageLabel;
 class Button;
+class UIDrawer;
 
 typedef enum {
 	kImageLabel,
@@ -44,6 +45,13 @@ typedef enum {
 //터치 좌표계와 동일하게 맞춰서 변환 삽질을 줄였다
 //ui system을 사용하기전에 touch queue을 작동시켜놓는다
 
+// ui좌표계는 왼쪽위가 0,0이다
+// 일반적으로 사용되는 GUI와 같은 좌표계를 채택했다
+// 레티나 지원을 한다. 아이폰3gs와 아이폰4모두 480*320기준으로 돌아간다
+// 안드로이드의 경우는 레티나가 없어 해상도가 곧 ui좌표계이다
+// web의 css의 컨셉을 받아들여 9방향 배치가 가능하다
+// 9방향 배치를 쓰면 해상도가 변해도 UI가 심각하지 붕괴하진 않을것이다
+
 ///ui는 멀티터치를 지원하지 않는다(굳이 필요하지도 않으니까)
 ///모든 ui component는 크기+위치를 표현하는 rect를 소유한다
 class UIComponent : boost::noncopyable {
@@ -58,6 +66,9 @@ public:
   virtual void Add(UIComponent *comp) { }
   virtual int ChildCount() const { return 0; }
   virtual UIComponent *GetChild(int index) { return NULL; }
+
+  // visiter pattern based
+  virtual void Draw(UIDrawer *drawer) = 0;
 
 public:
   //state
@@ -74,8 +85,8 @@ public:
   bool Enable() { is_enable_ = true; }
   bool Disable() { is_enable_ = false; }
 
-  const color4i &color() const { return color_; }
-  void set_color(const color4i &c) { color_ = c; }
+  const Color4ub &color() const { return color_; }
+  void set_color(const Color4ub &c) { color_ = c; }
 
 private:
 	UIComponentType ui_component_type_;
@@ -85,7 +96,7 @@ private:
 	//view와 관계있고 터치와는 무관함
 	sora::vec2 position_;
 
-  color4i color_;
+  Color4ub color_;
 };
 }
 #endif  // SORA_UI_COMPONENT_H_

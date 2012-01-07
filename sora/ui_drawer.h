@@ -38,6 +38,7 @@ public:
 
 	void Draw(ImageLabel *label);
 	void Draw(Button *btn);
+  void Draw(UIComponent *comp);
 
 	///@brief hud는 그릴때 행렬이 바뀌니까 잘 저장했다 복구해야한다&
 	void BeforeDraw();

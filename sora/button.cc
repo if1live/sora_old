@@ -20,33 +20,29 @@
 // Ŭnicode please
 #include "sora_stdafx.h"
 #include "button.h"
+#include "ui_drawer.h"
 
 namespace sora {;
-UIComponent *Button::Create(ButtonHandler *handler, const Recti &touch_area) {
-	Button *btn = new Button();
-	btn->SetHandler(handler);
-	btn->set_touch_rect(touch_area);
-	return btn;
-}
 Button::Button()
 	: UIComponent(kButton),
 	button_state_(kButtonReleased) {
 }
+Button::Button(const TextureSubImage &img)
+  : UIComponent(kButton),
+	button_state_(kButtonReleased),
+  released_img_(img), pressed_img_(img) {
+}
 Button::~Button() {
 }
 
-void Button::SetHandler(ButtonHandler *handler) {
-	handler_.reset(handler);
+void Button::Draw(UIDrawer *drawer) {
+  drawer->Draw(this);
 }
 void Button::OnPressed() {
-	if(handler_.get() != NULL) {
-		handler_->OnPressed();
-	}
+  pressed_functor_(this);
 }
 void Button::OnReleased() {
-	if(handler_.get() != NULL) {
-		handler_->OnReleased();
-	}
+  released_functor_(this);
 }
 TextureSubImage *Button::GetImage() {
 	if(button_state() == kButtonPressed) {
@@ -54,5 +50,22 @@ TextureSubImage *Button::GetImage() {
 	} else {
 		return &released_img_;
 	}
+}
+void Button::ResetTouchRect() {
+  touch_rect_ = Recti();
+}
+Recti Button::GetTouchRect() {
+  if (touch_rect_.IsEmpty()) {
+    // 이미지 영역과 동일
+    TextureSubImage *img = GetImage();
+    float w = img->w;
+    float h = img->h;
+    float x = position().x;
+    float y = position().y;
+
+    return Recti(x, y, w, h);
+  } else {
+    return touch_rect_;
+  }
 }
 }

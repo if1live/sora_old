@@ -25,6 +25,7 @@
 #include "ui_drawer.h"
 
 #include "image_label.h"
+#include "button.h"
 
 namespace sora {;
 //drawer 교체는 아직 생각없음
@@ -35,6 +36,9 @@ UIContainer::UIContainer()
 }
 UIContainer::~UIContainer() {
 	DestroyList(&comp_list_);
+}
+void UIContainer::Draw(UIDrawer *drawer) {
+  drawer->Draw(this);
 }
 void UIContainer::Add(UIComponent *comp) {
 	comp_list_.push_back(comp);
@@ -138,15 +142,9 @@ void Container::Update(float dt, const touch::TouchEventList &evt_list) {
 	}
 }
 #endif
-/*
-void UIContainer::DrawTouchArea() {
-	drawer.DrawTouchArea(this);
-}
-*/
 
-/*
 void UIContainer::GetButtonList(ButtonListType &out) {
-	IUASSERT(out.empty() == true);
+	SR_ASSERT(out.empty() == true);
 	//버튼 목록 얻기
 	BOOST_FOREACH(UIComponent *comp, comp_list_) {
 		UIComponentType comp_type = comp->ui_component_type();
@@ -157,10 +155,10 @@ void UIContainer::GetButtonList(ButtonListType &out) {
 	}
 }
 void UIContainer::GetVisibleButtonList(ButtonListType &out) {
-	IUASSERT(out.empty() == true);
+	SR_ASSERT(out.empty() == true);
 	//버튼 목록 얻기
 	BOOST_FOREACH(UIComponent *comp, comp_list_) {
-		if(comp->visible == false) {
+		if(comp->visible() == false) {
 			continue;
 		}
 		UIComponentType comp_type = comp->ui_component_type();
@@ -170,6 +168,5 @@ void UIContainer::GetVisibleButtonList(ButtonListType &out) {
 		}
 	}
 }
-*/
 
 }
