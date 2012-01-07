@@ -32,38 +32,36 @@ Keyboard::~Keyboard() {
 void Keyboard::Update() {
 }
 ButtonState Keyboard::GetButtonState(int key) {
-  int state;
-  switch(key) {
-  case kKeyIdentifierSpace:
-    state = glfwGetKey(GLFW_KEY_SPACE);
-    break;
-  case kKeyIdentifierEsc:
-    state = glfwGetKey(GLFW_KEY_ESC);
-    break;
-  case kKeyIdentifierUp:
-    state = glfwGetKey(GLFW_KEY_UP);
-    break;
-  case kKeyIdentifierDown:
-    state = glfwGetKey(GLFW_KEY_DOWN);
-    break;
-  case kKeyIdentifierLeft:
-    state = glfwGetKey(GLFW_KEY_LEFT);
-    break;
-  case kKeyIdentifierRight:
-    state = glfwGetKey(GLFW_KEY_RIGHT);
-    break;
-  default:
-    state = glfwGetKey(key);
-    break;
+  int key_code_table[][2] = {
+    { kKeyIdentifierSpace, GLFW_KEY_SPACE },
+    { kKeyIdentifierEsc, GLFW_KEY_ESC },
+    { kKeyIdentifierUp, GLFW_KEY_UP },
+    { kKeyIdentifierDown, GLFW_KEY_DOWN },
+    { kKeyIdentifierLeft, GLFW_KEY_LEFT },
+    { kKeyIdentifierRight, GLFW_KEY_RIGHT },
+  };
+
+  int state = 0;
+  bool is_special_key_occur = false;
+  int key_code_table_row = sizeof(key_code_table) / (sizeof(int) * 2);
+  for (int i = 0 ; i < key_code_table_row ; i++) {
+    if (key == key_code_table[i][0]) {
+      state = glfwGetKey(key);
+      is_special_key_occur = true;
+      break;
+    }
   }
+  if (is_special_key_occur == false) {
+    state = glfwGetKey(key);
+  }
+  
   if (state == GLFW_RELEASE) {
     return kButtonReleased;
   } else if(state == GLFW_PRESS) {
     return kButtonPressed;
-  } else {
-    SR_ASSERT(!"not valid");
-    return kButtonReleased;
   }
+  SR_ASSERT(!"do not reach");
+  return kButtonReleased;
 }
 bool Keyboard::IsPressed(int key) {
   return (kButtonPressed == GetButtonState(key));
