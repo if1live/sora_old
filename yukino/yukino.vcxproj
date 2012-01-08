@@ -85,7 +85,9 @@
     <ClCompile Include="game_scene.cc" />
     <ClCompile Include="glassless3d.cc" />
     <ClCompile Include="intro_scene.cc" />
+    <ClCompile Include="lang_button_selector.cc" />
     <ClCompile Include="main.cc" />
+    <ClCompile Include="menu_scene.cc" />
     <ClCompile Include="yukino_stdafx.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -100,6 +102,8 @@
     <ClInclude Include="game_scene.h" />
     <ClInclude Include="glassless3d.h" />
     <ClInclude Include="intro_scene.h" />
+    <ClInclude Include="lang_button_selector.h" />
+    <ClInclude Include="menu_scene.h" />
     <ClInclude Include="yukino_stdafx.h" />
   </ItemGroup>
   <ItemGroup>

@@ -112,6 +112,13 @@ private:
   Color4ub color_;
 
   UIComponent *parent_;
+
+public:
+  // 상속없이 일부 추가 데이터를 쓰기 위한 용도
+  void set_userdata(void *data) { data_ = data; }
+  void *userdata() { return data_; }
+private:
+  void *data_;
 };
 
 template<typename T>

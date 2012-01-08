@@ -122,7 +122,8 @@ void GameScene::Draw() {
   yukino::Glassless3d::GetInstance().Draw();
 
   //테스트 UI그리기
-  sora::UIDrawer drawer;
+  //sora::UIDrawer drawer(960, 640);
+  sora::UIDrawer drawer(800, 480);
   drawer.DrawRoot(&impl_->ui_container);
   drawer.DrawTouchArea(&impl_->ui_container);
 }

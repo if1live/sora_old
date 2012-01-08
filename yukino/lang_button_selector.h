@@ -18,26 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_stdafx.h"
-#include "ui_component.h"
+#ifndef YUKINO_LANG_BUTTON_SELECTOR_H_
+#define YUKINO_LANG_BUTTON_SELECTOR_H_
+
+#include "sora/selector.h"
 
 namespace sora {;
-///////////////////////////////////////////////////////
-UIComponent::UIComponent(UIComponentType comp_type)
-: ui_component_type_(comp_type),
-visible_(true),
-position_(0, 0),
-is_enable_(true),
-parent_(NULL),
-data_(NULL) {
+class UIComponent;
+class Button;
 }
-UIComponent::~UIComponent() {
+
+namespace yukino {;
+class LangButtonSelector : public sora::Selector {
+public:
+  LangButtonSelector(sora::Button *eng_enable,
+    sora::Button *eng_disable,
+    sora::Button *kor_enable,
+    sora::Button *kor_disable);
+ LangButtonSelector();
+  
+  void Set(float ui_x, float ui_y);
+
+  virtual void EngPressed(sora::UIComponent *obj);
+  virtual void KorPressed(sora::UIComponent *obj);
+  
+  //button ptr
+  sora::Button *eng_enable_btn;
+  sora::Button *eng_disable_btn;
+  sora::Button *kor_enable_btn;
+  sora::Button *kor_disable_btn;
+};
 }
-vec2 UIComponent::GetAbsolutePosition() {
-  if (parent() == NULL) {
-    return position();
-  } else {
-    return parent()->position() + position();
-  }
-}
-}
+
+#endif  // YUKINO_LANG_BUTTON_SELECTOR_H_

@@ -18,26 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_stdafx.h"
-#include "ui_component.h"
+#ifndef YUKINO_MENU_SCENE_H_
+#define YUKINO_MENU_SCENE_H_
 
-namespace sora {;
-///////////////////////////////////////////////////////
-UIComponent::UIComponent(UIComponentType comp_type)
-: ui_component_type_(comp_type),
-visible_(true),
-position_(0, 0),
-is_enable_(true),
-parent_(NULL),
-data_(NULL) {
+#include "sora/scene.h"
+
+namespace yukino {;
+struct MenuSceneImpl;
+class MenuScene : public sora::Scene {
+public:
+  MenuScene();
+  ~MenuScene();
+  virtual void Draw();
+  virtual void Update(int dt_ms);
+
+private:
+  friend class MenuSceneImpl;
+  MenuSceneImpl *impl_;
+};
 }
-UIComponent::~UIComponent() {
-}
-vec2 UIComponent::GetAbsolutePosition() {
-  if (parent() == NULL) {
-    return position();
-  } else {
-    return parent()->position() + position();
-  }
-}
-}
+
+#endif  // YUKINO_MENU_SCENE_H_

@@ -31,7 +31,7 @@ class TextureSubImage;
 
 class UIDrawer {
 public:
-	UIDrawer() {}
+	UIDrawer(float w, float h) : win_width_(w), win_height_(h) {}
 	~UIDrawer() {}
 
   void DrawRoot(UIComponent *root);
@@ -47,6 +47,8 @@ public:
 
 private:
   void Draw(TextureSubImage *img);
+  float win_width_;
+  float win_height_;
 };
 
 }

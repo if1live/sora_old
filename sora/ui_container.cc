@@ -28,9 +28,6 @@
 #include "button.h"
 
 namespace sora {;
-//drawer 교체는 아직 생각없음
-UIDrawer drawer;
-
 UIContainer::UIContainer()
   : UIComponent(kUIContainer) {
 }

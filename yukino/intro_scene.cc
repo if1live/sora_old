@@ -39,7 +39,9 @@
 #include "sora/matrix_stack.h"
 
 #include "game_scene.h"
+#include "menu_scene.h"
 #include "sora/scene_manager.h"
+#include "lang_button_selector.h"
 
 using namespace sora;
 
@@ -48,39 +50,23 @@ namespace yukino {;
 struct IntroSceneButtonSelector : public Selector {
 public:
   virtual void MenuPressed(UIComponent *obj) {
+    MenuScene *menu_scene = new MenuScene();
+    SceneManager::GetInstance().PopAndDestroy();
+    SceneManager::GetInstance().Push(menu_scene);
   }
   virtual void StartPressed(UIComponent *obj) {
     GameScene *game_scene = new GameScene();
     SceneManager::GetInstance().PopAndDestroy();
     SceneManager::GetInstance().Push(game_scene);
   }
-  virtual void EngPressed(UIComponent *obj) {
-    eng_enable_btn->set_visible(true);
-    eng_disable_btn->set_visible(false);
-    kor_enable_btn->set_visible(false);
-    kor_disable_btn->set_visible(true);
-    Locale::GetInstance().SetUSA();
-  }
-  virtual void KorPressed(UIComponent *obj) {
-    eng_enable_btn->set_visible(false);
-    eng_disable_btn->set_visible(true);
-    kor_enable_btn->set_visible(true);
-    kor_disable_btn->set_visible(false);
-
-    Locale::GetInstance().SetKorea();
-  }
-
-  //button ptr
-  Button *eng_enable_btn;
-  Button *eng_disable_btn;
-  Button *kor_enable_btn;
-  Button *kor_disable_btn;
 };
 
 struct IntroSceneImpl {
   sora::UIContainer ui_container;
-  TextureHandle background_tex_handle;
+  TextureHandle eng_background_tex_handle;
+  TextureHandle kor_background_tex_handle;
   IntroSceneButtonSelector btn_selector;
+  LangButtonSelector lang_selector;
 };
 
 IntroScene::IntroScene() 
@@ -93,57 +79,41 @@ IntroScene::IntroScene()
   sprite_xml_file.Open();
   TextureAtlas tex_atlas = SpriteSheetManager::Read((const char*)sprite_xml_file.start, "/ui/");
   SpriteSheetManager::GetInstance().Save(tex_atlas);
+  {
+    Texture *ui_tex = TextureManager::GetInstance().GetTexture(tex_atlas.tex_handle);
+    TextureParameter param;
+    param.mag_filter = kTexMagLinear;
+    param.min_filter = kTexMinLinearMipMapNearest;
+    param.wrap_s = kTexWrapRepeat;
+    param.wrap_t = kTexWrapRepeat;
+    ui_tex->SetTextureParameter(param);
+  }
   TextureManager::GetInstance().AsyncLoad(tex_atlas.tex_handle);
 
-  TextureSubImage *eng_enable_img = tex_atlas.GetSubImage("BtMenuEnglish@2x");
-  TextureSubImage *eng_disable_img = tex_atlas.GetSubImage("BtMenuEnglishD@2x");
-  TextureSubImage *kor_enable_img = tex_atlas.GetSubImage("BtMenuKorean@2x");
-  TextureSubImage *kor_disable_img = tex_atlas.GetSubImage("BtMenuKoreanD@2x");
   TextureSubImage *start_img = tex_atlas.GetSubImage("BtMenuStart@2x");
   TextureSubImage *menu_img = tex_atlas.GetSubImage("BtMenuPage@2x");
   
-  SR_ASSERT(eng_disable_img != NULL);
-  SR_ASSERT(eng_enable_img != NULL);
-  SR_ASSERT(kor_disable_img != NULL);
-  SR_ASSERT(kor_enable_img != NULL);
+  
   SR_ASSERT(start_img != NULL);
   SR_ASSERT(menu_img != NULL);
 
-  float win_w = GLWindow::GetInstance().width();
-  float win_h = GLWindow::GetInstance().height();
+  //float win_w = GLWindow::GetInstance().width();
+  //float win_h = GLWindow::GetInstance().height();
 
   //왼쪽 아래에 대충 kor/eng
   {
-    Button *eng_disable_btn = new Button(*eng_disable_img);
-    Button *eng_enable_btn = new Button(*eng_enable_img);
-    Button *kor_disable_btn = new Button(*kor_disable_img);
-    Button *kor_enable_btn = new Button(*kor_enable_img);
-
-    vec2 eng_pos(100, 100);
-    vec2 kor_pos(200, 200);
-    eng_disable_btn->set_position(eng_pos);
-    eng_enable_btn->set_position(eng_pos);
-    kor_enable_btn->set_position(kor_pos);
-    kor_disable_btn->set_position(kor_pos);
+    Button *eng_disable_btn = new Button();
+    Button *eng_enable_btn = new Button();
+    Button *kor_disable_btn = new Button();
+    Button *kor_enable_btn = new Button();
 
     impl_->ui_container.Add(eng_disable_btn);
     impl_->ui_container.Add(eng_enable_btn);
     impl_->ui_container.Add(kor_disable_btn);
     impl_->ui_container.Add(kor_enable_btn);
 
-    impl_->btn_selector.eng_disable_btn = eng_disable_btn;
-    impl_->btn_selector.eng_enable_btn = eng_enable_btn;
-    impl_->btn_selector.kor_disable_btn = kor_disable_btn;
-    impl_->btn_selector.kor_enable_btn = kor_enable_btn;
-
-    UICallbackFunctor eng_enable_functor(&impl_->btn_selector, SR_UI_CALLBACK_SEL(IntroSceneButtonSelector::EngPressed));
-    UICallbackFunctor eng_disable_functor(&impl_->btn_selector, SR_UI_CALLBACK_SEL(IntroSceneButtonSelector::EngPressed));
-    UICallbackFunctor kor_enable_functor(&impl_->btn_selector, SR_UI_CALLBACK_SEL(IntroSceneButtonSelector::KorPressed));
-    UICallbackFunctor kor_disable_functor(&impl_->btn_selector, SR_UI_CALLBACK_SEL(IntroSceneButtonSelector::KorPressed));
-    eng_enable_btn->set_pressed_functor(eng_enable_functor);
-    eng_disable_btn->set_pressed_functor(eng_disable_functor);
-    kor_enable_btn->set_pressed_functor(kor_enable_functor);
-    kor_disable_btn->set_pressed_functor(kor_disable_functor);
+    impl_->lang_selector = LangButtonSelector(eng_enable_btn, eng_disable_btn, kor_enable_btn, kor_disable_btn);
+    impl_->lang_selector.Set(0, 0);
   }
 
   //가운데에 start
@@ -172,34 +142,32 @@ IntroScene::IntroScene()
   Locale &locale = Locale::GetInstance();
   const char eng_menu[] = "background/MenuB_E@2x.png";
   const char kor_menu[] = "background/MenuB_K@2x.png";
-  const char *menu_file = NULL;
-  if (locale.language() == kLanguageKorean) {
-    menu_file = kor_menu;
-  } else {
-    menu_file = eng_menu;
-  }
+  for (int i = 0 ; i < 2 ; i++) {
+    const char *menu_file = NULL;
+    TextureHandle *tex_handle = NULL;
+    if (i == 0) {
+      menu_file = kor_menu;
+      tex_handle = &impl_->kor_background_tex_handle;
+    } else {
+      menu_file = eng_menu;
+      tex_handle = &impl_->eng_background_tex_handle;
+    }
 
-  Texture *back_tex = TextureManager::GetInstance().CreateTexture(impl_->background_tex_handle);
-  back_tex->set_filename(menu_file);
-  TextureParameter param;
-  param.mag_filter = kTexMagLinear;
-  param.min_filter = kTexMinLinearMipMapNearest;
-  param.wrap_s = kTexWrapRepeat;
-  param.wrap_t = kTexWrapRepeat;
-  back_tex->SetTextureParameter(param);
-  TextureManager::GetInstance().AsyncLoad(impl_->background_tex_handle);
-
-  //국가에 맞춰서 언어도 설정
-  if (locale.language() == kLanguageKorean) {
-    impl_->btn_selector.KorPressed(NULL);
-  } else {
-    impl_->btn_selector.EngPressed(NULL);
+    Texture *back_tex = TextureManager::GetInstance().CreateTexture(*tex_handle);
+    back_tex->set_filename(menu_file);
+    TextureParameter param;
+    param.mag_filter = kTexMagLinear;
+    param.min_filter = kTexMinLinearMipMapNearest;
+    param.wrap_s = kTexWrapRepeat;
+    param.wrap_t = kTexWrapRepeat;
+    back_tex->SetTextureParameter(param);
+    TextureManager::GetInstance().AsyncLoad(*tex_handle);
   }
 }
 IntroScene::~IntroScene() {
   //쌩 배경은 더이상 사용하지 않으니 그냥 내리자
-  TextureHandle &back_handle = impl_->background_tex_handle;
-  TextureManager::GetInstance().RemoveTexture(back_handle);
+  TextureManager::GetInstance().RemoveTexture(impl_->eng_background_tex_handle);
+  TextureManager::GetInstance().RemoveTexture(impl_->kor_background_tex_handle);
 
   delete(impl_);
   impl_ = NULL;
@@ -209,7 +177,13 @@ void IntroScene::Draw() {
   srglClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   //배경텍스쳐로 이미지 그리기
-  Texture *tex = TextureManager::GetInstance().GetTexture(impl_->background_tex_handle);
+  Texture *tex = NULL;
+  if (Locale::GetInstance().language() == kLanguageEnglish) {
+    tex = TextureManager::GetInstance().GetTexture(impl_->eng_background_tex_handle);
+  } else {
+    tex = TextureManager::GetInstance().GetTexture(impl_->kor_background_tex_handle);
+  }
+  
   if (tex != NULL) {
     int back_width = tex->tex_header.src_width;
     int back_height = tex->tex_header.src_height;
@@ -230,7 +204,8 @@ void IntroScene::Draw() {
     srglEnd();
   }
 
-  sora::UIDrawer drawer;
+  //sora::UIDrawer drawer(960, 640);
+  sora::UIDrawer drawer(800, 480);
   drawer.DrawRoot(&impl_->ui_container);
   drawer.DrawTouchArea(&impl_->ui_container);
 }

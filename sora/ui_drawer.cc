@@ -21,8 +21,6 @@
 #include "sora_stdafx.h"
 #include "ui_drawer.h"
 
-#include "gl_window.h"
-
 #include "gl_inc.h"
 #include "immediate_mode_emulator.h"
 
@@ -37,6 +35,9 @@
 namespace sora {;
 void UIDrawer::Draw(TextureSubImage *img) {
   Texture *tex = TextureManager::GetInstance().GetTexture(img->tex_handle);
+  if (tex == NULL) {
+    return;
+  }
   srglBindTexture(GL_TEXTURE_2D, tex->handle);
 
 	//sub img의 크기를 사용해서 그리기
@@ -72,8 +73,8 @@ void UIDrawer::Draw(ImageLabel *label) {
 	TextureSubImage &img = label->img();
 
 	//image
-  float win_width = GLWindow::GetInstance().width();
-  float win_height = GLWindow::GetInstance().height();
+  const float &win_width = win_width_;
+  const float &win_height = win_height_;
 	srglPushMatrix();
 	const vec2 &pos = label->position();
   float w = img.w;
@@ -93,8 +94,8 @@ void UIDrawer::Draw(Button *btn) {
   }
 
 	TextureSubImage *img = btn->GetImage();
-  float win_width = GLWindow::GetInstance().width();
-  float win_height = GLWindow::GetInstance().height();
+  const float &win_width = win_width_;
+  const float &win_height = win_height_;
 
 	if(img != NULL) {
 		srglPushMatrix();
@@ -119,8 +120,8 @@ void UIDrawer::BeforeDraw() {
 	srglPushMatrix();
 
 	srglLoadIdentity();
-  float win_w = GLWindow::GetInstance().width();
-  float win_h = GLWindow::GetInstance().height();
+  const float &win_w = win_width_;
+  const float &win_h = win_height_;
 
   srglOrtho(0, win_w, win_h, 0, -100, 100);
   
@@ -140,8 +141,8 @@ void UIDrawer::AfterDraw() {
 void UIDrawer::DrawTouchArea(UIContainer *container) {
 	BeforeDraw();
 
-  float win_width = GLWindow::GetInstance().width();
-  float win_height = GLWindow::GetInstance().height();
+  const float &win_width = win_width_;
+  const float &win_height = win_height_;
 
 	UIContainer::ButtonListType btnlist;
 	container->GetButtonList(btnlist);
@@ -192,7 +193,7 @@ void UIDrawer::Draw(UIComponent *comp) {
 
   srglPushMatrix();
 
-  float win_height = GLWindow::GetInstance().height();
+  const float &win_height = win_height_;
 	
 	const vec2 &pos = comp->position();
   //container는 크기라는게 미묘하니 왼쪽위를 그냥 쓰자
