@@ -83,9 +83,7 @@ public:
   TextureHeader tex_header;
 
   GLuint handle() const { return handle_; }
-  void set_handle(GLuint tex_id) {
-    handle_ = tex_id;
-  }
+  void set_handle(GLuint tex_id) { handle_ = tex_id; }
 
   // 파일명을 적절히 저장해놓으면 내려놨던 텍스쳐 다시 불러오는게 가능하겠지?
   const std::string filename() const { return filename_; }

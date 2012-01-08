@@ -48,6 +48,7 @@ public:
   typedef std::vector<TextureHandle>   RequestStackType;
   typedef std::vector<TextureLoadResponse>  ResponseStackType;
   typedef DynamicHandleManager<Texture, TextureHandle> HandleMgrType;
+  typedef std::tr1::unordered_map<std::string, TextureHandle> NameHandleDictType;
 
 public:
   void AsyncLoad(const TextureHandle &request);
@@ -73,6 +74,14 @@ public:
   TextureHandle GetHandle(Texture *tex) const;
 
   TextureManager();
+
+  int GetUsedHandleCount() const { return handle_mgr_.GetUsedHandleCount(); }
+  int GetUnusedHandleCount() const { return handle_mgr_.GetUnusedHandleCount(); }
+
+  NameHandleDictType::iterator Begin() { return name_handle_dict_.begin(); }
+  NameHandleDictType::iterator End() { return name_handle_dict_.end(); }
+  NameHandleDictType::const_iterator Begin() const { return name_handle_dict_.begin(); }
+  NameHandleDictType::const_iterator End() const { return name_handle_dict_.end(); }
 protected:
   ~TextureManager();
 
@@ -81,7 +90,6 @@ protected:
   ResponseStackType   response_stack_;
 
 private:
-  typedef std::tr1::unordered_map<std::string, TextureHandle> NameHandleDictType;
   NameHandleDictType name_handle_dict_;
 };
 }

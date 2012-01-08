@@ -107,6 +107,7 @@ int main(int argc, char *argv) {
 }
 
 void Update(int ms) {
+  using namespace sora;
 #if SR_WIN
   // 윈도우의 경우, 마우스로 터치 흉내내기
   sora::glfwMouseUpdate(win_width, win_height);
@@ -114,6 +115,27 @@ void Update(int ms) {
 #endif
 
   SceneManager::GetInstance().Update(ms);
+
+#if SR_WIN
+  if (glfwGetKey('T') == GLFW_PRESS) {
+    // texture alloc info
+    TextureManager &mgr = TextureManager::GetInstance();
+    printf("used %d / unused %d\n", mgr.GetUsedHandleCount(), mgr.GetUnusedHandleCount());
+
+    TextureManager::NameHandleDictType::iterator it = mgr.Begin();
+    TextureManager::NameHandleDictType::iterator endit = mgr.End();
+    for ( ; it != endit ; it++) {
+      const std::string &name = it->first;
+      const TextureHandle &handle = it->second;
+      Texture *tex = mgr.GetTexture(handle);
+
+      if (tex->IsSystemTexture() == false) {
+        printf("%s\n", name.c_str());
+      }
+    }
+    printf("=============\n");
+  }
+#endif
 }
 
 void Draw(int ms) {  

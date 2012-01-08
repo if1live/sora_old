@@ -27,6 +27,7 @@ public:
   BookScene *GetScene(int index);
 
   int curr_scene_page() const { return curr_scene_page_; }
+  int SceneCount() const { return scene_list().size(); }
   void MoveScene(int index);
   void MoveNextScene();
   void MovePrevScene();

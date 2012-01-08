@@ -52,9 +52,9 @@ public:
   virtual void OnNext(UIComponent *btn) {
     Book &book = Book::GetInstance();
     if (book.IsNextSceneExist()) {
-      BookScene *old_page = book.GetCurrScene();
+      int old_page = book.curr_scene_page();
       Book::GetInstance().MoveNextScene();
-      BookScene *new_page = book.GetCurrScene();
+      int new_page = book.curr_scene_page();
 
       LoadUnloadTexture(old_page, new_page);
     }
@@ -62,9 +62,9 @@ public:
   virtual void OnPrev(UIComponent *btn) {
     Book &book = Book::GetInstance();
     if (book.IsPrevScenExist()) {
-      BookScene *old_page = book.GetCurrScene();
+      int old_page = book.curr_scene_page();
       Book::GetInstance().MovePrevScene();
-      BookScene *new_page = book.GetCurrScene();
+      int new_page = book.curr_scene_page();
 
       LoadUnloadTexture(old_page, new_page);
     }
@@ -78,44 +78,55 @@ public:
     SceneManager::GetInstance().PopAndDestroy();
     SceneManager::GetInstance().Push(scene);
 
-    BookScene *curr = Book::GetInstance().GetCurrScene();
-    curr->UnloadTexture();
+    for (int i = 0 ; i < Book::GetInstance().SceneCount() ; i++) {
+      BookScene *scene = Book::GetInstance().GetScene(i);
+      scene->UnloadTexture();
+    }
   }
 
-  void LoadUnloadTexture(BookScene *old_page, BookScene *new_page) {
-    const set<TextureHandle> &old_tex_list = old_page->tex_handle_list();
-      const set<TextureHandle> &new_tex_list = new_page->tex_handle_list();
+  void LoadUnloadTexture(int old_index, int new_index) {
+    Book &book = Book::GetInstance();
+    //BookScene *old_page = book.GetScene(old_index);
+    BookScene *new_page = book.GetScene(new_index);
 
-      set<TextureHandle>::const_iterator it;
-      set<TextureHandle>::const_iterator endit;
+    //const set<TextureHandle> &old_tex_list = old_page->tex_handle_list();
+    const set<TextureHandle> &new_tex_list = new_page->tex_handle_list();
 
-      // new에는 없는데 old에는 있는텍스쳐는 unload
-      it = old_tex_list.begin();
-      endit = old_tex_list.end();
-      for ( ; it != endit ; it++) {
-        const TextureHandle &handle = *it;
-        set<TextureHandle>::const_iterator found = new_tex_list.find(handle);
-        if (found == new_tex_list.end()) {
-          // unload한다는것은 마저 로딩할 필요가 없다는것.
-          TextureManager::GetInstance().CancelAsyncLoad(handle);
-
-          Texture *tex = TextureManager::GetInstance().GetTexture(handle);
-          tex->Cleanup();
-          tex->SetAsLoading();
-        }
+    //모든 텍스쳐를 내리라고 요청
+    //load요청이 있는것은 set에서 제거
+    set<TextureHandle> unload_set;
+    for(int i = 0 ; i < book.SceneCount() ; i++) {
+      BookScene *scene = book.GetScene(i);
+      const set<TextureHandle> &tex_list = scene->tex_handle_list();
+      BOOST_FOREACH(const TextureHandle &handle, tex_list) {
+        unload_set.insert(handle);
       }
+    }
 
-      // new에는 있는데 old없는 텍스쳐 load
-      it = new_tex_list.begin();
-      endit = new_tex_list.end();
-      for ( ; it != endit ; it++) {
-        const TextureHandle &handle = *it;
-        set<TextureHandle>::const_iterator found = find(old_tex_list.begin(),
-          old_tex_list.end(), handle);
-        if (found == old_tex_list.end()) {
-          TextureManager::GetInstance().AsyncLoad(handle);
-        }
-      }
+    set<TextureHandle>::const_iterator it;
+    set<TextureHandle>::const_iterator endit;
+  
+    // new에 존재하는 텍스쳐는 unload목록에서 제거
+    it = new_tex_list.begin();
+    endit = new_tex_list.end();
+    for ( ; it != endit ; it++) {
+      const TextureHandle &handle = *it;
+      unload_set.erase(handle);
+      TextureManager::GetInstance().AsyncLoad(handle);
+    }
+
+    //unload할거 unload
+    it = unload_set.begin();
+    endit = unload_set.end();
+    for ( ; it != endit ; it++) {
+      const TextureHandle &handle = *it;
+      // unload한다는것은 마저 로딩할 필요가 없다는것.
+      TextureManager::GetInstance().CancelAsyncLoad(handle);
+
+      Texture *tex = TextureManager::GetInstance().GetTexture(handle);
+      tex->Cleanup();
+      tex->SetAsLoading();
+    }
   }
 };
 
