@@ -82,7 +82,9 @@
     <ClCompile Include="book_paper_builder.cc" />
     <ClCompile Include="book_scene.cc" />
     <ClCompile Include="camera.cc" />
+    <ClCompile Include="game_scene.cc" />
     <ClCompile Include="glassless3d.cc" />
+    <ClCompile Include="intro_scene.cc" />
     <ClCompile Include="main.cc" />
     <ClCompile Include="yukino_stdafx.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -95,7 +97,9 @@
     <ClInclude Include="book_paper_builder.h" />
     <ClInclude Include="book_scene.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="game_scene.h" />
     <ClInclude Include="glassless3d.h" />
+    <ClInclude Include="intro_scene.h" />
     <ClInclude Include="yukino_stdafx.h" />
   </ItemGroup>
   <ItemGroup>

@@ -18,34 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_UI_CONTAINER_H_
-#define SORA_UI_CONTAINER_H_
-#include "ui_component.h"
+#ifndef SORA_SCENE_MANAGER_H_
+#define SORA_SCENE_MANAGER_H_
+
+#include "template_library.h"
 
 namespace sora {;
-class Button;
-class UIDrawer;
-class UIContainer : public UIComponent {
+
+class Scene;
+
+class SceneManager : public Singleton<SceneManager> {
 public:
-	typedef std::vector<Button*> ButtonListType;
+  SceneManager();
+  
+  Scene *Top();
+  void *Push(Scene *scene);
 
-public:
-	UIContainer();
-	~UIContainer();
+  //최상위씬을 얻고 그것을 스택에서 빼낸다
+  Scene *Pop();
 
-	virtual void Add(UIComponent *comp);
-  virtual int ChildCount() const { return comp_list_.size(); }
-  virtual UIComponent *GetChild(int index);
+  //최상위 씬을 파기+꺼내기
+  void PopAndDestroy();
 
-  virtual void Draw(UIDrawer *drawer);
-	void GetButtonList(ButtonListType &out);
+  bool IsEmpty() const;
 
 private:
-	void GetVisibleButtonList(ButtonListType &out);
-
-	std::vector<UIComponent *> comp_list_;
+  ~SceneManager();
+  
+  typedef std::vector<Scene*> SceneStackType;
+  SceneStackType scene_stack_;
 };
+}
 
-}	// namespace
-
-#endif  // SORA_UI_CONTAINER_H_
+#endif  // SORA_SCENE_MANAGER_H_

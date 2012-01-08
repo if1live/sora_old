@@ -18,34 +18,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_UI_CONTAINER_H_
-#define SORA_UI_CONTAINER_H_
-#include "ui_component.h"
+#include "sora_stdafx.h"
+#include "scene_manager.h"
 
 namespace sora {;
-class Button;
-class UIDrawer;
-class UIContainer : public UIComponent {
-public:
-	typedef std::vector<Button*> ButtonListType;
+SceneManager::SceneManager() {
+}
+SceneManager::~SceneManager() {
+  while (!scene_stack_.empty()) {
+    Scene *scene = scene_stack_.back();
+    delete(scene);
+    scene_stack_.pop_back();
+  }
+}
+Scene *SceneManager::Top() {
+  if (scene_stack_.empty()) {
+    return NULL;
+  } else {
+    return scene_stack_.back();
+  }
+}
+void *SceneManager::Push(Scene *scene) {
+  SR_ASSERT(scene != NULL);
+  scene_stack_.push_back(scene);
+}
 
-public:
-	UIContainer();
-	~UIContainer();
+//최상위씬을 얻고 그것을 스택에서 빼낸다
+Scene *SceneManager::Pop() {
+  if (scene_stack_.empty()) {
+    return NULL;
+  } else {
+    Scene *scene = scene_stack_.back();
+    scene_stack_.pop_back();
+  }
+}
 
-	virtual void Add(UIComponent *comp);
-  virtual int ChildCount() const { return comp_list_.size(); }
-  virtual UIComponent *GetChild(int index);
+//최상위 씬을 파기+꺼내기
+void SceneManager::PopAndDestroy() {
+  if (!scene_stack_.empty()) {
+    Scene *scene = scene_stack_.back();
+    delete(scene);
+    scene_stack_.pop_back();
+  }
+}
 
-  virtual void Draw(UIDrawer *drawer);
-	void GetButtonList(ButtonListType &out);
-
-private:
-	void GetVisibleButtonList(ButtonListType &out);
-
-	std::vector<UIComponent *> comp_list_;
-};
-
-}	// namespace
-
-#endif  // SORA_UI_CONTAINER_H_
+bool SceneManager::IsEmpty() const {
+  return scene_stack_.empty();
+}
+}

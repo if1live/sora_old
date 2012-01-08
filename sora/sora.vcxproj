@@ -93,6 +93,8 @@
     <ClInclude Include="low_level_c_file.h" />
     <ClInclude Include="gl_helper.h" />
     <ClInclude Include="rect.h" />
+    <ClInclude Include="scene.h" />
+    <ClInclude Include="scene_manager.h" />
     <ClInclude Include="selector.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="shared_ptr_inc.h" />
@@ -133,6 +135,7 @@
     <ClCompile Include="mem.cc" />
     <ClCompile Include="memory_file.cc" />
     <ClCompile Include="gl_helper.cc" />
+    <ClCompile Include="scene_manager.cc" />
     <ClCompile Include="shader.cc" />
     <ClCompile Include="sora_stdafx.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -18,34 +18,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_UI_CONTAINER_H_
-#define SORA_UI_CONTAINER_H_
-#include "ui_component.h"
+#ifndef SORA_SCENE_H_
+#define SORA_SCENE_H_
 
 namespace sora {;
-class Button;
-class UIDrawer;
-class UIContainer : public UIComponent {
+class Scene {
 public:
-	typedef std::vector<Button*> ButtonListType;
-
+  Scene() {}
+  virtual ~Scene() {}
 public:
-	UIContainer();
-	~UIContainer();
-
-	virtual void Add(UIComponent *comp);
-  virtual int ChildCount() const { return comp_list_.size(); }
-  virtual UIComponent *GetChild(int index);
-
-  virtual void Draw(UIDrawer *drawer);
-	void GetButtonList(ButtonListType &out);
-
-private:
-	void GetVisibleButtonList(ButtonListType &out);
-
-	std::vector<UIComponent *> comp_list_;
+  virtual void Draw() = 0;
+  virtual void Update(int dt_ms) = 0;
 };
+}
 
-}	// namespace
-
-#endif  // SORA_UI_CONTAINER_H_
+#endif  // SORA_SCENE_H_

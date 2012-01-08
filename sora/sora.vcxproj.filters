@@ -140,6 +140,12 @@
     <ClInclude Include="xml_node.h">
       <Filter>io</Filter>
     </ClInclude>
+    <ClInclude Include="scene.h">
+      <Filter>scene</Filter>
+    </ClInclude>
+    <ClInclude Include="scene_manager.h">
+      <Filter>scene</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cc">
@@ -236,6 +242,9 @@
     <ClCompile Include="xml_node.cc">
       <Filter>io</Filter>
     </ClCompile>
+    <ClCompile Include="scene_manager.cc">
+      <Filter>scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
@@ -252,6 +261,9 @@
     </Filter>
     <Filter Include="io">
       <UniqueIdentifier>{cbc4d505-b088-4045-950b-e9e06365fce6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="scene">
+      <UniqueIdentifier>{3eeca277-ab0e-4fdb-be9f-b2d196f75dfa}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
