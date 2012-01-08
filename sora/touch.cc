@@ -21,7 +21,7 @@
 #include "sora_stdafx.h"
 #include "sora/touch.h"
 
-#define USE_TOUCH_LOG 1
+#define USE_TOUCH_LOG 0
 #if USE_TOUCH_LOG
 #define TOUCH_LOG(...)  LOGI(__VA_ARGS__)
 #else
@@ -30,61 +30,136 @@
 
 namespace sora {;
 TouchDevice::TouchDevice()
-  : prev_pos_count(0),
-  curr_pos_count(0) {
-  memset(prev_pos_list, 0, sizeof(int) * 5 * 2);
-  memset(curr_pos_list, 0, sizeof(int) * 5 * 2);
+: prev_pos_count(0),
+curr_pos_count(0) {
+  memset(prev_evt_list_, 0, sizeof(prev_evt_list_));
+  memset(curr_evt_list_, 0, sizeof(curr_evt_list_));
 }
+
 TouchDevice::~TouchDevice() {
 }
+
 void TouchDevice::AddBeganEvent(const TouchEvent &evt) {
   TOUCH_LOG("Began : %d %d", evt.curr_x, evt.curr_y);
   began_evt_list_.push_back(evt);
 }
+
 void TouchDevice::AddMovedEvent(const TouchEvent &evt) {
   TOUCH_LOG("Moved : %d %d", evt.curr_x, evt.curr_y);
   moved_evt_list_.push_back(evt);
 }
+
 void TouchDevice::AddEndedEvent(const TouchEvent &evt) {
   TOUCH_LOG("Ended : %d %d", evt.curr_x, evt.curr_y);
-  ended_evt_list_.push_back(evt);
+  ended_evt_list_.push_back(evt); 
 }
+
 void TouchDevice::AddCancelledEvent(const TouchEvent &evt) {
   TOUCH_LOG("Cancel: %d %d", evt.curr_x, evt.curr_y);
-  cancelled_evt_list_.push_back(evt);
+  cancelled_evt_list_.push_back(evt); 
 }
+
 void TouchDevice::Update() {
-  memset(curr_pos_list, 0, sizeof(int) * 5 * 2);
+  memset(curr_evt_list_, 0, sizeof(curr_evt_list_));
   int index = 0;
   SR_ASSERT(began_evt_list_.size() + moved_evt_list_.size() <= 5);
   BOOST_FOREACH(const TouchEvent &evt, began_evt_list_) {
-    curr_pos_list[index][0] = evt.curr_x;
-    curr_pos_list[index][1] = evt.curr_y;
+    curr_evt_list_[index] = evt;
     index++;
   }
   BOOST_FOREACH(const TouchEvent &evt, moved_evt_list_) {
-    curr_pos_list[index][0] = evt.curr_x;
-    curr_pos_list[index][1] = evt.curr_y;
+    curr_evt_list_[index] = evt;
     index++;
+  }
+  BOOST_FOREACH(const TouchEvent &evt, ended_evt_list_) {
+    curr_evt_list_[index] = evt;
+    index++;
+  }
+  BOOST_FOREACH(const TouchEvent &evt, cancelled_evt_list_) {
+    curr_evt_list_[index] = evt;
+    index++;
+  }
+
+  //occur event
+  if (!cancelled_evt_list_.empty()) {
+    BOOST_FOREACH(TouchListener *l, listener_list_) {
+      l->TouchCancelled(cancelled_evt_list_);
+    }
+  }
+  if(!ended_evt_list_.empty()) {
+    BOOST_FOREACH(TouchListener *l, listener_list_) {
+      l->TouchEnded(ended_evt_list_);
+    }
+  }
+  if(!moved_evt_list_.empty()) {
+    BOOST_FOREACH(TouchListener *l, listener_list_) {
+      l->TouchMoved(moved_evt_list_);
+    }
+  }
+  if(!began_evt_list_.empty()) {
+    BOOST_FOREACH(TouchListener *l, listener_list_) {
+      l->TouchBegan(began_evt_list_);
+    }
   }
 
   cancelled_evt_list_.clear();
   moved_evt_list_.clear();
   began_evt_list_.clear();
+  ended_evt_list_.clear();
 
   curr_pos_count = index;
   prev_pos_count = curr_pos_count;
-  memcpy(prev_pos_list, curr_pos_list, sizeof(int) * 5 * 2);
+
+  memcpy(prev_evt_list_, curr_evt_list_, sizeof(curr_evt_list_));
 }
 void TouchDevice::PrintLog() {
   if (curr_pos_count != 0) {
     std::ostringstream oss;
     oss << "CurrPos:";
-    for(int i = 0 ; i < curr_pos_count ; i++) {
-      oss << "(curr_pos_list[i][0]" << "," << curr_pos_list[i][1] << ") ";
+    for (int i = 0 ; i < curr_pos_count ; i++) {
+      const TouchEvent &evt = curr_evt_list_[i];
+      switch(evt.evt_type) {
+      case kTouchBegan:
+        oss << "b";
+        break;
+      case kTouchMoved:
+        oss << "m";
+        break;
+      case kTouchEnded:
+        oss << "e";
+        break;
+      case kTouchCancelled:
+        oss << "c";
+        break;
+      }
+      oss << "(" << evt.curr_x << "," << evt.curr_y << ") ";
     }
     std::string msg = oss.str();
     TOUCH_LOG("%s", msg.c_str());
+  }
+}
+
+void TouchDevice::ClearEventList() {
+  began_evt_list_.clear();
+  moved_evt_list_.clear();
+  ended_evt_list_.clear();
+  cancelled_evt_list_.clear();
+}
+
+void TouchDevice::AddListener(TouchListener *listener) {
+  using namespace std;
+  vector<TouchListener*>::iterator found = find(listener_list_.begin(),
+    listener_list_.end(), listener);
+  if (found == listener_list_.end()) {
+    listener_list_.push_back(listener);
+  }
+}
+void TouchDevice::RemoveListener(TouchListener *listener) {
+  using namespace std;
+  vector<TouchListener*>::iterator found = find(listener_list_.begin(),
+    listener_list_.end(), listener);
+  if (found != listener_list_.end()) {
+    listener_list_.erase(found);
   }
 }
 

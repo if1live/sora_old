@@ -23,6 +23,8 @@
 
 #include "color.h"
 #include "input_enum.h"
+#include "touch.h"
+#include "rect.h"
 
 namespace sora {;
 class UIContainer;
@@ -50,7 +52,11 @@ typedef enum {
 
 ///ui는 멀티터치를 지원하지 않는다(굳이 필요하지도 않으니까)
 ///모든 ui component는 크기+위치를 표현하는 rect를 소유한다
-class UIComponent : boost::noncopyable {
+class UIComponent : boost::noncopyable, public TouchListener {
+public:
+  template<typename T>
+	static bool IsContain(const Rect<T> &area, const Vector2<T> &touch);
+
 public:
 	UIComponent(UIComponentType comp_type);
 	virtual ~UIComponent();
@@ -66,6 +72,13 @@ public:
   // visiter pattern based
   virtual void Draw(UIDrawer *drawer) = 0;
 
+  // for touch
+public:
+  virtual void TouchBegan(const TouchDevice::EventListType &evt_list) {}
+  virtual void TouchMoved(const TouchDevice::EventListType &evt_list) {}
+  virtual void TouchEnded(const TouchDevice::EventListType &evt_list) {}
+  virtual void TouchCancelled(const TouchDevice::EventListType &evt_list) {}
+
 public:
   //state
   UIComponentType ui_component_type() const { return ui_component_type_; }
@@ -74,6 +87,9 @@ public:
   const vec2 &position() const { return position_; }
   void set_position(const vec2 &pos) { position_ = pos; }
   void set_position(float ui_x, float ui_y) { position_.x = ui_x; position_.y = ui_y; }
+
+  // 절대좌표얻기. 부모를 따라가면서 부모의 위치까지 적용된 좌표
+  vec2 GetAbsolutePosition();
   
   // enable 상태에 의해서 로직이 아예 진입 안할수도 있다
   bool is_enable() const { return is_enable_; }
@@ -84,6 +100,8 @@ public:
   const Color4ub &color() const { return color_; }
   void set_color(const Color4ub &c) { color_ = c; }
 
+  UIComponent *parent() { return parent_; }
+  void set_parent(UIComponent *parent) { parent_ = parent; }
 private:
 	UIComponentType ui_component_type_;
   bool visible_;
@@ -91,8 +109,27 @@ private:
 	//ui 객체를 그릴때의 왼쪽위의 좌표
 	//view와 관계있고 터치와는 무관함
 	sora::vec2 position_;
-
   Color4ub color_;
+
+  UIComponent *parent_;
 };
+
+template<typename T>
+bool UIComponent::IsContain(const sora::Rect<T> &area, const sora::Vector2<T> &touch) {
+	//좌표계가 왼쪽위가 0,0인것을 고려해서 잘 계산
+	T x = area.origin().x;
+	T y = area.origin().y;
+	T w = area.width();
+	T h = area.height();
+		
+	//x방향은 좌표문제없으니까 일단 확인
+	if(x > touch.x || x+w < touch.x) {
+		return false;
+	}
+	if(y > touch.y || y+h < touch.y) {
+		return false;
+	}
+	return true;
+}
 }
 #endif  // SORA_UI_COMPONENT_H_

@@ -158,7 +158,7 @@ void UIDrawer::DrawTouchArea(UIContainer *container) {
 
     // 순수하게 색만 쓰고싶으면 텍스쳐를 교체해야한다
     // 왜냐하면 즉시모드 에뮬에는 tex끄기가 아직 없어서...
-		if(btn->visible()) {
+    if(btn->button_state() == kButtonReleased) {
 			srglBindTexture(GL_TEXTURE_2D, Texture::Red().handle);
 		} else {
       srglBindTexture(GL_TEXTURE_2D, Texture::Green().handle);

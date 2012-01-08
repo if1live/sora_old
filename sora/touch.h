@@ -26,6 +26,10 @@
 
 namespace sora {;
 
+struct TouchEvent;
+class TouchDevice;
+class TouchListener;
+
 struct TouchEvent {
   int prev_x;
   int prev_y;
@@ -36,8 +40,8 @@ struct TouchEvent {
 
 class TouchDevice : public sora::Singleton<TouchDevice> {
 public:
+  typedef std::vector<TouchEvent> EventListType;
   TouchDevice();
-  ~TouchDevice();
 
   void AddBeganEvent(const TouchEvent &evt);
   void AddMovedEvent(const TouchEvent &evt);
@@ -47,19 +51,33 @@ public:
   void Update();
   void PrintLog();
 
-  // 멀티터치가 5개 이상 인식될 일은 없고
-  // 마찬가지로 
-  int curr_pos_list[5][2];
-  int prev_pos_list[5][2];
+  void ClearEventList();
+  void AddListener(TouchListener *listener);
+  void RemoveListener(TouchListener *listener);
+
+private:
+  ~TouchDevice();
+
+  EventListType began_evt_list_;
+  EventListType moved_evt_list_;
+  EventListType ended_evt_list_;
+  EventListType cancelled_evt_list_;
+
+  // 멀티터치가 5개 이상 인식될 일은 없으니까 고정
+  TouchEvent prev_evt_list_[5];
+  TouchEvent curr_evt_list_[5];
   int curr_pos_count;
   int prev_pos_count;
 
-private:
-  typedef std::vector<TouchEvent> TouchEventListType;
-  TouchEventListType began_evt_list_;
-  TouchEventListType moved_evt_list_;
-  TouchEventListType ended_evt_list_;
-  TouchEventListType cancelled_evt_list_;
+  std::vector<TouchListener*> listener_list_;
+};
+
+class TouchListener {
+public:
+  virtual void TouchBegan(const TouchDevice::EventListType &evt_list) {}
+  virtual void TouchMoved(const TouchDevice::EventListType &evt_list) {}
+  virtual void TouchEnded(const TouchDevice::EventListType &evt_list) {}
+  virtual void TouchCancelled(const TouchDevice::EventListType &evt_list) {}
 };
 
 #if SR_WIN

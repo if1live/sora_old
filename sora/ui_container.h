@@ -21,19 +21,12 @@
 #ifndef SORA_UI_CONTAINER_H_
 #define SORA_UI_CONTAINER_H_
 #include "ui_component.h"
-#include "rect.h"
 
 namespace sora {;
 class Button;
 class UIDrawer;
-
-template<typename T>  class Rect;
-template<typename T>  class Vector2;
-
 class UIContainer : public UIComponent {
 public:
-	template<typename T>
-	static bool IsContain(const sora::Rect<T> &area, const sora::Vector2<T> &touch);
 	typedef std::vector<Button*> ButtonListType;
 
 public:
@@ -59,23 +52,4 @@ private:
 
 }	// namespace
 
-namespace sora {;
-template<typename T>
-bool UIContainer::IsContain(const sora::Rect<T> &area, const sora::Vector2<T> &touch) {
-	//좌표계가 왼쪽위가 0,0인것을 고려해서 잘 계산
-	T x = area.origin().x;
-	T y = area.origin().y;
-	T w = area.width();
-	T h = area.height();
-		
-	//x방향은 좌표문제없으니까 일단 확인
-	if(x > touch.x || x+w < touch.x) {
-		return false;
-	}
-	if(y > touch.y || y+h < touch.y) {
-		return false;
-	}
-	return true;
-}
-}
 #endif  // SORA_UI_CONTAINER_H_

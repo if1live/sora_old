@@ -42,11 +42,6 @@ public:
 
   ButtonState button_state() const { return button_state_; }
 private:
-	//friend class를 사용함으로써 외부노출을 완전히 차단(제한된 클래스외에는
-	//버튼의 상태를 바꿀수없어야한다)
-	friend class Container;
-  void set_button_state(ButtonState state) { button_state_ = state; }
-
 	ButtonState button_state_;
 
   //터치 영역은 수동으로 잡아주면 그것을 쓰고, 없으면 이미지크기르 그냥 쓴다
@@ -81,6 +76,13 @@ public:
 private:
   UICallbackFunctor pressed_functor_;
   UICallbackFunctor released_functor_;
+
+  // 터치 이벤트 처리하기
+public:
+  virtual void TouchBegan(const TouchDevice::EventListType &evt_list);
+  virtual void TouchMoved(const TouchDevice::EventListType &evt_list);
+  virtual void TouchEnded(const TouchDevice::EventListType &evt_list);
+  virtual void TouchCancelled(const TouchDevice::EventListType &evt_list);
 };
 }
 

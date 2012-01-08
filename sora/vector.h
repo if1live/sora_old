@@ -83,6 +83,8 @@ struct Vector2 {
   Vector2(T x, T y) : x(x), y(y) {}
   Vector2() : x(0), y(0) {}
   Vector2(const T(&data)[2]) : x(data[0]), y(data[1]) {}
+  template<typename T2>
+  Vector2(const Vector2<T2> &o) : x((T)o.value[0]), y((T)o.value[1]) {}
 
   SR_VECTOR_OPERATOR_OVERLOADING(Vector2);
 };

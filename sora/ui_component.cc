@@ -27,8 +27,16 @@ UIComponent::UIComponent(UIComponentType comp_type)
 	: ui_component_type_(comp_type),
 	visible_(true),
 	position_(0, 0),
-  is_enable_(true) {
+  is_enable_(true),
+  parent_(NULL) {
 }
 UIComponent::~UIComponent() {
+}
+vec2 UIComponent::GetAbsolutePosition() {
+  if (parent() == NULL) {
+    return position();
+  } else {
+    return parent()->position() + position();
+  }
 }
 }

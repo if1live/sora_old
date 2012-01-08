@@ -42,6 +42,7 @@ void UIContainer::Draw(UIDrawer *drawer) {
 }
 void UIContainer::Add(UIComponent *comp) {
 	comp_list_.push_back(comp);
+  comp->set_parent(this);
 }
 UIComponent *UIContainer::GetChild(int index) {
   if (index >= 0 && index < ChildCount()) {

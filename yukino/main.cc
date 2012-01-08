@@ -113,7 +113,11 @@ int main(int argc, char *argv) {
 }
 
 void Update(int ms) {
-  //sora::glfwMouseUpdate(win_width, win_height); ???
+#if SR_WIN
+  // 윈도우의 경우, 마우스로 터치 흉내내기
+  sora::glfwMouseUpdate(win_width, win_height);
+  //sora::TouchDevice::GetInstance().PrintLog();
+#endif
 
   yukino::Glassless3d::GetInstance().Update(ms * 0.001f);
 }
