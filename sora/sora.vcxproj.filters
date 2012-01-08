@@ -47,16 +47,7 @@
     <ClInclude Include="gl_inc.h">
       <Filter>renderer</Filter>
     </ClInclude>
-    <ClInclude Include="memory_file.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="common_string.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="filesystem.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="low_level_c_file.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="mem.h">
@@ -76,12 +67,6 @@
     </ClInclude>
     <ClInclude Include="gl_window.h">
       <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="xml_reader.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="xml_node.h">
-      <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="texture_atlas.h">
       <Filter>renderer</Filter>
@@ -119,9 +104,6 @@
     <ClInclude Include="ui_container.h">
       <Filter>ui</Filter>
     </ClInclude>
-    <ClInclude Include="rect.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="ui_drawer.h">
       <Filter>ui</Filter>
     </ClInclude>
@@ -140,6 +122,24 @@
     <ClInclude Include="input_enum.h">
       <Filter>ui</Filter>
     </ClInclude>
+    <ClInclude Include="rect.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="filesystem.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="low_level_c_file.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="memory_file.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="xml_reader.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="xml_node.h">
+      <Filter>io</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cc">
@@ -155,16 +155,7 @@
     <ClCompile Include="common_string.cc">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="filesystem.cc">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="low_level_c_file.cc">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="mem.cc">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="memory_file.cc">
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="gl_helper.cc">
@@ -187,12 +178,6 @@
     </ClCompile>
     <ClCompile Include="immediate_mode_emulator.cc">
       <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="xml_node.cc">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="xml_reader.cc">
-      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="texture_atlas.cc">
       <Filter>renderer</Filter>
@@ -236,6 +221,21 @@
     <ClCompile Include="keyboard_glfw.cc">
       <Filter>ui</Filter>
     </ClCompile>
+    <ClCompile Include="filesystem.cc">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="low_level_c_file.cc">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="memory_file.cc">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="xml_reader.cc">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="xml_node.cc">
+      <Filter>io</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
@@ -249,6 +249,9 @@
     </Filter>
     <Filter Include="ui">
       <UniqueIdentifier>{0027060c-cbbf-4861-9f92-12afbf48047f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="io">
+      <UniqueIdentifier>{cbc4d505-b088-4045-950b-e9e06365fce6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

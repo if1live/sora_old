@@ -53,11 +53,12 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
   SR_ASSERT(res.size() > 0);
 
   //텍스쳐 불러오기. 생성된 텍스쳐 목록에 존재하는지 확인하고 없으면 생성
-  Texture *tex = TextureManager::GetInstance().GetTexture(res);
-  if(tex == NULL) {
+  Texture *tex = NULL;
+  TextureHandle handle = TextureManager::GetInstance().FileNameToHandle(res);
+  if(handle.IsNull()) {
     //새로운텍스쳐를 만들기. 모든 처리가 완료되면 TextureManager내부에 등록된다
-    TextureHandle handle;
     tex = TextureManager::GetInstance().CreateTexture(handle);
+    TextureManager::GetInstance().RegisterFilename(res, handle);
     //printf("Texture filename : %s\n", res.c_str());
     tex->set_filename(res);
 
@@ -82,15 +83,7 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
     tex_handle_list_.push_back(handle);
   }
 
-  TextureHandle tex_handle;
-  BOOST_FOREACH(TextureHandle &handle, tex_handle_list_) {
-    Texture *created_tex = TextureManager::GetInstance().GetTexture(handle);
-    if (created_tex == tex) {
-      tex_handle = handle;
-      break;
-    }
-  }
-  SR_ASSERT(tex_handle.IsNull() == false);
+  SR_ASSERT(handle.IsNull() == false);
 
   //텍스쳐의 정보를 사용해서 x, y, w, h를 구성하기
   float x = 0;
@@ -125,7 +118,7 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
   subimg.y = y;
   subimg.w = w;
   subimg.h = h;
-  subimg.tex_handle = tex_handle;
+  subimg.tex_handle = handle;
   spriteDict_[name] = subimg;
 }
 void BookScene::parseSpriteListNode(sora::XmlNode *node) {

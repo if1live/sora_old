@@ -55,11 +55,6 @@ public:
   TextureLoadResponse PopResponse();
   void ProcessRequest();
   void ProcessResponse();
-  
-  // filename based
-  boolean IsExist(const std::string &name) const;
-  Texture *GetTexture(const std::string &name);
-  boolean RemoveTexture(const std::string &name);
 
   // handle based
   boolean IsExist(TextureHandle &handle);
@@ -71,6 +66,7 @@ public:
   // 게임 내부의 구현은 핸들에 의존하는데 외부에서 읽은 파일은
   // 파일명에 의존하니 중간 변환을 할수있도록한다
   TextureHandle FileNameToHandle(const std::string &name) const;
+  bool RegisterFilename(const std::string &name, const TextureHandle &handle);
 
   TextureManager();
 protected:
@@ -80,6 +76,9 @@ protected:
   RequestStackType    request_stack_;
   ResponseStackType   response_stack_;
 
+private:
+  typedef std::tr1::unordered_map<std::string, TextureHandle> NameHandleDictType;
+  NameHandleDictType name_handle_dict_;
 };
 }
 

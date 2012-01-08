@@ -35,18 +35,6 @@ template<
 >
 class DynamicHandleManager;
 
-
-template<typename DataType, typename HandleType>
-struct OnNullHandlePolicy_Get {
-  static DataType *OnNullHandle(HandleType &handle,
-    DynamicHandleManager<DataType, HandleType> *mgr);
-};
-template<typename DataType, typename HandleType>
-struct OnNullHandlePolicy_CreateOrGet {
-  static DataType *OnNullHandle(HandleType &handle,
-    DynamicHandleManager<DataType, HandleType> *mgr);
-};
-
 template<typename DataType>
 struct DataTuple {
   u16 magic;
@@ -58,36 +46,31 @@ template<
   typename HandleType
 >
 class DynamicHandleManager : public Singleton <DynamicHandleManager<DataType, HandleType> > {
-private:
-  friend struct OnNullHandlePolicy_CreateOrGet<DataType, HandleType>;
-  friend struct OnNullHandlePolicy_Get<DataType, HandleType>;
 public:
   // 동적할당된 객체와 그것의 magic는 같이 붙어서 움직인다
   typedef DataTuple<DataType*> DataPairType;
   typedef std::vector<DataPairType> DataListType;
+  typedef std::vector<int> FreeSlotListType;
 private:
   DataListType data_list_;    //실제 자원을 넣는것
+  FreeSlotListType free_list_;
 public:
   DynamicHandleManager() { }
   ~DynamicHandleManager();
 
-  // 존재하는 DataType에 대해서 뭔가 특별한 작업읋 해야될때는 iterator로 돌려야할때가있다
-  typename DataListType::iterator Begin() { return data_list_.begin(); }
-  typename DataListType::iterator End() { return data_list_.end(); }
-  typename DataListType::const_iterator Begin() const { return data_list_.begin(); }
-  typename DataListType::const_iterator End() const { return data_list_.end(); }
-
   // 핸들에 해당되는것이 존재하지 않으면 NULL
-  DataType *Get(HandleType &handle);
+  DataType *Get(const HandleType &handle);
 
   // 해당되는 핸들이 존재하지 않으면 새로 만들고, 있으면 그거 반환
   // 핸들의 타입을 const로 하지 않는 이유는
   // 내부의 자료구조가 변경되서 handle의 인덱스가 invalid가 된경우, 그것을 다시
   // 올바르게 바꿔주는 기능이 있기떄문
-  DataType *CreateOrGet(HandleType &handle);
+  DataType *Acquire(HandleType &handle);
+  DataType *Create(HandleType &handle);
   bool Remove(HandleType &handle);
 
-  int GetHandleCount() const { return data_list_.size(); }
+  int GetUsedHandleCount() const { return data_list_.size() - free_list_.size(); }
+  int GetUnusedHandleCount() const { return free_list_.size(); }
 
 private:
   template<typename OnNullPolicy>
@@ -106,23 +89,27 @@ class StaticHandleManager {
 namespace sora {;
 
 template<typename DataType, typename HandleType>
-DataType *OnNullHandlePolicy_Get<DataType, HandleType>::OnNullHandle(HandleType &handle,
-  DynamicHandleManager<DataType, HandleType> *mgr) {
-    return NULL;
-}
+DataType *DynamicHandleManager<DataType, HandleType>::Create(HandleType &handle) {
+  SR_ASSERT(handle.IsNull() == true);
+  if (free_list_.empty()) {
+    DataType *data = new DataType();
+    int index = data_list_.size();
+    handle.Init(index);
+    u16 magic = handle.res_magic();
+    DataPairType data_pair = { magic, data };
+    data_list_.push_back(data_pair);
+    return data;
 
-template<typename DataType, typename HandleType>
-DataType *OnNullHandlePolicy_CreateOrGet<DataType, HandleType>::OnNullHandle(HandleType &handle,
-  DynamicHandleManager<DataType, HandleType> *mgr) {
-  typedef DynamicHandleManager<DataType, HandleType> MgrType;
-  // 목록에 아무것도 없으면 검색이 불가능하다. 그냥 새로 만들어서
-  // 그것의 핸들로 교체후 반환한다
-  DataType *data = new DataType();
-  handle.Init(mgr->data_list_.size());
-  u16 magic = handle.res_magic();
-  MgrType::DataPairType data_pair = { magic, data };
-  mgr->data_list_.push_back(data_pair);
-  return data;
+  } else {
+    int index = free_list_.back();
+    free_list_.pop_back();
+    DataType *data = new DataType();
+    handle.Init(index);
+    DataPairType &data_pair = data_list_[index];
+    data_pair.magic = handle.res_magic();
+    data_pair.data = data;
+    return data;
+  }
 }
 
 
@@ -139,58 +126,10 @@ DynamicHandleManager<DataType, HandleType>::~DynamicHandleManager() {
 
 // 핸들에 해당되는것이 존재하지 않으면 NULL
 template<typename DataType, typename HandleType>
-DataType *DynamicHandleManager<DataType, HandleType>::Get(HandleType &handle) {
-  return GetWithOnNullHandlePolicy<OnNullHandlePolicy_Get<DataType, HandleType> >(handle);
-}
-
-// 해당되는 핸들이 존재하지 않으면 새로 만들고, 있으면 그거 반환
-// 핸들의 타입을 const로 하지 않는 이유는
-// 내부의 자료구조가 변경되서 handle의 인덱스가 invalid가 된경우, 그것을 다시
-// 올바르게 바꿔주는 기능이 있기떄문
-template<typename DataType, typename HandleType>
-DataType *DynamicHandleManager<DataType, HandleType>::CreateOrGet(HandleType &handle) {
-  return GetWithOnNullHandlePolicy<OnNullHandlePolicy_CreateOrGet<DataType, HandleType> >(handle);
-}
-
-template<typename DataType, typename HandleType>
-bool DynamicHandleManager<DataType, HandleType>::Remove(HandleType &handle) {
-  // 핸들을 써서 바로 접근 가능한 상황의 경우. 즉, invalid아닌 경우
-  // 해당 인덱스로 접근이 가능하고
-  if (handle.res_index() < data_list_.size()) {
-    // 올바른 magic이면 객체를 삭제
-    const DataPairType &candidate_pair = data_list_[handle.res_index()];
-    if (candidate_pair.magic == handle.res_magic()) {
-      DataListType::iterator it = data_list_.begin();
-      std::advance(it, handle.res_index());
-      DataType *data = candidate_pair.data;
-      delete(data);
-      data_list_.erase(it);
-      return true;
-    }
-  }
-
-  // 이전에 밀린적이 있다든가 하는 경우는 리스트를 전체에 대해서 같은 magic를 찾아봐야한다
-  DataListType::iterator it = data_list_.begin();
-  DataListType::iterator endit = data_list_.end();
-  for ( ; it != endit ; it++) {
-    const DataPairType &candidate_pair = *it;
-    if (candidate_pair.magic == handle.res_magic()) {
-      DataType *data = candidate_pair.data;
-      delete(data);
-      data_list_.erase(it);
-      return true;
-    }
-  }
-
-  return false;
-}
-
-template<typename DataType, typename HandleType>
-template<typename OnNullPolicy>
-DataType *DynamicHandleManager<DataType, HandleType>::GetWithOnNullHandlePolicy(HandleType &handle) {
-  // 널 핸들이면 객체를 검색못하니까 만든다
+DataType *DynamicHandleManager<DataType, HandleType>::Get(const HandleType &handle) {
+  // 널 핸들이면 못 얻음
   if (handle.IsNull()) {
-    return OnNullPolicy::OnNullHandle(handle, this);
+    return NULL;
   }
 
   // 해당 인덱스로 접근이 가능하고
@@ -201,20 +140,57 @@ DataType *DynamicHandleManager<DataType, HandleType>::GetWithOnNullHandlePolicy(
       return candidate_pair.data;
     }
   }
+  //else..
+  return NULL;
+}
 
-  // 핸들이 invalid발생했을 가능성이 있다. 리소스 목록을 전부 뒤져본다
-  // 올바른게 있으면 그것을 반환하고 핸들도 올바르게 고친다
-  for (size_t i = 0 ; i < data_list_.size() ; i++) {
-    const DataPairType &candidate_pair = data_list_[i];
+// 해당되는 핸들이 존재하지 않으면 새로 만들고, 있으면 그거 반환
+// 핸들의 타입을 const로 하지 않는 이유는
+// 내부의 자료구조가 변경되서 handle의 인덱스가 invalid가 된경우, 그것을 다시
+// 올바르게 바꿔주는 기능이 있기떄문
+template<typename DataType, typename HandleType>
+DataType *DynamicHandleManager<DataType, HandleType>::Acquire(HandleType &handle) {
+  // 널 핸들이면 객체를 검색못하니까 만든다
+  if (handle.IsNull()) {
+    return Create(handle);
+  }
+
+  // 해당 인덱스로 접근이 가능하고
+  if (handle.res_index() < data_list_.size()) {
+    // handle 인덱스에 있는 객체가 magic이 동일하면 그 객체 맞을거다
+    const DataPairType &candidate_pair = data_list_[handle.res_index()];
     if (candidate_pair.magic == handle.res_magic()) {
-      handle.set_res_index(i);
       return candidate_pair.data;
     }
   }
-
-  //else...
+  //else..
   return NULL;
 }
+
+template<typename DataType, typename HandleType>
+bool DynamicHandleManager<DataType, HandleType>::Remove(HandleType &handle) {
+  // 핸들을 써서 바로 접근 가능한 상황의 경우. 즉, invalid아닌 경우
+  // 해당 인덱스로 접근이 가능하고
+  if (handle.res_index() < data_list_.size()) {
+    // 올바른 magic이면 객체를 삭제
+    DataPairType &candidate_pair = data_list_[handle.res_index()];
+    if (candidate_pair.magic == handle.res_magic()) {
+      // delete prev data + reset
+      DataType *data = candidate_pair.data;
+      delete(data);
+      candidate_pair.data = NULL;
+      candidate_pair.magic = 0;
+
+      int index = handle.res_index();
+      free_list_.push_back(index);
+
+      return true;
+    }
+  }
+
+  return false;
+}
+
 }
 
 #endif  // SORA_HANDLE_MANAGER_H_

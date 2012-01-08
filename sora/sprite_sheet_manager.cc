@@ -58,15 +58,17 @@ TextureAtlas SpriteSheetManager::Read(const char *content, const char *res_path)
   real_image_path += '/';
   real_image_path += image_path;
 
-  Texture *tex = TextureManager::GetInstance().GetTexture(real_image_path);
-  TextureHandle tex_handle;
-  if (tex == NULL) {
+  Texture *tex = NULL;
+  TextureHandle tex_handle = TextureManager::GetInstance().FileNameToHandle(real_image_path);
+  if (tex_handle.IsNull()) {
     tex = TextureManager::GetInstance().CreateTexture(tex_handle);
     //printf("Texture filename 2: %s\n", real_image_path.c_str());
     tex->set_filename(real_image_path);
+    TextureManager::GetInstance().RegisterFilename(real_image_path, tex_handle);
 
   } else {
     tex_handle = TextureManager::GetInstance().FileNameToHandle(real_image_path);
+    tex = TextureManager::GetInstance().GetTexture(tex_handle);
   }
   tex->tex_header.src_width = tex_width;
   tex->tex_header.src_height = tex_height;

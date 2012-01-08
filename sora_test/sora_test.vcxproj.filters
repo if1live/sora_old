@@ -12,9 +12,6 @@
     <ClCompile Include="common_string_test.cc">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="low_level_c_file_test.cc">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="vector_test.cc">
       <Filter>math</Filter>
     </ClCompile>
@@ -27,17 +24,8 @@
     <ClCompile Include="shader_test.cc">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="filesystem_test.cc">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="texture_test.cc">
       <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="xml_node_test.cc">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="xml_reader_test.cc">
-      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="locale_test.cc">
       <Filter>base</Filter>
@@ -54,6 +42,18 @@
     <ClCompile Include="color_test.cc">
       <Filter>math</Filter>
     </ClCompile>
+    <ClCompile Include="xml_reader_test.cc">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="xml_node_test.cc">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="filesystem_test.cc">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="low_level_c_file_test.cc">
+      <Filter>io</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h" />
@@ -67,6 +67,9 @@
     </Filter>
     <Filter Include="renderer">
       <UniqueIdentifier>{ef933348-198a-4e84-a261-40f6d525ac70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="io">
+      <UniqueIdentifier>{ee2dd9b7-f3dd-42f0-b3bf-5de02f9cc54d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

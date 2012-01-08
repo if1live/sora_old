@@ -125,23 +125,6 @@ TextureManager::TextureManager() {
 TextureManager::~TextureManager() {
 }
 
-Texture *TextureManager::GetTexture(const std::string &name) {
-  TextureHandle handle = FileNameToHandle(name);
-  return GetTexture(handle);
-}
-boolean TextureManager::IsExist(const std::string &name) const {
-  TextureHandle handle = FileNameToHandle(name);
-  if (handle.IsNull()) {
-    return false;
-  } else {
-    return true;
-  }
-}
-boolean TextureManager::RemoveTexture(const std::string &name) {
-  TextureHandle handle = FileNameToHandle(name);
-  return RemoveTexture(handle);
-}
-
 boolean TextureManager::IsExist(TextureHandle &handle) {
   Texture *tex = handle_mgr_.Get(handle);
   return (tex != NULL);
@@ -150,29 +133,45 @@ Texture *TextureManager::GetTexture(TextureHandle &handle) {
   return handle_mgr_.Get(handle);
 }
 boolean TextureManager::RemoveTexture(TextureHandle &handle) {
+  // handle이 존재하면 사전에서도 삭제
+  NameHandleDictType::iterator it = name_handle_dict_.begin();
+  NameHandleDictType::iterator endit = name_handle_dict_.end();
+  for ( ; it != endit ; it++) {
+    if (it->second == handle) {
+      name_handle_dict_.erase(it);
+      break;
+    }
+  }
   return handle_mgr_.Remove(handle);
 }
 Texture *TextureManager::CreateTexture(TextureHandle &handle) {
   if (handle.IsNull()) {
-    return handle_mgr_.CreateOrGet(handle);
+    return handle_mgr_.Acquire(handle);
   } else {
     return NULL;
   }
 }
 
 TextureHandle TextureManager::FileNameToHandle(const std::string &name) const {
-  HandleMgrType::DataListType::const_iterator it = handle_mgr_.Begin();
-  HandleMgrType::DataListType::const_iterator endit = handle_mgr_.End();
-  for ( ; it != endit ; it++) {
-    const HandleMgrType::DataPairType &data_pair = *it;
-    if (it->data->filename() == name) {
-      u16 index = std::distance(handle_mgr_.Begin(), it);
-      u16 magic = it->magic;
-      TextureHandle handle(index, magic);
-      return handle;
-    }
+  NameHandleDictType::const_iterator found = name_handle_dict_.find(name);
+  if (found == name_handle_dict_.end()) {
+    TextureHandle null_handle;
+    return null_handle;
+  } else {
+    return found->second;
   }
-  TextureHandle null_handle;
-  return null_handle;
+}
+bool TextureManager::RegisterFilename(const std::string &name, const TextureHandle &handle) {
+  if (handle.IsNull()) {
+    // 널핸들은 등록불가
+    return false;
+  }
+  TextureHandle prev = FileNameToHandle(name);
+  if (prev.IsNull()) {
+    // 아직 등록된 적이 없는 이름이면 핸들 등록 가능
+    name_handle_dict_[name] = handle;
+  } else {
+    return false;
+  }
 }
 }
