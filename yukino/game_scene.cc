@@ -69,7 +69,8 @@ GameScene::GameScene()
   sprite_xml_file.Open();
   TextureAtlas tex_atlas = SpriteSheetManager::Read((const char*)sprite_xml_file.start, "/ui/");
   SpriteSheetManager::GetInstance().Save(tex_atlas);
-  TextureManager::GetInstance().AsyncLoad(tex_atlas.tex_handle);
+  //메인 메뉴에서 ui관련내용은 이미 읽어져있을 것이다
+  //TextureManager::GetInstance().AsyncLoad(tex_atlas.tex_handle);
 
   TextureSubImage *next_img = tex_atlas.GetSubImage("BtMainNext@2x");
   TextureSubImage *prev_img = tex_atlas.GetSubImage("BtMainPrev@2x");

@@ -31,7 +31,7 @@ public:
 
 public:
 	UIContainer();
-	~UIContainer();
+	virtual ~UIContainer();
 
 	virtual void Add(UIComponent *comp);
   virtual int ChildCount() const { return comp_list_.size(); }

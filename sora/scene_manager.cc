@@ -20,16 +20,15 @@
 // Ŭnicode please
 #include "sora_stdafx.h"
 #include "scene_manager.h"
+#include "template_library.h"
+#include "scene.h"
 
 namespace sora {;
 SceneManager::SceneManager() {
 }
 SceneManager::~SceneManager() {
-  while (!scene_stack_.empty()) {
-    Scene *scene = scene_stack_.back();
-    delete(scene);
-    scene_stack_.pop_back();
-  }
+  DestroyList(&delete_stack_);
+  DestroyList(&scene_stack_);
 }
 Scene *SceneManager::Top() {
   if (scene_stack_.empty()) {
@@ -57,12 +56,33 @@ Scene *SceneManager::Pop() {
 void SceneManager::PopAndDestroy() {
   if (!scene_stack_.empty()) {
     Scene *scene = scene_stack_.back();
-    delete(scene);
     scene_stack_.pop_back();
+
+    RequestDelete(scene);
   }
 }
 
 bool SceneManager::IsEmpty() const {
   return scene_stack_.empty();
+}
+void SceneManager::RequestDelete(Scene *scene) {
+  SceneStackType::iterator found = find(delete_stack_.begin(),
+    delete_stack_.end(), scene);
+  if (found == delete_stack_.end()) {
+    delete_stack_.push_back(scene);
+  }
+}
+void SceneManager::Update(int dt_ms) {
+  Scene *top = Top();
+  if (top != NULL) {
+    top->Update(dt_ms);
+  }
+  DestroyList(&delete_stack_);
+}
+void SceneManager::Draw() {
+  Scene *top = Top();
+  if (top != NULL) {
+    top->Draw();
+  }
 }
 }

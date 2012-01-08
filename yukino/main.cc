@@ -113,13 +113,11 @@ void Update(int ms) {
   //sora::TouchDevice::GetInstance().PrintLog();
 #endif
 
-  Scene *scene = SceneManager::GetInstance().Top();
-  scene->Update(ms); 
+  SceneManager::GetInstance().Update(ms);
 }
 
 void Draw(int ms) {  
-  Scene *scene = SceneManager::GetInstance().Top();
-  scene->Draw();
+  SceneManager::GetInstance().Draw();
   sora::GLHelper::CheckError("DrawEnd");
 }
 

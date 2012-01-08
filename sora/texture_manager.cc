@@ -91,14 +91,11 @@ void TextureManager::ProcessRequest() {
 
   if (!created_request_list.empty()) {
     response_stack_lock.lock();
-    size_t curr_response_stack_size = response_stack_.size();
-    size_t target_size = curr_response_stack_size + created_request_list.size();
-    if (response_stack_.capacity() < target_size) {
-      response_stack_.resize(target_size);
+    ResponseStackType::iterator it = created_request_list.begin();
+    ResponseStackType::iterator endit = created_request_list.end();
+    for ( ; it != endit ; it++) {
+      response_stack_.push_back(*it);
     }
-    ResponseStackType::iterator insert_it = response_stack_.begin();
-    std::advance(insert_it, curr_response_stack_size);
-    std::copy(created_request_list.begin(), created_request_list.end(), insert_it);
     response_stack_lock.unlock();
   }
 }

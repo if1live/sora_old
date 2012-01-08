@@ -41,12 +41,19 @@ public:
   void PopAndDestroy();
 
   bool IsEmpty() const;
+  void RequestDelete(Scene *scene);
 
+  void Update(int dt_ms);
+  void Draw();
 private:
   ~SceneManager();
   
   typedef std::vector<Scene*> SceneStackType;
   SceneStackType scene_stack_;
+
+  // 씬의 삭제를 바로 처리할 경우, 돌아가던 로직이 뻑날수 있으니
+  // 삭제를 요청했다가 나중에 지우는것을 지원하도록하자
+  SceneStackType delete_stack_;
 };
 }
 

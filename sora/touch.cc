@@ -82,22 +82,26 @@ void TouchDevice::Update() {
 
   //occur event
   if (!cancelled_evt_list_.empty()) {
-    BOOST_FOREACH(TouchListener *l, listener_list_) {
+    for (int i = 0 ; i < listener_list_.size() ; i++) {
+      TouchListener *l = listener_list_[i];
       l->TouchCancelled(cancelled_evt_list_);
     }
   }
   if(!ended_evt_list_.empty()) {
-    BOOST_FOREACH(TouchListener *l, listener_list_) {
+    for (int i = 0 ; i < listener_list_.size() ; i++) {
+      TouchListener *l = listener_list_[i];
       l->TouchEnded(ended_evt_list_);
     }
   }
   if(!moved_evt_list_.empty()) {
-    BOOST_FOREACH(TouchListener *l, listener_list_) {
+    for (int i = 0 ; i < listener_list_.size() ; i++) {
+      TouchListener *l = listener_list_[i];
       l->TouchMoved(moved_evt_list_);
     }
   }
   if(!began_evt_list_.empty()) {
-    BOOST_FOREACH(TouchListener *l, listener_list_) {
+    for (int i = 0 ; i < listener_list_.size() ; i++) {
+      TouchListener *l = listener_list_[i];
       l->TouchBegan(began_evt_list_);
     }
   }
