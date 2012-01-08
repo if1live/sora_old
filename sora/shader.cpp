@@ -19,7 +19,11 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_stdafx.h"
-#include "sora/shader.h"
+#include "shader.h"
+
+#if SR_ANDROID
+#include "gl_inc.h"
+#endif
 
 namespace sora {;
 Shader::Shader()

@@ -22,8 +22,15 @@
 #define SORA_IMMEDIATE_MODE_EMULATOR_H_
 
 #include "template_library.h"
-
 #include "matrix_stack.h"
+
+#if SR_ANDROID
+//gles에는 없으니까 따로 선언
+#define GL_QUADS 0x0010  
+
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#endif
 
 namespace sora {;
 
@@ -84,6 +91,6 @@ inline void srglColor3f(float r, float g, float b) {
 #undef glVertex2f
 #undef glTexCoord2f
 #undef glColor4f
-#undef glColor3f;
+#undef glColor3f
 
 #endif  // SORA_IMMEDIATE_MODE_EMULATOR_H_

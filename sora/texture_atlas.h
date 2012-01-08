@@ -23,6 +23,11 @@
 
 #include "texture_info.h"
 
+#if SR_USE_PCH == 0
+#include "unordered_map_inc.h"
+#include <string>
+#endif
+
 namespace sora {;
 class Texture;
 class TextureAtlas;

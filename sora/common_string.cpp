@@ -22,6 +22,7 @@
 #include "sora/common_string.h"
 #if SR_USE_PCH == 0
 #include <sstream>
+#include <cstdlib>
 #endif
 
 namespace sora {;

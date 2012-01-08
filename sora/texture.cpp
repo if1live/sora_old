@@ -21,11 +21,20 @@
 #include "sora_stdafx.h"
 #include "texture_info.h"
 #include "texture.h"
-#include <png.h>
 #include "memory_file.h"
 #include "gl_helper.h"
 
 #include "filesystem.h"
+
+#if SR_USE_PCH == 0
+#include <png.h>
+#include "gl_inc.h"
+#include <set>
+#endif
+#if SR_ANDROID
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#endif
 
 namespace sora {;
 Texture::Texture()
@@ -156,7 +165,7 @@ GLuint Texture::GetLoadingTexture(int *width, int *height) {
     srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     srglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, *width, *height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
-    delete[](data);
+    delete[]((unsigned char *)data);
   }
   return tex_id;
 }
@@ -242,7 +251,7 @@ Texture &Texture::LoadingTexture() {
   return tex;
 }
 
-void Texture::ColorTexture(u32 r, u32 g, u32 b, Texture *tex) {
+void Texture::ColorTexture(u8 r, u8 g, u8 b, Texture *tex) {
   unsigned char tex_data[] = {
     r, g, b, 255,
     r, g, b, 255,
@@ -293,7 +302,7 @@ boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
 
 	//clean up
 	//픽셀데이터는 나중에 따로 처리한다
-	delete[](data);
+	delete[]((unsigned char*)data);
 	
 	//////////////////////////////////
 
@@ -494,8 +503,8 @@ void Texture::SetTextureParameter(const TextureParameter &param) {
 	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, param_.gl_min_filter());
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, param_.gl_wrap_s());
 	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, param_.gl_wrap_t());
-    //use mipmap?
-	  glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, param_.IsMipMap());
+    //TODO use mipmap?
+	  //glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, param_.IsMipMap());
   }
 }
 
@@ -517,7 +526,8 @@ void Texture::Init(const TexFormat &fmt, const TextureHeader &header, const Text
     srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, param.gl_wrap_t());
     srglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, header.tex_width, header.tex_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     //use mipmap
-    glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, param.IsMipMap());
+    //GL_GENERATE_MIPMAP가 데탑gl에만 있다. gles는 다른 구현을 필요함
+    //glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, param.IsMipMap());
 
     this->set_handle(tex_id);
 

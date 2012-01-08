@@ -32,6 +32,10 @@
 #include "texture_manager.h"
 #include "texture.h"
 
+#if SR_USE_PCH == 0
+#include <boost/foreach.hpp>
+#endif
+
 namespace sora {;
 void UIDrawer::Draw(TextureSubImage *img) {
   Texture *tex = TextureManager::GetInstance().GetTexture(img->tex_handle);

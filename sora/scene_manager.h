@@ -23,6 +23,10 @@
 
 #include "template_library.h"
 
+#if SR_USE_PCH == 0
+#include <vector>
+#endif
+
 namespace sora {;
 
 class Scene;

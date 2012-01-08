@@ -24,6 +24,10 @@
 #include "template_library.h"
 #include "input_enum.h"
 
+#if SR_USE_PCH == 0
+#include <vector>
+#endif
+
 namespace sora {;
 
 struct TouchEvent;

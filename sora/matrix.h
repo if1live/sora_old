@@ -22,6 +22,7 @@
 
 #if SR_USE_PCH == 0
 #include <cstring>
+#include <boost/static_assert.hpp>
 #endif
 #include "sora/vector.h"
 

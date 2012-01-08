@@ -22,11 +22,16 @@
 #include "sora/gl_helper.h"
 #include "sora/common_string.h"
 
+#if SR_ANDROID
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#endif
+
 namespace sora {;
 boolean GLHelper::CheckError(const char *name) {
   int error = glGetError();
   if (error != GL_NO_ERROR) {
-    char *error_msg;
+    const char *error_msg;
     switch (error) {
     case GL_INVALID_ENUM:
       error_msg = "GL_INVALID_ENUM";

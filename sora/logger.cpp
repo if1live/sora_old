@@ -18,31 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_GL_HELPER_H_
-#define SORA_GL_HELPER_H_
-
-#if SR_USE_PCH == 0
-#include <vector>
-#endif
+#include "sora_stdafx.h"
+#include "sora/logger.h"
 
 namespace sora {;
-class GLHelper {
-public:
-  static boolean CheckError(const char *name);
-  static boolean CheckError(const std::string &name) {
-    return CheckError(name.c_str());
-  }
-  // gl information
-  static const std::string &GetVersion();
-  static const std::string &GetVender();
-  static const std::string &GetRenderer();
-  static const std::vector<std::string> &GetExtensionList();
-  static boolean IsExtensionSupport(const char *ext) {
-    return IsExtensionSupport(std::string(ext));
-  }
-  static boolean IsExtensionSupport(const std::string &ext);
-};
-
+sora::Logger<ConsoleLogStream> &SharedConsoleLogger() {
+  // 템플릿 클래스 안에 대충 넣으니까 템플릿 인자가 없어서 안된다
+  // 그래서 명시적으로 함수를 분리했다
+  // 콘솔에 뭘 찍는 로그는 매크로와 연결되서 사실상
+  // 공유해도 문제가 없고 그것이 더 추적하기 편할거같아서
+  // 공용으로 접근할수있는거 하나 만들었다
+  static sora::Logger<ConsoleLogStream> logger("Shared");
+  return logger;
 }
-
-#endif  // SORA_GL_HELPER_H_
+}

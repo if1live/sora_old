@@ -27,6 +27,11 @@
 #include "matrix_stack.h"
 #include "basic_shader.h"
 
+#if SR_ANDROID
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#endif
+
 namespace sora {;
 
 struct Vertex {

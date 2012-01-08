@@ -26,6 +26,10 @@
 #include "touch.h"
 #include "rect.h"
 
+#if SR_USE_PCH == 0
+#include <boost/noncopyable.hpp>
+#endif
+
 namespace sora {;
 class UIContainer;
 class UIComponent;

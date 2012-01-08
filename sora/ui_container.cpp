@@ -27,6 +27,10 @@
 #include "image_label.h"
 #include "button.h"
 
+#if SR_USE_PCH == 0
+#include <boost/foreach.hpp>
+#endif
+
 namespace sora {;
 UIContainer::UIContainer()
   : UIComponent(kUIContainer) {

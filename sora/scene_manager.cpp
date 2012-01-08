@@ -23,6 +23,10 @@
 #include "template_library.h"
 #include "scene.h"
 
+#if SR_USE_PCH == 0
+#include <algorithm>
+#endif
+
 namespace sora {;
 SceneManager::SceneManager() {
 }

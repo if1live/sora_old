@@ -20,6 +20,11 @@
 #include "sora_stdafx.h"
 #include "sora/math_helper.h"
 
+#if SR_ANDROID
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#endif
+
 namespace sora {;
 
 mat4 &SetOrtho(float left, float right, float bottom, float top, float near_val, float far_val, mat4 *m) {

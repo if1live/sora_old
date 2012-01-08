@@ -23,6 +23,12 @@
 #include "texture.h"
 #include "filesystem.h"
 
+#if SR_USE_PCH == 0
+#include <algorithm>
+#include <png.h>
+#include <boost/thread.hpp>
+#endif
+
 #define USE_TEX_LOG 0
 #if USE_TEX_LOG
 #define TEX_LOG(...)  LOGI(__VA_ARGS__)
@@ -141,7 +147,7 @@ void TextureManager::ProcessResponse() {
     Texture *tex = GetTexture(response.handle);
     tex->Init(response.fmt, response.tex_header, tex->param(), response.data);
     TEX_LOG("Texture %s Load success", tex->filename().c_str());
-    delete[](response.data);
+    delete[]((unsigned char*)response.data);
   }
 }
 

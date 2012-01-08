@@ -23,6 +23,11 @@
 
 #include "handle.h"
 
+#if SR_ANDROID
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#endif
+
 namespace sora {;
 typedef enum {
   kTexWrapRepeat,

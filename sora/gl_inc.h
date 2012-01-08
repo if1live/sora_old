@@ -24,6 +24,9 @@
 #if SR_WIN
 #include <GL/glew.h>
 #include <GL/glfw.h>
+#elif SR_ANDROID
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
 #else
 #error "not support gl"
 #endif

@@ -21,6 +21,11 @@
 #ifndef SORA_SHADER_H_
 #define SORA_SHADER_H_
 
+#if SR_ANDROID
+#include <GLES2/gl2.h>
+#include <GLES2/gl2ext.h>
+#endif
+
 namespace sora {;
 class Shader {
 public:

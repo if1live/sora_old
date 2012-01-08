@@ -26,6 +26,10 @@
 //#include "assert_inc.h"
 //#include <map>
 
+#if SR_USE_PCH == 0
+#include <vector>
+#endif
+
 // GPG 1 1.6 범용 핸글 기반 자원 관리자의 코드를 대강 수정한거 
 namespace sora {;
 
@@ -115,8 +119,8 @@ DataType *DynamicHandleManager<DataType, HandleType>::Create(HandleType &handle)
 
 template<typename DataType, typename HandleType>
 DynamicHandleManager<DataType, HandleType>::~DynamicHandleManager() {
-  DataListType::iterator it = data_list_.begin();
-  DataListType::iterator endit = data_list_.end();
+  typename DataListType::iterator it = data_list_.begin();
+  typename DataListType::iterator endit = data_list_.end();
   for ( ; it != endit ; it++) {
     const DataPairType &data_pair = *it;
     DataType *data = data_pair.data;

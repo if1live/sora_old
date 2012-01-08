@@ -14,7 +14,11 @@
 /sdk/tinyxml
 *.suo
 *.sdf
+*.obj
+*.a
+armeabi
 /buildTmp
+NUL
 /ipch
 /buildResult
 *.opensdf
@@ -35,3 +39,4 @@
 *Debug*
 *.user
 *Release*
+/sdk/libjpeg/NUL

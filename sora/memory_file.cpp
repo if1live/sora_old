@@ -22,6 +22,10 @@
 #include "sora/memory_file.h"
 #include "sora/filesystem.h"
 
+#if SR_USE_PCH == 0
+#include <fcntl.h>
+#endif
+
 namespace sora {;
 MemoryFile::MemoryFile(const char *filepath)
   : filepath_(filepath),

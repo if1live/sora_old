@@ -4,6 +4,12 @@
 #include "xml_node.h"
 #include <iostream>
 
+#if SR_USE_PCH == 0
+#include <tinyxml.h>
+#include <memory>
+#include <sstream>
+#endif
+
 using namespace std;
 
 namespace sora {;

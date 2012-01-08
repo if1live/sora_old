@@ -23,6 +23,7 @@
 
 #if SR_USE_PCH == 0
 #include <string>
+#include <boost/noncopyable.hpp>
 #endif
 
 namespace sora {;

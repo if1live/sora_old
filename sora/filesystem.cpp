@@ -26,6 +26,9 @@
 #include <sys/stat.h>
 #endif
 
+#if SR_ANDROID
+#endif
+
 namespace sora {;
 std::string Filesystem::app_root_path;
 std::string Filesystem::doc_root_path;
@@ -57,7 +60,12 @@ i32 Filesystem::GetFileSize(int fd) {
   // struct stat s;
   // int result = fstat(fd, &s);
   // return s.st_size;
+#if SR_ANDROID
+  #define tell(fd) lseek(fd, 0, SEEK_CUR) 
   int curr_pos = tell(fd);
+#else
+  int curr_pos = tell(fd);
+#endif
   lseek(fd, 0, SEEK_END);
   int length = tell(fd);
   lseek(fd, curr_pos, SEEK_SET);

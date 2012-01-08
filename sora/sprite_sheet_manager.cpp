@@ -25,8 +25,13 @@
 #include "xml_reader.h"
 #include "texture_atlas.h"
 #include "common_string.h"
-#include "texture_manager.h"
 #include "texture.h"
+#include "texture_info.h"
+#include "texture_manager.h"
+
+#if SR_USE_PCH == 0
+#include <boost/foreach.hpp>
+#endif
 
 namespace sora {;
 SpriteSheetManager::SpriteSheetManager() {

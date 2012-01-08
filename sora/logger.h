@@ -32,8 +32,8 @@
 #if SR_ANDROID
 // 안드로이드의 경우는 printf가 먹히지 않는다. 그리고 콘솔 출력도 다르다
 #include <android/log.h>
-//#define LOGI(...)  __android_log_pri32(ANDROID_LOG_INFO,"LOGI",__VA_ARGS__)
-//#define LOGE(...)  __android_log_pri32(ANDROID_LOG_ERROR,"LOGE",__VA_ARGS__)
+//#define LOGI(...)  __android_log_print(ANDROID_LOG_INFO,"LOGI",__VA_ARGS__)
+//#define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,"LOGE",__VA_ARGS__)
 #endif
 
 #define LOGI(...)  { sora::SharedConsoleLogger().Infof(__VA_ARGS__); }
@@ -88,7 +88,7 @@ public:
     level = ANDROID_LOG_UNKNOWN;
     break;
   }
-	__android_log_pri32(level, logger_name, msg);
+	__android_log_print(level, logger_name, msg);
 #else
     printf("[%s] %s\n", logger_name, msg);
 #endif

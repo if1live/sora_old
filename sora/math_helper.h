@@ -24,6 +24,10 @@
 #include "matrix.h"
 #include "arch.h"
 
+#if SR_USE_PCH == 0
+#include <cmath>
+#endif
+
 namespace sora {;
 const f32 kPi = 3.141592f;
 const f32 kPiOver2 = kPi / 2;

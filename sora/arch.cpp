@@ -1,4 +1,5 @@
-﻿/* Copyright (C) 2011 by if1live */
+﻿/*  Copyright (C) 2011 by if1live */
+//
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
 // in the Software without restriction, including without limitation the rights
@@ -17,62 +18,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_SORA_STDAFX_H_
-#define SORA_SORA_STDAFX_H_
-// 사실상 모든 소스에서 필요한건 미리 인클루드
+#include "sora_stdafx.h"
 #include "sora/arch.h"
-#include "sora/assert_inc.h"
-#include "sora/mem.h"
-#include "sora/logger.h"
 
-#if SR_USE_PCH
-#include <cmath>
+#if SR_USE_PCH == 0
 #include <cstdlib>
-#include <cstring>
-#include <cstdarg>
-#include <cerrno>
-#include <ctime>
-
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#if SR_WIN
-// open, close...
-#include <io.h>
-#endif
-// #include <unistd.h>
-
-#include <sstream>
-#include <vector>
-#include <set>
-#include <string>
-#include <algorithm>
-#include <memory>
-#include <map>
-
-// third party library
-#include <tinyxml/tinyxml.h>
-#include <libpng/png.h>
-
-// boost
-#include <boost/noncopyable.hpp>
-#include <boost/foreach.hpp>
-#include <boost/thread.hpp>
-
-#if SR_WIN
-#include <Windows.h>
-#include <tchar.h>
-#include <direct.h>
+#include <cstdio>
 #endif
 
-#include "sora/shared_ptr_inc.h"
-#include "sora/unordered_map_inc.h"
-#include "sora/gl_inc.h"
-#include "sora/assert_inc.h"
-
-//vector는 뻔하니까
-#include "sora/vector.h"
-
-#endif
-
-#endif  // SORA_SORA_STDAFX_H_
+namespace sora {;
+int PositionToWhere(int pos) {
+  if (pos == kPositionStart) {
+    return SEEK_SET;
+  } else if (pos == kPositionCurrent) {
+    return SEEK_CUR;
+  } else if (pos == kPositionEnd) {
+    return SEEK_END;
+  } else {
+    SR_ASSERT(!"do not reach");
+    return -1;
+  }
+}
+}

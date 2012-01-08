@@ -148,103 +148,103 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="arch.cc">
+    <ClCompile Include="arch.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="sora_stdafx.cc" />
-    <ClCompile Include="clock.cc">
+    <ClCompile Include="clock.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="shader.cc">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="common_string.cc">
+    <ClCompile Include="common_string.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="mem.cc">
+    <ClCompile Include="locale.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="gl_helper.cc">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="logger.cc">
+    <ClCompile Include="logger.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="texture.cc">
-      <Filter>renderer</Filter>
+    <ClCompile Include="mem.cpp">
+      <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="math_helper.cc">
+    <ClCompile Include="filesystem.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="low_level_c_file.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="memory_file.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="xml_node.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="xml_reader.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="math_helper.cpp">
       <Filter>math</Filter>
     </ClCompile>
-    <ClCompile Include="touch.cc">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="gl_window.cc">
+    <ClCompile Include="basic_shader.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="immediate_mode_emulator.cc">
+    <ClCompile Include="gl_helper.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="texture_atlas.cc">
+    <ClCompile Include="gl_inc.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="locale.cc">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="matrix_stack.cc">
+    <ClCompile Include="gl_window.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="basic_shader.cc">
+    <ClCompile Include="immediate_mode_emulator.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="texture_manager.cc">
+    <ClCompile Include="matrix_stack.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="gl_inc.cc">
+    <ClCompile Include="shader.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="texture_info.cc">
+    <ClCompile Include="sprite_sheet_manager.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="ui_drawer.cc">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="image_label.cc">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_component.cc">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_container.cc">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="sprite_sheet_manager.cc">
+    <ClCompile Include="texture.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="button.cc">
-      <Filter>ui</Filter>
+    <ClCompile Include="texture_atlas.cpp">
+      <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="keyboard_glfw.cc">
-      <Filter>ui</Filter>
+    <ClCompile Include="texture_info.cpp">
+      <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="filesystem.cc">
-      <Filter>io</Filter>
+    <ClCompile Include="texture_manager.cpp">
+      <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="low_level_c_file.cc">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="memory_file.cc">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="xml_reader.cc">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="xml_node.cc">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="scene_manager.cc">
+    <ClCompile Include="scene_manager.cpp">
       <Filter>scene</Filter>
     </ClCompile>
+    <ClCompile Include="button.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="image_label.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="keyboard_glfw.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_component.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="touch.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_container.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui_drawer.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="sora_stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">

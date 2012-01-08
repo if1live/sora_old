@@ -21,6 +21,12 @@
 #include "sora_stdafx.h"
 #include "sora/touch.h"
 
+#if SR_USE_PCH == 0
+#include <boost/foreach.hpp>
+#include <algorithm>
+#include <sstream>
+#endif
+
 #define USE_TOUCH_LOG 0
 #if USE_TOUCH_LOG
 #define TOUCH_LOG(...)  LOGI(__VA_ARGS__)

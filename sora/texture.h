@@ -39,7 +39,7 @@ public:
   static Texture &Blue();
   static Texture &Green();
   static Texture &LoadingTexture();
-  static void ColorTexture(u32 r, u32 g, u32 b, Texture *tex);
+  static void ColorTexture(u8 r, u8 g, u8 b, Texture *tex);
   
 public:
   static boolean LoadFromPNG(const std::string &filepath, Texture *tex) {
