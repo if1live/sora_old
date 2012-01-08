@@ -504,7 +504,9 @@ void Texture::SetTextureParameter(const TextureParameter &param) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, param_.gl_wrap_s());
 	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, param_.gl_wrap_t());
     //TODO use mipmap?
-	  //glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, param_.IsMipMap());
+    if (param.IsMipMap()) {
+      glGenerateMipmap(GL_TEXTURE_2D);
+    }
   }
 }
 
@@ -528,6 +530,9 @@ void Texture::Init(const TexFormat &fmt, const TextureHeader &header, const Text
     //use mipmap
     //GL_GENERATE_MIPMAP가 데탑gl에만 있다. gles는 다른 구현을 필요함
     //glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, param.IsMipMap());
+    if (param.IsMipMap()) {
+      glGenerateMipmap(GL_TEXTURE_2D);
+    }
 
     this->set_handle(tex_id);
 
