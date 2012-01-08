@@ -77,18 +77,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="book.cc" />
-    <ClCompile Include="book_paper.cc" />
-    <ClCompile Include="book_paper_builder.cc" />
-    <ClCompile Include="book_scene.cc" />
-    <ClCompile Include="camera.cc" />
-    <ClCompile Include="game_scene.cc" />
-    <ClCompile Include="glassless3d.cc" />
-    <ClCompile Include="intro_scene.cc" />
-    <ClCompile Include="lang_button_selector.cc" />
-    <ClCompile Include="main.cc" />
-    <ClCompile Include="menu_scene.cc" />
-    <ClCompile Include="yukino_stdafx.cc">
+    <ClCompile Include="book.cpp" />
+    <ClCompile Include="book_paper.cpp" />
+    <ClCompile Include="book_paper_builder.cpp" />
+    <ClCompile Include="book_scene.cpp" />
+    <ClCompile Include="camera.cpp" />
+    <ClCompile Include="game_scene.cpp" />
+    <ClCompile Include="glassless3d.cpp" />
+    <ClCompile Include="intro_scene.cpp" />
+    <ClCompile Include="lang_button_selector.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="menu_scene.cpp" />
+    <ClCompile Include="yukino_stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>

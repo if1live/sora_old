@@ -1,30 +1,30 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="main.cc" />
-    <ClCompile Include="yukino_stdafx.cc" />
-    <ClCompile Include="book.cc">
+    <ClCompile Include="book.cpp">
       <Filter>book</Filter>
     </ClCompile>
-    <ClCompile Include="book_paper.cc">
+    <ClCompile Include="book_paper.cpp">
       <Filter>book</Filter>
     </ClCompile>
-    <ClCompile Include="book_paper_builder.cc">
+    <ClCompile Include="book_paper_builder.cpp">
       <Filter>book</Filter>
     </ClCompile>
-    <ClCompile Include="book_scene.cc">
+    <ClCompile Include="book_scene.cpp">
       <Filter>book</Filter>
     </ClCompile>
-    <ClCompile Include="glassless3d.cc">
+    <ClCompile Include="camera.cpp">
       <Filter>book</Filter>
     </ClCompile>
-    <ClCompile Include="camera.cc">
+    <ClCompile Include="glassless3d.cpp">
       <Filter>book</Filter>
     </ClCompile>
-    <ClCompile Include="game_scene.cc" />
-    <ClCompile Include="intro_scene.cc" />
-    <ClCompile Include="menu_scene.cc" />
-    <ClCompile Include="lang_button_selector.cc" />
+    <ClCompile Include="game_scene.cpp" />
+    <ClCompile Include="intro_scene.cpp" />
+    <ClCompile Include="lang_button_selector.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="menu_scene.cpp" />
+    <ClCompile Include="yukino_stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="yukino_stdafx.h" />
