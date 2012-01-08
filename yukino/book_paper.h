@@ -2,10 +2,7 @@
 #pragma once
 
 #include "sora/vector.h"
-
-namespace sora {;
-struct TextureSubImage;
-}
+#include "sora/texture_atlas.h"
 
 namespace yukino {;
 class BookPaperBuilder;
@@ -72,7 +69,7 @@ public:
   float yaw;
 
 private:
-  sora::TextureSubImage *sprite_;
+  sora::TextureSubImage sprite_;
   BookPaperType type_;
 };
 }

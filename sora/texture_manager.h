@@ -51,14 +51,16 @@ public:
 
 public:
   void AsyncLoad(const TextureHandle &request);
+  void CancelAsyncLoad(const TextureHandle &request);
   boolean IsResponseExist() const;
+  boolean IsRequestExist() const;
   TextureLoadResponse PopResponse();
   void ProcessRequest();
   void ProcessResponse();
 
   // handle based
   boolean IsExist(TextureHandle &handle);
-  Texture *GetTexture(TextureHandle &handle);
+  Texture *GetTexture(const TextureHandle &handle);
   boolean RemoveTexture(TextureHandle &handle);
 
   Texture *CreateTexture(TextureHandle &handle);
@@ -67,6 +69,8 @@ public:
   // 파일명에 의존하니 중간 변환을 할수있도록한다
   TextureHandle FileNameToHandle(const std::string &name) const;
   bool RegisterFilename(const std::string &name, const TextureHandle &handle);
+
+  TextureHandle GetHandle(Texture *tex) const;
 
   TextureManager();
 protected:

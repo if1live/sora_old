@@ -27,7 +27,7 @@ namespace yukino {;
 struct GameSceneImpl;
 class GameScene : public sora::Scene {
 public:
-  GameScene();
+  GameScene(int page);
   virtual ~GameScene();
   virtual void Draw();
   virtual void Update(int dt_ms);

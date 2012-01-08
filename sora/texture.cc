@@ -29,7 +29,7 @@
 
 namespace sora {;
 Texture::Texture()
-  : handle(0) {
+  : handle_(0) {
   // 최초에 텍스쳐가 할당되어있지 않으면 임시 텍스쳐를 대신 띄운다
   SetAsLoading();
 }
@@ -44,40 +44,44 @@ void Texture::Deinit() {
 void Texture::SetAsSample() {
   Cleanup();  //기존에 뭔가 있으면 해제
 
-  handle = GetSampleTexture(&tex_header.tex_width, &tex_header.tex_height);
+  set_handle(GetSampleTexture(&tex_header.tex_width, &tex_header.tex_height));
   tex_header.src_width = tex_header.tex_width;
   tex_header.src_height = tex_header.tex_height;
   format = kTexFormatRGB888;
 
-  param_.wrap_s = kTexWrapRepeat;
-  param_.wrap_t = kTexWrapRepeat;
-  param_.min_filter = kTexMinNearestMipMapOff;
-  param_.mag_filter = kTexMagNearest;
+  //텍스쳐 id만 교체하지 텍스쳐 정보는 날리지 않는다
+  //이것까지 날리면 다시 로딩할떄 의도하지 않은 결과가 나온다
+  //param_.wrap_s = kTexWrapRepeat;
+  //param_.wrap_t = kTexWrapRepeat;
+  //param_.min_filter = kTexMinNearestMipMapOff;
+  //param_.mag_filter = kTexMagNearest;
 }
 void Texture::SetAsLoading() {
   Cleanup();  //기존에 뭔가 있으면 해제
 
-  handle = GetLoadingTexture(&tex_header.tex_width, &tex_header.tex_height);
+  set_handle(GetLoadingTexture(&tex_header.tex_width, &tex_header.tex_height));
   tex_header.src_width = tex_header.tex_width;
   tex_header.src_height = tex_header.tex_height;
   format = kTexFormatRGB888;
 
-  param_.wrap_s = kTexWrapRepeat;
-  param_.wrap_t = kTexWrapRepeat;
-  param_.min_filter = kTexMinNearestMipMapOff;
-  param_.mag_filter = kTexMagNearest;
+  //텍스쳐 id만 교체하지 텍스쳐 정보는 날리지 않는다
+  //이것까지 날리면 다시 로딩할떄 의도하지 않은 결과가 나온다
+  //param_.wrap_s = kTexWrapRepeat;
+  //param_.wrap_t = kTexWrapRepeat;
+  //param_.min_filter = kTexMinNearestMipMapOff;
+  //param_.mag_filter = kTexMagNearest;
 }
 void Texture::Cleanup() {
-  if (handle == 0) {
+  if (handle() == 0) {
     return;
   }
 
   GLuint loading_tex_id = GetLoadingTexture();
   GLuint sample_tex_id = GetSampleTexture();
-  if(loading_tex_id != handle && sample_tex_id != handle) {
+  if(loading_tex_id != handle() && sample_tex_id != handle()) {
     // sample텍스쳐는 공유하므로 삭제하지 않는다
-    srglDeleteTextures(1, &handle);
-    handle = 0;
+    srglDeleteTextures(1, &handle_);
+    set_handle(0);
   }
 }
 //테스트로 쓰이는 샘플 텍스쳐는 gl함수를 썡으로 해서 생성이 가능하게 하자. 이것을 통하면
@@ -162,7 +166,7 @@ Texture &Texture::Sample() {
   static Texture tex;
   if (run == false) {
     run = true;
-    tex.handle = GetSampleTexture(&tex.tex_header.tex_width, &tex.tex_header.tex_height);
+    tex.set_handle(GetSampleTexture(&tex.tex_header.tex_width, &tex.tex_header.tex_height));
     tex.tex_header.src_width = tex.tex_header.tex_width;
     tex.tex_header.src_height = tex.tex_header.tex_height;
     tex.format = kTexFormatRGB888;
@@ -230,7 +234,7 @@ Texture &Texture::LoadingTexture() {
   static Texture tex;
   if (run == false) {
     run = true;
-    tex.handle = GetLoadingTexture(&tex.tex_header.tex_width, &tex.tex_header.tex_height);
+    tex.set_handle(GetLoadingTexture(&tex.tex_header.tex_width, &tex.tex_header.tex_height));
     tex.tex_header.src_width = tex.tex_header.tex_width;
     tex.tex_header.src_height = tex.tex_header.tex_height;
     tex.format = kTexFormatRGB888;
@@ -485,7 +489,7 @@ void* Texture::LoadPNG(const char *filepath, TexFormat *fmt, TextureHeader *tex_
 void Texture::SetTextureParameter(const TextureParameter &param) {
   param_ = param;
 
-  if (handle != 0) {
+  if (handle() != 0) {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, param_.gl_mag_filter());
 	  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, param_.gl_min_filter());
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, param_.gl_wrap_s());
@@ -515,7 +519,7 @@ void Texture::Init(const TexFormat &fmt, const TextureHeader &header, const Text
     //use mipmap
     glTexParameteri(GL_TEXTURE_2D, GL_GENERATE_MIPMAP, param.IsMipMap());
 
-    this->handle = tex_id;
+    this->set_handle(tex_id);
 
   } else {
     SR_ASSERT(!"not support yet");
@@ -530,17 +534,17 @@ bool Texture::IsSystemTexture() const {
     run = true;
     system_tex_list.insert(GetSampleTexture());
     system_tex_list.insert(GetLoadingTexture());
-    system_tex_list.insert(White().handle);
-    system_tex_list.insert(Black().handle);
-    system_tex_list.insert(Gray().handle);
-    system_tex_list.insert(Red().handle);
-    system_tex_list.insert(Blue().handle);
-    system_tex_list.insert(Green().handle);
-    system_tex_list.insert(Sample().handle);
-    system_tex_list.insert(LoadingTexture().handle);
+    system_tex_list.insert(White().handle());
+    system_tex_list.insert(Black().handle());
+    system_tex_list.insert(Gray().handle());
+    system_tex_list.insert(Red().handle());
+    system_tex_list.insert(Blue().handle());
+    system_tex_list.insert(Green().handle());
+    system_tex_list.insert(Sample().handle());
+    system_tex_list.insert(LoadingTexture().handle());
   }
 
-  set<u32>::iterator found = system_tex_list.find(handle);
+  set<u32>::iterator found = system_tex_list.find(handle());
   if (found == system_tex_list.end()) {
     return false;
   } else {

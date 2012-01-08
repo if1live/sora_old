@@ -20,12 +20,10 @@
 //#include "ASGyroInputHandler.h"
 //#include "ASAccelerometerInputHandler.h"
 
-using namespace sora;
-using namespace std;
-
 namespace yukino {;
 void Glassless3d::ReloadBook() {
   using namespace sora;
+  using namespace std;
   //book 불러오기. 언어에 따라서 다른 파일을 가져온다
   string book_path = Filesystem::GetAppPath("res/book_en.xml");
   if(Locale::GetInstance().language() == kLanguageKorean) {
@@ -37,8 +35,10 @@ void Glassless3d::ReloadBook() {
   book.Load(book_path);
   book.MoveScene(currPage);
 }
+
 void Glassless3d::Init() {
   using namespace sora;
+  using namespace std;
   //book 불러오기. 언어에 따라서 다른 파일을 가져온다
   string book_path = Filesystem::GetAppPath("res/book_en.xml");
   if(Locale::GetInstance().language() == kLanguageKorean) {
@@ -75,9 +75,6 @@ void Glassless3d::Init() {
   cube_ = auto_ptr<SoraModel>(new SoraModel(c));
 #endif
 
-  //테스트용 scene 생성
-  scene_ = book.GetCurrScene();
-  scene_->Load();
 }
 
 void Glassless3d::Draw() {
@@ -86,6 +83,8 @@ void Glassless3d::Draw() {
   }
 
   using namespace sora;
+
+  BookScene *scene = Book::GetInstance().GetCurrScene();
 
   /*기본 색 정보 날리기*/
   srglClearColor (0, 0, 0, 1);
@@ -146,7 +145,7 @@ void Glassless3d::Draw() {
 
     srglPushMatrix();
     //grid정의 있으면 그리기
-    if(scene_ != NULL && scene_->isUseGrid() == true) {
+    if(scene != NULL && scene->isUseGrid() == true) {
       //grid를 약간 작게 그려야 z-fighting문제가 없다
       srglScalef(0.99f, 0.99f, 0.99f);
       //grid 그리기..어차피 디버깅모드에서만 쓰는거니까 그리는 순서는 신경쓰지 말자 
@@ -160,8 +159,8 @@ void Glassless3d::Draw() {
     glEnable(GL_BLEND);
     //book scene 적절히 그리기 
     //glDisable(GL_DEPTH_TEST); 
-    if(scene_ != NULL) {
-      scene_->draw();
+    if(scene != NULL) {
+      scene->draw();
     }
 
     //테스트용 큐브 그리기 
@@ -184,27 +183,6 @@ void Glassless3d::Update(float dt) {
   if(visible_ == false) {
     return;
   }
-  //윈도우의 경우는 키보드 입력 이벤트로 화면이 전환된다. 그래서 updateEvent함수전후의 페이지 번호로 이전/다음 페이지 이동을 할수있다
-  int currPage = Book::GetInstance().curr_scene_page();
-
-  ///@XXX
-  //handler_->updateEvent();
-  int nextPage = Book::GetInstance().curr_scene_page();
-  if(currPage != nextPage) {
-    OnSceneChangeOccur();
-  }
-}
-void Glassless3d::OnSceneChangeOccur() {
-#if 0
-  //create new scene
-  string path = Path::appPath(Book::GetInstance().GetCurrSceneFile());
-  scene_ = BookScenePtr(new BookScene());
-  scene_->load(path);
-
-  //장면교체후에는 사용되지 않는 텍스쳐를 파기하자
-  //@XXX
-  //TextureManager::GetInstance().cleanupUnusedTexture();
-#endif
 }
 
 void Glassless3d::InitGrid() {

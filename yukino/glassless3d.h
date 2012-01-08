@@ -31,17 +31,12 @@ public:
 
   void ReloadBook();
 
-  //event
-  void OnSceneChangeOccur();
-
 private:
   //sora::model::SoraModelPtr gridModel_;
   //sora::model::SoraModelPtr targetModel_;
   //std::auto_ptr<InputHandler> handler_;
 
   //unsigned int texId_;
-  BookScene *scene_;
-
   bool visible_;
 };
 }

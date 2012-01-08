@@ -43,6 +43,9 @@
 #include "sora/scene_manager.h"
 #include "lang_button_selector.h"
 
+#include "book.h"
+#include "book_scene.h"
+
 using namespace sora;
 
 namespace yukino {;
@@ -55,9 +58,14 @@ public:
     SceneManager::GetInstance().Push(menu_scene);
   }
   virtual void StartPressed(UIComponent *obj) {
-    GameScene *game_scene = new GameScene();
+    GameScene *game_scene = new GameScene(0);
     SceneManager::GetInstance().PopAndDestroy();
     SceneManager::GetInstance().Push(game_scene);
+
+    // load first page
+    Book &book = Book::GetInstance();
+    BookScene *page = book.GetCurrScene();
+    page->LoadTexture();
   }
 };
 
@@ -195,7 +203,7 @@ void IntroScene::Draw() {
     srglMatrixMode(SR_MODELVIEW);
     srglLoadIdentity();
 
-    srglBindTexture(GL_TEXTURE_2D, tex->handle);
+    srglBindTexture(GL_TEXTURE_2D, tex->handle());
     srglBegin(GL_QUADS);
     srglTexCoord2f(0, 1); srglVertex2f(0, 0);
     srglTexCoord2f(1, 1); srglVertex2f(1, 0);

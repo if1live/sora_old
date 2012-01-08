@@ -47,6 +47,7 @@ public:
 
   BookPaperType typeStr2type(const std::string &str);
 
+  const std::set<sora::TextureHandle> &tex_handle_list() const { return tex_handle_list_; }
 private:
   bool useGrid_;
   std::vector<BookPaper> paperList_;
@@ -55,8 +56,8 @@ private:
 
   sora::XmlNode *root_node_;
 
-  //해당씬을 표현하는데 사용되는 텍스쳐 목록
-  std::vector<sora::TextureHandle> tex_handle_list_;
+  //해당씬을 표현하는데 사용되는 텍스쳐. 텍스쳐 2장을 쓰는 일단은 없으니까
+  std::set<sora::TextureHandle> tex_handle_list_;
 };
 
 bool BookPaperCompare(const BookPaper &a, const BookPaper &b);

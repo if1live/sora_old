@@ -54,11 +54,11 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
 
   //텍스쳐 불러오기. 생성된 텍스쳐 목록에 존재하는지 확인하고 없으면 생성
   Texture *tex = NULL;
-  TextureHandle handle = TextureManager::GetInstance().FileNameToHandle(res);
-  if(handle.IsNull()) {
+  TextureHandle tex_handle = TextureManager::GetInstance().FileNameToHandle(res);
+  if(tex_handle.IsNull()) {
     //새로운텍스쳐를 만들기. 모든 처리가 완료되면 TextureManager내부에 등록된다
-    tex = TextureManager::GetInstance().CreateTexture(handle);
-    TextureManager::GetInstance().RegisterFilename(res, handle);
+    tex = TextureManager::GetInstance().CreateTexture(tex_handle);
+    TextureManager::GetInstance().RegisterFilename(res, tex_handle);
     //printf("Texture filename : %s\n", res.c_str());
     tex->set_filename(res);
 
@@ -72,18 +72,26 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
     // 편법으로 텍스쳐 크기를 2048*2048로 설정. 텍스쳐 읽기전에
     // 기반 정보로 일반 객체가 생성되어야하니 어쩔수가 없다
     // @XXX나중에는 텍스쳐 기본 메타 정보를 메모리에 올려놓도록 고치자
-    tex->tex_header.src_width = 2048;
-    tex->tex_header.src_height = 2048;
-    tex->tex_header.tex_width = 2048;
-    tex->tex_header.tex_height = 2048;
 
-    TextureManager::GetInstance().AsyncLoad(handle);
-    
-    //현재 씬을 표현하는데 사용되는 텍스쳐 목록에 넣기
-    tex_handle_list_.push_back(handle);
+    //5번의 겨우 텍스쳐가 2장으로 넘쳐서 이렇게 처리한다
+    if (res == "res/Scene05_2.png") {
+      tex->tex_header.src_width = 1024;
+      tex->tex_header.src_height = 1024;
+      tex->tex_header.tex_width = 1024;
+      tex->tex_header.tex_height = 1024;
+    } else {
+      tex->tex_header.src_width = 2048;
+      tex->tex_header.src_height = 2048;
+      tex->tex_header.tex_width = 2048;
+      tex->tex_header.tex_height = 2048;
+    }
+
+    //텍스쳐 로딩 요청은 따로 한다. 
+    //TextureManager::GetInstance().AsyncLoad(tex_handle_);
   }
 
-  SR_ASSERT(handle.IsNull() == false);
+  tex_handle_list_.insert(tex_handle);
+  SR_ASSERT(tex_handle.IsNull() == false);
 
   //텍스쳐의 정보를 사용해서 x, y, w, h를 구성하기
   float x = 0;
@@ -118,7 +126,7 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
   subimg.y = y;
   subimg.w = w;
   subimg.h = h;
-  subimg.tex_handle = handle;
+  subimg.tex_handle = tex_handle;
   spriteDict_[name] = subimg;
 }
 void BookScene::parseSpriteListNode(sora::XmlNode *node) {
@@ -350,17 +358,20 @@ void BookScene::Unload() {
   spriteDict_.clear();
 }
 void BookScene::LoadTexture() {
-  BOOST_FOREACH(TextureHandle &handle, tex_handle_list_) {
+  BOOST_FOREACH(const TextureHandle &handle, tex_handle_list_) {
     Texture *tex = TextureManager::GetInstance().GetTexture(handle);
+    SR_ASSERT(tex != NULL);
     if (tex->IsSystemTexture()) {
       // 아직 안불러져있는 경우, 로드하기
       TextureManager::GetInstance().AsyncLoad(handle);
     }
-  }
+  }  
 }
 void BookScene::UnloadTexture() {
-  BOOST_FOREACH(TextureHandle &handle, tex_handle_list_) {
+  BOOST_FOREACH(const TextureHandle &handle, tex_handle_list_) {
     Texture *tex = TextureManager::GetInstance().GetTexture(handle);
+    SR_ASSERT(tex != NULL);
+    tex->Cleanup();
     tex->SetAsSample();
   }
 }

@@ -12,23 +12,22 @@ using namespace sora;
 
 namespace yukino {;
 BookPaper::BookPaper(TextureSubImage *sprite, BookPaperType type)
-  : sprite_(sprite), type_(type), pos_x(0), pos_y(0), pos_z(0),
+  : type_(type), pos_x(0), pos_y(0), pos_z(0),
   pitch(0), roll(0), yaw(0) {
 }
 BookPaper::BookPaper() 
-  : sprite_(NULL), type_(kBookPaperNormal), pos_x(0), pos_y(0), pos_z(0),
+  : type_(kBookPaperNormal), pos_x(0), pos_y(0), pos_z(0),
   pitch(0), roll(0), yaw(0) {
 }
 BookPaper::~BookPaper() {
 }
 void BookPaper::SetBaseAttribute(sora::TextureSubImage *sprite, BookPaperType type) {
-  sprite_ = sprite;
+  sprite_ = *sprite;
   type_ = type;
 }
 void BookPaper::draw() {
   //텍스쳐 활성화
-  srglBindTexture(GL_TEXTURE_2D, sprite_->GetHandle());
-
+  srglBindTexture(GL_TEXTURE_2D, sprite_.GetHandle());
 
   if(type_ == kBookPaperNormal) {
     //get model height

@@ -35,6 +35,7 @@
 
 #include "sora/sprite_sheet_manager.h"
 #include "lang_button_selector.h"
+#include "game_scene.h"
 
 using namespace std;
 using namespace sora;
@@ -136,7 +137,9 @@ MenuScene::MenuScene()
   }
   {
     // 뒤로가기 버튼
-
+    //SpriteSheetManager::
+    //"BtCloseKorean@2x"
+    //  BtCloseEnglish@2x
   }
 }
 MenuScene::~MenuScene() {
@@ -162,7 +165,7 @@ void MenuScene::Draw() {
     srglMatrixMode(SR_MODELVIEW);
     srglLoadIdentity();
 
-    srglBindTexture(GL_TEXTURE_2D, tex->handle);
+    srglBindTexture(GL_TEXTURE_2D, tex->handle());
     srglBegin(GL_QUADS);
     srglTexCoord2f(0, 1); srglVertex2f(0, 0);
     srglTexCoord2f(1, 1); srglVertex2f(1, 0);

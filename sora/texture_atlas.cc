@@ -34,7 +34,7 @@ TextureSubImage::TextureSubImage(f32 x, f32 y, f32 w, f32 h, const TextureHandle
 GLuint TextureSubImage::GetHandle() {
   Texture *tex = TextureManager::GetInstance().GetTexture(tex_handle);
   SR_ASSERT(tex != NULL);
-  return tex->handle;
+  return tex->handle();
 }
 f32 TextureSubImage::GetTexWidth() {
   Texture *tex = TextureManager::GetInstance().GetTexture(tex_handle);

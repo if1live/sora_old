@@ -36,80 +36,146 @@
 
 
 #include "glassless3d.h"
+#include "menu_scene.h"
+#include "sora/scene_manager.h"
+#include "sora/texture.h"
+
+#include "book.h"
 
 using namespace sora;
+using namespace std;
 
 namespace yukino {;
 
-class UIEventTestClass : public sora::Selector {
+class GameSceneButtonSelector : public Selector {
 public:
-  virtual void OnButtonPressed(sora::UIComponent *btn) {
-    printf("btn pressed\n");
+  virtual void OnNext(UIComponent *btn) {
+    Book &book = Book::GetInstance();
+    if (book.IsNextSceneExist()) {
+      BookScene *old_page = book.GetCurrScene();
+      Book::GetInstance().MoveNextScene();
+      BookScene *new_page = book.GetCurrScene();
+
+      LoadUnloadTexture(old_page, new_page);
+    }
   }
-  virtual void OnButtonReleased(sora::UIComponent *btn) {
-    printf("btn released\n");
+  virtual void OnPrev(UIComponent *btn) {
+    Book &book = Book::GetInstance();
+    if (book.IsPrevScenExist()) {
+      BookScene *old_page = book.GetCurrScene();
+      Book::GetInstance().MovePrevScene();
+      BookScene *new_page = book.GetCurrScene();
+
+      LoadUnloadTexture(old_page, new_page);
+    }
+  }
+  virtual void OnReset(UIComponent *btn) {
+    // 어떻게 리셋??
+    //Glassless3d::GetInstance().res
+  }
+  virtual void OnMenu(UIComponent *btn) {
+    MenuScene *scene = new MenuScene();
+    SceneManager::GetInstance().Push(scene);
+  }
+
+  void LoadUnloadTexture(BookScene *old_page, BookScene *new_page) {
+    const set<TextureHandle> &old_tex_list = old_page->tex_handle_list();
+      const set<TextureHandle> &new_tex_list = new_page->tex_handle_list();
+
+      set<TextureHandle>::const_iterator it;
+      set<TextureHandle>::const_iterator endit;
+
+      // new에는 없는데 old에는 있는텍스쳐는 unload
+      it = old_tex_list.begin();
+      endit = old_tex_list.end();
+      for ( ; it != endit ; it++) {
+        const TextureHandle &handle = *it;
+        set<TextureHandle>::const_iterator found = new_tex_list.find(handle);
+        if (found == new_tex_list.end()) {
+          // unload한다는것은 마저 로딩할 필요가 없다는것.
+          TextureManager::GetInstance().CancelAsyncLoad(handle);
+
+          Texture *tex = TextureManager::GetInstance().GetTexture(handle);
+          tex->Cleanup();
+          tex->SetAsLoading();
+        }
+      }
+
+      // new에는 있는데 old없는 텍스쳐 load
+      it = new_tex_list.begin();
+      endit = new_tex_list.end();
+      for ( ; it != endit ; it++) {
+        const TextureHandle &handle = *it;
+        set<TextureHandle>::const_iterator found = find(old_tex_list.begin(),
+          old_tex_list.end(), handle);
+        if (found == old_tex_list.end()) {
+          TextureManager::GetInstance().AsyncLoad(handle);
+        }
+      }
   }
 };
 
 struct GameSceneImpl {
+  GameSceneButtonSelector btn_selector;
   sora::UIContainer ui_container;
 };
 
-
-GameScene::GameScene()
+GameScene::GameScene(int page)
 : impl_(NULL) {
   impl_ = new GameSceneImpl();
 
-  yukino::Glassless3d::GetInstance().Init();
-
-  //테스트용 UI만들기
-
-  //ui에서 쓰이는 스프라이트 로딩
-  MemoryFile sprite_xml_file("ui/ui_sprite-hd.xml");
-  sprite_xml_file.Open();
-  TextureAtlas tex_atlas = SpriteSheetManager::Read((const char*)sprite_xml_file.start, "/ui/");
-  SpriteSheetManager::GetInstance().Save(tex_atlas);
-  //메인 메뉴에서 ui관련내용은 이미 읽어져있을 것이다
-  //TextureManager::GetInstance().AsyncLoad(tex_atlas.tex_handle);
-
-  TextureSubImage *next_img = tex_atlas.GetSubImage("BtMainNext@2x");
-  TextureSubImage *prev_img = tex_atlas.GetSubImage("BtMainPrev@2x");
-  TextureSubImage *reset_img = tex_atlas.GetSubImage("BtMainReset@2x");
-  TextureSubImage *menu_img = tex_atlas.GetSubImage("BtMainPage@2x");
-  SR_ASSERT(next_img != NULL);
-  SR_ASSERT(prev_img != NULL);
-  SR_ASSERT(reset_img != NULL);
-  SR_ASSERT(menu_img != NULL);
+  yukino::Glassless3d::GetInstance().Init();  
 
   {
-    ImageLabel *label = new ImageLabel(*prev_img);
-    label->set_position(vec2(100, 100));
-    impl_->ui_container.Add(label);
-  }
-  {
-    static UIEventTestClass obj;
-    Button *btn = new Button(*next_img);
-    btn->set_position(vec2(400, 100));
+    //menu
+    TextureSubImage *menu_img = SpriteSheetManager::GetInstance().GetSubImage("BtMainPage@2x");
+    SR_ASSERT(menu_img != NULL);
 
-    UICallbackFunctor pressed_functor(&obj, SR_UI_CALLBACK_SEL(UIEventTestClass::OnButtonPressed));
-    btn->set_pressed_functor(pressed_functor);
-    UICallbackFunctor released_functor(&obj, SR_UI_CALLBACK_SEL(UIEventTestClass::OnButtonReleased));
-    btn->set_released_functor(released_functor);
-
-    btn->set_pressed_img(*prev_img);
-
-
+    Button *btn = new Button(*menu_img);
+    btn->set_position(vec2(100, 100));
     impl_->ui_container.Add(btn);
+
+    UICallbackFunctor functor(&impl_->btn_selector, SR_UI_CALLBACK_SEL(GameSceneButtonSelector::OnMenu));
+    btn->set_pressed_functor(functor);
   }
+
   {
-    ImageLabel *label = new ImageLabel(*reset_img);
-    label->set_position(vec2(100, 400));
-    impl_->ui_container.Add(label);
+    //reset
+    TextureSubImage *reset_img = SpriteSheetManager::GetInstance().GetSubImage("BtMainReset@2x");
+    SR_ASSERT(reset_img != NULL);
+
+    Button *btn = new Button(*reset_img);
+    btn->set_position(vec2(400, 100));
+    impl_->ui_container.Add(btn);
+
+    UICallbackFunctor functor(&impl_->btn_selector, SR_UI_CALLBACK_SEL(GameSceneButtonSelector::OnReset));
+    btn->set_pressed_functor(functor);
   }
+
   {
-    ImageLabel *label = new ImageLabel(*menu_img);
-    label->set_position(vec2(400, 400));
-    impl_->ui_container.Add(label);
+    //prev
+    TextureSubImage *prev_img = SpriteSheetManager::GetInstance().GetSubImage("BtMainPrev@2x");
+    SR_ASSERT(prev_img != NULL);
+
+    Button *btn = new Button(*prev_img);
+    btn->set_position(vec2(100, 400));
+    impl_->ui_container.Add(btn);
+
+    UICallbackFunctor functor(&impl_->btn_selector, SR_UI_CALLBACK_SEL(GameSceneButtonSelector::OnPrev));
+    btn->set_pressed_functor(functor);
+  }
+
+  {
+    //next
+    TextureSubImage *next_img = SpriteSheetManager::GetInstance().GetSubImage("BtMainNext@2x");
+    SR_ASSERT(next_img != NULL);
+
+    Button *btn = new Button(*next_img);
+    btn->set_position(vec2(400, 400));
+    impl_->ui_container.Add(btn);
+
+    UICallbackFunctor functor(&impl_->btn_selector, SR_UI_CALLBACK_SEL(GameSceneButtonSelector::OnNext));
+    btn->set_pressed_functor(functor);
   }
 }
 GameScene::~GameScene() {

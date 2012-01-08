@@ -112,6 +112,7 @@ void Book::LoadSceneList(sora::XmlNode *node) {
     SR_ASSERT(read_result == true);
 
     BookScene *scene = new BookScene(node);
+    scene->Load();  //로딩과 텍스쳐 로딩을 별개로 치고 일단 전부 생성
     scene_list_.push_back(scene);
 
     mem_file.Close();

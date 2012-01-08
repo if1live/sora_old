@@ -38,7 +38,7 @@ void UIDrawer::Draw(TextureSubImage *img) {
   if (tex == NULL) {
     return;
   }
-  srglBindTexture(GL_TEXTURE_2D, tex->handle);
+  srglBindTexture(GL_TEXTURE_2D, tex->handle());
 
 	//sub img의 크기를 사용해서 그리기
   float width = img->w;
@@ -160,9 +160,9 @@ void UIDrawer::DrawTouchArea(UIContainer *container) {
     // 순수하게 색만 쓰고싶으면 텍스쳐를 교체해야한다
     // 왜냐하면 즉시모드 에뮬에는 tex끄기가 아직 없어서...
     if(btn->button_state() == kButtonReleased) {
-			srglBindTexture(GL_TEXTURE_2D, Texture::Red().handle);
+			srglBindTexture(GL_TEXTURE_2D, Texture::Red().handle());
 		} else {
-      srglBindTexture(GL_TEXTURE_2D, Texture::Green().handle);
+      srglBindTexture(GL_TEXTURE_2D, Texture::Green().handle());
 		}
     
     srglBegin(GL_LINE_LOOP);
