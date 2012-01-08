@@ -21,32 +21,10 @@
 //#include "ASAccelerometerInputHandler.h"
 
 namespace yukino {;
-void Glassless3d::ReloadBook() {
-  using namespace sora;
-  using namespace std;
-  //book 불러오기. 언어에 따라서 다른 파일을 가져온다
-  string book_path = Filesystem::GetAppPath("res/book_en.xml");
-  if(Locale::GetInstance().language() == kLanguageKorean) {
-    book_path = Filesystem::GetAppPath("res/book_kr.xml");
-  }
-  Book &book = Book::GetInstance();
-
-  int currPage = book.curr_scene_page();
-  book.Load(book_path);
-  book.MoveScene(currPage);
-}
 
 void Glassless3d::Init() {
   using namespace sora;
   using namespace std;
-  //book 불러오기. 언어에 따라서 다른 파일을 가져온다
-  string book_path = Filesystem::GetAppPath("res/book_en.xml");
-  if(Locale::GetInstance().language() == kLanguageKorean) {
-    book_path = Filesystem::GetAppPath("res/book_kr.xml");
-  }
-
-  Book &book = Book::GetInstance();
-  book.Load(book_path);
 
   /*여기에서 사용할 모델을 미리 만들어놓자 */
   InitGrid();

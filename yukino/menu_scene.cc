@@ -36,6 +36,10 @@
 #include "sora/sprite_sheet_manager.h"
 #include "lang_button_selector.h"
 #include "game_scene.h"
+#include "sora/locale.h"
+
+#include "book.h"
+#include "book_scene.h"
 
 using namespace std;
 using namespace sora;
@@ -51,9 +55,35 @@ struct MenuSceneButtonSelector : public sora::Selector {
 public:
   virtual void ScenePressed(UIComponent *obj) {
     Button *btn = static_cast<Button*>(obj);
-    int scene_index = (int)btn->userdata();
+    int scene_index = (int)btn->userdata();    
 
-    // TODO 게임 장면으로 되돌아가기. 없으면 생성해서 가기
+    SceneManager::GetInstance().PopAndDestroy();
+    GameScene *scene = new GameScene(scene_index);
+    SceneManager::GetInstance().Push(scene);
+
+    // load first page
+    Book &book = Book::GetInstance();
+    book.SetLanguage(Locale::GetInstance().language());
+    book.MoveScene(scene_index);
+    BookScene *page = book.GetCurrScene();
+    page->LoadTexture();
+  }
+  virtual void ClosePressed(UIComponent *btn) {
+    Book &book = Book::GetInstance();
+    int scene_index = book.curr_scene_page();
+
+    book.SetLanguage(Locale::GetInstance().language());
+
+    //언어가 바뀌엇을수도 있는데 확인이 귀찮으니 통째로 다시 부르기
+    //Book::GetInstance().Reload();
+
+    SceneManager::GetInstance().PopAndDestroy();
+    GameScene *scene = new GameScene(scene_index);
+    SceneManager::GetInstance().Push(scene);
+
+    // load first page
+    BookScene *page = book.GetCurrScene();
+    page->LoadTexture();
   }
 };
 
@@ -62,6 +92,9 @@ struct MenuSceneImpl {
   TextureHandle background_tex_handle;
   MenuSceneButtonSelector btn_selector;
   LangButtonSelector lang_selector;
+
+  Button *kor_close_btn;
+  Button *eng_close_btn;
 };
 
 MenuScene::MenuScene()
@@ -114,8 +147,11 @@ MenuScene::MenuScene()
       Button *btn = new Button();
       btn->set_position(btn_pos);
       btn->set_touch_rect(Recti(vec2(0, 0) + btn_pos, vec2(btn_width, btn_height)));
-      btn->set_userdata((void*)i);
+      btn->set_userdata((void*)(i * 2));  //2배인 이유는 장면/대사 순서니까
       impl_->ui_container.Add(btn);
+
+      UICallbackFunctor functor(&impl_->btn_selector, SR_UI_CALLBACK_SEL(MenuSceneButtonSelector::ScenePressed));
+      btn->set_released_functor(functor);
     }
   }
 
@@ -137,9 +173,25 @@ MenuScene::MenuScene()
   }
   {
     // 뒤로가기 버튼
-    //SpriteSheetManager::
-    //"BtCloseKorean@2x"
-    //  BtCloseEnglish@2x
+    const char kor_file[] = "BtCloseKorean@2x";
+    const char eng_file[] = "BtCloseEnglish@2x";
+    TextureSubImage *eng_img = SpriteSheetManager::GetInstance().GetSubImage(eng_file);
+    TextureSubImage *kor_img = SpriteSheetManager::GetInstance().GetSubImage(kor_file);
+    Button *eng_btn = new Button(*eng_img);
+    Button *kor_btn = new Button(*kor_img);
+
+    impl_->ui_container.Add(eng_btn);
+    impl_->ui_container.Add(kor_btn);
+    impl_->eng_close_btn = eng_btn;
+    impl_->kor_close_btn = kor_btn;
+
+    UICallbackFunctor functor(&impl_->btn_selector, SR_UI_CALLBACK_SEL(MenuSceneButtonSelector::ClosePressed));
+    eng_btn->set_released_functor(functor);
+    kor_btn->set_released_functor(functor);
+
+    vec2 pos(400, 400);
+    eng_btn->set_position(pos);
+    kor_btn->set_position(pos);
   }
 }
 MenuScene::~MenuScene() {
@@ -180,5 +232,12 @@ void MenuScene::Draw() {
   drawer.DrawTouchArea(&impl_->ui_container); 
 }
 void MenuScene::Update(int dt_ms) {
+  if (Locale::GetInstance().language() == kLanguageEnglish) {
+    impl_->eng_close_btn->set_visible(true);
+    impl_->kor_close_btn->set_visible(false);
+  } else {
+    impl_->eng_close_btn->set_visible(false);
+    impl_->kor_close_btn->set_visible(true);
+  }
 }
 }

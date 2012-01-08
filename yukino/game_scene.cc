@@ -75,7 +75,11 @@ public:
   }
   virtual void OnMenu(UIComponent *btn) {
     MenuScene *scene = new MenuScene();
+    SceneManager::GetInstance().PopAndDestroy();
     SceneManager::GetInstance().Push(scene);
+
+    BookScene *curr = Book::GetInstance().GetCurrScene();
+    curr->UnloadTexture();
   }
 
   void LoadUnloadTexture(BookScene *old_page, BookScene *new_page) {
@@ -136,7 +140,7 @@ GameScene::GameScene(int page)
     impl_->ui_container.Add(btn);
 
     UICallbackFunctor functor(&impl_->btn_selector, SR_UI_CALLBACK_SEL(GameSceneButtonSelector::OnMenu));
-    btn->set_pressed_functor(functor);
+    btn->set_released_functor(functor);
   }
 
   {
@@ -149,7 +153,7 @@ GameScene::GameScene(int page)
     impl_->ui_container.Add(btn);
 
     UICallbackFunctor functor(&impl_->btn_selector, SR_UI_CALLBACK_SEL(GameSceneButtonSelector::OnReset));
-    btn->set_pressed_functor(functor);
+    btn->set_released_functor(functor);
   }
 
   {
@@ -162,7 +166,7 @@ GameScene::GameScene(int page)
     impl_->ui_container.Add(btn);
 
     UICallbackFunctor functor(&impl_->btn_selector, SR_UI_CALLBACK_SEL(GameSceneButtonSelector::OnPrev));
-    btn->set_pressed_functor(functor);
+    btn->set_released_functor(functor);
   }
 
   {
@@ -175,7 +179,7 @@ GameScene::GameScene(int page)
     impl_->ui_container.Add(btn);
 
     UICallbackFunctor functor(&impl_->btn_selector, SR_UI_CALLBACK_SEL(GameSceneButtonSelector::OnNext));
-    btn->set_pressed_functor(functor);
+    btn->set_released_functor(functor);
   }
 }
 GameScene::~GameScene() {

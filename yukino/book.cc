@@ -9,6 +9,8 @@
 #include "sora/filesystem.h"
 #include "book_scene.h"
 
+#include "sora/locale.h"
+
 using namespace sora;
 using namespace std;
 
@@ -20,12 +22,26 @@ Book::Book()
   max_pan_deg_(60),
   max_tilt_deg_(60),
   curr_scene_page_(0),
-  cam_radius_(1) {
+  cam_radius_(1),
+  lang_(kLanguageEnglish) {
+  //책 정보 로딩
 }
 Book::~Book() {
-  DestroyList(&scene_list_);
+  DestroyList(&kor_scene_list_);
+  DestroyList(&eng_scene_list_);
 }
 
+void Book::SetLanguage(sora::LanguageType lang) {
+  // 없으면 불러오기
+  lang_ = lang;
+  if (kor_scene_list_.empty() && lang == kLanguageKorean) {
+    string book_path = Filesystem::GetAppPath("res/book_kr.xml");
+    Load(book_path, lang);
+  } else if (eng_scene_list_.empty() && lang == kLanguageEnglish) {
+    string book_path = Filesystem::GetAppPath("res/book_en.xml");
+    Load(book_path, lang);
+  }
+}
 
 float Book::CalcPanDeg(float raw_degree) {
   if(raw_degree > max_pan_deg_) {
@@ -45,13 +61,8 @@ float Book::CalcTiltDeg(float raw_degree) {
   //else..
   return raw_degree;
 }
-const std::string &Book::GetSceneFile(int index) const {
-  return scene_file_list_[index];
-}
-const std::string &Book::GetCurrSceneFile() const {
-  return scene_file_list_[curr_scene_page_];
-}
-void Book::LoadConfigList(sora::XmlNode *node) {
+
+void Book::LoadConfigList(sora::XmlNode *node, sora::LanguageType lang) {
   XmlNodeListIterator it = node->ChildBegin();
   XmlNodeListIterator endit = node->ChildEnd();
   for( ; it != endit ; it++) {
@@ -87,8 +98,8 @@ void Book::LoadConfigList(sora::XmlNode *node) {
     }
   }
 }
-void Book::LoadSceneList(sora::XmlNode *node) {
-  scene_file_list_.clear();
+void Book::LoadSceneList(sora::XmlNode *node, sora::LanguageType lang) {
+  std::vector<std::string> scene_file_list;
 
   XmlNodeListIterator it = node->ChildBegin();
   XmlNodeListIterator endit = node->ChildEnd();
@@ -96,11 +107,11 @@ void Book::LoadSceneList(sora::XmlNode *node) {
     XmlNode *sceneNode = *it;
     const string &file = sceneNode->GetAttribute("file");
     SR_ASSERT(file.size() > 0 && "no file error");
-    scene_file_list_.push_back(file);
+    scene_file_list.push_back(file);
   }
 
   //scene 파일 전부 로딩하기
-  BOOST_FOREACH(const std::string &file, scene_file_list_) {
+  BOOST_FOREACH(const std::string &file, scene_file_list) {
     string path = sora::Filesystem::GetAppPath(file);
     sora::MemoryFile mem_file(path);
     mem_file.Open();
@@ -113,12 +124,16 @@ void Book::LoadSceneList(sora::XmlNode *node) {
 
     BookScene *scene = new BookScene(node);
     scene->Load();  //로딩과 텍스쳐 로딩을 별개로 치고 일단 전부 생성
-    scene_list_.push_back(scene);
+    if(lang == kLanguageEnglish) {
+      eng_scene_list_.push_back(scene);
+    } else {
+      kor_scene_list_.push_back(scene);
+    }
 
     mem_file.Close();
   }
 }
-void Book::Load(const std::string &cfgfile) {
+void Book::Load(const std::string &cfgfile, sora::LanguageType lang) {
   /*
   <?xml version="1.0"?>
   <cube>
@@ -147,9 +162,9 @@ void Book::Load(const std::string &cfgfile) {
   for( ; it != endit ; it++) {
     XmlNode *node = *it;
     if(node->name() == "config_list") {
-      LoadConfigList(node);
+      LoadConfigList(node, lang);
     } else if(node->name() == "scene_list") {
-      LoadSceneList(node);
+      LoadSceneList(node, lang);
     } else {
       SR_ASSERT(!"not valid xml");
     }
@@ -169,13 +184,15 @@ void Book::MovePrevScene() {
   }
 }
 bool Book::IsNextSceneExist() const {
-  if(curr_scene_page() >= scene_file_list_.size()-1) {
+  SR_ASSERT(!scene_list().empty());
+  if(curr_scene_page() >= scene_list().size()-1) {
     return false;
   } else {
     return true;
   }
 }
 bool Book::IsPrevScenExist() const {
+  SR_ASSERT(!scene_list().empty());
   if(curr_scene_page() == 0) {
     return false;
   } else {
@@ -184,8 +201,29 @@ bool Book::IsPrevScenExist() const {
 }
 
 void Book::MoveScene(int index) {
-  SR_ASSERT(index >= 0 && index < scene_file_list_.size());
+  SR_ASSERT(!scene_list().empty());
+  SR_ASSERT(index >= 0 && index < scene_list().size());
   curr_scene_page_ = index;
 }
 
+BookScene *Book::GetCurrScene() {
+  return scene_list().at(curr_scene_page_);
+}
+BookScene *Book::GetScene(int index) {
+  return scene_list().at(index);
+}
+std::vector<BookScene*> &Book::scene_list() {
+  if (lang_ == kLanguageEnglish) {
+    return eng_scene_list_;
+  } else {
+    return kor_scene_list_;
+  }
+}
+const std::vector<BookScene*> &Book::scene_list() const {
+  if (lang_ == kLanguageEnglish) {
+    return eng_scene_list_;
+  } else {
+    return kor_scene_list_;
+  }
+}
 }

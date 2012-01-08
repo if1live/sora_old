@@ -64,6 +64,7 @@ public:
 
     // load first page
     Book &book = Book::GetInstance();
+    book.SetLanguage(Locale::GetInstance().language());
     BookScene *page = book.GetCurrScene();
     page->LoadTexture();
   }
@@ -132,7 +133,7 @@ IntroScene::IntroScene()
     impl_->ui_container.Add(start_btn);
 
     UICallbackFunctor start_functor(&impl_->btn_selector, SR_UI_CALLBACK_SEL(IntroSceneButtonSelector::StartPressed));
-    start_btn->set_pressed_functor(start_functor);
+    start_btn->set_released_functor(start_functor);
   }
 
   //오른쪽 아래에 menu
@@ -143,7 +144,7 @@ IntroScene::IntroScene()
     impl_->ui_container.Add(menu_btn);
 
     UICallbackFunctor menu_functor(&impl_->btn_selector, SR_UI_CALLBACK_SEL(IntroSceneButtonSelector::MenuPressed));
-    menu_btn->set_pressed_functor(menu_functor);
+    menu_btn->set_released_functor(menu_functor);
   }
 
   // 배경 이미지. 국자거에 따라서 띄우기. 이것도 쓰레드 로딩이 필요한가?

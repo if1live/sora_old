@@ -28,6 +28,8 @@ BookScene::BookScene(sora::XmlNode *node)
   : useGrid_(true), root_node_(node) {
 }
 BookScene::~BookScene() {
+  UnloadTexture();
+  Unload();
   if (root_node_ != NULL) {
     delete(root_node_);
     root_node_ = NULL;
@@ -372,7 +374,7 @@ void BookScene::UnloadTexture() {
     Texture *tex = TextureManager::GetInstance().GetTexture(handle);
     SR_ASSERT(tex != NULL);
     tex->Cleanup();
-    tex->SetAsSample();
+    tex->SetAsLoading();
   }
 }
 
