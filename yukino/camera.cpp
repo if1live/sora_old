@@ -6,6 +6,10 @@
 
 #include "sora/immediate_mode_emulator.h"
 
+#if SR_USE_PCH == 0
+#include <cmath>
+#endif
+
 using namespace sora;
 
 namespace yukino {;

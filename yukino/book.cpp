@@ -11,6 +11,10 @@
 
 #include "sora/locale.h"
 
+#if SR_USE_PCH == 0
+#include <boost/foreach.hpp>
+#endif
+
 using namespace sora;
 using namespace std;
 

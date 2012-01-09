@@ -4,6 +4,10 @@
 #include "book_paper.h"
 #include "sora/texture_manager.h"
 
+#if SR_USE_PCH == 0
+#include <set>
+#endif
+
 namespace sora {;
 class XmlNode;
 struct TextureSubImage;

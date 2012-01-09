@@ -13,6 +13,7 @@
 # limitations under the License.
 #
 LOCAL_PATH:= $(call my-dir)
+START_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
@@ -22,11 +23,12 @@ LOCAL_C_INCLUDES := ../sdk/boost	\
 	../sdk/libpng	\
 	../sdk/tinyxml
 
-LOCAL_MODULE    := libgl2jni
+LOCAL_MODULE    := sora
 LOCAL_CFLAGS    := -Werror	-std=gnu++0x
-LOCAL_LDLIBS    := -llog -lGLESv2
+LOCAL_LDLIBS    := -llog -lGLESv2  -lz
 LOCAL_CPP_EXTENSION := .cpp .cc
-LOCAL_SRC_FILES := gl_code.cc	\
+LOCAL_STATIC_LIBRARIES := boost_thread tinyxml libpng
+LOCAL_SRC_FILES := \
 	../arch.cpp	\
 	../basic_shader.cpp	\
 	../button.cpp	\
@@ -49,6 +51,7 @@ LOCAL_SRC_FILES := gl_code.cc	\
 	../shader.cpp	\
 	../sprite_sheet_manager.cpp	\
 	../texture.cpp	\
+	../texture_atlas.cpp	\
 	../texture_info.cpp	\
 	../texture_manager.cpp	\
 	../touch.cpp	\
@@ -63,8 +66,13 @@ include $(BUILD_SHARED_LIBRARY)
 
 
 include $(CLEAR_VARS)
-LOCAL_MODULE    := libgl2jni-tmp
+LOCAL_MODULE    := sora-tmp
 LOCAL_SRC_FILES := 
 LOCAL_LDLIBS += -landroid
-LOCAL_STATIC_LIBRARIES := libgl2jni
+LOCAL_STATIC_LIBRARIES := sora
 include $(BUILD_SHARED_LIBRARY)
+
+$(call import-module,boost)
+
+include $(START_PATH)/../../sdk/tinyxml/jni/Android.mk
+include $(START_PATH)/../../sdk/libpng/jni/Android.mk

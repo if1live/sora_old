@@ -23,6 +23,7 @@
 
 #include "sora/sora_stdafx.h"
 
+#if SR_USE_PCH
 #if SR_WIN
 #include <GL/glew.h>
 #include <GL/glfw.h>
@@ -36,4 +37,5 @@
 // math
 #include "sora/vector.h"
 
-#endif
+#endif  // SR_USE_PCH
+#endif  // YUKINO_YUKINO_STDAFX_H_

@@ -14,6 +14,10 @@
 #include "sora/locale.h"
 #include "sora/gl_window.h"
 
+#if SR_USE_PCH == 0
+#include "sora/gl_inc.h"
+#endif
+
 //input
 //#include "ASInputHandler.h"
 //#include "ASKeyboardInputHandler.h"
@@ -42,7 +46,7 @@ void Glassless3d::Init() {
 #elif SR_WIN
   //handler_ = auto_ptr<InputHandler>(new KeyboardInputHandler()); 
 #else
-#error "not support this platform"
+//#error "not support this platform"
 #endif
 
 #if 0

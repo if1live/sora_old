@@ -97,11 +97,13 @@ struct Color4 {
 };
 
 //float 일때는 max가 바뀐다
+/*
 template<>
 float Color3<float>::max_value() { return 1.0f; }
 
 template<>
 float Color4<float>::max_value() { return 1.0f; }
+*/
 
 template<typename ColorType>
 void ToRed(ColorType *color) {

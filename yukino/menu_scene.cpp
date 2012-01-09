@@ -41,6 +41,10 @@
 #include "book.h"
 #include "book_scene.h"
 
+#if SR_USE_PCH == 0
+#include "sora/gl_inc.h"
+#endif
+
 using namespace std;
 using namespace sora;
 
