@@ -26,6 +26,12 @@
 #include <boost/noncopyable.hpp>
 #endif
 
+#if SR_ANDROID
+#include <android/asset_manager.h>
+#include <android/asset_manager_jni.h>
+#include <android/native_activity.h>
+#endif
+
 namespace sora {;
 class MemoryFile : boost::noncopyable {
 public:

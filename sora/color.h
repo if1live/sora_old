@@ -57,8 +57,8 @@ struct Color3 {
     }
   }
 
-  static T max_value() { return 255; }
-  static T min_value() { return 0; }
+  inline static T max_value() { return 255; }
+  inline static T min_value() { return 0; }
 
   static bool HasAlpha() { return false; }
 
@@ -87,8 +87,8 @@ struct Color4 {
   Color4(T r, T g, T b, T a) : r(r), g(g), b(b), a(a) {}
   Color4(const Color3<T> &o) : r(o.r), g(o.g), b(o.b), a(max_value()) {}
 
-  static T max_value() { return 255; }
-  static T min_value() { return 0; }
+  inline static T max_value() { return 255; }
+  inline static T min_value() { return 0; }
 
   static bool HasAlpha() { return true; }
 
@@ -97,13 +97,10 @@ struct Color4 {
 };
 
 //float 일때는 max가 바뀐다
-/*
-template<>
-float Color3<float>::max_value() { return 1.0f; }
-
-template<>
-float Color4<float>::max_value() { return 1.0f; }
-*/
+//http://stackoverflow.com/questions/4445654/multiple-definition-of-template-specialization-when-using-different-objects
+//inline으로 해주면 multiple definition error가 사라진다
+template<>  inline float Color3<float>::max_value() { return 1.0f; }
+template<>  inline float Color4<float>::max_value() { return 1.0f; }
 
 template<typename ColorType>
 void ToRed(ColorType *color) {

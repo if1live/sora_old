@@ -61,19 +61,18 @@ void GLWindow::Init() {
     exit( EXIT_FAILURE );
   }
   fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
-
+#endif
   // gl 관련 정보 출력
-  printf("GLVersion:%s\n", GLHelper::GetVersion().c_str());
-  printf("GLVender:%s\n", GLHelper::GetVender().c_str());
-  printf("GLRenderer:%s\n", GLHelper::GetRenderer().c_str());
+  LOGI("GLVersion:%s\n", GLHelper::GetVersion().c_str());
+  LOGI("GLVender:%s\n", GLHelper::GetVender().c_str());
+  LOGI("GLRenderer:%s\n", GLHelper::GetRenderer().c_str());
   using std::vector;
   using std::string;
-  printf("GLExtension:");
+  LOGI("GLExtension:");
   const vector<string> &ext_list = GLHelper::GetExtensionList();
   for (size_t i = 0 ; i < ext_list.size() ; i++) {
-    printf("%s ", ext_list[i].c_str());
+    LOGI("%s ", ext_list[i].c_str());
   }
-  printf("\n");
-#endif
+  LOGI("\n");
 }
 }

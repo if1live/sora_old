@@ -25,11 +25,12 @@ LOCAL_C_INCLUDES := ../sdk/boost	\
 
 LOCAL_MODULE    := sora
 LOCAL_CFLAGS    := -Werror	-std=gnu++0x
-LOCAL_LDLIBS    := -llog -lGLESv2  -lz
-LOCAL_CPP_EXTENSION := .cpp .cc
-LOCAL_STATIC_LIBRARIES := boost_thread tinyxml libpng
+LOCAL_LDLIBS    := 
 LOCAL_SRC_FILES := \
+	../logger.cpp	\
 	../arch.cpp	\
+	../xml_node.cpp	\
+	../xml_reader.cpp	\
 	../basic_shader.cpp	\
 	../button.cpp	\
 	../clock.cpp	\
@@ -41,7 +42,6 @@ LOCAL_SRC_FILES := \
 	../image_label.cpp	\
 	../immediate_mode_emulator.cpp	\
 	../locale.cpp	\
-	../logger.cpp	\
 	../low_level_c_file.cpp	\
 	../math_helper.cpp	\
 	../matrix_stack.cpp	\
@@ -58,21 +58,17 @@ LOCAL_SRC_FILES := \
 	../ui_component.cpp	\
 	../ui_container.cpp	\
 	../ui_drawer.cpp	\
-	../xml_node.cpp	\
-	../xml_reader.cpp
 
-include $(BUILD_SHARED_LIBRARY)
+include $(BUILD_STATIC_LIBRARY)
 
 
 
 include $(CLEAR_VARS)
 LOCAL_MODULE    := sora-tmp
 LOCAL_SRC_FILES := 
-LOCAL_LDLIBS += -landroid
 LOCAL_STATIC_LIBRARIES := sora
 include $(BUILD_SHARED_LIBRARY)
 
-$(call import-module,boost)
-
-include $(START_PATH)/../../sdk/tinyxml/jni/Android.mk
-include $(START_PATH)/../../sdk/libpng/jni/Android.mk
+#$(call import-module,boost)
+#include $(START_PATH)/../../sdk/tinyxml/jni/Android.mk
+#include $(START_PATH)/../../sdk/libpng/jni/Android.mk

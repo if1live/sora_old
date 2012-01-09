@@ -23,6 +23,7 @@
 
 #if SR_USE_PCH == 0
 #include <vector>
+#include <string>
 #endif
 
 namespace sora {;

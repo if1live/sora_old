@@ -39,4 +39,12 @@ NUL
 *Debug*
 *.user
 *Release*
-/sdk/libjpeg/NUL
+*NUL
+*/assets/*
+*/gen/*
+*/bin/*
+/yukino/.classpath
+/yukino/.project
+/yukino/.settings/org.eclipse.jdt.core.prefs
+/yukino/default.properties
+/yukino/project.properties
