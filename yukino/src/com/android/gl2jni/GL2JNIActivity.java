@@ -22,18 +22,25 @@ import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import java.io.File;
 
+import com.cauly.android.ad.AdInfo;
+import com.cauly.android.ad.AdListener;
+import com.cauly.android.ad.AdView;
 
-public class GL2JNIActivity extends Activity {
+
+public class GL2JNIActivity extends Activity implements AdListener {
 
     GL2JNIView mView;
+    private RelativeLayout main_layout;
 
     @Override protected void onCreate(Bundle icicle) {
         super.onCreate(icicle);
-        mView = new GL2JNIView(getApplication());
         
+        /*
+        mView = new GL2JNIView(getApplication());
         LinearLayout layout = new LinearLayout(getBaseContext());
         Button btn = new Button(this); 
         btn.setText("MyButton");
@@ -42,6 +49,19 @@ public class GL2JNIActivity extends Activity {
         layout.addView(mView);
         //setContentView(btn);
         setContentView(layout);
+        */
+        setContentView(R.layout.test);
+        main_layout = (RelativeLayout)findViewById(R.id.layout);
+        mView = new GL2JNIView(getApplication());
+        main_layout.addView(mView);
+        
+        AdInfo ads_info = new AdInfo();
+        //String appcode = "Slek0KLF";
+        String appcode = "CAULY";
+        ads_info.initData(appcode, "CPC", "all", "all", "off", "default", "no", 90, false);
+        AdView adView = new AdView(this);
+        adView.setAdListener(this);
+        main_layout.addView(adView);        
         
     }
 
@@ -54,4 +74,14 @@ public class GL2JNIActivity extends Activity {
         super.onResume();
         mView.onResume();
     }
+
+	public void onFailedToReceiveAd(boolean arg0) {
+		// TODO Auto-generated method stub
+		Log.w("yukino", "on failed");
+	}
+
+	public void onReceiveAd() {
+		// TODO Auto-generated method stub
+		Log.w("yukino", "on receive");
+	}
 }
