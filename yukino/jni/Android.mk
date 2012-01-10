@@ -24,7 +24,7 @@ LOCAL_C_INCLUDES := ../sdk/boost	\
 	../sdk/libpng	\
 	../sdk/tinyxml
 
-LOCAL_MODULE    := native-activity
+LOCAL_MODULE    := yukino
 LOCAL_CFLAGS    := -Werror	-std=gnu++0x
 LOCAL_LDLIBS    := -llog  -landroid -lEGL -lGLESv2 -lz
 #-lGLESv1_CM
