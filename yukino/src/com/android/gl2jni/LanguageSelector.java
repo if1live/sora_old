@@ -1,11 +1,10 @@
-package co.kr.teamobj.whitesnow;
+package com.android.gl2jni;
 
 import android.app.Activity;
+
 import android.graphics.drawable.Drawable;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
-
-import com.android.gl2jni.R;
 
 public class LanguageSelector {
 	private static LanguageSelector ctx = null;

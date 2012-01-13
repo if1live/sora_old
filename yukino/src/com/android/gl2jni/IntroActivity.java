@@ -1,8 +1,7 @@
-package co.kr.teamobj.whitesnow;
+package com.android.gl2jni;
 
 import java.util.Locale;
 
-import com.android.gl2jni.R;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -55,10 +54,9 @@ public class IntroActivity extends Activity {
 		//시작 버튼
 		ImageButton startBtn = (ImageButton)findViewById(R.id.StartButton);
 		startBtn.setOnClickListener(new View.OnClickListener() {
-			
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
+				Intent intentSubActivity = new Intent(activity, GL2JNIActivity.class);
+				startActivity(intentSubActivity);
 			}
 		});
 		

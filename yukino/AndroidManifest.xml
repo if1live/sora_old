@@ -30,27 +30,29 @@
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     
-    <application
-            android:label="@string/gl2jni_activity">
-        <activity android:name="GL2JNIActivity"
+    <application android:label="@string/gl2jni_activity">
+        <activity android:name=".GL2JNIActivity"
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             	android:launchMode="singleTask"
             	android:configChanges="orientation|keyboardHidden"
             	android:screenOrientation="landscape">
             <intent-filter>
-                <!--  <action android:name="android.intent.action.MAIN" />-->
+                 <!-- 
+                <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
+                  -->
             </intent-filter>
         </activity>
-        <activity android:name="co.kr.teamobj.whitesnow.IntroActivity" 
+        <activity android:name=".IntroActivity" 
             android:label="IntroActivity"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="co.kr.teamobj.whitesnow.PageActivity" 
+        <activity android:name=".PageActivity" 
             android:label="IntroActivity"
             android:theme="@android:style/Theme.NoTitleBar"
             android:screenOrientation="landscape">

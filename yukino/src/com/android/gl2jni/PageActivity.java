@@ -1,9 +1,17 @@
-package co.kr.teamobj.whitesnow;
+package com.android.gl2jni;
 
-import com.android.gl2jni.R;
+import java.util.Vector;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -42,11 +50,39 @@ public class PageActivity extends Activity {
 		});
 		
 		//listview에 내용 적절히 채우기
-		//final int scene = 10;
-		//ListView sceneListView = (ListView)findViewById(R.id);
-		//sceneListView.add
+		
+		ListView sceneListView = (ListView)findViewById(R.id.sceneListView);
+		sceneListView.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, sceneList));
+		sceneListView.setOnItemClickListener(new OnItemClickListener() {
+			public void onItemClick(AdapterView<?> l, View v, int position, long id) {
+				int scenePageIndex = position * 2;	//script * raw
+				Log.i("fds", "fds");
+				//TODO NDK
+				
+				//이전에 생성된것이 하나도 없으면 그냥 만들기
+				//Intent intentSubActivity = new Intent(activity, SceneActivity.class);
+				//startActivity(intentSubActivity);
+				
+				//이전에 게임씬을 거쳐서 왔으면 finish
+				finish();
+			}
+		});
 	}
 	
+	final int sceneCount = 10;
+	static final String[] sceneList = new String[] {
+		"Scene #1",
+		"Scene #2",
+		"Scene #3",
+		"Scene #4",
+		"Scene #5",
+		"Scene #6",
+		"Scene #7",
+		"Scene #8",
+		"Scene #9",
+		"Scene #10",
+	};
+
 	@Override
 	public void onBackPressed() {
 		// TODO Auto-generated method stub

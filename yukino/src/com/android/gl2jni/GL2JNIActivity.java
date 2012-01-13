@@ -17,10 +17,13 @@
 package com.android.gl2jni;
 
 import android.app.Activity;
+
+
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.RelativeLayout;
 
+import com.android.gl2jni.*;
 import com.cauly.android.ad.AdInfo;
 import com.cauly.android.ad.AdListener;
 import com.cauly.android.ad.AdView;
@@ -28,48 +31,36 @@ import com.cauly.android.ad.AdView;
 
 public class GL2JNIActivity extends Activity implements AdListener {
 
-    GL2JNIView mView;
-    private RelativeLayout main_layout;
+	GL2JNIView mView;
+	private RelativeLayout main_layout;
 
-    @Override protected void onCreate(Bundle icicle) {
-        super.onCreate(icicle);
-        
-        /*
-        mView = new GL2JNIView(getApplication());
-        LinearLayout layout = new LinearLayout(getBaseContext());
-        Button btn = new Button(this); 
-        btn.setText("MyButton");
-        layout.addView(btn);
-        //setContentView(mView);
-        layout.addView(mView);
-        //setContentView(btn);
-        setContentView(layout);
-        */
-        setContentView(R.layout.test);
-        main_layout = (RelativeLayout)findViewById(R.id.layout);
-        //sora renderer는 나중에 부착하자
-        //mView = new GL2JNIView(getApplication());
-        //main_layout.addView(mView);
-        
-        AdInfo ads_info = new AdInfo();
-        //String appcode = "Slek0KLF";
-        String appcode = "CAULY";
-        ads_info.initData(appcode, "CPC", "all", "all", "off", "default", "no", 90, false);
-        AdView adView = new AdView(this);
-        adView.setAdListener(this);
-        main_layout.addView(adView);        
-        
-    }
+	@Override protected void onCreate(Bundle icicle) {
+		super.onCreate(icicle);
+		
+		setContentView(R.layout.test);
+		main_layout = (RelativeLayout)findViewById(R.id.layout);
+		//sora renderer는 나중에 부착하자
+		mView = new GL2JNIView(getApplication());
+		main_layout.addView(mView);
 
-    @Override protected void onPause() {
-        super.onPause();
-        mView.onPause();
-    }
+		AdInfo ads_info = new AdInfo();
+		//String appcode = "Slek0KLF";
+		String appcode = "CAULY";
+		ads_info.initData(appcode, "CPC", "all", "all", "off", "default", "no", 90, false);
+		AdView adView = new AdView(this);
+		adView.setAdListener(this);
+		main_layout.addView(adView);
+	}
 
-    @Override protected void onResume() {
-        super.onResume();
-        mView.onResume();
-    }
+	@Override protected void onPause() {
+		super.onPause();
+		mView.onPause();
+	}
+
+	@Override protected void onResume() {
+		super.onResume();
+		mView.onResume();
+	}
 
 	public void onFailedToReceiveAd(boolean arg0) {
 		// TODO Auto-generated method stub
