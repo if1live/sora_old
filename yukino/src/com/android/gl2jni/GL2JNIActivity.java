@@ -19,12 +19,7 @@ package com.android.gl2jni;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-
-import java.io.File;
 
 import com.cauly.android.ad.AdInfo;
 import com.cauly.android.ad.AdListener;
@@ -52,8 +47,9 @@ public class GL2JNIActivity extends Activity implements AdListener {
         */
         setContentView(R.layout.test);
         main_layout = (RelativeLayout)findViewById(R.id.layout);
-        mView = new GL2JNIView(getApplication());
-        main_layout.addView(mView);
+        //sora renderer는 나중에 부착하자
+        //mView = new GL2JNIView(getApplication());
+        //main_layout.addView(mView);
         
         AdInfo ads_info = new AdInfo();
         //String appcode = "Slek0KLF";

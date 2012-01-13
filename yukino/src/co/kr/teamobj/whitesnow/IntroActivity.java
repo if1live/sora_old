@@ -5,6 +5,7 @@ import java.util.Locale;
 import com.android.gl2jni.R;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
@@ -64,10 +65,9 @@ public class IntroActivity extends Activity {
 		//페이지 버튼
 		ImageButton pageBtn = (ImageButton)findViewById(R.id.PageButton);
 		pageBtn.setOnClickListener(new View.OnClickListener() {
-			
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				
+				Intent intentSubActivity = new Intent(activity, PageActivity.class);
+				startActivity(intentSubActivity);
 			}
 		});
 		
@@ -89,5 +89,13 @@ public class IntroActivity extends Activity {
 			}
 		});
 		*/
+	}
+	
+	@Override
+	protected void onResume() {
+		super.onResume();
+		//현재 로케일을 얻어서 button 상태 초기화
+		LanguageSelector.GetInstance().ResetUI(this);
+
 	}
 }

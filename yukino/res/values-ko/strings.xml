@@ -24,8 +24,8 @@
 <resources>
     <!-- Simple strings. -->
     <string name="gl2jni_activity">GL2JNI</string>
-    <string name="lang_ko">Korean</string>
-    <string name="lang_en">English</string>
+    <string name="lang_ko">한국어</string>
+    <string name="lang_en">영어</string>
 
 </resources>
 

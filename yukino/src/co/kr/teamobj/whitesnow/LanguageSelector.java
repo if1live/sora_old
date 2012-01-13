@@ -26,17 +26,16 @@ public class LanguageSelector {
 	public static final int English = 0x02;
 	
 	public void SetLanguage(int code, Activity activity) {
-		if(currLang == code) {
-			return;
-		}
 		currLang = code;
-			
+		ResetUI(activity);
+	}
+	public void ResetUI(Activity activity) {
 		//언어에 따라서 배경 이미지 교체
 		//언어에 따라서 button 이미지 교체
 		ImageButton korBtn = (ImageButton)activity.findViewById(R.id.LangKoreanButton);
 		ImageButton engBtn = (ImageButton)activity.findViewById(R.id.LangEnglishButton);
 		if(korBtn != null && engBtn != null) {
-			if(code == Korean) {
+			if(currLang == Korean) {
 				korBtn.setSelected(true);
 				engBtn.setSelected(false);
 				
@@ -53,7 +52,7 @@ public class LanguageSelector {
 				Drawable drawable = activity.getResources().getDrawable(resId);
 				layout.setBackgroundDrawable(drawable);
 			}
-		}		
+		}
 	}
 	public int GetCurrLanguage() {
 		return currLang;
