@@ -30,4 +30,17 @@ public class GL2JNILib {
      */
      public static native void init(int width, int height);
      public static native void step();
+     
+     // sora scene으로 연결되는 함수
+     public static native void onResume();
+     public static native void onSuspend();
+     public static native void onInit();
+     public static native void onCleanup();
+     
+     // sora book로 연결되는 함수
+     public static native void setBookPage(int index);
+     public static native void moveNextPage();
+     public static native void movePrevPage();
+     public static native boolean isNextPageExist();
+     public static native boolean isPrevPageExist();
 }

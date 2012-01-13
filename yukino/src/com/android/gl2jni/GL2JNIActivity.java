@@ -17,13 +17,19 @@
 package com.android.gl2jni;
 
 import android.app.Activity;
+import android.content.Intent;
 
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
 import com.android.gl2jni.*;
+import com.android.gl2jni.R.id;
 import com.cauly.android.ad.AdInfo;
 import com.cauly.android.ad.AdListener;
 import com.cauly.android.ad.AdView;
@@ -37,11 +43,11 @@ public class GL2JNIActivity extends Activity implements AdListener {
 	@Override protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		
-		setContentView(R.layout.test);
+		setContentView(R.layout.scene);
 		main_layout = (RelativeLayout)findViewById(R.id.layout);
 		//sora renderer는 나중에 부착하자
 		mView = new GL2JNIView(getApplication());
-		main_layout.addView(mView);
+		main_layout.addView(mView, 0);
 
 		AdInfo ads_info = new AdInfo();
 		//String appcode = "Slek0KLF";
@@ -49,7 +55,41 @@ public class GL2JNIActivity extends Activity implements AdListener {
 		ads_info.initData(appcode, "CPC", "all", "all", "off", "default", "no", 90, false);
 		AdView adView = new AdView(this);
 		adView.setAdListener(this);
-		main_layout.addView(adView);
+		LinearLayout contentLayout = (LinearLayout)findViewById(R.id.contentLayout);
+		contentLayout.addView(adView, 0);
+		
+		final Activity activity = this;
+		//버튼에 이벤트 걸기
+		ImageButton pageBtn = (ImageButton)findViewById(R.id.pageBtn);
+		pageBtn.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				Intent intentSubActivity = new Intent(activity, PageActivity.class);
+				startActivity(intentSubActivity);	//그리고 메뉴씬으로
+			}
+		});
+		ImageButton nextBtn = (ImageButton)findViewById(R.id.nextBtn);
+		nextBtn.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				//TODO ndk
+				
+				//prev, next 버튼 갱신
+			}
+		});
+		ImageButton prevBtn = (ImageButton)findViewById(R.id.prevBtn);
+		prevBtn.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				// TODO ndk
+				
+				//prev, next 버튼 갱신
+			}
+		});
+		ImageButton resetBtn = (ImageButton)findViewById(R.id.resetBtn);
+		resetBtn.setOnClickListener(new OnClickListener() {
+			public void onClick(View v) {
+				// TODO 자이로인지 가속도인지 확인해서 적절한 값을 보내자
+				
+			}
+		});
 	}
 
 	@Override protected void onPause() {

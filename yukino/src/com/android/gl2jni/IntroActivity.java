@@ -55,6 +55,8 @@ public class IntroActivity extends Activity {
 		ImageButton startBtn = (ImageButton)findViewById(R.id.StartButton);
 		startBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				finish();	//메인씬 죽이기
+				
 				Intent intentSubActivity = new Intent(activity, GL2JNIActivity.class);
 				startActivity(intentSubActivity);
 			}
@@ -64,8 +66,13 @@ public class IntroActivity extends Activity {
 		ImageButton pageBtn = (ImageButton)findViewById(R.id.PageButton);
 		pageBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Intent intentSubActivity = new Intent(activity, PageActivity.class);
-				startActivity(intentSubActivity);
+				finish();	//메인씬 죽이기
+				
+				Intent intentSubActivity = new Intent(activity, GL2JNIActivity.class);
+				startActivity(intentSubActivity);	//일단 게임씬 넣기
+				
+				intentSubActivity = new Intent(activity, PageActivity.class);
+				startActivity(intentSubActivity);	//그리고 메뉴씬으로
 			}
 		});
 		

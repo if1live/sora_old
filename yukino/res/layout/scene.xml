@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <!--
+    XML을 이용하여 광고를 붙일때. 
+	<com.cauly.android.ad.AdView  
+		xmlns:app="http://schemas.android.com/apk/res/com.cauly.adtest"
+		android:id="@+id/ad" 
+        android:layout_width="fill_parent" 
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        app:appcode="CAULY"	
+        app:adtype="cpc"
+        app:gender="all"
+        app:age="all"
+        app:effect="circle"
+        app:gps="off"
+        app:allowcall="yes"	
+        app:reloadInterval="90"
+        app:dynamicReloadInterval="true"/>
+    -->
+
+    <LinearLayout
+        android:id="@+id/contentLayout"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical" >
+<!--
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <requestFocus />
+        </EditText>
+-->
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" >
+
+            <LinearLayout
+                android:id="@+id/linearLayout1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/pageBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#00000000"
+                    android:src="@drawable/bt_main_page" />
+
+                <FrameLayout
+                    android:id="@+id/frameLayout2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.47" >
+                </FrameLayout>
+
+                <ImageButton
+                    android:id="@+id/prevBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#00000000"
+                    android:src="@drawable/bt_main_prev" />
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/frameLayout1"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.44" >
+            </FrameLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayout2"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical" >
+
+                <ImageButton
+                    android:id="@+id/resetBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#00000000"
+                    android:src="@drawable/bt_main_reset" />
+
+                <FrameLayout
+                    android:id="@+id/frameLayout3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.37" >
+                </FrameLayout>
+
+                <ImageButton
+                    android:id="@+id/nextBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="#00000000"
+                    android:src="@drawable/bt_main_next" />
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
