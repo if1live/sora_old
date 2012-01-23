@@ -21,6 +21,8 @@
 #ifndef SORA_TEMPLATE_LIBRARY_H_
 #define SORA_TEMPLATE_LIBRARY_H_
 
+#include "assert_inc.h"
+
 namespace sora {;
 /// @brief second에 포인터를 저장하는 연관 컨테이너가
 /// 보관하는 포인터 해제 및 적절히 비우기
@@ -97,7 +99,8 @@ class SharedObject {
     if (SharedObject::ctx_ == NULL) {
       SharedObject::ctx_ = static_cast<T*>(this);
     } else {
-      SR_ASSERT(!"shared obj cannot exist 2 obj");
+      //@TODO
+      //SR_ASSERT(!"shared obj cannot exist 2 obj");
     }
   }
   ~SharedObject() {

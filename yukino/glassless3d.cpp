@@ -11,11 +11,11 @@
 
 #include "sora/filesystem.h"
 #include "sora/math_helper.h"
-#include "sora/locale.h"
+#include "sora/sys_locale.h"
 #include "sora/render/gl_window.h"
 
 #if SR_USE_PCH == 0
-#include "sora/gl_inc.h"
+#include "sora/render/gl_inc.h"
 #endif
 
 //input

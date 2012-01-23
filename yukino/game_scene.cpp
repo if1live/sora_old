@@ -44,7 +44,7 @@
 
 #if SR_USE_PCH == 0
 #include <boost/foreach.hpp>
-#include "sora/gl_inc.h"
+#include "sora/render/gl_inc.h"
 #endif
 
 using namespace sora;

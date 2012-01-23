@@ -9,7 +9,7 @@
 #include "sora/filesystem.h"
 #include "book_scene.h"
 
-#include "sora/locale.h"
+#include "sora/sys_locale.h"
 
 #if SR_USE_PCH == 0
 #include <boost/foreach.hpp>

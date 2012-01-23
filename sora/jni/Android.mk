@@ -20,44 +20,47 @@ include $(CLEAR_VARS)
 LOCAL_C_INCLUDES := ../sdk/boost	\
 	../sdk	\
 	../	\
+	../sora	\
 	../sdk/libpng	\
 	../sdk/tinyxml
 
 LOCAL_MODULE    := sora
-LOCAL_CFLAGS    := -Werror	-std=gnu++0x
+LOCAL_CFLAGS    := -Werror 
 LOCAL_LDLIBS    := 
 LOCAL_SRC_FILES := \
 	../logger.cpp	\
 	../arch.cpp	\
 	../xml_node.cpp	\
 	../xml_reader.cpp	\
-	../basic_shader.cpp	\
-	../button.cpp	\
 	../clock.cpp	\
 	../common_string.cpp	\
 	../filesystem.cpp	\
-	../gl_helper.cpp	\
-	../gl_inc.cpp	\
-	../gl_window.cpp	\
-	../image_label.cpp	\
-	../immediate_mode_emulator.cpp	\
-	../locale.cpp	\
+	../sys_locale.cpp	\
 	../low_level_c_file.cpp	\
 	../math_helper.cpp	\
-	../matrix_stack.cpp	\
 	../mem.cpp	\
-	../memory_file.cpp	\
-	../scene_manager.cpp	\
-	../shader.cpp	\
-	../sprite_sheet_manager.cpp	\
-	../texture.cpp	\
-	../texture_atlas.cpp	\
-	../texture_info.cpp	\
-	../texture_manager.cpp	\
-	../touch.cpp	\
-	../ui_component.cpp	\
-	../ui_container.cpp	\
-	../ui_drawer.cpp	\
+	../memory_file.cpp
+LOCAL_SRC_FILES +=	\
+	../render/matrix_stack.cpp	\
+	../render/gl_helper.cpp	\
+	../render/gl_inc.cpp	\
+	../render/gl_window.cpp	\
+	../render/basic_shader.cpp	\
+	../render/immediate_mode_emulator.cpp	\
+	../render/scene_manager.cpp	\
+	../render/shader.cpp	\
+	../render/sprite_sheet_manager.cpp	\
+	../render/texture.cpp	\
+	../render/texture_atlas.cpp	\
+	../render/texture_info.cpp	\
+	../render/texture_manager.cpp
+LOCAL_SRC_FILES +=	\
+	../ui/button.cpp	\
+	../ui/image_label.cpp	\
+	../ui/touch.cpp	\
+	../ui/ui_component.cpp	\
+	../ui/ui_container.cpp	\
+	../ui/ui_drawer.cpp	\
 
 include $(BUILD_STATIC_LIBRARY)
 

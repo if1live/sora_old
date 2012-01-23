@@ -36,13 +36,13 @@
 #include "sora/render/sprite_sheet_manager.h"
 #include "lang_button_selector.h"
 #include "game_scene.h"
-#include "sora/locale.h"
+#include "sora/sys_locale.h"
 
 #include "book.h"
 #include "book_scene.h"
 
 #if SR_USE_PCH == 0
-#include "sora/gl_inc.h"
+#include "sora/render/gl_inc.h"
 #endif
 
 using namespace std;

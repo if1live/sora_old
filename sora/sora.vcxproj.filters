@@ -47,9 +47,6 @@
     <ClInclude Include="mem.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="locale.h">
-      <Filter>base</Filter>
-    </ClInclude>
     <ClInclude Include="selector.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -146,6 +143,9 @@
     <ClInclude Include="render\scene.h">
       <Filter>render</Filter>
     </ClInclude>
+    <ClInclude Include="sys_locale.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cpp">
@@ -155,9 +155,6 @@
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="common_string.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="locale.cpp">
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="logger.cpp">
@@ -244,6 +241,9 @@
     </ClCompile>
     <ClCompile Include="render\scene_manager.cpp">
       <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="sys_locale.cpp">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -22,7 +22,7 @@
 #include "lang_button_selector.h"
 
 #include "sora/ui/button.h"
-#include "sora/locale.h"
+#include "sora/sys_locale.h"
 #include "sora/render/sprite_sheet_manager.h"
 
 using namespace sora;

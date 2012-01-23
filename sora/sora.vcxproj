@@ -74,7 +74,7 @@
     <ClInclude Include="filesystem.h" />
     <ClInclude Include="handle.h" />
     <ClInclude Include="handle_manager.h" />
-    <ClInclude Include="locale.h" />
+    <ClInclude Include="sys_locale.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="math_helper.h" />
     <ClInclude Include="matrix.h" />
@@ -120,7 +120,7 @@
     <ClCompile Include="arch.cpp" />
     <ClCompile Include="clock.cpp" />
     <ClCompile Include="filesystem.cpp" />
-    <ClCompile Include="locale.cpp" />
+    <ClCompile Include="sys_locale.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="low_level_c_file.cpp" />
     <ClCompile Include="math_helper.cpp" />

@@ -32,7 +32,7 @@
 #include "sora/render/texture.h"
 #include "sora/selector.h"
 
-#include "sora/locale.h"
+#include "sora/sys_locale.h"
 #include "sora/render/gl_window.h"
 
 #include "sora/render/immediate_mode_emulator.h"
@@ -47,7 +47,7 @@
 #include "book_scene.h"
 
 #if SR_USE_PCH == 0
-#include "sora/gl_inc.h"
+#include "sora/render/gl_inc.h"
 #endif
 
 using namespace sora;

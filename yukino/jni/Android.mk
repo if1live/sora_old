@@ -20,6 +20,7 @@ include $(CLEAR_VARS)
 LOCAL_C_INCLUDES := ../sdk/boost	\
 	../sdk	\
 	../	\
+	../sora	\
 	../yukino	\
 	../sdk/libpng	\
 	../sdk/tinyxml

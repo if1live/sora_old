@@ -11,9 +11,6 @@
     <ClCompile Include="handle_manager_test.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="locale_test.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
     <ClCompile Include="mem_test.cpp">
       <Filter>base</Filter>
     </ClCompile>
@@ -53,6 +50,9 @@
     </ClCompile>
     <ClCompile Include="render\texture_test.cpp">
       <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="sys_locale_test.cpp">
+      <Filter>base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

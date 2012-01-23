@@ -8,7 +8,7 @@
 #include "book_paper_builder.h"
 
 #if SR_USE_PCH == 0
-#include "sora/gl_inc.h"
+#include "sora/render/gl_inc.h"
 #endif
 
 using namespace std;

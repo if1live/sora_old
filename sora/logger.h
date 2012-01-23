@@ -21,9 +21,8 @@
 #ifndef SORA_LOGGER_H_
 #define SORA_LOGGER_H_
 
-#include <string>
 #include <cstdarg>
-
+#include <string>
 #if SR_USE_PCH == 0
 #include <cstdio>
 #include <cstdarg>
