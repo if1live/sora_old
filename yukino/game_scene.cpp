@@ -23,7 +23,7 @@
 
 #include "sora/selector.h"
 
-#include "sora/memory_file.h"
+#include "sora/io/memory_file.h"
 #include "sora/render/sprite_sheet_manager.h"
 #include "sora/render/texture_atlas.h"
 #include "sora/render/texture_manager.h"

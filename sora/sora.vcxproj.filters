@@ -62,21 +62,6 @@
     <ClInclude Include="rect.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="filesystem.h">
-      <Filter>io</Filter>
-    </ClInclude>
-    <ClInclude Include="low_level_c_file.h">
-      <Filter>io</Filter>
-    </ClInclude>
-    <ClInclude Include="memory_file.h">
-      <Filter>io</Filter>
-    </ClInclude>
-    <ClInclude Include="xml_reader.h">
-      <Filter>io</Filter>
-    </ClInclude>
-    <ClInclude Include="xml_node.h">
-      <Filter>io</Filter>
-    </ClInclude>
     <ClInclude Include="render\immediate_mode_emulator.h">
       <Filter>render</Filter>
     </ClInclude>
@@ -146,6 +131,21 @@
     <ClInclude Include="sys_locale.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="io\memory_file.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="io\xml_node.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="io\xml_reader.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="io\filesystem.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="io\low_level_c_file.h">
+      <Filter>io</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cpp">
@@ -162,21 +162,6 @@
     </ClCompile>
     <ClCompile Include="mem.cpp">
       <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="filesystem.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="low_level_c_file.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="memory_file.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="xml_node.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="xml_reader.cpp">
-      <Filter>io</Filter>
     </ClCompile>
     <ClCompile Include="math_helper.cpp">
       <Filter>math</Filter>
@@ -244,6 +229,21 @@
     </ClCompile>
     <ClCompile Include="sys_locale.cpp">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="io\xml_node.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="io\xml_reader.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="io\filesystem.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="io\low_level_c_file.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="io\memory_file.cpp">
+      <Filter>io</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

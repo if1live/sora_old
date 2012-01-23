@@ -21,7 +21,7 @@
 #include "sora_stdafx.h"
 #include "texture_manager.h"
 #include "texture.h"
-#include "sora/filesystem.h"
+#include "sora/io/filesystem.h"
 
 #if SR_USE_PCH == 0
 #include <algorithm>

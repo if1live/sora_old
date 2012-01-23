@@ -21,8 +21,8 @@
 #include "sora_stdafx.h"
 #include "sprite_sheet_manager.h"
 
-#include "sora/xml_node.h"
-#include "sora/xml_reader.h"
+#include "sora/io/xml_node.h"
+#include "sora/io/xml_reader.h"
 #include "texture_atlas.h"
 #include "sora/common_string.h"
 #include "texture.h"

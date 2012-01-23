@@ -71,17 +71,19 @@
     <ClInclude Include="clock.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="common_string.h" />
-    <ClInclude Include="filesystem.h" />
     <ClInclude Include="handle.h" />
     <ClInclude Include="handle_manager.h" />
+    <ClInclude Include="io\filesystem.h" />
+    <ClInclude Include="io\low_level_c_file.h" />
+    <ClInclude Include="io\memory_file.h" />
+    <ClInclude Include="io\xml_node.h" />
+    <ClInclude Include="io\xml_reader.h" />
     <ClInclude Include="sys_locale.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="math_helper.h" />
     <ClInclude Include="matrix.h" />
     <ClInclude Include="mem.h" />
-    <ClInclude Include="memory_file.h" />
     <ClInclude Include="arch.h" />
-    <ClInclude Include="low_level_c_file.h" />
     <ClInclude Include="rect.h" />
     <ClInclude Include="render\basic_shader.h" />
     <ClInclude Include="render\gl_helper.h" />
@@ -113,19 +115,19 @@
     <ClInclude Include="ui\ui_drawer.h" />
     <ClInclude Include="unordered_map_inc.h" />
     <ClInclude Include="vector.h" />
-    <ClInclude Include="xml_node.h" />
-    <ClInclude Include="xml_reader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cpp" />
     <ClCompile Include="clock.cpp" />
-    <ClCompile Include="filesystem.cpp" />
+    <ClCompile Include="io\filesystem.cpp" />
+    <ClCompile Include="io\low_level_c_file.cpp" />
+    <ClCompile Include="io\memory_file.cpp" />
+    <ClCompile Include="io\xml_node.cpp" />
+    <ClCompile Include="io\xml_reader.cpp" />
     <ClCompile Include="sys_locale.cpp" />
     <ClCompile Include="logger.cpp" />
-    <ClCompile Include="low_level_c_file.cpp" />
     <ClCompile Include="math_helper.cpp" />
     <ClCompile Include="mem.cpp" />
-    <ClCompile Include="memory_file.cpp" />
     <ClCompile Include="render\basic_shader.cpp" />
     <ClCompile Include="render\gl_helper.cpp" />
     <ClCompile Include="render\gl_inc.cpp" />
@@ -150,8 +152,6 @@
     <ClCompile Include="ui\ui_component.cpp" />
     <ClCompile Include="ui\ui_container.cpp" />
     <ClCompile Include="ui\ui_drawer.cpp" />
-    <ClCompile Include="xml_node.cpp" />
-    <ClCompile Include="xml_reader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

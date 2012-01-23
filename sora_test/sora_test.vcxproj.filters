@@ -17,18 +17,6 @@
     <ClCompile Include="selector_test.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="filesystem_test.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="low_level_c_file_test.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="xml_node_test.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="xml_reader_test.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
     <ClCompile Include="color_test.cpp">
       <Filter>math</Filter>
     </ClCompile>
@@ -53,6 +41,18 @@
     </ClCompile>
     <ClCompile Include="sys_locale_test.cpp">
       <Filter>base</Filter>
+    </ClCompile>
+    <ClCompile Include="io\filesystem_test.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="io\low_level_c_file_test.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="io\xml_node_test.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="io\xml_reader_test.cpp">
+      <Filter>io</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

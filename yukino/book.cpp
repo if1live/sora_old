@@ -1,12 +1,12 @@
 // Ŭnicode please
 #include "yukino_stdafx.h"
 #include "book.h"
-#include "sora/xml_reader.h"
-#include "sora/xml_node.h"
+#include "sora/io/xml_reader.h"
+#include "sora/io/xml_node.h"
 #include "sora/common_string.h"
-#include "sora/memory_file.h"
+#include "sora/io/memory_file.h"
 #include "sora/template_library.h"
-#include "sora/filesystem.h"
+#include "sora/io/filesystem.h"
 #include "book_scene.h"
 
 #include "sora/sys_locale.h"

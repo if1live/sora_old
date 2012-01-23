@@ -14,10 +14,12 @@
     <ClCompile Include="class_type_test.cpp" />
     <ClCompile Include="color_test.cpp" />
     <ClCompile Include="common_string_test.cpp" />
-    <ClCompile Include="filesystem_test.cpp" />
     <ClCompile Include="handle_manager_test.cpp" />
+    <ClCompile Include="io\filesystem_test.cpp" />
+    <ClCompile Include="io\low_level_c_file_test.cpp" />
+    <ClCompile Include="io\xml_node_test.cpp" />
+    <ClCompile Include="io\xml_reader_test.cpp" />
     <ClCompile Include="sys_locale_test.cpp" />
-    <ClCompile Include="low_level_c_file_test.cpp" />
     <ClCompile Include="math_helper_test.cpp" />
     <ClCompile Include="matrix_test.cpp" />
     <ClCompile Include="mem_test.cpp" />
@@ -31,8 +33,6 @@
     </ClCompile>
     <ClCompile Include="testmain.cc" />
     <ClCompile Include="vector_test.cpp" />
-    <ClCompile Include="xml_node_test.cpp" />
-    <ClCompile Include="xml_reader_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h" />

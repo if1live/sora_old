@@ -9,7 +9,7 @@
 #include "book_scene.h"
 #include "book.h"
 
-#include "sora/filesystem.h"
+#include "sora/io/filesystem.h"
 #include "sora/math_helper.h"
 #include "sora/sys_locale.h"
 #include "sora/render/gl_window.h"

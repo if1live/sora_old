@@ -30,16 +30,19 @@ LOCAL_LDLIBS    :=
 LOCAL_SRC_FILES := \
 	../logger.cpp	\
 	../arch.cpp	\
-	../xml_node.cpp	\
-	../xml_reader.cpp	\
 	../clock.cpp	\
 	../common_string.cpp	\
-	../filesystem.cpp	\
 	../sys_locale.cpp	\
-	../low_level_c_file.cpp	\
 	../math_helper.cpp	\
 	../mem.cpp	\
-	../memory_file.cpp
+	
+LOCAL_SRC_FILES +=	\
+	../io/memory_file.cpp	\
+	../io/filesystem.cpp	\
+	../io/xml_node.cpp	\
+	../io/xml_reader.cpp	\
+	../io/low_level_c_file.cpp	\
+	
 LOCAL_SRC_FILES +=	\
 	../render/matrix_stack.cpp	\
 	../render/gl_helper.cpp	\

@@ -25,12 +25,13 @@
 
 #include "sora/ui/button.h"
 #include "sora/ui/image_label.h"
-#include "sora/memory_file.h"
 #include "sora/ui/ui_container.h"
 #include "sora/ui/ui_drawer.h"
 #include "sora/render/texture_manager.h"
 #include "sora/render/texture.h"
 #include "sora/selector.h"
+
+#include "sora/io/memory_file.h"
 
 #include "sora/sys_locale.h"
 #include "sora/render/gl_window.h"

@@ -22,9 +22,9 @@
 #include "sora/clock.h"
 #include "sora/render/gl_helper.h"
 #include "sora/render/texture.h"
-#include "sora/filesystem.h"
+#include "sora/io/filesystem.h"
 #include "sora/render/gl_window.h"
-#include "sora/memory_file.h"
+#include "sora/io/memory_file.h"
 
 #include "sora/render/immediate_mode_emulator.h"
 #include "sora/ui/touch.h"
