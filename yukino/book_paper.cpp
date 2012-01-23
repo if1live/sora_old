@@ -56,6 +56,8 @@ void BookPaper::draw() {
     
     float bookHeight = Book::GetInstance().height;
 
+    //원본이 2배 크기니까 
+    //하지만 스프라이트는 2배크기로 그리기
     srglPushMatrix();
     srglTranslatef(pos_x, pos_y - bookHeight/2 + height/2, pos_z);
     srglRotatef(roll, 0, 1, 0);

@@ -168,8 +168,8 @@ void BookPaperBuilder::CreateNormalModel(float width, float height) {
   SR_ASSERT(sprite_ != NULL);
 
   //스프라이트의 크기와 크기비율을 곱해서 적절한 모델 크기를 만든다 
-  width = sprite_->w * width;
-  height = sprite_->h * height;
+  width = sprite_->w * width * 2;
+  height = sprite_->h * height * 2;
 
   //float texBaseX = sprite_->getAtlasX();
   //float texBaseY = sprite_->getAtlasY();

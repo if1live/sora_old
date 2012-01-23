@@ -83,15 +83,15 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
 
     //5번의 겨우 텍스쳐가 2장으로 넘쳐서 이렇게 처리한다
     if (res == "res/Scene05_2.png") {
-      tex->tex_header.src_width = 1024;
-      tex->tex_header.src_height = 1024;
-      tex->tex_header.tex_width = 1024;
-      tex->tex_header.tex_height = 1024;
+      tex->tex_header.src_width = 1024/2;
+      tex->tex_header.src_height = 1024/2;
+      tex->tex_header.tex_width = 1024/2;
+      tex->tex_header.tex_height = 1024/2;
     } else {
-      tex->tex_header.src_width = 2048;
-      tex->tex_header.src_height = 2048;
-      tex->tex_header.tex_width = 2048;
-      tex->tex_header.tex_height = 2048;
+      tex->tex_header.src_width = 2048/2;
+      tex->tex_header.src_height = 2048/2;
+      tex->tex_header.tex_width = 2048/2;
+      tex->tex_header.tex_height = 2048/2;
     }
 
     //텍스쳐 로딩 요청은 따로 한다. 
@@ -106,23 +106,30 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
   float y = 0;
   float w = 0;
   float h = 0;
+  //@TODO 사양문제로 텍스쳐를 반크기로 떨궛으니 여기도 반땅으로
   if(xStr.size() > 0) {
     x = (float)StringToInt(xStr);
+    x /= 2;
     SR_ASSERT(x >= 0);
   }
   if(yStr.size() > 0) {
     y = (float)StringToInt(yStr);
+    y /= 2;
     SR_ASSERT(y >= 0);
   }
   if(wStr.size() > 0) {
     w = (float)StringToInt(wStr);
+    w /= 2;
   } else {
     w = (float)tex->tex_header.src_width;
+    w /= 2;
   }
   if(hStr.size() > 0) {
     h = (float)StringToInt(hStr);
+    h /= 2;
   } else {
     h = (float)tex->tex_header.src_height;
+    h /= 2;
   }
   SR_ASSERT(w > 0);
   SR_ASSERT(h > 0);
