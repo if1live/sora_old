@@ -56,7 +56,7 @@ boolean MemoryFile::Open() {
   }
 
   int length = Filesystem::GetFileSize(fd);
-  start = (u8*)MM_MALLOC(length + 1);
+  start = (u8*)MM_MALLOC(length + 1); 
   data = start;
   read(fd, start, length);
 
