@@ -21,7 +21,7 @@
 #ifndef YUKINO_INTRO_SCENE_H_
 #define YUKINO_INTRO_SCENE_H_
 
-#include "sora/scene.h"
+#include "sora/render/scene.h"
 
 namespace yukino {;
 

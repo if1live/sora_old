@@ -21,19 +21,19 @@
 #include "yukino_stdafx.h"
 #include "menu_scene.h"
 
-#include "sora/scene_manager.h"
+#include "sora/render/scene_manager.h"
 #include "sora/selector.h"
 
-#include "sora/texture.h"
-#include "sora/texture_manager.h"
-#include "sora/immediate_mode_emulator.h"
-#include "sora/texture_atlas.h"
+#include "sora/render/texture.h"
+#include "sora/render/texture_manager.h"
+#include "sora/render/immediate_mode_emulator.h"
+#include "sora/render/texture_atlas.h"
 
-#include "sora/ui_container.h"
-#include "sora/ui_drawer.h"
-#include "sora/button.h"
+#include "sora/ui/ui_container.h"
+#include "sora/ui/ui_drawer.h"
+#include "sora/ui/button.h"
 
-#include "sora/sprite_sheet_manager.h"
+#include "sora/render/sprite_sheet_manager.h"
 #include "lang_button_selector.h"
 #include "game_scene.h"
 #include "sora/locale.h"

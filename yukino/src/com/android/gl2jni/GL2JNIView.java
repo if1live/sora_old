@@ -325,6 +325,8 @@ public class GL2JNIView extends GLSurfaceView {
 
     private static class Renderer implements GLSurfaceView.Renderer {
         public void onDrawFrame(GL10 gl) {
+        	//매 프레임 호출되는 함수이니까 여기에서 적절히 자이로나 가속도 센서 값을 얻자
+        	
             GL2JNILib.step();
         }
 

@@ -24,21 +24,21 @@
 #include "sora/selector.h"
 
 #include "sora/memory_file.h"
-#include "sora/sprite_sheet_manager.h"
-#include "sora/texture_atlas.h"
-#include "sora/texture_manager.h"
+#include "sora/render/sprite_sheet_manager.h"
+#include "sora/render/texture_atlas.h"
+#include "sora/render/texture_manager.h"
+#include "sora/render/texture.h"
 
-#include "sora/ui_component.h"
-#include "sora/ui_container.h"
-#include "sora/ui_drawer.h"
-#include "sora/button.h"
-#include "sora/image_label.h"
+#include "sora/ui/ui_component.h"
+#include "sora/ui/ui_container.h"
+#include "sora/ui/ui_drawer.h"
+#include "sora/ui/button.h"
+#include "sora/ui/image_label.h"
 
 
 #include "glassless3d.h"
 #include "menu_scene.h"
-#include "sora/scene_manager.h"
-#include "sora/texture.h"
+#include "sora/render/scene_manager.h"
 
 #include "book.h"
 

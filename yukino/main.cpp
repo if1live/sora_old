@@ -20,19 +20,19 @@
 // Ŭnicode please
 #include "yukino_stdafx.h"
 #include "sora/clock.h"
-#include "sora/gl_helper.h"
-#include "sora/texture.h"
+#include "sora/render/gl_helper.h"
+#include "sora/render/texture.h"
 #include "sora/filesystem.h"
-#include "sora/gl_window.h"
+#include "sora/render/gl_window.h"
 #include "sora/memory_file.h"
 
-#include "sora/immediate_mode_emulator.h"
-#include "sora/touch.h"
+#include "sora/render/immediate_mode_emulator.h"
+#include "sora/ui/touch.h"
 
-#include "sora/texture_manager.h"
+#include "sora/render/texture_manager.h"
 
-#include "sora/scene_manager.h"
-#include "sora/scene.h"
+#include "sora/render/scene_manager.h"
+#include "sora/render/scene.h"
 
 #include "game_scene.h"
 #include "intro_scene.h"

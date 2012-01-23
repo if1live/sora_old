@@ -2,9 +2,9 @@
 #include "yukino_stdafx.h"
 #include "book.h"
 #include "book_paper.h"
-#include "sora/texture_atlas.h"
-#include "sora/immediate_mode_emulator.h"
-#include "sora/texture.h"
+#include "sora/render/texture_atlas.h"
+#include "sora/render/immediate_mode_emulator.h"
+#include "sora/render/texture.h"
 #include "book_paper_builder.h"
 
 #if SR_USE_PCH == 0

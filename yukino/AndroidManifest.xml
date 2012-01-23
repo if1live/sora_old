@@ -54,8 +54,7 @@
         </activity>
         <activity android:name=".PageActivity" 
             android:label="IntroActivity"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:screenOrientation="landscape">
+            android:theme="@android:style/Theme.NoTitleBar">
         </activity>
     </application>
     

@@ -12,9 +12,9 @@
 
 #include "sora/memory_file.h"
 #include "sora/common_string.h"
-#include "sora/texture.h"
-#include "sora/texture_atlas.h"
-#include "sora/texture_manager.h"
+#include "sora/render/texture.h"
+#include "sora/render/texture_atlas.h"
+#include "sora/render/texture_manager.h"
 
 #if SR_USE_PCH == 0
 #include <boost/foreach.hpp>

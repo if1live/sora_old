@@ -12,6 +12,7 @@
 /sdk/glew
 /sdk/glfw
 /sdk/tinyxml
+sdk/
 *.suo
 *.sdf
 *.obj

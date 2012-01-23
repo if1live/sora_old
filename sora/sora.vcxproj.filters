@@ -41,35 +41,11 @@
     <ClInclude Include="math_helper.h">
       <Filter>math</Filter>
     </ClInclude>
-    <ClInclude Include="shader.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="gl_inc.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
     <ClInclude Include="common_string.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="mem.h">
       <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="gl_helper.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="texture.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="immediate_mode_emulator.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="touch.h">
-      <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="gl_window.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="texture_atlas.h">
-      <Filter>renderer</Filter>
     </ClInclude>
     <ClInclude Include="locale.h">
       <Filter>base</Filter>
@@ -77,50 +53,14 @@
     <ClInclude Include="selector.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="matrix_stack.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="basic_shader.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="texture_manager.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="texture_info.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
     <ClInclude Include="handle_manager.h">
       <Filter>base</Filter>
     </ClInclude>
     <ClInclude Include="handle.h">
       <Filter>base</Filter>
     </ClInclude>
-    <ClInclude Include="image_label.h">
-      <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="ui_component.h">
-      <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="ui_container.h">
-      <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="ui_drawer.h">
-      <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="sprite_sheet_manager.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="button.h">
-      <Filter>ui</Filter>
-    </ClInclude>
     <ClInclude Include="color.h">
       <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="keyboard.h">
-      <Filter>ui</Filter>
-    </ClInclude>
-    <ClInclude Include="input_enum.h">
-      <Filter>ui</Filter>
     </ClInclude>
     <ClInclude Include="rect.h">
       <Filter>math</Filter>
@@ -140,11 +80,71 @@
     <ClInclude Include="xml_node.h">
       <Filter>io</Filter>
     </ClInclude>
-    <ClInclude Include="scene.h">
-      <Filter>scene</Filter>
+    <ClInclude Include="render\immediate_mode_emulator.h">
+      <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="scene_manager.h">
-      <Filter>scene</Filter>
+    <ClInclude Include="render\matrix_stack.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\texture.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\texture_atlas.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\texture_info.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\texture_manager.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\sprite_sheet_manager.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\basic_shader.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\gl_helper.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\gl_inc.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\gl_window.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\input_enum.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\keyboard.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\touch.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ui_component.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ui_container.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\ui_drawer.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\button.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\image_label.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="render\shader.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\scene_manager.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="render\scene.h">
+      <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -184,74 +184,71 @@
     <ClCompile Include="math_helper.cpp">
       <Filter>math</Filter>
     </ClCompile>
-    <ClCompile Include="basic_shader.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="gl_helper.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="gl_inc.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="gl_window.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="immediate_mode_emulator.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="matrix_stack.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="shader.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="sprite_sheet_manager.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="texture.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="texture_atlas.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="texture_info.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="texture_manager.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="scene_manager.cpp">
-      <Filter>scene</Filter>
-    </ClCompile>
-    <ClCompile Include="button.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="image_label.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="keyboard_glfw.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_component.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="touch.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_container.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_drawer.cpp">
-      <Filter>ui</Filter>
-    </ClCompile>
     <ClCompile Include="sora_stdafx.cpp" />
+    <ClCompile Include="render\immediate_mode_emulator.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\matrix_stack.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\texture.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\texture_atlas.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\texture_info.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\texture_manager.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\sprite_sheet_manager.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\basic_shader.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\gl_helper.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\gl_inc.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\gl_window.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\keyboard_glfw.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\touch.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\ui_component.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\ui_container.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\ui_drawer.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\button.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\image_label.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="render\shader.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\scene_manager.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
       <UniqueIdentifier>{499db5ef-e963-444b-b728-66dfba5f2a59}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="renderer">
-      <UniqueIdentifier>{9a6c4513-3657-43a5-88d9-ef98b15adcf6}</UniqueIdentifier>
     </Filter>
     <Filter Include="math">
       <UniqueIdentifier>{83a419fe-6df0-4a88-8203-699bfee3fc0b}</UniqueIdentifier>
@@ -262,8 +259,8 @@
     <Filter Include="io">
       <UniqueIdentifier>{cbc4d505-b088-4045-950b-e9e06365fce6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="scene">
-      <UniqueIdentifier>{3eeca277-ab0e-4fdb-be9f-b2d196f75dfa}</UniqueIdentifier>
+    <Filter Include="render">
+      <UniqueIdentifier>{9a6c4513-3657-43a5-88d9-ef98b15adcf6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -4,7 +4,7 @@
 #include "book.h"
 #include "camera.h"
 
-#include "sora/immediate_mode_emulator.h"
+#include "sora/render/immediate_mode_emulator.h"
 
 #if SR_USE_PCH == 0
 #include <cmath>

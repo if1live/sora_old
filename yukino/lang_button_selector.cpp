@@ -21,9 +21,9 @@
 #include "yukino_stdafx.h"
 #include "lang_button_selector.h"
 
-#include "sora/button.h"
+#include "sora/ui/button.h"
 #include "sora/locale.h"
-#include "sora/sprite_sheet_manager.h"
+#include "sora/render/sprite_sheet_manager.h"
 
 using namespace sora;
 

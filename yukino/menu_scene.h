@@ -21,7 +21,7 @@
 #ifndef YUKINO_MENU_SCENE_H_
 #define YUKINO_MENU_SCENE_H_
 
-#include "sora/scene.h"
+#include "sora/render/scene.h"
 
 namespace yukino {;
 struct MenuSceneImpl;

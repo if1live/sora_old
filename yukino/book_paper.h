@@ -2,7 +2,7 @@
 #pragma once
 
 #include "sora/vector.h"
-#include "sora/texture_atlas.h"
+#include "sora/render/texture_atlas.h"
 
 namespace yukino {;
 class BookPaperBuilder;

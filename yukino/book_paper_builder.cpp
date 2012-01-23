@@ -3,8 +3,8 @@
 #include "book_paper.h"
 #include "book_paper_builder.h"
 #include "book.h"
-#include "sora/texture_atlas.h"
-#include "sora/texture.h"
+#include "sora/render/texture_atlas.h"
+#include "sora/render/texture.h"
 
 using namespace std;
 using namespace sora;

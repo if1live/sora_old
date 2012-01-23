@@ -21,15 +21,15 @@
     <ClCompile Include="math_helper_test.cpp" />
     <ClCompile Include="matrix_test.cpp" />
     <ClCompile Include="mem_test.cpp" />
+    <ClCompile Include="render\shader_test.cpp" />
+    <ClCompile Include="render\sprite_sheet_manager_test.cpp" />
+    <ClCompile Include="render\texture_test.cpp" />
     <ClCompile Include="selector_test.cpp" />
-    <ClCompile Include="shader_test.cpp" />
     <ClCompile Include="sora_test_stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="sprite_sheet_manager_test.cpp" />
     <ClCompile Include="testmain.cc" />
-    <ClCompile Include="texture_test.cpp" />
     <ClCompile Include="vector_test.cpp" />
     <ClCompile Include="xml_node_test.cpp" />
     <ClCompile Include="xml_reader_test.cpp" />

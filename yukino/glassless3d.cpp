@@ -2,8 +2,8 @@
 #include "yukino_stdafx.h"
 
 #include "glassless3d.h"
-#include "sora/immediate_mode_emulator.h"
-#include "sora/matrix_stack.h"
+#include "sora/render/immediate_mode_emulator.h"
+#include "sora/render/matrix_stack.h"
 
 #include "camera.h"
 #include "book_scene.h"
@@ -12,7 +12,7 @@
 #include "sora/filesystem.h"
 #include "sora/math_helper.h"
 #include "sora/locale.h"
-#include "sora/gl_window.h"
+#include "sora/render/gl_window.h"
 
 #if SR_USE_PCH == 0
 #include "sora/gl_inc.h"

@@ -44,16 +44,16 @@
     <ClCompile Include="vector_test.cpp">
       <Filter>math</Filter>
     </ClCompile>
-    <ClCompile Include="shader_test.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="sprite_sheet_manager_test.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="texture_test.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
     <ClCompile Include="sora_test_stdafx.cpp" />
+    <ClCompile Include="render\shader_test.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\sprite_sheet_manager_test.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\texture_test.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h" />
@@ -65,11 +65,11 @@
     <Filter Include="math">
       <UniqueIdentifier>{ad796c37-a1b3-4401-83cb-4b593280137f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="renderer">
-      <UniqueIdentifier>{ef933348-198a-4e84-a261-40f6d525ac70}</UniqueIdentifier>
-    </Filter>
     <Filter Include="io">
       <UniqueIdentifier>{ee2dd9b7-f3dd-42f0-b3bf-5de02f9cc54d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="render">
+      <UniqueIdentifier>{ef933348-198a-4e84-a261-40f6d525ac70}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
