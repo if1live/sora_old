@@ -56,7 +56,9 @@ using namespace yukino;
 
 int main(int argc, char *argv) {
   // init glfw
-  sora::GLWindow win(win_width, win_height, sora::kWinModeWindow, 1);
+  sora::GLWindow &win = GLWindow::GetInstance();
+  win.SetSize(win_width, win_height);
+  win.set_content_scale(1);
   win.Init();
 
   Init();

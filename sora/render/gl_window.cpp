@@ -23,19 +23,15 @@
 #include "gl_helper.h"
 
 namespace sora {;
-GLWindow::GLWindow(int w, int h, WinMode mode, float content_scale)
-: width_(w),
-height_(h),
-win_mode_(mode), 
-content_scale_(content_scale) {
-}
 GLWindow::GLWindow()
-  : width_(800), height_(480), win_mode_(kWinModeWindow), content_scale_(1) {}
+  : width_(-1), height_(-1), win_mode_(kWinModeWindow), content_scale_(1) {}
 
 GLWindow::~GLWindow() {
 }
 
 void GLWindow::Init() {
+  SR_ASSERT(width_ > 0);
+  SR_ASSERT(height_ > 0);
 #if SR_WIN
   // Initialize GLFW
   if( !glfwInit() ) {

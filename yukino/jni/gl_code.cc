@@ -44,7 +44,9 @@ using namespace yukino;
 
 bool setupGraphics(int w, int h) {
 	LOGI("setupGraphics(%d, %d)", w, h);
-	sora::GLWindow win(w, h, sora::kWinModeWindow, 1);
+	sora::GLWindow &win = GLWindow::GetInstance();
+	win.SetSize(w, h);
+	win.set_content_scale(1);
 	win.Init();
 	sora::ImmediateModeEmulator::GetInstance().Init();
 	srglViewport(0, 0, w, h); 

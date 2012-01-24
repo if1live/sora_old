@@ -30,19 +30,18 @@ typedef enum {
   kWinModeFullscreen
 } WinMode;
 
-class GLWindow : public SharedObject<GLWindow> {
+class GLWindow : public Singleton<GLWindow> {
 public:
-  GLWindow(int w, int h, WinMode mode, float content_scale);
   GLWindow();
   ~GLWindow();
 
   void Init();
 
-  int width() const { return width_; }
-  int height() const { return height_; }
-  int SetSize(int w, int h) { width_ = w; height_ = h; }
+  int width() const { SR_ASSERT(width_ > 0); return width_; }
+  int height() const { SR_ASSERT(height_ > 0); return height_; }
+  void SetSize(int w, int h) { width_ = w; height_ = h; }
   float content_scale() const { return content_scale_; }
-  void set_conetent_scale(float s) { content_scale_ = s; }
+  void set_content_scale(float s) { content_scale_ = s; }
 
 private:
   int width_;
