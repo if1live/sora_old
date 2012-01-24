@@ -18,45 +18,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_MEMORY_FILE_H_
-#define SORA_MEMORY_FILE_H_
-
-#if SR_USE_PCH == 0
-#include <string>
-#include <boost/noncopyable.hpp>
-#endif
-
-#if SR_ANDROID
-#include <android/asset_manager.h>
-#include <android/asset_manager_jni.h>
-#include <android/native_activity.h>
-#endif
+#include "sora_stdafx.h"
+#include "accelerometer.h"
 
 namespace sora {;
-class MemoryFile : boost::noncopyable {
-public:
-  MemoryFile(const char *filepath);
-  MemoryFile(const std::string &filepath);
-  ~MemoryFile();
-
-  boolean Open();
-  boolean IsOpened() const { return (data != NULL); }
-  void Close();
-  i32 GetLength() const { return end - start; }
-  i32 Read(void *buf, i32 size);
-  
-  const std::string &filepath() const { return filepath_; }
-
-public:
-  // data
-  u8 *start;
-  u8 *curr;
-  u8 *end;
-  void *data;
-
-  std::string filepath_;
-};
-
+Accelerometer::Accelerometer() {
+  AccelData data = { 1, 0, 0 };
+  buffer_.Push(data);
+}
+Accelerometer::~Accelerometer() {
+}
+void Accelerometer::Add(float x, float y, float z) {
+  AccelData data = { x, y, z };
+  buffer_.Push(data);
 }
 
-#endif  // SORA_MEMORY_FILE_H_
+const AccelData &Accelerometer::GetLast() const { 
+  return buffer_.Top();
+}
+}

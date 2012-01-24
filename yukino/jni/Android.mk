@@ -23,14 +23,15 @@ LOCAL_C_INCLUDES := ../sdk/boost	\
 	../sora	\
 	../yukino	\
 	../sdk/libpng	\
-	../sdk/tinyxml
+	../sdk/tinyxml	\
+	../sdk/libzip/jni
 
 LOCAL_MODULE    := yukino
 LOCAL_CFLAGS    := -Werror	-std=gnu++0x
 LOCAL_LDLIBS    := -llog  -landroid -lEGL -lGLESv2 -lz
 #-lGLESv1_CM
 LOCAL_CPP_EXTENSION := .cpp .cc
-LOCAL_STATIC_LIBRARIES := android_native_app_glue sora tinyxml libpng boost_thread
+LOCAL_STATIC_LIBRARIES := android_native_app_glue sora tinyxml libpng boost_thread libzip
 LOCAL_SRC_FILES := gl_code.cc \
 	../book.cpp	\
 	../book_paper.cpp	\
@@ -41,13 +42,14 @@ LOCAL_SRC_FILES := gl_code.cc \
 	../glassless3d.cpp	\
 	../intro_scene.cpp	\
 	../lang_button_selector.cpp	\
-	../menu_scene.cpp
+	../menu_scene.cpp	\
+	../logic_interface.cpp
 include $(BUILD_SHARED_LIBRARY)
 
 
 include $(START_PATH)/../../sora/jni/Android.mk
 include $(START_PATH)/../../sdk/libpng/jni/Android.mk
 include $(START_PATH)/../../sdk/tinyxml/jni/Android.mk
+include $(START_PATH)/../../sdk/libzip/jni/Android.mk
 
 $(call import-module,boost)
-$(call import-module,android/native_app_glue)

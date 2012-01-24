@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_test_stdafx.h"
-#include "sora/filesystem.h"
+#include "sora/io/filesystem.h"
 
 TEST(Filesystem, GetExtension) {
   using std::string;

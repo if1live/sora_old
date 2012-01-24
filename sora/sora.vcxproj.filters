@@ -149,6 +149,15 @@
     <ClInclude Include="ring_buffer.h">
       <Filter>base</Filter>
     </ClInclude>
+    <ClInclude Include="ui\gyro.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\accelerometer.h">
+      <Filter>ui</Filter>
+    </ClInclude>
+    <ClInclude Include="io\zip_stream_file.h">
+      <Filter>io</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cpp">
@@ -246,6 +255,15 @@
       <Filter>io</Filter>
     </ClCompile>
     <ClCompile Include="io\memory_file.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\gyro.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\accelerometer.cpp">
+      <Filter>ui</Filter>
+    </ClCompile>
+    <ClCompile Include="io\zip_stream_file.cpp">
       <Filter>io</Filter>
     </ClCompile>
   </ItemGroup>

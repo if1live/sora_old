@@ -18,45 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_MEMORY_FILE_H_
-#define SORA_MEMORY_FILE_H_
+#ifndef SORA_ACCELEROMETER_H_
+#define SORA_ACCELEROMETER_H_
 
-#if SR_USE_PCH == 0
-#include <string>
-#include <boost/noncopyable.hpp>
-#endif
-
-#if SR_ANDROID
-#include <android/asset_manager.h>
-#include <android/asset_manager_jni.h>
-#include <android/native_activity.h>
-#endif
+#include "sora/template_library.h"
+#include "sora/ring_buffer.h"
 
 namespace sora {;
-class MemoryFile : boost::noncopyable {
+struct AccelData {
+  union {
+    struct {
+      float x;
+      float y;
+      float z;
+    };
+    float value[3];
+  };
+};
+
+class Accelerometer : public Singleton<Accelerometer> {
 public:
-  MemoryFile(const char *filepath);
-  MemoryFile(const std::string &filepath);
-  ~MemoryFile();
+  ~Accelerometer();
 
-  boolean Open();
-  boolean IsOpened() const { return (data != NULL); }
-  void Close();
-  i32 GetLength() const { return end - start; }
-  i32 Read(void *buf, i32 size);
-  
-  const std::string &filepath() const { return filepath_; }
+  void Add(float x, float y, float z);
+  const AccelData &GetLast() const;
 
-public:
-  // data
-  u8 *start;
-  u8 *curr;
-  u8 *end;
-  void *data;
-
-  std::string filepath_;
+private:
+  Accelerometer();
+  RingBuffer<AccelData, 10> buffer_;
 };
 
 }
 
-#endif  // SORA_MEMORY_FILE_H_
+#endif  // SORA_ACCELEROMETER_H_

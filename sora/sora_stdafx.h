@@ -53,6 +53,7 @@
 // third party library
 #include <tinyxml/tinyxml.h>
 #include <libpng/png.h>
+#include <zlib.h>
 
 // boost
 #include <boost/noncopyable.hpp>

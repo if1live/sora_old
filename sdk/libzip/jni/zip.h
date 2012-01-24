@@ -192,6 +192,7 @@ ZIP_EXTERN const char *zip_file_strerror(struct zip_file *);
 ZIP_EXTERN struct zip_file *zip_fopen(struct zip *, const char *, int);
 ZIP_EXTERN struct zip_file *zip_fopen_index(struct zip *, int, int);
 ZIP_EXTERN ssize_t zip_fread(struct zip_file *, void *, size_t);
+//ZIP_EXTERN size_t zip_fread(struct zip_file *, void *, size_t);
 ZIP_EXTERN const char *zip_get_archive_comment(struct zip *, int *, int);
 ZIP_EXTERN int zip_get_archive_flag(struct zip *, int, int);
 ZIP_EXTERN const char *zip_get_file_comment(struct zip *, int, int *, int);

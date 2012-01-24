@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_test_stdafx.h"
-#include "sora/xml_reader.h"
-#include "sora/xml_node.h"
-#include "sora/memory_file.h"
+#include "sora/io/xml_reader.h"
+#include "sora/io/xml_node.h"
+#include "sora/io/memory_file.h"
 
 using namespace sora;
 using namespace std;

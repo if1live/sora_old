@@ -22,7 +22,8 @@ LOCAL_C_INCLUDES := ../sdk/boost	\
 	../	\
 	../sora	\
 	../sdk/libpng	\
-	../sdk/tinyxml
+	../sdk/tinyxml	\
+	../sdk/libzip/jni
 
 LOCAL_MODULE    := sora
 LOCAL_CFLAGS    := -Werror 
@@ -42,6 +43,7 @@ LOCAL_SRC_FILES +=	\
 	../io/xml_node.cpp	\
 	../io/xml_reader.cpp	\
 	../io/low_level_c_file.cpp	\
+	../io/zip_stream_file.cpp
 	
 LOCAL_SRC_FILES +=	\
 	../render/matrix_stack.cpp	\
@@ -78,3 +80,4 @@ include $(BUILD_SHARED_LIBRARY)
 #$(call import-module,boost)
 #include $(START_PATH)/../../sdk/tinyxml/jni/Android.mk
 #include $(START_PATH)/../../sdk/libpng/jni/Android.mk
+#include $(START_PATH)/../../sdk/libzip/jni/Android.mk

@@ -36,11 +36,15 @@ public class GL2JNILib {
      public static native void onSuspend();
      public static native void onInit();
      public static native void onCleanup();
+     public static native void setApkPath(String path);
      
      // sora book로 연결되는 함수
-     public static native void setBookPage(int index);
+     //특정 페이지로의 이동은 안쓰더라
+     //public static native void setBookPage(int index);
      public static native void moveNextPage();
      public static native void movePrevPage();
      public static native boolean isNextPageExist();
      public static native boolean isPrevPageExist();
+     public static native void resetGyro();
+     public static native void resetAccel();
 }

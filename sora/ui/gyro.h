@@ -18,45 +18,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_MEMORY_FILE_H_
-#define SORA_MEMORY_FILE_H_
+#ifndef SORA_GYRO_H_
+#define SORA_GYRO_H_
 
-#if SR_USE_PCH == 0
-#include <string>
-#include <boost/noncopyable.hpp>
-#endif
-
-#if SR_ANDROID
-#include <android/asset_manager.h>
-#include <android/asset_manager_jni.h>
-#include <android/native_activity.h>
-#endif
+#include "sora/template_library.h"
+#include "sora/ring_buffer.h"
 
 namespace sora {;
-class MemoryFile : boost::noncopyable {
-public:
-  MemoryFile(const char *filepath);
-  MemoryFile(const std::string &filepath);
-  ~MemoryFile();
 
-  boolean Open();
-  boolean IsOpened() const { return (data != NULL); }
-  void Close();
-  i32 GetLength() const { return end - start; }
-  i32 Read(void *buf, i32 size);
-  
-  const std::string &filepath() const { return filepath_; }
-
-public:
-  // data
-  u8 *start;
-  u8 *curr;
-  u8 *end;
-  void *data;
-
-  std::string filepath_;
+struct GyroData {
+  float yaw;
+  float roll;
+  float pitch;
 };
 
+class Gyro : public Singleton<Gyro> {
+public:
+  ~Gyro();
+  
+  void Add(float yaw, float roll, float pitch);
+  const GyroData &GetLast() const;
+  
+private:
+  Gyro();
+  RingBuffer<GyroData, 10> buffer_;
+};
 }
 
-#endif  // SORA_MEMORY_FILE_H_
+#endif  // SORA_GYRO_H_

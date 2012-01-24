@@ -42,6 +42,7 @@ public class GL2JNIActivity extends Activity implements AdListener {
 
 	@Override protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
+				
 		
 		setContentView(R.layout.scene);
 		main_layout = (RelativeLayout)findViewById(R.id.layout);
@@ -67,27 +68,47 @@ public class GL2JNIActivity extends Activity implements AdListener {
 				startActivity(intentSubActivity);	//그리고 메뉴씬으로
 			}
 		});
-		ImageButton nextBtn = (ImageButton)findViewById(R.id.nextBtn);
+		final ImageButton nextBtn = (ImageButton)findViewById(R.id.nextBtn);
+		final ImageButton prevBtn = (ImageButton)findViewById(R.id.prevBtn);
 		nextBtn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				//TODO ndk
+				GL2JNILib.moveNextPage();
 				
 				//prev, next 버튼 갱신
+				if(GL2JNILib.isNextPageExist() == false) {
+					nextBtn.setVisibility(ImageButton.INVISIBLE);
+				} else {
+					nextBtn.setVisibility(ImageButton.VISIBLE);
+				}
+				if(GL2JNILib.isPrevPageExist() == true) {
+					prevBtn.setVisibility(ImageButton.VISIBLE);
+				} else {
+					prevBtn.setVisibility(ImageButton.INVISIBLE);
+				}
 			}
 		});
-		ImageButton prevBtn = (ImageButton)findViewById(R.id.prevBtn);
 		prevBtn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				// TODO ndk
+				GL2JNILib.movePrevPage();
 				
 				//prev, next 버튼 갱신
+				if(GL2JNILib.isNextPageExist() == false) {
+					nextBtn.setVisibility(ImageButton.INVISIBLE);
+				} else {
+					nextBtn.setVisibility(ImageButton.VISIBLE);
+				}
+				if(GL2JNILib.isPrevPageExist() == true) {
+					prevBtn.setVisibility(ImageButton.VISIBLE);
+				} else {
+					prevBtn.setVisibility(ImageButton.INVISIBLE);
+				}
 			}
 		});
 		ImageButton resetBtn = (ImageButton)findViewById(R.id.resetBtn);
 		resetBtn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				// TODO 자이로인지 가속도인지 확인해서 적절한 값을 보내자
-				
+				//GL2JNILib.resetSensor();
 			}
 		});
 	}

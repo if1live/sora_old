@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_test_stdafx.h"
-#include "sora/low_level_c_file.h"
+#include "sora/io/low_level_c_file.h"
 
-#include "sora/memory_file.h"
+#include "sora/io/memory_file.h"
 
 TEST(LowLevelCFile, test) {
   using sora::LowLevelCFile;

@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_test_stdafx.h"
-#include "sora/xml_node.h"
+#include "sora/io/xml_node.h"
 
 using namespace sora;
 using namespace std;

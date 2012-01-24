@@ -76,6 +76,7 @@
     <ClInclude Include="io\filesystem.h" />
     <ClInclude Include="io\low_level_c_file.h" />
     <ClInclude Include="io\memory_file.h" />
+    <ClInclude Include="io\zip_stream_file.h" />
     <ClInclude Include="io\xml_node.h" />
     <ClInclude Include="io\xml_reader.h" />
     <ClInclude Include="ring_buffer.h" />
@@ -106,7 +107,9 @@
     <ClInclude Include="string_code_dictionary.h" />
     <ClInclude Include="string_hash_functor.h" />
     <ClInclude Include="template_library.h" />
+    <ClInclude Include="ui\accelerometer.h" />
     <ClInclude Include="ui\button.h" />
+    <ClInclude Include="ui\gyro.h" />
     <ClInclude Include="ui\image_label.h" />
     <ClInclude Include="ui\input_enum.h" />
     <ClInclude Include="ui\keyboard.h" />
@@ -123,6 +126,7 @@
     <ClCompile Include="io\filesystem.cpp" />
     <ClCompile Include="io\low_level_c_file.cpp" />
     <ClCompile Include="io\memory_file.cpp" />
+    <ClCompile Include="io\zip_stream_file.cpp" />
     <ClCompile Include="io\xml_node.cpp" />
     <ClCompile Include="io\xml_reader.cpp" />
     <ClCompile Include="sys_locale.cpp" />
@@ -146,7 +150,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="common_string.cpp" />
+    <ClCompile Include="ui\accelerometer.cpp" />
     <ClCompile Include="ui\button.cpp" />
+    <ClCompile Include="ui\gyro.cpp" />
     <ClCompile Include="ui\image_label.cpp" />
     <ClCompile Include="ui\keyboard_glfw.cpp" />
     <ClCompile Include="ui\touch.cpp" />

@@ -7,6 +7,11 @@
 #include "book_scene.h"
 #include "sora/sys_locale.h"
 
+#if SR_USE_PCH == 0
+#include "sora/io/zip_stream_file.h"
+#include <boost/foreach.hpp>
+#endif
+
 using namespace yukino;
 using namespace sora;
 using namespace std;
@@ -109,4 +114,18 @@ void sora_set_lang_english() {
   Locale::GetInstance().SetUSA();
   Book &book = Book::GetInstance();
   book.SetLanguage(Locale::GetInstance().language());
+}
+
+bool sora_is_next_page_exist() {
+  Book &book = Book::GetInstance();
+  return book.IsNextSceneExist();
+}
+bool sora_is_prev_page_exist() {
+  Book &book = Book::GetInstance();
+  return book.IsPrevScenExist();
+}
+void sora_set_apk_file_path(const char *abs_path) {
+#if SR_ANDROID
+	ZipStreamFile::SetApkFile(abs_path);
+#endif
 }

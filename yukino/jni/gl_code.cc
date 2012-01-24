@@ -26,6 +26,8 @@
 #include <stdlib.h>
 #include <math.h>
 
+#include "logic_interface.h"
+
 #define  LOG_TAG    "libgl2jni"
 #define  LOGI(...)  __android_log_print(ANDROID_LOG_INFO,LOG_TAG,__VA_ARGS__)
 #define  LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG,__VA_ARGS__)
@@ -170,7 +172,19 @@ void renderFrame() {
 
 extern "C" {
     JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height);
-    JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_step(JNIEnv * env, jobject obj);
+    JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_step(JNIEnv * env, jobject obj);	
+	JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_onResume(JNIEnv * env, jobject obj);
+	JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_onSuspend(JNIEnv * env, jobject obj);
+	JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_onInit(JNIEnv * env, jobject obj);
+	JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_onCleanup(JNIEnv * env, jobject obj);
+	JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_setApkPath(JNIEnv * env, jobject obj, jstring apkPath);
+	JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_moveNextPage(JNIEnv * env, jobject obj);
+	JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_movePrevPage(JNIEnv * env, jobject obj);
+	JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_resetGyro(JNIEnv * env, jobject obj);
+	JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_resetAccel(JNIEnv * env, jobject obj);
+	JNIEXPORT jboolean JNICALL Java_com_android_gl2jni_GL2JNILib_isNextPageExist(JNIEnv * env, jobject obj);
+	JNIEXPORT jboolean JNICALL Java_com_android_gl2jni_GL2JNILib_isPrevPageExist(JNIEnv * env, jobject obj);
+
 };
 
 JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height)
@@ -181,4 +195,58 @@ JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_init(JNIEnv * env, jobj
 JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_step(JNIEnv * env, jobject obj)
 {
     renderFrame();
+}
+
+JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_onResume(JNIEnv * env, jobject obj) {
+	LOGE("resume");
+}
+JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_onSuspend(JNIEnv * env, jobject obj) {
+	LOGE("suspend");
+}
+JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_onInit(JNIEnv * env, jobject obj) {
+	LOGE("on init");
+}
+JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_onCleanup(JNIEnv * env, jobject obj) {
+	LOGE("on cleanup");
+}
+JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_setApkPath(JNIEnv * env, jobject obj, jstring apkPath) {
+	//LOGE("apk set called");
+	const char* str;
+	jboolean isCopy;
+	str = env->GetStringUTFChars(apkPath, &isCopy);
+	sora_set_apk_file_path(str);
+}
+JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_moveNextPage(JNIEnv * env, jobject obj) {
+	LOGE("move next");
+	sora_next_page();
+}
+JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_movePrevPage(JNIEnv * env, jobject obj) {
+	LOGE("move prev");
+	sora_prev_page();
+}
+
+JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_resetGyro(JNIEnv * env, jobject obj) {
+	LOGE("reset gyro");
+	sora_reset_gyro();
+}
+JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_resetAccel(JNIEnv * env, jobject obj) {
+	LOGE("reset accel");
+	sora_reset_accel();
+}
+
+JNIEXPORT jboolean JNICALL Java_com_android_gl2jni_GL2JNILib_isNextPageExist(JNIEnv * env, jobject obj) {
+	LOGE("is next page exist");
+	if(sora_is_next_page_exist() == true) {
+		return JNI_TRUE;
+	} else {
+		return JNI_FALSE;
+	}
+}
+JNIEXPORT jboolean JNICALL Java_com_android_gl2jni_GL2JNILib_isPrevPageExist(JNIEnv * env, jobject obj) {
+	LOGE("is prev page exist");
+	if(sora_is_prev_page_exist() == true) {
+		return JNI_TRUE;
+	} else {
+		return JNI_FALSE;
+	}
 }

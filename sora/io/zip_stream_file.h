@@ -18,45 +18,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_MEMORY_FILE_H_
-#define SORA_MEMORY_FILE_H_
+#ifndef SORA_ZIP_STREAM_FILE_H_
+#define SORA_ZIP_STREAM_FILE_H_
 
-#if SR_USE_PCH == 0
-#include <string>
-#include <boost/noncopyable.hpp>
-#endif
-
+//zip으로 압축된것을 읽는것은 일단 안드로이드에서만 사용한다
+//장치를 안드로이드로만 한정하면 apk파일도 1개니까 구조를 더 간단하게 만들수있다
 #if SR_ANDROID
-#include <android/asset_manager.h>
-#include <android/asset_manager_jni.h>
-#include <android/native_activity.h>
-#endif
+#include <boost/noncopyable.hpp>
+#include <zip.h>
 
 namespace sora {;
-class MemoryFile : boost::noncopyable {
+
+// 안드로이드 + apk의 조합은
+// zip을 그냥 읽어야되는데 이것은 스트림으로 처리하는것이 좋을거같아서
+// 스트림에 특화된 클래스를 만들엇다. 읽는것이 단방향으로만 진행된다
+// zip파일 1개를 여는게 아니라 zip파일안에 잇는 파일을 읽을떄 사용한다
+class ZipStreamFile : boost::noncopyable {
 public:
-  MemoryFile(const char *filepath);
-  MemoryFile(const std::string &filepath);
-  ~MemoryFile();
+  static void SetApkFile(const std::string &apk_file);
+  static void SetApkFile(const char *apk_file);
+public:
+  ZipStreamFile(const char *filepath);
+  ZipStreamFile(const std::string &filepath);
+  ~ZipStreamFile();
 
   boolean Open();
-  boolean IsOpened() const { return (data != NULL); }
   void Close();
-  i32 GetLength() const { return end - start; }
   i32 Read(void *buf, i32 size);
-  
-  const std::string &filepath() const { return filepath_; }
+  boolean IsOpened() const { return (file_ != NULL); }
 
-public:
-  // data
-  u8 *start;
-  u8 *curr;
-  u8 *end;
-  void *data;
-
+private:
   std::string filepath_;
+  zip_file* file_;
+
+  static zip* apk_archive_;
 };
 
 }
 
-#endif  // SORA_MEMORY_FILE_H_
+#endif  // SR_ANDROID
+
+#endif  // SORA_STREAM_FILE_H_

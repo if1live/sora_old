@@ -19,6 +19,8 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_stdafx.h"
+#include "sora/sora_stdafx.h"
+
 #include "sora/io/memory_file.h"
 #include "sora/io/filesystem.h"
 

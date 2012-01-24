@@ -37,7 +37,7 @@
 
 
 #include "glassless3d.h"
-#include "menu_scene.h"7
+#include "menu_scene.h"
 #include "sora/render/scene_manager.h"
 
 #include "book.h"
