@@ -47,24 +47,18 @@ bool setupGraphics(int w, int h) {
 	sora::GLWindow win(w, h, sora::kWinModeWindow, 1);
 	win.Init();
 	sora::ImmediateModeEmulator::GetInstance().Init();
-	srglViewport(0, 0, w, h);  
+	srglViewport(0, 0, w, h); 
 	
 	sora::TextureManagerThreadRunner texture_thd_runner;
 	boost::thread texture_thd(texture_thd_runner);
-	sora::GLHelper::CheckError("1");	//	
-	Scene *scene = new MainScene();
-	sora::GLHelper::CheckError("112");	//
-	SceneManager::GetInstance().Push(scene);
 	
-	sora::GLHelper::CheckError("12");	//
+	Scene *scene = new MainScene();
+	SceneManager::GetInstance().Push(scene);
 	
 	return true;
 }
 
 void renderFrame() {
-	sora::GLWindow &win = sora::GLWindow::GetInstance();
-	LOGI("setupGraphics(%d, %d)", win.width(), win.height());  
-
 	SceneManager::GetInstance().Update(1/30.0f);
 	SceneManager::GetInstance().Draw();		
 	

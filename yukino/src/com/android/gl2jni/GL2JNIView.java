@@ -354,7 +354,6 @@ public class GL2JNIView extends GLSurfaceView {
 				throw new RuntimeException("unable to locate assets, aborting..");
 			}
 			apkFilePath = appInfo.sourceDir;
-			Log.e("fds", apkFilePath);
 			GL2JNILib.setApkPath(apkFilePath);
 		}
 	}

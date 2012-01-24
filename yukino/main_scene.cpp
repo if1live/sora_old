@@ -61,9 +61,7 @@ MainScene::MainScene() {
   BookScene *page = book.GetCurrScene();
   page->LoadTexture();
 
-  sora::GLHelper::CheckError("1122");	//
   yukino::Glassless3d::GetInstance().Init();
-  sora::GLHelper::CheckError("12213");	//
 }
 MainScene::~MainScene() {
 }

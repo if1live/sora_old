@@ -113,7 +113,6 @@ void ImmediateModeEmulator::Init() {
   srglUniformMatrix4fv(basic_shader.modelview_location, 1, GL_FALSE, identity.value);
 
   // GL환경 설정
-  srglEnable(GL_TEXTURE_2D);
   srglEnable(GL_BLEND);
   srglBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
