@@ -16,12 +16,12 @@ using namespace sora;
 
 namespace yukino {;
 BookPaper::BookPaper(TextureSubImage *sprite, BookPaperType type)
-  : type_(type), pos_x(0), pos_y(0), pos_z(0),
-  pitch(0), roll(0), yaw(0) {
+  : pos_x(0), pos_y(0), pos_z(0),
+  pitch(0), roll(0), yaw(0), type_(type) {
 }
 BookPaper::BookPaper() 
-  : type_(kBookPaperNormal), pos_x(0), pos_y(0), pos_z(0),
-  pitch(0), roll(0), yaw(0) {
+  : pos_x(0), pos_y(0), pos_z(0),
+  pitch(0), roll(0), yaw(0), type_(kBookPaperNormal) {
 }
 BookPaper::~BookPaper() {
 }
@@ -42,7 +42,7 @@ void BookPaper::draw() {
     point_list.push_back(v2);
     point_list.push_back(v3);
     point_list.push_back(v4);
-    for (int i = 0 ; i < point_list.size() ; i++) {
+    for (size_t i = 0 ; i < point_list.size() ; i++) {
       const BookVertex &v = point_list[i];
       if (min_y > v.y) {
         min_y = v.y;
@@ -65,7 +65,7 @@ void BookPaper::draw() {
     srglRotatef(yaw, 0, 0, 1);
 
     srglBegin(GL_QUADS);
-    for (int i = 0 ; i < point_list.size() ; i++) {
+    for (size_t i = 0 ; i < point_list.size() ; i++) {
       const BookVertex &v = point_list[i];
       srglTexCoord2f(v.s, v.t);
       srglVertex3f(v.x, v.y, v.z);
@@ -91,7 +91,7 @@ void BookPaper::draw() {
     point_list.push_back(v4);
 
     srglBegin(GL_QUADS);
-    for (int i = 0 ; i < point_list.size() ; i++) {
+    for (size_t i = 0 ; i < point_list.size() ; i++) {
       const BookVertex &v = point_list[i];
       srglTexCoord2f(v.s, v.t);
       srglVertex3f(v.x, v.y, v.z);

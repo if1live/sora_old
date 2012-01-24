@@ -22,6 +22,7 @@
 #include "texture_manager.h"
 #include "texture.h"
 #include "sora/io/filesystem.h"
+#include "sora/render/texture_helper.h"
 
 #if SR_USE_PCH == 0
 #include <algorithm>
@@ -118,7 +119,12 @@ void TextureManager::ProcessRequest() {
   TexFormat fmt;
   TextureHeader tex_header;
 
-  TEX_LOG("Texture %s Load Start", tex->filename().c_str());
+  if(TextureHelper::IsSystemTexture(*request_tex) == false) {
+    //시스템 텍스쳐가 아니라면 벌써 로딩되었다는뜻이다
+    return;
+  }
+
+  TEX_LOG("Texture %s Load Start", request_tex->filename().c_str());
   void *data = Texture::LoadPNG(fullpath.c_str(), &fmt, &tex_header);
     
   TextureLoadResponse response;

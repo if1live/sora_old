@@ -19,6 +19,7 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_stdafx.h"
+#include <string>
 #include "sora/logger.h"
 
 namespace sora {;

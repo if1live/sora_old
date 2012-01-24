@@ -95,7 +95,6 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
       tex->tex_header.tex_height = 2048/2;
     }
   }
-  LOGI("%s", res.c_str());
 
   tex_handle_list_.insert(tex);
   SR_ASSERT(tex.get() != NULL);
@@ -312,6 +311,7 @@ BookPaperType BookScene::typeStr2type(const std::string &str) {
     return kBookPaperNormal;
   } else {
     SR_ASSERT(!"not support yet");
+    return kBookPaperNormal;
   }
 }
 bool BookScene::isUseGrid() const {

@@ -19,6 +19,7 @@ public class IntroActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.intro);
 		
+		
 		final Activity activity = this;
 		
 		//현재 로케일을 얻어서 button 상태 초기화

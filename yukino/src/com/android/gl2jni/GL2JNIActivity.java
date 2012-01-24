@@ -73,7 +73,7 @@ public class GL2JNIActivity extends Activity implements AdListener {
 		nextBtn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				GL2JNILib.moveNextPage();
-				
+				/*
 				//prev, next 버튼 갱신
 				if(GL2JNILib.isNextPageExist() == false) {
 					nextBtn.setAlpha(0);
@@ -89,12 +89,13 @@ public class GL2JNIActivity extends Activity implements AdListener {
 					prevBtn.setAlpha(0);
 					prevBtn.setEnabled(false);
 				}
+				*/
 			}
 		});
 		prevBtn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				GL2JNILib.movePrevPage();
-				
+				/*
 				//prev, next 버튼 갱신
 				if(GL2JNILib.isNextPageExist() == false) {
 					nextBtn.setAlpha(0);
@@ -110,6 +111,7 @@ public class GL2JNIActivity extends Activity implements AdListener {
 					prevBtn.setAlpha(0);
 					prevBtn.setEnabled(false);
 				}
+				*/
 			}
 		});
 		ImageButton resetBtn = (ImageButton)findViewById(R.id.resetBtn);

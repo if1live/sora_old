@@ -28,12 +28,13 @@
 namespace sora {;
 std::string Trim(const std::string &str) {
   using std::string;
+  using std::size_t;
 
   // do no use boost to compile speed + dependenty
   const char *whitespace = "\t\n\x0b\x0c\r ";
 
-  i32 leftFound = str.find_first_not_of(whitespace);
-  i32 rightFound = str.find_last_not_of(whitespace);
+  size_t leftFound = str.find_first_not_of(whitespace);
+  size_t rightFound = str.find_last_not_of(whitespace);
 
   if (leftFound == string::npos) {
     leftFound = 0;
@@ -47,14 +48,14 @@ std::string Trim(const std::string &str) {
 
 std::string LeftTrim(const std::string &str) {
   using std::string;
-  i32 n = str.find_first_not_of("\t\n\x0b\x0c\r ");
+  size_t n = str.find_first_not_of("\t\n\x0b\x0c\r ");
   string left(n == string::npos ? str : str.substr(n, str.length()));
   return left;
 }
 
 std::string RightTrim(const std::string &str) {
   using std::string;
-  i32 n = str.find_last_not_of("\t\n\x0b\x0c\r ");
+  size_t n = str.find_last_not_of("\t\n\x0b\x0c\r ");
   string right(n == string::npos ? str : str.substr(0, n + 1));
   return right;
 }

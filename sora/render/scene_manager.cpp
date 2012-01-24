@@ -44,6 +44,7 @@ Scene *SceneManager::Top() {
 void *SceneManager::Push(Scene *scene) {
   SR_ASSERT(scene != NULL);
   scene_stack_.push_back(scene);
+  return scene;
 }
 
 //최상위씬을 얻고 그것을 스택에서 빼낸다
@@ -53,6 +54,7 @@ Scene *SceneManager::Pop() {
   } else {
     Scene *scene = scene_stack_.back();
     scene_stack_.pop_back();
+    return scene;
   }
 }
 

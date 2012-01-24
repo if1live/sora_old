@@ -72,7 +72,9 @@ boolean ZipStreamFile::Open() {
   file_ = zip_fopen(apk_archive_, filepath_.c_str(), 0);
   if (!file_) {
     LOGE("Error opening %s from APK", filepath_.c_str());
+    return false;
   }
+  return true;
 }
 
 void ZipStreamFile::Close() {
@@ -83,7 +85,7 @@ void ZipStreamFile::Close() {
 }
 
 i32 ZipStreamFile::Read(void *buf, i32 size) {
-  zip_fread(file_, buf, size);
+  return zip_fread(file_, buf, size);
 }
 
 i32 ZipStreamFile::GetLength() const {

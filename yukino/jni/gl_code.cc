@@ -62,7 +62,6 @@ bool setupGraphics(int w, int h) {
 }
 
 void renderFrame() {
-	LOGI("render frame");
 	sora::GLHelper::CheckError("DrawStart");
 	
 	sora::TextureManager::GetInstance().ProcessRequest();
@@ -87,6 +86,9 @@ extern "C" {
 	JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_resetAccel(JNIEnv * env, jobject obj);
 	JNIEXPORT jboolean JNICALL Java_com_android_gl2jni_GL2JNILib_isNextPageExist(JNIEnv * env, jobject obj);
 	JNIEXPORT jboolean JNICALL Java_com_android_gl2jni_GL2JNILib_isPrevPageExist(JNIEnv * env, jobject obj);
+	
+	JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_SetLangKor(JNIEnv * env, jobject obj);
+    JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_SetLangEng(JNIEnv * env, jobject obj);
 
 };
 
@@ -155,4 +157,11 @@ JNIEXPORT jboolean JNICALL Java_com_android_gl2jni_GL2JNILib_isPrevPageExist(JNI
 	} else {
 		return JNI_FALSE;
 	}
+}
+
+JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_SetLangKor(JNIEnv * env, jobject obj) {
+	sora_set_lang_korean();
+}
+JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_SetLangEng(JNIEnv * env, jobject obj) {
+	sora_set_lang_english();
 }

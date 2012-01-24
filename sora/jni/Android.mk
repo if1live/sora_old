@@ -26,7 +26,7 @@ LOCAL_C_INCLUDES := ../sdk/boost	\
 	../sdk/libzip/jni
 
 LOCAL_MODULE    := sora
-LOCAL_CFLAGS    := -Werror 
+LOCAL_CFLAGS    := -Werror  -Wall 
 LOCAL_LDLIBS    := 
 LOCAL_SRC_FILES := \
 	../logger.cpp	\

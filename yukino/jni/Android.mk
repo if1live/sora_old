@@ -27,7 +27,7 @@ LOCAL_C_INCLUDES := ../sdk/boost	\
 	../sdk/libzip/jni
 
 LOCAL_MODULE    := yukino
-LOCAL_CFLAGS    := -Werror	-std=gnu++0x
+LOCAL_CFLAGS    := -Werror -Wall -std=gnu++0x
 LOCAL_LDLIBS    := -llog  -landroid -lEGL -lGLESv2 -lz
 #-lGLESv1_CM
 LOCAL_CPP_EXTENSION := .cpp .cc
@@ -39,7 +39,6 @@ LOCAL_SRC_FILES := gl_code.cc \
 	../book_scene.cpp	\
 	../camera.cpp	\
 	../glassless3d.cpp	\
-	../lang_button_selector.cpp	\
 	../logic_interface.cpp	\
 	../main_scene.cpp	\
 	

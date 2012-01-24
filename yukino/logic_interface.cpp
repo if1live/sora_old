@@ -44,9 +44,10 @@ void LoadUnloadTexture(int old_index, int new_index) {
   it = new_tex_list.begin();
   endit = new_tex_list.end();
   for ( ; it != endit ; it++) {
-    const TexturePtr &handle = *it;
-    unload_set.erase(handle);
-    TextureManager::GetInstance().AsyncLoad(handle);
+    const TexturePtr &tex = *it;
+    unload_set.erase(tex);
+    TextureManager::GetInstance().AsyncLoad(tex);
+	LOGI("Load texture %s", tex->filename().c_str());
   }
 
   //unload할거 unload
@@ -58,6 +59,7 @@ void LoadUnloadTexture(int old_index, int new_index) {
     TextureManager::GetInstance().CancelAsyncLoad(tex);
     tex->Cleanup();
     tex->SetAsLoading();
+	LOGI("Unload texture %s", tex->filename().c_str());
   }
 }
 

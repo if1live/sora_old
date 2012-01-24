@@ -74,12 +74,12 @@ struct BasicShaderImpl {
 };
 
 BasicShader::BasicShader() 
-: impl_(NULL),
-modelview_location(-1),
+: modelview_location(-1),
 projection_location(-1),
 texcoord_location(-1),
 color_location(-1),
-position_location(-1) {
+position_location(-1),
+impl_(NULL) {
   Init();
 }
 BasicShader::~BasicShader() {

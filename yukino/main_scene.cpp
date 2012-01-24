@@ -29,13 +29,6 @@
 #include "sora/render/texture_manager.h"
 #include "sora/render/texture.h"
 
-#include "sora/ui/ui_component.h"
-#include "sora/ui/ui_container.h"
-#include "sora/ui/ui_drawer.h"
-#include "sora/ui/button.h"
-#include "sora/ui/image_label.h"
-
-
 #include "glassless3d.h"
 #include "menu_scene.h"
 #include "sora/render/scene_manager.h"
@@ -58,14 +51,10 @@ MainScene::MainScene() {
   //적당한 언어로 일단 열기
   Book &book = Book::GetInstance();
   book.SetLanguage(Locale::GetInstance().language());
-  LOGI("4");
   BookScene *page = book.GetCurrScene();
-  LOGI("3");
   page->LoadTexture();
-  LOGI("2");
 
   yukino::Glassless3d::GetInstance().Init();
-  LOGI("5");
 }
 MainScene::~MainScene() {
 }

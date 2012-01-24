@@ -46,7 +46,7 @@ public:
   void Close();
   i32 Read(void *buf, i32 size);
   i32 GetLength() const;
-  boolean IsOpened() const { return (file_ != NULL); }
+  boolean IsOpened() const { return (file_ == NULL ? false : true); }
 
   const std::string &filepath() const { return filepath_; }
 

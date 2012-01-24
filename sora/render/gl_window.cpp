@@ -24,7 +24,7 @@
 
 namespace sora {;
 GLWindow::GLWindow()
-  : width_(-1), height_(-1), win_mode_(kWinModeWindow), content_scale_(1) {}
+  : width_(-1), height_(-1), content_scale_(1), win_mode_(kWinModeWindow) {}
 
 GLWindow::~GLWindow() {
 }

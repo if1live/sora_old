@@ -70,8 +70,8 @@ public:
   // GL_QUAD 구현에 사용됨
   GLushort index_list[kTriangleCount * 3];
   Vertex vert;
-  int curr_index;
   GLenum mode;
+  int curr_index;
 
   //color값은 1회 설정한것이 지속된다
   float color[4];

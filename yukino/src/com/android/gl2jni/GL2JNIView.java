@@ -81,6 +81,26 @@ public class GL2JNIView extends GLSurfaceView {
 		init(translucent, depth, stencil, context);
 	}
 	
+	@Override
+	public void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+		GL2JNILib.onCleanup();
+	}
+	@Override
+	public void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+		GL2JNILib.onResume();
+		
+		if(Renderer.created == true) {
+			if(LanguageSelector.GetInstance().GetCurrLanguage() == LanguageSelector.Korean) {
+				GL2JNILib.SetLangKor();
+			} else {
+				GL2JNILib.SetLangEng();
+			}
+		}
+	}
 	
 	private void init(boolean translucent, int depth, int stencil, Context context) {
 
@@ -329,6 +349,8 @@ public class GL2JNIView extends GLSurfaceView {
 
 	private static class Renderer implements GLSurfaceView.Renderer {
 		private Context context;
+		public static boolean created = false;
+		
 		public Renderer(Context context) {
 			this.context = context;
 		}
@@ -355,6 +377,14 @@ public class GL2JNIView extends GLSurfaceView {
 			}
 			apkFilePath = appInfo.sourceDir;
 			GL2JNILib.setApkPath(apkFilePath);
+			created = true;
+			
+			//언어 적절히 처리하기
+			if(LanguageSelector.GetInstance().GetCurrLanguage() == LanguageSelector.Korean) {
+				GL2JNILib.SetLangKor();
+			} else {
+				GL2JNILib.SetLangEng();
+			}
 		}
 	}
 }

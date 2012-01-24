@@ -63,7 +63,7 @@ boolean Shader::InitShader(GLenum shader_type, const char *src) {
 
     LOGE("ShaderError : %s", msg);
     LOGE("ShaderSrc : %s", src);
-    SR_ASSERT(!msg);
+    SR_ASSERT(false);
     return false;
   }
   return true;

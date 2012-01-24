@@ -31,18 +31,18 @@
 
 namespace sora {;
 MemoryFile::MemoryFile(const char *filepath)
-  : filepath_(filepath),
-  start(NULL),
+  : start(NULL),
   end(NULL),
   curr(NULL),
-  data(NULL) {
+  data(NULL),
+  filepath_(filepath){
 }
 MemoryFile::MemoryFile(const std::string &filepath)
-  : filepath_(filepath),
-  start(NULL),
+  : start(NULL),
   end(NULL),
   curr(NULL),
-  data(NULL) {
+  data(NULL),
+  filepath_(filepath) {
 }
 MemoryFile::~MemoryFile() {
   Close();

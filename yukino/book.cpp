@@ -25,8 +25,8 @@ Book::Book()
   depth(320), 
   max_pan_deg_(60),
   max_tilt_deg_(60),
-  curr_scene_page_(0),
   cam_radius_(1),
+  curr_scene_page_(0),
   lang_(kLanguageEnglish) {
   //책 정보 로딩
 }
@@ -197,7 +197,7 @@ void Book::MovePrevScene() {
 }
 bool Book::IsNextSceneExist() const {
   SR_ASSERT(!scene_list().empty());
-  if(curr_scene_page() >= scene_list().size()-1) {
+  if((size_t)curr_scene_page() >= scene_list().size()-1) {
     return false;
   } else {
     return true;
@@ -214,19 +214,19 @@ bool Book::IsPrevScenExist() const {
 
 void Book::MoveScene(int index) {
   SR_ASSERT(!scene_list().empty());
-  SR_ASSERT(index >= 0 && index < scene_list().size());
+  SR_ASSERT(index >= 0 && (size_t)index < scene_list().size());
   curr_scene_page_ = index;
 }
 
 BookScene *Book::GetCurrScene() {
-  if(scene_list().size() > curr_scene_page_) {
+  if(scene_list().size() > (size_t)curr_scene_page_) {
     return scene_list().at(curr_scene_page_);
   } else {
     return NULL;
   }
 }
 BookScene *Book::GetScene(int index) {
-  if(scene_list().size() > index) {
+  if(scene_list().size() > (size_t)index) {
     return scene_list().at(index);
   } else {
     return NULL;

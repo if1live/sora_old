@@ -103,7 +103,7 @@ GLenum TextureParameter::ConvertToGLenum(TexFormat orig) {
 }
 TexMinFilter TextureParameter::ConvertToTexMinFilter(GLenum orig) {
   for (int i = 0 ; i < kTexMinCount ; i++) {
-    if (tex_min_filter_table[i][1] == orig) {
+    if (tex_min_filter_table[i][1] == static_cast<int>(orig)) {
       return (TexMinFilter)tex_min_filter_table[i][0];
     }
   }

@@ -42,6 +42,7 @@ public class LanguageSelector {
 				int resId = R.drawable.intro_menu_k;
 				Drawable drawable = activity.getResources().getDrawable(resId);
 				layout.setBackgroundDrawable(drawable);
+				
 			} else {
 				korBtn.setSelected(false);
 				engBtn.setSelected(true);

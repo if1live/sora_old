@@ -47,4 +47,7 @@ public class GL2JNILib {
      public static native boolean isPrevPageExist();
      public static native void resetGyro();
      public static native void resetAccel();
+     
+     public static native void SetLangKor();
+     public static native void SetLangEng();
 }

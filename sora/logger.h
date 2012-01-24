@@ -103,8 +103,8 @@ public:
 template<typename LogStream>
 class Logger {
 public:
-  Logger(const char *name) : name_(name), level(kLogLevelDebug) {}
-  Logger(const std::string &name) : name_(name), level(kLogLevelDebug) {}
+  Logger(const char *name) : level(kLogLevelDebug), name_(name) {}
+  Logger(const std::string &name) : level(kLogLevelDebug),name_(name) {}
   ~Logger() {}
 
   const std::string &name() const { return name_; }
@@ -148,7 +148,7 @@ public:
   // sora의 매크로를 쓰면 의존성이 생겨서 독립배포가 귀찮으니까
   // 그냥 public으로 만들었다
   LogLevel level;
-
+private:
   std::string name_;
   LogStream stream_;
 };

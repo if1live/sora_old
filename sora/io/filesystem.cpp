@@ -51,6 +51,7 @@ int InitFileSystem() {
   return 1;
 #elif SR_ANDROID
   Filesystem::app_root_path = "assets";
+  return 1;
 #else
   return 0;
 #endif
@@ -130,14 +131,14 @@ std::string Filesystem::GetAppPath(const char *filename) {
     app_path = app_root_path + PATH_SEPARATOR + filename;
   }
   //\대신 /로 전부 교체
-  for(int i = 0 ; i < app_path.size() ; i++) {
+  for(size_t i = 0 ; i < app_path.size() ; i++) {
     if (app_path[i] == '\\') {
       app_path[i] = '/';
     }
   }
   // /가 연속으로 들어가지 않도록 수정하기
   string result;
-  for(int i = 0 ; i < app_path.size() ; i++) {
+  for(size_t i = 0 ; i < app_path.size() ; i++) {
     char ch = app_path[i];
     if(result.empty() == false && result[result.size() - 1] == '/') {
       if(ch == '/') {

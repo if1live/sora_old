@@ -50,8 +50,8 @@ public:
 public:
   // data
   u8 *start;
-  u8 *curr;
   u8 *end;
+  u8 *curr;
   void *data;
 
   std::string filepath_;
