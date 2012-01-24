@@ -60,7 +60,8 @@ void TextureManagerThreadRunner::operator()() {
   //printf("texture thread exit...\n");
 }
 
-void TextureManager::AsyncLoad(const TextureHandle &request) {
+
+void TextureManager::AsyncLoad(const TexturePtr &request) {
   request_stack_lock.lock();
   request_stack_.push_back(request);
   request_stack_lock.unlock();
@@ -69,15 +70,14 @@ boolean TextureManager::IsRequestExist() const {
   //락없이 그냥써도 큰 문제 없을듯?
   return !request_stack_.empty();
 }
-void TextureManager::CancelAsyncLoad(const TextureHandle &request) {
+void TextureManager::CancelAsyncLoad(const TexturePtr &request) {
   using namespace std;
   //아직 요청이 진입하지 않았으면 목록에서 제거
   request_stack_lock.lock();
   RequestStackType::iterator found = find(request_stack_.begin(),
     request_stack_.end(), request);
   if (found != request_stack_.end()) {
-    Texture *tex = GetTexture(request);
-    TEX_LOG("Texture %s Load Cancelled", tex->filename().c_str());
+    TEX_LOG("Texture %s Load Cancelled", request->filename().c_str());
     request_stack_.erase(found);
   }
   request_stack_lock.unlock();
@@ -101,10 +101,10 @@ void TextureManager::ProcessRequest() {
   using std::string;
 
   request_stack_lock.lock();
-  TextureHandle request_handle;
+  TexturePtr request_tex;
   bool request_empty = request_stack_.empty();
   if (request_empty == false) {
-    request_handle = request_stack_.back();
+    request_tex = request_stack_.back();
     request_stack_.pop_back();
   }
   request_stack_lock.unlock();
@@ -113,9 +113,8 @@ void TextureManager::ProcessRequest() {
     return;
   }
 
-  Texture *tex = GetTexture(request_handle);
-  SR_ASSERT(!tex->filename().empty() && "no file defined?");
-  string fullpath = Filesystem::GetAppPath(tex->filename());
+  SR_ASSERT(!request_tex->filename().empty() && "no file defined?");
+  string fullpath = Filesystem::GetAppPath(request_tex->filename());
   TexFormat fmt;
   TextureHeader tex_header;
 
@@ -123,7 +122,7 @@ void TextureManager::ProcessRequest() {
   void *data = Texture::LoadPNG(fullpath.c_str(), &fmt, &tex_header);
     
   TextureLoadResponse response;
-  response.handle = request_handle;
+  response.tex = request_tex;
   response.fmt = fmt;
   response.tex_header = tex_header;
   response.data = data;
@@ -143,8 +142,7 @@ void TextureManager::ProcessResponse() {
   ResponseStackType::iterator endit = cpy_response_stack_.end();
   for ( ; it != endit ; it++) {
     TextureLoadResponse &response = *it;
-
-    Texture *tex = GetTexture(response.handle);
+    TexturePtr &tex = response.tex;
     tex->Init(response.fmt, response.tex_header, tex->param(), response.data);
     TEX_LOG("Texture %s Load success", tex->filename().c_str());
     delete[]((unsigned char*)response.data);
@@ -156,57 +154,56 @@ TextureManager::TextureManager() {
 TextureManager::~TextureManager() {
 }
 
-boolean TextureManager::IsExist(TextureHandle &handle) {
-  Texture *tex = handle_mgr_.Get(handle);
-  return (tex != NULL);
-}
-Texture *TextureManager::GetTexture(const TextureHandle &handle) {
-  return handle_mgr_.Get(handle);
-}
-boolean TextureManager::RemoveTexture(TextureHandle &handle) {
-  // handle이 존재하면 사전에서도 삭제
-  NameHandleDictType::iterator it = name_handle_dict_.begin();
-  NameHandleDictType::iterator endit = name_handle_dict_.end();
-  for ( ; it != endit ; it++) {
-    if (it->second == handle) {
-      name_handle_dict_.erase(it);
-      break;
-    }
-  }
-  return handle_mgr_.Remove(handle);
-}
-Texture *TextureManager::CreateTexture(TextureHandle &handle) {
-  if (handle.IsNull()) {
-    return handle_mgr_.Acquire(handle);
-  } else {
-    return NULL;
-  }
+TexturePtr TextureManager::Create(const std::string &name) {
+  TexturePtr tex(new Texture());
+  tex_dict_[name] = tex;
+  return tex;
 }
 
-TextureHandle TextureManager::FileNameToHandle(const std::string &name) const {
-  NameHandleDictType::const_iterator found = name_handle_dict_.find(name);
-  if (found == name_handle_dict_.end()) {
-    TextureHandle null_handle;
-    return null_handle;
+Texture *TextureManager::GetRaw(const std::string &name) {
+  TexDictType::iterator found = tex_dict_.find(name);
+  if (found == tex_dict_.end()) {
+    return NULL;
+  } else {
+    return found->second.get();
+  }
+}
+TexturePtr TextureManager::Get(const std::string &name) {
+  static TexturePtr empty;
+  TexDictType::iterator found = tex_dict_.find(name);
+  if (found == tex_dict_.end()) {
+    return empty;
   } else {
     return found->second;
   }
 }
-bool TextureManager::RegisterFilename(const std::string &name, const TextureHandle &handle) {
-  if (handle.IsNull()) {
-    // 널핸들은 등록불가
+boolean TextureManager::IsExist(const std::string &name) const {
+  TexDictType::const_iterator found = tex_dict_.find(name);
+  if (found == tex_dict_.end()) {
     return false;
+  } else {
+    return true;
   }
-  TextureHandle prev = FileNameToHandle(name);
-  if (prev.IsNull()) {
-    // 아직 등록된 적이 없는 이름이면 핸들 등록 가능
-    name_handle_dict_[name] = handle;
+}
+
+boolean TextureManager::Remove(const std::string &name) {
+  TexDictType::iterator found = tex_dict_.find(name);
+  if (found != tex_dict_.end()) {
+    tex_dict_.erase(found);
+    return true;
   } else {
     return false;
   }
 }
-TextureHandle TextureManager::GetHandle(Texture *tex) const {
-  const std::string &name = tex->filename();
-  return FileNameToHandle(name);
+boolean TextureManager::Remove(const TexturePtr &tex) {
+  TexDictType::iterator it = tex_dict_.begin();
+  TexDictType::iterator endit = tex_dict_.end();
+  for ( ; it != endit ; it++) {
+    if (it->second == tex) {
+      tex_dict_.erase(it);
+      return true;
+    }
+  }
+  return false;
 }
 }

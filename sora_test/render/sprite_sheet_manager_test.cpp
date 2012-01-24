@@ -67,7 +67,7 @@ TEST(SpriteSheetManager, Read) {
   const char res_path[] = "testdata/";
   TextureAtlas tex_atlas = SpriteSheetManager::Read(content, res_path);
 
-  Texture *tex = TextureManager::GetInstance().GetTexture(tex_atlas.tex_handle);
+  Texture *tex = tex_atlas.tex.get();
   EXPECT_EQ(512, tex->tex_header.tex_width);
   EXPECT_EQ(1024, tex->tex_header.tex_height);
 

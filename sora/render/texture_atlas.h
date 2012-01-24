@@ -39,7 +39,7 @@ struct TextureSubImage;
 // 그래서 텍스쳐는 썡gltexid가 아니라 포인터(또는 엔진용핸들)로 갖고있어야한다
 struct TextureSubImage {
   TextureSubImage();
-  TextureSubImage(f32 x, f32 y, f32 w, f32 h, const TextureHandle &tex);
+  TextureSubImage(f32 x, f32 y, f32 w, f32 h, const TexturePtr &tex);
 
   // 텍스쳐 이미지에서의 좌표(이미지 크기 기준)
   f32 x;
@@ -55,7 +55,7 @@ struct TextureSubImage {
   };
 
   // opengl texture
-  TextureHandle tex_handle;
+  TexturePtr tex;
 
   // 텍스쳐 좌표기준(0~1로 보정된 값)
   f32 GetTexCoordX();
@@ -72,7 +72,7 @@ struct TextureSubImage {
 class TextureAtlas {
 public:
   TextureAtlas();
-  TextureAtlas(const TextureHandle &handle);
+  TextureAtlas(const TexturePtr &tex);
   ~TextureAtlas();
 
   const TextureSubImage *GetSubImage(const char *key) const;
@@ -87,7 +87,7 @@ public:
   TextureSubImage &AddSubImage(const std::string &key, f32 x, f32 y, f32 w, f32 h);
 
 public:
-  TextureHandle tex_handle;
+  TexturePtr tex;
 
 private:
   typedef std::tr1::unordered_map<std::string, TextureSubImage> SubImageDictType;

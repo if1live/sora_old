@@ -21,7 +21,8 @@
 #ifndef SORA_TEXTURE_INFO_H_
 #define SORA_TEXTURE_INFO_H_
 
-#include "sora/handle.h"
+//#include "sora/handle.h"
+#include "sora/shared_ptr_inc.h"
 
 #if SR_ANDROID
 #include <GLES2/gl2.h>
@@ -105,8 +106,12 @@ public:
   boolean IsMipMap() const { return IsMipMap(min_filter); }
 };
 
-struct TextureTag { };
-typedef Handle<TextureTag> TextureHandle;
+//텍스쳐를 핸들대신 레퍼런스 카운터로 교체
+//생각만큼 핸들이 편하진 않더라
+//struct TextureTag { };
+//typedef Handle<TextureTag> TextureHandle;
+class Texture;
+typedef std::tr1::shared_ptr<Texture> TexturePtr;
 }
 
 #endif

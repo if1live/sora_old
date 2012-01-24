@@ -58,10 +58,14 @@ MainScene::MainScene() {
   //적당한 언어로 일단 열기
   Book &book = Book::GetInstance();
   book.SetLanguage(Locale::GetInstance().language());
+  LOGI("4");
   BookScene *page = book.GetCurrScene();
+  LOGI("3");
   page->LoadTexture();
+  LOGI("2");
 
   yukino::Glassless3d::GetInstance().Init();
+  LOGI("5");
 }
 MainScene::~MainScene() {
 }

@@ -30,7 +30,7 @@
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     
-    <application android:label="@string/gl2jni_activity">
+    <application android:label="@string/gl2jni_activity" android:debuggable="true">
         <activity android:name=".GL2JNIActivity"
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             	android:launchMode="singleTask"

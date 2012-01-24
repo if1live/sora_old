@@ -41,8 +41,7 @@ struct TextureManagerThreadRunner {
 // png파일같은것을 읽은 결과 내용이다. 텍스쳐 생성은
 // opengl을 생성한 쓰레드인 메인 쓰레드에서 작업해야하므로 이렇게 다시 넘기도록했다
 struct TextureLoadResponse {
-  TextureHandle handle;
-
+  TexturePtr tex;
   TexFormat fmt;
   TextureHeader tex_header;
   void *data;
@@ -50,52 +49,33 @@ struct TextureLoadResponse {
 
 class TextureManager : public Singleton<TextureManager> {
 public:
-  typedef std::vector<TextureHandle>   RequestStackType;
+  typedef std::vector<TexturePtr>   RequestStackType;
   typedef std::vector<TextureLoadResponse>  ResponseStackType;
-  typedef DynamicHandleManager<Texture, TextureHandle> HandleMgrType;
-  typedef std::tr1::unordered_map<std::string, TextureHandle> NameHandleDictType;
+  typedef std::tr1::unordered_map<std::string, TexturePtr> TexDictType;
 
 public:
-  void AsyncLoad(const TextureHandle &request);
-  void CancelAsyncLoad(const TextureHandle &request);
+  void AsyncLoad(const TexturePtr &request);
+  void CancelAsyncLoad(const TexturePtr &request);
   boolean IsResponseExist() const;
   boolean IsRequestExist() const;
   TextureLoadResponse PopResponse();
   void ProcessRequest();
   void ProcessResponse();
 
-  // handle based
-  boolean IsExist(TextureHandle &handle);
-  Texture *GetTexture(const TextureHandle &handle);
-  boolean RemoveTexture(TextureHandle &handle);
-
-  Texture *CreateTexture(TextureHandle &handle);
-
-  // 게임 내부의 구현은 핸들에 의존하는데 외부에서 읽은 파일은
-  // 파일명에 의존하니 중간 변환을 할수있도록한다
-  TextureHandle FileNameToHandle(const std::string &name) const;
-  bool RegisterFilename(const std::string &name, const TextureHandle &handle);
-
-  TextureHandle GetHandle(Texture *tex) const;
+  TexturePtr Create(const std::string &name);
+  Texture *GetRaw(const std::string &name);
+  TexturePtr Get(const std::string &name);
+  boolean IsExist(const std::string &name) const;
+  boolean Remove(const std::string &name);
+  boolean Remove(const TexturePtr &tex);
 
   TextureManager();
-
-  int GetUsedHandleCount() const { return handle_mgr_.GetUsedHandleCount(); }
-  int GetUnusedHandleCount() const { return handle_mgr_.GetUnusedHandleCount(); }
-
-  NameHandleDictType::iterator Begin() { return name_handle_dict_.begin(); }
-  NameHandleDictType::iterator End() { return name_handle_dict_.end(); }
-  NameHandleDictType::const_iterator Begin() const { return name_handle_dict_.begin(); }
-  NameHandleDictType::const_iterator End() const { return name_handle_dict_.end(); }
 protected:
   ~TextureManager();
 
-  HandleMgrType handle_mgr_;
+  TexDictType tex_dict_;
   RequestStackType    request_stack_;
   ResponseStackType   response_stack_;
-
-private:
-  NameHandleDictType name_handle_dict_;
 };
 }
 

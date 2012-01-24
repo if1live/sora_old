@@ -28,28 +28,21 @@ namespace sora {;
 TextureSubImage::TextureSubImage()
   : x(0), y(0), w(0), h(0) {
 }
-TextureSubImage::TextureSubImage(f32 x, f32 y, f32 w, f32 h, const TextureHandle &tex)
-  : x(x), y(y), w(w), h(h), tex_handle(tex) {
+TextureSubImage::TextureSubImage(f32 x, f32 y, f32 w, f32 h, const TexturePtr &tex)
+  : x(x), y(y), w(w), h(h), tex(tex) {
 }
 GLuint TextureSubImage::GetHandle() {
-  Texture *tex = TextureManager::GetInstance().GetTexture(tex_handle);
-  SR_ASSERT(tex != NULL);
   return tex->handle();
 }
 f32 TextureSubImage::GetTexWidth() {
-  Texture *tex = TextureManager::GetInstance().GetTexture(tex_handle);
-  SR_ASSERT(tex != NULL);
   float tex_width = static_cast<f32>(tex->tex_header.tex_width);
   return tex_width;
 }
 f32 TextureSubImage::GetTexHeight() {
-  Texture *tex = TextureManager::GetInstance().GetTexture(tex_handle);
-  SR_ASSERT(tex != NULL);
   float tex_height = static_cast<f32>(tex->tex_header.tex_height);
   return tex_height;
 }
 f32 TextureSubImage::GetTexCoordX() {
-  Texture *tex = TextureManager::GetInstance().GetTexture(tex_handle);
   float tex_width = GetTexWidth();
   return x / tex_width;
 }
@@ -89,7 +82,7 @@ void TextureSubImage::GetFrame(f32 *left, f32 *right, f32 *bottom, f32 *top) {
 }
 ////////////////////////////////
 TextureAtlas::TextureAtlas() {}
-TextureAtlas::TextureAtlas(const TextureHandle &handle) : tex_handle(handle) {}
+TextureAtlas::TextureAtlas(const TexturePtr &tex) : tex(tex) {}
 TextureAtlas::~TextureAtlas() {}
 
 const TextureSubImage *TextureAtlas::GetSubImage(const char *key) const {
@@ -113,7 +106,7 @@ TextureSubImage *TextureAtlas::GetSubImage(const char *key) {
   return NULL;
 }
 TextureSubImage &TextureAtlas::AddSubImage(const std::string &key, f32 x, f32 y, f32 w, f32 h) {
-  TextureSubImage img(x, y, w, h, tex_handle);
+  TextureSubImage img(x, y, w, h, tex);
   sub_img_list_[key] = img;
   return sub_img_list_[key];
 }

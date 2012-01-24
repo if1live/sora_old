@@ -29,6 +29,7 @@
 #include "texture_info.h"
 #include "texture.h"
 #include "gl_helper.h"
+#include "texture_helper.h"
 
 #include "sora/io/filesystem.h"
 
@@ -59,7 +60,7 @@ void Texture::Deinit() {
 void Texture::SetAsSample() {
   Cleanup();  //기존에 뭔가 있으면 해제
 
-  set_handle(GetSampleTexture(&tex_header.tex_width, &tex_header.tex_height));
+  set_handle(TextureHelper::GetSampleTexture(&tex_header.tex_width, &tex_header.tex_height));
   tex_header.src_width = tex_header.tex_width;
   tex_header.src_height = tex_header.tex_height;
   format = kTexFormatRGB888;
@@ -73,12 +74,10 @@ void Texture::SetAsSample() {
 }
 void Texture::SetAsLoading() {
   Cleanup();  //기존에 뭔가 있으면 해제
-
-  set_handle(GetLoadingTexture(&tex_header.tex_width, &tex_header.tex_height));
+  set_handle(TextureHelper::GetLoadingTexture(&tex_header.tex_width, &tex_header.tex_height));
   tex_header.src_width = tex_header.tex_width;
   tex_header.src_height = tex_header.tex_height;
   format = kTexFormatRGB888;
-
   //텍스쳐 id만 교체하지 텍스쳐 정보는 날리지 않는다
   //이것까지 날리면 다시 로딩할떄 의도하지 않은 결과가 나온다
   //param_.wrap_s = kTexWrapRepeat;
@@ -91,180 +90,14 @@ void Texture::Cleanup() {
     return;
   }
 
-  GLuint loading_tex_id = GetLoadingTexture();
-  GLuint sample_tex_id = GetSampleTexture();
+  //완전히 빈것으로 설정하기
+  GLuint loading_tex_id = TextureHelper::GetLoadingTexture();
+  GLuint sample_tex_id = TextureHelper::GetSampleTexture();
   if(loading_tex_id != handle() && sample_tex_id != handle()) {
     // sample텍스쳐는 공유하므로 삭제하지 않는다
     srglDeleteTextures(1, &handle_);
     set_handle(0);
   }
-}
-//테스트로 쓰이는 샘플 텍스쳐는 gl함수를 썡으로 해서 생성이 가능하게 하자. 이것을 통하면
-//glint로된 핸들을 직접 받아서 다룰수 있으니 디버깅에 더 유리할 것이다
-GLuint Texture::GetSampleTexture(int *width, int *height) {
-  static bool run = false;
-  static GLuint tex_id = -1;
-
-  const int w = 2;
-  const int h = 2;
-  if (width) {
-    *width = w;
-  }
-  if (height) {
-    *height = h;
-  }
-
-  if (run == false) {
-    run = true;
-
-    unsigned char tex_data[] = {
-      255, 0, 0, 255,
-      0, 255, 0, 255,
-      0, 0, 255, 255,
-      255, 255, 255, 255,
-    };
-
-    srglGenTextures(1, &tex_id);
-    srglBindTexture(GL_TEXTURE_2D, tex_id);
-    srglPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
-    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); 
-    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    srglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, tex_data);
-  }
-  return tex_id;
-}
-
-GLuint Texture::GetLoadingTexture(int *width, int *height) {
-  static bool run = false;
-  static GLuint tex_id = -1;
-  
-  if (run == false) {
-    run = true;
-
-    //텍스쳐 떄려박는건 좀 무식한거같은데...
-    using std::string;
-    string filename = "\\resource\\loading.png";
-    //string filename = "\\res\\test.png";
-    filename = sora::Filesystem::GetAppPath(filename);
-    TexFormat fmt;
-    TextureHeader tex_header;
-    void *data = LoadPNG(filename.c_str(), &fmt, &tex_header);
-    
-    srglGenTextures(1, &tex_id);
-    srglBindTexture(GL_TEXTURE_2D, tex_id);
-    srglPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-    if (width) {
-      *width = tex_header.tex_width;
-    }
-    if (height) {
-      *height = tex_header.tex_height;
-    }
-    SR_ASSERT(fmt == kTexFormatRGBA8888);
-
-    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
-    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); 
-    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    srglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, *width, *height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-
-    delete[]((unsigned char *)data);
-  }
-  return tex_id;
-}
-
-Texture &Texture::Sample() {
-  static bool run = false;
-  static Texture tex;
-  if (run == false) {
-    run = true;
-    tex.set_handle(GetSampleTexture(&tex.tex_header.tex_width, &tex.tex_header.tex_height));
-    tex.tex_header.src_width = tex.tex_header.tex_width;
-    tex.tex_header.src_height = tex.tex_header.tex_height;
-    tex.format = kTexFormatRGB888;
-  }
-  return tex;
-}
-
-Texture &Texture::White() {
-  static bool run = false;
-  static Texture tex;
-  if (run == false) {
-    run = true;
-    ColorTexture(255, 255, 255, &tex);
-  }
-  return tex;
-}
-Texture &Texture::Black() {
-  static bool run = false;
-  static Texture tex;
-  if (run == false) {
-    run = true;
-    ColorTexture(0, 0, 0, &tex);
-  }
-  return tex;
-}
-Texture &Texture::Gray() {
-  static bool run = false;
-  static Texture tex;
-  if (run == false) {
-    run = true;
-    ColorTexture(128, 128, 128, &tex);
-  }
-  return tex;
-}
-Texture &Texture::Red() {
-  static bool run = false;
-  static Texture tex;
-  if (run == false) {
-    run = true;
-    ColorTexture(255, 0, 0, &tex);
-  }
-  return tex;
-}
-Texture &Texture::Green() {
-  static bool run = false;
-  static Texture tex;
-  if (run == false) {
-    run = true;
-    ColorTexture(0, 255, 0, &tex);
-  }
-  return tex;
-}
-Texture &Texture::Blue() {
-  static bool run = false;
-  static Texture tex;
-  if (run == false) {
-    run = true;
-    ColorTexture(0, 0, 255, &tex);
-  }
-  return tex;
-}
-
-Texture &Texture::LoadingTexture() {
-  static bool run = false;
-  static Texture tex;
-  if (run == false) {
-    run = true;
-    tex.set_handle(GetLoadingTexture(&tex.tex_header.tex_width, &tex.tex_header.tex_height));
-    tex.tex_header.src_width = tex.tex_header.tex_width;
-    tex.tex_header.src_height = tex.tex_header.tex_height;
-    tex.format = kTexFormatRGB888;
-  }
-  return tex;
-}
-
-void Texture::ColorTexture(u8 r, u8 g, u8 b, Texture *tex) {
-  unsigned char tex_data[] = {
-    r, g, b, 255,
-    r, g, b, 255,
-    r, g, b, 255,
-    r, g, b, 255,
-  };
-  tex->InitSimpleTexture(2, 2, kTexFormatRGBA8888, tex_data);
 }
 
 void Texture::InitSimpleTexture(i32 width, i32 height, const TexFormat &fmt, void *data) {
@@ -376,31 +209,6 @@ void Texture::Init(const TexFormat &fmt, const TextureHeader &header, const Text
     SR_ASSERT(!"not support yet");
   }
 }
-bool Texture::IsSystemTexture() const {
-  using std::set;
 
-  static set<u32> system_tex_list;
-  static bool run = false;
-  if (run == false) {
-    run = true;
-    system_tex_list.insert(GetSampleTexture());
-    system_tex_list.insert(GetLoadingTexture());
-    system_tex_list.insert(White().handle());
-    system_tex_list.insert(Black().handle());
-    system_tex_list.insert(Gray().handle());
-    system_tex_list.insert(Red().handle());
-    system_tex_list.insert(Blue().handle());
-    system_tex_list.insert(Green().handle());
-    system_tex_list.insert(Sample().handle());
-    system_tex_list.insert(LoadingTexture().handle());
-  }
-
-  set<u32>::iterator found = system_tex_list.find(handle());
-  if (found == system_tex_list.end()) {
-    return false;
-  } else {
-    return true;
-  }
-}
 }
 

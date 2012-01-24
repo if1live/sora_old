@@ -30,6 +30,7 @@
 #include "sora/ui/touch.h"
 
 #include "sora/render/texture_manager.h"
+#include "sora/render/texture_helper.h"
 
 #include "sora/render/scene_manager.h"
 #include "sora/render/scene.h"
@@ -63,8 +64,8 @@ int main(int argc, char *argv) {
 
   Init();
 
-  sora::TextureManagerThreadRunner texture_thd_runner;
-  boost::thread texture_thd(texture_thd_runner);
+  //sora::TextureManagerThreadRunner texture_thd_runner;
+  //boost::thread texture_thd(texture_thd_runner);
 
   /////////////
   // set scene
@@ -94,11 +95,12 @@ int main(int argc, char *argv) {
     //////////
     // engine logic
     sora::TextureManager::GetInstance().ProcessResponse();
+    sora::TextureManager::GetInstance().ProcessRequest(); //single thd
   }
 
   //texture thread stop
-  sora::TextureManagerThreadRunner::run_thread = false;
-  texture_thd.join();
+  //sora::TextureManagerThreadRunner::run_thread = false;
+  //texture_thd.join();
 
   // Close window and terminate GLFW
   sora::ImmediateModeEmulator::DestroyInstance();
@@ -114,12 +116,13 @@ void Update(int ms) {
   using namespace sora;
 #if SR_WIN
   // 윈도우의 경우, 마우스로 터치 흉내내기
-  sora::glfwMouseUpdate(win_width, win_height);
+  //sora::glfwMouseUpdate(win_width, win_height);
   //sora::TouchDevice::GetInstance().PrintLog();
 #endif
 
   SceneManager::GetInstance().Update(ms);
 
+  /*
 #if SR_WIN
   if (glfwGetKey('T') == GLFW_PRESS) {
     // texture alloc info
@@ -133,13 +136,14 @@ void Update(int ms) {
       const TextureHandle &handle = it->second;
       Texture *tex = mgr.GetTexture(handle);
 
-      if (tex->IsSystemTexture() == false) {
+      if (TextureHelper::IsSystemTexture(*tex) == false) {
         printf("%s\n", name.c_str());
       }
     }
     printf("=============\n");
   }
 #endif
+  */
 }
 
 void Draw(int ms) {  

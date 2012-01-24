@@ -80,19 +80,7 @@ public class GL2JNIView extends GLSurfaceView {
 		super(context);
 		init(translucent, depth, stencil, context);
 	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		//unload all texture
-		GL2JNILib.onCleanup();
-	}
-	@Override
-	public void onResume() {
-		// TODO Auto-generated method stub
-		super.onResume();
-		GL2JNILib.onResume();
-	}
+	
 	
 	private void init(boolean translucent, int depth, int stencil, Context context) {
 
@@ -346,7 +334,7 @@ public class GL2JNIView extends GLSurfaceView {
 		}
 		public void onDrawFrame(GL10 gl) {
 			//매 프레임 호출되는 함수이니까 여기에서 적절히 자이로나 가속도 센서 값을 얻자
-			GL2JNILib.step();
+			GL2JNILib.step();	
 		}
 
 		public void onSurfaceChanged(GL10 gl, int width, int height) {

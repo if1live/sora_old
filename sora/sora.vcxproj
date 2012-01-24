@@ -79,6 +79,8 @@
     <ClInclude Include="io\zip_stream_file.h" />
     <ClInclude Include="io\xml_node.h" />
     <ClInclude Include="io\xml_reader.h" />
+    <ClInclude Include="render\texture.hpp" />
+    <ClInclude Include="render\texture_helper.h" />
     <ClInclude Include="ring_buffer.h" />
     <ClInclude Include="sys_locale.h" />
     <ClInclude Include="logger.h" />
@@ -107,16 +109,6 @@
     <ClInclude Include="string_code_dictionary.h" />
     <ClInclude Include="string_hash_functor.h" />
     <ClInclude Include="template_library.h" />
-    <ClInclude Include="ui\accelerometer.h" />
-    <ClInclude Include="ui\button.h" />
-    <ClInclude Include="ui\gyro.h" />
-    <ClInclude Include="ui\image_label.h" />
-    <ClInclude Include="ui\input_enum.h" />
-    <ClInclude Include="ui\keyboard.h" />
-    <ClInclude Include="ui\touch.h" />
-    <ClInclude Include="ui\ui_component.h" />
-    <ClInclude Include="ui\ui_container.h" />
-    <ClInclude Include="ui\ui_drawer.h" />
     <ClInclude Include="unordered_map_inc.h" />
     <ClInclude Include="vector.h" />
   </ItemGroup>
@@ -129,6 +121,7 @@
     <ClCompile Include="io\zip_stream_file.cpp" />
     <ClCompile Include="io\xml_node.cpp" />
     <ClCompile Include="io\xml_reader.cpp" />
+    <ClCompile Include="render\texture_helper.cpp" />
     <ClCompile Include="sys_locale.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="math_helper.cpp" />
@@ -150,15 +143,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="common_string.cpp" />
-    <ClCompile Include="ui\accelerometer.cpp" />
-    <ClCompile Include="ui\button.cpp" />
-    <ClCompile Include="ui\gyro.cpp" />
-    <ClCompile Include="ui\image_label.cpp" />
-    <ClCompile Include="ui\keyboard_glfw.cpp" />
-    <ClCompile Include="ui\touch.cpp" />
-    <ClCompile Include="ui\ui_component.cpp" />
-    <ClCompile Include="ui\ui_container.cpp" />
-    <ClCompile Include="ui\ui_drawer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

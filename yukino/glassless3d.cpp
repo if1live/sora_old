@@ -97,7 +97,7 @@ void Glassless3d::Draw() {
     float pan_deg = 0;
     float tilt_deg = 15;
     static float dynamic_pan_dt = 0;
-    dynamic_pan_dt += 1.0f;
+    dynamic_pan_dt += 0.1f;
     pan_deg = 15 * sin(DegreeToRadian(dynamic_pan_dt));
 
 

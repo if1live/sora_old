@@ -45,9 +45,13 @@ void Book::SetLanguage(sora::LanguageType lang) {
   if (kor_scene_list_.empty() && lang == kLanguageKorean) {
     string book_path = Filesystem::GetAppPath("res/book_kr.xml");
     Load(book_path, lang);
+    LOGI("load korean book");
   } else if (eng_scene_list_.empty() && lang == kLanguageEnglish) {
     string book_path = Filesystem::GetAppPath("res/book_en.xml");
     Load(book_path, lang);
+    LOGI("load english book");
+  } else {
+    SR_ASSERT(!"not valid");
   }
 }
 

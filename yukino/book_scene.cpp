@@ -14,6 +14,7 @@
 #include "sora/render/texture.h"
 #include "sora/render/texture_atlas.h"
 #include "sora/render/texture_manager.h"
+#include "sora/render/texture_helper.h"
 
 #if SR_USE_PCH == 0
 #include <boost/foreach.hpp>
@@ -60,12 +61,13 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
   SR_ASSERT(res.size() > 0);
 
   //텍스쳐 불러오기. 생성된 텍스쳐 목록에 존재하는지 확인하고 없으면 생성
-  Texture *tex = NULL;
-  TextureHandle tex_handle = TextureManager::GetInstance().FileNameToHandle(res);
-  if(tex_handle.IsNull()) {
+  TexturePtr tex;
+  bool prev_exist = TextureManager::GetInstance().IsExist(res);
+  if(prev_exist) {
+    tex = TextureManager::GetInstance().Get(res);
+  } else {
     //새로운텍스쳐를 만들기. 모든 처리가 완료되면 TextureManager내부에 등록된다
-    tex = TextureManager::GetInstance().CreateTexture(tex_handle);
-    TextureManager::GetInstance().RegisterFilename(res, tex_handle);
+    tex = TextureManager::GetInstance().Create(res);
     //printf("Texture filename : %s\n", res.c_str());
     tex->set_filename(res);
 
@@ -92,13 +94,11 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
       tex->tex_header.tex_width = 2048/2;
       tex->tex_header.tex_height = 2048/2;
     }
-
-    //텍스쳐 로딩 요청은 따로 한다. 
-    //TextureManager::GetInstance().AsyncLoad(tex_handle_);
   }
+  LOGI("%s", res.c_str());
 
-  tex_handle_list_.insert(tex_handle);
-  SR_ASSERT(tex_handle.IsNull() == false);
+  tex_handle_list_.insert(tex);
+  SR_ASSERT(tex.get() != NULL);
 
   //텍스쳐의 정보를 사용해서 x, y, w, h를 구성하기
   float x = 0;
@@ -140,7 +140,7 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
   subimg.y = y;
   subimg.w = w;
   subimg.h = h;
-  subimg.tex_handle = tex_handle;
+  subimg.tex = tex;
   spriteDict_[name] = subimg;
 }
 void BookScene::parseSpriteListNode(sora::XmlNode *node) {
@@ -372,19 +372,16 @@ void BookScene::Unload() {
   spriteDict_.clear();
 }
 void BookScene::LoadTexture() {
-  BOOST_FOREACH(const TextureHandle &handle, tex_handle_list_) {
-    Texture *tex = TextureManager::GetInstance().GetTexture(handle);
-    SR_ASSERT(tex != NULL);
-    if (tex->IsSystemTexture()) {
+  BOOST_FOREACH(const TexturePtr &tex, tex_handle_list_) {
+    if (TextureHelper::IsSystemTexture(*tex)) {
       // 아직 안불러져있는 경우, 로드하기
-      TextureManager::GetInstance().AsyncLoad(handle);
+      TextureManager::GetInstance().AsyncLoad(tex);
+      sora::TextureManager::GetInstance().ProcessRequest();
     }
   }  
 }
 void BookScene::UnloadTexture() {
-  BOOST_FOREACH(const TextureHandle &handle, tex_handle_list_) {
-    Texture *tex = TextureManager::GetInstance().GetTexture(handle);
-    SR_ASSERT(tex != NULL);
+  BOOST_FOREACH(const TexturePtr &tex, tex_handle_list_) {
     tex->Cleanup();
     tex->SetAsLoading();
   }

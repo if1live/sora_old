@@ -58,14 +58,17 @@ LOCAL_SRC_FILES +=	\
 	../render/texture.cpp	\
 	../render/texture_atlas.cpp	\
 	../render/texture_info.cpp	\
-	../render/texture_manager.cpp
-LOCAL_SRC_FILES +=	\
-	../ui/button.cpp	\
-	../ui/image_label.cpp	\
-	../ui/touch.cpp	\
-	../ui/ui_component.cpp	\
-	../ui/ui_container.cpp	\
-	../ui/ui_drawer.cpp	\
+	../render/texture_manager.cpp	\
+	../render/texture_helper.cpp
+	
+
+#LOCAL_SRC_FILES +=	\
+#	../ui/button.cpp	\
+#	../ui/image_label.cpp	\
+#	../ui/touch.cpp	\
+#	../ui/ui_component.cpp	\
+#	../ui/ui_container.cpp	\
+#	../ui/ui_drawer.cpp	\
 
 include $(BUILD_STATIC_LIBRARY)
 

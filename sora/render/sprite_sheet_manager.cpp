@@ -63,24 +63,23 @@ TextureAtlas SpriteSheetManager::Read(const char *content, const char *res_path)
   real_image_path += '/';
   real_image_path += image_path;
 
-  Texture *tex = NULL;
-  TextureHandle tex_handle = TextureManager::GetInstance().FileNameToHandle(real_image_path);
-  if (tex_handle.IsNull()) {
-    tex = TextureManager::GetInstance().CreateTexture(tex_handle);
-    //printf("Texture filename 2: %s\n", real_image_path.c_str());
-    tex->set_filename(real_image_path);
-    TextureManager::GetInstance().RegisterFilename(real_image_path, tex_handle);
-
+  TexturePtr tex;
+  bool prev_exist = TextureManager::GetInstance().IsExist(real_image_path);
+  if(prev_exist == true) {
+    tex = TextureManager::GetInstance().Get(real_image_path);
   } else {
-    tex_handle = TextureManager::GetInstance().FileNameToHandle(real_image_path);
-    tex = TextureManager::GetInstance().GetTexture(tex_handle);
+    tex = TextureManager::GetInstance().Create(real_image_path);
+    tex->set_filename(real_image_path);
+
+    ///@TODO 텍스쳐 로딩 집어넣기
   }
+
   tex->tex_header.src_width = tex_width;
   tex->tex_header.src_height = tex_height;
   tex->tex_header.tex_width = tex_width;
   tex->tex_header.tex_height = tex_height;
 
-  TextureAtlas tex_atlas(tex_handle);
+  TextureAtlas tex_atlas(tex);
 
   XmlNodeListConstIterator it = root.ChildBegin();
   XmlNodeListConstIterator endit = root.ChildEnd();

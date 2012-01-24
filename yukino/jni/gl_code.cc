@@ -48,17 +48,12 @@ bool setupGraphics(int w, int h) {
 	win.SetSize(w, h);
 	win.set_content_scale(1);
 	win.Init();
-	
-	sora::GLHelper::CheckError("shader begin");
 	sora::ImmediateModeEmulator::GetInstance().Init();
-	sora::GLHelper::CheckError("shader");
-	
 	srglViewport(0, 0, w, h); 
-	sora::GLHelper::CheckError("Viewport");
 	
-	sora::TextureManagerThreadRunner texture_thd_runner;
-	boost::thread texture_thd(texture_thd_runner);
-	sora::GLHelper::CheckError("thread texture");
+	//sora::TextureManagerThreadRunner texture_thd_runner;
+	//boost::thread texture_thd(texture_thd_runner);
+	//sora::GLHelper::CheckError("thread texture");
 	
 	Scene *scene = new MainScene();
 	SceneManager::GetInstance().Push(scene);
@@ -67,35 +62,15 @@ bool setupGraphics(int w, int h) {
 }
 
 void renderFrame() {
+	LOGI("render frame");
 	sora::GLHelper::CheckError("DrawStart");
-	SceneManager::GetInstance().Update(1/30.0f);
-	SceneManager::GetInstance().Draw();		
 	
+	sora::TextureManager::GetInstance().ProcessRequest();
 	sora::TextureManager::GetInstance().ProcessResponse();
+	
+	SceneManager::GetInstance().Update(1000.0f/30.0f);
+	SceneManager::GetInstance().Draw();		
 	sora::GLHelper::CheckError("DrawEnd");
-/*
-const GLfloat gTriangleVertices[] = { 0.0f, 0.5f, -0.5f, -0.5f,
-        0.5f, -0.5f };
-    static float grey;
-    grey += 0.01f;
-    if (grey > 1.0f) {
-        grey = 0.0f;
-    }
-    glClearColor(grey, grey, grey, 1.0f);
-    checkGlError("glClearColor");
-    glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-    checkGlError("glClear");
-
-    glUseProgram(gProgram);
-    checkGlError("glUseProgram");
-
-    glVertexAttribPointer(gvPositionHandle, 2, GL_FLOAT, GL_FALSE, 0, gTriangleVertices);
-    checkGlError("glVertexAttribPointer");
-    glEnableVertexAttribArray(gvPositionHandle);
-    checkGlError("glEnableVertexAttribArray");
-    glDrawArrays(GL_TRIANGLES, 0, 3);
-    checkGlError("glDrawArrays");
-	*/
 }
 
 extern "C" {
