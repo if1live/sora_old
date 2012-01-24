@@ -21,24 +21,16 @@ float GyroInputHandler::GetTiltDegree() {
   return tilt_deg_;
 }
 void GyroInputHandler::UpdateEvent() {
-  /*
-  while(InputEventQueue::sharedQueue().isEmpty() == false)
-  {
-    InputEventPtr evt = InputEventQueue::sharedQueue().pop();
-    if(evt->getType() == EventTypeAttitude)
-    {
-      //아이폰4에서는 자이로의 roll을 이용해서 좌우보는것을 구현
-      //중력없이 구현하기 
-      AttitudeData *data = evt->getEventData<AttitudeData>();
-      tiltDegree_ = -rad2deg(data->roll - zeroRoll_);
-      float panRadian = calcIncludeAngleRadian(zeroYaw_, data->yaw);
-      panDegree_ = rad2deg(panRadian);
+  //아이폰4에서는 자이로의 roll을 이용해서 좌우보는것을 구현
+  //중력없이 구현하기 
+  const GyroData &attitude = Gyro::GetInstance().GetLast();
 
-      MT_ASSERT(isNaN(panDegree_) == false);
-      MT_ASSERT(isNaN(tiltDegree_) == false);
-    }
-  }
-  */
+  tilt_deg_ = -RadianToDegree(attitude.roll - zero_roll_);
+  float panRadian = CalcIncludeAngleRadian(zero_yaw_, attitude.yaw);
+  pan_deg_ = RadianToDegree(panRadian);
+
+  SR_ASSERT(IsNaN(pan_deg_) == false);
+  SR_ASSERT(IsNaN(tilt_deg_) == false);
 }
 void GyroInputHandler::Reset() {
   //자이로센서의 yaw를 저장. 이것을 이용해서 좌우기울이는 효과를 만들어낸다 

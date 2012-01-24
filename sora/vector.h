@@ -260,6 +260,15 @@ Vector3<T> VectorCross(const Vector3<T> &a, const Vector3<T> &b) {
   T z = a.x * b.y - a.y * b.x;
   return Vector3<T>(x, y, z);
 }
+
+template<typename VecType>
+bool VectorIsZero(const VecType &a, typename VecType::ElemType error) {
+  typename VecType::ElemType length_square = VectorLengthSquare(a);
+  if (length_square > error) {
+    return false;
+  }
+  return true;
+}
 }
 
 #endif  // SORA_VECTOR_H_
