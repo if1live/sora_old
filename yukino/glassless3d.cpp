@@ -13,6 +13,7 @@
 #include "sora/math_helper.h"
 #include "sora/sys_locale.h"
 #include "sora/render/gl_window.h"
+#include "sora/render/gl_helper.h"
 
 #if SR_USE_PCH == 0
 #include "sora/render/gl_inc.h"
@@ -23,6 +24,8 @@
 //#include "ASKeyboardInputHandler.h"
 //#include "ASGyroInputHandler.h"
 //#include "ASAccelerometerInputHandler.h"
+
+using namespace sora;
 
 namespace yukino {;
 

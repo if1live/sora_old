@@ -38,12 +38,11 @@ LOCAL_SRC_FILES := gl_code.cc \
 	../book_paper_builder.cpp	\
 	../book_scene.cpp	\
 	../camera.cpp	\
-	../game_scene.cpp	\
 	../glassless3d.cpp	\
-	../intro_scene.cpp	\
 	../lang_button_selector.cpp	\
-	../menu_scene.cpp	\
-	../logic_interface.cpp
+	../logic_interface.cpp	\
+	../main_scene.cpp	\
+	
 include $(BUILD_SHARED_LIBRARY)
 
 

@@ -37,7 +37,11 @@ Book::~Book() {
 
 void Book::SetLanguage(sora::LanguageType lang) {
   // 없으면 불러오기
+  if(lang == kLanguageETC) {
+    lang = kLanguageEnglish;
+  }
   lang_ = lang;
+
   if (kor_scene_list_.empty() && lang == kLanguageKorean) {
     string book_path = Filesystem::GetAppPath("res/book_kr.xml");
     Load(book_path, lang);

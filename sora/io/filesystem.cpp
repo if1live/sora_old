@@ -49,6 +49,8 @@ int InitFileSystem() {
   Filesystem::app_root_path = path;
   chdir(Filesystem::app_root_path.c_str());
   return 1;
+#elif SR_ANDROID
+  Filesystem::app_root_path = "assets";
 #else
   return 0;
 #endif
@@ -113,10 +115,38 @@ std::string Filesystem::GetExtension(const std::string &str) {
 
 std::string Filesystem::GetAppPath(const char *filename) {
   char last_ch = app_root_path[app_root_path.size()-1];
+#if SR_WIN || SR_IOS
   if (last_ch == '/' || last_ch == '\\') {
     return app_root_path + filename;
   } else {
     return app_root_path + PATH_SEPARATOR + filename;
   }
+#else
+  using namespace std;
+  string app_path;
+  if (last_ch == '/' || last_ch == '\\') {
+    app_path = app_root_path + filename;
+  } else {
+    app_path = app_root_path + PATH_SEPARATOR + filename;
+  }
+  //\대신 /로 전부 교체
+  for(int i = 0 ; i < app_path.size() ; i++) {
+    if (app_path[i] == '\\') {
+      app_path[i] = '/';
+    }
+  }
+  // /가 연속으로 들어가지 않도록 수정하기
+  string result;
+  for(int i = 0 ; i < app_path.size() ; i++) {
+    char ch = app_path[i];
+    if(result.empty() == false && result[result.size() - 1] == '/') {
+      if(ch == '/') {
+        continue;
+      }
+    }
+    result.push_back(ch);
+  }
+  return result;
+#endif
 }
 }

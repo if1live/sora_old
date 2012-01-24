@@ -36,6 +36,7 @@
 
 #include "game_scene.h"
 #include "intro_scene.h"
+#include "main_scene.h"
 
 // 첫번쨰 타겟은 안드로이드로 생각하고 거기에 맞춰서 작업하자
 //const int win_width = 960;
@@ -65,8 +66,9 @@ int main(int argc, char *argv) {
 
   /////////////
   // set scene
-  //GameScene *scene = new GameScene();
-  IntroScene *scene = new IntroScene();
+  //Scene *scene = new GameScene();
+  //Scene *scene = new IntroScene();
+  Scene *scene = new MainScene();
   SceneManager::GetInstance().Push(scene);
   ////////////
 

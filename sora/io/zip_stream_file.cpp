@@ -34,7 +34,7 @@ void ZipStreamFile::SetApkFile(const char *apk_file) {
     LOGE("Error loading APK");
     return;
   }
-
+  /*
   //Just for debug, print APK contents
   int numFiles = zip_get_num_files(apk_archive_);
   for (int i=0; i<numFiles; i++) {
@@ -45,6 +45,7 @@ void ZipStreamFile::SetApkFile(const char *apk_file) {
     }
     LOGI("File %i : %s\n", i, name);
   }
+  */
 }
 void ZipStreamFile::SetApkFile(const std::string &apk_file) {
   SetApkFile(apk_file.c_str());
@@ -83,6 +84,16 @@ void ZipStreamFile::Close() {
 
 i32 ZipStreamFile::Read(void *buf, i32 size) {
   zip_fread(file_, buf, size);
+}
+
+i32 ZipStreamFile::GetLength() const {
+  struct zip_stat stat;
+  int result = zip_stat(apk_archive_, filepath_.c_str(), 0, &stat);
+  if(result == -1) {
+    LOGE("Error read stat %s", filepath_.c_str());
+  }
+  SR_ASSERT(stat.size > 0);
+  return stat.size;
 }
 
 }
