@@ -20,8 +20,11 @@
 // Ŭnicode please
 #include "sora_stdafx.h"
 
+#if SR_WIN || SR_IOS
 #include "sora/io/memory_file.h"
+#else
 #include "sora/io/zip_stream_file.h"
+#endif
 
 #include "texture_info.h"
 #include "texture.h"
@@ -284,12 +287,7 @@ void Texture::InitSimpleTexture(i32 width, i32 height, const TexFormat &fmt, voi
   Init(fmt, header, default_param, data);
 }
 
-void png_asset_read(png_structp png_ptr, png_bytep data, png_size_t length);
-void png_asset_read(png_structp png_ptr, png_bytep data, png_size_t length) {
-	png_voidp a = png_get_io_ptr(png_ptr);
-  MemoryFile *file = (MemoryFile*)a;
-	file->Read((char*)data, length);
-}
+
 boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
   TexFormat fmt;
   TextureHeader header;
@@ -319,6 +317,17 @@ void* Texture::LoadPNG(const char *filepath, TexFormat *fmt, TextureHeader *tex_
 #else
   ZipStreamFile asset(filepath);
   return LoadPNG(asset, fmt, tex_header);
+#endif
+}
+
+void png_asset_read(png_structp png_ptr, png_bytep data, png_size_t length) {
+	png_voidp a = png_get_io_ptr(png_ptr);
+#if SR_WIN || SR_IOS
+  MemoryFile *file = (MemoryFile*)a;
+	file->Read((char*)data, length);
+#else
+  ZipStreamFile *file = (ZipStreamFile*)a;
+	file->Read((char*)data, length);
 #endif
 }
 

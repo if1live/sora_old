@@ -47,6 +47,8 @@ public:
   i32 Read(void *buf, i32 size);
   boolean IsOpened() const { return (file_ != NULL); }
 
+  const std::string &filepath() const { return filepath_; }
+
 private:
   std::string filepath_;
   zip_file* file_;

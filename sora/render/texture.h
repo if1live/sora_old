@@ -23,6 +23,10 @@
 
 #include "texture_info.h"
 
+#if SR_USE_PCH == 0
+#include <png.h>
+#endif
+
 namespace sora {;
 class Texture;
 
@@ -100,6 +104,8 @@ private:
   GLuint handle_;  // 텍스쳐 여러개를 그룹화로 쓰는건 아마도 당분간 필요없겠지
 };
 
+
+void png_asset_read(png_structp png_ptr, png_bytep data, png_size_t length);
 
 template<typename T>
 void* Texture::LoadPNG(T &asset, TexFormat *fmt, TextureHeader *tex_header) {
