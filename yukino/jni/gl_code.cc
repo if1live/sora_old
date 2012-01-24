@@ -48,11 +48,17 @@ bool setupGraphics(int w, int h) {
 	win.SetSize(w, h);
 	win.set_content_scale(1);
 	win.Init();
+	
+	sora::GLHelper::CheckError("shader begin");
 	sora::ImmediateModeEmulator::GetInstance().Init();
+	sora::GLHelper::CheckError("shader");
+	
 	srglViewport(0, 0, w, h); 
+	sora::GLHelper::CheckError("Viewport");
 	
 	sora::TextureManagerThreadRunner texture_thd_runner;
 	boost::thread texture_thd(texture_thd_runner);
+	sora::GLHelper::CheckError("thread texture");
 	
 	Scene *scene = new MainScene();
 	SceneManager::GetInstance().Push(scene);
@@ -61,6 +67,7 @@ bool setupGraphics(int w, int h) {
 }
 
 void renderFrame() {
+	sora::GLHelper::CheckError("DrawStart");
 	SceneManager::GetInstance().Update(1/30.0f);
 	SceneManager::GetInstance().Draw();		
 	
@@ -120,6 +127,7 @@ JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_step(JNIEnv * env, jobj
 
 JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_onResume(JNIEnv * env, jobject obj) {
 	LOGE("resume");
+	sora_reload_texture();
 }
 JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_onSuspend(JNIEnv * env, jobject obj) {
 	LOGE("suspend");
@@ -129,6 +137,8 @@ JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_onInit(JNIEnv * env, jo
 }
 JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_onCleanup(JNIEnv * env, jobject obj) {
 	LOGE("on cleanup");
+	sora_unload_texture();
+	sora_unload_shader();
 }
 JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_setApkPath(JNIEnv * env, jobject obj, jstring apkPath) {
 	//LOGE("apk set called");

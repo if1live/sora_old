@@ -67,6 +67,9 @@ struct BasicShaderImpl {
     SR_ASSERT(clazz->position_location != -1);
     SR_ASSERT(clazz->color_location != -1);
   }
+  ~BasicShaderImpl() {
+    prog.Deinit();
+  }
   Program prog;
 };
 
@@ -77,16 +80,29 @@ projection_location(-1),
 texcoord_location(-1),
 color_location(-1),
 position_location(-1) {
-  impl_ = new BasicShaderImpl(this);
+  Init();
 }
 BasicShader::~BasicShader() {
+  Cleanup();
+}
+
+void BasicShader::Cleanup() {
   if (impl_ != NULL) {
     delete(impl_);
     impl_ = NULL;
   }
 }
 
+bool BasicShader::IsInited() const {
+  if (impl_ == NULL) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 void BasicShader::Init() {
+  impl_ = new BasicShaderImpl(this);
 }
 void BasicShader::Use() {
   Program &prog = impl_->prog;

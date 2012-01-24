@@ -33,6 +33,8 @@ public:
 
   void Init();
   void Use();
+  void Cleanup();
+  bool IsInited() const;
 
 public:
   int modelview_location;

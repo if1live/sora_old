@@ -215,10 +215,18 @@ void Book::MoveScene(int index) {
 }
 
 BookScene *Book::GetCurrScene() {
-  return scene_list().at(curr_scene_page_);
+  if(scene_list().size() > curr_scene_page_) {
+    return scene_list().at(curr_scene_page_);
+  } else {
+    return NULL;
+  }
 }
 BookScene *Book::GetScene(int index) {
-  return scene_list().at(index);
+  if(scene_list().size() > index) {
+    return scene_list().at(index);
+  } else {
+    return NULL;
+  }
 }
 std::vector<BookScene*> &Book::scene_list() {
   if (lang_ == kLanguageEnglish) {

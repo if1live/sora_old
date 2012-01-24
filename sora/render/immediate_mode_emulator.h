@@ -42,6 +42,7 @@ public:
   ~ImmediateModeEmulator();
 
   void Init();
+  void Cleanup();
 
   //immediate mode
   void Begin(GLenum mode);

@@ -76,14 +76,18 @@ public class GL2JNIActivity extends Activity implements AdListener {
 				
 				//prev, next 버튼 갱신
 				if(GL2JNILib.isNextPageExist() == false) {
-					nextBtn.setVisibility(ImageButton.INVISIBLE);
+					nextBtn.setAlpha(0);
+					nextBtn.setEnabled(false);
 				} else {
-					nextBtn.setVisibility(ImageButton.VISIBLE);
+					nextBtn.setAlpha(255);
+					nextBtn.setEnabled(true);
 				}
 				if(GL2JNILib.isPrevPageExist() == true) {
-					prevBtn.setVisibility(ImageButton.VISIBLE);
+					prevBtn.setAlpha(255);
+					prevBtn.setEnabled(true);
 				} else {
-					prevBtn.setVisibility(ImageButton.INVISIBLE);
+					prevBtn.setAlpha(0);
+					prevBtn.setEnabled(false);
 				}
 			}
 		});
@@ -93,14 +97,18 @@ public class GL2JNIActivity extends Activity implements AdListener {
 				
 				//prev, next 버튼 갱신
 				if(GL2JNILib.isNextPageExist() == false) {
-					nextBtn.setVisibility(ImageButton.INVISIBLE);
+					nextBtn.setAlpha(0);
+					nextBtn.setEnabled(false);
 				} else {
-					nextBtn.setVisibility(ImageButton.VISIBLE);
+					nextBtn.setAlpha(255);
+					nextBtn.setEnabled(true);
 				}
 				if(GL2JNILib.isPrevPageExist() == true) {
-					prevBtn.setVisibility(ImageButton.VISIBLE);
+					prevBtn.setAlpha(255);
+					prevBtn.setEnabled(true);
 				} else {
-					prevBtn.setVisibility(ImageButton.INVISIBLE);
+					prevBtn.setAlpha(0);
+					prevBtn.setEnabled(false);
 				}
 			}
 		});
@@ -122,6 +130,7 @@ public class GL2JNIActivity extends Activity implements AdListener {
 		super.onResume();
 		mView.onResume();
 	}
+	
 
 	public void onFailedToReceiveAd(boolean arg0) {
 		// TODO Auto-generated method stub

@@ -6,6 +6,7 @@
 #include "sora/render/texture.h"
 #include "book_scene.h"
 #include "sora/sys_locale.h"
+#include "sora/render/immediate_mode_emulator.h"
 
 #if SR_USE_PCH == 0
 #include "sora/io/zip_stream_file.h"
@@ -95,13 +96,21 @@ void sora_update_accel(float x, float y, float z) {
 void sora_unload_texture() {
   for (int i = 0 ; i < Book::GetInstance().SceneCount() ; i++) {
     BookScene *scene = Book::GetInstance().GetScene(i);
-    scene->UnloadTexture();
+	if(scene != NULL) {
+	  scene->UnloadTexture();
+	}
   }
 }
 void sora_reload_texture() {
   Book &book = Book::GetInstance();
   BookScene *page = book.GetCurrScene();
-  page->LoadTexture();
+  if(page != NULL) {
+	page->LoadTexture();
+  }
+}
+
+void sora_unload_shader() {
+	ImmediateModeEmulator::GetInstance().Cleanup();
 }
 
 void sora_set_lang_korean() {

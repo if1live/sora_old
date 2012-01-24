@@ -81,15 +81,26 @@ ImmediateModeEmulator::ImmediateModeEmulator()
 : impl_(NULL) {
 }
 ImmediateModeEmulator::~ImmediateModeEmulator() {
+  Cleanup();
+}
+
+void ImmediateModeEmulator::Cleanup() {
   if (impl_ != NULL) {
     delete(impl_);
     impl_ = NULL;
+
+    BasicShader &basic_shader = BasicShader::GetInstance();
+    basic_shader.Cleanup();
   }
 }
 void ImmediateModeEmulator::Init() {
+  SR_ASSERT(impl_ == NULL);
   impl_ = new ImmediateModeEmulatorImpl();
   
   BasicShader &basic_shader = BasicShader::GetInstance();
+  if(basic_shader.IsInited() == false) {
+    basic_shader.Init();
+  }
   basic_shader.Use();
   
   srglEnableVertexAttribArray(basic_shader.texcoord_location);
@@ -119,6 +130,9 @@ void ImmediateModeEmulator::Init() {
 
 ImmediateModeEmulatorImpl *ImmediateModeEmulator::impl() {
   ImmediateModeEmulatorImpl *impl = ImmediateModeEmulator::GetInstance().impl_;
+  if(impl_ == NULL) {
+    Init();
+  }
   SR_ASSERT(impl != NULL);
   return impl;
 }
