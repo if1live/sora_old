@@ -39,12 +39,11 @@ struct AccelData {
 class Accelerometer : public Singleton<Accelerometer> {
 public:
   ~Accelerometer();
-
+  Accelerometer();
   void Add(float x, float y, float z);
   const AccelData &GetLast() const;
 
 private:
-  Accelerometer();
   RingBuffer<AccelData, 10> buffer_;
 };
 

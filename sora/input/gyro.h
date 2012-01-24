@@ -34,13 +34,13 @@ struct GyroData {
 
 class Gyro : public Singleton<Gyro> {
 public:
+  Gyro();
   ~Gyro();
   
   void Add(float yaw, float roll, float pitch);
   const GyroData &GetLast() const;
   
 private:
-  Gyro();
   RingBuffer<GyroData, 10> buffer_;
 };
 }

@@ -19,6 +19,7 @@
     <ClCompile Include="io\low_level_c_file_test.cpp" />
     <ClCompile Include="io\xml_node_test.cpp" />
     <ClCompile Include="io\xml_reader_test.cpp" />
+    <ClCompile Include="coordinate_test.cpp" />
     <ClCompile Include="ring_buffer_test.cpp" />
     <ClCompile Include="sys_locale_test.cpp" />
     <ClCompile Include="math_helper_test.cpp" />

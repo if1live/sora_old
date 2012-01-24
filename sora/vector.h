@@ -106,6 +106,7 @@ struct Vector3 {
   Vector3(T x, T y, T z) : x(x), y(y), z(z) {}
   Vector3() : x(0), y(0), z(0) {}
   Vector3(const T(&data)[3]) : x(data[0]), y(data[1]), z(data[2]) {}
+  Vector3(const Vector2<T> &o) : x(o.x), y(o.y), z(0) {}
 
   SR_VECTOR_OPERATOR_OVERLOADING(Vector3);
 };
@@ -221,7 +222,7 @@ VecType VectorDivide(const VecType &a, typename VecType::ElemType t) {
   return tmp;
 }
 template<typename VecType>
-typename VecType::ElemType LengthSquare(const VecType &a) {
+typename VecType::ElemType VectorLengthSquare(const VecType &a) {
   typename VecType::ElemType retval = 0;
   for (i32 i = 0 ; i < VecType::Dimension ; i++) {
     retval += a.value[i] * a.value[i];
@@ -229,12 +230,12 @@ typename VecType::ElemType LengthSquare(const VecType &a) {
   return retval;
 }
 template<typename VecType>
-typename VecType::ElemType Length(const VecType &a) {
-  typename VecType::ElemType length_square = LengthSquare(a);
+typename VecType::ElemType VectorLength(const VecType &a) {
+  typename VecType::ElemType length_square = VectorLengthSquare(a);
   return sqrt(length_square);
 }
 template<typename VecType>
-typename VecType::ElemType Dot(const VecType &a, const VecType &b) {
+typename VecType::ElemType VectorDot(const VecType &a, const VecType &b) {
   typename VecType::ElemType retval = 0;
   for (i32 i = 0 ; i < VecType::Dimension ; i++) {
     retval += a.value[i] * b.value[i];
@@ -242,18 +243,18 @@ typename VecType::ElemType Dot(const VecType &a, const VecType &b) {
   return retval;
 }
 template<typename VecType>
-VecType &Normalized(VecType &a) {
-  typename VecType::ElemType length = Length(a);
+VecType &VectorNormalized(VecType &a) {
+  typename VecType::ElemType length = VectorLength(a);
   return a /= length;
 }
 template<typename VecType>
-VecType Normalize(const VecType &a) {
+VecType VectorNormalize(const VecType &a) {
   VecType tmp = a;
-  Normalized(tmp);
+  VectorNormalized(tmp);
   return tmp;
 }
 template<typename T>
-Vector3<T> Cross(const Vector3<T> &a, const Vector3<T> &b) {
+Vector3<T> VectorCross(const Vector3<T> &a, const Vector3<T> &b) {
   T x = a.y * b.z - a.z * b.y;
   T y = a.z * b.x - a.x * b.z;
   T z = a.x * b.y - a.y * b.x;

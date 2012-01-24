@@ -73,12 +73,18 @@
     <ClInclude Include="common_string.h" />
     <ClInclude Include="handle.h" />
     <ClInclude Include="handle_manager.h" />
+    <ClInclude Include="input\accelerometer.h" />
+    <ClInclude Include="input\gyro.h" />
+    <ClInclude Include="input\input_enum.h" />
+    <ClInclude Include="input\keyboard.h" />
     <ClInclude Include="io\filesystem.h" />
     <ClInclude Include="io\low_level_c_file.h" />
     <ClInclude Include="io\memory_file.h" />
     <ClInclude Include="io\zip_stream_file.h" />
     <ClInclude Include="io\xml_node.h" />
     <ClInclude Include="io\xml_reader.h" />
+    <ClInclude Include="coordinate.h" />
+    <ClInclude Include="coordinate.hpp" />
     <ClInclude Include="render\texture.hpp" />
     <ClInclude Include="render\texture_helper.h" />
     <ClInclude Include="ring_buffer.h" />
@@ -115,6 +121,9 @@
   <ItemGroup>
     <ClCompile Include="arch.cpp" />
     <ClCompile Include="clock.cpp" />
+    <ClCompile Include="input\accelerometer.cpp" />
+    <ClCompile Include="input\gyro.cpp" />
+    <ClCompile Include="input\keyboard_glfw.cpp" />
     <ClCompile Include="io\filesystem.cpp" />
     <ClCompile Include="io\low_level_c_file.cpp" />
     <ClCompile Include="io\memory_file.cpp" />

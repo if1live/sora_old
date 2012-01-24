@@ -19,11 +19,22 @@
     <ClCompile Include="glassless3d.cpp">
       <Filter>book</Filter>
     </ClCompile>
-    <ClCompile Include="lang_button_selector.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="yukino_stdafx.cpp" />
     <ClCompile Include="logic_interface.cpp" />
     <ClCompile Include="main_scene.cpp" />
+    <ClCompile Include="accelerometer_input_handler.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="gyro_input_handler.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="input_handler.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="accelerometer_filter.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="yukino_stdafx.h" />
@@ -45,13 +56,27 @@
     <ClInclude Include="camera.h">
       <Filter>book</Filter>
     </ClInclude>
-    <ClInclude Include="lang_button_selector.h" />
     <ClInclude Include="logic_interface.h" />
     <ClInclude Include="main_scene.h" />
+    <ClInclude Include="input_handler.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="accelerometer_input_handler.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="gyro_input_handler.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="accelerometer_filter.h">
+      <Filter>input</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="book">
       <UniqueIdentifier>{f8127a02-d301-4c7a-a89d-0fc9b45a2a9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="input">
+      <UniqueIdentifier>{04f5028a-27d1-4393-8480-f20c2c98dffc}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

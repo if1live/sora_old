@@ -48,6 +48,108 @@ void SetIdentity(Matrix<T, D, D> *m) {
   }
 }
 
+
+bool EqualAbsError(float a, float b, float maxError);	
+bool EqualRelError(float a, float b, float maxError);	
+bool EqualUlps(float a, float b, int maxUlps);
+
+template<typename T>
+boolean IsNaN(T value) {
+  if (value != value) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+template<typename T>
+bool IsInf(T num) {
+	if(std::numeric_limits<T>::has_infinity == false)	{
+		return false;
+	}
+	if(num == std::numeric_limits<T>::infinity())	{
+		return true;
+	}
+	return false;
+}
+
+template<typename T>
+bool IsNormalNumber(T num) {
+	if(IsNaN(num) || IsInf(num)) 	{
+		return false;
+	}
+	return true;
+}
+
+template<typename T>
+bool IsPower(T base, T target) {
+	if(target < 1) {
+		//2*-1=0.5인데 이런 경우는 쓰지 않을듯해서 신경쓰지 않는다
+		//어차피 위와같이 분수로 내려가는 경우, 정밀도 문제로
+		//쓰지도 못할거같다
+		return false;
+	}
+	T curr = base;
+	while(curr <= target) {
+		if(curr == target) {
+			return true;
+		}
+		curr *= base;
+	}
+	return false;
+}
+
+template<typename T>
+T CeilPower(T base, T target) {
+	if(target < 1) {
+		//소수점이하는 계산무시
+		return base;
+	}
+	T curr = base;
+	while(curr < target) {
+		curr *= base;
+	}
+	return curr;
+}
+
+template<typename T>
+T CalcIncludeAngleDegree(T src, T dst) {
+	T radResult = CalcIncludeAngleRadian(DegreeToRadian(src), DegreeToRadian(dst));
+	return RadianToDegree(radResult);
+}
+	
+template<typename T>
+T CalcIncludeAngleRadian(T src, T dst) {
+	vec2 srcVec2(cos(src), sin(src));
+	vec2 dstVec2(cos(dst), sin(dst));
+	float vecDot = VectorDot(srcVec2, dstVec2);
+	float srcSize = VectorLength(srcVec2);
+	float dstSize = VectorLength(dstVec2);
+	float value = vecDot / srcSize / dstSize;
+	if(value >= 1.0f) {
+		value = 1.0f;
+	} else if(value <= -1.0f) {
+		value = -1.0f;
+	}
+	float rawAbsRadian = acos(value);
+	SR_ASSERT(IsNaN(rawAbsRadian) == false);
+		
+	//벡터의 외적을 이용해서 zero-curr이 양수방향인지 음수방향인지를 결정한다
+	vec3 srcVec3(srcVec2);
+	vec3 dstVec3(dstVec2);
+	vec3 crossPan = VectorCross(srcVec3, dstVec3);
+	if(crossPan.z > 0) {
+		return rawAbsRadian;
+	} else {
+		return -rawAbsRadian;
+	}
+}
+
+template<typename T>
+T Lerp(T from, T to, float t) {
+	return from * (1-t) + to * t;
+}
+
 template<typename T, i32 D>
 boolean IsIdentity(const Matrix<T, D, D> &m) {
   for (i32 x = 0 ; x < D ; x++) {

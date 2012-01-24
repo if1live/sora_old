@@ -32,8 +32,8 @@ void Tech48Camera::Apply(float x_rad, float y_rad) {
 
   vec3 pos_vec(pos_z, pos_y, pos_z);
   vec3 right_vec(right_x, right_y, right_z);
-  vec3 up_vec = sora::Cross(pos_vec, right_vec);
-  Normalized(up_vec);
+  vec3 up_vec = sora::VectorCross(pos_vec, right_vec);
+  VectorNormalized(up_vec);
 
   //@XXX nan?
   /*

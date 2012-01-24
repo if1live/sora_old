@@ -57,6 +57,9 @@
     <ClCompile Include="ring_buffer_test.cpp">
       <Filter>base</Filter>
     </ClCompile>
+    <ClCompile Include="coordinate_test.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h" />

@@ -70,15 +70,15 @@ TEST(Vector2, Operator) {
 TEST(Vector2, Length) {
   using namespace sora;
   vec2 v(3, 4);
-  EXPECT_EQ(25, LengthSquare(v));
-  EXPECT_EQ(5, Length(v));
+  EXPECT_EQ(25, VectorLengthSquare(v));
+  EXPECT_EQ(5, VectorLength(v));
 }
 
 TEST(Vector2, Dot) {
   using namespace sora;
   vec2 v1(2, 3);
   vec2 v2(3, 4);
-  EXPECT_EQ(2*3+3*4, Dot(v1, v2));
+  EXPECT_EQ(2*3+3*4, VectorDot(v1, v2));
 }
 
 TEST(Vector2, Normalized) {
@@ -86,15 +86,15 @@ TEST(Vector2, Normalized) {
   vec2 v1(3, 4);
   vec2 v2 = v1;
   vec2 v3(3.0f/5.0f, 4.0f/5.0f);
-  Normalized(v2);
+  VectorNormalized(v2);
   EXPECT_EQ(true, v3 == v2);
-  EXPECT_EQ(v3, Normalize(v1));
+  EXPECT_EQ(v3, VectorNormalize(v1));
 }
 TEST(Vector3, Cross) {
   using namespace sora;
   vec3 xVec(1, 0, 0);
 	vec3 yVec(0, 1, 0);
-	vec3 result = Cross(xVec, yVec);
+	vec3 result = VectorCross(xVec, yVec);
 	EXPECT_EQ(0, result.x);
 	EXPECT_EQ(0, result.y);
 	EXPECT_EQ(1, result.z);

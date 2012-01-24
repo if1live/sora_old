@@ -134,6 +134,24 @@
     <ClInclude Include="render\texture_helper.h">
       <Filter>render</Filter>
     </ClInclude>
+    <ClInclude Include="input\gyro.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="input\keyboard.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="input\accelerometer.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="input\input_enum.h">
+      <Filter>input</Filter>
+    </ClInclude>
+    <ClInclude Include="coordinate.hpp">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="coordinate.h">
+      <Filter>math</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cpp">
@@ -218,6 +236,15 @@
     <ClCompile Include="render\texture_helper.cpp">
       <Filter>render</Filter>
     </ClCompile>
+    <ClCompile Include="input\keyboard_glfw.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="input\accelerometer.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
+    <ClCompile Include="input\gyro.cpp">
+      <Filter>input</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="base">
@@ -231,6 +258,9 @@
     </Filter>
     <Filter Include="render">
       <UniqueIdentifier>{9a6c4513-3657-43a5-88d9-ef98b15adcf6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="input">
+      <UniqueIdentifier>{e5ca3a9c-6e59-439f-9edb-a75d7152ddd0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

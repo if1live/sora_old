@@ -35,4 +35,4 @@ public:
 };
 }
 
-#endif  // PLATFORM_CHIZURU_KEYBOARD_H_
+#endif  // SORA_KEYBOARD_H_

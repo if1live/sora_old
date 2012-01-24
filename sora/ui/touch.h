@@ -22,7 +22,7 @@
 #define SORA_TOUCH_H_
 
 #include "sora/template_library.h"
-#include "sora/ui/input_enum.h"
+#include "sora/input/input_enum.h"
 
 #if SR_USE_PCH == 0
 #include <vector>
