@@ -18,52 +18,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_MEMORY_FILE_H_
-#define SORA_MEMORY_FILE_H_
+#include "sora_test_stdafx.h"
+#include "sora/ring_buffer.h"
 
-#if SR_USE_PCH == 0
-#include <string>
-#include <boost/noncopyable.hpp>
-#endif
+TEST(RingBuffer, test) {
+  using namespace sora;
 
-#if SR_ANDROID
-#include <android/asset_manager.h>
-#include <android/asset_manager_jni.h>
-#include <android/native_activity.h>
-#endif
+	RingBuffer<int, 3> buffer;
+	EXPECT_EQ(true, buffer.IsEmpty());
 
-namespace sora {;
-#if SR_ANDROID
-//안드로이드의 경우는 apk를 직접 뜯는 식으로 구현해야한다
-//이부분을 ndk에서 지원하는 기능을 통해서 구현할 경우
-//안드로이드 2.3부터만 지원한다(native actitivy를 써야되니까)
-//2.2도 지원하기 위해서 apk를 직접 뜯는식으로 구현했다
-#endif
+	buffer.Push(1);
+	EXPECT_EQ(false, buffer.IsEmpty());
+	EXPECT_EQ(1, buffer.Get(0));
 
-class MemoryFile : boost::noncopyable {
-public:
-  MemoryFile(const char *filepath);
-  MemoryFile(const std::string &filepath);
-  ~MemoryFile();
+	buffer.Push(2);
+	EXPECT_EQ(false, buffer.IsEmpty());
+	EXPECT_EQ(2, buffer.Get(0));
+	EXPECT_EQ(1, buffer.Get(1));
 
-  boolean Open();
-  boolean IsOpened() const { return (data != NULL); }
-  void Close();
-  i32 GetLength() const { return end - start; }
-  i32 Read(void *buf, i32 size);
-  
-  const std::string &filepath() const { return filepath_; }
+	buffer.Push(3);
+	EXPECT_EQ(false, buffer.IsEmpty());
+	EXPECT_EQ(3, buffer.Get(0));
+	EXPECT_EQ(2, buffer.Get(1));
+	EXPECT_EQ(1, buffer.Get(2));
 
-public:
-  // data
-  u8 *start;
-  u8 *curr;
-  u8 *end;
-  void *data;
-
-  std::string filepath_;
-};
-
+	buffer.Push(4);
+	EXPECT_EQ(false, buffer.IsEmpty());
+	EXPECT_EQ(4, buffer.Get(0));
+	EXPECT_EQ(3, buffer.Get(1));
+	EXPECT_EQ(2, buffer.Get(2));
 }
-
-#endif  // SORA_MEMORY_FILE_H_

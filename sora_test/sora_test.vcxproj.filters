@@ -54,6 +54,9 @@
     <ClCompile Include="io\xml_reader_test.cpp">
       <Filter>io</Filter>
     </ClCompile>
+    <ClCompile Include="ring_buffer_test.cpp">
+      <Filter>base</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h" />

@@ -78,6 +78,7 @@
     <ClInclude Include="io\memory_file.h" />
     <ClInclude Include="io\xml_node.h" />
     <ClInclude Include="io\xml_reader.h" />
+    <ClInclude Include="ring_buffer.h" />
     <ClInclude Include="sys_locale.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="math_helper.h" />

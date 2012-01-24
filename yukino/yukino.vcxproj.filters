@@ -25,6 +25,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="menu_scene.cpp" />
     <ClCompile Include="yukino_stdafx.cpp" />
+    <ClCompile Include="logic_interface.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="yukino_stdafx.h" />
@@ -50,6 +51,7 @@
     <ClInclude Include="intro_scene.h" />
     <ClInclude Include="menu_scene.h" />
     <ClInclude Include="lang_button_selector.h" />
+    <ClInclude Include="logic_interface.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="book">

@@ -146,6 +146,9 @@
     <ClInclude Include="io\low_level_c_file.h">
       <Filter>io</Filter>
     </ClInclude>
+    <ClInclude Include="ring_buffer.h">
+      <Filter>base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="arch.cpp">

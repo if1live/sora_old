@@ -37,10 +37,11 @@
 
 
 #include "glassless3d.h"
-#include "menu_scene.h"
+#include "menu_scene.h"7
 #include "sora/render/scene_manager.h"
 
 #include "book.h"
+#include "logic_interface.h"
 
 #if SR_USE_PCH == 0
 #include <boost/foreach.hpp>
@@ -55,24 +56,10 @@ namespace yukino {;
 class GameSceneButtonSelector : public Selector {
 public:
   virtual void OnNext(UIComponent *btn) {
-    Book &book = Book::GetInstance();
-    if (book.IsNextSceneExist()) {
-      int old_page = book.curr_scene_page();
-      Book::GetInstance().MoveNextScene();
-      int new_page = book.curr_scene_page();
-
-      LoadUnloadTexture(old_page, new_page);
-    }
+    sora_next_page();
   }
   virtual void OnPrev(UIComponent *btn) {
-    Book &book = Book::GetInstance();
-    if (book.IsPrevScenExist()) {
-      int old_page = book.curr_scene_page();
-      Book::GetInstance().MovePrevScene();
-      int new_page = book.curr_scene_page();
-
-      LoadUnloadTexture(old_page, new_page);
-    }
+    sora_prev_page();
   }
   virtual void OnReset(UIComponent *btn) {
     // 어떻게 리셋??
@@ -83,55 +70,7 @@ public:
     SceneManager::GetInstance().PopAndDestroy();
     SceneManager::GetInstance().Push(scene);
 
-    for (int i = 0 ; i < Book::GetInstance().SceneCount() ; i++) {
-      BookScene *scene = Book::GetInstance().GetScene(i);
-      scene->UnloadTexture();
-    }
-  }
-
-  void LoadUnloadTexture(int old_index, int new_index) {
-    Book &book = Book::GetInstance();
-    //BookScene *old_page = book.GetScene(old_index);
-    BookScene *new_page = book.GetScene(new_index);
-
-    //const set<TextureHandle> &old_tex_list = old_page->tex_handle_list();
-    const set<TextureHandle> &new_tex_list = new_page->tex_handle_list();
-
-    //모든 텍스쳐를 내리라고 요청
-    //load요청이 있는것은 set에서 제거
-    set<TextureHandle> unload_set;
-    for(int i = 0 ; i < book.SceneCount() ; i++) {
-      BookScene *scene = book.GetScene(i);
-      const set<TextureHandle> &tex_list = scene->tex_handle_list();
-      BOOST_FOREACH(const TextureHandle &handle, tex_list) {
-        unload_set.insert(handle);
-      }
-    }
-
-    set<TextureHandle>::const_iterator it;
-    set<TextureHandle>::const_iterator endit;
-  
-    // new에 존재하는 텍스쳐는 unload목록에서 제거
-    it = new_tex_list.begin();
-    endit = new_tex_list.end();
-    for ( ; it != endit ; it++) {
-      const TextureHandle &handle = *it;
-      unload_set.erase(handle);
-      TextureManager::GetInstance().AsyncLoad(handle);
-    }
-
-    //unload할거 unload
-    it = unload_set.begin();
-    endit = unload_set.end();
-    for ( ; it != endit ; it++) {
-      const TextureHandle &handle = *it;
-      // unload한다는것은 마저 로딩할 필요가 없다는것.
-      TextureManager::GetInstance().CancelAsyncLoad(handle);
-
-      Texture *tex = TextureManager::GetInstance().GetTexture(handle);
-      tex->Cleanup();
-      tex->SetAsLoading();
-    }
+    sora_unload_texture();
   }
 };
 

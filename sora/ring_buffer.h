@@ -18,52 +18,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_MEMORY_FILE_H_
-#define SORA_MEMORY_FILE_H_
-
-#if SR_USE_PCH == 0
-#include <string>
-#include <boost/noncopyable.hpp>
-#endif
-
-#if SR_ANDROID
-#include <android/asset_manager.h>
-#include <android/asset_manager_jni.h>
-#include <android/native_activity.h>
-#endif
+#ifndef SORA_RING_BUFFER_H_
+#define SORA_RING_BUFFER_H_
 
 namespace sora {;
-#if SR_ANDROID
-//안드로이드의 경우는 apk를 직접 뜯는 식으로 구현해야한다
-//이부분을 ndk에서 지원하는 기능을 통해서 구현할 경우
-//안드로이드 2.3부터만 지원한다(native actitivy를 써야되니까)
-//2.2도 지원하기 위해서 apk를 직접 뜯는식으로 구현했다
-#endif
-
-class MemoryFile : boost::noncopyable {
+template<typename T, unsigned int N>
+class RingBuffer {
 public:
-  MemoryFile(const char *filepath);
-  MemoryFile(const std::string &filepath);
-  ~MemoryFile();
-
-  boolean Open();
-  boolean IsOpened() const { return (data != NULL); }
-  void Close();
-  i32 GetLength() const { return end - start; }
-  i32 Read(void *buf, i32 size);
-  
-  const std::string &filepath() const { return filepath_; }
-
+  enum {
+    BufferSize = N,
+  };
 public:
-  // data
-  u8 *start;
-  u8 *curr;
-  u8 *end;
-  void *data;
+  RingBuffer() : index_(-1) { }
+  ~RingBuffer()	{ }
 
-  std::string filepath_;
+  bool IsEmpty() {
+    if(index_ == -1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  void Push(const T &value) {
+    int target = (index_ + 1) % N;
+    data_[target] = value;
+    index_ = target;
+  }
+  const T& Top() const { return data_[index_]; }
+  T &Top() { return data_[index_]; }
+
+  const T& Get(int i) const {
+    int target = (index_ - i + N) % N;
+    return data_[target];
+  }
+  T& Get(int i) {
+    int target = (index_ - i + N) % N;
+    return data_[target];
+  }
+
+private:
+  T data_[N];
+  int index_;
 };
-
 }
 
-#endif  // SORA_MEMORY_FILE_H_
+#endif  // SORA_RING_BUFFER_H_
