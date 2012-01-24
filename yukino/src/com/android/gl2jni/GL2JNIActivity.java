@@ -143,4 +143,12 @@ public class GL2JNIActivity extends Activity implements AdListener {
 		// TODO Auto-generated method stub
 		Log.w("yukino", "on receive");
 	}
+	@Override
+	public void onBackPressed() {
+		// TODO Auto-generated method stub
+		super.onBackPressed();
+		finish();
+		
+		System.exit(0);
+	}
 }

@@ -4,6 +4,7 @@ import java.util.Locale;
 
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.Bundle;
@@ -19,6 +20,7 @@ public class IntroActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.intro);
 		
+
 		
 		final Activity activity = this;
 		
@@ -67,13 +69,13 @@ public class IntroActivity extends Activity {
 		ImageButton pageBtn = (ImageButton)findViewById(R.id.PageButton);
 		pageBtn.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				finish();	//메인씬 죽이기
+				//finish();	//메인씬 죽이기
 				
 				Intent intentSubActivity = new Intent(activity, GL2JNIActivity.class);
 				startActivity(intentSubActivity);	//일단 게임씬 넣기
 				
-				intentSubActivity = new Intent(activity, PageActivity.class);
-				startActivity(intentSubActivity);	//그리고 메뉴씬으로
+				//intentSubActivity = new Intent(activity, PageActivity.class);
+				//startActivity(intentSubActivity);	//그리고 메뉴씬으로
 			}
 		});
 		

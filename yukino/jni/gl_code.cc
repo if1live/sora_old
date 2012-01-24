@@ -105,6 +105,7 @@ JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_step(JNIEnv * env, jobj
 JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_onResume(JNIEnv * env, jobject obj) {
 	LOGE("resume");
 	sora_reload_texture();
+	LOGE("resume complete");
 }
 JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_onSuspend(JNIEnv * env, jobject obj) {
 	LOGE("suspend");

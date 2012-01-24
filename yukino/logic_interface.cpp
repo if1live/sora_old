@@ -110,7 +110,7 @@ void sora_reload_texture() {
 	page->LoadTexture();
   } else {
 	LOGE("empty");
-}
+	}
   TextureHelper::Load();
 }
 

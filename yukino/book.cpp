@@ -51,7 +51,10 @@ void Book::SetLanguage(sora::LanguageType lang) {
     Load(book_path, lang);
     LOGI("load english book");
   } else {
-    SR_ASSERT(!"not valid");
+    //없으면 영어취급
+    string book_path = Filesystem::GetAppPath("res/book_en.xml");
+    Load(book_path, lang);
+    LOGI("load english book");
   }
 }
 
