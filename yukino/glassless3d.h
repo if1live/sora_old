@@ -31,6 +31,7 @@ public:
 
   void ReloadBook();
 
+  void set_handler(InputHandler *handler) { handler_.reset(handler); }
 private:
   //sora::model::SoraModelPtr gridModel_;
   //sora::model::SoraModelPtr targetModel_;

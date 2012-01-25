@@ -18,3 +18,6 @@ void sora_set_lang_english();
 void sora_set_apk_file_path(const char *abs_path);
 
 void sora_unload_shader();
+
+void sora_use_accel();
+void sora_use_gyro();

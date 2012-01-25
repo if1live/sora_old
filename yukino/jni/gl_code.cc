@@ -92,6 +92,9 @@ extern "C" {
 
 	JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_addGryo(JNIEnv * env, jobject obj, jfloat yaw, jfloat roll, jfloat pitch);
     JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_addAccel(JNIEnv * env, jobject obj, jfloat x, jfloat y, jfloat z);
+	
+	JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_useGyro(JNIEnv * env, jobject obj);
+    JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_useAccel(JNIEnv * env, jobject obj);
 };
 
 JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height)
@@ -180,4 +183,11 @@ JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_addAccel(JNIEnv * env, 
 	float y_value = y;
 	float z_value = z;
 	sora_update_accel(x_value, y_value, z_value);
+}
+
+JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_useGyro(JNIEnv * env, jobject obj) {
+	sora_use_gyro();
+}
+JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_useAccel(JNIEnv * env, jobject obj) {
+	sora_use_accel();
 }

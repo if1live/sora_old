@@ -37,9 +37,13 @@ public class SoraAccelerometer implements SensorEventListener {
             return;
 		}
 
-		float x = event.values[0];
-		float y = event.values[1];
-		float z = event.values[2];
+		//float x = event.values[0];
+		//float y = event.values[1];
+		//float z = event.values[2];
+		accelVals = lowPass( event.values, accelVals );
+		float x = accelVals[0];
+		float y = accelVals[1];
+		float z = accelVals[2];
 		
 		/*
 		 * Because the axes are not swapped when the device's screen orientation changes. 
@@ -57,4 +61,19 @@ public class SoraAccelerometer implements SensorEventListener {
         //Log.d("a", "x = " + event.values[0] + " y = " + event.values[1] + " z = " + event.values[2]);
 	}
 	
+	protected float[] accelVals;
+	//http://stackoverflow.com/questions/4611599/help-smoothing-data-from-a-sensor/4611772#4611772
+	static final float ALPHA = 0.2f;
+	/**
+	 * @see http://en.wikipedia.org/wiki/Low-pass_filter#Algorithmic_implementation
+	 * @see http://developer.android.com/reference/android/hardware/Sensor.html#TYPE_ACCELEROMETER
+	 */
+	protected float[] lowPass( float[] input, float[] output ) {
+	    if ( output == null ) return input;
+
+	    for ( int i=0; i<input.length; i++ ) {
+	        output[i] = output[i] + ALPHA * (input[i] - output[i]);
+	    }
+	    return output;
+	}
 }

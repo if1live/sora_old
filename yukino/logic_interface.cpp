@@ -14,6 +14,10 @@
 #include "sora/input/gyro.h"
 #include "input_handler.h"
 
+#include "gyro_input_handler.h"
+#include "accelerometer_input_handler.h"
+#include "glassless3d.h"
+
 #if SR_USE_PCH == 0
 #include "sora/io/zip_stream_file.h"
 #include <boost/foreach.hpp>
@@ -163,4 +167,15 @@ void sora_set_apk_file_path(const char *abs_path) {
 #if SR_ANDROID
   ZipStreamFile::SetApkFile(abs_path);
 #endif
+}
+
+void sora_use_accel() {
+  Glassless3d::GetInstance().set_handler(NULL);
+  Glassless3d::GetInstance().set_handler(new AccelerometerInputHandler());
+  LOGI("use accel");
+}
+void sora_use_gyro() {
+  Glassless3d::GetInstance().set_handler(NULL);
+  Glassless3d::GetInstance().set_handler(new GyroInputHandler());
+  LOGI("use gyro");
 }

@@ -43,20 +43,21 @@ public class GL2JNIActivity extends Activity implements AdListener {
 	GL2JNIView mView;
 	private RelativeLayout main_layout;
 	
-	//private SoraAccelerometer accelerometer;
+	private SoraAccelerometer accelerometer;
 	private SoraGyro gyro;
 	
 	@Override protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
 		
 		//가속도 센서 생성
-		//accelerometer = new SoraAccelerometer(this);
-		//accelerometer.enable();
-		gyro = new SoraGyro(this);
-		if(gyro.isAvaliable() == false) {
-			System.exit(0);
-		}
-		gyro.enable();
+		accelerometer = new SoraAccelerometer(this);
+		GL2JNILib.useAccel();
+		accelerometer.enable();
+		//gyro = new SoraGyro(this);
+		//if(gyro.isAvaliable() == false) {
+		//	System.exit(0);
+		//}
+		//gyro.enable();
 		
 		setContentView(R.layout.scene);
 		main_layout = (RelativeLayout)findViewById(R.id.layout);

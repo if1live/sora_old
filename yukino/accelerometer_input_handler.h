@@ -1,7 +1,7 @@
 #pragma once
 
 #include "input_handler.h"
-#include "accelerometer_filter.h"
+//#include "accelerometer_filter.h"
 #include "sora/vector.h"
 #include <memory>
 
@@ -24,6 +24,6 @@ private:
 
   // Low-pass filter for raw accelerometer data
   // Only used the accelMode==YES	 
-  std::auto_ptr<LowpassFilter> gravityLpf_;
+  //std::auto_ptr<LowpassFilter> gravityLpf_;
 };
 }

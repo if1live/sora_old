@@ -15,15 +15,15 @@ AccelerometerInputHandler::AccelerometerInputHandler()
   : pan_deg_(0), tilt_deg_(0)
 {
   //static const double kUserAccelerationFilterConstant = 0.1;
-  static const double kMinCutoffFrequency = 1;
+  //static const double kMinCutoffFrequency = 1;
   //static const double kUserAccelerationHpfCutoffFrequency = 1000.0;
   //static const double kUserAccelerationLpfCutoffFrequency = 10.0;
 
-  float maximumValue = 100;
-  float value = 80;
+  //float maximumValue = 100;
+  //float value = 80;
 
   //필터 초기화
-  gravityLpf_ = auto_ptr<LowpassFilter>(new LowpassFilter(maximumValue - value + kMinCutoffFrequency));
+  //gravityLpf_ = auto_ptr<LowpassFilter>(new LowpassFilter(maximumValue - value + kMinCutoffFrequency));
   //재설정
   //[gravityLpf setCutoffFrequency:(sender.maximumValue - sender.value + kMinCutoffFrequency)];
 
@@ -47,7 +47,7 @@ void AccelerometerInputHandler::UpdateEvent() {
   elapsed_time += 1.0f/30.0f;
   //아이폰3에서는 순수 가속도로 구현
   const AccelData &data = Accelerometer::GetInstance().GetLast();
-
+  vec3 curr(data.x, data.y, data.z);
   //이전 프레임에서의 가속도값과 현재 프레임에서의 가속도값을 차이를 보고,
   //많이 차이나지 않으면 아래의 로직을 적용하지 않는다. 
   //이런거 없이 그냥 적용하면 손떨림떄문에 화면이 덜덜 떨린다....
@@ -57,13 +57,12 @@ void AccelerometerInputHandler::UpdateEvent() {
 
   //filter를 통과시켜서 curr를 변화시킨다
   //CMAcceleration accel = {curr.x, curr.y, curr.z};
-  gravityLpf_->addAcceleration(data, elapsed_time);
-  // gravity estimate: [gravityLpf.x, gravityLpf.y, gravityLpf.z]
-  vec3 curr;
-  curr.x = gravityLpf_->x;
-  curr.y = gravityLpf_->y;
-  curr.z = gravityLpf_->z;
-  VectorNormalized(curr);
+  //gravityLpf_->addAcceleration(data, elapsed_time);
+  // gravity estimate: [gravityLpf.x, gravityLpf.y, gravityLpf.z]  
+  //curr.x = gravityLpf_->x;
+  //curr.y = gravityLpf_->y;
+  //curr.z = gravityLpf_->z;
+  //VectorNormalized(curr);
 
   if(VectorIsZero(curr, 0.0001)) { 
     curr = vec3(0, 0, -1);
