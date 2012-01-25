@@ -23,7 +23,10 @@
 
 namespace sora {;
 Gyro::Gyro() {
-  GyroData data = {0, 0, 0};
+  GyroData data;
+  data.pitch = 0;
+  data.roll = 0;
+  data.yaw = 0;
   buffer_.Push(data);
 }
 Gyro::~Gyro() {

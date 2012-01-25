@@ -50,4 +50,7 @@ public class GL2JNILib {
      
      public static native void SetLangKor();
      public static native void SetLangEng();
+     
+     public static native void addGryo(float yaw, float roll, float pitch);
+     public static native void addAccel(float x, float y, float z);
 }

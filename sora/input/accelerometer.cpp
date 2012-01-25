@@ -23,13 +23,19 @@
 
 namespace sora {;
 Accelerometer::Accelerometer() {
-  AccelData data = { 1, 0, 0 };
+  AccelData data;
+  data.x = 1;
+  data.y = 0;
+  data.z = 0;
   buffer_.Push(data);
 }
 Accelerometer::~Accelerometer() {
 }
 void Accelerometer::Add(float x, float y, float z) {
-  AccelData data = { x, y, z };
+  AccelData data;
+  data.x = x;
+  data.y = y;
+  data.z = z;
   buffer_.Push(data);
 }
 

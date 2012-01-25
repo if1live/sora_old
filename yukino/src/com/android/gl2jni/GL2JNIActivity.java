@@ -17,7 +17,10 @@
 package com.android.gl2jni;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
 
 
 import android.os.Bundle;
@@ -39,10 +42,21 @@ public class GL2JNIActivity extends Activity implements AdListener {
 
 	GL2JNIView mView;
 	private RelativeLayout main_layout;
-
+	
+	//private SoraAccelerometer accelerometer;
+	private SoraGyro gyro;
+	
 	@Override protected void onCreate(Bundle icicle) {
 		super.onCreate(icicle);
-				
+		
+		//가속도 센서 생성
+		//accelerometer = new SoraAccelerometer(this);
+		//accelerometer.enable();
+		gyro = new SoraGyro(this);
+		if(gyro.isAvaliable() == false) {
+			System.exit(0);
+		}
+		gyro.enable();
 		
 		setContentView(R.layout.scene);
 		main_layout = (RelativeLayout)findViewById(R.id.layout);
@@ -50,6 +64,8 @@ public class GL2JNIActivity extends Activity implements AdListener {
 		mView = new GL2JNIView(getApplication());
 		main_layout.addView(mView, 0);
 
+		/*
+		 광고는 일단 사용하지 않는다. 결제수단을 달 생각이 아직 없어서.
 		AdInfo ads_info = new AdInfo();
 		//String appcode = "Slek0KLF";
 		String appcode = "CAULY";
@@ -58,7 +74,7 @@ public class GL2JNIActivity extends Activity implements AdListener {
 		adView.setAdListener(this);
 		LinearLayout contentLayout = (LinearLayout)findViewById(R.id.contentLayout);
 		contentLayout.addView(adView, 0);
-		
+		*/
 		final Activity activity = this;
 		//버튼에 이벤트 걸기
 		ImageButton pageBtn = (ImageButton)findViewById(R.id.pageBtn);
@@ -118,7 +134,7 @@ public class GL2JNIActivity extends Activity implements AdListener {
 		resetBtn.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
 				// TODO 자이로인지 가속도인지 확인해서 적절한 값을 보내자
-				//GL2JNILib.resetSensor();
+				GL2JNILib.resetAccel();
 			}
 		});
 	}

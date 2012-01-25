@@ -90,6 +90,8 @@ extern "C" {
 	JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_SetLangKor(JNIEnv * env, jobject obj);
     JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_SetLangEng(JNIEnv * env, jobject obj);
 
+	JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_addGryo(JNIEnv * env, jobject obj, jfloat yaw, jfloat roll, jfloat pitch);
+    JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_addAccel(JNIEnv * env, jobject obj, jfloat x, jfloat y, jfloat z);
 };
 
 JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height)
@@ -165,4 +167,17 @@ JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_SetLangKor(JNIEnv * env
 }
 JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_SetLangEng(JNIEnv * env, jobject obj) {
 	sora_set_lang_english();
+}
+
+JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_addGryo(JNIEnv * env, jobject obj, jfloat yaw, jfloat roll, jfloat pitch) {
+	float yaw_value = yaw;
+	float pitch_value = pitch;
+	float roll_value = roll;
+	sora_update_gyro(yaw_value, pitch_value, roll_value);
+}
+JNIEXPORT void JNICALL Java_com_android_gl2jni_GL2JNILib_addAccel(JNIEnv * env, jobject obj, jfloat x, jfloat y, jfloat z) {
+	float x_value = x;
+	float y_value = y;
+	float z_value = z;
+	sora_update_accel(x_value, y_value, z_value);
 }

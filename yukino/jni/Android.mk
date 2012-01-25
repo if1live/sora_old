@@ -41,6 +41,10 @@ LOCAL_SRC_FILES := gl_code.cc \
 	../glassless3d.cpp	\
 	../logic_interface.cpp	\
 	../main_scene.cpp	\
+	../gyro_input_handler.cpp	\
+	../accelerometer_input_handler.cpp	\
+	../accelerometer_filter.cpp	\
+	../input_handler.cpp
 	
 include $(BUILD_SHARED_LIBRARY)
 

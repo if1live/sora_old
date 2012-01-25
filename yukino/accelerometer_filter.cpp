@@ -49,6 +49,7 @@ Copyright (C) 2009 Apple Inc. All Rights Reserved.
 #include "yukino_stdafx.h"
 #include "accelerometer_filter.h"
 #include "sora/input/accelerometer.h"
+#include <cmath>
 
 using namespace sora;
 namespace yukino {;
@@ -71,7 +72,7 @@ void AccelerometerFilter::setCutoffFrequency(double fc) {
 #define kAccelerometerNoiseAttenuation		3.0
 
 double Norm(double x, double y, double z) {
-  return sqrt(x * x + y * y + z * z);
+  return sqrtf(x * x + y * y + z * z);
 }
 
 double Clamp(double v, double min, double max) {

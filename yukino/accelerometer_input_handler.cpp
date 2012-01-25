@@ -5,6 +5,7 @@
 #include "sora/input/accelerometer.h"
 #include "sora/vector.h"
 #include "sora/coordinate.h"
+#include "sora/logger.h"
 
 using namespace std;
 using namespace sora;
@@ -25,6 +26,9 @@ AccelerometerInputHandler::AccelerometerInputHandler()
   gravityLpf_ = auto_ptr<LowpassFilter>(new LowpassFilter(maximumValue - value + kMinCutoffFrequency));
   //재설정
   //[gravityLpf setCutoffFrequency:(sender.maximumValue - sender.value + kMinCutoffFrequency)];
+
+  //zero가 진짜 zero가 아니도록 일단 설정
+  zero_accel_ = vec3(1, 0, 0);
 }
 AccelerometerInputHandler::~AccelerometerInputHandler() {
 
@@ -39,9 +43,10 @@ float AccelerometerInputHandler::GetTiltDegree() {
   return tilt_deg_;
 }
 void AccelerometerInputHandler::UpdateEvent() {
+  static double elapsed_time = 1000;
+  elapsed_time += 1.0f/30.0f;
   //아이폰3에서는 순수 가속도로 구현
   const AccelData &data = Accelerometer::GetInstance().GetLast();
-  vec3 curr(data.x, data.y, data.z);
 
   //이전 프레임에서의 가속도값과 현재 프레임에서의 가속도값을 차이를 보고,
   //많이 차이나지 않으면 아래의 로직을 적용하지 않는다. 
@@ -52,11 +57,14 @@ void AccelerometerInputHandler::UpdateEvent() {
 
   //filter를 통과시켜서 curr를 변화시킨다
   //CMAcceleration accel = {curr.x, curr.y, curr.z};
-  gravityLpf_->addAcceleration(data, 0);
+  gravityLpf_->addAcceleration(data, elapsed_time);
   // gravity estimate: [gravityLpf.x, gravityLpf.y, gravityLpf.z]
+  vec3 curr;
   curr.x = gravityLpf_->x;
   curr.y = gravityLpf_->y;
   curr.z = gravityLpf_->z;
+  VectorNormalized(curr);
+
   if(VectorIsZero(curr, 0.0001)) { 
     curr = vec3(0, 0, -1);
   }
@@ -87,7 +95,7 @@ void AccelerometerInputHandler::UpdateEvent() {
 
   float zeroTheta = zeroSPoint.theta_deg();
   float currTheta = currSPoint.theta_deg();
-  tilt_deg_ = (currTheta - zeroTheta);
+  tilt_deg_ = CalcIncludeAngleDegree(zeroTheta, currTheta);
 
   float zeroPi = zeroSPoint.pi_deg();
   float currPi = currSPoint.pi_deg();
@@ -100,6 +108,8 @@ void AccelerometerInputHandler::UpdateEvent() {
 
   SR_ASSERT(IsNaN(pan_deg_) == false);
   SR_ASSERT(IsNaN(tilt_deg_) == false);
+
+  //LOGI("pan, tilt=%f, %f", pan_deg_, tilt_deg_);
 }
 void AccelerometerInputHandler::Reset() {
   //reset으로 작용하기 위해서 가장 마지막에 추출된 중력값을 임시로 저장한다.

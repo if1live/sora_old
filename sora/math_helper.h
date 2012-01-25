@@ -26,6 +26,7 @@
 
 #if SR_USE_PCH == 0
 #include <cmath>
+#include <limits>
 #endif
 
 namespace sora {;

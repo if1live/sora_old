@@ -20,10 +20,10 @@
 #endif
 
 //input
-//#include "ASInputHandler.h"
+#include "input_handler.h"
 //#include "ASKeyboardInputHandler.h"
-//#include "ASGyroInputHandler.h"
-//#include "ASAccelerometerInputHandler.h"
+#include "gyro_input_handler.h"
+#include "accelerometer_input_handler.h"
 
 using namespace sora;
 
@@ -48,8 +48,12 @@ void Glassless3d::Init() {
   }
 #elif SR_WIN
   //handler_ = auto_ptr<InputHandler>(new KeyboardInputHandler()); 
+  //handler_ = auto_ptr<InputHandler>(new AccelerometerInputHandler());
+  handler_ = auto_ptr<InputHandler>(new GyroInputHandler());
 #else
 //#error "not support this platform"
+  //handler_ = auto_ptr<InputHandler>(new AccelerometerInputHandler());
+  handler_ = auto_ptr<InputHandler>(new GyroInputHandler());
 #endif
 
 #if 0
@@ -91,25 +95,31 @@ void Glassless3d::Draw() {
 
     ///vertex없이 z값에 따라서 x,y를 움직이게 하는 행렬을 쓰면 적절히 그릴수있다
     //일정각도 이상으로는 안넘어가도록 하자
-    //float panDegree = handler_->getPanDegree();
-    //float tiltDegree = handler_->getTiltDegree();
-    //float pan_deg = 15;
+    float pan_deg = handler_->GetPanDegree();
+    float tilt_deg = handler_->GetTiltDegree();
+
+    /*
     float pan_deg = 0;
     float tilt_deg = 15;
     static float dynamic_pan_dt = 0;
     dynamic_pan_dt += 0.1f;
-    pan_deg = 15 * sin(DegreeToRadian(dynamic_pan_dt));
-
+    pan_deg = 15 * cos(DegreeToRadian(dynamic_pan_dt));
+    */
 
     pan_deg = Book::GetInstance().CalcPanDeg(pan_deg);
     tilt_deg = Book::GetInstance().CalcTiltDeg(tilt_deg);
 
     float pan_rad = DegreeToRadian(pan_deg);
     float tilt_rad = DegreeToRadian(tilt_deg);
+    //LOGI("pan, tilt=%f, %f", pan_deg, tilt_deg);
 
     //구면위를 따라서 움직이는 느낌의 카메라 도입하기
     //화면을 landscape로 ui쪽에서 설정하면서 방향이 뒤틀렸다. 가장 간단한 편법으로 x,y를 뒤바꿨다
-    cam.Apply(pan_rad, tilt_rad);
+    if(Book::GetInstance().curr_scene_page() % 2 == 1) {
+      cam.Apply(0, 0);
+    } else {
+      cam.Apply(pan_rad, tilt_rad);
+    }
   }
 
   srglMatrixMode(SR_MODELVIEW);
@@ -168,6 +178,10 @@ void Glassless3d::Update(float dt) {
   if(visible_ == false) {
     return;
   }
+
+  if(Book::GetInstance().curr_scene_page() % 2 == 0) {
+    handler_->UpdateEvent();
+  } 
 }
 
 void Glassless3d::InitGrid() {

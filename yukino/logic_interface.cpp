@@ -1,5 +1,6 @@
 ﻿// Ŭnicode please
 #include "yukino_stdafx.h"
+#include "logic_interface.h"
 
 #include "book.h"
 #include "sora/render/texture_manager.h"
@@ -8,6 +9,10 @@
 #include "sora/sys_locale.h"
 #include "sora/render/immediate_mode_emulator.h"
 #include "sora/render/texture_helper.h"
+
+#include "sora/input/accelerometer.h"
+#include "sora/input/gyro.h"
+#include "input_handler.h"
 
 #if SR_USE_PCH == 0
 #include "sora/io/zip_stream_file.h"
@@ -47,7 +52,7 @@ void LoadUnloadTexture(int old_index, int new_index) {
     const TexturePtr &tex = *it;
     unload_set.erase(tex);
     TextureManager::GetInstance().AsyncLoad(tex);
-	LOGI("Load texture %s", tex->filename().c_str());
+    LOGI("Load texture %s", tex->filename().c_str());
   }
 
   //unload할거 unload
@@ -59,7 +64,7 @@ void LoadUnloadTexture(int old_index, int new_index) {
     TextureManager::GetInstance().CancelAsyncLoad(tex);
     tex->Cleanup();
     tex->SetAsLoading();
-	LOGI("Unload texture %s", tex->filename().c_str());
+    LOGI("Unload texture %s", tex->filename().c_str());
   }
 }
 
@@ -72,6 +77,8 @@ void sora_next_page() {
 
     LoadUnloadTexture(old_page, new_page);
   }
+
+  sora_reset_gyro();
 }
 void sora_prev_page() {
   Book &book = Book::GetInstance();
@@ -82,24 +89,34 @@ void sora_prev_page() {
 
     LoadUnloadTexture(old_page, new_page);
   }
+
+  sora_reset_gyro();
 }
 void sora_reset_gyro() {
-  //TODO
+  InputHandler *handler = InputHandler::GetLast();
+  if(handler != NULL) {
+    handler->Reset();
+  }
 }
 void sora_reset_accel() {
-  //TODO
+  InputHandler *handler = InputHandler::GetLast();
+  if(handler != NULL) {
+    handler->Reset();
+  }
 }
 void sora_update_gyro(float yaw, float roll, float pitch) {
+  Gyro::GetInstance().Add(yaw, roll, pitch);
 }
 void sora_update_accel(float x, float y, float z) {
+  Accelerometer::GetInstance().Add(x, y, z);
 }
 
 void sora_unload_texture() {
   for (int i = 0 ; i < Book::GetInstance().SceneCount() ; i++) {
     BookScene *scene = Book::GetInstance().GetScene(i);
-	if(scene != NULL) {
-	  scene->UnloadTexture();
-	}
+    if(scene != NULL) {
+      scene->UnloadTexture();
+    }
   }
   TextureHelper::Unload();
 }
@@ -107,27 +124,31 @@ void sora_reload_texture() {
   Book &book = Book::GetInstance();
   BookScene *page = book.GetCurrScene();
   if(page != NULL) {
-	page->LoadTexture();
+    page->LoadTexture();
   } else {
-	LOGE("empty");
-	}
+    LOGE("empty");
+  }
   TextureHelper::Load();
 }
 
 void sora_unload_shader() {
-	ImmediateModeEmulator::GetInstance().Cleanup();
+  ImmediateModeEmulator::GetInstance().Cleanup();
 }
 
 void sora_set_lang_korean() {
   Locale::GetInstance().SetKorea();
   Book &book = Book::GetInstance();
   book.SetLanguage(Locale::GetInstance().language());
+
+  sora_reset_gyro();
 }
 
 void sora_set_lang_english() {
   Locale::GetInstance().SetUSA();
   Book &book = Book::GetInstance();
   book.SetLanguage(Locale::GetInstance().language());
+
+  sora_reset_gyro();
 }
 
 bool sora_is_next_page_exist() {
@@ -140,6 +161,6 @@ bool sora_is_prev_page_exist() {
 }
 void sora_set_apk_file_path(const char *abs_path) {
 #if SR_ANDROID
-	ZipStreamFile::SetApkFile(abs_path);
+  ZipStreamFile::SetApkFile(abs_path);
 #endif
 }

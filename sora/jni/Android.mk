@@ -61,7 +61,11 @@ LOCAL_SRC_FILES +=	\
 	../render/texture_manager.cpp	\
 	../render/texture_helper.cpp
 	
+LOCAL_SRC_FILES +=	\
+	../input/accelerometer.cpp	\
+	../input/gyro.cpp	\
 
+	
 #LOCAL_SRC_FILES +=	\
 #	../ui/button.cpp	\
 #	../ui/image_label.cpp	\

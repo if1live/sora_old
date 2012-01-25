@@ -34,7 +34,7 @@ public:
 private:
   //sora::model::SoraModelPtr gridModel_;
   //sora::model::SoraModelPtr targetModel_;
-  //std::auto_ptr<InputHandler> handler_;
+  std::auto_ptr<InputHandler> handler_;
 
   //unsigned int texId_;
   bool visible_;
