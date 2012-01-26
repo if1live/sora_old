@@ -26,6 +26,7 @@
     <string name="gl2jni_activity">GL2JNI</string>
     <string name="lang_ko">한국어</string>
     <string name="lang_en">영어</string>
+    <string name="app_name">i3D백설공주</string>
 
 </resources>
 

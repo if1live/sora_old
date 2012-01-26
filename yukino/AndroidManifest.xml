@@ -30,7 +30,7 @@
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
 	<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     
-    <application android:label="@string/gl2jni_activity" android:debuggable="true">
+    <application android:label="@string/gl2jni_activity" android:debuggable="true" android:icon="@drawable/icon">
         <activity android:name=".GL2JNIActivity"
                 android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             	android:launchMode="singleTask"
@@ -44,7 +44,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".IntroActivity" 
-            android:label="IntroActivity"
+            android:label="i3D ShowWhite"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:screenOrientation="landscape">
             <intent-filter>

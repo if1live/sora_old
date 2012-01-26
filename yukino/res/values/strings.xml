@@ -26,6 +26,7 @@
     <string name="gl2jni_activity">GL2JNI</string>
     <string name="lang_ko">Korean</string>
     <string name="lang_en">English</string>
+    <string name="app_name">i3DShowWhite</string>
 
 </resources>
 
