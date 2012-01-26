@@ -125,6 +125,8 @@ void sora_unload_texture() {
   TextureHelper::Unload();
 }
 void sora_reload_texture() {
+  LOGI("reload texture start");
+
   Book &book = Book::GetInstance();
   BookScene *page = book.GetCurrScene();
   if(page != NULL) {
@@ -133,6 +135,8 @@ void sora_reload_texture() {
     LOGE("empty");
   }
   TextureHelper::Load();
+
+  LOGI("reload texture end");
 }
 
 void sora_unload_shader() {

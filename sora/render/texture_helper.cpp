@@ -108,6 +108,7 @@ GLuint TextureHelper::GetLoadingTexture(int *width, int *height) {
     filename = sora::Filesystem::GetAppPath(filename);
     TexFormat fmt;
     TextureHeader tex_header;
+    
     void *data = Texture::LoadPNG(filename.c_str(), &fmt, &tex_header);
     srglGenTextures(1, &ctx.loading_tex_id);
     srglBindTexture(GL_TEXTURE_2D, ctx.loading_tex_id);
@@ -119,13 +120,14 @@ GLuint TextureHelper::GetLoadingTexture(int *width, int *height) {
       *height = tex_header.tex_height;
     }
     SR_ASSERT(fmt == kTexFormatRGBA8888);
-
     srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST); 
     srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST); 
     srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     srglTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    srglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, *width, *height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    srglTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, tex_header.tex_width, tex_header.tex_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
     delete[]((unsigned char *)data);
+
+    LOGI("Loading Texture create complete");
   }
   return ctx.loading_tex_id;
 }

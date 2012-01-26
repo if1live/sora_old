@@ -80,5 +80,12 @@ public class SoraGyro implements SensorEventListener {
 	    }
 	    return output;
 	}
+	public boolean isAvaliable() {
+		if(gyro == null) {
+			return false;
+		} else {
+			return true;
+		}
+	}
 
 }

@@ -72,7 +72,7 @@ public class GL2JNIView extends GLSurfaceView {
 	private static final boolean DEBUG = false;
 
 	public GL2JNIView(Context context) {
-		super(context);
+		super(context);	
 		init(false, 0, 0, context);
 	}
 	
@@ -83,16 +83,14 @@ public class GL2JNIView extends GLSurfaceView {
 	
 	@Override
 	public void onPause() {
-		// TODO Auto-generated method stub
-		super.onPause();
 		GL2JNILib.onCleanup();
+		//Log.d("a", "on pause half complete");
+		super.onPause();
 	}
 	@Override
 	public void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
 		GL2JNILib.onResume();
-		
 		if(Renderer.created == true) {
 			if(LanguageSelector.GetInstance().GetCurrLanguage() == LanguageSelector.Korean) {
 				GL2JNILib.SetLangKor();

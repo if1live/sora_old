@@ -122,6 +122,7 @@ void Texture::InitSimpleTexture(i32 width, i32 height, const TexFormat &fmt, voi
 
 
 boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
+  LOGI("LoadFromPNG Start");
   TexFormat fmt;
   TextureHeader header;
   void *data = LoadPNG(filepath, &fmt, &header);
@@ -140,7 +141,7 @@ boolean Texture::LoadFromPNG(const char *filepath, Texture *tex) {
 	
 	//////////////////////////////////
 
-  LOGI("Load PNG Texture End");
+  LOGI("LoadFromPNG End");
 	return true;
 }
 void* Texture::LoadPNG(const char *filepath, TexFormat *fmt, TextureHeader *tex_header) {

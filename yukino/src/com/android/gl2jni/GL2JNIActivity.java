@@ -40,7 +40,7 @@ import com.cauly.android.ad.AdView;
 
 public class GL2JNIActivity extends Activity implements AdListener {
 
-	GL2JNIView mView;
+	GL2JNIView mView = null;
 	private RelativeLayout main_layout;
 	
 	private SoraAccelerometer accelerometer;
@@ -50,14 +50,17 @@ public class GL2JNIActivity extends Activity implements AdListener {
 		super.onCreate(icicle);
 		
 		//가속도 센서 생성
-		accelerometer = new SoraAccelerometer(this);
-		GL2JNILib.useAccel();
-		accelerometer.enable();
-		//gyro = new SoraGyro(this);
-		//if(gyro.isAvaliable() == false) {
-		//	System.exit(0);
-		//}
-		//gyro.enable();
+		gyro = new SoraGyro(this);
+		if(gyro.isAvaliable() == true) {
+			GL2JNILib.useGyro();
+			gyro.enable();
+			Log.d("asd", "use gyro");
+		} else {
+			accelerometer = new SoraAccelerometer(this);
+			GL2JNILib.useAccel();
+			accelerometer.enable();
+			Log.d("asd", "use accel");
+		}
 		
 		setContentView(R.layout.scene);
 		main_layout = (RelativeLayout)findViewById(R.id.layout);
@@ -141,13 +144,31 @@ public class GL2JNIActivity extends Activity implements AdListener {
 	}
 
 	@Override protected void onPause() {
+		//정지지원 제거. gl과 내장ui가 충돌하기떄문에 그냥끄게했다
+		System.exit(0);
 		super.onPause();
-		mView.onPause();
+		if(mView != null) {
+			mView.onPause();
+			
+			((RelativeLayout)mView.getParent()).removeAllViewsInLayout();
+			//((RelativeLayout)mView.getParent()).removeView(mView);
+			mView = null;
+		}		
 	}
 
 	@Override protected void onResume() {
 		super.onResume();
-		mView.onResume();
+		if(mView != null) {
+			mView.onResume();
+		}
+		else {
+			setContentView(R.layout.scene);
+			main_layout = (RelativeLayout)findViewById(R.id.layout);
+			//sora renderer는 나중에 부착하자
+			mView = new GL2JNIView(getApplication());
+			main_layout.addView(mView, 0);
+		}
+		
 	}
 	
 

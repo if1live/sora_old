@@ -35,7 +35,7 @@
 //#define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,"LOGE",__VA_ARGS__)
 #endif
 
-#define LOGI(...)  { sora::SharedConsoleLogger().Infof(__VA_ARGS__); }
+#define LOGI(...)  { sora::SharedConsoleLogger().Debugf(__VA_ARGS__); }
 #define LOGE(...)  { sora::SharedConsoleLogger().Errorf(__VA_ARGS__); }
 #define SHOW_LINE() { sora::SharedConsoleLogger().Infof("%s / %d", __FILE__, __LINE__); }
 

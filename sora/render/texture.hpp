@@ -206,6 +206,7 @@ void* Texture::LoadPNG(T &asset, TexFormat *fmt, TextureHeader *tex_header) {
   //And don't forget to clean up the read and info structs !
 	png_destroy_read_struct(&png_ptr, &info_ptr,(png_infopp)0);
 
+  LOGI("Load PNG Texture End : %s", asset.filepath().c_str());
   return data;
 }
 }

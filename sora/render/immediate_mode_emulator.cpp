@@ -92,9 +92,12 @@ void ImmediateModeEmulator::Cleanup() {
     BasicShader &basic_shader = BasicShader::GetInstance();
     basic_shader.Cleanup();
   }
+  SR_ASSERT(impl_ == NULL);
 }
 void ImmediateModeEmulator::Init() {
-  SR_ASSERT(impl_ == NULL);
+  if(impl_ != NULL) {
+    return; //already created
+  }
   impl_ = new ImmediateModeEmulatorImpl();
   
   BasicShader &basic_shader = BasicShader::GetInstance();
@@ -126,12 +129,15 @@ void ImmediateModeEmulator::Init() {
   // GL환경 설정
   srglEnable(GL_BLEND);
   srglBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  SR_ASSERT(impl_ != NULL);
 }
 
 ImmediateModeEmulatorImpl *ImmediateModeEmulator::impl() {
   ImmediateModeEmulatorImpl *impl = ImmediateModeEmulator::GetInstance().impl_;
   if(impl_ == NULL) {
     Init();
+    impl = ImmediateModeEmulator::GetInstance().impl_;
   }
   SR_ASSERT(impl != NULL);
   return impl;
