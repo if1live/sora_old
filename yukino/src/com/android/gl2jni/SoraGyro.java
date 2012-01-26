@@ -20,13 +20,6 @@ public class SoraGyro implements SensorEventListener {
 		sensorMgr = (SensorManager)ctx.getSystemService(Context.SENSOR_SERVICE);
 		gyro = sensorMgr.getDefaultSensor(Sensor.TYPE_ORIENTATION);
 	}
-	public boolean isAvaliable() {
-		if(gyro == null) {
-			return false;
-		} else {
-			return true;
-		}
-	}
 	public void enable() {
 		sensorMgr.registerListener(this, gyro, SensorManager.SENSOR_DELAY_GAME);
 	}
@@ -41,9 +34,10 @@ public class SoraGyro implements SensorEventListener {
 	protected float[] accelVals;
 	
 	public void onSensorChanged(SensorEvent event) {
-		if (event.sensor.getType() != Sensor.TYPE_ORIENTATION){
-			return;
-		}
+		
+		//if (event.sensor.getType() != Sensor.TYPE_ORIENTATION){
+		//return;
+		//}
 		
 		//accelVals = lowPass( event.values, accelVals );
 		

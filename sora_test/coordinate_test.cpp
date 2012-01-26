@@ -65,6 +65,32 @@ TEST(SphericalPoint, create) {
 	orig = Rectangular3Point<float>(0.161136568, 0.247228201, -0.944041371);
 	conv = SphericalPoint<float>::Create(orig);
 	EXPECT_TRUE(conv.radius() > 0);
+
+  {
+    //01-26 00:21:56.859: I/Shared(11213): orig 0.064531 8.228765 5.586045
+    //01-26 00:21:56.859: I/Shared(11213): 17.437447 89.550705->72.113258
+    orig = Rectangular3Point<float>(+0.1, 1, 0);
+    conv = SphericalPoint<float>::Create(orig);
+    printf("%f / %f / %f\n", conv.radius(), conv.theta_deg(), conv.pi_deg());
+
+    //01-26 00:21:56.879: I/Shared(11213): orig -0.270156 8.314498 5.621884
+    //01-26 00:21:56.879: I/Shared(11213): 17.437447 271.860992->-105.576508
+    //문제가 생기는건 pi
+    //고작 x가 -붙었다고 각도가 확 바뀌는건 구현이 뭔가 잘못된거 일듯?
+    //orig = Rectangular3Point<float>(-0.270156, 8.314498, 5.621884);
+    orig = Rectangular3Point<float>(-0.1, 1, 0);
+    conv = SphericalPoint<float>::Create(orig);
+    printf("%f / %f / %f\n", conv.radius(), conv.theta_deg(), conv.pi_deg());
+  }
+  {
+    orig = Rectangular3Point<float>(+0.1, -1, 0);
+    conv = SphericalPoint<float>::Create(orig);
+    printf("%f / %f / %f\n", conv.radius(), conv.theta_deg(), conv.pi_deg());
+
+    orig = Rectangular3Point<float>(-0.1, -1, 0);
+    conv = SphericalPoint<float>::Create(orig);
+    printf("%f / %f / %f\n", conv.radius(), conv.theta_deg(), conv.pi_deg());
+  }
 }
 
 TEST(Rectangular3Point, construct) {

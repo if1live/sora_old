@@ -57,7 +57,27 @@ SphericalPoint<T> SphericalPoint<T>::Create(const Rectangular3Point<T> &o) {
   T pi = 0;
   if(x != 0) {
     //x가 0이면 y/x를 계산할수 없다. 
-    pi = atan(y/x);
+    //atan의 커버범위는 -90~90도니까 그것을 넘는 각도에서는 따로 계산을 수행
+    if(x > 0) {
+      if(y >= 0) {
+        //1사분면
+        pi = atan(y/x);
+      } else {
+        //4사분면
+        pi = atan(y/x);
+      }
+    } else {
+      if(y >= 0) {
+        //2사분면
+        T other_side_pi_rad = atan(y / -x);
+        pi = kPi - other_side_pi_rad;
+      } else {
+        //3사분면
+        T other_side_pi_rad = atan(y / -x);
+        pi = kPi - other_side_pi_rad;
+      }
+    }
+
   } else {
     //x가 -이라는것은 pi의 각도는 90이거나 270이라는것이다. 이것은 y의 부호에 따라 결정된다 
     if(y > 0) {

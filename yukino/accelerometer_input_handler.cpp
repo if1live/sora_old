@@ -43,8 +43,6 @@ float AccelerometerInputHandler::GetTiltDegree() {
   return tilt_deg_;
 }
 void AccelerometerInputHandler::UpdateEvent() {
-  static double elapsed_time = 1000;
-  elapsed_time += 1.0f/30.0f;
   //아이폰3에서는 순수 가속도로 구현
   const AccelData &data = Accelerometer::GetInstance().GetLast();
   vec3 curr(data.x, data.y, data.z);
@@ -87,6 +85,14 @@ void AccelerometerInputHandler::UpdateEvent() {
   SR_ASSERT(zeroSPoint.radius() > 0);
 
   //현재중력의 극좌표 
+  //오차에 의해서 축이 뒤집일떄 죽는듯? 그래서 강제 보정
+  /*
+  01-26 00:21:56.859: I/Shared(11213): orig 0.064531 8.228765 5.586045
+  01-26 00:21:56.859: I/Shared(11213): 17.437447 89.550705->72.113258
+
+  01-26 00:21:56.879: I/Shared(11213): orig -0.270156 8.314498 5.621884
+  01-26 00:21:56.879: I/Shared(11213): 17.437447 271.860992->-105.576508
+*/
   Rectangular3Point<float> currRPoint(curr.x, curr.y, curr.z);
   SphericalPoint<float> currSPoint = SphericalPoint<float>::Create(currRPoint);
   //설마 반지름이 0되는 버그가?
@@ -98,8 +104,9 @@ void AccelerometerInputHandler::UpdateEvent() {
 
   float zeroPi = zeroSPoint.pi_deg();
   float currPi = currSPoint.pi_deg();
-
   pan_deg_ = CalcIncludeAngleDegree(zeroPi, currPi);
+  //LOGI("orig %f %f %f", curr.x, curr.y, curr.z);
+  //LOGI("%f %f->%f", zeroPi, currPi, pan_deg_);
 
 
   //이전프레임에서의 가속도값을 저장해놓는다. 다음프레임에서 쓰게된다
