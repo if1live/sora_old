@@ -42,8 +42,8 @@
 // 첫번쨰 타겟은 안드로이드로 생각하고 거기에 맞춰서 작업하자
 //const int win_width = 960;
 //const int win_height = 640;
-const int win_width = 800;
-const int win_height = 480;
+const int win_width = 1024;
+const int win_height = 600;
 
 void Update(int ms);
 void Draw(int ms);

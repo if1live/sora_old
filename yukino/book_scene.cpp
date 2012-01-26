@@ -73,7 +73,7 @@ void BookScene::parseSpriteNode(sora::XmlNode *node) {
 
     TextureParameter param;
     param.mag_filter = kTexMagLinear;
-    param.min_filter = kTexMinLinearMipMapNearest;
+    param.min_filter = kTexMinLinearMipMapLinear;
     param.wrap_s = kTexWrapRepeat;
     param.wrap_t = kTexWrapRepeat;
     tex->SetTextureParameter(param);

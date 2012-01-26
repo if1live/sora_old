@@ -48,7 +48,7 @@ void Glassless3d::Init() {
   }
 #elif SR_WIN
   //handler_ = auto_ptr<InputHandler>(new KeyboardInputHandler()); 
-  //handler_ = auto_ptr<InputHandler>(new AccelerometerInputHandler());
+  handler_ = auto_ptr<InputHandler>(new AccelerometerInputHandler());
   //handler_ = auto_ptr<InputHandler>(new GyroInputHandler());
 #else
 //#error "not support this platform"
