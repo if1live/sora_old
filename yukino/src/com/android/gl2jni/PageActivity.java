@@ -2,6 +2,8 @@ package com.android.gl2jni;
 
 import java.util.Vector;
 
+import kr.co.teamobj.snowwhite.R;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;

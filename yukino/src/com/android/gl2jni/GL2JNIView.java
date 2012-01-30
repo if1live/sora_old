@@ -368,7 +368,8 @@ public class GL2JNIView extends GLSurfaceView {
 			ApplicationInfo appInfo = null;
 			PackageManager packMgr = context.getPackageManager();
 			try {
-				appInfo = packMgr.getApplicationInfo("com.android.gl2jni", 0);
+				//appInfo = packMgr.getApplicationInfo("com.android.gl2jni", 0);
+				appInfo = packMgr.getApplicationInfo("kr.co.teamobj.snowwhite", 0);
 			} catch(NameNotFoundException e) {
 				e.printStackTrace();
 				throw new RuntimeException("unable to locate assets, aborting..");

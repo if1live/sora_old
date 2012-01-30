@@ -16,7 +16,9 @@
 
 package com.android.gl2jni;
 
+import kr.co.teamobj.snowwhite.R;
 import android.app.Activity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.Sensor;
@@ -31,8 +33,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.android.gl2jni.*;
-import com.android.gl2jni.R.id;
 import com.cauly.android.ad.AdInfo;
 import com.cauly.android.ad.AdListener;
 import com.cauly.android.ad.AdView;

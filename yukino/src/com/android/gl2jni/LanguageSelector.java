@@ -1,5 +1,6 @@
 package com.android.gl2jni;
 
+import kr.co.teamobj.snowwhite.R;
 import android.app.Activity;
 
 import android.graphics.drawable.Drawable;

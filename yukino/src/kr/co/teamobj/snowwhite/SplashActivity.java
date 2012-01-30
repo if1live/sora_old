@@ -1,4 +1,6 @@
-package com.android.gl2jni;
+package kr.co.teamobj.snowwhite;
+
+import com.android.gl2jni.IntroActivity;
 
 import android.app.Activity;
 import android.content.Intent;

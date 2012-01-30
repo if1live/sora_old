@@ -2,6 +2,9 @@ package com.android.gl2jni;
 
 import java.util.Locale;
 
+import kr.co.teamobj.snowwhite.R;
+
+
 
 import android.app.Activity;
 import android.app.ActivityManager;
@@ -26,7 +29,8 @@ public class IntroActivity extends Activity {
 		
 		//현재 로케일을 얻어서 button 상태 초기화
 		Locale locale = Locale.getDefault();
-		if(locale == Locale.KOREAN) {
+		String curr_lang = locale.getLanguage(); 
+		if(curr_lang.equals("ko")) {
 			LanguageSelector.GetInstance().SetLanguage(LanguageSelector.Korean, this);
 		} else {
 			LanguageSelector.GetInstance().SetLanguage(LanguageSelector.English, this);
