@@ -39,6 +39,7 @@ int InitFileSystem();
 int init_filesystem = InitFileSystem();
 int InitFileSystem() {
 #if SR_WIN
+  /*
   // 윈도우에서 실행프로그램이 있는 경로 얻기
   // 이것을 이용해서 경로 변경후 파일을 열자
   TCHAR path[MAX_PATH];
@@ -48,6 +49,8 @@ int InitFileSystem() {
   Filesystem::doc_root_path = path;
   Filesystem::app_root_path = path;
   chdir(Filesystem::app_root_path.c_str());
+  return 1;
+  */
   return 1;
 #elif SR_ANDROID
   Filesystem::app_root_path = "assets";

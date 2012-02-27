@@ -1,89 +1,169 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClInclude Include="assert_inc.h">
-      <Filter>base</Filter>
+    <Filter Include="sdk">
+      <UniqueIdentifier>{6e1e807d-5e27-4d27-aed8-61ec467b8b2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sdk\nodepng">
+      <UniqueIdentifier>{c951e7e1-961c-4ac0-af47-8212e4e0414b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sdk\tinyxml">
+      <UniqueIdentifier>{852bcccf-d1cf-4f0c-b8d8-bd0224005443}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="common">
+      <UniqueIdentifier>{03f7613a-78cf-4dd9-8063-bee713e81d19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="render">
+      <UniqueIdentifier>{a4d8ac0c-5530-4238-ab74-03b18e19791d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="io">
+      <UniqueIdentifier>{5bfeefb2-3862-40be-a491-70ceaec8627f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\sdk\tinyxml\tinyxml.cpp">
+      <Filter>sdk\tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sdk\tinyxml\tinyxmlerror.cpp">
+      <Filter>sdk\tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sdk\tinyxml\tinyxmlparser.cpp">
+      <Filter>sdk\tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sdk\tinyxml\tinystr.cpp">
+      <Filter>sdk\tinyxml</Filter>
+    </ClCompile>
+    <ClCompile Include="sora_stdafx.cpp" />
+    <ClCompile Include="..\sdk\nodepng\lodepng.cpp">
+      <Filter>sdk\nodepng</Filter>
+    </ClCompile>
+    <ClCompile Include="common\clock.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\common_string.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\logger.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\math_helper.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\mem.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\sys_locale.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="render\matrix_stack.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\shader.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\gl_helper.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="render\gl_inc.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="common\arch.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="io\memory_file.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="io\xml_node.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="io\xml_reader.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="io\filesystem.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="io\low_level_c_file.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="render\immediate_mesh_builder.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\sdk\tinyxml\tinyxml.h">
+      <Filter>sdk\tinyxml</Filter>
     </ClInclude>
-    <ClInclude Include="class_type.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="logger.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="shared_ptr_inc.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="string_code_dictionary.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="string_hash_functor.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="template_library.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="unordered_map_inc.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\sdk\tinyxml\tinystr.h">
+      <Filter>sdk\tinyxml</Filter>
     </ClInclude>
     <ClInclude Include="sora_stdafx.h" />
-    <ClInclude Include="arch.h">
-      <Filter>base</Filter>
+    <ClInclude Include="..\sdk\nodepng\lodepng.h">
+      <Filter>sdk\nodepng</Filter>
     </ClInclude>
-    <ClInclude Include="clock.h">
-      <Filter>base</Filter>
+    <ClInclude Include="common\clock.h">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="vector.h">
-      <Filter>math</Filter>
+    <ClInclude Include="common\color.h">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="matrix.h">
-      <Filter>math</Filter>
+    <ClInclude Include="common\common_string.h">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="math_helper.h">
-      <Filter>math</Filter>
+    <ClInclude Include="common\coordinate.h">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="common_string.h">
-      <Filter>base</Filter>
+    <ClInclude Include="common\coordinate.hpp">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="mem.h">
-      <Filter>base</Filter>
+    <ClInclude Include="common\handle.h">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="selector.h">
-      <Filter>base</Filter>
+    <ClInclude Include="common\handle_manager.h">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="handle_manager.h">
-      <Filter>base</Filter>
+    <ClInclude Include="common\logger.h">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="handle.h">
-      <Filter>base</Filter>
+    <ClInclude Include="common\math_helper.h">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="color.h">
-      <Filter>math</Filter>
+    <ClInclude Include="common\matrix.h">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="rect.h">
-      <Filter>math</Filter>
+    <ClInclude Include="common\mem.h">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="render\immediate_mode_emulator.h">
-      <Filter>render</Filter>
+    <ClInclude Include="common\rect.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\ring_buffer.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\selector.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\string_code_dictionary.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\string_hash_functor.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\sys_locale.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\template_library.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\vector.h">
+      <Filter>common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\class_type.h">
+      <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="render\matrix_stack.h">
       <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="render\texture.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="render\texture_atlas.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="render\texture_info.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="render\texture_manager.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="render\sprite_sheet_manager.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="render\basic_shader.h">
+    <ClInclude Include="render\shader.h">
       <Filter>render</Filter>
     </ClInclude>
     <ClInclude Include="render\gl_helper.h">
@@ -92,20 +172,17 @@
     <ClInclude Include="render\gl_inc.h">
       <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="render\gl_window.h">
-      <Filter>render</Filter>
+    <ClInclude Include="common\shared_ptr_inc.h">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="render\shader.h">
-      <Filter>render</Filter>
+    <ClInclude Include="common\unordered_map_inc.h">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="render\scene_manager.h">
-      <Filter>render</Filter>
+    <ClInclude Include="common\arch.h">
+      <Filter>common</Filter>
     </ClInclude>
-    <ClInclude Include="render\scene.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="sys_locale.h">
-      <Filter>base</Filter>
+    <ClInclude Include="common\assert_inc.h">
+      <Filter>common</Filter>
     </ClInclude>
     <ClInclude Include="io\memory_file.h">
       <Filter>io</Filter>
@@ -122,145 +199,8 @@
     <ClInclude Include="io\low_level_c_file.h">
       <Filter>io</Filter>
     </ClInclude>
-    <ClInclude Include="ring_buffer.h">
-      <Filter>base</Filter>
-    </ClInclude>
-    <ClInclude Include="io\zip_stream_file.h">
-      <Filter>io</Filter>
-    </ClInclude>
-    <ClInclude Include="render\texture.hpp">
+    <ClInclude Include="render\immediate_mesh_builder.h">
       <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="render\texture_helper.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="input\gyro.h">
-      <Filter>input</Filter>
-    </ClInclude>
-    <ClInclude Include="input\keyboard.h">
-      <Filter>input</Filter>
-    </ClInclude>
-    <ClInclude Include="input\accelerometer.h">
-      <Filter>input</Filter>
-    </ClInclude>
-    <ClInclude Include="input\input_enum.h">
-      <Filter>input</Filter>
-    </ClInclude>
-    <ClInclude Include="coordinate.hpp">
-      <Filter>math</Filter>
-    </ClInclude>
-    <ClInclude Include="coordinate.h">
-      <Filter>math</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="arch.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="clock.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="common_string.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="logger.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="mem.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="math_helper.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="sora_stdafx.cpp" />
-    <ClCompile Include="render\immediate_mode_emulator.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="render\matrix_stack.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="render\texture.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="render\texture_atlas.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="render\texture_info.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="render\texture_manager.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="render\sprite_sheet_manager.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="render\basic_shader.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="render\gl_helper.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="render\gl_inc.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="render\gl_window.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="render\shader.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="render\scene_manager.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="sys_locale.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="io\xml_node.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="io\xml_reader.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="io\filesystem.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="io\low_level_c_file.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="io\memory_file.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="io\zip_stream_file.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="render\texture_helper.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="input\keyboard_glfw.cpp">
-      <Filter>input</Filter>
-    </ClCompile>
-    <ClCompile Include="input\accelerometer.cpp">
-      <Filter>input</Filter>
-    </ClCompile>
-    <ClCompile Include="input\gyro.cpp">
-      <Filter>input</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="base">
-      <UniqueIdentifier>{499db5ef-e963-444b-b728-66dfba5f2a59}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="math">
-      <UniqueIdentifier>{83a419fe-6df0-4a88-8203-699bfee3fc0b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="io">
-      <UniqueIdentifier>{cbc4d505-b088-4045-950b-e9e06365fce6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="render">
-      <UniqueIdentifier>{9a6c4513-3657-43a5-88d9-ef98b15adcf6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="input">
-      <UniqueIdentifier>{e5ca3a9c-6e59-439f-9edb-a75d7152ddd0}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
 </Project>

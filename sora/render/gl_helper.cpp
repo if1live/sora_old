@@ -20,7 +20,7 @@
 // Ŭnicode please
 #include "sora_stdafx.h"
 #include "sora/render/gl_helper.h"
-#include "sora/common_string.h"
+#include "sora/common/common_string.h"
 
 #if SR_ANDROID
 #include <GLES2/gl2.h>

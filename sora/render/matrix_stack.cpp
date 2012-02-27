@@ -20,7 +20,7 @@
 // Ŭnicode please
 #include "sora_stdafx.h"
 #include "matrix_stack.h"
-#include "sora/math_helper.h"
+#include "sora/common/math_helper.h"
 
 namespace sora {;
 MatrixStack::MatrixStack()

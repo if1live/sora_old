@@ -21,7 +21,7 @@
 #ifndef SORA_MATRIX_STACK_H_
 #define SORA_MATRIX_STACK_H_
 
-#include "sora/matrix.h"
+#include "sora/common/matrix.h"
 
 #if SR_USE_PCH == 0
 #include <vector>

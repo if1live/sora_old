@@ -20,8 +20,8 @@
 #include "sora_test_stdafx.h"
 //#include "karen/memory_leak_detector.h"
 
-#include "sora/logger.h"
-#include "sora/assert_inc.h"
+#include "sora/common/logger.h"
+#include "sora/common/assert_inc.h"
 
 int main(int argc, char *argv[]) {
   SHOW_LINE();

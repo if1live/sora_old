@@ -1,46 +1,46 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="testmain.cc" />
-    <ClCompile Include="class_type_test.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="common_string_test.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="handle_manager_test.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="mem_test.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="selector_test.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="color_test.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="math_helper_test.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="matrix_test.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
-    <ClCompile Include="vector_test.cpp">
-      <Filter>math</Filter>
-    </ClCompile>
     <ClCompile Include="sora_test_stdafx.cpp" />
+    <ClCompile Include="testmain.cc" />
+    <ClCompile Include="common\handle_manager_test.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\math_helper_test.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\matrix_test.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\mem_test.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\ring_buffer_test.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\selector_test.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\sys_locale_test.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\vector_test.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\class_type_test.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\color_test.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\common_string_test.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
+    <ClCompile Include="common\coordinate_test.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
     <ClCompile Include="render\shader_test.cpp">
       <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="render\sprite_sheet_manager_test.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="render\texture_test.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="sys_locale_test.cpp">
-      <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="io\filesystem_test.cpp">
       <Filter>io</Filter>
@@ -48,34 +48,30 @@
     <ClCompile Include="io\low_level_c_file_test.cpp">
       <Filter>io</Filter>
     </ClCompile>
-    <ClCompile Include="io\xml_node_test.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
     <ClCompile Include="io\xml_reader_test.cpp">
       <Filter>io</Filter>
     </ClCompile>
-    <ClCompile Include="ring_buffer_test.cpp">
-      <Filter>base</Filter>
-    </ClCompile>
-    <ClCompile Include="coordinate_test.cpp">
-      <Filter>math</Filter>
+    <ClCompile Include="io\xml_node_test.cpp">
+      <Filter>io</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="base">
-      <UniqueIdentifier>{d56732c6-659d-445e-b0a0-b59f83f2c8d3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="math">
-      <UniqueIdentifier>{ad796c37-a1b3-4401-83cb-4b593280137f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="io">
-      <UniqueIdentifier>{ee2dd9b7-f3dd-42f0-b3bf-5de02f9cc54d}</UniqueIdentifier>
+    <Filter Include="common">
+      <UniqueIdentifier>{8465cb43-4d62-44c8-a912-0cf5958f66ca}</UniqueIdentifier>
     </Filter>
     <Filter Include="render">
-      <UniqueIdentifier>{ef933348-198a-4e84-a261-40f6d525ac70}</UniqueIdentifier>
+      <UniqueIdentifier>{43689424-64aa-4fcb-a399-c8cdbc7c24d1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="io">
+      <UniqueIdentifier>{77903693-e78f-4ce7-bab3-d1faeca3be57}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="common\sora_test.vcxproj.user">
+      <Filter>common</Filter>
+    </None>
   </ItemGroup>
 </Project>

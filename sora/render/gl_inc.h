@@ -50,12 +50,13 @@ void srglBlendFunc (GLenum sfactor, GLenum dfactor);
 // 텍스쳐 bind는 최적화를 위해서 함수로 처리. 소프트웨어적으로 중복해결함
 void srglBindTexture(GLenum target, GLuint texture);
 
+/*
 void srglGenTextures (GLsizei n, GLuint *textures);
 void srglDeleteTextures (GLsizei n, const GLuint *textures);
 void srglPixelStorei (GLenum pname, GLint param);
 void srglTexParameteri (GLenum target, GLenum pname, GLint param);
 void srglTexImage2D (GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const GLvoid *pixels);
-
+*/
 // shader 관련
 #define srglDeleteShader  glDeleteShader
 #define srglShaderSource  glShaderSource
@@ -72,12 +73,36 @@ void srglTexImage2D (GLenum target, GLint level, GLint internalformat, GLsizei w
 #define srglValidateProgram glValidateProgram
 #define srglUseProgram    glUseProgram
 
+/*
 #define srglGetUniformLocation  glGetUniformLocation
 #define srglGetAttribLocation   glGetAttribLocation
 #define srglVertexAttribPointer glVertexAttribPointer
 #define srglEnableVertexAttribArray glEnableVertexAttribArray
-#define srglUniformMatrix4fv    glUniformMatrix4fv
+#define srglDisableVertexAttribArray glDisableVertexAttribArray
 
+#define srglUniformMatrix4fv    glUniformMatrix4fv
+#define srglUniform1f           glUniform1f
+#define srglUniform1fv          glUniform1fv
+#define srglUniform1i           glUniform1i
+#define srglUniform1iv          glUniform1iv
+
+#define srglUniform2f           glUniform2f
+#define srglUniform2fv          glUniform2fv
+#define srglUniform2i           glUniform2i
+#define srglUniform2iv          glUniform2iv
+
+#define srglUniform3f           glUniform3f
+#define srglUniform3fv          glUniform3fv
+#define srglUniform3i           glUniform3i
+#define srglUniform3iv          glUniform3iv
+
+#define srglUniform4f           glUniform4f
+#define srglUniform4fv          glUniform4fv
+#define srglUniform4i           glUniform4i
+#define srglUniform4iv          glUniform4iv
+*/
+
+/*
 //기본gl함수 전부 블럭.sr계열을 쓰게 강요하기
 #undef glClearColor
 #undef glClear
@@ -97,5 +122,5 @@ void srglTexImage2D (GLenum target, GLint level, GLint internalformat, GLsizei w
 #undef glPixelStorei
 #undef glTexParameteri
 #undef glTexImage2D
-
+*/
 #endif  // SORA_GL_INC_H_

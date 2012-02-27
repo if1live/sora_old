@@ -23,7 +23,6 @@
 
 #include "sora/io/memory_file.h"
 #include "sora/io/filesystem.h"
-#include "sora/io/zip_stream_file.h"
 
 #if SR_USE_PCH == 0
 #include <fcntl.h>

@@ -23,7 +23,6 @@
 
 #if SR_USE_PCH == 0
 #include <string>
-#include <boost/noncopyable.hpp>
 #endif
 
 #if SR_ANDROID
@@ -33,7 +32,7 @@
 #endif
 
 namespace sora {;
-class MemoryFile : boost::noncopyable {
+class MemoryFile {
 public:
   MemoryFile(const char *filepath);
   MemoryFile(const std::string &filepath);

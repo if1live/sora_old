@@ -10,6 +10,74 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\sdk\nodepng\lodepng.cpp" />
+    <ClCompile Include="..\sdk\tinyxml\tinystr.cpp" />
+    <ClCompile Include="..\sdk\tinyxml\tinyxml.cpp" />
+    <ClCompile Include="..\sdk\tinyxml\tinyxmlerror.cpp" />
+    <ClCompile Include="..\sdk\tinyxml\tinyxmlparser.cpp" />
+    <ClCompile Include="common\arch.cpp" />
+    <ClCompile Include="common\clock.cpp" />
+    <ClCompile Include="common\common_string.cpp" />
+    <ClCompile Include="common\logger.cpp" />
+    <ClCompile Include="common\math_helper.cpp" />
+    <ClCompile Include="common\mem.cpp" />
+    <ClCompile Include="common\sys_locale.cpp" />
+    <ClCompile Include="io\filesystem.cpp" />
+    <ClCompile Include="io\low_level_c_file.cpp" />
+    <ClCompile Include="io\memory_file.cpp" />
+    <ClCompile Include="io\xml_node.cpp" />
+    <ClCompile Include="io\xml_reader.cpp" />
+    <ClCompile Include="render\gl_helper.cpp" />
+    <ClCompile Include="render\gl_inc.cpp" />
+    <ClCompile Include="render\immediate_mesh_builder.cpp" />
+    <ClCompile Include="render\matrix_stack.cpp" />
+    <ClCompile Include="render\shader.cpp" />
+    <ClCompile Include="sora_stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\sdk\nodepng\lodepng.h" />
+    <ClInclude Include="..\sdk\tinyxml\tinystr.h" />
+    <ClInclude Include="..\sdk\tinyxml\tinyxml.h" />
+    <ClInclude Include="common\arch.h" />
+    <ClInclude Include="common\assert_inc.h" />
+    <ClInclude Include="common\class_type.h" />
+    <ClInclude Include="common\clock.h" />
+    <ClInclude Include="common\color.h" />
+    <ClInclude Include="common\common_string.h" />
+    <ClInclude Include="common\coordinate.h" />
+    <ClInclude Include="common\coordinate.hpp" />
+    <ClInclude Include="common\handle.h" />
+    <ClInclude Include="common\handle_manager.h" />
+    <ClInclude Include="common\logger.h" />
+    <ClInclude Include="common\math_helper.h" />
+    <ClInclude Include="common\matrix.h" />
+    <ClInclude Include="common\mem.h" />
+    <ClInclude Include="common\rect.h" />
+    <ClInclude Include="common\ring_buffer.h" />
+    <ClInclude Include="common\selector.h" />
+    <ClInclude Include="common\shared_ptr_inc.h" />
+    <ClInclude Include="common\string_code_dictionary.h" />
+    <ClInclude Include="common\string_hash_functor.h" />
+    <ClInclude Include="common\sys_locale.h" />
+    <ClInclude Include="common\template_library.h" />
+    <ClInclude Include="common\unordered_map_inc.h" />
+    <ClInclude Include="common\vector.h" />
+    <ClInclude Include="io\filesystem.h" />
+    <ClInclude Include="io\low_level_c_file.h" />
+    <ClInclude Include="io\memory_file.h" />
+    <ClInclude Include="io\xml_node.h" />
+    <ClInclude Include="io\xml_reader.h" />
+    <ClInclude Include="render\gl_helper.h" />
+    <ClInclude Include="render\gl_inc.h" />
+    <ClInclude Include="render\immediate_mesh_builder.h" />
+    <ClInclude Include="render\matrix_stack.h" />
+    <ClInclude Include="render\shader.h" />
+    <ClInclude Include="sora_stdafx.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{6451C89B-1FEF-4BC5-812A-BF84A8C21919}</ProjectGuid>
     <RootNamespace>sora</RootNamespace>
@@ -65,94 +133,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="assert_inc.h" />
-    <ClInclude Include="class_type.h" />
-    <ClInclude Include="clock.h" />
-    <ClInclude Include="color.h" />
-    <ClInclude Include="common_string.h" />
-    <ClInclude Include="handle.h" />
-    <ClInclude Include="handle_manager.h" />
-    <ClInclude Include="input\accelerometer.h" />
-    <ClInclude Include="input\gyro.h" />
-    <ClInclude Include="input\input_enum.h" />
-    <ClInclude Include="input\keyboard.h" />
-    <ClInclude Include="io\filesystem.h" />
-    <ClInclude Include="io\low_level_c_file.h" />
-    <ClInclude Include="io\memory_file.h" />
-    <ClInclude Include="io\zip_stream_file.h" />
-    <ClInclude Include="io\xml_node.h" />
-    <ClInclude Include="io\xml_reader.h" />
-    <ClInclude Include="coordinate.h" />
-    <ClInclude Include="coordinate.hpp" />
-    <ClInclude Include="render\texture.hpp" />
-    <ClInclude Include="render\texture_helper.h" />
-    <ClInclude Include="ring_buffer.h" />
-    <ClInclude Include="sys_locale.h" />
-    <ClInclude Include="logger.h" />
-    <ClInclude Include="math_helper.h" />
-    <ClInclude Include="matrix.h" />
-    <ClInclude Include="mem.h" />
-    <ClInclude Include="arch.h" />
-    <ClInclude Include="rect.h" />
-    <ClInclude Include="render\basic_shader.h" />
-    <ClInclude Include="render\gl_helper.h" />
-    <ClInclude Include="render\gl_inc.h" />
-    <ClInclude Include="render\gl_window.h" />
-    <ClInclude Include="render\immediate_mode_emulator.h" />
-    <ClInclude Include="render\matrix_stack.h" />
-    <ClInclude Include="render\scene.h" />
-    <ClInclude Include="render\scene_manager.h" />
-    <ClInclude Include="render\shader.h" />
-    <ClInclude Include="render\sprite_sheet_manager.h" />
-    <ClInclude Include="render\texture.h" />
-    <ClInclude Include="render\texture_atlas.h" />
-    <ClInclude Include="render\texture_info.h" />
-    <ClInclude Include="render\texture_manager.h" />
-    <ClInclude Include="selector.h" />
-    <ClInclude Include="shared_ptr_inc.h" />
-    <ClInclude Include="sora_stdafx.h" />
-    <ClInclude Include="string_code_dictionary.h" />
-    <ClInclude Include="string_hash_functor.h" />
-    <ClInclude Include="template_library.h" />
-    <ClInclude Include="unordered_map_inc.h" />
-    <ClInclude Include="vector.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="arch.cpp" />
-    <ClCompile Include="clock.cpp" />
-    <ClCompile Include="input\accelerometer.cpp" />
-    <ClCompile Include="input\gyro.cpp" />
-    <ClCompile Include="input\keyboard_glfw.cpp" />
-    <ClCompile Include="io\filesystem.cpp" />
-    <ClCompile Include="io\low_level_c_file.cpp" />
-    <ClCompile Include="io\memory_file.cpp" />
-    <ClCompile Include="io\zip_stream_file.cpp" />
-    <ClCompile Include="io\xml_node.cpp" />
-    <ClCompile Include="io\xml_reader.cpp" />
-    <ClCompile Include="render\texture_helper.cpp" />
-    <ClCompile Include="sys_locale.cpp" />
-    <ClCompile Include="logger.cpp" />
-    <ClCompile Include="math_helper.cpp" />
-    <ClCompile Include="mem.cpp" />
-    <ClCompile Include="render\basic_shader.cpp" />
-    <ClCompile Include="render\gl_helper.cpp" />
-    <ClCompile Include="render\gl_inc.cpp" />
-    <ClCompile Include="render\gl_window.cpp" />
-    <ClCompile Include="render\immediate_mode_emulator.cpp" />
-    <ClCompile Include="render\matrix_stack.cpp" />
-    <ClCompile Include="render\scene_manager.cpp" />
-    <ClCompile Include="render\shader.cpp" />
-    <ClCompile Include="render\sprite_sheet_manager.cpp" />
-    <ClCompile Include="render\texture.cpp" />
-    <ClCompile Include="render\texture_atlas.cpp" />
-    <ClCompile Include="render\texture_info.cpp" />
-    <ClCompile Include="render\texture_manager.cpp" />
-    <ClCompile Include="sora_stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
-    <ClCompile Include="common_string.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

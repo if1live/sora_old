@@ -25,11 +25,11 @@
 
 TEST(LowLevelCFile, test) {
   using sora::LowLevelCFile;
-  const char *path1 = "testdata/low_level_c_file.txt";
+  const char *path1 = "low_level_c_file.txt";
 
   LowLevelCFile file1(path1);
   EXPECT_EQ(false, file1.IsOpened());
-  EXPECT_EQ(true, file1.Open("rb"));
+  ASSERT_EQ(true, file1.Open("rb"));
   
   EXPECT_EQ(28, file1.GetLength());
   const char *content = "this is line1.this is line2.";
@@ -40,12 +40,12 @@ TEST(LowLevelCFile, test) {
 TEST(ReadonlyFile_WriteonlyFile, test) {
   using sora::WriteonlyCFile;
   using sora::ReadonlyCFile;
-  const char path1[] = "testdata/asdf.txt";
+  const char path1[] = "asdf.txt";
   const char content[] = "this is line1.this is line2.";
 
   WriteonlyCFile file1(path1);
   EXPECT_EQ(false, file1.IsOpened());
-  EXPECT_EQ(true, file1.Open());
+  ASSERT_EQ(true, file1.Open());
   file1.Write(content, sizeof(content));
   file1.Close();
 
@@ -59,11 +59,11 @@ TEST(ReadonlyFile_WriteonlyFile, test) {
 
 TEST(MemoryFile, test) {
   using sora::MemoryFile;
-  const char *path1 = "testdata/low_level_c_file.txt";
+  const char *path1 = "low_level_c_file.txt";
 
   MemoryFile file1(path1);
   EXPECT_EQ(false, file1.IsOpened());
-  EXPECT_EQ(true, file1.Open());
+  ASSERT_EQ(true, file1.Open());
   
   EXPECT_EQ(28, file1.GetLength());
   const char *content = "this is line1.this is line2.";

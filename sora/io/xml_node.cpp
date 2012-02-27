@@ -20,7 +20,7 @@
 // Ŭnicode please
 #include "sora_stdafx.h"
 #include "xml_node.h"
-#include "sora/template_library.h"
+#include "sora/common/template_library.h"
 
 namespace sora {;
 XmlNode::XmlNode()

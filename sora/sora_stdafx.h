@@ -20,10 +20,10 @@
 #ifndef SORA_SORA_STDAFX_H_
 #define SORA_SORA_STDAFX_H_
 // 사실상 모든 소스에서 필요한건 미리 인클루드
-#include "sora/arch.h"
-#include "sora/assert_inc.h"
-#include "sora/mem.h"
-#include "sora/logger.h"
+#include "sora/common/arch.h"
+#include "sora/common/assert_inc.h"
+#include "sora/common/mem.h"
+#include "sora/common/logger.h"
 
 #if SR_USE_PCH
 #include <cmath>
@@ -52,13 +52,6 @@
 
 // third party library
 #include <tinyxml/tinyxml.h>
-#include <libpng/png.h>
-#include <zlib.h>
-
-// boost
-#include <boost/noncopyable.hpp>
-#include <boost/foreach.hpp>
-#include <boost/thread.hpp>
 
 #if SR_WIN
 #include <Windows.h>
@@ -66,13 +59,13 @@
 #include <direct.h>
 #endif
 
-#include "sora/shared_ptr_inc.h"
-#include "sora/unordered_map_inc.h"
+#include "sora/common/shared_ptr_inc.h"
+#include "sora/common/unordered_map_inc.h"
 #include "sora/render/gl_inc.h"
-#include "sora/assert_inc.h"
+#include "sora/common/assert_inc.h"
 
 //vector는 뻔하니까
-#include "sora/vector.h"
+#include "sora/common/vector.h"
 
 #endif
 

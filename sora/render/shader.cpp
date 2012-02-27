@@ -134,11 +134,13 @@ boolean Program::Validate(GLuint prog) {
   return true;
 }
 GLint Program::GetAttribLocation(const char *name) {
-  return srglGetAttribLocation(prog, name);
+  return glGetAttribLocation(prog, name);
 }
 
 GLint Program::GetUniformLocation(const char *name) {
-  return srglGetUniformLocation(prog, name);
+  return glGetUniformLocation(prog, name);
 }
-
+void Program::Use() {
+  glUseProgram(prog);
+}
 }

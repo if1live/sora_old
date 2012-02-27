@@ -24,7 +24,6 @@
 #if SR_USE_PCH == 0
 #include <cstdio>
 #include <string>
-#include <boost/noncopyable.hpp>
 #endif
 
 namespace sora {;
@@ -32,7 +31,7 @@ class ReadonlyCFile;
 class WriteonlyCFile;
 class LowLevelCFile;
 
-class LowLevelCFile : boost::noncopyable {
+class LowLevelCFile {
 public:
   LowLevelCFile(const std::string &filepath);
   LowLevelCFile(const char *filepath);
@@ -57,7 +56,7 @@ private:
   void *buffer_;
 };
 
-class ReadonlyCFile : boost::noncopyable {
+class ReadonlyCFile {
 public:
   ReadonlyCFile(const std::string &filepath) : file_(filepath) {}
   ReadonlyCFile(const char *filepath) : file_(filepath) {}
@@ -79,7 +78,7 @@ private:
   LowLevelCFile file_;
 };
 
-class WriteonlyCFile : boost::noncopyable {
+class WriteonlyCFile {
 public:
   WriteonlyCFile(const std::string &filepath) : file_(filepath) {}
   WriteonlyCFile(const char *filepath) : file_(filepath) {}

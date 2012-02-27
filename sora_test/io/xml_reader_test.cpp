@@ -28,7 +28,7 @@ using namespace std;
 
 
 TEST(XmlReaderTest, test) {
-  const char *path1 = "testdata/books.xml";
+  const char *path1 = "books.xml";
   MemoryFile file1(path1);
   file1.Open();
   const unsigned char *content = file1.start;
@@ -38,7 +38,7 @@ TEST(XmlReaderTest, test) {
 
 
 TEST(XmlReaderTest, read) {
-	const char *path1 = "testdata/books.xml";
+	const char *path1 = "books.xml";
   MemoryFile file1(path1);
   file1.Open();
   const unsigned char *content = file1.start;
@@ -75,7 +75,7 @@ TEST(XmlReaderTest, read) {
 
 
 TEST(XmlReaderTest, read2) {
-  const char *path1 = "testdata/monster.xml";
+  const char *path1 = "monster.xml";
   MemoryFile file1(path1);
   file1.Open();
   const unsigned char *content = file1.start;
