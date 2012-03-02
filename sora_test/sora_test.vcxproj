@@ -37,13 +37,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="template_library_test.cpp" />
     <ClCompile Include="testmain.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="common\sora_test.vcxproj.user" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{98FFED31-7CF9-4307-AB86-120905A265CA}</ProjectGuid>

@@ -54,6 +54,9 @@
     <ClCompile Include="io\xml_node_test.cpp">
       <Filter>io</Filter>
     </ClCompile>
+    <ClCompile Include="template_library_test.cpp">
+      <Filter>common</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h" />
@@ -68,10 +71,5 @@
     <Filter Include="io">
       <UniqueIdentifier>{77903693-e78f-4ce7-bab3-d1faeca3be57}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="common\sora_test.vcxproj.user">
-      <Filter>common</Filter>
-    </None>
   </ItemGroup>
 </Project>

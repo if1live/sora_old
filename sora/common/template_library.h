@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2011 by if1live */
+﻿/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -76,6 +76,17 @@ void SafeDeleteArrayWithNullCheck(T* &ptr) {
   delete[](ptr);
   ptr = NULL;
 }
+
+template<typename T>
+void CallConstructor(T *ptr) {
+  new(ptr) T;
+}
+
+template<typename T>
+void CallDestructor(T *ptr) {
+  ptr->~T();
+}
+
 
 /////////////////////////////////////////
 template<typename T>
