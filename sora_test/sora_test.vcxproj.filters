@@ -54,7 +54,7 @@
     <ClCompile Include="io\xml_node_test.cpp">
       <Filter>io</Filter>
     </ClCompile>
-    <ClCompile Include="template_library_test.cpp">
+    <ClCompile Include="common\template_library_test.cpp">
       <Filter>common</Filter>
     </ClCompile>
   </ItemGroup>
