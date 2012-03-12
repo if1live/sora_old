@@ -1,75 +1,66 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="sora_test_stdafx.cpp" />
-    <ClCompile Include="testmain.cc" />
-    <ClCompile Include="common\handle_manager_test.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="common\math_helper_test.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="common\matrix_test.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="common\mem_test.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="common\ring_buffer_test.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="common\selector_test.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="common\sys_locale_test.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="common\vector_test.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="common\class_type_test.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="common\color_test.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="common\common_string_test.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="common\coordinate_test.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
-    <ClCompile Include="render\shader_test.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="io\filesystem_test.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="io\low_level_c_file_test.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="io\xml_reader_test.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="io\xml_node_test.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="common\template_library_test.cpp">
-      <Filter>common</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="sora_test_stdafx.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Filter Include="common">
-      <UniqueIdentifier>{8465cb43-4d62-44c8-a912-0cf5958f66ca}</UniqueIdentifier>
+    <Filter Include="support">
+      <UniqueIdentifier>{88efa29e-2b5f-4213-b307-7c1bc5e241ca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="core">
+      <UniqueIdentifier>{d107a738-8bdd-4eb7-b848-eb61f7f5d80e}</UniqueIdentifier>
     </Filter>
     <Filter Include="render">
-      <UniqueIdentifier>{43689424-64aa-4fcb-a399-c8cdbc7c24d1}</UniqueIdentifier>
+      <UniqueIdentifier>{a1549323-4d54-466b-962f-03973928a211}</UniqueIdentifier>
     </Filter>
     <Filter Include="io">
-      <UniqueIdentifier>{77903693-e78f-4ce7-bab3-d1faeca3be57}</UniqueIdentifier>
+      <UniqueIdentifier>{c364ede8-d912-41ab-9cc3-6e98c738ad5f}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="sora_test_stdafx.cpp">
+      <Filter>support</Filter>
+    </ClCompile>
+    <ClCompile Include="testmain.cc">
+      <Filter>support</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix_test.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="mem_test.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="template_lib_test.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="vector_test.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="math_helper_test.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="color_test.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="common_string_test.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="sys_locale_test.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix_stack_test.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="shader_test.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="filesystem_test.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="low_level_c_file_test.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="sora_test_stdafx.h">
+      <Filter>support</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

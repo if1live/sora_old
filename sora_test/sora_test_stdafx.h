@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora/common/arch.h"
+#include "sora/arch.h"
 
 #if SR_USE_PCH
 #if SR_WIN
@@ -27,5 +27,11 @@
 #error "not support"
 #endif
 
-#include "sora/sora_stdafx.h"
+//#include "sora/sora_stdafx.h"
+
+#include <GL/glew.h>
+#include <GL/glfw.h>
+
+//boost
+
 #endif

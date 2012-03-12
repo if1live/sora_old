@@ -18,15 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 #include "sora_test_stdafx.h"
-//#include "karen/memory_leak_detector.h"
 
-#include "sora/common/logger.h"
-#include "sora/common/assert_inc.h"
+//#include "sora/common/logger.h"
+//#include "sora/common/assert_inc.h"
 
 int main(int argc, char *argv[]) {
-  SHOW_LINE();
-  LOGI("LOGI");
-  LOGE("LOGE %s", "args");
+  //SHOW_LINE();
+  //LOGI("LOGI");
+  //LOGE("LOGE %s", "args");
   //SR_ASSERT(true == false);
 
   if( !glfwInit() ) {
@@ -40,7 +39,7 @@ int main(int argc, char *argv[]) {
   // init glew
   glewInit();
 
-	::testing::InitGoogleTest(&argc, argv);
+  ::testing::InitGoogleTest(&argc, argv);
 	int result = RUN_ALL_TESTS();
 
   glfwTerminate();

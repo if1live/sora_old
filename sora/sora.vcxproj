@@ -10,86 +10,18 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\sdk\nodepng\lodepng.cpp" />
-    <ClCompile Include="..\sdk\tinyxml\tinystr.cpp" />
-    <ClCompile Include="..\sdk\tinyxml\tinyxml.cpp" />
-    <ClCompile Include="..\sdk\tinyxml\tinyxmlerror.cpp" />
-    <ClCompile Include="..\sdk\tinyxml\tinyxmlparser.cpp" />
-    <ClCompile Include="common\arch.cpp" />
-    <ClCompile Include="common\clock.cpp" />
-    <ClCompile Include="common\common_string.cpp" />
-    <ClCompile Include="common\logger.cpp" />
-    <ClCompile Include="common\math_helper.cpp" />
-    <ClCompile Include="common\mem.cpp" />
-    <ClCompile Include="common\sys_locale.cpp" />
-    <ClCompile Include="io\filesystem.cpp" />
-    <ClCompile Include="io\low_level_c_file.cpp" />
-    <ClCompile Include="io\memory_file.cpp" />
-    <ClCompile Include="io\xml_node.cpp" />
-    <ClCompile Include="io\xml_reader.cpp" />
-    <ClCompile Include="render\gl_helper.cpp" />
-    <ClCompile Include="render\gl_inc.cpp" />
-    <ClCompile Include="render\immediate_mesh_builder.cpp" />
-    <ClCompile Include="render\matrix_stack.cpp" />
-    <ClCompile Include="render\shader.cpp" />
-    <ClCompile Include="sora_stdafx.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\sdk\nodepng\lodepng.h" />
-    <ClInclude Include="..\sdk\tinyxml\tinystr.h" />
-    <ClInclude Include="..\sdk\tinyxml\tinyxml.h" />
-    <ClInclude Include="common\arch.h" />
-    <ClInclude Include="common\assert_inc.h" />
-    <ClInclude Include="common\class_type.h" />
-    <ClInclude Include="common\clock.h" />
-    <ClInclude Include="common\color.h" />
-    <ClInclude Include="common\common_string.h" />
-    <ClInclude Include="common\coordinate.h" />
-    <ClInclude Include="common\coordinate.hpp" />
-    <ClInclude Include="common\handle.h" />
-    <ClInclude Include="common\handle_manager.h" />
-    <ClInclude Include="common\logger.h" />
-    <ClInclude Include="common\math_helper.h" />
-    <ClInclude Include="common\matrix.h" />
-    <ClInclude Include="common\mem.h" />
-    <ClInclude Include="common\rect.h" />
-    <ClInclude Include="common\ring_buffer.h" />
-    <ClInclude Include="common\selector.h" />
-    <ClInclude Include="common\shared_ptr_inc.h" />
-    <ClInclude Include="common\string_code_dictionary.h" />
-    <ClInclude Include="common\string_hash_functor.h" />
-    <ClInclude Include="common\sys_locale.h" />
-    <ClInclude Include="common\template_library.h" />
-    <ClInclude Include="common\unordered_map_inc.h" />
-    <ClInclude Include="common\vector.h" />
-    <ClInclude Include="io\filesystem.h" />
-    <ClInclude Include="io\low_level_c_file.h" />
-    <ClInclude Include="io\memory_file.h" />
-    <ClInclude Include="io\xml_node.h" />
-    <ClInclude Include="io\xml_reader.h" />
-    <ClInclude Include="render\gl_helper.h" />
-    <ClInclude Include="render\gl_inc.h" />
-    <ClInclude Include="render\immediate_mesh_builder.h" />
-    <ClInclude Include="render\matrix_stack.h" />
-    <ClInclude Include="render\shader.h" />
-    <ClInclude Include="sora_stdafx.h" />
-  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{6451C89B-1FEF-4BC5-812A-BF84A8C21919}</ProjectGuid>
+    <ProjectGuid>{9EB895AB-D40F-4B99-B063-432571E6D799}</ProjectGuid>
     <RootNamespace>sora</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
@@ -113,6 +45,7 @@
       <Optimization>Disabled</Optimization>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>sora_stdafx.h</PrecompiledHeaderFile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -126,6 +59,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>sora_stdafx.h</PrecompiledHeaderFile>
+      <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -133,6 +67,60 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="arch.cpp" />
+    <ClCompile Include="common_string.cpp" />
+    <ClCompile Include="filesystem.cpp" />
+    <ClCompile Include="gl_helper.cpp" />
+    <ClCompile Include="gl_inc.cpp" />
+    <ClCompile Include="low_level_c_file.cpp" />
+    <ClCompile Include="matrix_stack.cpp" />
+    <ClCompile Include="memory_file.cpp" />
+    <ClCompile Include="nodepng\lodepng.cpp" />
+    <ClCompile Include="shader.cpp" />
+    <ClCompile Include="sys_locale.cpp" />
+    <ClCompile Include="timer.cpp" />
+    <ClCompile Include="logger.cpp" />
+    <ClCompile Include="math_helper.cpp" />
+    <ClCompile Include="matrix.cpp" />
+    <ClCompile Include="mem.cpp" />
+    <ClCompile Include="sora_main.cpp" />
+    <ClCompile Include="sora_stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="vector.cpp" />
+    <ClCompile Include="zip_stream_file.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="arch.h" />
+    <ClInclude Include="array_inc.h" />
+    <ClInclude Include="assert_inc.h" />
+    <ClInclude Include="color.h" />
+    <ClInclude Include="common_string.h" />
+    <ClInclude Include="filesystem.h" />
+    <ClInclude Include="gl_helper.h" />
+    <ClInclude Include="gl_inc.h" />
+    <ClInclude Include="low_level_c_file.h" />
+    <ClInclude Include="matrix_stack.h" />
+    <ClInclude Include="memory_file.h" />
+    <ClInclude Include="nodepng\lodepng.h" />
+    <ClInclude Include="rect.h" />
+    <ClInclude Include="shader.h" />
+    <ClInclude Include="sys_locale.h" />
+    <ClInclude Include="timer.h" />
+    <ClInclude Include="logger.h" />
+    <ClInclude Include="math_helper.h" />
+    <ClInclude Include="matrix.h" />
+    <ClInclude Include="mem.h" />
+    <ClInclude Include="shared_ptr_inc.h" />
+    <ClInclude Include="sora_main.h" />
+    <ClInclude Include="sora_stdafx.h" />
+    <ClInclude Include="template_lib.h" />
+    <ClInclude Include="unordered_map_inc.h" />
+    <ClInclude Include="vector.h" />
+    <ClInclude Include="zip_stream_file.h" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

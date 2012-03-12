@@ -3,17 +3,18 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <LibraryPath>C:\Program Files (x86)\boost\boost_1_47\lib;$(LibraryPath)</LibraryPath>
+    <LibraryPath>C:\devel\boost_1_49_0\stage\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\devel\boost_1_49_0;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>.;..\sdk\glfw\include;..\sdk\glew\include;..\sdk\zlib;..\sdk\libjpeg;..;..\sdk\libpng;..\sdk\boost;..\sdk</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4819</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>..\boost;..\glfw\include;..\glew\include;..;..\sora</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4819;4099</DisableSpecificWarnings>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>..\sdk\glew\lib;..\sdk\glfw\lib;..\sdk\library;$(SolutionDir)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\glew\lib;..\glfw\lib;$(SolutionDir)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;glew32.lib;glfw.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
