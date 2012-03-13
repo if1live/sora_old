@@ -21,7 +21,7 @@ LOCAL_C_INCLUDES := \
 	..	\
 	.	\
 	../sora	\
-	../libzip/jni	\
+	../sdk/libzip/jni	\
 	
 LOCAL_CFLAGS := 
 
@@ -57,4 +57,4 @@ LOCAL_STATIC_LIBRARIES := sora
 include $(BUILD_SHARED_LIBRARY)
 
 
-include $(START_PATH)/../../libzip/jni/Android.mk
+include $(START_PATH)/../../sdk/libzip/jni/Android.mk
