@@ -30,7 +30,7 @@ Shader::Shader()
   : handle(0), type(0) {
 }
 Shader::~Shader() {
-  Deinit();
+  // deinit is manual call
 }
 void Shader::Deinit() {
   if (handle != 0) {
@@ -57,24 +57,33 @@ bool Shader::InitShader(GLenum shader_type, const char *src) {
   GLint status;
   glGetShaderiv(handle, GL_COMPILE_STATUS, &status);
   if (status == GL_FALSE) {
-    GLchar msg[1024];
-    glGetShaderInfoLog(handle, sizeof(msg), 0, &msg[0]);
+    GLint infoLen = 0;
+    glGetShaderiv(handle, GL_INFO_LOG_LENGTH, &infoLen);
+    if (infoLen) {
+      char* buf = (char*) malloc(infoLen);
+      if (buf) {
+        glGetShaderInfoLog(handle, infoLen, NULL, buf);
+        LOGE("Could not compile shader %d:\n%s\n", shader_type, buf);
+        free(buf);
+      }
+      glDeleteShader(handle);
+      handle = 0;
 
-    LOGE("ShaderError : %s", msg);
-    LOGE("ShaderSrc : %s", src);
-    SR_ASSERT(false);
+      LOGE("ShaderSrc : %s", src);
+      SR_ASSERT(false);
+    }
     return false;
   }
   return true;
 }
 /////////////////////
-Program::Program()
+ShaderProgram::ShaderProgram()
   : prog(0) {
 }
-Program::~Program() {
-  Deinit();
+ShaderProgram::~ShaderProgram() {
+  // deinit is manual call
 }
-void Program::Deinit() {
+void ShaderProgram::Deinit() {
   if (prog != 0) {
     glDeleteProgram(prog);
     prog = 0;
@@ -86,7 +95,8 @@ void Program::Deinit() {
     frag_shader_.Deinit();
   }
 }
-bool Program::Link() {
+/*
+bool ShaderProgram::Link() {
   glLinkProgram(prog);
 
   GLint status;
@@ -98,22 +108,48 @@ bool Program::Link() {
   }
   return true;
 }
-bool Program::Init(const char *v_src, const char *f_src) {
+*/
+bool ShaderProgram::Init(const char *v_src, const char *f_src) {
   SR_ASSERT(prog == 0);
-  prog = glCreateProgram();
 
-  SR_ASSERT(true == vert_shader_.InitVertexShader(v_src));
-  SR_ASSERT(true == frag_shader_.InitFragmentShader(f_src));
+  if(false == vert_shader_.InitVertexShader(v_src)) {
+    return false;
+  }
+  if(false == frag_shader_.InitFragmentShader(f_src)) {
+    return false;
+  }
+
+  prog = glCreateProgram();
+  if(!prog) {
+    return false;
+  }
 
   glAttachShader(prog, vert_shader_.handle);
   glAttachShader(prog, frag_shader_.handle);
 
-  if (Link() == false) {
+  glLinkProgram(prog);
+  GLint linkStatus = GL_FALSE;
+  glGetProgramiv(prog, GL_LINK_STATUS, &linkStatus);
+  if (linkStatus != GL_TRUE) {
+    //link fail
+    GLint bufLength = 0;
+    glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &bufLength);
+    if (bufLength) {
+      char* buf = (char*) malloc(bufLength);
+      if (buf) {
+        glGetProgramInfoLog(prog, bufLength, NULL, buf);
+        LOGE("Could not link program:\n%s\n", buf);
+        free(buf);
+      }
+    }
+    glDeleteProgram(prog);
+    prog = 0;
+    SR_ASSERT(false);
     return false;
   }
   return true;
 }
-bool Program::Validate(GLuint prog) {
+bool ShaderProgram::Validate(GLuint prog) {
     GLint logLength, status;
 
   glValidateProgram(prog);
@@ -132,14 +168,14 @@ bool Program::Validate(GLuint prog) {
   }
   return true;
 }
-GLint Program::GetAttribLocation(const char *name) {
+GLint ShaderProgram::GetAttribLocation(const char *name) {
   return glGetAttribLocation(prog, name);
 }
 
-GLint Program::GetUniformLocation(const char *name) {
+GLint ShaderProgram::GetUniformLocation(const char *name) {
   return glGetUniformLocation(prog, name);
 }
-void Program::Use() {
+void ShaderProgram::Use() {
   glUseProgram(prog);
 }
 }

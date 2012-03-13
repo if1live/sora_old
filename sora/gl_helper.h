@@ -37,6 +37,7 @@ public:
   static const std::string &GetVersion();
   static const std::string &GetVender();
   static const std::string &GetRenderer();
+  static const std::string &GetExtensions();
   static const std::vector<std::string> &GetExtensionList();
   static bool IsExtensionSupport(const char *ext) {
     return IsExtensionSupport(std::string(ext));

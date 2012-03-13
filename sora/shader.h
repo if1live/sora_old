@@ -52,20 +52,19 @@ public:
   GLenum type;
 };
 
-class SR_DLL Program {
+class SR_DLL ShaderProgram {
 public:
   static bool Validate(GLuint prog);
  
 public:
-  Program();
-  ~Program();
+  ShaderProgram();
+  ~ShaderProgram();
 
   bool Init(const char *v_src, const char *f_src);
   bool Init(const std::string &v_src, const std::string &f_src) {
     return Init(v_src.c_str(), f_src.c_str());
   }
   void Deinit();
-  bool Link();
   bool IsInit() const { return (prog != 0); }
   void Use();
 

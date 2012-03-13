@@ -116,4 +116,17 @@ bool GLHelper::IsExtensionSupport(const std::string &ext) {
   }
   return false;
 }
+
+const std::string &GLHelper::GetExtensions() {
+  using std::string;
+
+  static string ext;
+  static bool run = false;
+  if (run == false) {
+    run = true;
+    const char *str = (const char*)glGetString(GL_EXTENSIONS);
+    ext = str;
+  }
+  return ext;
+}
 }

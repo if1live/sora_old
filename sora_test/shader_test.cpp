@@ -62,10 +62,10 @@ TEST(Shader, InitFragmentShader) {
   EXPECT_EQ(true, fsh.IsInit());
 }
 
-TEST(Program, program) {
-  using sora::Program;
+TEST(ShaderProgram, ShaderProgram) {
+  using sora::ShaderProgram;
   using std::string;
-  Program prog;
+  ShaderProgram prog;
 
   EXPECT_EQ(false, prog.IsInit());
   string v_src = ""

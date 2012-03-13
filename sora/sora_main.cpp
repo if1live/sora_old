@@ -42,139 +42,29 @@
 #include "gl_helper.h"
 #include "memory_file.h"
 
+#include "shader.h"
+
 using sora::GLHelper;
+using sora::ShaderProgram;
 
-static void printGLString(const char *name, GLenum s) {
-  const char *v = (const char *) glGetString(s);
-  LOGI("GL %s = %s\n", name, v);
-}
-
-static void checkGlError(const char* op) {
-  for (GLint error = glGetError(); error; error
-    = glGetError()) {
-      LOGI("after %s() glError (0x%x)\n", op, error);
-  }
-}
-/*
-static const char gVertexShader[] = 
-"attribute vec4 vPosition;\n"
-"void main() {\n"
-"  gl_Position = vPosition;\n"
-"}\n";
-
-static const char gFragmentShader[] = 
-"precision mediump float;\n"
-"void main() {\n"
-"  gl_FragColor = vec4(0.0, 1.0, 0.0, 1.0);\n"
-"}\n";
-*/
-static const char gVertexShader[] = 
-  "attribute vec4 vPosition;\n"
-  "attribute vec2 a_texcoord;\n"
-  "varying vec2 v_texcoord;\n"
-  "void main() {\n"
-  "  v_texcoord = a_texcoord;\n"
-  "  gl_Position = vPosition;\n"
-  "}\n";
-
-static const char gFragmentShader[] = 
-  "precision mediump float;\n"
-  "varying vec2 v_texcoord;\n"
-  "uniform sampler2D s_texture;\n"
-  "void main() {\n"
-  "  gl_FragColor = texture2D(s_texture, v_texcoord);\n"
-  "}\n";
-
-
-GLuint loadShader(GLenum shaderType, const char* pSource) {
-  GLuint shader = glCreateShader(shaderType);
-  if (shader) {
-    glShaderSource(shader, 1, &pSource, NULL);
-    glCompileShader(shader);
-    GLint compiled = 0;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &compiled);
-    if (!compiled) {
-      GLint infoLen = 0;
-      glGetShaderiv(shader, GL_INFO_LOG_LENGTH, &infoLen);
-      if (infoLen) {
-        char* buf = (char*) malloc(infoLen);
-        if (buf) {
-          glGetShaderInfoLog(shader, infoLen, NULL, buf);
-          LOGE("Could not compile shader %d:\n%s\n",
-            shaderType, buf);
-          free(buf);
-        }
-        glDeleteShader(shader);
-        shader = 0;
-      }
-    }
-  } else {
-    //check error
-    GLenum error_code = glGetError();
-    if(error_code == GL_INVALID_ENUM) {
-      printf("invalid enum\n");
-    } else if(error_code == GL_INVALID_OPERATION) {
-      printf("invalid operation\n");
-    } else {
-      printf("unknown error\n");
-    }
-  }
-  return shader;
-}
-
-GLuint createProgram(const char* pVertexSource, const char* pFragmentSource) {
-  GLuint vertexShader = loadShader(GL_VERTEX_SHADER, pVertexSource);
-  if (!vertexShader) {
-    return 0;
-  }
-
-  GLuint pixelShader = loadShader(GL_FRAGMENT_SHADER, pFragmentSource);
-  if (!pixelShader) {
-    return 0;
-  }
-
-  GLuint program = glCreateProgram();
-  if (program) {
-    glAttachShader(program, vertexShader);
-    checkGlError("glAttachShader");
-    glAttachShader(program, pixelShader);
-    checkGlError("glAttachShader");
-    glLinkProgram(program);
-    GLint linkStatus = GL_FALSE;
-    glGetProgramiv(program, GL_LINK_STATUS, &linkStatus);
-    if (linkStatus != GL_TRUE) {
-      GLint bufLength = 0;
-      glGetProgramiv(program, GL_INFO_LOG_LENGTH, &bufLength);
-      if (bufLength) {
-        char* buf = (char*) malloc(bufLength);
-        if (buf) {
-          glGetProgramInfoLog(program, bufLength, NULL, buf);
-          LOGE("Could not link program:\n%s\n", buf);
-          free(buf);
-        }
-      }
-      glDeleteProgram(program);
-      program = 0;
-    }
-  }
-  return program;
-}
-
-GLuint gProgram;
 GLuint gvPositionHandle;
 
 //fixed
 GLuint tex_id = -1;
 GLuint gvTexcoordHandle;
 
+
+ShaderProgram shader_prog;
+
 bool setupGraphics(int w, int h) {
+  LOGI("setupGraphics(%d, %d)", w, h);
   float v = (float)sora::Vec2f_testFunc((float)w, (float)h);
   LOGI("testfunc %f", v);
 
   LOGI("Version : %s", GLHelper::GetVersion().c_str());
   LOGI("Vendor : %s", GLHelper::GetVender().c_str());
-  LOGI("Renderer : %d", GLHelper::GetRenderer().c_str());
-  //printGLString("Extensions", GL_EXTENSIONS);
+  LOGI("Renderer : %s", GLHelper::GetRenderer().c_str());
+  LOGI("Extensions : %s", GLHelper::GetExtensions().c_str());
 
   //load shader file
   const char *vert_path = "v_simple.glsl";
@@ -187,25 +77,23 @@ bool setupGraphics(int w, int h) {
   frag_file.Open();
   const char *vert_src = (const char*)(vert_file.start);
   const char *frag_src = (const char*)(frag_file.start);
-  gProgram = createProgram(vert_src, frag_src);
-  
-  LOGI("setupGraphics(%d, %d)", w, h);
-  //gProgram = createProgram(gVertexShader, gFragmentShader);
-  
-  if (!gProgram) {
+  bool prog_result = shader_prog.Init(vert_src, frag_src);
+  if(prog_result == false) {
     LOGE("Could not create program.");
     return false;
   }
-  gvPositionHandle = glGetAttribLocation(gProgram, "vPosition");
-  checkGlError("glGetAttribLocation");
+  
+  gvPositionHandle = shader_prog.GetAttribLocation("vPosition");
+  GLHelper::CheckError("glGetAttribLocation");
   LOGI("glGetAttribLocation(\"vPosition\") = %d\n", gvPositionHandle);
 
-  gvTexcoordHandle = glGetAttribLocation(gProgram, "a_texcoord");
-  checkGlError("glGetAttribLocation");
+  
+  gvTexcoordHandle = shader_prog.GetAttribLocation("a_texcoord");
+  GLHelper::CheckError("glGetAttribLocation");
   LOGI("glGetAttribLocation(\"a_texcoord\") = %d\n", gvTexcoordHandle);
 
   glViewport(0, 0, w, h);
-  checkGlError("glViewport");
+  GLHelper::CheckError("glViewport");
 
   //create sample texture
   GLubyte pixel_data[4*3] = {
@@ -239,25 +127,25 @@ void renderFrame() {
     grey = 0.0f;
   }
   glClearColor(grey, grey, grey, 1.0f);
-  checkGlError("glClearColor");
+  GLHelper::CheckError("glClearColor");
   glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-  checkGlError("glClear");
+  GLHelper::CheckError("glClear");
 
-  glUseProgram(gProgram);
-  checkGlError("glUseProgram");
+  shader_prog.Use();
+  GLHelper::CheckError("glUseProgram");
 
   glVertexAttribPointer(gvPositionHandle, 2, GL_FLOAT, GL_FALSE, 0, gTriangleVertices);
-  checkGlError("glVertexAttribPointer");
+  GLHelper::CheckError("glVertexAttribPointer");
   glEnableVertexAttribArray(gvPositionHandle);
-  checkGlError("glEnableVertexAttribArray");
+  GLHelper::CheckError("glEnableVertexAttribArray");
 
   glVertexAttribPointer(gvTexcoordHandle, 2, GL_FLOAT, GL_FALSE, 0, texcoord_list);
-  checkGlError("glVertexAttribPointer");
+  GLHelper::CheckError("glVertexAttribPointer");
   glEnableVertexAttribArray(gvTexcoordHandle);
-  checkGlError("glEnableVertexAttribArray");
+  GLHelper::CheckError("glEnableVertexAttribArray");
 
   glDrawArrays(GL_TRIANGLES, 0, 3);
-  checkGlError("glDrawArrays");
+  GLHelper::CheckError("glDrawArrays");
 }
 
 void SORA_setup_graphics(int w, int h) {
@@ -280,6 +168,9 @@ SR_C_DLL void SORA_init_gl_env() {
 }
 
 void SORA_update_frame(float dt) {
+}
+
+void SORA_cleanup_graphics() {
 }
 
 #if SR_ANDROID
