@@ -47,12 +47,12 @@
 using sora::GLHelper;
 using sora::ShaderProgram;
 
-GLuint gvPositionHandle;
-
 //fixed
 GLuint tex_id = -1;
-GLuint gvTexcoordHandle;
 
+GLuint mvp_handle;
+GLuint texcoord_handle;
+GLuint position_handle;
 
 ShaderProgram shader_prog;
 
@@ -83,14 +83,15 @@ bool setupGraphics(int w, int h) {
     return false;
   }
   
-  gvPositionHandle = shader_prog.GetAttribLocation("vPosition");
-  GLHelper::CheckError("glGetAttribLocation");
-  LOGI("glGetAttribLocation(\"vPosition\") = %d\n", gvPositionHandle);
+  position_handle = shader_prog.GetAttribLocation("a_position");
+  LOGI("glGetAttribLocation(\"a_position\") = %d", position_handle);
 
   
-  gvTexcoordHandle = shader_prog.GetAttribLocation("a_texcoord");
-  GLHelper::CheckError("glGetAttribLocation");
-  LOGI("glGetAttribLocation(\"a_texcoord\") = %d\n", gvTexcoordHandle);
+  texcoord_handle = shader_prog.GetAttribLocation("a_texcoord");
+  LOGI("glGetAttribLocation(\"a_texcoord\") = %d", texcoord_handle);
+
+  mvp_handle = shader_prog.GetUniformLocation("u_modelviewprojection");
+  LOGI("GetUniformLocation(\"u_modelviewprojection\") = %d", mvp_handle);
 
   glViewport(0, 0, w, h);
   GLHelper::CheckError("glViewport");
@@ -127,25 +128,23 @@ void renderFrame() {
     grey = 0.0f;
   }
   glClearColor(grey, grey, grey, 1.0f);
-  GLHelper::CheckError("glClearColor");
   glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-  GLHelper::CheckError("glClear");
 
   shader_prog.Use();
-  GLHelper::CheckError("glUseProgram");
 
-  glVertexAttribPointer(gvPositionHandle, 2, GL_FLOAT, GL_FALSE, 0, gTriangleVertices);
-  GLHelper::CheckError("glVertexAttribPointer");
-  glEnableVertexAttribArray(gvPositionHandle);
-  GLHelper::CheckError("glEnableVertexAttribArray");
+  glVertexAttribPointer(position_handle, 2, GL_FLOAT, GL_FALSE, 0, gTriangleVertices);
+  glEnableVertexAttribArray(position_handle);
 
-  glVertexAttribPointer(gvTexcoordHandle, 2, GL_FLOAT, GL_FALSE, 0, texcoord_list);
-  GLHelper::CheckError("glVertexAttribPointer");
-  glEnableVertexAttribArray(gvTexcoordHandle);
-  GLHelper::CheckError("glEnableVertexAttribArray");
+  glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, 0, texcoord_list);
+  glEnableVertexAttribArray(texcoord_handle);
+
+
+  glm::mat4 projection = glm::ortho(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);
+  glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0));
+  glm::mat4 mvp = projection * modelview;
+  glUniformMatrix4fv(mvp_handle, 1, 0, glm::value_ptr(mvp));
 
   glDrawArrays(GL_TRIANGLES, 0, 3);
-  GLHelper::CheckError("glDrawArrays");
 }
 
 void SORA_setup_graphics(int w, int h) {

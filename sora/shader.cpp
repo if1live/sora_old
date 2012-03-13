@@ -110,7 +110,9 @@ bool ShaderProgram::Link() {
 }
 */
 bool ShaderProgram::Init(const char *v_src, const char *f_src) {
-  SR_ASSERT(prog == 0);
+  if(prog != 0) {
+    Deinit();
+  }
 
   if(false == vert_shader_.InitVertexShader(v_src)) {
     return false;

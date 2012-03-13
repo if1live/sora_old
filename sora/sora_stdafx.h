@@ -72,6 +72,11 @@
 
 #include "nodepng/lodepng.h"
 
+//glm
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 #endif
 
 #endif  // SORA_SORA_STDAFX_H_

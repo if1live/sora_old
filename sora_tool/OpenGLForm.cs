@@ -37,12 +37,10 @@ namespace ManagedOpenGL.Engine.Windows
         protected void OnLoad(object sender, EventArgs e)
         {
             //base.OnLoad(e);
-
             WindowsOpenGLNative.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
 
             this.Init();
             this.ClientSize = WindowSize;
-            this.AfterInitGL();
             this.InitGL();
         }
 
