@@ -22,6 +22,7 @@ LOCAL_C_INCLUDES := \
 	.	\
 	../sora	\
 	../sdk/libzip/jni	\
+	../sdk/glm-0.9.3.1
 	
 LOCAL_CFLAGS := 
 

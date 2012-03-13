@@ -22,21 +22,20 @@
 #include "sora_main.h"
 
 //android  OpenGL ES 2.0 code based
-
 #if SR_ANDROID
 #include <jni.h>
-#include <android/log.h>
-
-#include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
-#else
-#include <GL/glew.h>
-#include <GL/glfw.h>
 #endif
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
+#if SR_USE_PCH == 0
+#include "gl_inc.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
+#include <cstdio>
+#include <cstdlib>
+#include <cmath>
+#endif
 
 #include "vector.h"
 #include "gl_helper.h"
