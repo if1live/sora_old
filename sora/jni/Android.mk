@@ -32,7 +32,6 @@ LOCAL_SRC_FILES := \
 	../common_string.cpp	\
 	../timer.cpp	\
 	../math_helper.cpp	\
-	../matrix.cpp	\
 	../logger.cpp	\
 	../mem.cpp	\
 	../vector.cpp	\
@@ -40,7 +39,6 @@ LOCAL_SRC_FILES := \
 	../gl_inc.cpp	\
 	../sys_locale.cpp	\
 	../shader.cpp	\
-	../matrix_stack.cpp	\
 	../filesystem.cpp	\
 	../low_level_c_file.cpp	\
 	../memory_file.cpp	\

@@ -56,13 +56,13 @@ struct Vector2 {
   enum { Dim = 2 };
   //data
   union {
-    float data[2];
+    T data[2];
     struct { T x, y; };
   };
 
   Vector2() : x(0), y(0) {}
   Vector2(T x, T y) : x(x), y(y) {}
-  Vector2(T (&v)[2]) : { memcpy(data, v, sizeof(T) * Dim); }
+  Vector2(T (&v)[2]) { memcpy(data, v, sizeof(T) * Dim); }
   Vector2&  operator+=(const Vector2 &o) {
     VecAdd(data, o.data, data);
     return *this;
@@ -134,14 +134,14 @@ struct Vector3 {
   enum { Dim = 3 };
   //data
   union {
-    float data[3];
+    T data[3];
     struct { T x, y, z; };
   };
 
   //operator 
   Vector3() : x(0), y(0), z(0) {}
   Vector3(T x, T y, T z) : x(x), y(y), z(z) {}
-  Vector3(T (&v)[3]) : { memcpy(data, v, sizeof(T) * Dim); }
+  Vector3(T (&v)[3]) { memcpy(data, v, sizeof(T) * Dim); }
   Vector3&  operator+=(const Vector3 &o) {
     VecAdd(data, o.data, data);
     return *this;
@@ -213,13 +213,13 @@ struct Vector4 {
   enum { Dim = 4 };
   //data
   union {
-    float data[4];
+    T data[4];
     struct { T x, y, z, w; };
   };
 
   //operator 
   Vector4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
-  Vector4(T (&v)[4]) : { memcpy(data, v, sizeof(T) * Dim); }
+  Vector4(T (&v)[4]) { memcpy(data, v, sizeof(T) * Dim); }
   Vector4&  operator+=(const Vector4 &o) {
     VecAdd(data, o.data, data);
     return *this;
