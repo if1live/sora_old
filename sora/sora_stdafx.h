@@ -63,8 +63,8 @@
 
 //vector는 뻔하니까
 #include "vector.h"
-#include "matrix.h"
-#include "color.h"
+//#include "matrix.h"
+//#include "color.h"
 
 //boost
 #include <boost/foreach.hpp>

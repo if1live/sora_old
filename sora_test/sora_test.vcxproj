@@ -83,8 +83,6 @@
     <ClCompile Include="filesystem_test.cpp" />
     <ClCompile Include="low_level_c_file_test.cpp" />
     <ClCompile Include="math_helper_test.cpp" />
-    <ClCompile Include="matrix_stack_test.cpp" />
-    <ClCompile Include="matrix_test.cpp" />
     <ClCompile Include="mem_test.cpp" />
     <ClCompile Include="shader_test.cpp" />
     <ClCompile Include="sora_test_stdafx.cpp">

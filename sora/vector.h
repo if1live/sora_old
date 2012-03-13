@@ -30,12 +30,261 @@
 //#endif
 
 namespace sora {;
-typedef float Vec2f[2];
-typedef float Vec3f[3];
-typedef float Vec4f[4];
-typedef Vec2f Vec2;
-typedef Vec3f Vec3;
-typedef Vec4f Vec4;
+typedef float vec2f_t[2];
+typedef float vec3f_t[3];
+typedef float vec4f_t[4];
+typedef vec2f_t vec2_t;
+typedef vec3f_t vec3_t;
+typedef vec4f_t vec4_t;
+
+template<typename T> struct Vector2;
+template<typename T> struct Vector3;
+template<typename T> struct Vector4;
+typedef Vector2<float> Vec2f;
+typedef Vector3<float> Vec3f;
+typedef Vector4<float> Vec4f;
+typedef Vector2<float> Vec2;
+typedef Vector3<float> Vec3;
+typedef Vector4<float> Vec4;
+typedef Vector2<ushort> Vec2us;
+typedef Vector3<ushort> Vec3us;
+typedef Vector4<ushort> Vec4us;
+
+template<typename T>
+struct Vector2 {
+  typedef T ElemType;
+  enum { Dim = 2 };
+  //data
+  union {
+    float data[2];
+    struct { T x, y; };
+  };
+
+  Vector2() : x(0), y(0) {}
+  Vector2(T x, T y) : x(x), y(y) {}
+  Vector2(T (&v)[2]) : { memcpy(data, v, sizeof(T) * Dim); }
+  Vector2&  operator+=(const Vector2 &o) {
+    VecAdd(data, o.data, data);
+    return *this;
+  }
+  Vector2   operator+(const Vector2 &o) const {
+    Vector2 tmp = *this;
+    tmp += o;
+    return tmp;
+  }
+  Vector2&  operator-=(const Vector2 &o) {
+    VecSub(data, o.data, data);
+    return *this;
+  }
+  Vector2   operator-(const Vector2 &o) const {
+    Vector2 tmp = *this;
+    tmp -= o;
+    return tmp;
+  }
+  Vector2&  operator*=(T o) {
+    VecMul(data, o, data);
+    return *this;
+  }
+  Vector2   operator*(T o) const {
+    Vector2 tmp = *this;
+    tmp *= o;
+    return tmp;
+  }
+  Vector2&  operator/=(T o) {
+    VecDiv(data, o, data);
+    return *this;
+  }
+  Vector2   operator/(T o) const {
+    Vector2 tmp = *this;
+    tmp /= o;
+    return tmp;
+  }
+  Vector2   operator-() const {
+    Vector2 tmp = *this;
+    tmp *= -1;
+    return tmp;
+  }
+  T LengthSquare() const {
+    return VecLengthSquare(data);
+  }
+  T Length() const {
+    return VecLength(data);
+  }
+  void Normalized() {
+    VecNormalized(data);
+  }
+  Vector2 Normalize() const {
+    Vector2 tmp = *this;
+    tmp.Normalized();
+    return tmp;
+  }
+  T Dot(const Vector2 &o) const {
+    return VecDot(data, o.data);
+  }
+  bool operator==(const Vector2 &o) const {
+    return (memcmp(data, o.data, sizeof(T) * Dim) == 0);
+  }
+  bool operator!=(const Vector2 &o) const {
+    return !(*this == o);
+  }
+};
+
+template<typename T>
+struct Vector3 {
+  enum { Dim = 3 };
+  //data
+  union {
+    float data[3];
+    struct { T x, y, z; };
+  };
+
+  //operator 
+  Vector3() : x(0), y(0), z(0) {}
+  Vector3(T x, T y, T z) : x(x), y(y), z(z) {}
+  Vector3(T (&v)[3]) : { memcpy(data, v, sizeof(T) * Dim); }
+  Vector3&  operator+=(const Vector3 &o) {
+    VecAdd(data, o.data, data);
+    return *this;
+  }
+  Vector3   operator+(const Vector3 &o) const {
+    Vector3 tmp = *this;
+    tmp += o;
+    return tmp;
+  }
+  Vector3&  operator-=(const Vector3 &o) {
+    VecSub(data, o.data, data);
+    return *this;
+  }
+  Vector3   operator-(const Vector3 &o) const {
+    Vector3 tmp = *this;
+    tmp -= o;
+    return tmp;
+  }
+  Vector3&  operator*=(T o) {
+    VecMul(data, o, data);
+    return *this;
+  }
+  Vector3   operator*(T o) const {
+    Vector3 tmp = *this;
+    tmp *= o;
+    return tmp;
+  }
+  Vector3&  operator/=(T o) {
+    VecDiv(data, o, data);
+    return *this;
+  }
+  Vector3   operator/(T o) const {
+    Vector3 tmp = *this;
+    tmp /= o;
+    return tmp;
+  }
+  Vector3   operator-() const {
+    Vector3 tmp = *this;
+    tmp *= -1;
+    return tmp;
+  }
+  T LengthSquare() const {
+    return VecLengthSquare(data);
+  }
+  T Length() const {
+    return VecLength(data);
+  }
+  void Normalized() {
+    VecNormalized(data);
+  }
+  Vector3 Normalize() const {
+    Vector3 tmp = *this;
+    tmp.Normalized();
+    return tmp;
+  }
+  T Dot(const Vector3 &o) const {
+    return VecDot(data, o.data);
+  }
+  bool operator==(const Vector3 &o) const {
+    return (memcmp(data, o.data, sizeof(T) * Dim) == 0);
+  }
+  bool operator!=(const Vector3 &o) const {
+    return !(*this == o);
+  }
+};
+
+template<typename T>
+struct Vector4 {
+  enum { Dim = 4 };
+  //data
+  union {
+    float data[4];
+    struct { T x, y, z, w; };
+  };
+
+  //operator 
+  Vector4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
+  Vector4(T (&v)[4]) : { memcpy(data, v, sizeof(T) * Dim); }
+  Vector4&  operator+=(const Vector4 &o) {
+    VecAdd(data, o.data, data);
+    return *this;
+  }
+  Vector4   operator+(const Vector4 &o) const {
+    Vector4 tmp = *this;
+    tmp += o;
+    return tmp;
+  }
+  Vector4&  operator-=(const Vector4 &o) {
+    VecSub(data, o.data, data);
+    return *this;
+  }
+  Vector4   operator-(const Vector4 &o) const {
+    Vector4 tmp = *this;
+    tmp -= o;
+    return tmp;
+  }
+  Vector4&  operator*=(T o) {
+    VecMul(data, o, data);
+    return *this;
+  }
+  Vector4   operator*(T o) const {
+    Vector4 tmp = *this;
+    tmp *= o;
+    return tmp;
+  }
+  Vector4&  operator/=(T o) {
+    VecDiv(data, o, data);
+    return *this;
+  }
+  Vector4   operator/(T o) const {
+    Vector4 tmp = *this;
+    tmp /= o;
+    return tmp;
+  }
+  Vector4   operator-() const {
+    Vector4 tmp = *this;
+    tmp *= -1;
+    return tmp;
+  }
+  T LengthSquare() const {
+    return VecLengthSquare(data);
+  }
+  T Length() const {
+    return VecLength(data);
+  }
+  void Normalized() {
+    VecNormalized(data);
+  }
+  Vector4 Normalize() const {
+    Vector4 tmp = *this;
+    tmp.Normalized();
+    return tmp;
+  }
+  T Dot(const Vector4 &o) const {
+    return VecDot(data, o.data);
+  }
+  bool operator==(const Vector4 &o) const {
+    return (memcmp(data, o.data, sizeof(T) * Dim) == 0);
+  }
+  bool operator!=(const Vector4 &o) const {
+    return !(*this == o);
+  }
+};
 
 template<typename T, int D>
 void VecSetZero(T (&a)[D]) {

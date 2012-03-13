@@ -21,9 +21,6 @@
     <ClCompile Include="testmain.cc">
       <Filter>support</Filter>
     </ClCompile>
-    <ClCompile Include="matrix_test.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="mem_test.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -44,9 +41,6 @@
     </ClCompile>
     <ClCompile Include="sys_locale_test.cpp">
       <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="matrix_stack_test.cpp">
-      <Filter>render</Filter>
     </ClCompile>
     <ClCompile Include="shader_test.cpp">
       <Filter>render</Filter>

@@ -37,9 +37,6 @@
     <ClCompile Include="math_helper.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="matrix.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="mem.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -63,9 +60,6 @@
     </ClCompile>
     <ClCompile Include="sora_main.cpp">
       <Filter>main</Filter>
-    </ClCompile>
-    <ClCompile Include="matrix_stack.cpp">
-      <Filter>render</Filter>
     </ClCompile>
     <ClCompile Include="shader.cpp">
       <Filter>render</Filter>
@@ -103,9 +97,6 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="math_helper.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="matrix.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="mem.h">
@@ -146,9 +137,6 @@
     </ClInclude>
     <ClInclude Include="sora_main.h">
       <Filter>main</Filter>
-    </ClInclude>
-    <ClInclude Include="matrix_stack.h">
-      <Filter>render</Filter>
     </ClInclude>
     <ClInclude Include="shader.h">
       <Filter>render</Filter>

@@ -77,7 +77,6 @@
     <ClCompile Include="gl_helper.cpp" />
     <ClCompile Include="gl_inc.cpp" />
     <ClCompile Include="low_level_c_file.cpp" />
-    <ClCompile Include="matrix_stack.cpp" />
     <ClCompile Include="memory_file.cpp" />
     <ClCompile Include="nodepng\lodepng.cpp" />
     <ClCompile Include="shader.cpp" />
@@ -85,7 +84,6 @@
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="math_helper.cpp" />
-    <ClCompile Include="matrix.cpp" />
     <ClCompile Include="mem.cpp" />
     <ClCompile Include="sora_main.cpp" />
     <ClCompile Include="sora_stdafx.cpp">
@@ -105,7 +103,6 @@
     <ClInclude Include="gl_helper.h" />
     <ClInclude Include="gl_inc.h" />
     <ClInclude Include="low_level_c_file.h" />
-    <ClInclude Include="matrix_stack.h" />
     <ClInclude Include="memory_file.h" />
     <ClInclude Include="nodepng\lodepng.h" />
     <ClInclude Include="rect.h" />
@@ -114,7 +111,6 @@
     <ClInclude Include="timer.h" />
     <ClInclude Include="logger.h" />
     <ClInclude Include="math_helper.h" />
-    <ClInclude Include="matrix.h" />
     <ClInclude Include="mem.h" />
     <ClInclude Include="shared_ptr_inc.h" />
     <ClInclude Include="sora_main.h" />
