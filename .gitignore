@@ -2,6 +2,7 @@
 *.sdf
 *.obj
 *.a
+*if1live*
 armeabi
 /buildTmp
 NUL
