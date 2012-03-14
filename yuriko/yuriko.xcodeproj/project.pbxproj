@@ -1,0 +1,294 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EAEEF2991510746100003AC0 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAEEF2981510746100003AC0 /* UIKit.framework */; };
+		EAEEF29B1510746100003AC0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAEEF29A1510746100003AC0 /* Foundation.framework */; };
+		EAEEF29D1510746100003AC0 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAEEF29C1510746100003AC0 /* CoreGraphics.framework */; };
+		EAEEF29F1510746100003AC0 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAEEF29E1510746100003AC0 /* GLKit.framework */; };
+		EAEEF2A11510746100003AC0 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAEEF2A01510746100003AC0 /* OpenGLES.framework */; };
+		EAEEF2FC151075A900003AC0 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = EAEEF2F8151075A900003AC0 /* InfoPlist.strings */; };
+		EAEEF2FD151075A900003AC0 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = EAEEF2FA151075A900003AC0 /* ViewController.xib */; };
+		EAEEF300151075B300003AC0 /* Shader.fsh in Sources */ = {isa = PBXBuildFile; fileRef = EAEEF2FE151075B300003AC0 /* Shader.fsh */; };
+		EAEEF301151075B300003AC0 /* Shader.vsh in Sources */ = {isa = PBXBuildFile; fileRef = EAEEF2FF151075B300003AC0 /* Shader.vsh */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		EAEEF2941510746100003AC0 /* yuriko.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = yuriko.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EAEEF2981510746100003AC0 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		EAEEF29A1510746100003AC0 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		EAEEF29C1510746100003AC0 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		EAEEF29E1510746100003AC0 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
+		EAEEF2A01510746100003AC0 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		EAEEF2F11510759E00003AC0 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = SOURCE_ROOT; };
+		EAEEF2F21510759E00003AC0 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = SOURCE_ROOT; };
+		EAEEF2F31510759E00003AC0 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = SOURCE_ROOT; };
+		EAEEF2F41510759E00003AC0 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = SOURCE_ROOT; };
+		EAEEF2F51510759E00003AC0 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = SOURCE_ROOT; };
+		EAEEF2F61510759E00003AC0 /* yuriko-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "yuriko-Info.plist"; sourceTree = SOURCE_ROOT; };
+		EAEEF2F71510759E00003AC0 /* yuriko-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "yuriko-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		EAEEF2F9151075A900003AC0 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = SOURCE_ROOT; };
+		EAEEF2FB151075A900003AC0 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = en.lproj/ViewController.xib; sourceTree = SOURCE_ROOT; };
+		EAEEF2FE151075B300003AC0 /* Shader.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Shader.fsh; path = Shaders/Shader.fsh; sourceTree = SOURCE_ROOT; };
+		EAEEF2FF151075B300003AC0 /* Shader.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; name = Shader.vsh; path = Shaders/Shader.vsh; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EAEEF2911510746100003AC0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EAEEF2991510746100003AC0 /* UIKit.framework in Frameworks */,
+				EAEEF29B1510746100003AC0 /* Foundation.framework in Frameworks */,
+				EAEEF29D1510746100003AC0 /* CoreGraphics.framework in Frameworks */,
+				EAEEF29F1510746100003AC0 /* GLKit.framework in Frameworks */,
+				EAEEF2A11510746100003AC0 /* OpenGLES.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EAEEF2891510746100003AC0 = {
+			isa = PBXGroup;
+			children = (
+				EAEEF2A21510746100003AC0 /* yuriko */,
+				EAEEF2971510746100003AC0 /* Frameworks */,
+				EAEEF2951510746100003AC0 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EAEEF2951510746100003AC0 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EAEEF2941510746100003AC0 /* yuriko.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EAEEF2971510746100003AC0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EAEEF2981510746100003AC0 /* UIKit.framework */,
+				EAEEF29A1510746100003AC0 /* Foundation.framework */,
+				EAEEF29C1510746100003AC0 /* CoreGraphics.framework */,
+				EAEEF29E1510746100003AC0 /* GLKit.framework */,
+				EAEEF2A01510746100003AC0 /* OpenGLES.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EAEEF2A21510746100003AC0 /* yuriko */ = {
+			isa = PBXGroup;
+			children = (
+				EAEEF2F8151075A900003AC0 /* InfoPlist.strings */,
+				EAEEF2FA151075A900003AC0 /* ViewController.xib */,
+				EAEEF2F11510759E00003AC0 /* AppDelegate.h */,
+				EAEEF2F21510759E00003AC0 /* AppDelegate.m */,
+				EAEEF2F31510759E00003AC0 /* main.m */,
+				EAEEF2F41510759E00003AC0 /* ViewController.h */,
+				EAEEF2F51510759E00003AC0 /* ViewController.m */,
+				EAEEF2F61510759E00003AC0 /* yuriko-Info.plist */,
+				EAEEF2F71510759E00003AC0 /* yuriko-Prefix.pch */,
+				EAEEF2FE151075B300003AC0 /* Shader.fsh */,
+				EAEEF2FF151075B300003AC0 /* Shader.vsh */,
+				EAEEF2A31510746100003AC0 /* Supporting Files */,
+			);
+			path = yuriko;
+			sourceTree = "<group>";
+		};
+		EAEEF2A31510746100003AC0 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EAEEF2931510746100003AC0 /* yuriko */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EAEEF2BA1510746100003AC0 /* Build configuration list for PBXNativeTarget "yuriko" */;
+			buildPhases = (
+				EAEEF2901510746100003AC0 /* Sources */,
+				EAEEF2911510746100003AC0 /* Frameworks */,
+				EAEEF2921510746100003AC0 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = yuriko;
+			productName = yuriko;
+			productReference = EAEEF2941510746100003AC0 /* yuriko.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EAEEF28B1510746100003AC0 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = EAEEF28E1510746100003AC0 /* Build configuration list for PBXProject "yuriko" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = EAEEF2891510746100003AC0;
+			productRefGroup = EAEEF2951510746100003AC0 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EAEEF2931510746100003AC0 /* yuriko */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EAEEF2921510746100003AC0 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EAEEF2FC151075A900003AC0 /* InfoPlist.strings in Resources */,
+				EAEEF2FD151075A900003AC0 /* ViewController.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EAEEF2901510746100003AC0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EAEEF300151075B300003AC0 /* Shader.fsh in Sources */,
+				EAEEF301151075B300003AC0 /* Shader.vsh in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		EAEEF2F8151075A900003AC0 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EAEEF2F9151075A900003AC0 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		EAEEF2FA151075A900003AC0 /* ViewController.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EAEEF2FB151075A900003AC0 /* en */,
+			);
+			name = ViewController.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		EAEEF2B81510746100003AC0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		EAEEF2B91510746100003AC0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EAEEF2BB1510746100003AC0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "yuriko-Prefix.pch";
+				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
+				INFOPLIST_FILE = "yuriko-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		EAEEF2BC1510746100003AC0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "yuriko-Prefix.pch";
+				"GCC_THUMB_SUPPORT[arch=armv6]" = "";
+				INFOPLIST_FILE = "yuriko-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EAEEF28E1510746100003AC0 /* Build configuration list for PBXProject "yuriko" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EAEEF2B81510746100003AC0 /* Debug */,
+				EAEEF2B91510746100003AC0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EAEEF2BA1510746100003AC0 /* Build configuration list for PBXNativeTarget "yuriko" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EAEEF2BB1510746100003AC0 /* Debug */,
+				EAEEF2BC1510746100003AC0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EAEEF28B1510746100003AC0 /* Project object */;
+}
