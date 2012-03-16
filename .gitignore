@@ -1,6 +1,5 @@
 *.suo
 *.sdf
-*.obj
 *.a
 *if1live*
 armeabi
@@ -27,7 +26,6 @@ NUL
 *.user
 *Release*
 *NUL
-*/assets/*
 */gen/*
 */bin/*
 /yukino/.classpath
