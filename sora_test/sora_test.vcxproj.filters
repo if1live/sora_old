@@ -51,6 +51,9 @@
     <ClCompile Include="low_level_c_file_test.cpp">
       <Filter>io</Filter>
     </ClCompile>
+    <ClCompile Include="matrix_stack_test.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h">

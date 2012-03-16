@@ -42,9 +42,11 @@
 #include "memory_file.h"
 
 #include "shader.h"
+#include "matrix_stack.h"
 
 using sora::GLHelper;
 using sora::ShaderProgram;
+using sora::MatrixStack;
 
 //fixed
 GLuint tex_id = -1;
@@ -137,7 +139,7 @@ void renderFrame() {
   glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, 0, texcoord_list);
   glEnableVertexAttribArray(texcoord_handle);
 
-
+  MatrixStack mat_stack;
   glm::mat4 projection = glm::ortho(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);
   glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0));
   glm::mat4 mvp = projection * modelview;

@@ -76,6 +76,9 @@
     <ClCompile Include="zip_stream_file.cpp">
       <Filter>io</Filter>
     </ClCompile>
+    <ClCompile Include="matrix_stack.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -152,6 +155,9 @@
     </ClInclude>
     <ClInclude Include="zip_stream_file.h">
       <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix_stack.h">
+      <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
