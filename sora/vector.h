@@ -127,6 +127,12 @@ struct Vector2 {
   bool operator!=(const Vector2 &o) const {
     return !(*this == o);
   }
+  T& operator()(int idx) {
+    return data[idx];
+  }
+  T& operator[](int idx) {
+    return data[idx];
+  }
 };
 
 template<typename T>
@@ -206,6 +212,12 @@ struct Vector3 {
   bool operator!=(const Vector3 &o) const {
     return !(*this == o);
   }
+  T& operator()(int idx) {
+    return data[idx];
+  }
+  T& operator[](int idx) {
+    return data[idx];
+  }
 };
 
 template<typename T>
@@ -283,6 +295,12 @@ struct Vector4 {
   }
   bool operator!=(const Vector4 &o) const {
     return !(*this == o);
+  }
+  T& operator()(int idx) {
+    return data[idx];
+  }
+  T& operator[](int idx) {
+    return data[idx];
   }
 };
 

@@ -82,6 +82,9 @@
     <ClCompile Include="gl_buffer_object.cpp">
       <Filter>render</Filter>
     </ClCompile>
+    <ClCompile Include="obj_model.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -166,6 +169,9 @@
       <Filter>render</Filter>
     </ClInclude>
     <ClInclude Include="gl_buffer_object.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="obj_model.h">
       <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>

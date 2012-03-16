@@ -29,6 +29,7 @@ struct TangentVertex;
 struct Vertex2D;
 
 struct Vertex2D {
+  Vertex2D() : pos(0, 0), texcoord(0, 0) {}
   Vertex2D(float x, float y, float s, float t)
     : pos(x, y), texcoord(s, t) {}
 
@@ -37,6 +38,7 @@ struct Vertex2D {
 };
 
 struct Vertex {
+  Vertex() : pos(0, 0, 0), texcoord(0, 0), normal(1, 0, 0) {}
   Vertex(float x, float y, float z, float s, float t, float nx, float ny, float nz)
     : pos(x, y, z), texcoord(s, t), normal(nx, ny, nz) {}
   Vec3f pos;

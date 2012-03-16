@@ -44,9 +44,12 @@
 #include "shader.h"
 #include "matrix_stack.h"
 
+#include "obj_model.h"
+
 using sora::GLHelper;
 using sora::ShaderProgram;
 using sora::MatrixStack;
+using sora::ObjModel;
 
 //fixed
 GLuint tex_id = -1;
@@ -57,8 +60,19 @@ GLuint position_handle;
 
 ShaderProgram shader_prog;
 
+float win_width = 0;
+float win_height = 0;
+
+ObjModel obj_model;
+
 bool setupGraphics(int w, int h) {
   LOGI("setupGraphics(%d, %d)", w, h);
+  win_width = w;
+  win_height = h;
+
+  //glEnable(GL_CULL_FACE);
+  glEnable(GL_DEPTH_TEST);
+
   float v = (float)sora::Vec2f_testFunc((float)w, (float)h);
   LOGI("testfunc %f", v);
 
@@ -68,8 +82,8 @@ bool setupGraphics(int w, int h) {
   LOGI("Extensions : %s", GLHelper::GetExtensions().c_str());
 
   //load shader file
-  const char *vert_path = "v_simple.glsl";
-  const char *frag_path = "f_simple.glsl";
+  const char *vert_path = "shader/v_simple.glsl";
+  const char *frag_path = "shader/f_simple.glsl";
   std::string app_vert_path = sora::Filesystem::GetAppPath(vert_path);
   std::string app_frag_path = sora::Filesystem::GetAppPath(frag_path);
   sora::MemoryFile vert_file(app_vert_path);
@@ -111,6 +125,13 @@ bool setupGraphics(int w, int h) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
+  //load model
+  std::string path1 = sora::Filesystem::GetAppPath("obj/cube.obj");
+  sora::MemoryFile file1(path1);
+  file1.Open();
+  sora::ObjModelLoader loader;
+  loader.Load(file1.start, file1.end, &obj_model);
+
   return true;
 }
 
@@ -123,12 +144,16 @@ void renderFrame() {
   float v = sora::Vec2f_testFunc(-1, 1);	//0.0f
   texcoord_list[0] = v;
 
+  static float rot = 0;
+  rot += 0.05f;
+
   static float grey;
   grey += 0.01f;
   if (grey > 1.0f) {
     grey = 0.0f;
   }
-  glClearColor(grey, grey, grey, 1.0f);
+  //glClearColor(grey, grey, grey, 1.0f);
+  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   shader_prog.Use();
@@ -140,12 +165,21 @@ void renderFrame() {
   glEnableVertexAttribArray(texcoord_handle);
 
   MatrixStack mat_stack;
-  glm::mat4 projection = glm::ortho(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);
-  glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0));
+  //glm::mat4 projection = glm::ortho(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);
+  //glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0));
+  glm::mat4 projection = glm::perspective(60.0f, win_width / win_height, 1.0f, 100.0f);
+  glm::mat4 modelview = glm::lookAt(glm::vec3(0, 0, 3), glm::vec3(0), glm::vec3(0, 1, 0));
+  modelview = glm::rotate(modelview, rot, glm::vec3(0, 1, 0));
   glm::mat4 mvp = projection * modelview;
   glUniformMatrix4fv(mvp_handle, 1, 0, glm::value_ptr(mvp));
 
-  glDrawArrays(GL_TRIANGLES, 0, 3);
+
+  //draw cube
+  glVertexAttribPointer(position_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &obj_model.vert_list[0].pos);
+  glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &obj_model.vert_list[0].texcoord);
+  glDrawElements(GL_TRIANGLES, obj_model.index_list.size(), GL_UNSIGNED_SHORT, &obj_model.index_list[0]);
+
+  //glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 void SORA_setup_graphics(int w, int h) {

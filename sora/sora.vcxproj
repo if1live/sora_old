@@ -81,6 +81,7 @@
     <ClCompile Include="matrix_stack.cpp" />
     <ClCompile Include="memory_file.cpp" />
     <ClCompile Include="nodepng\lodepng.cpp" />
+    <ClCompile Include="obj_model.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="sys_locale.cpp" />
     <ClCompile Include="timer.cpp" />
@@ -109,6 +110,7 @@
     <ClInclude Include="matrix_stack.h" />
     <ClInclude Include="memory_file.h" />
     <ClInclude Include="nodepng\lodepng.h" />
+    <ClInclude Include="obj_model.h" />
     <ClInclude Include="rect.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="sys_locale.h" />
