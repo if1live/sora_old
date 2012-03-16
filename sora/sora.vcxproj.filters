@@ -79,6 +79,9 @@
     <ClCompile Include="matrix_stack.cpp">
       <Filter>render</Filter>
     </ClCompile>
+    <ClCompile Include="gl_buffer_object.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -157,6 +160,12 @@
       <Filter>io</Filter>
     </ClInclude>
     <ClInclude Include="matrix_stack.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="vertex.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_buffer_object.h">
       <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>

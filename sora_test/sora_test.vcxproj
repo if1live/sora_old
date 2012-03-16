@@ -96,6 +96,7 @@
     <ClCompile Include="vector_test.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gl_buffer_object_test.cpp" />
     <ClInclude Include="sora_test_stdafx.h" />
   </ItemGroup>
   <ItemGroup>

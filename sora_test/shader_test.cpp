@@ -41,6 +41,10 @@ TEST(Shader, InitVertexShader) {
   vsh.InitVertexShader(src);
   EXPECT_EQ(true, vsh.handle > 0);
   EXPECT_EQ(GL_VERTEX_SHADER, vsh.type);
+
+  //쉐이더 해제는 소멸자로 하지 않도록 고쳐서
+  //쉐이더를 복사해도 문제가 생기지 않도록햇다.
+  vsh.Deinit();
 }
 TEST(Shader, InitFragmentShader) {
   using sora::Shader;
@@ -60,6 +64,10 @@ TEST(Shader, InitFragmentShader) {
   EXPECT_EQ(true, fsh.handle > 0);
   EXPECT_EQ(GL_FRAGMENT_SHADER, fsh.type);
   EXPECT_EQ(true, fsh.IsInit());
+
+  //쉐이더 해제는 소멸자로 하지 않도록 고쳐서
+  //쉐이더를 복사해도 문제가 생기지 않도록햇다.
+  fsh.Deinit();
 }
 
 TEST(ShaderProgram, ShaderProgram) {
@@ -88,4 +96,8 @@ TEST(ShaderProgram, ShaderProgram) {
   prog.Init(v_src, f_src);
   EXPECT_EQ(true, prog.IsInit());
   EXPECT_EQ(true, prog.Validate(prog.prog));
+
+  //쉐이더 해제는 소멸자로 하지 않도록 고쳐서
+  //쉐이더를 복사해도 문제가 생기지 않도록햇다.
+  prog.Deinit();
 }

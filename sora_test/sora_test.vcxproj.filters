@@ -59,5 +59,8 @@
     <ClInclude Include="sora_test_stdafx.h">
       <Filter>support</Filter>
     </ClInclude>
+    <ClInclude Include="gl_buffer_object_test.cpp">
+      <Filter>render</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
