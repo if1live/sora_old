@@ -45,6 +45,7 @@
 #include "matrix_stack.h"
 
 #include "obj_model.h"
+#include "obj_loader.h"
 
 using sora::GLHelper;
 using sora::ShaderProgram;
@@ -67,8 +68,8 @@ ObjModel obj_model;
 
 bool setupGraphics(int w, int h) {
   LOGI("setupGraphics(%d, %d)", w, h);
-  win_width = w;
-  win_height = h;
+  win_width = (float)w;
+  win_height = (float)h;
 
   //glEnable(GL_CULL_FACE);
   glEnable(GL_DEPTH_TEST);
@@ -129,8 +130,8 @@ bool setupGraphics(int w, int h) {
   std::string path1 = sora::Filesystem::GetAppPath("obj/cube.obj");
   sora::MemoryFile file1(path1);
   file1.Open();
-  sora::ObjModelLoader loader;
-  loader.Load(file1.start, file1.end, &obj_model);
+  sora::ObjLoader loader;
+  loader.LoadObj(file1.start, file1.end, &obj_model);
 
   return true;
 }

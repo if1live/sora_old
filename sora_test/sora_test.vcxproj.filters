@@ -54,7 +54,7 @@
     <ClCompile Include="matrix_stack_test.cpp">
       <Filter>render</Filter>
     </ClCompile>
-    <ClCompile Include="obj_model_test.cpp">
+    <ClCompile Include="obj_loader_test.cpp">
       <Filter>render</Filter>
     </ClCompile>
   </ItemGroup>

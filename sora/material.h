@@ -18,19 +18,35 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_OBJ_MODEL_H_
-#define SORA_OBJ_MODEL_H_
+#ifndef SORA_MATERIAL_H_
+#define SORA_MATERIAL_H_
 
-#include "vertex.h"
 namespace sora {;
-
-struct ObjModel;
-
-struct SR_DLL ObjModel {
-  std::vector<Vertex> vert_list;
-  // GL_TRIANGLES로 그릴수 잇도록 정렬된 인덱스 리스트
-  std::vector<ushort> index_list;
+//재질데이터는 MTL을 기반으로 일단 구현한다. 나중에 다른 포맷에 맞춰서 확장하자
+struct Material {
+  Material() {
+    //http://people.sc.fsu.edu/~jburkardt/data/mtl/mtl.html
+    //mtl format default value
+    for(int i = 0 ; i < 3 ; i++) {
+      ambient[i] = 0.2f;
+      diffuse[i] = 0.8f;
+      specular[i] = 1.0f;
+    }
+    transparency = 1.0f;  //not transparent
+    shininess = 0.0f;
+  };
+  float ambient[3];
+  float diffuse[3];
+  float specular[3];
+  
+  float transparency;   //tr or d
+  float shininess;
+  //denotes the illumination model used by the material.
+  //illum = 1 indicates a flat material with no specular highlights, so the value of Ks is not used.
+  //illum = 2 denotes the presence of specular highlights, and so a specification for Ks is required.
+  uint illumination_model;
+  char tex_map[128];   //names a file containing a texture map, which should just be an ASCII dump of RGB values;
 };
 }
 
-#endif  // SORA_OBJ_MODEL_H_
+#endif  // SORA_MATERIAL_H_

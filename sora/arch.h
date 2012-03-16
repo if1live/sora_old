@@ -96,14 +96,4 @@ typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned int uint;
 
-//인덱스용 enum
-enum {
-  kX = 0,
-  kY = 1,
-  kZ = 2,
-  kW = 3,
-  kWidth = 2,
-  kHeight = 3,
-};
-
 #endif  // SORA_ARCH_H_

@@ -25,18 +25,29 @@
 #include <cstring>
 
 namespace sora {;
-//외부인터페이스로 왠지 접근할떄 쓸거같아서 단순배열로함
-//구조체로 감싸는거보다는 배열이 속편하니까
 //x, y, width, height
-typedef float Rectf[4]; 
-typedef int Recti[4];
+template<typename T>  struct Rect;
+typedef Rect<float> Rectf;
+typedef Rect<int> Recti;
+
+template<typename T>  
+struct Rect {
+  union {
+    struct { T x, y, width, height; };
+    T data[4];
+  };
+
+  Rect() { memset(data, 0, sizeof(T) * 4); }
+  Rect(T x, T y, T w, T h) : x(x), y(y), width(w), height(h) {}
+  ~Rect() {}
+};
 
 template<typename T>
 void RectInit(T x, T y, T w, T h, T (&rect)[4]) {
-  rect[kX] = x;
-  rect[kY] = y;
-  rect[kWidth] = w;
-  rect[kHeight] = h;
+  rect[0] = x;
+  rect[1] = y;
+  rect[2] = w;
+  rect[3] = h;
 }
 template<typename T>
 void RectCopy(const T (&src)[4], T (&dst)[4]) {
@@ -45,23 +56,23 @@ void RectCopy(const T (&src)[4], T (&dst)[4]) {
 
 template<typename T>
 void RectGetOrigin(const T (&rect)[4], T (&p)[2]) {
-  p[0] = rect[kX];
-  p[1] = rect[kY];
+  p[0] = rect[0];
+  p[1] = rect[1];
 }
 template<typename T>
 void RectGetSize(const T (&rect)[4], T (&p)[2]) {
-  p[0] = rect[kWidth];
-  p[1] = rect[kHeight];
+  p[0] = rect[2];
+  p[1] = rect[3];
 }
 
 template<typename T>
-T RectGetX(const T (&rect)[4]) { return rect[kX]; }
+T RectGetX(const T (&rect)[4]) { return rect[0]; }
 template<typename T>
-T RectGetY(const T (&rect)[4]) { return rect[kY]; }
+T RectGetY(const T (&rect)[4]) { return rect[1]; }
 template<typename T>
-T RectGetWidth(const T (&rect)[4]) { return rect[kWidth]; }
+T RectGetWidth(const T (&rect)[4]) { return rect[2]; }
 template<typename T>
-T RectGetHeight(const T (&rect)[4]) { return rect[kHeight]; }
+T RectGetHeight(const T (&rect)[4]) { return rect[3]; }
 
 template<typename T>
 bool RectEq(const T (&a)[4], const T (&b)[4]) {

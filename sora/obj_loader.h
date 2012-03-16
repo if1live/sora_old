@@ -18,19 +18,52 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_OBJ_MODEL_H_
-#define SORA_OBJ_MODEL_H_
+#ifndef SORA_OBJ_LOADER_H_
+#define SORA_OBJ_LOADER_H_
 
-#include "vertex.h"
+#include "vector.h"
+
 namespace sora {;
 
 struct ObjModel;
+struct Material;
 
-struct SR_DLL ObjModel {
-  std::vector<Vertex> vert_list;
-  // GL_TRIANGLES로 그릴수 잇도록 정렬된 인덱스 리스트
-  std::vector<ushort> index_list;
+struct ObjLoaderImpl;
+//http://people.sc.fsu.edu/~jburkardt/data/mtl/mtl.html
+class SR_DLL ObjLoader {
+public:
+  //파싱을 하는데 사용되는 스태틱 함수 모음
+  friend class ObjModel;
+  friend class Material;
+  //\n을 \0로 변환
+  static void NewLineToNullChar(uchar *start, uchar *end);
+  //\0을 기준으로 잘라서 문장의 시작을 의미하는 포인터 얻기
+  static int GetLineStartPos(uchar *start, uchar *end, std::vector<uchar*> &line_list);
+  static void GetLineLength(const std::vector<uchar*> &line_list, std::vector<int> &length_list);
+  
+  static int GetFaceVertexCount(int face_type, int elem_count);
+
+public:
+  ObjLoader();
+  ~ObjLoader();
+  void LoadObj(uchar *start, uchar *end, ObjModel *model);
+  void LoadMaterial(uchar *start, uchar *end, Material *material);
+
+private:
+  enum {
+    kFaceVertex,
+    kFaceVertexTex,
+    kFaceVertexTexNormal,
+    kFaceVertexNormal
+  };
+
+private:
+  void ParseObjLine(uchar *str, int n);
+
+private:
+  ObjLoaderImpl *impl;
 };
+
 }
 
-#endif  // SORA_OBJ_MODEL_H_
+#endif  // SORA_OBJ_LOADER_H_

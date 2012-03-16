@@ -37,9 +37,9 @@ typedef vec2f_t vec2_t;
 typedef vec3f_t vec3_t;
 typedef vec4f_t vec4_t;
 
-template<typename T> struct Vector2;
-template<typename T> struct Vector3;
-template<typename T> struct Vector4;
+template<typename T> struct SR_DLL Vector2;
+template<typename T> struct SR_DLL Vector3;
+template<typename T> struct SR_DLL Vector4;
 typedef Vector2<float> Vec2f;
 typedef Vector3<float> Vec3f;
 typedef Vector4<float> Vec4f;
@@ -51,7 +51,7 @@ typedef Vector3<ushort> Vec3us;
 typedef Vector4<ushort> Vec4us;
 
 template<typename T>
-struct Vector2 {
+struct SR_DLL Vector2 {
   typedef T ElemType;
   enum { Dim = 2 };
   //data
@@ -136,7 +136,7 @@ struct Vector2 {
 };
 
 template<typename T>
-struct Vector3 {
+struct SR_DLL Vector3 {
   enum { Dim = 3 };
   //data
   union {
@@ -221,7 +221,7 @@ struct Vector3 {
 };
 
 template<typename T>
-struct Vector4 {
+struct SR_DLL Vector4 {
   enum { Dim = 4 };
   //data
   union {
