@@ -36,6 +36,7 @@
 #define SORA_SPECULAR_COLOR_NAME        "u_specularColor"
 #define SORA_SPECULAR_SHININESS_NAME    "u_specularShininess"
 #define SORA_MATERIAL_ALPHA_NAME        "u_materialAlpha"
+#define SORA_LIGHT_POSITION_NAME        "u_lightPosition"
 
 namespace sora {;
 
@@ -49,6 +50,7 @@ enum {
   kLocationSpecularColor,
   kLocationSpecularShininess,
   kLocationMaterialAlpha,
+  kLocationLightPosition,
   kLocationCount,
 };
 enum {

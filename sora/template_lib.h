@@ -87,6 +87,10 @@ void CallDestructor(T *ptr) {
   ptr->~T();
 }
 
+template<typename T, int N>
+int GetArraySize(T (&arr)[N]) {
+  return N;
+}
 
 /////////////////////////////////////////
 template<typename T>

@@ -20,6 +20,7 @@
 // Ŭnicode please
 #include "sora_stdafx.h"
 #include "shader.h"
+#include "template_lib.h"
 
 #if SR_ANDROID
 #include "gl_inc.h"
@@ -203,7 +204,9 @@ const std::vector<LocationTuple> &ShaderProgram::GetLocationTupleList() {
       kLocationTypeUniform,   //kLocationSpecularColor,
       kLocationTypeUniform,   //kLocationSpecularShininess,
       kLocationTypeUniform,   //kLocationMaterialAlpha,
+      kLocationTypeUniform,   //kLocationLightPosition
     };
+
     const char *location_name_table[] = {
       SORA_MODELVIEWPROJECTION_NAME,    //kLocationModelViewProjection,
       SORA_POSITION_NAME,               //kLocationPosition,
@@ -214,7 +217,12 @@ const std::vector<LocationTuple> &ShaderProgram::GetLocationTupleList() {
       SORA_SPECULAR_COLOR_NAME,          //kLocationSpecularColor,
       SORA_SPECULAR_SHININESS_NAME,      //kLocationSpecularShininess,
       SORA_MATERIAL_ALPHA_NAME,          //kLocationMaterialAlpha,
+      SORA_LIGHT_POSITION_NAME,          //kLocationLightPosition
     };
+    const int type_count = GetArraySize(location_type_table);
+    const int name_count = GetArraySize(location_name_table);
+    SR_ASSERT(type_count == kLocationCount);
+    SR_ASSERT(name_count == kLocationCount);
     
     for(int i = 0 ; i < kLocationCount ; ++i) {
       int location_type = location_type_table[i];
