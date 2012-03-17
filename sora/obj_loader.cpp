@@ -32,14 +32,20 @@ namespace sora {;
 
 //pimpl pattern
 struct ObjLoaderImpl {
-  ObjLoaderImpl() : model(NULL), material(NULL) {}
+  ObjLoaderImpl() : model(NULL), mtl_list(NULL) {}
 
   std::vector<Vec3f> pos_list;
   std::vector<Vec2f> tex_list;
   std::vector<Vec3f> normal_list;
 
   ObjModel *model;
-  Material *material;
+  std::vector<Material> *mtl_list;
+
+  Material *GetLastMtl() {
+    SR_ASSERT(mtl_list != NULL);
+    SR_ASSERT(mtl_list->size() > 0);
+    return &mtl_list->back();
+  }
 };
 
 void ObjLoader::NewLineToNullChar(uchar *start, uchar *end) {
@@ -281,5 +287,109 @@ void ObjLoader::LoadObj(uchar *start, uchar *end, ObjModel *model) {
   }
 }
 
+void ObjLoader::LoadMtl(uchar *start, uchar *end, std::vector<Material> *mtl_list) {
+  impl->mtl_list = mtl_list;
+
+  ObjLoader::NewLineToNullChar(start, end);
+  vector<uchar*> line_list;
+  vector<int> length_list;
+  int line_count = ObjLoader::GetLineStartPos(start, end, line_list);
+  ObjLoader::GetLineLength(line_list, length_list);
+
+  for(int i = 0 ; i < line_count ; i++) {
+    uchar *line = line_list[i];
+    int length = length_list[i];
+    ParseMtlLine(line, length);
+  }
+}
+void ObjLoader::ParseMtlLine(uchar *str, int n) {
+  SR_ASSERT(str != NULL);
+  SR_ASSERT(n >= 1);
+
+  string line((char*)str, n);
+  // check is comment
+  if(line[0] == '#') {
+    return;
+  }
+
+  //parse line
+  typedef boost::tokenizer<boost::char_separator<char> > tokenizer;
+  boost::char_separator<char> sep(" \n\r\t", "/");
+  tokenizer tokens(line, sep);
+
+  tokenizer::iterator tok_iter = tokens.begin();
+  if(tok_iter == tokens.end()) {
+    return;
+  }
+
+  string cmd = *tok_iter;
+  ++tok_iter;
+  if(cmd == "newmtl") {
+    string mtl_name = *tok_iter;
+    Material mtl;
+    strcpy(mtl.name, mtl_name.c_str());
+    impl->mtl_list->push_back(mtl);
+
+  } else if(cmd == "Ka") {
+    Material *mtl = impl->GetLastMtl();
+    for(int i = 0 ; i < 3 ; i++) {
+      string color_str = *tok_iter;
+      ++tok_iter;
+      float color = (float)atof(color_str.c_str());
+      mtl->ambient[i] = color;
+    }
+
+  } else if(cmd == "Kd") {
+    Material *mtl = impl->GetLastMtl();
+    for(int i = 0 ; i < 3 ; i++) {
+      string color_str = *tok_iter;
+      ++tok_iter;
+      float color = (float)atof(color_str.c_str());
+      mtl->diffuse[i] = color;
+    }
+
+  } else if(cmd == "Ks") {
+    Material *mtl = impl->GetLastMtl();
+    for(int i = 0 ; i < 3 ; i++) {
+      string color_str = *tok_iter;
+      ++tok_iter;
+      float color = (float)atof(color_str.c_str());
+      mtl->specular[i] = color;
+    }
+
+  } else if(cmd == "illum") {
+    string illum_str = *tok_iter;
+    int illum = atoi(illum_str.c_str());
+    Material *mtl = impl->GetLastMtl();
+    mtl->illumination_model = illum;
+
+  } else if(cmd == "Ns") {
+    string s_str = *tok_iter;
+    float s = (float)atof(s_str.c_str());
+    Material *mtl = impl->GetLastMtl();
+    mtl->shininess = s;
+
+  } else if(cmd == "d") {
+    string alpha_str = *tok_iter;
+    float alpha = (float)atof(alpha_str.c_str());
+    Material *mtl = impl->GetLastMtl();
+    mtl->alpha = alpha;
+
+  } else if(cmd == "Tr") {
+    string alpha_str = *tok_iter;
+    float alpha = (float)atof(alpha_str.c_str());
+    Material *mtl = impl->GetLastMtl();
+    mtl->alpha = alpha;
+
+  } else if(cmd == "map_Ka") {
+    string filename= *tok_iter;
+    Material *mtl = impl->GetLastMtl();
+    strcpy(mtl->tex_map, filename.c_str());
+
+  } else {
+    SR_ASSERT(!"not valid cmd");
+  }
+  
+}
 }
 

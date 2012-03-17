@@ -50,7 +50,7 @@ public:
   ObjLoader();
   ~ObjLoader();
   void LoadObj(uchar *start, uchar *end, ObjModel *model);
-  void LoadMaterial(uchar *start, uchar *end, Material *material);
+  void LoadMtl(uchar *start, uchar *end, std::vector<Material> *mtl_list);
 
 private:
   enum {
@@ -62,6 +62,7 @@ private:
 
 private:
   void ParseObjLine(uchar *str, int n);
+  void ParseMtlLine(uchar *str, int n);
 
 private:
   ObjLoaderImpl *impl;

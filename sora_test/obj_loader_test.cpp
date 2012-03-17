@@ -23,6 +23,7 @@
 #include "memory_file.h"
 #include "filesystem.h"
 #include "obj_model.h"
+#include "material.h"
 
 using namespace std;
 using namespace sora;
@@ -115,4 +116,66 @@ TEST(ObjLoader, Cube_Load) {
   ObjLoader loader;
   loader.LoadObj(file1.start, file1.end, &model);
 
+}
+
+TEST(ObjLoader, LoadMtl) {
+  using sora::MemoryFile;
+  string path1 = Filesystem::GetAppPath("mtl/example.mtl");
+  MemoryFile file1(path1);
+  EXPECT_EQ(false, file1.IsOpened());
+  ASSERT_EQ(true, file1.Open());
+
+  vector<Material> mtl_list;
+  ObjLoader loader;
+  loader.LoadMtl(file1.start, file1.end, &mtl_list);
+
+/*
+#sample material
+newmtl flatwhite
+Ka  0.5000  0.5000  0.5000
+Kd  1.0000  1.0000  1.0000
+illum 1
+
+newmtl shinyred
+Ka  0.1985  0.0000  0.0000
+Kd  0.5921  0.0167  0.0000
+Ks  0.5973  0.2083  0.2083
+illum 2
+Ns 100.2235
+
+newmtl clearblue
+Ka  0.0394  0.0394  0.3300
+Kd  0.1420  0.1420  0.9500
+illum 1
+Tr 0.4300
+*/
+
+  ASSERT_EQ(3, mtl_list.size());
+  Material &mtl1 = mtl_list[0];
+  EXPECT_STREQ("flatwhite", mtl1.name);
+  EXPECT_EQ(0.5f, mtl1.ambient[0]);
+  EXPECT_EQ(0.5f, mtl1.ambient[1]);
+  EXPECT_EQ(0.5f, mtl1.ambient[2]);
+  EXPECT_EQ(1.0f, mtl1.diffuse[0]);
+  EXPECT_EQ(1.0f, mtl1.diffuse[1]);
+  EXPECT_EQ(1.0f, mtl1.diffuse[2]);
+  EXPECT_EQ(1, mtl1.illumination_model);
+
+
+  Material &mtl2 = mtl_list[1];
+  EXPECT_STREQ("shinyred", mtl2.name);
+  EXPECT_EQ(0.1985f, mtl2.ambient[0]);
+  EXPECT_EQ(0.0f, mtl2.ambient[1]);
+  EXPECT_EQ(0.0f, mtl2.ambient[2]);
+  EXPECT_EQ(0.5921f, mtl2.diffuse[0]);
+  EXPECT_EQ(0.0167f, mtl2.diffuse[1]);
+  EXPECT_EQ(0.0f, mtl2.diffuse[2]);
+  EXPECT_EQ(0.5973f, mtl2.specular[0]);
+  EXPECT_EQ(0.2083f, mtl2.specular[1]);
+  EXPECT_EQ(0.2083f, mtl2.specular[2]);
+  EXPECT_EQ(100.2235f, mtl2.shininess);
+  EXPECT_EQ(2, mtl2.illumination_model);
+
+  Material &mtl3 = mtl_list[2];
+  EXPECT_EQ(0.43f, mtl3.alpha);
 }

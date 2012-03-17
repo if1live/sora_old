@@ -25,6 +25,9 @@ namespace sora {;
 //재질데이터는 MTL을 기반으로 일단 구현한다. 나중에 다른 포맷에 맞춰서 확장하자
 struct Material {
   Material() {
+    strcpy(name, "");
+    strcpy(tex_map, "");
+
     //http://people.sc.fsu.edu/~jburkardt/data/mtl/mtl.html
     //mtl format default value
     for(int i = 0 ; i < 3 ; i++) {
@@ -32,14 +35,16 @@ struct Material {
       diffuse[i] = 0.8f;
       specular[i] = 1.0f;
     }
-    transparency = 1.0f;  //not transparent
+    alpha = 1.0f;  //not transparent
     shininess = 0.0f;
   };
+  char name[64];
+
   float ambient[3];
   float diffuse[3];
   float specular[3];
   
-  float transparency;   //tr or d
+  float alpha;   //tr or d
   float shininess;
   //denotes the illumination model used by the material.
   //illum = 1 indicates a flat material with no specular highlights, so the value of Ks is not used.
