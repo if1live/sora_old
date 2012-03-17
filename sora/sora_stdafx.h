@@ -32,6 +32,7 @@
 #include <cstdarg>
 #include <cerrno>
 #include <ctime>
+#include <iostream>
 
 #include <sys/types.h>
 #include <sys/stat.h>

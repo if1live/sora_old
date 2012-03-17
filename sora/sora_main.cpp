@@ -48,13 +48,15 @@
 #include "obj_loader.h"
 #include "primitive_model.h"
 
+#include "texture.h"
+
 using sora::GLHelper;
 using sora::ShaderProgram;
 using sora::MatrixStack;
 using sora::ObjModel;
 
 //fixed
-GLuint tex_id = -1;
+sora::Texture tex;
 
 GLuint mvp_handle;
 GLuint texcoord_handle;
@@ -115,6 +117,7 @@ bool setupGraphics(int w, int h) {
   glViewport(0, 0, w, h);
   GLHelper::CheckError("glViewport");
 
+  /*
   //create sample texture
   GLubyte pixel_data[4*3] = {
     255, 0, 0,
@@ -123,11 +126,22 @@ bool setupGraphics(int w, int h) {
     255, 255, 0,
   };
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  GLuint tex_id = -1;
   glGenTextures(1, &tex_id);
   glBindTexture(GL_TEXTURE_2D, tex_id);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, pixel_data);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+  tex.Init(tex_id, 2, 2);
+  */
+
+  //lodepng
+  std::string tex_path = sora::Filesystem::GetAppPath("texture/sora.png");
+  sora::MemoryFile tex_file(tex_path);
+  tex_file.Open();
+  tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
+  tex.Init();
+
 
   //load model
   std::string path1 = sora::Filesystem::GetAppPath("obj/cube.obj");
@@ -137,8 +151,7 @@ bool setupGraphics(int w, int h) {
   loader.LoadObj(file1.start, file1.end, &obj_model);
 
   //primitive model test
-  //primitive_model.SolidCube(1, 1, 1);
-  //primitive_model.SolidCube(1, 1, 1);
+  primitive_model.SolidCube(1.5, 3, 2);
   //primitive_model.WireCube(1, 1, 1);
   //primitive_model.WireAxis(2);
   //primitive_model.WireSphere(1, 8, 8);
@@ -146,7 +159,7 @@ bool setupGraphics(int w, int h) {
   //primitive_model.WireCone(1, 2, 8, 8);
   //primitive_model.SolidCone(1, 2, 8, 8);
   //primitive_model.WireCylinder(1, 2, 8);
-  primitive_model.SolidCylinder(1, 2, 16);
+  //primitive_model.SolidCylinder(1, 2, 16);
 
   return true;
 }
