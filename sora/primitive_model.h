@@ -24,9 +24,14 @@
 #include "vertex.h"
 
 namespace sora {;
+struct PrimitiveModelImpl;
+
+typedef std::vector<Vertex> VertexListType;
+typedef std::vector<ushort> IndexListType;
+
 class SR_DLL PrimitiveModel {
 public:
-  PrimitiveModel(std::vector<Vertex> *vert_list, std::vector<ushort> *index_list);
+  PrimitiveModel();
   ~PrimitiveModel();
   //use GL_TRIANGLES
   void WireCube(float width, float height, float depth);
@@ -39,9 +44,16 @@ public:
   void SolidCylinder(float radius, float height, int slices);
   void WireAxis(float size);
 
+  // 몇개의 submodel로 구성되는가
+  int Count() const;
+  const Vertex* vertex_list(int idx) const;
+  const void *index_list(int idx) const;
+  int vertex_count(int idx) const;
+  int index_count(int idx) const;
+  GLenum draw_mode(int idx) const;
+
 private:
-  std::vector<Vertex> *vert_list_;
-  std::vector<ushort> *index_list_;
+  PrimitiveModelImpl *impl;
 };
 
 }

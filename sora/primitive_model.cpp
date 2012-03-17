@@ -20,22 +20,65 @@
 // Ŭnicode please
 #include "sora_stdafx.h"
 #include "primitive_model.h"
+#include "template_lib.h"
 
 namespace sora {;
+struct PrimitiveModelImpl {
+  PrimitiveModelImpl(int size) {
+    vert_list_group.resize(size);
+    index_list_group.resize(size);
+    mode_group.resize(size);
+  }  
+  std::vector<VertexListType> vert_list_group;
+  std::vector<IndexListType> index_list_group;
+  std::vector<GLenum> mode_group;
+};
 
-PrimitiveModel::PrimitiveModel(std::vector<Vertex> *vert_list, std::vector<ushort> *index_list)
-: vert_list_(vert_list), index_list_(index_list) {
-  SR_ASSERT(vert_list != NULL);
-  SR_ASSERT(index_list != NULL);
+PrimitiveModel::PrimitiveModel() : impl(NULL) {
 }
 PrimitiveModel::~PrimitiveModel() {
+  SafeDelete(impl);
 }
+
+int PrimitiveModel::Count() const {
+  return impl->mode_group.size();
+}
+const Vertex* PrimitiveModel::vertex_list(int idx) const {
+  SR_ASSERT(idx >= 0 && idx < Count());
+  const VertexListType &vert_list = impl->vert_list_group[idx];
+  return &vert_list[0];
+}
+const void *PrimitiveModel::index_list(int idx) const {
+  SR_ASSERT(idx >= 0 && idx < Count());
+  return &impl->index_list_group[idx].at(0);
+}
+int PrimitiveModel::vertex_count(int idx) const {
+  SR_ASSERT(idx >= 0 && idx < Count());
+  return impl->vert_list_group[idx].size();
+}
+int PrimitiveModel::index_count(int idx) const {
+  SR_ASSERT(idx >= 0 && idx < Count());
+  return impl->index_list_group[idx].size();
+}
+GLenum PrimitiveModel::draw_mode(int idx) const {
+  SR_ASSERT(idx >= 0 && idx < Count());
+  return impl->mode_group[idx];
+}
+
 void PrimitiveModel::WireCube(float width, float height, float depth) {
   SR_ASSERT(width > 0 && height > 0 && depth > 0);
   width /= 2;
   height /= 2;
   depth /= 2;
 
+  //wirecube는 1개의 메시로 표현 가능
+  SR_ASSERT(impl == NULL);
+  impl = new PrimitiveModelImpl(1);
+
+  VertexListType &vert_list = impl->vert_list_group[0];
+  IndexListType &index_list = impl->index_list_group[0];
+  impl->mode_group[0] = GL_LINES;
+  
   //top
   //0 1
   //2 3
@@ -64,14 +107,14 @@ void PrimitiveModel::WireCube(float width, float height, float depth) {
   Vertex vertex6; vertex6.pos = v6;
   Vertex vertex7; vertex7.pos = v7;
 
-  vert_list_->push_back(vertex0);
-  vert_list_->push_back(vertex1);
-  vert_list_->push_back(vertex2);
-  vert_list_->push_back(vertex3);
-  vert_list_->push_back(vertex4);
-  vert_list_->push_back(vertex5);
-  vert_list_->push_back(vertex6);
-  vert_list_->push_back(vertex7);
+  vert_list.push_back(vertex0);
+  vert_list.push_back(vertex1);
+  vert_list.push_back(vertex2);
+  vert_list.push_back(vertex3);
+  vert_list.push_back(vertex4);
+  vert_list.push_back(vertex5);
+  vert_list.push_back(vertex6);
+  vert_list.push_back(vertex7);
 
   //GL_LINES용 index list
   const GLushort indexList[] = {
@@ -80,7 +123,7 @@ void PrimitiveModel::WireCube(float width, float height, float depth) {
     0,4,	1,5,	2,6,	3,7
   };
   for(size_t i = 0 ; i < sizeof(indexList) / sizeof(GLushort) ; i++) {
-    index_list_->push_back(indexList[i]);
+    index_list.push_back(indexList[i]);
   }
 }
 
@@ -90,13 +133,21 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
   height = height/2;
   depth = depth/2;
 
+  //solid cube는 1개의 메시로 표현 가능
+  SR_ASSERT(impl == NULL);
+  impl = new PrimitiveModelImpl(1);
+
+  VertexListType &vert_list = impl->vert_list_group[0];
+  IndexListType &index_list = impl->index_list_group[0];
+  impl->mode_group[0] = GL_TRIANGLES;
+
   //construct vertex list
   //GL_TRIANGLES용 index list도 같이 구성한다
   //ccw base
 
   {
     // Front Face
-    int baseIndex = vert_list_->size();
+    int baseIndex = vert_list.size();
 
     Vec3f normal(0, 0, 1);	// Normal Pointing Towards Viewer
 
@@ -126,23 +177,23 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
     v4.texcoord = texCoord4;
     v4.normal = normal;
 
-    vert_list_->push_back(v1);
-    vert_list_->push_back(v2);
-    vert_list_->push_back(v3);
-    vert_list_->push_back(v4);
+    vert_list.push_back(v1);
+    vert_list.push_back(v2);
+    vert_list.push_back(v3);
+    vert_list.push_back(v4);
 
     //add index
-    index_list_->push_back(baseIndex + 0);
-    index_list_->push_back(baseIndex + 1);
-    index_list_->push_back(baseIndex + 2);
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 1);
+    index_list.push_back(baseIndex + 2);
 
-    index_list_->push_back(baseIndex + 0);
-    index_list_->push_back(baseIndex + 2);
-    index_list_->push_back(baseIndex + 3);
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 2);
+    index_list.push_back(baseIndex + 3);
   }
   {
     // Back Face
-    int baseIndex = vert_list_->size();
+    int baseIndex = vert_list.size();
     Vec3f normal(0, 0, -1);	// Normal Pointing Away From Viewer
 
     Vec2f texCoord1(1, 0);	Vec3f vertex1(-width, -height, -depth);
@@ -160,24 +211,24 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
     Vertex v4;
     v4.pos = vertex4; v4.texcoord = texCoord4; v4.normal = normal;
 
-    vert_list_->push_back(v1);
-    vert_list_->push_back(v2);
-    vert_list_->push_back(v3);
-    vert_list_->push_back(v4);
+    vert_list.push_back(v1);
+    vert_list.push_back(v2);
+    vert_list.push_back(v3);
+    vert_list.push_back(v4);
 
     //add index
-    index_list_->push_back(baseIndex + 0);
-    index_list_->push_back(baseIndex + 1);
-    index_list_->push_back(baseIndex + 2);
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 1);
+    index_list.push_back(baseIndex + 2);
 
-    index_list_->push_back(baseIndex + 0);
-    index_list_->push_back(baseIndex + 2);
-    index_list_->push_back(baseIndex + 3);
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 2);
+    index_list.push_back(baseIndex + 3);
   }
 
   {
     // Top Face
-    int baseIndex = vert_list_->size();
+    int baseIndex = vert_list.size();
     Vec3f normal(0, 1, 0);	// Normal Pointing Up
 
     Vec2f texCoord1(0, 1);	Vec3f vertex1(-width, height, -depth);
@@ -195,24 +246,24 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
     Vertex v4;
     v4.pos = vertex4; v4.texcoord = texCoord4; v4.normal = normal;
 
-    vert_list_->push_back(v1);
-    vert_list_->push_back(v2);
-    vert_list_->push_back(v3);
-    vert_list_->push_back(v4);
+    vert_list.push_back(v1);
+    vert_list.push_back(v2);
+    vert_list.push_back(v3);
+    vert_list.push_back(v4);
 
     //add index
-    index_list_->push_back(baseIndex + 0);
-    index_list_->push_back(baseIndex + 1);
-    index_list_->push_back(baseIndex + 2);
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 1);
+    index_list.push_back(baseIndex + 2);
 
-    index_list_->push_back(baseIndex + 0);
-    index_list_->push_back(baseIndex + 2);
-    index_list_->push_back(baseIndex + 3);
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 2);
+    index_list.push_back(baseIndex + 3);
   }
 
   {
     // Bottom Face
-    int baseIndex = vert_list_->size();
+    int baseIndex = vert_list.size();
     Vec3f normal(0, -1, 0);	// Normal Pointing Down
 
     Vec2f texCoord1(1, 1);	Vec3f vertex1(-width, -height, -depth);
@@ -230,24 +281,24 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
     Vertex v4;
     v4.pos = vertex4; v4.texcoord = texCoord4; v4.normal = normal;
 
-    vert_list_->push_back(v1);
-    vert_list_->push_back(v2);
-    vert_list_->push_back(v3);
-    vert_list_->push_back(v4);
+    vert_list.push_back(v1);
+    vert_list.push_back(v2);
+    vert_list.push_back(v3);
+    vert_list.push_back(v4);
 
     //add index
-    index_list_->push_back(baseIndex + 0);
-    index_list_->push_back(baseIndex + 1);
-    index_list_->push_back(baseIndex + 2);
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 1);
+    index_list.push_back(baseIndex + 2);
 
-    index_list_->push_back(baseIndex + 0);
-    index_list_->push_back(baseIndex + 2);
-    index_list_->push_back(baseIndex + 3);
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 2);
+    index_list.push_back(baseIndex + 3);
   }
 
   {
     // Right face
-    int baseIndex = vert_list_->size();
+    int baseIndex = vert_list.size();
     Vec3f normal(1, 0, 0);	// Normal Pointing Right
 
     Vec2f texCoord1(1, 0);	Vec3f vertex1(width, -height, -depth);
@@ -265,24 +316,24 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
     Vertex v4;
     v4.pos = vertex4; v4.texcoord = texCoord4; v4.normal = normal;
 
-    vert_list_->push_back(v1);
-    vert_list_->push_back(v2);
-    vert_list_->push_back(v3);
-    vert_list_->push_back(v4);
+    vert_list.push_back(v1);
+    vert_list.push_back(v2);
+    vert_list.push_back(v3);
+    vert_list.push_back(v4);
 
     //add index
-    index_list_->push_back(baseIndex + 0);
-    index_list_->push_back(baseIndex + 1);
-    index_list_->push_back(baseIndex + 2);
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 1);
+    index_list.push_back(baseIndex + 2);
 
-    index_list_->push_back(baseIndex + 0);
-    index_list_->push_back(baseIndex + 2);
-    index_list_->push_back(baseIndex + 3);
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 2);
+    index_list.push_back(baseIndex + 3);
   }
 
   {
     // Left Face
-    int baseIndex = vert_list_->size();
+    int baseIndex = vert_list.size();
     Vec3f normal(-1, 0, 0);	// Normal Pointing Left
 
     Vec2f texCoord1(0, 0);	Vec3f vertex1(-width, -height, -depth);
@@ -300,19 +351,19 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
     Vertex v4;
     v4.pos = vertex4; v4.texcoord = texCoord4; v4.normal = normal;
 
-    vert_list_->push_back(v1);
-    vert_list_->push_back(v2);
-    vert_list_->push_back(v3);
-    vert_list_->push_back(v4);
+    vert_list.push_back(v1);
+    vert_list.push_back(v2);
+    vert_list.push_back(v3);
+    vert_list.push_back(v4);
 
     //add index
-    index_list_->push_back(baseIndex + 0);
-    index_list_->push_back(baseIndex + 1);
-    index_list_->push_back(baseIndex + 2);
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 1);
+    index_list.push_back(baseIndex + 2);
 
-    index_list_->push_back(baseIndex + 0);
-    index_list_->push_back(baseIndex + 2);
-    index_list_->push_back(baseIndex + 3);
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 2);
+    index_list.push_back(baseIndex + 3);
   }
 }
 void PrimitiveModel::WireSphere(float radius, int slices, int stacks) {
@@ -329,6 +380,15 @@ void PrimitiveModel::SolidCylinder(float radius, float height, int slices) {
 }
 void PrimitiveModel::WireAxis(float size) {
   SR_ASSERT(size > 0);
+
+  //asiz는 1개의 메시로 표현 가능
+  SR_ASSERT(impl == NULL);
+  impl = new PrimitiveModelImpl(1);
+
+  VertexListType &vert_list = impl->vert_list_group[0];
+  IndexListType &index_list = impl->index_list_group[0];
+  impl->mode_group[0] = GL_LINES;
+
   //vertex list 생성
   Vec3f xPos(size, 0, 0);
   Vec3f yPos(0, size, 0);
@@ -342,24 +402,24 @@ void PrimitiveModel::WireAxis(float size) {
   //x axis - r
   Vertex vx0; vx0.pos = zero; vx0.color = red;
   Vertex vx1; vx1.pos = xPos; vx1.color = red;
-  vert_list_->push_back(vx0);
-  vert_list_->push_back(vx1);
+  vert_list.push_back(vx0);
+  vert_list.push_back(vx1);
 
   //y axis - g
   Vertex vy0; vy0.pos = zero; vy0.color = green;
   Vertex vy1; vy1.pos = yPos; vy1.color = green;
-  vert_list_->push_back(vy0);
-  vert_list_->push_back(vy1);
+  vert_list.push_back(vy0);
+  vert_list.push_back(vy1);
 
   //z axis - b
   Vertex vz0; vz0.pos = zero; vz0.color = blue;
   Vertex vz1; vz1.pos = zPos; vz1.color = blue;
-  vert_list_->push_back(vz0);
-  vert_list_->push_back(vz1);
+  vert_list.push_back(vz0);
+  vert_list.push_back(vz1);
 
   //create index list
   for(GLushort i = 0 ; i < 6 ; i++) {
-    index_list_->push_back(i);
+    index_list.push_back(i);
   }
 }
 
@@ -377,7 +437,7 @@ WireCube::~WireCube()
 const std::vector<DrawCommand> WireCube::getDrawCommand() const
 {
   std::vector<DrawCommand> list;
-  DrawCommand cmd(GL_LINES, index_list_->size(), GL_UNSIGNED_SHORT, &indexList_[0], vertexPointer());
+  DrawCommand cmd(GL_LINES, index_list.size(), GL_UNSIGNED_SHORT, &indexList_[0], vertexPointer());
   list.push_back(cmd);
   return list;
 }
@@ -422,7 +482,7 @@ WireSphere::WireSphere(GLfloat radius, GLint slices, GLint stacks, const matsu::
     vec3 &pos = *it;
     pos = pos * radius;
     Vertex vertex(pos, colorVec);
-    vert_list_->push_back(vertex);
+    vert_list.push_back(vertex);
   }
 
   //index list
@@ -436,8 +496,8 @@ WireSphere::WireSphere(GLfloat radius, GLint slices, GLint stacks, const matsu::
       GLushort b = a + 1;
       if(j == slices-1)
         b = start;
-      index_list_->push_back(a);
-      index_list_->push_back(b);
+      index_list.push_back(a);
+      index_list.push_back(b);
     }
   }
   for(int i = 0 ; i < slices ; i++)
@@ -450,8 +510,8 @@ WireSphere::WireSphere(GLfloat radius, GLint slices, GLint stacks, const matsu::
       GLushort b = (a + slices);
       if(b >= slices*stacks)
         b = topIndex;
-      index_list_->push_back(a);
-      index_list_->push_back(b);
+      index_list.push_back(a);
+      index_list.push_back(b);
     }
   }
 }
@@ -461,7 +521,7 @@ WireSphere::~WireSphere()
 const std::vector<DrawCommand> WireSphere::getDrawCommand() const
 {
   vector<DrawCommand> list;
-  DrawCommand cmd(GL_LINES, index_list_->size(), GL_UNSIGNED_SHORT, &indexList_[0], vertexPointer());
+  DrawCommand cmd(GL_LINES, index_list.size(), GL_UNSIGNED_SHORT, &indexList_[0], vertexPointer());
   list.push_back(cmd);
   return list;
 }
@@ -513,7 +573,7 @@ SolidSphere::SolidSphere(GLfloat radius, GLint slices, GLint stacks, const matsu
   {
     vec3 pos = posList[i] * radius;
     Vertex vertex(pos, texCoordList[i], normalList[i]);
-    vert_list_->push_back(vertex);
+    vert_list.push_back(vertex);
   }
 
   for(int i = 0 ; i < stacks ; i++)
@@ -529,13 +589,13 @@ SolidSphere::SolidSphere(GLfloat radius, GLint slices, GLint stacks, const matsu
       GLushort d = c + 1;
 
 
-      index_list_->push_back(a);
-      index_list_->push_back(c);
-      index_list_->push_back(b);
+      index_list.push_back(a);
+      index_list.push_back(c);
+      index_list.push_back(b);
 
-      index_list_->push_back(c);
-      index_list_->push_back(d);
-      index_list_->push_back(b);
+      index_list.push_back(c);
+      index_list.push_back(d);
+      index_list.push_back(b);
     }
 
   }
@@ -546,7 +606,7 @@ SolidSphere::~SolidSphere()
 const std::vector<DrawCommand> SolidSphere::getDrawCommand() const
 {
   std::vector<DrawCommand> list;
-  DrawCommand cmd(GL_TRIANGLES, index_list_->size(), GL_UNSIGNED_SHORT, &indexList_[0], vertexPointer());
+  DrawCommand cmd(GL_TRIANGLES, index_list.size(), GL_UNSIGNED_SHORT, &indexList_[0], vertexPointer());
   list.push_back(cmd);
   return list;
 }
@@ -591,7 +651,7 @@ WireCone::WireCone(GLfloat base, GLfloat height, GLint slices, GLint stacks, con
     pos.z *= base;
     //Vertex v(posList[i], texCoord, normal);
     Vertex v(posList[i], colorVec);
-    vert_list_->push_back(v);
+    vert_list.push_back(v);
   }
 
   //index for bottom;
@@ -604,17 +664,17 @@ WireCone::WireCone(GLfloat base, GLfloat height, GLint slices, GLint stacks, con
         startIndex = j*slices;
       GLushort a = startIndex + i;
       GLushort b = ((a + 1) % slices) + startIndex;
-      stackindex_list_->push_back(a);
-      stackindex_list_->push_back(b);
+      stackindex_list.push_back(a);
+      stackindex_list.push_back(b);
     }
   }
 
   //꼭지점에서 base로 내려오는 직선 긋기
-  GLushort topVertexIndex = vert_list_->size()-1;
+  GLushort topVertexIndex = vert_list.size()-1;
   for(int i = 0 ; i < slices ; i++)
   {
-    sliceindex_list_->push_back(i);
-    sliceindex_list_->push_back(topVertexIndex);
+    sliceindex_list.push_back(i);
+    sliceindex_list.push_back(topVertexIndex);
   }
 
 }
@@ -624,8 +684,8 @@ WireCone::~WireCone()
 const std::vector<DrawCommand> WireCone::getDrawCommand() const
 {
   std::vector<DrawCommand> list;
-  DrawCommand cmd1(GL_LINES, stackindex_list_->size(), GL_UNSIGNED_SHORT, &stackIndexList_[0], vertexPointer());
-  DrawCommand cmd2(GL_LINES, sliceindex_list_->size(), GL_UNSIGNED_SHORT, &sliceIndexList_[0], vertexPointer());
+  DrawCommand cmd1(GL_LINES, stackindex_list.size(), GL_UNSIGNED_SHORT, &stackIndexList_[0], vertexPointer());
+  DrawCommand cmd2(GL_LINES, sliceindex_list.size(), GL_UNSIGNED_SHORT, &sliceIndexList_[0], vertexPointer());
   list.push_back(cmd1);
   list.push_back(cmd2);
   return list;
@@ -658,13 +718,13 @@ SolidCone::SolidCone(GLfloat base, GLfloat height, GLint slices, GLint stacks, c
       vec2 texCoord(texCoordS, texCoordT);
 
       Vertex v(pos, texCoord, normal);
-      vert_list_->push_back(v);
+      vert_list.push_back(v);
     }
   }
 
   //밑바닥용 vertex pos는 다시 계산한다. normal+tex가 옆면과 달라야되기 떄문에 추가로 필요하다
   vec3 bottomNormal(0, -1, 0);
-  const int bottomVertexStartIndex = vert_list_->size();	//bottom vertex 정보가 시작되는 인덱스
+  const int bottomVertexStartIndex = vert_list.size();	//bottom vertex 정보가 시작되는 인덱스
   for(int i = 0 ; i < slices ; i++)
   {
     float angleDt = static_cast<float>(2.0 * M_PI / slices);
@@ -675,13 +735,13 @@ SolidCone::SolidCone(GLfloat base, GLfloat height, GLint slices, GLint stacks, c
     vec2 texCoord((cos(angleDt * i) + 1) / 2, (sin(angleDt *i) + 1) / 2);
 
     Vertex v(pos, texCoord, bottomNormal);
-    vert_list_->push_back(v);
+    vert_list.push_back(v);
   }
   //밑바닥 중심점
   vec3 bottompos(0, 0, 0);
   vec2 bottomCenterTexCoord(0.5, 0.5);
   Vertex bottomCenterVertex(bottompos, bottomCenterTexCoord, bottomNormal);
-  vert_list_->push_back(bottomCenterVertex);
+  vert_list.push_back(bottomCenterVertex);
 
   //index list
   //옆면부터
@@ -698,25 +758,25 @@ SolidCone::SolidCone(GLfloat base, GLfloat height, GLint slices, GLint stacks, c
       GLushort c = a + (slices + 1);
       GLushort d = c + 1;
 
-      sideindex_list_->push_back(a);
-      sideindex_list_->push_back(c);
-      sideindex_list_->push_back(d);
+      sideindex_list.push_back(a);
+      sideindex_list.push_back(c);
+      sideindex_list.push_back(d);
 
-      sideindex_list_->push_back(a);
-      sideindex_list_->push_back(d);
-      sideindex_list_->push_back(b);
+      sideindex_list.push_back(a);
+      sideindex_list.push_back(d);
+      sideindex_list.push_back(b);
     }
   }
   //밑면
   //화면의 밑점은 가장 마지막에 넣었음
-  GLushort bottomVertexIndex = vert_list_->size()-1;
-  bottomindex_list_->push_back(bottomVertexIndex);
+  GLushort bottomVertexIndex = vert_list.size()-1;
+  bottomindex_list.push_back(bottomVertexIndex);
   for(int i = 0 ; i < slices ; i++)
   {
-    bottomindex_list_->push_back(i + bottomVertexStartIndex);
+    bottomindex_list.push_back(i + bottomVertexStartIndex);
   }
   //처음점을 다시 찍어야 원형 완성
-  bottomindex_list_->push_back(bottomVertexStartIndex);
+  bottomindex_list.push_back(bottomVertexStartIndex);
 }
 SolidCone::~SolidCone()
 {
@@ -724,8 +784,8 @@ SolidCone::~SolidCone()
 const std::vector<DrawCommand> SolidCone::getDrawCommand() const
 {
   vector<DrawCommand> list;
-  DrawCommand bottom(GL_TRIANGLE_FAN, bottomindex_list_->size(), GL_UNSIGNED_SHORT, &bottomIndexList_[0], vertexPointer());
-  DrawCommand side(GL_TRIANGLES, sideindex_list_->size(), GL_UNSIGNED_SHORT, &sideIndexList_[0], vertexPointer());
+  DrawCommand bottom(GL_TRIANGLE_FAN, bottomindex_list.size(), GL_UNSIGNED_SHORT, &bottomIndexList_[0], vertexPointer());
+  DrawCommand side(GL_TRIANGLES, sideindex_list.size(), GL_UNSIGNED_SHORT, &sideIndexList_[0], vertexPointer());
   list.push_back(bottom);
   list.push_back(side);
   return list;
@@ -788,7 +848,7 @@ WireTeapot::WireTeapot(GLfloat size, const matsu::vec4 &color)
     Vec3f pos(x, y, z);
 
     Vertex v(pos, color);
-    vert_list_->push_back(v);
+    vert_list.push_back(v);
   }
 
   //set index list(for wire)
@@ -798,14 +858,14 @@ WireTeapot::WireTeapot(GLfloat size, const matsu::vec4 &color)
     GLushort index1 = teapotIndices[i*3 + 1];
     GLushort index2 = teapotIndices[i*3 + 2];
 
-    index_list_->push_back(index0);
-    index_list_->push_back(index1);
+    index_list.push_back(index0);
+    index_list.push_back(index1);
 
-    index_list_->push_back(index0);
-    index_list_->push_back(index2);
+    index_list.push_back(index0);
+    index_list.push_back(index2);
 
-    index_list_->push_back(index2);
-    index_list_->push_back(index1);
+    index_list.push_back(index2);
+    index_list.push_back(index1);
   }
 }
 WireTeapot::~WireTeapot()
@@ -814,7 +874,7 @@ WireTeapot::~WireTeapot()
 const std::vector<DrawCommand> WireTeapot::getDrawCommand() const
 {
   vector<DrawCommand> list;
-  DrawCommand cmd(GL_LINES, index_list_->size(), GL_UNSIGNED_SHORT, &indexList_[0], vertexPointer());
+  DrawCommand cmd(GL_LINES, index_list.size(), GL_UNSIGNED_SHORT, &indexList_[0], vertexPointer());
   list.push_back(cmd);
   return list;
 }
@@ -844,7 +904,7 @@ SolidTeapot::SolidTeapot(GLfloat size, const matsu::vec4 &color)
     Vec3f normal(normalX, normalY, normalZ);
 
     Vertex v(pos, color, texCoord, normal);
-    vert_list_->push_back(v);
+    vert_list.push_back(v);
   }
 }
 SolidTeapot::~SolidTeapot()
@@ -879,7 +939,7 @@ WireCylinder::WireCylinder(GLfloat radius, GLfloat height, GLint slices, const m
 
       Vec3f pos(x, y, z);
       Vertex v(pos, color);
-      vert_list_->push_back(v);
+      vert_list.push_back(v);
     }
   }
   //밑점, 윗점 따로 vertex list에 넣기
@@ -887,12 +947,12 @@ WireCylinder::WireCylinder(GLfloat radius, GLfloat height, GLint slices, const m
   Vec3f topPos(0, height/2, 0);
   Vertex bottom(bottomPos, color);
   Vertex top(topPos, color);
-  vert_list_->push_back(bottom);
-  vert_list_->push_back(top);
+  vert_list.push_back(bottom);
+  vert_list.push_back(top);
 
   //index list구성
-  const int topIndex = vert_list_->size() - 1;
-  const int bottomIndex = vert_list_->size() - 2;
+  const int topIndex = vert_list.size() - 1;
+  const int bottomIndex = vert_list.size() - 2;
 
   for(int i = 0 ; i < slices ; i++)
   {
@@ -905,30 +965,30 @@ WireCylinder::WireCylinder(GLfloat radius, GLfloat height, GLint slices, const m
     GLushort d = (c + 1) % slices + slices;
 
     //윗면과 아랫면 선으로 연결하기 + 대각선도 넣기
-    index_list_->push_back(a);
-    index_list_->push_back(c);
+    index_list.push_back(a);
+    index_list.push_back(c);
 
-    index_list_->push_back(b);
-    index_list_->push_back(d);
+    index_list.push_back(b);
+    index_list.push_back(d);
 
-    index_list_->push_back(a);
-    index_list_->push_back(d);
+    index_list.push_back(a);
+    index_list.push_back(d);
 
     //윗면의 테두리 그리기	
-    index_list_->push_back(a);
-    index_list_->push_back(b);
+    index_list.push_back(a);
+    index_list.push_back(b);
 
     //아랫면의 테두리 그리기
-    index_list_->push_back(c);
-    index_list_->push_back(d);
+    index_list.push_back(c);
+    index_list.push_back(d);
 
     //아랫면 덮기
-    index_list_->push_back(c);
-    index_list_->push_back(bottomIndex);
+    index_list.push_back(c);
+    index_list.push_back(bottomIndex);
 
     //윗면 덮기
-    index_list_->push_back(a);
-    index_list_->push_back(topIndex);
+    index_list.push_back(a);
+    index_list.push_back(topIndex);
   }
 }
 WireCylinder::~WireCylinder()
@@ -937,7 +997,7 @@ WireCylinder::~WireCylinder()
 const std::vector<DrawCommand> WireCylinder::getDrawCommand() const
 {
   vector<DrawCommand> list;
-  DrawCommand cmd(GL_LINES, index_list_->size(), GL_UNSIGNED_SHORT, &indexList_[0], vertexPointer());
+  DrawCommand cmd(GL_LINES, index_list.size(), GL_UNSIGNED_SHORT, &indexList_[0], vertexPointer());
   list.push_back(cmd);
   return list;
 }
@@ -976,7 +1036,7 @@ SolidCylinder::SolidCylinder(GLfloat radius, GLfloat height, GLint slices, const
       normal.normalize();
 
       Vertex v(pos, color, texCoord, normal);
-      vert_list_->push_back(v);
+      vert_list.push_back(v);
     }
   }
   //밑점, 윗점 따로 vertex list에 넣기
@@ -986,7 +1046,7 @@ SolidCylinder::SolidCylinder(GLfloat radius, GLfloat height, GLint slices, const
     Vec2f texCoord(0, 0);
     Vec3f normal(0, -1, 0);
     Vertex bottom(bottomPos, color, texCoord, normal);
-    vert_list_->push_back(bottom);
+    vert_list.push_back(bottom);
   }
 
   //윗점
@@ -995,15 +1055,15 @@ SolidCylinder::SolidCylinder(GLfloat radius, GLfloat height, GLint slices, const
     Vec2f texCoord(0, 0);
     Vec3f normal(0, 1, 0);
     Vertex top(topPos, color, texCoord, normal);
-    vert_list_->push_back(top);
+    vert_list.push_back(top);
   }
 
   //index list구성
-  const int topIndex = vert_list_->size() - 1;
-  const int bottomIndex = vert_list_->size() - 2;
+  const int topIndex = vert_list.size() - 1;
+  const int bottomIndex = vert_list.size() - 2;
 
-  topindex_list_->push_back(topIndex);
-  bottomindex_list_->push_back(bottomIndex);
+  topindex_list.push_back(topIndex);
+  bottomindex_list.push_back(bottomIndex);
 
   for(int i = 0 ; i < slices ; i++)
   {
@@ -1016,13 +1076,13 @@ SolidCylinder::SolidCylinder(GLfloat radius, GLfloat height, GLint slices, const
     GLushort d = (c + 1) % slices + slices;
 
     //옆면 삼각형 인덱스 생성
-    sideindex_list_->push_back(a);
-    sideindex_list_->push_back(c);
-    sideindex_list_->push_back(d);
+    sideindex_list.push_back(a);
+    sideindex_list.push_back(c);
+    sideindex_list.push_back(d);
 
-    sideindex_list_->push_back(a);
-    sideindex_list_->push_back(d);
-    sideindex_list_->push_back(b);
+    sideindex_list.push_back(a);
+    sideindex_list.push_back(d);
+    sideindex_list.push_back(b);
   }
 
   for(int i = 0 ; i <= slices ; i++)
@@ -1034,7 +1094,7 @@ SolidCylinder::SolidCylinder(GLfloat radius, GLfloat height, GLint slices, const
     GLushort c = a + slices;
 
     //아랫면 덮기
-    bottomindex_list_->push_back(c);
+    bottomindex_list.push_back(c);
   }
 
   for(int i = slices-1 ; i >= -1 ; i--)
@@ -1047,7 +1107,7 @@ SolidCylinder::SolidCylinder(GLfloat radius, GLfloat height, GLint slices, const
       a = slices-1;
 
     //윗면 덮기, (인덱스 넣는 방향 반대여야 cull통과한다)
-    topindex_list_->push_back(a);
+    topindex_list.push_back(a);
   }
 }
 SolidCylinder::~SolidCylinder()
@@ -1056,9 +1116,9 @@ SolidCylinder::~SolidCylinder()
 const std::vector<DrawCommand> SolidCylinder::getDrawCommand() const
 {
   vector<DrawCommand> list;
-  DrawCommand topCmd(GL_TRIANGLE_FAN, topindex_list_->size(), GL_UNSIGNED_SHORT, &topIndexList_[0], vertexPointer());
-  DrawCommand bottomCmd(GL_TRIANGLE_FAN, bottomindex_list_->size(), GL_UNSIGNED_SHORT, &bottomIndexList_[0], vertexPointer());
-  DrawCommand sideCmd(GL_TRIANGLE_STRIP, sideindex_list_->size(), GL_UNSIGNED_SHORT, &sideIndexList_[0], vertexPointer());
+  DrawCommand topCmd(GL_TRIANGLE_FAN, topindex_list.size(), GL_UNSIGNED_SHORT, &topIndexList_[0], vertexPointer());
+  DrawCommand bottomCmd(GL_TRIANGLE_FAN, bottomindex_list.size(), GL_UNSIGNED_SHORT, &bottomIndexList_[0], vertexPointer());
+  DrawCommand sideCmd(GL_TRIANGLE_STRIP, sideindex_list.size(), GL_UNSIGNED_SHORT, &sideIndexList_[0], vertexPointer());
   list.push_back(topCmd);
   list.push_back(bottomCmd);
   list.push_back(sideCmd);

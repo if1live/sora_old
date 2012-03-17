@@ -67,8 +67,7 @@ float win_height = 0;
 
 
 ObjModel obj_model;
-std::vector<sora::Vertex> vert_list;
-std::vector<ushort> index_list;
+sora::PrimitiveModel primitive_model;
 
 bool setupGraphics(int w, int h) {
   LOGI("setupGraphics(%d, %d)", w, h);
@@ -138,10 +137,10 @@ bool setupGraphics(int w, int h) {
   loader.LoadObj(file1.start, file1.end, &obj_model);
 
   //primitive model test
-  sora::PrimitiveModel primitive_model(&vert_list, &index_list);
+  primitive_model.SolidCube(1, 1, 1);
   //primitive_model.SolidCube(1, 1, 1);
   //primitive_model.WireCube(1, 1, 1);
-  primitive_model.WireAxis(2);
+  //primitive_model.WireAxis(2);
 
   return true;
 }
@@ -190,10 +189,18 @@ void renderFrame() {
   //glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &obj_model.vertex_ptr()->texcoord);
   //glDrawElements(GL_TRIANGLES, obj_model.index_count(), GL_UNSIGNED_SHORT, obj_model.index_ptr());
 
-  glVertexAttribPointer(position_handle, 3, GL_FLOAT, GL_FLOAT, sizeof(sora::Vertex), &vert_list[0].pos);
-  glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FLOAT, sizeof(sora::Vertex), &vert_list[0].texcoord);
-  //glDrawElements(GL_TRIANGLES, index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
-  glDrawElements(GL_LINES, index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
+  //draw primitive model
+  for(int i = 0 ; i < primitive_model.Count() ; i++) {
+    const sora::Vertex *vert_ptr = primitive_model.vertex_list(i);
+    const void *idx_ptr = primitive_model.index_list(i);
+    int idx_count = primitive_model.index_count(i);
+    GLenum draw_mode = primitive_model.draw_mode(i);
+
+    glVertexAttribPointer(position_handle, 3, GL_FLOAT, GL_FLOAT, sizeof(sora::Vertex), &vert_ptr->pos);
+    glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FLOAT, sizeof(sora::Vertex), &vert_ptr->texcoord);
+    //glDrawElements(GL_TRIANGLES, index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
+    glDrawElements(draw_mode, idx_count, GL_UNSIGNED_SHORT, idx_ptr);
+  }
 
   //glDrawArrays(GL_TRIANGLES, 0, 3);
 }
