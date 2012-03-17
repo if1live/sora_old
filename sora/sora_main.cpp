@@ -49,6 +49,7 @@
 #include "primitive_model.h"
 
 #include "texture.h"
+#include "renderer.h"
 
 using sora::GLHelper;
 using sora::ShaderProgram;
@@ -64,28 +65,14 @@ GLuint position_handle;
 
 ShaderProgram shader_prog;
 
-float win_width = 0;
-float win_height = 0;
-
-
 ObjModel obj_model;
 sora::PrimitiveModel primitive_model;
 
+sora::Renderer renderer;
+
 bool setupGraphics(int w, int h) {
-  LOGI("setupGraphics(%d, %d)", w, h);
-  win_width = (float)w;
-  win_height = (float)h;
-
-  //glEnable(GL_CULL_FACE);
-  glEnable(GL_DEPTH_TEST);
-
-  float v = (float)sora::Vec2f_testFunc((float)w, (float)h);
-  LOGI("testfunc %f", v);
-
-  LOGI("Version : %s", GLHelper::GetVersion().c_str());
-  LOGI("Vendor : %s", GLHelper::GetVender().c_str());
-  LOGI("Renderer : %s", GLHelper::GetRenderer().c_str());
-  LOGI("Extensions : %s", GLHelper::GetExtensions().c_str());
+  renderer.SetWindowSize((float)w, (float)h);
+ 
 
   //load shader file
   const char *vert_path = "shader/v_simple.glsl";
@@ -113,9 +100,6 @@ bool setupGraphics(int w, int h) {
 
   mvp_handle = shader_prog.GetUniformLocation("u_modelviewprojection");
   LOGI("GetUniformLocation(\"u_modelviewprojection\") = %d", mvp_handle);
-
-  glViewport(0, 0, w, h);
-  GLHelper::CheckError("glViewport");
 
   /*
   //create sample texture
@@ -164,36 +148,24 @@ bool setupGraphics(int w, int h) {
   return true;
 }
 
-const GLfloat gTriangleVertices[] = { 0.0f, 0.5f, -0.5f, -0.5f,
-  0.5f, -0.5f };
-
-GLfloat texcoord_list[] = {10.0f, 0.5f, -0.5f, -0.5f, 0.5f, -0.5f };
-
 void renderFrame() {
-  float v = sora::Vec2f_testFunc(-1, 1);	//0.0f
-  texcoord_list[0] = v;
+  renderer.Set3D();
+
+  //use texture
+  renderer.SetTexture(tex);
+  renderer.SetShader(shader_prog);
 
   static float rot = 0;
   rot += 0.05f;
 
-  static float grey;
-  grey += 0.01f;
-  if (grey > 1.0f) {
-    grey = 0.0f;
-  }
-  //glClearColor(grey, grey, grey, 1.0f);
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-  shader_prog.Use();
-
-  glVertexAttribPointer(position_handle, 2, GL_FLOAT, GL_FALSE, 0, gTriangleVertices);
   glEnableVertexAttribArray(position_handle);
-
-  glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, 0, texcoord_list);
   glEnableVertexAttribArray(texcoord_handle);
 
-  MatrixStack mat_stack;
+  float win_width = renderer.win_width();
+  float win_height = renderer.win_height();
   //glm::mat4 projection = glm::ortho(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);
   //glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0));
   glm::mat4 projection = glm::perspective(60.0f, win_width / win_height, 1.0f, 100.0f);
@@ -215,13 +187,15 @@ void renderFrame() {
     int idx_count = primitive_model.index_count(i);
     GLenum draw_mode = primitive_model.draw_mode(i);
 
-    glVertexAttribPointer(position_handle, 3, GL_FLOAT, GL_FLOAT, sizeof(sora::Vertex), &vert_ptr->pos);
-    glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FLOAT, sizeof(sora::Vertex), &vert_ptr->texcoord);
+    glVertexAttribPointer(position_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->pos);
+    glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->texcoord);
     //glDrawElements(GL_TRIANGLES, index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
     glDrawElements(draw_mode, idx_count, GL_UNSIGNED_SHORT, idx_ptr);
   }
 
-  //glDrawArrays(GL_TRIANGLES, 0, 3);
+
+  //////////////////////////////
+  renderer.EndRender();
 }
 
 void SORA_setup_graphics(int w, int h) {

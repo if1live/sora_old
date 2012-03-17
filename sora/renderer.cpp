@@ -21,23 +21,57 @@
 #include "sora_stdafx.h"
 #include "renderer.h"
 
+#include "texture.h"
+#include "gl_helper.h"
+#include "shader.h"
+
 namespace sora {;
 Renderer::Renderer() 
-: win_width_(480), win_height_(320) {
+: win_width_(480), 
+win_height_(320),
+last_tex_id_(-1) {
 }
 Renderer::~Renderer() {
 }
 
 void Renderer::SetWindowSize(float w, float h) {
+  LOGI("setupGraphics(%d, %d)", (int)w, (int)h);
+
   win_width_ = w;
   win_height_ = h;
+
+  LOGI("Version : %s", GLHelper::GetVersion().c_str());
+  LOGI("Vendor : %s", GLHelper::GetVender().c_str());
+  LOGI("Renderer : %s", GLHelper::GetRenderer().c_str());
+  LOGI("Extensions : %s", GLHelper::GetExtensions().c_str());
+
+  glViewport(0, 0, (int)w, (int)h);
+  GLHelper::CheckError("glViewport");
 }
 
 void Renderer::Set2D() {
+  glDisable(GL_DEPTH_TEST);
 }
+
 void Renderer::Set3D() {
+  glEnable(GL_CULL_FACE);
+  glEnable(GL_DEPTH_TEST);
+}
+
+void Renderer::SetTexture(const Texture &tex) {
+  if(last_tex_id_ != tex.handle()) {
+    glBindTexture(GL_TEXTURE_2D, tex.handle());
+    last_tex_id_ = tex.handle();
+  }
+}
+
+void Renderer::SetShader(const ShaderProgram &prog) {
+  glUseProgram(prog.prog);
 }
 
 void Renderer::EndRender() {
+  last_tex_id_ = -1;
+
+  GLHelper::CheckError("EndRender");
 }
 }

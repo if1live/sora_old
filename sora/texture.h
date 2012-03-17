@@ -41,6 +41,8 @@ public:
   bool Init(GLuint tex_id, int width, int height);
   bool Loaded() const;
 
+  GLuint handle() const { return handle_; }
+
 private:
   GLuint handle_;
   //텍스쳐 정보가 잇는 메모리를 올려서

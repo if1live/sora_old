@@ -22,6 +22,10 @@
 #define SORA_RENDERER_H_
 
 namespace sora {;
+
+class Texture;
+class ShaderProgram;
+
 //opengles 2.0 renderer
 class Renderer {
 public:
@@ -29,14 +33,23 @@ public:
   ~Renderer();
 
   void SetWindowSize(float w, float h);
+  float win_width() const { return win_width_; }
+  float win_height() const { return win_height_; }
+
   void Set2D();
   void Set3D();
 
   void EndRender();
 
+  void SetTexture(const Texture &tex);
+  void SetShader(const ShaderProgram &prog);
+
 private:
   float win_width_;
   float win_height_;
+
+  //like cache?
+  GLuint last_tex_id_;
 };
 }
 
