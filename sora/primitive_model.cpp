@@ -23,6 +23,10 @@
 #include "template_lib.h"
 #include "math_helper.h"
 
+#if SR_USE_PCH == 0
+#include "gl_inc.h"
+#endif
+
 using namespace std;
 
 namespace sora {;

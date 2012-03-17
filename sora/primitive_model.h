@@ -22,6 +22,10 @@
 #define SORA_PRIMITIVE_MODEL_H_
 
 #include "vertex.h"
+#if SR_USE_PCH == 0
+#include <vector>
+#include "gl_inc.h"
+#endif
 
 namespace sora {;
 struct PrimitiveModelImpl;

@@ -26,12 +26,14 @@
 #include "sora/sora_main.h"
 #include "sora/timer.h"
 
+const int kWinWidth = 480;
+const int kWinHeight = 800;
 int main(int argc, char *argv[]) {
   if( !glfwInit() ) {
     exit( EXIT_FAILURE );
   }
   // Open an OpenGL window
-  if( !glfwOpenWindow( 300,300, 0,0,0,0,0,0, GLFW_WINDOW ) ) {
+  if( !glfwOpenWindow( kWinWidth,kWinHeight, 0,0,0,0,0,0, GLFW_WINDOW ) ) {
     glfwTerminate();
     exit( EXIT_FAILURE );
   }
@@ -40,7 +42,7 @@ int main(int argc, char *argv[]) {
   Timer_Init();
 
 	//logic begin
-  SORA_setup_graphics(300, 300);
+  SORA_setup_graphics(kWinWidth, kWinHeight);
 
   
   float prev_time = Timer_GetSecond();

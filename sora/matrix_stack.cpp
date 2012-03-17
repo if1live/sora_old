@@ -21,7 +21,10 @@
 #include "sora_stdafx.h"
 
 #include "matrix_stack.h"
+#if SR_USE_PCH == 0
 #include <glm/gtc/matrix_transform.hpp>
+#include <vector>
+#endif
 
 namespace sora {;
 struct MatrixStackImpl {

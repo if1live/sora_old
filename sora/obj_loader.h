@@ -22,6 +22,9 @@
 #define SORA_OBJ_LOADER_H_
 
 #include "vector.h"
+#if SR_USE_PCH == 0
+#include <vector>
+#endif
 
 namespace sora {;
 

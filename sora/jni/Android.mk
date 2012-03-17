@@ -22,7 +22,8 @@ LOCAL_C_INCLUDES := \
 	.	\
 	../sora	\
 	../sdk/libzip/jni	\
-	../sdk/glm-0.9.3.1
+	../sdk/glm-0.9.3.1	\
+	../../boost_1_49_0
 	
 LOCAL_CFLAGS := 
 
@@ -43,7 +44,15 @@ LOCAL_SRC_FILES := \
 	../low_level_c_file.cpp	\
 	../memory_file.cpp	\
 	../zip_stream_file.cpp	\
-	../sora_main.cpp
+	../sora_main.cpp	\
+	../renderer.cpp	\
+	../obj_loader.cpp	\
+	../obj_model.cpp	\
+	../primitive_model.cpp	\
+	../texture.cpp	\
+	../lodepng/lodepng.cpp	\
+	../gl_buffer_object.cpp	\
+	../matrix_stack.cpp
 
 #include $(BUILD_SHARED_LIBRARY)
 include $(BUILD_STATIC_LIBRARY)

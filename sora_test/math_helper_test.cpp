@@ -39,7 +39,7 @@ TEST(MTMath, radian2degree)
 }
 
 
-TEST(MTMath, isNaN) {
+TEST(MTMath, IsNaN) {
 	//number
 	EXPECT_EQ(false, IsNaN(static_cast<int>(1)));
 	EXPECT_EQ(false, IsNaN(static_cast<float>(1)));
@@ -47,7 +47,7 @@ TEST(MTMath, isNaN) {
 	EXPECT_EQ(false, IsNaN(static_cast<char>(1)));
 }
 
-TEST(MTMath, isInf) {
+TEST(MTMath, IsInf) {
 	//number
 	EXPECT_EQ(false, IsInf(static_cast<int>(1)));
 	EXPECT_EQ(false, IsInf(static_cast<float>(1)));
@@ -58,4 +58,29 @@ TEST(MTMath, isInf) {
 	float divider = 0.0f;
 	float nan = 1.0f / divider;
 	EXPECT_EQ(true, IsInf(nan));
+}
+
+
+TEST(MTMath, IsPower) {
+	//int test
+	EXPECT_EQ(true, IsPower(2, 4));
+	EXPECT_EQ(false, IsPower(2, 5));
+	//double
+	EXPECT_EQ(true, IsPower(2.0, 4.0));
+	EXPECT_EQ(true, IsPower(3.0, 9.0));
+	EXPECT_EQ(false, IsPower(3.0, 9.1));
+	//float
+	EXPECT_EQ(true, IsPower(2.0f, 4.0f));
+	EXPECT_EQ(true, IsPower(3.0f, 9.0f));
+	EXPECT_EQ(false, IsPower(3.0f, 9.1f));
+}
+
+TEST(MTMath, CeilPower) {
+	//int test
+	EXPECT_EQ(4, CeilPower(2, 4));
+	EXPECT_EQ(8, CeilPower(2, 5));
+	//double
+	EXPECT_EQ(4.0, CeilPower(2.0, 4.0));
+	EXPECT_EQ(9.0, CeilPower(3.0, 9.0));
+	EXPECT_EQ(27.0, CeilPower(3.0, 9.1));
 }

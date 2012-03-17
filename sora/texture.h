@@ -29,22 +29,25 @@ public:
     kFileUnknown = -1,
     kFilePNG,
   };
+  enum {
+    kPolicyForcePOT = 0x01, //2의 승수로 강제 보정할것인가
+  };
 
 public:
-  Texture();
+  Texture(uint policy = 0);
   ~Texture();
 
   void Deinit();
   void SetData(int file_fmt, uchar *start, uchar *end);
   bool Init();
   //외부에서 생성된 GL텍스쳐를 sora텍스쳐로 사용하기
-  bool Init(GLuint tex_id, int width, int height);
+  bool Init(uint tex_id, int width, int height);
   bool Loaded() const;
 
-  GLuint handle() const { return handle_; }
+  uint handle() const { return handle_; }
 
 private:
-  GLuint handle_;
+  uint handle_;
   //텍스쳐 정보가 잇는 메모리를 올려서
   //텍스쳐를 나중에 생성하는것이 가능하도록하자
   int file_fmt_;
@@ -55,6 +58,8 @@ private:
   int tex_height_;
   int src_width_;
   int src_height_;
+
+  uint policy_;
 
 private:
   bool Init_PNG();  //파일 포맷별 로딩을 다르게 할수잇도록. 함수깊이를 얕게 하기 위해서

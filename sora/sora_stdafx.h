@@ -71,7 +71,7 @@
 #include <boost/foreach.hpp>
 //#include <boost/utility.hpp>
 
-#include "nodepng/lodepng.h"
+#include "lodepng/lodepng.h"
 
 //glm
 #include <glm/glm.hpp>

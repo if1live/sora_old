@@ -57,6 +57,38 @@ bool IsInf(T num) {
 	return false;
 }
 
+template<typename T>
+bool IsValudNum(T num) {
+  if(IsNaN(num) == false) {
+    return false;
+  }
+  if(IsInf(num) == false) {
+    return false;
+  }
+  return true;
+}
+
+template<typename T>
+bool IsPower(T base, T num) {
+  T curr = 1;
+  while(curr < num) {
+    curr *= base;
+    if(curr == num) {
+      return true;
+    }
+  }
+  return false;
+}
+
+template<typename T>
+T CeilPower(T base, T num) {
+  T curr = 1;
+  while(curr < num) {
+    curr *= base;
+  }
+  return curr;
+}
+
 SR_C_DLL float DegToRad(float degree);
 SR_C_DLL float RadToDeg(float radian);
 

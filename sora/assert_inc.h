@@ -46,8 +46,10 @@
 //static_assert
 #if SR_WIN || SR_IOS
 #define SR_STATIC_ASSERT(A, B) static_assert(A, B)
+#define SR_STATIC_ASSERT_NOMSG(A) static_assert(A, "no msg")
 #else
 #define SR_STATIC_ASSERT(A, B)
+#define SR_STATIC_ASSERT_NOMSG(A)
 #endif
 
 #endif  // SORA_ASSERT_INC_H_

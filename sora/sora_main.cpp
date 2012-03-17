@@ -57,6 +57,7 @@ using sora::MatrixStack;
 using sora::ObjModel;
 
 //fixed
+//sora::Texture tex(sora::Texture::kPolicyForcePOT);
 sora::Texture tex;
 
 GLuint mvp_handle;
@@ -73,7 +74,6 @@ sora::Renderer renderer;
 bool setupGraphics(int w, int h) {
   renderer.SetWindowSize((float)w, (float)h);
  
-
   //load shader file
   const char *vert_path = "shader/v_simple.glsl";
   const char *frag_path = "shader/f_simple.glsl";
@@ -118,7 +118,6 @@ bool setupGraphics(int w, int h) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   tex.Init(tex_id, 2, 2);
   */
-
   //lodepng
   std::string tex_path = sora::Filesystem::GetAppPath("texture/sora.png");
   sora::MemoryFile tex_file(tex_path);
@@ -135,7 +134,7 @@ bool setupGraphics(int w, int h) {
   loader.LoadObj(file1.start, file1.end, &obj_model);
 
   //primitive model test
-  primitive_model.SolidCube(1.5, 3, 2);
+  primitive_model.SolidCube(1, 2, 1);
   //primitive_model.WireCube(1, 1, 1);
   //primitive_model.WireAxis(2);
   //primitive_model.WireSphere(1, 8, 8);

@@ -21,7 +21,13 @@
 #include "sora_stdafx.h"
 #include "texture.h"
 
-#include "nodepng/lodepng.h"
+#if SR_USE_PCH == 0
+#include <iostream>
+#include "lodepng/lodepng.h"
+#include "gl_inc.h"
+#endif
+
+#include "math_helper.h"
 
 namespace sora {;
 
@@ -108,7 +114,7 @@ void PNGLoader::PrintLog() {
 
 ////////////////////////////////////////////
 
-Texture::Texture()
+Texture::Texture(uint policy)
 : start_(NULL), 
 end_(NULL), 
 handle_(0),
@@ -116,7 +122,8 @@ file_fmt_(kFileUnknown),
 tex_width_(0),
 tex_height_(0),
 src_width_(0),
-src_height_(0) {
+src_height_(0),
+policy_(policy) {
 }
 
 Texture::~Texture() {
@@ -136,6 +143,10 @@ void Texture::SetData(int file, uchar *start, uchar *end) {
 
 bool Texture::Init(GLuint tex_id, int width, int height) {
   SR_ASSERT(Loaded() == false);
+  if(Loaded() == true) {
+    return false;
+  }
+
   handle_ = tex_id;
   file_fmt_ = kFileUnknown;
   start_ = NULL;
@@ -144,6 +155,7 @@ bool Texture::Init(GLuint tex_id, int width, int height) {
   tex_height_ = height;
   src_width_ = width;
   src_height_ = height;
+  return true;
 }
 
 bool Texture::Loaded() const {
@@ -198,11 +210,6 @@ bool Texture::Init_PNG() {
     SR_ASSERT(!"unknown color channel");
   }
 
-  tex_width_ = loader.width();
-  tex_height_ = loader.height();
-  src_width_ = loader.width();
-  src_height_ = loader.height();
-
   GLenum elem_type = GL_UNSIGNED_BYTE;
   if(loader.bit_depth() == 8) {
     elem_type = GL_UNSIGNED_BYTE;
@@ -210,12 +217,64 @@ bool Texture::Init_PNG() {
     SR_ASSERT(!"unknowkn bit depth");
   }
 
-  glTexImage2D(GL_TEXTURE_2D, 0, format, tex_width_, tex_height_, 0, format, elem_type, loader.data());
+  src_width_ = loader.width();
+  src_height_ = loader.height();
+  if((policy_ & kPolicyForcePOT) == kPolicyForcePOT) {
+    if(IsPower(2, src_width_) && IsPower(2, src_height_)) {
+      tex_width_ = loader.width();
+      tex_height_ = loader.height();
+      glTexImage2D(GL_TEXTURE_2D, 0, format, tex_width_, tex_height_, 0, format, elem_type, loader.data());
+
+    } else {
+      //2의 승수가 아니면 가상 이미지로 적절히 복사
+      tex_width_ = CeilPower(2, src_width_);
+      tex_height_ = CeilPower(2, src_height_);
+
+      uchar *new_data = (uchar*)malloc(sizeof(uchar) * tex_width_ * tex_height_ * loader.color_channels());
+      memset(new_data, 128, sizeof(uchar) * tex_width_ * tex_height_ * loader.color_channels());
+      for(int y = 0 ; y < src_height_ ; y++) {
+        int new_scanline_size = tex_width_ * loader.color_channels();
+        int old_scanline_size = src_width_ * loader.color_channels();
+        int new_data_idx = y * new_scanline_size;
+        int old_data_idx = y * old_scanline_size;
+        uchar *new_scanline = new_data + new_data_idx;
+        uchar *old_scanline = (uchar*)loader.data() + old_data_idx;
+        memcpy(new_scanline, old_scanline, old_scanline_size);
+      }
+
+      glTexImage2D(GL_TEXTURE_2D, 0, format, tex_width_, tex_height_, 0, format, elem_type, new_data);
+      free(new_data);
+    }
+
+  } else {
+    //npot 사용 가능
+    tex_width_ = loader.width();
+    tex_height_ = loader.height();
+    glTexImage2D(GL_TEXTURE_2D, 0, format, tex_width_, tex_height_, 0, format, elem_type, loader.data());
+  }
   
-  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  if(IsPower(2, tex_width_) == false || IsPower(2, tex_height_) == false) {
+    //npot는 wrap로 GL_CLAMP_TO_EDGE, 만 허용한다
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+
+    //npot는 mipmap불가능
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+  } else {
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    //npot는 mipmap불가능
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  }
+  
 
   return true;
 }

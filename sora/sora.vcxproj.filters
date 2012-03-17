@@ -43,9 +43,6 @@
     <ClCompile Include="timer.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="nodepng\lodepng.cpp">
-      <Filter>sdk</Filter>
-    </ClCompile>
     <ClCompile Include="gl_inc.cpp">
       <Filter>render</Filter>
     </ClCompile>
@@ -97,6 +94,9 @@
     <ClCompile Include="texture.cpp">
       <Filter>render</Filter>
     </ClCompile>
+    <ClCompile Include="lodepng\lodepng.cpp">
+      <Filter>sdk</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -140,9 +140,6 @@
     </ClInclude>
     <ClInclude Include="rect.h">
       <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="nodepng\lodepng.h">
-      <Filter>sdk</Filter>
     </ClInclude>
     <ClInclude Include="gl_inc.h">
       <Filter>render</Filter>
@@ -203,6 +200,9 @@
     </ClInclude>
     <ClInclude Include="texture.h">
       <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="lodepng\lodepng.h">
+      <Filter>sdk</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
