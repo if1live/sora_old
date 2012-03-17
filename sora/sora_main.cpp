@@ -137,10 +137,14 @@ bool setupGraphics(int w, int h) {
   loader.LoadObj(file1.start, file1.end, &obj_model);
 
   //primitive model test
-  primitive_model.SolidCube(1, 1, 1);
+  //primitive_model.SolidCube(1, 1, 1);
   //primitive_model.SolidCube(1, 1, 1);
   //primitive_model.WireCube(1, 1, 1);
   //primitive_model.WireAxis(2);
+  //primitive_model.WireSphere(1, 8, 8);
+  //primitive_model.SolidSphere(1, 8, 8);
+  //primitive_model.WireCone(1, 2, 8, 8);
+  primitive_model.SolidCone(1, 2, 8, 8);
 
   return true;
 }

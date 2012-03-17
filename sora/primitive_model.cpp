@@ -21,6 +21,9 @@
 #include "sora_stdafx.h"
 #include "primitive_model.h"
 #include "template_lib.h"
+#include "math_helper.h"
+
+using namespace std;
 
 namespace sora {;
 struct PrimitiveModelImpl {
@@ -46,7 +49,13 @@ int PrimitiveModel::Count() const {
 const Vertex* PrimitiveModel::vertex_list(int idx) const {
   SR_ASSERT(idx >= 0 && idx < Count());
   const VertexListType &vert_list = impl->vert_list_group[idx];
-  return &vert_list[0];
+  if(vert_list.empty() == false) {
+    return &vert_list[0];
+  } else {
+    //0번인덱스를 대표값으로 쓰자
+    const VertexListType &vert_list = impl->vert_list_group[0];  
+    return &vert_list[0];
+  }
 }
 const void *PrimitiveModel::index_list(int idx) const {
   SR_ASSERT(idx >= 0 && idx < Count());
@@ -78,7 +87,7 @@ void PrimitiveModel::WireCube(float width, float height, float depth) {
   VertexListType &vert_list = impl->vert_list_group[0];
   IndexListType &index_list = impl->index_list_group[0];
   impl->mode_group[0] = GL_LINES;
-  
+
   //top
   //0 1
   //2 3
@@ -367,12 +376,314 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
   }
 }
 void PrimitiveModel::WireSphere(float radius, int slices, int stacks) {
+  SR_ASSERT(radius > 0);
+  SR_ASSERT(slices > 0);
+  SR_ASSERT(stacks > 0);
+
+  //use one mesh
+  SR_ASSERT(impl == NULL);
+  impl = new PrimitiveModelImpl(1);
+
+  VertexListType &vert_list = impl->vert_list_group[0];
+  IndexListType &index_list = impl->index_list_group[0];
+  impl->mode_group[0] = GL_LINES;
+
+  //사용될 vertex list 생성
+  std::vector<Vec3f> tmp_vertex_list;
+  for(int i = 0 ; i < stacks ; i++) {
+    double yAngle = (kPi / stacks * i) - kPiOver2;
+    float y = static_cast<float>(sin(yAngle));
+
+    for(int j = 0 ; j < slices ; j++) {
+      double zxAngle = (2.0 * kPi / slices) * j;
+      float x = static_cast<float>(cos(yAngle) * cos(zxAngle));
+      float z = static_cast<float>(cos(yAngle) * sin(zxAngle));
+
+      Vec3f pos(x, y, z);
+      tmp_vertex_list.push_back(pos);
+    }
+  }
+  //북극점(맨위)
+  Vec3f top(0, 1, 0);
+  tmp_vertex_list.push_back(top);
+
+  //선으로 구성되니까 해당항목은 없어도 별로 티가 안난다
+
+  //vertex 위치정보+잡탕으로 진짜 vertex list생성
+  vector<Vec3f>::iterator it;
+  for(it = tmp_vertex_list.begin() ; it != tmp_vertex_list.end() ; it++) {
+    const Vec3f &pos = *it;
+    Vertex vertex;
+    vertex.normal = pos;
+    vertex.pos = pos * radius;
+    vert_list.push_back(vertex);
+  }
+
+  //index list
+  for(int i = 0 ; i < stacks ; i++) {
+    //stack 라인 구성
+    int start = i * slices;
+    for(int j = 0 ; j < slices ; j++) {
+      GLushort a = start + j;
+      GLushort b = a + 1;
+      if(j == slices-1) {
+        b = start;
+      }
+      index_list.push_back(a);
+      index_list.push_back(b);
+    }
+  }
+  for(int i = 0 ; i < slices ; i++) {
+    //slice 라인 구성
+    const GLushort topIndex = vert_list.size()-1;
+    for(int j = 0 ; j < stacks ; j++) {
+      GLushort a = i + (j*slices);
+      GLushort b = (a + slices);
+      if(b >= slices*stacks) {
+        b = topIndex;
+      }
+      index_list.push_back(a);
+      index_list.push_back(b);
+    }
+  }
 }
 void PrimitiveModel::SolidSphere(float radius, int slices, int stacks) {
+  SR_ASSERT(radius > 0);
+  SR_ASSERT(slices > 0);
+  SR_ASSERT(stacks > 0);
+
+  //use one mesh
+  SR_ASSERT(impl == NULL);
+  impl = new PrimitiveModelImpl(1);
+  VertexListType &vert_list = impl->vert_list_group[0];
+  IndexListType &index_list = impl->index_list_group[0];
+  impl->mode_group[0] = GL_TRIANGLES;
+
+  //원을 구성하는 포인트 리스트 + 텍스쳐 좌표 동시 계산
+  vector<Vec3f> posList;
+  vector<Vec2f> texCoordList;
+  for(int i = 0 ; i <= stacks ; i++) {
+    double yAngle = (kPi / stacks * i) - kPiOver2;
+    float y = static_cast<float>(sin(yAngle));
+    for(int j = 0 ; j <= slices ; j++) {
+      float zxAngle = static_cast<float>((2.0 * kPi / slices) * j);
+      float x = static_cast<float>(cos(yAngle) * cos(zxAngle));
+      float z = static_cast<float>(cos(yAngle) * sin(zxAngle));
+
+      Vec3f pos(x, y, z);
+      posList.push_back(pos);
+
+      //tex 좌표 계산
+      float s = 1.0f / (slices) * j;
+      float t = 1.0f / (stacks) * i;
+      Vec2f texCoord(s, t);
+      texCoordList.push_back(texCoord);
+    }
+  }
+
+  //normal vector = 반지름1인 pso
+
+  //vertex 구성
+  for(std::size_t i = 0 ; i < posList.size() ; i++) {
+    const Vec3f &pos = posList[i];
+    const Vec2f &texcoord = texCoordList[i];
+
+    Vertex vert;
+    vert.pos = pos * radius;
+    vert.normal = pos;
+    vert.texcoord = texcoord;
+    vert_list.push_back(vert);
+  }
+
+  for(int i = 0 ; i < stacks ; i++) {
+    GLushort start = i * (slices+1);
+    for(int j = 0 ; j < slices ; j++) {
+      //d c
+      //b a
+      GLushort a = j + start;
+      GLushort b = a + 1;
+      GLushort c = a + slices + 1;
+      GLushort d = c + 1;
+
+
+      index_list.push_back(a);
+      index_list.push_back(c);
+      index_list.push_back(b);
+
+      index_list.push_back(c);
+      index_list.push_back(d);
+      index_list.push_back(b);
+    }
+  }
 }
 void PrimitiveModel::WireCone(float base, float height, int slices, int stacks) {
+  SR_ASSERT(base > 0);
+  SR_ASSERT(height > 0);
+  SR_ASSERT(slices > 0);
+  SR_ASSERT(stacks > 0);
+
+  //밑면/옆면을 다른 메시로 처리하자
+  //vertex List는 공유하고 index만 다르게 하자
+  SR_ASSERT(impl == NULL);
+  impl = new PrimitiveModelImpl(2);
+  VertexListType &vert_list = impl->vert_list_group[0];
+  IndexListType &stackindex_list = impl->index_list_group[0];
+  IndexListType &sliceindex_list = impl->index_list_group[1];
+  impl->mode_group[0] = GL_LINES;
+  impl->mode_group[1] = GL_LINES;
+
+  //밑면
+  vector<Vec3f> posList; 
+  for(int j = 0 ; j < stacks ; j++) {
+    float y = (1.0f / (float)stacks) * j;
+    for(int i = 0 ; i < slices ; i++) {
+      double angleDt = 2.0 * kPi / slices;
+      float radius = (1.0f / stacks) * (stacks-j);
+      float x = static_cast<float>(cos(angleDt * i) * radius);
+      float z = static_cast<float>(sin(angleDt * i) * radius);
+
+      Vec3f pos(x, y, z);
+      posList.push_back(pos);
+    }
+  }
+  //최상위 꼭지점은 따로 넣는다
+  Vec3f toppos(0, 1, 0);
+  posList.push_back(toppos);
+
+
+  //vertex 구성
+  //vec2 texCoord(0, 0);
+  //vec3 normal(0, 0, 0);
+  for(std::size_t i = 0 ; i < posList.size() ; i++) {
+    Vec3f &pos = posList[i];
+    pos.x *= base;
+    pos.y *= height;
+    pos.z *= base;
+    
+    Vertex v;
+    v.pos = pos;
+    vert_list.push_back(v);
+  }
+
+  //index for bottom;
+  for(int j = 0 ; j < stacks ; j++) {
+    int startIndex = -1;
+    for(int i = 0 ; i < slices ; i++) {
+      if(i == 0) {
+        startIndex = j*slices;
+      }
+      GLushort a = startIndex + i;
+      GLushort b = ((a + 1) % slices) + startIndex;
+      stackindex_list.push_back(a);
+      stackindex_list.push_back(b);
+    }
+  }
+
+  //꼭지점에서 base로 내려오는 직선 긋기
+  GLushort topVertexIndex = vert_list.size()-1;
+  for(int i = 0 ; i < slices ; i++) {
+    sliceindex_list.push_back(i);
+    sliceindex_list.push_back(topVertexIndex);
+  }
 }
 void PrimitiveModel::SolidCone(float base, float height, int slices, int stacks) {
+  SR_ASSERT(base > 0);
+  SR_ASSERT(height > 0);
+  SR_ASSERT(slices > 2);
+  SR_ASSERT(stacks > 0);
+
+  //밑면/옆면을 다른 메시로 처리하자
+  //vertex List는 공유하고 index만 다르게 하자
+  SR_ASSERT(impl == NULL);
+  impl = new PrimitiveModelImpl(2);
+  VertexListType &vert_list = impl->vert_list_group[0];
+  IndexListType &sideindex_list = impl->index_list_group[0];
+  IndexListType &bottomindex_list = impl->index_list_group[1];
+  impl->mode_group[0] = GL_TRIANGLES;
+  impl->mode_group[1] = GL_TRIANGLE_FAN;
+
+  //점 목록 찍기. 옆면용 + vertex list 구성
+  for(int j = 0 ; j <= stacks ; j++) {
+    float y = (height / stacks) * j;
+    for(int i = 0 ; i <= slices ; i++) {
+      float angleDt = static_cast<float>(2.0 * kPi / slices);
+      float radius = (1.0f / stacks) * (stacks-j)* base;
+      float x = cos(angleDt * i) * radius;
+      float z = sin(angleDt * i) * radius;
+      Vec3f pos(x, y, z);
+      Vec3f normal = pos.Normalize();
+
+      float texCoordS = (1.0f / slices) * i;
+      float texCoordT = (1.0f / stacks) * j;
+      assert(texCoordS >= 0 && texCoordS <= 1 && texCoordT >= 0 && texCoordT <= 1);
+      Vec2f texCoord(texCoordS, texCoordT);
+
+      Vertex v;
+      v.pos = pos;
+      v.texcoord = texCoord;
+      v.normal = normal;
+      vert_list.push_back(v);
+    }
+  }
+
+  //밑바닥용 vertex pos는 다시 계산한다. normal+tex가 옆면과 달라야되기 떄문에 추가로 필요하다
+  Vec3f bottomNormal(0, -1, 0);
+  const int bottomVertexStartIndex = vert_list.size();	//bottom vertex 정보가 시작되는 인덱스
+  for(int i = 0 ; i < slices ; i++) {
+    float angleDt = static_cast<float>(2.0 * kPi / slices);
+    float x = cos(angleDt * i) * base;
+    float z = sin(angleDt * i) * base;
+    Vec3f pos(x, 0, z);
+    //texcoord 계산
+    Vec2f texCoord((cos(angleDt * i) + 1) / 2, (sin(angleDt *i) + 1) / 2);
+
+    Vertex v;
+    v.pos = pos;
+    v.texcoord = texCoord;
+    v.normal = bottomNormal;
+    vert_list.push_back(v);
+  }
+
+  //밑바닥 중심점
+  Vec3f bottompos(0, 0, 0);
+  Vec2f bottomCenterTexCoord(0.5, 0.5);
+  Vertex bottomCenterVertex;
+  bottomCenterVertex.pos = bottompos;
+  bottomCenterVertex.texcoord = bottomCenterTexCoord;
+  bottomCenterVertex.normal = bottomNormal;
+  vert_list.push_back(bottomCenterVertex);
+
+  //index list
+  //옆면부터
+  for(int i = 0 ; i < stacks ; i++) {
+    GLushort start = i * (slices+1);
+    for(int j = 0 ; j < slices ; j++) {
+      //x-z평면의 좌표계의 방향은 x-y평면과 증가방향이 반대다
+      //d c
+      //b a
+      GLushort a = start + j;
+      GLushort b = a + 1;
+      GLushort c = a + (slices + 1);
+      GLushort d = c + 1;
+
+      sideindex_list.push_back(a);
+      sideindex_list.push_back(c);
+      sideindex_list.push_back(d);
+
+      sideindex_list.push_back(a);
+      sideindex_list.push_back(d);
+      sideindex_list.push_back(b);
+    }
+  }
+  //밑면
+  //화면의 밑점은 가장 마지막에 넣었음
+  GLushort bottomVertexIndex = vert_list.size()-1;
+  bottomindex_list.push_back(bottomVertexIndex);
+  for(int i = 0 ; i < slices ; i++) {
+    bottomindex_list.push_back(i + bottomVertexStartIndex);
+  }
+  //처음점을 다시 찍어야 원형 완성
+  bottomindex_list.push_back(bottomVertexStartIndex);
 }
 void PrimitiveModel::WireCylinder(float radius, float height, int slices) {
 }
@@ -424,359 +735,9 @@ void PrimitiveModel::WireAxis(float size) {
 }
 
 #if 0
-#if _IOS_
-#pragma mark wire cube
-#endif
-WireCube::WireCube(GLfloat width, GLfloat height, GLfloat depth, const matsu::vec4 &color)
-{
-  
-}
-WireCube::~WireCube()
-{
-}
-const std::vector<DrawCommand> WireCube::getDrawCommand() const
-{
-  std::vector<DrawCommand> list;
-  DrawCommand cmd(GL_LINES, index_list.size(), GL_UNSIGNED_SHORT, &indexList_[0], vertexPointer());
-  list.push_back(cmd);
-  return list;
-}
-
-#if _IOS_
-#pragma mark wire sphere
-#endif
-WireSphere::WireSphere(GLfloat radius, GLint slices, GLint stacks, const matsu::vec4 &color)
-{
-  assert(radius > 0 && slices > 0 && stacks > 0);
-
-  //사용될 vertex list 생성
-  vector<vec3> vertexList;
-  for(int i = 0 ; i < stacks ; i++)
-  {
-    double yAngle = (M_PI / stacks * i) - M_PI_2;
-    float y = static_cast<float>(sin(yAngle));
-
-    for(int j = 0 ; j < slices ; j++)
-    {
-      double zxAngle = (2.0 * M_PI / slices) * j;
-      float x = static_cast<float>(cos(yAngle) * cos(zxAngle));
-      float z = static_cast<float>(cos(yAngle) * sin(zxAngle));
-
-      Vec3f pos(x, y, z);
-      vertexList.push_back(pos);
-    }
-  }
-  //북극점(맨위)
-  Vec3f top(0, 1, 0);
-  vertexList.push_back(top);
-
-  //선으로 구성되니까 해당항목은 없어도 별로 티가 안난다
-  //vec2 texCoord(0, 0);
-  //vec3 normal(0, 0, 0);
-  matsu::vec4 colorVec(color);
-
-  //vertex 위치정보+잡탕으로 진짜 vertex list생성
-  vector<vec3>::iterator it;
-  for(it = vertexList.begin() ; it != vertexList.end() ; it++)
-  {
-    vec3 &pos = *it;
-    pos = pos * radius;
-    Vertex vertex(pos, colorVec);
-    vert_list.push_back(vertex);
-  }
-
-  //index list
-  for(int i = 0 ; i < stacks ; i++)
-  {
-    //stack 라인 구성
-    int start = i * slices;
-    for(int j = 0 ; j < slices ; j++)
-    {
-      GLushort a = start + j;
-      GLushort b = a + 1;
-      if(j == slices-1)
-        b = start;
-      index_list.push_back(a);
-      index_list.push_back(b);
-    }
-  }
-  for(int i = 0 ; i < slices ; i++)
-  {
-    //slice 라인 구성
-    const GLushort topIndex = vertexList.size()-1;
-    for(int j = 0 ; j < stacks ; j++)
-    {
-      GLushort a = i + (j*slices);
-      GLushort b = (a + slices);
-      if(b >= slices*stacks)
-        b = topIndex;
-      index_list.push_back(a);
-      index_list.push_back(b);
-    }
-  }
-}
-WireSphere::~WireSphere()
-{
-}
-const std::vector<DrawCommand> WireSphere::getDrawCommand() const
-{
-  vector<DrawCommand> list;
-  DrawCommand cmd(GL_LINES, index_list.size(), GL_UNSIGNED_SHORT, &indexList_[0], vertexPointer());
-  list.push_back(cmd);
-  return list;
-}
-
-#if _IOS_
-#pragma mark solid sphere
-#endif
-SolidSphere::SolidSphere(GLfloat radius, GLint slices, GLint stacks, const matsu::vec4 &color)
-{
-  assert(radius > 0 && slices > 0 && stacks > 0);
-
-  //원을 구성하는 포인트 리스트 + 텍스쳐 좌표 동시 계산
-  vector<vec3> posList;
-  vector<vec2> texCoordList;
-  for(int i = 0 ; i <= stacks ; i++)
-  {
-    double yAngle = (M_PI / stacks * i) - M_PI_2;
-    float y = static_cast<float>(sin(yAngle));
-    for(int j = 0 ; j <= slices ; j++)
-    {
-      float zxAngle = static_cast<float>((2.0 * M_PI / slices) * j);
-      float x = static_cast<float>(cos(yAngle) * cos(zxAngle));
-      float z = static_cast<float>(cos(yAngle) * sin(zxAngle));
-
-      Vec3f pos(x, y, z);
-      posList.push_back(pos);
-
-      //tex 좌표 계산
-      float s = 1.0f / (slices) * j;
-      float t = 1.0f / (stacks) * i;
-      Vec2f texCoord(s, t);
-      texCoordList.push_back(texCoord);
-    }
-  }
-
-  //normal vector 계산
-  //normal = 0, 0, 0에서 pos방향 벡터
-  vector<vec3> normalList;
-  for(std::size_t i = 0 ; i < posList.size() ; i++)
-  {
-    Vec3f &pos = posList[i];
-    vec3 normal = pos.normal();
-    normalList.push_back(normal);
-  }
-
-  //vertex 구성
-  matsu::vec4 colorVec(color);
-  for(std::size_t i = 0 ; i < posList.size() ; i++)
-  {
-    vec3 pos = posList[i] * radius;
-    Vertex vertex(pos, texCoordList[i], normalList[i]);
-    vert_list.push_back(vertex);
-  }
-
-  for(int i = 0 ; i < stacks ; i++)
-  {
-    GLushort start = i * (slices+1);
-    for(int j = 0 ; j < slices ; j++)
-    {
-      //d c
-      //b a
-      GLushort a = j + start;
-      GLushort b = a + 1;
-      GLushort c = a + slices + 1;
-      GLushort d = c + 1;
-
-
-      index_list.push_back(a);
-      index_list.push_back(c);
-      index_list.push_back(b);
-
-      index_list.push_back(c);
-      index_list.push_back(d);
-      index_list.push_back(b);
-    }
-
-  }
-}
-SolidSphere::~SolidSphere()
-{
-}
-const std::vector<DrawCommand> SolidSphere::getDrawCommand() const
-{
-  std::vector<DrawCommand> list;
-  DrawCommand cmd(GL_TRIANGLES, index_list.size(), GL_UNSIGNED_SHORT, &indexList_[0], vertexPointer());
-  list.push_back(cmd);
-  return list;
-}
-
-#if _IOS_
-#pragma mark wire cone
-#endif
-WireCone::WireCone(GLfloat base, GLfloat height, GLint slices, GLint stacks, const matsu::vec4 &color)
-{
-  assert(base > 0 && height > 0 && slices > 0 && stacks > 0);
-
-  //밑면
-  vector<vec3> posList;
-  for(int j = 0 ; j < stacks ; j++)
-  {
-    float y = (1.0f / (float)stacks) * j;
-    for(int i = 0 ; i < slices ; i++)
-    {
-      double angleDt = 2.0 * M_PI / slices;
-      float radius = (1.0f / stacks) * (stacks-j);
-      float x = static_cast<float>(cos(angleDt * i) * radius);
-      float z = static_cast<float>(sin(angleDt * i) * radius);
-
-      vec3 pos(x, y, z);
-      posList.push_back(pos);
-    }
-  }
-  //최상위 꼭지점은 따로 넣는다
-  vec3 toppos(0, 1, 0);
-  posList.push_back(toppos);
-
-
-  //vertex 구성
-  //vec2 texCoord(0, 0);
-  //vec3 normal(0, 0, 0);
-  vec4 colorVec(color);
-  for(std::size_t i = 0 ; i < posList.size() ; i++)
-  {
-    vec3 pos = posList[i];
-    pos.x *= base;
-    pos.y *= height;
-    pos.z *= base;
-    //Vertex v(posList[i], texCoord, normal);
-    Vertex v(posList[i], colorVec);
-    vert_list.push_back(v);
-  }
-
-  //index for bottom;
-  for(int j = 0 ; j < stacks ; j++)
-  {
-    int startIndex = -1;
-    for(int i = 0 ; i < slices ; i++)
-    {
-      if(i == 0)
-        startIndex = j*slices;
-      GLushort a = startIndex + i;
-      GLushort b = ((a + 1) % slices) + startIndex;
-      stackindex_list.push_back(a);
-      stackindex_list.push_back(b);
-    }
-  }
-
-  //꼭지점에서 base로 내려오는 직선 긋기
-  GLushort topVertexIndex = vert_list.size()-1;
-  for(int i = 0 ; i < slices ; i++)
-  {
-    sliceindex_list.push_back(i);
-    sliceindex_list.push_back(topVertexIndex);
-  }
-
-}
-WireCone::~WireCone()
-{
-}
-const std::vector<DrawCommand> WireCone::getDrawCommand() const
-{
-  std::vector<DrawCommand> list;
-  DrawCommand cmd1(GL_LINES, stackindex_list.size(), GL_UNSIGNED_SHORT, &stackIndexList_[0], vertexPointer());
-  DrawCommand cmd2(GL_LINES, sliceindex_list.size(), GL_UNSIGNED_SHORT, &sliceIndexList_[0], vertexPointer());
-  list.push_back(cmd1);
-  list.push_back(cmd2);
-  return list;
-}
-
-#if _IOS_
-#pragma mark solid cone
-#endif
 SolidCone::SolidCone(GLfloat base, GLfloat height, GLint slices, GLint stacks, const matsu::vec4 &color)
 {
-  assert(base > 0 && height > 0 && slices > 2 && stacks > 0);
-  vec4 colorVec(color);
-
-  //점 목록 찍기. 옆면용 + vertex list 구성
-  for(int j = 0 ; j <= stacks ; j++)
-  {
-    float y = (height / stacks) * j;
-    for(int i = 0 ; i <= slices ; i++)
-    {
-      float angleDt = static_cast<float>(2.0 * M_PI / slices);
-      float radius = (1.0f / stacks) * (stacks-j)* base;
-      float x = cos(angleDt * i) * radius;
-      float z = sin(angleDt * i) * radius;
-      vec3 pos(x, y, z);
-      vec3 normal = pos.normal();
-
-      float texCoordS = (1.0f / slices) * i;
-      float texCoordT = (1.0f / stacks) * j;
-      assert(texCoordS >= 0 && texCoordS <= 1 && texCoordT >= 0 && texCoordT <= 1);
-      vec2 texCoord(texCoordS, texCoordT);
-
-      Vertex v(pos, texCoord, normal);
-      vert_list.push_back(v);
-    }
-  }
-
-  //밑바닥용 vertex pos는 다시 계산한다. normal+tex가 옆면과 달라야되기 떄문에 추가로 필요하다
-  vec3 bottomNormal(0, -1, 0);
-  const int bottomVertexStartIndex = vert_list.size();	//bottom vertex 정보가 시작되는 인덱스
-  for(int i = 0 ; i < slices ; i++)
-  {
-    float angleDt = static_cast<float>(2.0 * M_PI / slices);
-    float x = cos(angleDt * i) * base;
-    float z = sin(angleDt * i) * base;
-    vec3 pos(x, 0, z);
-    //texcoord 계산
-    vec2 texCoord((cos(angleDt * i) + 1) / 2, (sin(angleDt *i) + 1) / 2);
-
-    Vertex v(pos, texCoord, bottomNormal);
-    vert_list.push_back(v);
-  }
-  //밑바닥 중심점
-  vec3 bottompos(0, 0, 0);
-  vec2 bottomCenterTexCoord(0.5, 0.5);
-  Vertex bottomCenterVertex(bottompos, bottomCenterTexCoord, bottomNormal);
-  vert_list.push_back(bottomCenterVertex);
-
-  //index list
-  //옆면부터
-  for(int i = 0 ; i < stacks ; i++)
-  {
-    GLushort start = i * (slices+1);
-    for(int j = 0 ; j < slices ; j++)
-    {
-      //x-z평면의 좌표계의 방향은 x-y평면과 증가방향이 반대다
-      //d c
-      //b a
-      GLushort a = start + j;
-      GLushort b = a + 1;
-      GLushort c = a + (slices + 1);
-      GLushort d = c + 1;
-
-      sideindex_list.push_back(a);
-      sideindex_list.push_back(c);
-      sideindex_list.push_back(d);
-
-      sideindex_list.push_back(a);
-      sideindex_list.push_back(d);
-      sideindex_list.push_back(b);
-    }
-  }
-  //밑면
-  //화면의 밑점은 가장 마지막에 넣었음
-  GLushort bottomVertexIndex = vert_list.size()-1;
-  bottomindex_list.push_back(bottomVertexIndex);
-  for(int i = 0 ; i < slices ; i++)
-  {
-    bottomindex_list.push_back(i + bottomVertexStartIndex);
-  }
-  //처음점을 다시 찍어야 원형 완성
-  bottomindex_list.push_back(bottomVertexStartIndex);
+  
 }
 SolidCone::~SolidCone()
 {
