@@ -51,6 +51,7 @@
 #include "texture.h"
 #include "renderer.h"
 #include "material.h"
+#include "math_helper.h"
 
 using sora::GLHelper;
 using sora::ShaderProgram;
@@ -128,11 +129,11 @@ bool setupGraphics(int w, int h) {
   loader.LoadMtl(mtl_file.start, mtl_file.end, &material_list);
 
   //primitive model test
-  //primitive_model.SolidCube(1, 2, 1);
+  primitive_model.SolidCube(1, 2, 1);
   //primitive_model.WireCube(1, 1, 1);
   //primitive_model.WireAxis(2);
   //primitive_model.WireSphere(1, 8, 8);
-  primitive_model.SolidSphere(1, 16, 16);
+  //primitive_model.SolidSphere(1, 16, 16);
   //primitive_model.WireCone(1, 2, 8, 8);
   //primitive_model.SolidCone(1, 2, 8, 8);
   //primitive_model.WireCylinder(1, 2, 8);
@@ -143,7 +144,7 @@ bool setupGraphics(int w, int h) {
 
 void renderFrame() {
   static float rot = 0;
-  rot += 0.05f;
+  rot += 0.2f;
 
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -156,13 +157,16 @@ void renderFrame() {
   sora::Renderer::GetInstance().SetTexture(tex);
 
   //use material
-  sora::Material &mtl = material_list[0];
+  //sora::Material &mtl = material_list[0];
+  sora::Material &mtl = material_list[2];
   sora::Renderer::GetInstance().SetMaterial(mtl);
 
   GLint mvp_handle = shader_prog.GetLocation(sora::kLocationModelViewProjection);
   GLint texcoord_handle = shader_prog.GetLocation(sora::kLocationTexcoord);
   GLint position_handle = shader_prog.GetLocation(sora::kLocationPosition);
   GLint normal_handle = shader_prog.GetLocation(sora::kLocationNormal);
+  GLint world_handle = shader_prog.GetLocation(sora::kLocationWorld);
+  GLint light_pos_handle = shader_prog.GetLocation(sora::kLocationLightPosition);
   
   glEnableVertexAttribArray(position_handle);
   glEnableVertexAttribArray(texcoord_handle);
@@ -173,17 +177,36 @@ void renderFrame() {
   //glm::mat4 projection = glm::ortho(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);
   //glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0));
   glm::mat4 projection = glm::perspective(60.0f, win_width / win_height, 1.0f, 100.0f);
-  glm::mat4 modelview = glm::lookAt(glm::vec3(0, 0, 3), glm::vec3(0), glm::vec3(0, 1, 0));
-  modelview = glm::rotate(modelview, rot, glm::vec3(0, 1, 0));
-  glm::mat4 mvp = projection * modelview;  
-  glUniformMatrix4fv(mvp_handle, 1, 0, glm::value_ptr(mvp));
+  glm::mat4 view = glm::lookAt(glm::vec3(0, 0, 3), glm::vec3(0), glm::vec3(0, 1, 0));
+  glm::mat4 model = glm::mat4(1.0f);
+  model= glm::rotate(model, rot, glm::vec3(0, 1, 0));
+  glm::mat4 mvp = projection * view * model;  
+  glUniformMatrix4fv(mvp_handle, 1, GL_FALSE, glm::value_ptr(mvp));
+  
+  //set world matrix??
+  glUniformMatrix4fv(world_handle, 1, GL_FALSE, glm::value_ptr(model));
+  GLHelper::CheckError("Set Matrix Pos Handle");
 
+  //set light position
+  glm::vec3 light_pos = glm::vec3(1.0f, 6.0f, 50.0f);
+  glUniform3fv(light_pos_handle, 1, glm::value_ptr(light_pos));
+  GLHelper::CheckError("Set Light Pos Handle");
 
+  //set view position
+  GLint view_pos_handle = shader_prog.GetUniformLocation("u_viewPosition");
+  glm::vec4 view_pos = glm::vec4(0, 0, 3, 1);
+  glUniform4fv(view_pos_handle, 1, glm::value_ptr(view_pos));
+  GLHelper::CheckError("Set View Pos Handle");
+
+  /*
   //draw cube
-  //glVertexAttribPointer(position_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &obj_model.vertex_ptr()->pos);
-  //glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &obj_model.vertex_ptr()->texcoord);
-  //glDrawElements(GL_TRIANGLES, obj_model.index_count(), GL_UNSIGNED_SHORT, obj_model.index_ptr());
+  glVertexAttribPointer(position_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &obj_model.vertex_ptr()->pos);
+  glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &obj_model.vertex_ptr()->texcoord);
+  glVertexAttribPointer(normal_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &obj_model.vertex_ptr()->normal);
+  glDrawElements(GL_TRIANGLES, obj_model.index_count(), GL_UNSIGNED_SHORT, obj_model.index_ptr());
+  */
 
+  
   //draw primitive model
   for(int i = 0 ; i < primitive_model.Count() ; i++) {
     const sora::Vertex *vert_ptr = primitive_model.vertex_list(i);
@@ -196,8 +219,9 @@ void renderFrame() {
     glVertexAttribPointer(normal_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->normal);
     //glDrawElements(GL_TRIANGLES, index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
     glDrawElements(draw_mode, idx_count, GL_UNSIGNED_SHORT, idx_ptr);
+    GLHelper::CheckError("DrawElements - primitive model");
   }
-
+  
 
   //////////////////////////////
   sora::Renderer::GetInstance().EndRender();

@@ -25,7 +25,12 @@
 #include <GLES2/gl2.h>
 #include <GLES2/gl2ext.h>
 #endif
+
+#if SR_USE_PCH == 0
 #include <string>
+#include "tuple_inc.h"
+#include <vector>
+#endif
 
 #define SORA_MODELVIEWPROJECTION_NAME   "u_modelViewProjection"
 #define SORA_POSITION_NAME              "a_position"
@@ -37,6 +42,7 @@
 #define SORA_SPECULAR_SHININESS_NAME    "u_specularShininess"
 #define SORA_MATERIAL_ALPHA_NAME        "u_materialAlpha"
 #define SORA_LIGHT_POSITION_NAME        "u_lightPosition"
+#define SORA_WORLD_NAME                 "u_world"
 
 namespace sora {;
 
@@ -51,6 +57,7 @@ enum {
   kLocationSpecularShininess,
   kLocationMaterialAlpha,
   kLocationLightPosition,
+  kLocationWorld,
   kLocationCount,
 };
 enum {

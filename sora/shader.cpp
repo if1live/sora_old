@@ -27,6 +27,7 @@
 #endif
 
 using namespace std;
+using namespace std::tr1;
 
 namespace sora {;
 Shader::Shader()
@@ -205,6 +206,7 @@ const std::vector<LocationTuple> &ShaderProgram::GetLocationTupleList() {
       kLocationTypeUniform,   //kLocationSpecularShininess,
       kLocationTypeUniform,   //kLocationMaterialAlpha,
       kLocationTypeUniform,   //kLocationLightPosition
+      kLocationTypeUniform,   //kLocationWorld
     };
 
     const char *location_name_table[] = {
@@ -218,6 +220,7 @@ const std::vector<LocationTuple> &ShaderProgram::GetLocationTupleList() {
       SORA_SPECULAR_SHININESS_NAME,      //kLocationSpecularShininess,
       SORA_MATERIAL_ALPHA_NAME,          //kLocationMaterialAlpha,
       SORA_LIGHT_POSITION_NAME,          //kLocationLightPosition
+      SORA_WORLD_NAME,                  //kLocationWorld
     };
     const int type_count = GetArraySize(location_type_table);
     const int name_count = GetArraySize(location_name_table);

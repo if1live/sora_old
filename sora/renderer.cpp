@@ -79,12 +79,34 @@ void Renderer::SetShader(const ShaderProgram &prog) {
 void Renderer::SetMaterial(const Material &material) {
   int ambient_color_loc = last_prog_->GetLocation(kLocationAmbientColor);
   if(ambient_color_loc != -1) {
-    glUniform3fv(ambient_color_loc, 3, material.ambient);
+    glUniform3fv(ambient_color_loc, 1, material.ambient);
+    GLHelper::CheckError("Uniform AmbientColor");
   }
 
   int diffuse_color_loc = last_prog_->GetLocation(kLocationDiffuseColor);
   if(diffuse_color_loc != -1) {
-    glUniform3fv(diffuse_color_loc, 3, material.diffuse);
+    glUniform3fv(diffuse_color_loc, 1, material.diffuse);
+    GLHelper::CheckError("Uniform DiffuseColor");
+  }
+
+  //specular
+  if(material.illumination_model == 1) {
+    //not use ks
+    ;
+  } else if(material.illumination_model == 2) {
+    //use ks, specular
+    int specular_color_loc = last_prog_->GetLocation(kLocationSpecularColor);
+    if(specular_color_loc != -1) {
+      glUniform3fv(specular_color_loc, 1, material.specular);
+      GLHelper::CheckError("Uniform SpecularColor");
+    }
+    int shininess_loc = last_prog_->GetLocation(kLocationSpecularShininess);
+    if(shininess_loc != -1) {
+      glUniform1f(shininess_loc, material.shininess);
+      GLHelper::CheckError("Uniform Shininess");
+    }
+  } else {
+    SR_ASSERT(!"not support yet");
   }
 }
 

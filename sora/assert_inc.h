@@ -23,6 +23,7 @@
 
 #include "arch.h"
 #include <cassert>
+#include <cstdlib>
 
 #if SR_WIN
 //#define SR_ASSERT(EXPR) do { assert(EXPR); } while(0);
@@ -37,6 +38,7 @@
   if (!(EXPR)) {  \
     LOGE("%s : %d : %s", __FILE__, __LINE__, #EXPR); \
     assert(EXPR); \
+    exit(-1); \
   } } while(0);
 
 #else

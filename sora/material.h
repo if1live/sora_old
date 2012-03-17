@@ -21,6 +21,10 @@
 #ifndef SORA_MATERIAL_H_
 #define SORA_MATERIAL_H_
 
+#if SR_USE_PCH == 0
+#include <cstring>
+#endif
+
 namespace sora {;
 //재질데이터는 MTL을 기반으로 일단 구현한다. 나중에 다른 포맷에 맞춰서 확장하자
 struct Material {
@@ -36,6 +40,7 @@ struct Material {
       specular[i] = 1.0f;
     }
     alpha = 1.0f;  //not transparent
+    illumination_model = 1;
     shininess = 0.0f;
   };
   char name[64];

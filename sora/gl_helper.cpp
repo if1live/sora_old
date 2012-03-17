@@ -55,6 +55,9 @@ bool GLHelper::CheckError(const char *name) {
     }
 
     LOGE("OpenGL Error [%s] : %s", name, error_msg);
+#if SR_ANDROID
+    exit(-1);
+#endif
     return false;
   }
   return true;
