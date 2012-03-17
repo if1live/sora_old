@@ -176,9 +176,9 @@ void renderFrame() {
 
 
   //draw cube
-  glVertexAttribPointer(position_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &obj_model.vert_list[0].pos);
-  glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &obj_model.vert_list[0].texcoord);
-  glDrawElements(GL_TRIANGLES, obj_model.index_list.size(), GL_UNSIGNED_SHORT, &obj_model.index_list[0]);
+  glVertexAttribPointer(position_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &obj_model.vertex_ptr()->pos);
+  glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &obj_model.vertex_ptr()->texcoord);
+  glDrawElements(GL_TRIANGLES, obj_model.index_count(), GL_UNSIGNED_SHORT, obj_model.index_ptr());
 
   //glDrawArrays(GL_TRIANGLES, 0, 3);
 }

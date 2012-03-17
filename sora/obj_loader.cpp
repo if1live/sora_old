@@ -217,13 +217,13 @@ void ObjLoader::ParseObjLine(uchar *str, int n) {
       }
     }
 
-    int base_vert_size = impl->model->vert_list.size();
+    int base_vert_size = impl->model->vertex_count();
     for(int i = 0 ; i < 3 ; i++) {
-      impl->model->vert_list.push_back(vert_list[i]);
+      impl->model->AddVertex(vert_list[i]);
     }
-    impl->model->index_list.push_back(base_vert_size + 0);
-    impl->model->index_list.push_back(base_vert_size + 1);
-    impl->model->index_list.push_back(base_vert_size + 2);
+    impl->model->AddIndex(base_vert_size + 0);
+    impl->model->AddIndex(base_vert_size + 1);
+    impl->model->AddIndex(base_vert_size + 2);
 
 
   } else if(*tok_iter == "g") {

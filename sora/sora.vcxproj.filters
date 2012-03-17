@@ -88,6 +88,9 @@
     <ClCompile Include="obj_loader.cpp">
       <Filter>render</Filter>
     </ClCompile>
+    <ClCompile Include="primitive_model.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -181,6 +184,12 @@
       <Filter>render</Filter>
     </ClInclude>
     <ClInclude Include="obj_loader.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="teapot.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="primitive_model.h">
       <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>

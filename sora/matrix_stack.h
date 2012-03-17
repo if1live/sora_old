@@ -25,6 +25,7 @@
 #include "vector.h"
 
 namespace sora {;
+struct MatrixStackImpl;
 class SR_DLL MatrixStack {
 public:
   MatrixStack();
@@ -59,7 +60,7 @@ public:
   void Rotate(float deg, const Vec3f &v);
 
 private:
-  std::vector<glm::mat4> matrix_stack_;
+  MatrixStackImpl *impl;
 };
 }
 

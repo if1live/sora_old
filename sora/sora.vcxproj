@@ -84,6 +84,7 @@
     <ClCompile Include="obj_loader.cpp" />
     <ClCompile Include="obj_model.cpp" />
     <ClCompile Include="shader.cpp" />
+    <ClCompile Include="primitive_model.cpp" />
     <ClCompile Include="sys_locale.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="logger.cpp" />
@@ -116,6 +117,8 @@
     <ClInclude Include="obj_model.h" />
     <ClInclude Include="rect.h" />
     <ClInclude Include="shader.h" />
+    <ClInclude Include="primitive_model.h" />
+    <ClInclude Include="teapot.h" />
     <ClInclude Include="sys_locale.h" />
     <ClInclude Include="timer.h" />
     <ClInclude Include="logger.h" />

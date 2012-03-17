@@ -26,4 +26,37 @@
 using namespace std;
 
 namespace sora {;
+struct ObjModelImpl {;
+  std::vector<Vertex> vert_list;
+  // GL_TRIANGLES로 그릴수 잇도록 정렬된 인덱스 리스트
+  std::vector<ushort> index_list;
+};
+
+ObjModel::ObjModel()
+: impl(new ObjModelImpl()) {
+}
+ObjModel::~ObjModel() {
+  delete(impl);
+}
+
+const Vertex *ObjModel::vertex_ptr() const {
+  return &impl->vert_list[0];
+}
+const void *ObjModel::index_ptr() const {
+  return &impl->index_list[0];
+}
+int ObjModel::vertex_count() const {
+  return impl->vert_list.size();
+}
+int ObjModel::index_count() const {
+  return impl->index_list.size();
+}
+
+void ObjModel::AddVertex(const Vertex &v) {
+  impl->vert_list.push_back(v);
+}
+void ObjModel::AddIndex(ushort idx) {
+  impl->index_list.push_back(idx);
+}
+
 }

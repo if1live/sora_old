@@ -25,11 +25,21 @@
 namespace sora {;
 
 struct ObjModel;
-
+struct ObjModelImpl;
 struct SR_DLL ObjModel {
-  std::vector<Vertex> vert_list;
-  // GL_TRIANGLES로 그릴수 잇도록 정렬된 인덱스 리스트
-  std::vector<ushort> index_list;
+  ObjModel();
+  ~ObjModel();
+
+  const Vertex *vertex_ptr() const;
+  const void *index_ptr() const;
+  int vertex_count() const;
+  int index_count() const;
+
+  void AddVertex(const Vertex &v);
+  void AddIndex(ushort idx);
+
+private:
+  ObjModelImpl *impl;
 };
 }
 
