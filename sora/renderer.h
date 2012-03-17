@@ -18,44 +18,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_VERTEX_H_
-#define SORA_VERTEX_H_
-
-#include "vector.h"
+#ifndef SORA_RENDERER_H_
+#define SORA_RENDERER_H_
 
 namespace sora {;
-struct Vertex;
-struct TangentVertex;
-struct Vertex2D;
+//opengles 2.0 renderer
+class Renderer {
+public:
+  Renderer();
+  ~Renderer();
 
-struct Vertex2D {
-  Vertex2D() : pos(0, 0), texcoord(0, 0) {}
-  Vertex2D(float x, float y, float s, float t)
-    : pos(x, y), texcoord(s, t) {}
+  void SetWindowSize(float w, float h);
+  void Set2D();
+  void Set3D();
 
-  Vec2f pos;
-  Vec2f texcoord;
+  void EndRender();
+
+private:
+  float win_width_;
+  float win_height_;
 };
-
-struct Vertex {
-  Vertex() : pos(0, 0, 0), texcoord(0, 0), normal(1, 0, 0), color(1, 1, 1, 1) {}
-  Vertex(float x, float y, float z, float s, float t, float nx, float ny, float nz, float r, float g, float b, float a)
-    : pos(x, y, z), texcoord(s, t), normal(nx, ny, nz), color(r, g, b, a) {}
-  Vec3f pos;
-  Vec2f texcoord;
-  Vec3f normal;
-  Vec4f color;
-};
-
-struct TangentVertex {
-  Vec3f pos;
-  Vec2f texcoord;
-  Vec3f normal;
-  
-  Vec3f tangent;
-  Vec3f binormal;
-};
-
 }
 
-#endif  // SORA_VERTEX_H_
+#endif  // SORA_RENDERER_H_

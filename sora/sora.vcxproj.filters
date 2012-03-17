@@ -91,6 +91,9 @@
     <ClCompile Include="primitive_model.cpp">
       <Filter>render</Filter>
     </ClCompile>
+    <ClCompile Include="renderer.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -190,6 +193,9 @@
       <Filter>render</Filter>
     </ClInclude>
     <ClInclude Include="primitive_model.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer.h">
       <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>
