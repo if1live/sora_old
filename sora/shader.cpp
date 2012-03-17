@@ -184,9 +184,9 @@ GLint ShaderProgram::GetAttribLocation(const char *name) {
 GLint ShaderProgram::GetUniformLocation(const char *name) {
   return glGetUniformLocation(prog, name);
 }
-void ShaderProgram::Use() {
-  glUseProgram(prog);
-}
+//void ShaderProgram::Use() {
+//  glUseProgram(prog);
+//}
 
 const std::vector<LocationTuple> &ShaderProgram::GetLocationTupleList() {
   static bool run = false;

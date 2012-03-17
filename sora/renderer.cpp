@@ -24,12 +24,15 @@
 #include "texture.h"
 #include "gl_helper.h"
 #include "shader.h"
+#include "material.h"
 
 namespace sora {;
 Renderer::Renderer() 
 : win_width_(480), 
 win_height_(320),
-last_tex_id_(-1) {
+last_tex_id_(-1),
+last_prog_id_(-1),
+last_prog_(NULL) {
 }
 Renderer::~Renderer() {
 }
@@ -66,11 +69,29 @@ void Renderer::SetTexture(const Texture &tex) {
 }
 
 void Renderer::SetShader(const ShaderProgram &prog) {
-  glUseProgram(prog.prog);
+  if(last_prog_id_ != prog.prog) {
+    glUseProgram(prog.prog);
+    last_prog_id_ = prog.prog;
+    last_prog_ = const_cast<ShaderProgram*>(&prog);
+  }
+}
+
+void Renderer::SetMaterial(const Material &material) {
+  int ambient_color_loc = last_prog_->GetLocation(kLocationAmbientColor);
+  if(ambient_color_loc != -1) {
+    glUniform3fv(ambient_color_loc, 3, material.ambient);
+  }
+
+  int diffuse_color_loc = last_prog_->GetLocation(kLocationDiffuseColor);
+  if(diffuse_color_loc != -1) {
+    glUniform3fv(diffuse_color_loc, 3, material.diffuse);
+  }
 }
 
 void Renderer::EndRender() {
   last_tex_id_ = -1;
+  last_prog_id_ = -1;
+  last_prog_ = NULL;
 
   GLHelper::CheckError("EndRender");
 }

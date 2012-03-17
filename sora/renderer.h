@@ -29,6 +29,7 @@
 namespace sora {;
 
 class Texture;
+class Material;
 class ShaderProgram;
 
 //opengles 2.0 renderer
@@ -48,6 +49,7 @@ public:
 
   void SetTexture(const Texture &tex);
   void SetShader(const ShaderProgram &prog);
+  void SetMaterial(const Material &material);
 
 private:
   float win_width_;
@@ -55,6 +57,8 @@ private:
 
   //like cache?
   GLuint last_tex_id_;
+  GLuint last_prog_id_;
+  ShaderProgram *last_prog_;
 };
 SR_C_DLL Renderer &Renderer_get_instance();
 }

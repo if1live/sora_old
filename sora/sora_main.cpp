@@ -50,6 +50,7 @@
 
 #include "texture.h"
 #include "renderer.h"
+#include "material.h"
 
 using sora::GLHelper;
 using sora::ShaderProgram;
@@ -64,13 +65,16 @@ ShaderProgram shader_prog;
 
 ObjModel obj_model;
 sora::PrimitiveModel primitive_model;
+std::vector<sora::Material> material_list;
 
 bool setupGraphics(int w, int h) {
   sora::Renderer::GetInstance().SetWindowSize((float)w, (float)h);
  
   //load shader file
-  const char *vert_path = "shader/v_simple.glsl";
-  const char *frag_path = "shader/f_simple.glsl";
+  //const char *vert_path = "shader/v_simple.glsl";
+  //const char *frag_path = "shader/f_simple.glsl";
+  const char *vert_path = "shader/v_diffuse.glsl";
+  const char *frag_path = "shader/f_diffuse.glsl";
   std::string app_vert_path = sora::Filesystem::GetAppPath(vert_path);
   std::string app_frag_path = sora::Filesystem::GetAppPath(frag_path);
   sora::MemoryFile vert_file(app_vert_path);
@@ -117,12 +121,18 @@ bool setupGraphics(int w, int h) {
   sora::ObjLoader loader;
   loader.LoadObj(file1.start, file1.end, &obj_model);
 
+  //load material
+  std::string mtl_path = sora::Filesystem::GetAppPath("material/example.mtl");
+  sora::MemoryFile mtl_file(mtl_path);
+  mtl_file.Open();
+  loader.LoadMtl(mtl_file.start, mtl_file.end, &material_list);
+
   //primitive model test
-  primitive_model.SolidCube(1, 2, 1);
+  //primitive_model.SolidCube(1, 2, 1);
   //primitive_model.WireCube(1, 1, 1);
   //primitive_model.WireAxis(2);
   //primitive_model.WireSphere(1, 8, 8);
-  //primitive_model.SolidSphere(1, 8, 8);
+  primitive_model.SolidSphere(1, 16, 16);
   //primitive_model.WireCone(1, 2, 8, 8);
   //primitive_model.SolidCone(1, 2, 8, 8);
   //primitive_model.WireCylinder(1, 2, 8);
@@ -132,24 +142,31 @@ bool setupGraphics(int w, int h) {
 }
 
 void renderFrame() {
-  sora::Renderer::GetInstance().Set3D();
-
-  //use texture
-  sora::Renderer::GetInstance().SetTexture(tex);
-  sora::Renderer::GetInstance().SetShader(shader_prog);
-
   static float rot = 0;
   rot += 0.05f;
 
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
-  GLuint mvp_handle = shader_prog.GetLocation(sora::kLocationModelViewProjection);
-  GLuint texcoord_handle = shader_prog.GetLocation(sora::kLocationTexcoord);
-  GLuint position_handle = shader_prog.GetLocation(sora::kLocationPosition);
+  /////////////////////////
+  sora::Renderer::GetInstance().Set3D();
+
+  //use texture
+  sora::Renderer::GetInstance().SetShader(shader_prog);
+  sora::Renderer::GetInstance().SetTexture(tex);
+
+  //use material
+  sora::Material &mtl = material_list[0];
+  sora::Renderer::GetInstance().SetMaterial(mtl);
+
+  GLint mvp_handle = shader_prog.GetLocation(sora::kLocationModelViewProjection);
+  GLint texcoord_handle = shader_prog.GetLocation(sora::kLocationTexcoord);
+  GLint position_handle = shader_prog.GetLocation(sora::kLocationPosition);
+  GLint normal_handle = shader_prog.GetLocation(sora::kLocationNormal);
   
   glEnableVertexAttribArray(position_handle);
   glEnableVertexAttribArray(texcoord_handle);
+  glEnableVertexAttribArray(normal_handle);
 
   float win_width = sora::Renderer::GetInstance().win_width();
   float win_height = sora::Renderer::GetInstance().win_height();
@@ -158,9 +175,7 @@ void renderFrame() {
   glm::mat4 projection = glm::perspective(60.0f, win_width / win_height, 1.0f, 100.0f);
   glm::mat4 modelview = glm::lookAt(glm::vec3(0, 0, 3), glm::vec3(0), glm::vec3(0, 1, 0));
   modelview = glm::rotate(modelview, rot, glm::vec3(0, 1, 0));
-  glm::mat4 mvp = projection * modelview;
-  
-  
+  glm::mat4 mvp = projection * modelview;  
   glUniformMatrix4fv(mvp_handle, 1, 0, glm::value_ptr(mvp));
 
 
@@ -178,6 +193,7 @@ void renderFrame() {
 
     glVertexAttribPointer(position_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->pos);
     glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->texcoord);
+    glVertexAttribPointer(normal_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->normal);
     //glDrawElements(GL_TRIANGLES, index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
     glDrawElements(draw_mode, idx_count, GL_UNSIGNED_SHORT, idx_ptr);
   }

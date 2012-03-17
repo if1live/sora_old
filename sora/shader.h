@@ -103,7 +103,7 @@ public:
   }
   void Deinit();
   bool IsInit() const { return (prog != 0); }
-  void Use();
+  //void Use();
 
   GLint GetAttribLocation(const char *name);
   GLint GetUniformLocation(const char *name);
