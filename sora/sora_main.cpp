@@ -144,7 +144,9 @@ bool setupGraphics(int w, int h) {
   //primitive_model.WireSphere(1, 8, 8);
   //primitive_model.SolidSphere(1, 8, 8);
   //primitive_model.WireCone(1, 2, 8, 8);
-  primitive_model.SolidCone(1, 2, 8, 8);
+  //primitive_model.SolidCone(1, 2, 8, 8);
+  //primitive_model.WireCylinder(1, 2, 8);
+  primitive_model.SolidCylinder(1, 2, 16);
 
   return true;
 }

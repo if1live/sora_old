@@ -686,8 +686,206 @@ void PrimitiveModel::SolidCone(float base, float height, int slices, int stacks)
   bottomindex_list.push_back(bottomVertexStartIndex);
 }
 void PrimitiveModel::WireCylinder(float radius, float height, int slices) {
+  SR_ASSERT(radius > 0);
+  SR_ASSERT(height > 0);
+  SR_ASSERT(slices >= 4);
+
+  //1개의 메시로 구성
+  SR_ASSERT(impl == NULL);
+  impl = new PrimitiveModelImpl(1);
+  VertexListType &vert_list = impl->vert_list_group[0];
+  IndexListType &index_list = impl->index_list_group[0];
+  impl->mode_group[0] = GL_LINES;
+
+  //원기둥의 높이(z)는 -height/2~height/2로 height를 구성함
+  const float angleDt = static_cast<float>(2.0 * kPi / slices);
+  for(int j = 0 ; j < 2 ; j++) {
+    for(int i = 0 ; i < slices ; i++) {	
+      float x = static_cast<float>(cos(angleDt * i) * radius);
+      float z = static_cast<float>(sin(angleDt * i) * radius);
+
+      float y = 0;
+      if(j == 0) {
+        y = height / 2;	//윗면
+      } else {
+        y = -height / 2;		//아랫면
+      }
+
+      Vec3f pos(x, y, z);
+      Vertex v; v.pos = pos;
+      vert_list.push_back(v);
+    }
+  }
+  //밑점, 윗점 따로 vertex list에 넣기
+  Vec3f bottomPos(0, -height/2, 0);
+  Vec3f topPos(0, height/2, 0);
+  Vertex bottom; bottom.pos = bottomPos;
+  Vertex top; top.pos = topPos;
+  vert_list.push_back(bottom);
+  vert_list.push_back(top);
+
+  //index list구성
+  const int topIndex = vert_list.size() - 1;
+  const int bottomIndex = vert_list.size() - 2;
+
+  for(int i = 0 ; i < slices ; i++) {
+    //옆에서 봤을떄의 얻어낸 정보
+    //a b
+    //c d
+    GLushort a = i;
+    GLushort c = i + slices;
+    GLushort b = (i + 1) % slices;
+    GLushort d = (c + 1) % slices + slices;
+
+    //윗면과 아랫면 선으로 연결하기 + 대각선도 넣기
+    index_list.push_back(a);
+    index_list.push_back(c);
+
+    index_list.push_back(b);
+    index_list.push_back(d);
+
+    index_list.push_back(a);
+    index_list.push_back(d);
+
+    //윗면의 테두리 그리기	
+    index_list.push_back(a);
+    index_list.push_back(b);
+
+    //아랫면의 테두리 그리기
+    index_list.push_back(c);
+    index_list.push_back(d);
+
+    //아랫면 덮기
+    index_list.push_back(c);
+    index_list.push_back(bottomIndex);
+
+    //윗면 덮기
+    index_list.push_back(a);
+    index_list.push_back(topIndex);
+  }
 }
 void PrimitiveModel::SolidCylinder(float radius, float height, int slices) {
+  SR_ASSERT(radius > 0);
+  SR_ASSERT(height > 0);
+  SR_ASSERT(slices >= 4);
+
+  //use 3 mesh
+  SR_ASSERT(impl == NULL);
+  impl = new PrimitiveModelImpl(3);
+  VertexListType &vert_list = impl->vert_list_group[0];
+  IndexListType &topindex_list = impl->index_list_group[0];
+  IndexListType &bottomindex_list = impl->index_list_group[1];
+  IndexListType &sideindex_list = impl->index_list_group[2];
+  impl->mode_group[0] = GL_TRIANGLE_FAN;
+  impl->mode_group[1] = GL_TRIANGLE_FAN;
+  impl->mode_group[2] = GL_TRIANGLE_STRIP;
+
+  //원기둥의 높이(z)는 -height/2~height/2로 height를 구성함
+  const float angleDt = static_cast<float>(2.0 * kPi / slices);
+  for(int j = 0 ; j < 2 ; j++) {
+    for(int i = 0 ; i < slices ; i++) {	
+      float x = static_cast<float>(cos(angleDt * i) * radius);
+      float z = static_cast<float>(sin(angleDt * i) * radius);
+
+      float y = 0;
+      Vec2f texCoord;
+      if(j == 0) {
+        y = height / 2;	//윗면
+        texCoord = Vec2f(static_cast<float>(cos(angleDt * i)), 1);
+      }	else {
+        y = -height / 2;		//아랫면
+        texCoord = Vec2f(static_cast<float>(cos(angleDt * i)), 0);
+      }
+
+      Vec3f pos(x, y, z);
+
+      //normal 계산
+      static Vec3f zero(0, 0, 0);
+      Vec3f normal = pos - zero;
+      normal.Normalized();
+
+      Vertex v;
+      v.pos = pos;
+      v.texcoord = texCoord;
+      v.normal = normal;
+      vert_list.push_back(v);
+    }
+  }
+  //밑점, 윗점 따로 vertex list에 넣기
+  //밑점
+  {
+    Vec3f bottomPos(0, -height/2, 0);
+    Vec2f texCoord(0, 0);
+    Vec3f normal(0, -1, 0);
+    Vertex bottom;
+    bottom.pos = bottomPos;
+    bottom.texcoord = texCoord;
+    bottom.normal = normal;
+    vert_list.push_back(bottom);
+  }
+
+  //윗점
+  {
+    Vec3f topPos(0, height/2, 0);
+    Vec2f texCoord(0, 0);
+    Vec3f normal(0, 1, 0);
+    Vertex top;
+    top.pos = topPos;
+    top.texcoord = texCoord;
+    top.normal = normal;
+    vert_list.push_back(top);
+  }
+
+  //index list구성
+  const int topIndex = vert_list.size() - 1;
+  const int bottomIndex = vert_list.size() - 2;
+
+  topindex_list.push_back(topIndex);
+  bottomindex_list.push_back(bottomIndex);
+
+  for(int i = 0 ; i < slices ; i++) {
+    //옆에서 봤을떄의 얻어낸 정보
+    //a b
+    //c d
+    GLushort a = i;
+    GLushort c = i + slices;
+    GLushort b = (i + 1) % slices;
+    GLushort d = (c + 1) % slices + slices;
+
+    //옆면 삼각형 인덱스 생성
+    sideindex_list.push_back(a);
+    sideindex_list.push_back(c);
+    sideindex_list.push_back(d);
+
+    sideindex_list.push_back(a);
+    sideindex_list.push_back(d);
+    sideindex_list.push_back(b);
+  }
+
+  for(int i = 0 ; i <= slices ; i++) {
+    //옆에서 봤을떄의 얻어낸 정보
+    //a b
+    //c d
+    GLushort a = (i) % slices;
+    GLushort c = a + slices;
+
+    //아랫면 덮기
+    bottomindex_list.push_back(c);
+  }
+
+  for(int i = slices-1 ; i >= -1 ; i--) {
+    //옆에서 봤을떄의 얻어낸 정보
+    //a b
+    //c d
+    GLushort a = (i) % slices;
+    if(i == -1) {
+      a = slices-1;
+    }
+
+    //윗면 덮기, (인덱스 넣는 방향 반대여야 cull통과한다)
+    topindex_list.push_back(a);
+  }
+
 }
 void PrimitiveModel::WireAxis(float size) {
   SR_ASSERT(size > 0);
@@ -734,358 +932,5 @@ void PrimitiveModel::WireAxis(float size) {
   }
 }
 
-#if 0
-SolidCone::SolidCone(GLfloat base, GLfloat height, GLint slices, GLint stacks, const matsu::vec4 &color)
-{
-  
-}
-SolidCone::~SolidCone()
-{
-}
-const std::vector<DrawCommand> SolidCone::getDrawCommand() const
-{
-  vector<DrawCommand> list;
-  DrawCommand bottom(GL_TRIANGLE_FAN, bottomindex_list.size(), GL_UNSIGNED_SHORT, &bottomIndexList_[0], vertexPointer());
-  DrawCommand side(GL_TRIANGLES, sideindex_list.size(), GL_UNSIGNED_SHORT, &sideIndexList_[0], vertexPointer());
-  list.push_back(bottom);
-  list.push_back(side);
-  return list;
-}
-
-//for teapot
-class TeapotHelper {
-public:
-  static Box boundingBox();
-  static float scale(GLfloat size);
-};
-Box TeapotHelper::boundingBox()
-{
-  vector<SimpleVertex> vertexlist;
-
-  //set vertex info
-  for(int i = 0 ; i < NUM_TEAPOT_OBJECT_VERTEX ; i++)
-  {
-    //vertex info
-    float x = teapotVertices[i*3 + 0];
-    float y = teapotVertices[i*3 + 1];
-    float z = teapotVertices[i*3 + 2];
-    Vec3f pos(x, y, z);
-
-    SimpleVertex v(pos);
-    vertexlist.push_back(v);
-  }
-  Box b(vertexlist);
-  return b;
-}
-float TeapotHelper::scale(GLfloat size)
-{
-  Box b = boundingBox();
-
-  float maxLength = -1;
-  if(b.width() > b.height())
-    maxLength = b.width();
-  else
-    maxLength = b.height();
-
-  if(maxLength < b.depth())
-    maxLength = b.depth();
-
-  //각 vertex요소를 maxLength로 나누면 크기가 1인 정육면체안에 들어갈수 있다
-  //그것에 size를 적용한다
-  return 1.0f / maxLength * size;
-}
-
-WireTeapot::WireTeapot(GLfloat size, const matsu::vec4 &color)
-{
-  float scale = TeapotHelper::scale(size);
-
-  //set vertex info
-  for(int i = 0 ; i < NUM_TEAPOT_OBJECT_VERTEX ; i++)
-  {
-    //vertex info
-    float x = teapotVertices[i*3 + 0] * scale;
-    float y = teapotVertices[i*3 + 1] * scale;
-    float z = teapotVertices[i*3 + 2] * scale;
-    Vec3f pos(x, y, z);
-
-    Vertex v(pos, color);
-    vert_list.push_back(v);
-  }
-
-  //set index list(for wire)
-  for(int i = 0 ; i < NUM_TEAPOT_OBJECT_VERTEX ; i++)
-  {
-    GLushort index0 = teapotIndices[i*3 + 0];
-    GLushort index1 = teapotIndices[i*3 + 1];
-    GLushort index2 = teapotIndices[i*3 + 2];
-
-    index_list.push_back(index0);
-    index_list.push_back(index1);
-
-    index_list.push_back(index0);
-    index_list.push_back(index2);
-
-    index_list.push_back(index2);
-    index_list.push_back(index1);
-  }
-}
-WireTeapot::~WireTeapot()
-{
-}
-const std::vector<DrawCommand> WireTeapot::getDrawCommand() const
-{
-  vector<DrawCommand> list;
-  DrawCommand cmd(GL_LINES, index_list.size(), GL_UNSIGNED_SHORT, &indexList_[0], vertexPointer());
-  list.push_back(cmd);
-  return list;
-}
-
-SolidTeapot::SolidTeapot(GLfloat size, const matsu::vec4 &color)
-{
-  float scale = TeapotHelper::scale(size);
-
-  //set vertex info
-  for(int i = 0 ; i < NUM_TEAPOT_OBJECT_VERTEX ; i++)
-  {
-    //vertex info
-    float x = teapotVertices[i*3 + 0] * scale;
-    float y = teapotVertices[i*3 + 1] * scale;
-    float z = teapotVertices[i*3 + 2] * scale;
-    Vec3f pos(x, y, z);
-
-    //tex coord info
-    float s = teapotTexCoords[i*2 + 0];
-    float t = teapotTexCoords[i*2 + 1];
-    Vec2f texCoord(s, t);
-
-    //normal info
-    float normalX = teapotNormals[i*3 + 0];
-    float normalY = teapotNormals[i*3 + 1];
-    float normalZ = teapotNormals[i*3 + 2];
-    Vec3f normal(normalX, normalY, normalZ);
-
-    Vertex v(pos, color, texCoord, normal);
-    vert_list.push_back(v);
-  }
-}
-SolidTeapot::~SolidTeapot()
-{
-}
-const std::vector<DrawCommand> SolidTeapot::getDrawCommand() const
-{
-  vector<DrawCommand> list;
-  DrawCommand cmd(GL_TRIANGLES, NUM_TEAPOT_OBJECT_INDEX, GL_UNSIGNED_SHORT, teapotIndices, vertexPointer());
-  list.push_back(cmd);
-  return list;
-}
-
-WireCylinder::WireCylinder(GLfloat radius, GLfloat height, GLint slices, const matsu::vec4 &color)
-{
-  SR_ASSERT(radius > 0 && height > 0 && slices >= 4);
-
-  //원기둥의 높이(z)는 -height/2~height/2로 height를 구성함
-  const float angleDt = static_cast<float>(2.0 * M_PI / slices);
-  for(int j = 0 ; j < 2 ; j++)
-  {
-    for(int i = 0 ; i < slices ; i++)
-    {	
-      float x = static_cast<float>(cos(angleDt * i) * radius);
-      float z = static_cast<float>(sin(angleDt * i) * radius);
-
-      float y = 0;
-      if(j == 0)
-        y = height / 2;	//윗면
-      else
-        y = -height / 2;		//아랫면
-
-      Vec3f pos(x, y, z);
-      Vertex v(pos, color);
-      vert_list.push_back(v);
-    }
-  }
-  //밑점, 윗점 따로 vertex list에 넣기
-  Vec3f bottomPos(0, -height/2, 0);
-  Vec3f topPos(0, height/2, 0);
-  Vertex bottom(bottomPos, color);
-  Vertex top(topPos, color);
-  vert_list.push_back(bottom);
-  vert_list.push_back(top);
-
-  //index list구성
-  const int topIndex = vert_list.size() - 1;
-  const int bottomIndex = vert_list.size() - 2;
-
-  for(int i = 0 ; i < slices ; i++)
-  {
-    //옆에서 봤을떄의 얻어낸 정보
-    //a b
-    //c d
-    GLushort a = i;
-    GLushort c = i + slices;
-    GLushort b = (i + 1) % slices;
-    GLushort d = (c + 1) % slices + slices;
-
-    //윗면과 아랫면 선으로 연결하기 + 대각선도 넣기
-    index_list.push_back(a);
-    index_list.push_back(c);
-
-    index_list.push_back(b);
-    index_list.push_back(d);
-
-    index_list.push_back(a);
-    index_list.push_back(d);
-
-    //윗면의 테두리 그리기	
-    index_list.push_back(a);
-    index_list.push_back(b);
-
-    //아랫면의 테두리 그리기
-    index_list.push_back(c);
-    index_list.push_back(d);
-
-    //아랫면 덮기
-    index_list.push_back(c);
-    index_list.push_back(bottomIndex);
-
-    //윗면 덮기
-    index_list.push_back(a);
-    index_list.push_back(topIndex);
-  }
-}
-WireCylinder::~WireCylinder()
-{
-}
-const std::vector<DrawCommand> WireCylinder::getDrawCommand() const
-{
-  vector<DrawCommand> list;
-  DrawCommand cmd(GL_LINES, index_list.size(), GL_UNSIGNED_SHORT, &indexList_[0], vertexPointer());
-  list.push_back(cmd);
-  return list;
-}
-
-SolidCylinder::SolidCylinder(GLfloat radius, GLfloat height, GLint slices, const matsu::vec4 &color)
-{
-  SR_ASSERT(radius > 0 && height > 0 && slices >= 4);
-
-  //원기둥의 높이(z)는 -height/2~height/2로 height를 구성함
-  const float angleDt = static_cast<float>(2.0 * M_PI / slices);
-  for(int j = 0 ; j < 2 ; j++)
-  {
-    for(int i = 0 ; i < slices ; i++)
-    {	
-      float x = static_cast<float>(cos(angleDt * i) * radius);
-      float z = static_cast<float>(sin(angleDt * i) * radius);
-
-      float y = 0;
-      Vec2f texCoord;
-      if(j == 0)
-      {
-        y = height / 2;	//윗면
-        texCoord = Vec2f(static_cast<float>(cos(angleDt * i)), 1);
-      }	
-      else
-      {
-        y = -height / 2;		//아랫면
-        texCoord = Vec2f(static_cast<float>(cos(angleDt * i)), 0);
-      }
-
-      Vec3f pos(x, y, z);
-
-      //normal 계산
-      static Vec3f zero(0, 0, 0);
-      Vec3f normal = pos - zero;
-      normal.normalize();
-
-      Vertex v(pos, color, texCoord, normal);
-      vert_list.push_back(v);
-    }
-  }
-  //밑점, 윗점 따로 vertex list에 넣기
-  //밑점
-  {
-    Vec3f bottomPos(0, -height/2, 0);
-    Vec2f texCoord(0, 0);
-    Vec3f normal(0, -1, 0);
-    Vertex bottom(bottomPos, color, texCoord, normal);
-    vert_list.push_back(bottom);
-  }
-
-  //윗점
-  {
-    Vec3f topPos(0, height/2, 0);
-    Vec2f texCoord(0, 0);
-    Vec3f normal(0, 1, 0);
-    Vertex top(topPos, color, texCoord, normal);
-    vert_list.push_back(top);
-  }
-
-  //index list구성
-  const int topIndex = vert_list.size() - 1;
-  const int bottomIndex = vert_list.size() - 2;
-
-  topindex_list.push_back(topIndex);
-  bottomindex_list.push_back(bottomIndex);
-
-  for(int i = 0 ; i < slices ; i++)
-  {
-    //옆에서 봤을떄의 얻어낸 정보
-    //a b
-    //c d
-    GLushort a = i;
-    GLushort c = i + slices;
-    GLushort b = (i + 1) % slices;
-    GLushort d = (c + 1) % slices + slices;
-
-    //옆면 삼각형 인덱스 생성
-    sideindex_list.push_back(a);
-    sideindex_list.push_back(c);
-    sideindex_list.push_back(d);
-
-    sideindex_list.push_back(a);
-    sideindex_list.push_back(d);
-    sideindex_list.push_back(b);
-  }
-
-  for(int i = 0 ; i <= slices ; i++)
-  {
-    //옆에서 봤을떄의 얻어낸 정보
-    //a b
-    //c d
-    GLushort a = (i) % slices;
-    GLushort c = a + slices;
-
-    //아랫면 덮기
-    bottomindex_list.push_back(c);
-  }
-
-  for(int i = slices-1 ; i >= -1 ; i--)
-  {
-    //옆에서 봤을떄의 얻어낸 정보
-    //a b
-    //c d
-    GLushort a = (i) % slices;
-    if(i == -1)
-      a = slices-1;
-
-    //윗면 덮기, (인덱스 넣는 방향 반대여야 cull통과한다)
-    topindex_list.push_back(a);
-  }
-}
-SolidCylinder::~SolidCylinder()
-{
-}
-const std::vector<DrawCommand> SolidCylinder::getDrawCommand() const
-{
-  vector<DrawCommand> list;
-  DrawCommand topCmd(GL_TRIANGLE_FAN, topindex_list.size(), GL_UNSIGNED_SHORT, &topIndexList_[0], vertexPointer());
-  DrawCommand bottomCmd(GL_TRIANGLE_FAN, bottomindex_list.size(), GL_UNSIGNED_SHORT, &bottomIndexList_[0], vertexPointer());
-  DrawCommand sideCmd(GL_TRIANGLE_STRIP, sideindex_list.size(), GL_UNSIGNED_SHORT, &sideIndexList_[0], vertexPointer());
-  list.push_back(topCmd);
-  list.push_back(bottomCmd);
-  list.push_back(sideCmd);
-  return list;
-}
-
-#endif
 }
 
