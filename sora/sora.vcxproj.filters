@@ -97,6 +97,9 @@
     <ClCompile Include="lodepng\lodepng.cpp">
       <Filter>sdk</Filter>
     </ClCompile>
+    <ClCompile Include="uber_shader.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -203,6 +206,12 @@
     </ClInclude>
     <ClInclude Include="lodepng\lodepng.h">
       <Filter>sdk</Filter>
+    </ClInclude>
+    <ClInclude Include="uber_shader.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="tuple_inc.h">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

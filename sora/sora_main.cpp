@@ -60,19 +60,13 @@ using sora::ObjModel;
 //sora::Texture tex(sora::Texture::kPolicyForcePOT);
 sora::Texture tex;
 
-GLuint mvp_handle;
-GLuint texcoord_handle;
-GLuint position_handle;
-
 ShaderProgram shader_prog;
 
 ObjModel obj_model;
 sora::PrimitiveModel primitive_model;
 
-sora::Renderer renderer;
-
 bool setupGraphics(int w, int h) {
-  renderer.SetWindowSize((float)w, (float)h);
+  sora::Renderer::GetInstance().SetWindowSize((float)w, (float)h);
  
   //load shader file
   const char *vert_path = "shader/v_simple.glsl";
@@ -90,16 +84,6 @@ bool setupGraphics(int w, int h) {
     LOGE("Could not create program.");
     return false;
   }
-  
-  position_handle = shader_prog.GetAttribLocation("a_position");
-  LOGI("glGetAttribLocation(\"a_position\") = %d", position_handle);
-
-  
-  texcoord_handle = shader_prog.GetAttribLocation("a_texcoord");
-  LOGI("glGetAttribLocation(\"a_texcoord\") = %d", texcoord_handle);
-
-  mvp_handle = shader_prog.GetUniformLocation("u_modelviewprojection");
-  LOGI("GetUniformLocation(\"u_modelviewprojection\") = %d", mvp_handle);
 
   /*
   //create sample texture
@@ -148,11 +132,11 @@ bool setupGraphics(int w, int h) {
 }
 
 void renderFrame() {
-  renderer.Set3D();
+  sora::Renderer::GetInstance().Set3D();
 
   //use texture
-  renderer.SetTexture(tex);
-  renderer.SetShader(shader_prog);
+  sora::Renderer::GetInstance().SetTexture(tex);
+  sora::Renderer::GetInstance().SetShader(shader_prog);
 
   static float rot = 0;
   rot += 0.05f;
@@ -160,17 +144,23 @@ void renderFrame() {
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
+  GLuint mvp_handle = shader_prog.GetLocation(sora::kLocationModelViewProjection);
+  GLuint texcoord_handle = shader_prog.GetLocation(sora::kLocationTexcoord);
+  GLuint position_handle = shader_prog.GetLocation(sora::kLocationPosition);
+  
   glEnableVertexAttribArray(position_handle);
   glEnableVertexAttribArray(texcoord_handle);
 
-  float win_width = renderer.win_width();
-  float win_height = renderer.win_height();
+  float win_width = sora::Renderer::GetInstance().win_width();
+  float win_height = sora::Renderer::GetInstance().win_height();
   //glm::mat4 projection = glm::ortho(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);
   //glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0));
   glm::mat4 projection = glm::perspective(60.0f, win_width / win_height, 1.0f, 100.0f);
   glm::mat4 modelview = glm::lookAt(glm::vec3(0, 0, 3), glm::vec3(0), glm::vec3(0, 1, 0));
   modelview = glm::rotate(modelview, rot, glm::vec3(0, 1, 0));
   glm::mat4 mvp = projection * modelview;
+  
+  
   glUniformMatrix4fv(mvp_handle, 1, 0, glm::value_ptr(mvp));
 
 
@@ -194,7 +184,7 @@ void renderFrame() {
 
 
   //////////////////////////////
-  renderer.EndRender();
+  sora::Renderer::GetInstance().EndRender();
 }
 
 void SORA_setup_graphics(int w, int h) {

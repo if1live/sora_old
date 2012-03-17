@@ -18,45 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_RENDERER_H_
-#define SORA_RENDERER_H_
-
-#include "template_lib.h"
-#if SR_USE_PCH == 0
-#include "gl_inc.h"
-#endif
+#include "sora_stdafx.h"
+#include "uber_shader.h"
 
 namespace sora {;
 
-class Texture;
-class ShaderProgram;
-
-//opengles 2.0 renderer
-class Renderer : public Singleton<Renderer> {
-public:
-  Renderer();
-  ~Renderer();
-
-  void SetWindowSize(float w, float h);
-  float win_width() const { return win_width_; }
-  float win_height() const { return win_height_; }
-
-  void Set2D();
-  void Set3D();
-
-  void EndRender();
-
-  void SetTexture(const Texture &tex);
-  void SetShader(const ShaderProgram &prog);
-
-private:
-  float win_width_;
-  float win_height_;
-
-  //like cache?
-  GLuint last_tex_id_;
-};
-SR_C_DLL Renderer &Renderer_get_instance();
+UberShader::UberShader() {
+  //memset(location_list_, 0, sizeof(location_list_));
 }
 
-#endif  // SORA_RENDERER_H_
+UberShader::~UberShader() {
+}
+
+}

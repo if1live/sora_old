@@ -28,6 +28,29 @@
 #include <string>
 
 namespace sora {;
+
+enum {
+  kLocationModelViewProjection,
+  kLocationPosition,
+  kLocationNormal,
+  kLocationTexcoord,
+  kLocationAmbientColor,
+  kLocationDiffuseColor,
+  kLocationSpecularColor,
+  kLocationSpecularShininess,
+  kLocationMaterialAlpha,
+  kLocationCount,
+};
+enum {
+  kLocationTypeAttrib,
+  kLocationTypeUniform,
+  kLocationTypeCount,
+};
+//0 : location code
+//1 : attrib, uniform
+//2 : name
+typedef std::tr1::tuple<int, int, const char*> LocationTuple;
+
 class SR_DLL Shader {
 public:
   Shader();
@@ -55,7 +78,9 @@ public:
 class SR_DLL ShaderProgram {
 public:
   static bool Validate(GLuint prog);
- 
+
+  static const std::vector<LocationTuple> &GetLocationTupleList();
+  static const LocationTuple &GetLocationTuple(int location);
 public:
   ShaderProgram();
   ~ShaderProgram();
@@ -70,6 +95,7 @@ public:
 
   GLint GetAttribLocation(const char *name);
   GLint GetUniformLocation(const char *name);
+  int GetLocation(int location_code) { return location_list_[location_code]; }
 
 public:
   GLuint prog;
@@ -77,6 +103,8 @@ public:
 private:
   Shader vert_shader_;
   Shader frag_shader_;
+
+  int location_list_[kLocationCount];
 };
 
 }

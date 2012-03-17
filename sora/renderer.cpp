@@ -74,4 +74,8 @@ void Renderer::EndRender() {
 
   GLHelper::CheckError("EndRender");
 }
+
+SR_C_DLL Renderer &Renderer_get_instance() {
+  return Renderer::GetInstance();
+}
 }

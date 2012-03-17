@@ -25,6 +25,8 @@
 #include "gl_inc.h"
 #endif
 
+using namespace std;
+
 namespace sora {;
 Shader::Shader()
   : handle(0), type(0) {
@@ -78,37 +80,26 @@ bool Shader::InitShader(GLenum shader_type, const char *src) {
 }
 /////////////////////
 ShaderProgram::ShaderProgram()
-  : prog(0) {
+: prog(0) {
+  memset(location_list_, 0, sizeof(location_list_));
 }
 ShaderProgram::~ShaderProgram() {
   // deinit is manual call
 }
+
 void ShaderProgram::Deinit() {
-  if (prog != 0) {
-    glDeleteProgram(prog);
-    prog = 0;
-  }
   if (vert_shader_.IsInit()) {
     vert_shader_.Deinit();
   }
   if (frag_shader_.IsInit()) {
     frag_shader_.Deinit();
   }
-}
-/*
-bool ShaderProgram::Link() {
-  glLinkProgram(prog);
-
-  GLint status;
-  glGetProgramiv(prog, GL_LINK_STATUS, &status);
-  if (status == GL_FALSE) {
-    GLchar msg[256];
-    glGetProgramInfoLog(prog, sizeof(msg), 0, &msg[0]);
-    return false;
+  if (prog != 0) {
+    glDeleteProgram(prog);
+    prog = 0;
   }
-  return true;
 }
-*/
+
 bool ShaderProgram::Init(const char *v_src, const char *f_src) {
   if(prog != 0) {
     Deinit();
@@ -149,6 +140,21 @@ bool ShaderProgram::Init(const char *v_src, const char *f_src) {
     SR_ASSERT(false);
     return false;
   }
+
+  for(int location_code = 0 ; location_code < kLocationCount ; location_code++) {
+    const LocationTuple &location_data = GetLocationTuple(location_code);
+    int location_type = get<1>(location_data);
+    const char *location_name = get<2>(location_data);
+    if(location_type == kLocationTypeAttrib) {
+      int location = GetAttribLocation(location_name);
+      location_list_[location_code] = location;
+
+    } else if(location_type == kLocationTypeUniform) {
+      int location = GetUniformLocation(location_name);
+      location_list_[location_code] = location;
+    }
+  }
+
   return true;
 }
 bool ShaderProgram::Validate(GLuint prog) {
@@ -180,4 +186,50 @@ GLint ShaderProgram::GetUniformLocation(const char *name) {
 void ShaderProgram::Use() {
   glUseProgram(prog);
 }
+
+const std::vector<LocationTuple> &ShaderProgram::GetLocationTupleList() {
+  static bool run = false;
+  static vector<LocationTuple> tuple_list;
+  if(run == false) {
+    run = true;
+
+    int location_type_table[] = {
+      kLocationTypeUniform,   //kLocationModelViewProjection,
+      kLocationTypeAttrib,   //kLocationPosition,
+      kLocationTypeAttrib,    //kLocationNormal,
+      kLocationTypeAttrib,    //kLocationTexcoord,
+      kLocationTypeUniform,   //kLocationAmbientColor,
+      kLocationTypeUniform,   //kLocationDiffuseColor,
+      kLocationTypeUniform,   //kLocationSpecularColor,
+      kLocationTypeUniform,   //kLocationSpecularShininess,
+      kLocationTypeUniform,   //kLocationMaterialAlpha,
+    };
+    const char *location_name_table[] = {
+      "u_modelViewProjection",    //kLocationModelViewProjection,
+      "a_position",               //kLocationPosition,
+      "a_normal",                 //kLocationNormal,
+      "a_texcoord",               //kLocationTexcoord,
+      "u_ambientColor",           //kLocationAmbientColor,
+      "u_diffuseColor",           //kLocationDiffuseColor,
+      "u_specularColor",          //kLocationSpecularColor,
+      "u_specularShininess",      //kLocationSpecularShininess,
+      "u_materialAlpha",          //kLocationMaterialAlpha,
+    };
+    
+    for(int i = 0 ; i < kLocationCount ; ++i) {
+      int location_type = location_type_table[i];
+      const char *location_name = location_name_table[i];
+      LocationTuple t = make_tuple(i, location_type, location_name);
+      tuple_list.push_back(t);
+    }
+  }
+  return tuple_list;
+}
+const LocationTuple &ShaderProgram::GetLocationTuple(int location) {
+  const vector<LocationTuple> &tpl_list = GetLocationTupleList();
+  SR_ASSERT(location >= 0);
+  SR_ASSERT(location < (int)tpl_list.size());
+  return tpl_list[location];
+}
+
 }
