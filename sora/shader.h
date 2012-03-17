@@ -27,6 +27,16 @@
 #endif
 #include <string>
 
+#define SORA_MODELVIEWPROJECTION_NAME   "u_modelViewProjection"
+#define SORA_POSITION_NAME              "a_position"
+#define SORA_NORMAL_NAME                "a_normal"
+#define SORA_TEXCOORD_NAME              "a_texcoord"
+#define SORA_AMBIENT_COLOR_NAME         "u_ambientColor"
+#define SORA_DIFFUSE_COLOR_NAME         "u_diffuseColor"
+#define SORA_SPECULAR_COLOR_NAME        "u_specularColor"
+#define SORA_SPECULAR_SHININESS_NAME    "u_specularShininess"
+#define SORA_MATERIAL_ALPHA_NAME        "u_materialAlpha"
+
 namespace sora {;
 
 enum {

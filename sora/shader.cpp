@@ -205,15 +205,15 @@ const std::vector<LocationTuple> &ShaderProgram::GetLocationTupleList() {
       kLocationTypeUniform,   //kLocationMaterialAlpha,
     };
     const char *location_name_table[] = {
-      "u_modelViewProjection",    //kLocationModelViewProjection,
-      "a_position",               //kLocationPosition,
-      "a_normal",                 //kLocationNormal,
-      "a_texcoord",               //kLocationTexcoord,
-      "u_ambientColor",           //kLocationAmbientColor,
-      "u_diffuseColor",           //kLocationDiffuseColor,
-      "u_specularColor",          //kLocationSpecularColor,
-      "u_specularShininess",      //kLocationSpecularShininess,
-      "u_materialAlpha",          //kLocationMaterialAlpha,
+      SORA_MODELVIEWPROJECTION_NAME,    //kLocationModelViewProjection,
+      SORA_POSITION_NAME,               //kLocationPosition,
+      SORA_NORMAL_NAME,                 //kLocationNormal,
+      SORA_TEXCOORD_NAME,               //kLocationTexcoord,
+      SORA_AMBIENT_COLOR_NAME,           //kLocationAmbientColor,
+      SORA_DIFFUSE_COLOR_NAME,           //kLocationDiffuseColor,
+      SORA_SPECULAR_COLOR_NAME,          //kLocationSpecularColor,
+      SORA_SPECULAR_SHININESS_NAME,      //kLocationSpecularShininess,
+      SORA_MATERIAL_ALPHA_NAME,          //kLocationMaterialAlpha,
     };
     
     for(int i = 0 ; i < kLocationCount ; ++i) {
