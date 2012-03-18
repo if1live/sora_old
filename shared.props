@@ -4,11 +4,11 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <LibraryPath>C:\devel\boost_1_49_0\stage\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\devel\boost_1_49_0;$(IncludePath)</IncludePath>
+    <IncludePath>..\sdk\vincent;C:\devel\boost_1_49_0;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>..\boost;..\glfw\include;..\glew\include;..;..\sora</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\sdk\vincent;..\boost;..\glfw\include;..\glew\include;..;..\sora</AdditionalIncludeDirectories>
       <DisableSpecificWarnings>4819;4099</DisableSpecificWarnings>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <MinimalRebuild>false</MinimalRebuild>

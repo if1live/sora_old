@@ -54,7 +54,9 @@
 #include "material.h"
 #include "math_helper.h"
 #include "camera.h"
+#include "font.h"
 
+using namespace std;
 using sora::GLHelper;
 using sora::ShaderProgram;
 using sora::MatrixStack;
@@ -65,6 +67,7 @@ using sora::ObjModel;
 sora::Texture tex;
 
 ShaderProgram shader_prog;
+ShaderProgram shader_2d;
 
 ObjModel obj_model;
 sora::PrimitiveModel primitive_model;
@@ -73,22 +76,37 @@ bool setupGraphics(int w, int h) {
   sora::Renderer::GetInstance().SetWindowSize((float)w, (float)h);
  
   //load shader file
-  //const char *vert_path = "shader/v_simple.glsl";
-  //const char *frag_path = "shader/f_simple.glsl";
-  const char *vert_path = "shader/v_diffuse.glsl";
-  const char *frag_path = "shader/f_diffuse.glsl";
-  std::string app_vert_path = sora::Filesystem::GetAppPath(vert_path);
-  std::string app_frag_path = sora::Filesystem::GetAppPath(frag_path);
-  sora::MemoryFile vert_file(app_vert_path);
-  sora::MemoryFile frag_file(app_frag_path);
-  vert_file.Open();
-  frag_file.Open();
-  const char *vert_src = (const char*)(vert_file.start);
-  const char *frag_src = (const char*)(frag_file.start);
-  bool prog_result = shader_prog.Init(vert_src, frag_src);
-  if(prog_result == false) {
-    LOGE("Could not create program.");
-    return false;
+  {
+    std::string app_vert_path = sora::Filesystem::GetAppPath("shader/v_diffuse.glsl");
+    std::string app_frag_path = sora::Filesystem::GetAppPath("shader/f_diffuse.glsl");
+    sora::MemoryFile vert_file(app_vert_path);
+    sora::MemoryFile frag_file(app_frag_path);
+    vert_file.Open();
+    frag_file.Open();
+    const char *vert_src = (const char*)(vert_file.start);
+    const char *frag_src = (const char*)(frag_file.start);
+    bool prog_result = shader_prog.Init(vert_src, frag_src);
+    if(prog_result == false) {
+      LOGE("Could not create program.");
+      return false;
+    }
+  }
+
+  {
+    //2d shader
+    std::string app_vert_path = sora::Filesystem::GetAppPath("shader/v_simple.glsl");
+    std::string app_frag_path = sora::Filesystem::GetAppPath("shader/f_simple.glsl");
+    sora::MemoryFile vert_file(app_vert_path);
+    sora::MemoryFile frag_file(app_frag_path);
+    vert_file.Open();
+    frag_file.Open();
+    const char *vert_src = (const char*)(vert_file.start);
+    const char *frag_src = (const char*)(frag_file.start);
+    bool prog_result = shader_2d.Init(vert_src, frag_src);
+    if(prog_result == false) {
+      LOGE("Could not create program.");
+      return false;
+    }
   }
 
   /*
@@ -136,13 +154,13 @@ bool setupGraphics(int w, int h) {
   //primitive_model.WireCube(1, 1, 1);
   //primitive_model.WireAxis(2);
   //primitive_model.WireSphere(1, 8, 8);
-  //primitive_model.SolidSphere(1, 16, 16);
+  primitive_model.SolidSphere(1, 16, 16);
   //primitive_model.WireCone(1, 2, 8, 8);
   //primitive_model.SolidCone(1, 2, 8, 8);
   //primitive_model.WireCylinder(1, 2, 8);
   //primitive_model.SolidCylinder(1, 2, 16);
   //primitive_model.SolidTeapot(1);
-  primitive_model.WireTeapot(1);
+  //primitive_model.WireTeapot(1);
 
   return true;
 }
@@ -178,7 +196,7 @@ void renderFrame() {
   //newmtl shinyred
   //newmtl clearblue
   //const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("sample");
-  const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("shinyred");
+  const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("sample");
   renderer.SetMaterial(mtl);
   
   int position_handle = shader_prog.GetLocation(sora::ShaderVariable::kPosition);
@@ -193,6 +211,7 @@ void renderFrame() {
   glm::mat4 &projection = renderer.projection_mat();
   glm::mat4 &view = renderer.view_mat();
   glm::mat4 &world = renderer.world_mat();
+  world = glm::mat4(1.0f);  //reset world matrix
 
   float win_width = renderer.win_width();
   float win_height = renderer.win_height();
@@ -219,6 +238,39 @@ void renderFrame() {
   renderer.ApplyMatrix();
   //renderer.DrawObj(obj_model);  
   renderer.DrawPrimitiveModel(primitive_model);
+  
+  //draw 2d something
+  {
+    renderer.Set2D();
+    renderer.SetShader(shader_2d);
+    renderer.ApplyMatrix2D();
+    sora::Font &font = sora::Font::GetInstance();
+    renderer.SetTexture(font.font_texture());
+
+    int position_handle = shader_2d.GetLocation(sora::ShaderVariable::kPosition);
+    int texcoord_handle = shader_2d.GetLocation(sora::ShaderVariable::kTexcoord);
+
+    /*
+    vector<sora::Vertex2D> vert_list;
+    vert_list.push_back(sora::Vertex2D(100, 100, 0, 0));
+    vert_list.push_back(sora::Vertex2D(100+128*2, 100, 1, 0));
+    vert_list.push_back(sora::Vertex2D(100+128*2, 100+128*2, 1, 1));
+    vert_list.push_back(sora::Vertex2D(100, 100+128*2, 0, 1));
+    glVertexAttribPointer(position_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &vert_list[0].pos);
+    glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &vert_list[0].texcoord);
+    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    */
+
+    glm::mat4 &world = renderer.world_mat();
+    world = glm::translate(world, glm::vec3(0, 800, 0));
+    world = glm::scale(world, glm::vec3(2, 2, 1));
+    renderer.ApplyMatrix2D();
+    sora::Label label("PQRS_1234_asdf");
+    glVertexAttribPointer(position_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->pos);
+    glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->texcoord);
+    glDrawElements(GL_TRIANGLES, label.index_count(), GL_UNSIGNED_SHORT, label.index_data());
+
+  }
   
 
   //////////////////////////////

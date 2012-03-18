@@ -73,6 +73,7 @@
   <ItemGroup>
     <ClCompile Include="arch.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="font.cpp" />
     <ClCompile Include="gl_buffer_object.cpp" />
     <ClCompile Include="common_string.cpp" />
     <ClCompile Include="filesystem.cpp" />
@@ -105,10 +106,12 @@
     <ClCompile Include="zip_stream_file.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\sdk\vincent\vincent.h" />
     <ClInclude Include="arch.h" />
     <ClInclude Include="array_inc.h" />
     <ClInclude Include="assert_inc.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="font.h" />
     <ClInclude Include="gl_buffer_object.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="common_string.h" />

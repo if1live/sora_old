@@ -20,6 +20,12 @@
     <Filter Include="io">
       <UniqueIdentifier>{795d0241-e4df-4d6d-9b84-4d223b2bb0bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sdk\lodepng">
+      <UniqueIdentifier>{ba0d8e2b-7aa3-4b06-a0f7-f4d3c6b5c943}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="sdk\vincent">
+      <UniqueIdentifier>{6ebe6cb7-522d-481a-b7b1-5ce8a670595b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora_stdafx.cpp">
@@ -94,9 +100,6 @@
     <ClCompile Include="texture.cpp">
       <Filter>render</Filter>
     </ClCompile>
-    <ClCompile Include="lodepng\lodepng.cpp">
-      <Filter>sdk</Filter>
-    </ClCompile>
     <ClCompile Include="uber_shader.cpp">
       <Filter>render</Filter>
     </ClCompile>
@@ -107,6 +110,12 @@
       <Filter>render</Filter>
     </ClCompile>
     <ClCompile Include="camera.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="lodepng\lodepng.cpp">
+      <Filter>sdk\lodepng</Filter>
+    </ClCompile>
+    <ClCompile Include="font.cpp">
       <Filter>render</Filter>
     </ClCompile>
   </ItemGroup>
@@ -213,9 +222,6 @@
     <ClInclude Include="texture.h">
       <Filter>render</Filter>
     </ClInclude>
-    <ClInclude Include="lodepng\lodepng.h">
-      <Filter>sdk</Filter>
-    </ClInclude>
     <ClInclude Include="uber_shader.h">
       <Filter>render</Filter>
     </ClInclude>
@@ -229,6 +235,15 @@
       <Filter>render</Filter>
     </ClInclude>
     <ClInclude Include="camera.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="lodepng\lodepng.h">
+      <Filter>sdk\lodepng</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sdk\vincent\vincent.h">
+      <Filter>sdk\vincent</Filter>
+    </ClInclude>
+    <ClInclude Include="font.h">
       <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>

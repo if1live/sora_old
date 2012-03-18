@@ -86,6 +86,11 @@ void Renderer::Set2D() {
   glDisable(GL_DEPTH_TEST);
   glEnable(GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+  //reset matrix
+  impl->projection = glm::ortho(0.0f, (float)win_width_, 0.0f, (float)win_height_);
+  impl->view = glm::mat4(1.0f);
+  impl->world = glm::mat4(1.0f);
 }
 
 void Renderer::Set3D() {
@@ -228,9 +233,38 @@ void Renderer::set_view_mat(const glm::mat4 &m) {
   impl->view = m;
 }
 
+void Renderer::ApplyMatrix2D() {
+  //world-view-projection
+  //world, view, projection 같은것을 등록할수 잇으면 등록하기
+  int mvp_handle = impl->last_prog->GetLocation(ShaderVariable::kWorldViewProjection);
+  if(mvp_handle != -1) {
+    //glm::mat4 mvp = impl->projection * impl->view * impl->world;  
+    glm::mat4 mvp = glm::mat4(1.0f);
+    mvp *= impl->projection;
+    mvp *= impl->view;
+    mvp *= impl->world;
+    glUniformMatrix4fv(mvp_handle, 1, GL_FALSE, glm::value_ptr(mvp));
+  }
+
+  int world_handle = impl->last_prog->GetLocation(ShaderVariable::kWorld);
+  if(world_handle != -1) {
+    glUniformMatrix4fv(world_handle, 1, GL_FALSE, glm::value_ptr(impl->world));
+  }
+
+  int view_handle = impl->last_prog->GetLocation(ShaderVariable::kView);
+  if(view_handle != -1) {
+    glUniformMatrix4fv(view_handle, 1, GL_FALSE, glm::value_ptr(impl->view));
+  }
+
+  int projection_handle = impl->last_prog->GetLocation(ShaderVariable::kProjection);
+  if(projection_handle != -1) {
+    glUniformMatrix4fv(projection_handle, 1, GL_FALSE, glm::value_ptr(impl->projection));
+  }
+}
+
 void Renderer::ApplyMatrix() {
-  glm::mat4 &view = impl->view;
-  Camera &cam = camera();
+  Camera &cam = impl->cam;
+  //apply new viw matrix
   const Vec3f &eye = cam.eye();
   const Vec3f &dir = cam.dir();
   const Vec3f center = eye + dir;
@@ -240,6 +274,7 @@ void Renderer::ApplyMatrix() {
   glm::vec3 center_v(center.x, center.y, center.z);
   glm::vec3 up_v(up.x, up.y, up.z);
 
+  glm::mat4 &view = impl->view;
   view = glm::lookAt(eye_v, center_v, up_v);
 
   //world-view-projection

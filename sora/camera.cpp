@@ -59,9 +59,11 @@ void Camera::set_eye(const Vec3f &v) {
 }
 void Camera::set_dir(const Vec3f &v) {
   impl->dir = v;
+  impl->dir.Normalized();
 }
 void Camera::set_up(const Vec3f &v) {
   impl->up = v;
+  impl->up.Normalized();
 }
 }
 
