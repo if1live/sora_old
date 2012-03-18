@@ -132,11 +132,11 @@ bool setupGraphics(int w, int h) {
   sora::MaterialManager::GetInstance().Add(material_list);
 
   //primitive model test
-  //primitive_model.SolidCube(1, 2, 1);
+  primitive_model.SolidCube(1, 2, 1);
   //primitive_model.WireCube(1, 1, 1);
   //primitive_model.WireAxis(2);
   //primitive_model.WireSphere(1, 8, 8);
-  primitive_model.SolidSphere(1, 16, 16);
+  //primitive_model.SolidSphere(1, 16, 16);
   //primitive_model.WireCone(1, 2, 8, 8);
   //primitive_model.SolidCone(1, 2, 8, 8);
   //primitive_model.WireCylinder(1, 2, 8);
@@ -175,7 +175,8 @@ void renderFrame() {
   //newmtl flatwhite
   //newmtl shinyred
   //newmtl clearblue
-  const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("sample");
+  //const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("sample");
+  const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("shinyred");
   renderer.SetMaterial(mtl);
   
   int position_handle = shader_prog.GetLocation(sora::ShaderVariable::kPosition);
@@ -204,29 +205,19 @@ void renderFrame() {
   cam.set_dir(sora::Vec3f(0, 0, 0) - cam.eye());
   cam.set_up(sora::Vec3f(0, 1, 0));
   renderer.set_camera(cam);
-  
-  //view = glm::lookAt(glm::vec3(cam_x, cam_y, cam_z), glm::vec3(0), glm::vec3(0, 1, 0));
-  //view = glm::lookAt(glm::vec3(0, 0, 3), glm::vec3(0), glm::vec3(0, 1, 0));
-  //view = glm::rotate(view, latitude, glm::vec3(0, 1, 0));
-  //view = glm::rotate(view, aptitude, glm::vec3(1, 0, 1));
-  world = glm::mat4(1.0f);
-  //world = glm::scale(world, glm::vec3(0.04, 0.04, 0.04));
-  //world = glm::rotate(world, rot, glm::vec3(0, 1, 0));
 
   //set light position
   //GLint light_pos_handle = shader_prog.GetLocation(sora::kLocationWorldLightPosition);
   GLint light_pos_handle = shader_prog.GetUniformLocation("u_worldLightPosition");
-  glm::vec3 light_pos = glm::vec3(0, 0, 1000);  //???
+  glm::vec3 light_pos = glm::vec3(0, 0, 100);
   glUniform3fv(light_pos_handle, 1, glm::value_ptr(light_pos));
   GLHelper::CheckError("Set Light Pos Handle");
-
   
   //draw cube
   renderer.ApplyMatrix();
   //renderer.DrawObj(obj_model);  
-  renderer.DrawPrimitiveModel(primitive_model);
-  //renderer.DrawSolidTeapot();
-  
+  //renderer.DrawPrimitiveModel(primitive_model);
+  renderer.DrawSolidTeapot();
   
 
   //////////////////////////////
