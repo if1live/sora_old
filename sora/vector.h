@@ -23,6 +23,7 @@
 
 #if SR_USE_PCH == 0
 #include "arch.h"
+#include <cmath>
 #endif
 
 //#ifdef __cplusplus

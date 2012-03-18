@@ -21,6 +21,10 @@
 #ifndef SORA_SHADER_VARIABLE_H_
 #define SORA_SHADER_VARIABLE_H_
 
+#if SR_USE_PCH == 0
+#include <vector>
+#endif
+
 namespace sora {;
 
 const char kViewDirectionName[] = "u_viewDirection";

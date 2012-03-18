@@ -23,7 +23,8 @@ LOCAL_C_INCLUDES := \
 	../sora	\
 	../sdk/libzip/jni	\
 	../sdk/glm-0.9.3.1	\
-	../../boost_1_49_0
+	../../boost_1_49_0	\
+	../sdk/vincent
 	
 LOCAL_CFLAGS := 
 LOCAL_CXXFLAGS := --std=gnu++0x
@@ -54,7 +55,10 @@ LOCAL_SRC_FILES := \
 	../lodepng/lodepng.cpp	\
 	../gl_buffer_object.cpp	\
 	../material_manager.cpp	\
-	../matrix_stack.cpp
+	../matrix_stack.cpp	\
+	../font.cpp	\
+	../shader_variable.cpp	\
+	../camera.cpp
 
 #include $(BUILD_SHARED_LIBRARY)
 include $(BUILD_STATIC_LIBRARY)
