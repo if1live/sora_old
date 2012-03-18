@@ -35,7 +35,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #endif
 
-#include "teapot.h"
 #include "camera.h"
 
 namespace sora {;
@@ -208,24 +207,6 @@ void Renderer::DrawPrimitiveModel(const PrimitiveModel &model) {
     glDrawElements(draw_mode, idx_count, GL_UNSIGNED_SHORT, idx_ptr);
     GLHelper::CheckError("DrawElements - primitive model");
   }
-}
-
-void Renderer::DrawSolidTeapot() {
-  int pos_loc = impl->last_prog->GetLocation(ShaderVariable::kPosition);
-  int texcoord_loc = impl->last_prog->GetLocation(ShaderVariable::kTexcoord);
-  int normal_loc = impl->last_prog->GetLocation(ShaderVariable::kNormal);
-
-  if(pos_loc != -1) {
-    glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, 0, teapotVertices);
-  }
-  if(texcoord_loc != -1) {
-    glVertexAttribPointer(texcoord_loc, 2, GL_FLOAT, GL_FALSE, 0, teapotTexCoords);
-  }
-  if(normal_loc != -1) {
-    glVertexAttribPointer(normal_loc, 3, GL_FLOAT, GL_FALSE, 0, teapotNormals);
-  }
-  glDrawElements(GL_TRIANGLES, NUM_TEAPOT_OBJECT_INDEX, GL_UNSIGNED_SHORT, teapotIndices);
-  GLHelper::CheckError("DrawElements - solid teapot");
 }
 
 glm::mat4 &Renderer::world_mat() {

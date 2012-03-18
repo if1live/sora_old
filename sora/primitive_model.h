@@ -47,6 +47,8 @@ public:
   void WireCylinder(float radius, float height, int slices);
   void SolidCylinder(float radius, float height, int slices);
   void WireAxis(float size);
+  void WireTeapot(float size);
+  void SolidTeapot(float size);
 
   // 몇개의 submodel로 구성되는가
   int Count() const;
@@ -58,6 +60,16 @@ public:
 
 private:
   PrimitiveModelImpl *impl;
+
+  static void CalcTeapotSize();
+  //teapot
+  static float teapot_min_x_;
+  static float teapot_max_x_;
+  static float teapot_min_y_;
+  static float teapot_max_y_;
+  static float teapot_min_z_;
+  static float teapot_max_z_;
+  static bool teapot_created_;
 };
 
 }

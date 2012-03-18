@@ -58,7 +58,6 @@ public:
 
   void DrawObj(const ObjModel &model);
   void DrawPrimitiveModel(const PrimitiveModel &model);
-  void DrawSolidTeapot();
 
   glm::mat4 &world_mat();
   glm::mat4 &projection_mat();
