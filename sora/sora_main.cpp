@@ -144,10 +144,20 @@ bool setupGraphics(int w, int h) {
   return true;
 }
 
-void renderFrame() {
-  static float rot = 0;
-  rot += 0.1f;
+float aptitude = 0; //위도. -90~90. 세로 위치 표현
+float latitude = 0; //경도
 
+void SORA_set_cam_pos(float a, float b) {
+  aptitude += a;
+  latitude += b;
+  if(aptitude > 90) {
+    aptitude = 90;
+  } else if(aptitude < -90) {
+    aptitude = -90;
+  }
+}
+
+void renderFrame() {
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
@@ -164,7 +174,7 @@ void renderFrame() {
   //newmtl flatwhite
   //newmtl shinyred
   //newmtl clearblue
-  const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("shinyred");
+  const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("sample");
   renderer.SetMaterial(mtl);
 
   GLint texcoord_handle = shader_prog.GetLocation(sora::kLocationTexcoord);
@@ -184,26 +194,37 @@ void renderFrame() {
 
   float win_width = renderer.win_width();
   float win_height = renderer.win_height();
-  projection = glm::perspective(60.0f, win_width / win_height, 1.0f, 100.0f);
-  view = glm::lookAt(glm::vec3(0, 0, 3), glm::vec3(0), glm::vec3(0, 1, 0));
+  projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 100.0f);
+  float radius = 4;
+  float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * cos(SR_DEG_2_RAD(latitude));
+  float cam_y = radius * sin(SR_DEG_2_RAD(aptitude));
+  float cam_z = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
+
+  view = glm::lookAt(glm::vec3(cam_x, cam_y, cam_z), glm::vec3(0), glm::vec3(0, 1, 0));
+  //view = glm::lookAt(glm::vec3(0, 0, 3), glm::vec3(0), glm::vec3(0, 1, 0));
+  //view = glm::rotate(view, latitude, glm::vec3(0, 1, 0));
+  //view = glm::rotate(view, aptitude, glm::vec3(1, 0, 1));
   world = glm::mat4(1.0f);
-  world = glm::rotate(world, rot, glm::vec3(0, 1, 0));
+  //world = glm::scale(world, glm::vec3(0.04, 0.04, 0.04));
+  //world = glm::rotate(world, rot, glm::vec3(0, 1, 0));
 
   //set light position
-  glm::vec3 light_pos = glm::vec3(1.0f, 6.0f, 50.0f);
+  glm::vec3 light_pos = glm::vec3(0.0f, 0.0f, 3.0f);
   glUniform3fv(light_pos_handle, 1, glm::value_ptr(light_pos));
   GLHelper::CheckError("Set Light Pos Handle");
 
   //set view position
   GLint view_pos_handle = shader_prog.GetUniformLocation("u_viewPosition");
   glm::vec4 view_pos = glm::vec4(0, 0, 3, 1);
+  view_pos = view * view_pos;
   glUniform4fv(view_pos_handle, 1, glm::value_ptr(view_pos));
   GLHelper::CheckError("Set View Pos Handle");
 
   //draw cube
   renderer.ApplyMatrix();
-  //sora::Renderer::GetInstance().DrawObj(obj_model);  
+  //renderer.DrawObj(obj_model);  
   renderer.DrawPrimitiveModel(primitive_model);
+  //renderer.DrawSolidTeapot();
   
   
 
@@ -231,6 +252,7 @@ SR_C_DLL void SORA_init_gl_env() {
 }
 
 void SORA_update_frame(float dt) {
+  
 }
 
 void SORA_cleanup_graphics() {

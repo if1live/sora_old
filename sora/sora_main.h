@@ -31,6 +31,8 @@ SR_C_DLL void SORA_draw_frame();
 SR_C_DLL void SORA_update_frame(float dt);
 SR_C_DLL void SORA_init_gl_env();
 
+SR_C_DLL void SORA_set_cam_pos(float a, float b);
+
 #if SR_ANDROID
 void SORA_set_apk_file_path(const char *abs_path);
 #endif

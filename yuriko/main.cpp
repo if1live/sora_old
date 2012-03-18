@@ -55,6 +55,25 @@ int main(int argc, char *argv[]) {
     glfwSwapBuffers();
     prev_time = curr_time;
     Timer_Tick();
+
+    if (glfwGetKey(GLFW_KEY_ESC) == GLFW_PRESS) {
+      exit(0);
+    }
+
+    float x = 0.1;
+    //check key
+    if(glfwGetKey('W') == GLFW_PRESS || glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS) {
+      SORA_set_cam_pos(x, 0);
+    }
+    if(glfwGetKey('S') == GLFW_PRESS || glfwGetKey(GLFW_KEY_DOWN) == GLFW_PRESS) {
+      SORA_set_cam_pos(-x, 0);
+    }
+    if(glfwGetKey('A') == GLFW_PRESS || glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS) {
+      SORA_set_cam_pos(0, x);
+    }
+    if(glfwGetKey('D') == GLFW_PRESS || glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS) {
+      SORA_set_cam_pos(0, -x);
+    }
   }
   //logic end
 

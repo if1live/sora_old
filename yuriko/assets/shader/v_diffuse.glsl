@@ -30,7 +30,6 @@ void main() {
 	v_shininess = u_specularShininess;
 	
 	//calc diffuse
-	//vec3 light_pos = vec3(0, 0, 100);
 	vec3 light_dir = a_position.xyz - u_lightPosition.xyz;
 	light_dir = normalize(light_dir);
 

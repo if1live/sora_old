@@ -35,6 +35,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #endif
 
+#include "teapot.h"
+
 namespace sora {;
 
 struct RendererImpl {
@@ -139,7 +141,7 @@ void Renderer::SetMaterial(const Material &material) {
       float color[4];
       memcpy(color, material.specular, sizeof(material.specular));
       color[3] = material.alpha;
-      glUniform4fv(specular_color_loc, 1, material.specular);
+      glUniform4fv(specular_color_loc, 1, color);
       GLHelper::CheckError("Uniform SpecularColor");
     }
     int shininess_loc = impl->last_prog->GetLocation(kLocationSpecularShininess);
@@ -205,6 +207,24 @@ void Renderer::DrawPrimitiveModel(const PrimitiveModel &model) {
   }
 }
 
+void Renderer::DrawSolidTeapot() {
+  int pos_loc = impl->last_prog->GetLocation(kLocationPosition);
+  int texcoord_loc = impl->last_prog->GetLocation(kLocationTexcoord);
+  int normal_loc = impl->last_prog->GetLocation(kLocationNormal);
+
+  if(pos_loc != -1) {
+    glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, 0, teapotVertices);
+  }
+  if(texcoord_loc != -1) {
+    glVertexAttribPointer(texcoord_loc, 2, GL_FLOAT, GL_FALSE, 0, teapotTexCoords);
+  }
+  if(normal_loc != -1) {
+    glVertexAttribPointer(normal_loc, 3, GL_FLOAT, GL_FALSE, 0, teapotNormals);
+  }
+  glDrawElements(GL_TRIANGLES, NUM_TEAPOT_OBJECT_INDEX, GL_UNSIGNED_SHORT, teapotIndices);
+  GLHelper::CheckError("DrawElements - solid teapot");
+}
+
 glm::mat4 &Renderer::world_mat() {
   return impl->world;
 }
@@ -228,12 +248,18 @@ void Renderer::ApplyMatrix() {
   GLint mvp_handle = impl->last_prog->GetLocation(sora::kLocationModelViewProjection);
   GLint world_handle = impl->last_prog->GetLocation(sora::kLocationWorld);
 
-  glm::mat4 mvp = impl->projection * impl->view * impl->world;  
+  //glm::mat4 mvp = impl->projection * impl->view * impl->world;  
+  glm::mat4 mvp = glm::mat4(1.0f);
+  mvp *= impl->projection;
+  mvp *= impl->view;
+  mvp *= impl->world;
+  
   glUniformMatrix4fv(mvp_handle, 1, GL_FALSE, glm::value_ptr(mvp));
 
   //set world matrix??
   if(world_handle != -1) {
-    glUniformMatrix4fv(world_handle, 1, GL_FALSE, glm::value_ptr(impl->world));
+    glm::mat4 modelview = impl->view * impl->world;
+    glUniformMatrix4fv(world_handle, 1, GL_FALSE, glm::value_ptr(modelview));
     GLHelper::CheckError("Set Matrix Pos Handle");
   }
 }

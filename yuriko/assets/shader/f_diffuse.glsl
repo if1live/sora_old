@@ -22,17 +22,16 @@ void main() {
 	
 	//calc specular
 	vec4 specular_color = v_specularColor;
-	if(diffuse > 0.0) {
+	//if(diffuse > 0.0) {
 		vec3 reflection = normalize(v_reflection);
 		vec3 viewDir = normalize(v_viewDir);
 
 		float dot_result = clamp(dot(reflection, -viewDir ), 0.0, 1.0);
 		float pow_result = pow(dot_result, v_shininess);
 		specular_color = v_specularColor * pow_result;
-	}
+	//}
 	
 	vec4 color = ambient_color + diffuse_color + specular_color;
-	//vec4 color = vec4(ambient_color + diffuse_color, 1.0);
-	//gl_FragColor = color;
+	//gl_FragColor = specular_color;
 	gl_FragColor = color * texture2D(s_texture, v_texcoord);
 }
