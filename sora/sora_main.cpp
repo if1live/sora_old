@@ -47,6 +47,7 @@
 #include "obj_model.h"
 #include "obj_loader.h"
 #include "primitive_model.h"
+#include "material_manager.h"
 
 #include "texture.h"
 #include "renderer.h"
@@ -66,7 +67,6 @@ ShaderProgram shader_prog;
 
 ObjModel obj_model;
 sora::PrimitiveModel primitive_model;
-std::vector<sora::Material> material_list;
 
 bool setupGraphics(int w, int h) {
   sora::Renderer::GetInstance().SetWindowSize((float)w, (float)h);
@@ -126,7 +126,9 @@ bool setupGraphics(int w, int h) {
   std::string mtl_path = sora::Filesystem::GetAppPath("material/example.mtl");
   sora::MemoryFile mtl_file(mtl_path);
   mtl_file.Open();
+  std::vector<sora::Material> material_list;
   loader.LoadMtl(mtl_file.start, mtl_file.end, &material_list);
+  sora::MaterialManager::GetInstance().Add(material_list);
 
   //primitive model test
   primitive_model.SolidCube(1, 2, 1);
@@ -158,7 +160,10 @@ void renderFrame() {
 
   //use material
   //sora::Material &mtl = material_list[0];
-  sora::Material &mtl = material_list[2];
+  //newmtl flatwhite
+  //newmtl shinyred
+  //newmtl clearblue
+  const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("shinyred");
   sora::Renderer::GetInstance().SetMaterial(mtl);
 
   GLint mvp_handle = shader_prog.GetLocation(sora::kLocationModelViewProjection);

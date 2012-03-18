@@ -79,6 +79,7 @@
     <ClCompile Include="gl_inc.cpp" />
     <ClCompile Include="lodepng\lodepng.cpp" />
     <ClCompile Include="low_level_c_file.cpp" />
+    <ClCompile Include="material_manager.cpp" />
     <ClCompile Include="matrix_stack.cpp" />
     <ClCompile Include="memory_file.cpp" />
     <ClCompile Include="obj_loader.cpp" />
@@ -114,6 +115,7 @@
     <ClInclude Include="lodepng\lodepng.h" />
     <ClInclude Include="low_level_c_file.h" />
     <ClInclude Include="material.h" />
+    <ClInclude Include="material_manager.h" />
     <ClInclude Include="matrix_stack.h" />
     <ClInclude Include="memory_file.h" />
     <ClInclude Include="obj_loader.h" />
