@@ -106,6 +106,9 @@
     <ClCompile Include="shader_variable.cpp">
       <Filter>render</Filter>
     </ClCompile>
+    <ClCompile Include="camera.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -223,6 +226,9 @@
       <Filter>render</Filter>
     </ClInclude>
     <ClInclude Include="shader_variable.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="camera.h">
       <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>

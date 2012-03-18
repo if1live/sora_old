@@ -36,6 +36,7 @@
 #endif
 
 #include "teapot.h"
+#include "camera.h"
 
 namespace sora {;
 
@@ -55,6 +56,8 @@ struct RendererImpl {
   glm::mat4 projection;
   glm::mat4 view;
   glm::mat4 world;
+
+  Camera cam;
 };
 
 Renderer::Renderer() 
@@ -245,21 +248,66 @@ void Renderer::set_view_mat(const glm::mat4 &m) {
 }
 
 void Renderer::ApplyMatrix() {
-  GLint mvp_handle = impl->last_prog->GetLocation(ShaderVariable::kWorldViewProjection);
-  GLint world_handle = impl->last_prog->GetLocation(ShaderVariable::kWorld);
+  glm::mat4 &view = impl->view;
+  Camera &cam = camera();
+  const Vec3f &eye = cam.eye();
+  const Vec3f &dir = cam.dir();
+  const Vec3f center = eye + dir;
+  const Vec3f &up = cam.up();
 
-  //glm::mat4 mvp = impl->projection * impl->view * impl->world;  
-  glm::mat4 mvp = glm::mat4(1.0f);
-  mvp *= impl->projection;
-  mvp *= impl->view;
-  mvp *= impl->world;
-  
-  glUniformMatrix4fv(mvp_handle, 1, GL_FALSE, glm::value_ptr(mvp));
+  glm::vec3 eye_v(eye.x, eye.y, eye.z);
+  glm::vec3 center_v(center.x, center.y, center.z);
+  glm::vec3 up_v(up.x, up.y, up.z);
 
-  //set world matrix??
+  view = glm::lookAt(eye_v, center_v, up_v);
+
+  //world-view-projection
+  //world, view, projection 같은것을 등록할수 잇으면 등록하기
+  int mvp_handle = impl->last_prog->GetLocation(ShaderVariable::kWorldViewProjection);
+  if(mvp_handle != -1) {
+    //glm::mat4 mvp = impl->projection * impl->view * impl->world;  
+    glm::mat4 mvp = glm::mat4(1.0f);
+    mvp *= impl->projection;
+    mvp *= impl->view;
+    mvp *= impl->world;
+    glUniformMatrix4fv(mvp_handle, 1, GL_FALSE, glm::value_ptr(mvp));
+  }
+
+  int world_handle = impl->last_prog->GetLocation(ShaderVariable::kWorld);
   if(world_handle != -1) {
     glUniformMatrix4fv(world_handle, 1, GL_FALSE, glm::value_ptr(impl->world));
-    GLHelper::CheckError("Set Matrix Pos Handle");
+  }
+
+  int view_handle = impl->last_prog->GetLocation(ShaderVariable::kView);
+  if(view_handle != -1) {
+    glUniformMatrix4fv(view_handle, 1, GL_FALSE, glm::value_ptr(impl->view));
+  }
+
+  int projection_handle = impl->last_prog->GetLocation(ShaderVariable::kProjection);
+  if(projection_handle != -1) {
+    glUniformMatrix4fv(projection_handle, 1, GL_FALSE, glm::value_ptr(impl->projection));
+  }
+
+  int view_pos_handle = impl->last_prog->GetLocation(ShaderVariable::kViewPosition);
+  if(view_pos_handle != -1) {
+    glUniform4f(view_pos_handle, eye.x, eye.y, eye.z, 1.0f);
+  }
+
+  int view_side_handle = impl->last_prog->GetLocation(ShaderVariable::kViewSide);
+  if(view_side_handle != -1) {
+    Vec3f view_side;
+    VecCross(dir.data, up.data, view_side.data);
+    glUniform4f(view_side_handle, view_side.x, view_side.y, view_side.z, 1.0f);
+  }
+
+  int view_up_handle = impl->last_prog->GetLocation(ShaderVariable::kViewUp);
+  if(view_up_handle != -1) {
+    glUniform4f(view_up_handle, up.x, up.y, up.z, 1.0f);
+  }
+
+  int view_dir_handle = impl->last_prog->GetLocation(ShaderVariable::kViewDirection);
+  if(view_dir_handle != -1) {
+    glUniform4f(view_dir_handle, dir.x, dir.y, dir.z, 1.0f);
   }
 }
 
@@ -267,5 +315,23 @@ SR_C_DLL Renderer &Renderer_get_instance() {
   return Renderer::GetInstance();
 }
 
+Camera &Renderer::camera() {
+  return impl->cam;
+}
+void Renderer::set_camera(const Camera &cam) {
+  impl->cam = cam;
 
+  //apply new viw matrix
+  const Vec3f &eye = cam.eye();
+  const Vec3f &dir = cam.dir();
+  const Vec3f center = eye + dir;
+  const Vec3f &up = cam.up();
+
+  glm::vec3 eye_v(eye.x, eye.y, eye.z);
+  glm::vec3 center_v(center.x, center.y, center.z);
+  glm::vec3 up_v(up.x, up.y, up.z);
+
+  glm::mat4 &view = impl->view;
+  view = glm::lookAt(eye_v, center_v, up_v);
+}
 }

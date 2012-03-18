@@ -53,6 +53,7 @@
 #include "renderer.h"
 #include "material.h"
 #include "math_helper.h"
+#include "camera.h"
 
 using sora::GLHelper;
 using sora::ShaderProgram;
@@ -131,11 +132,11 @@ bool setupGraphics(int w, int h) {
   sora::MaterialManager::GetInstance().Add(material_list);
 
   //primitive model test
-  primitive_model.SolidCube(1, 2, 1);
+  //primitive_model.SolidCube(1, 2, 1);
   //primitive_model.WireCube(1, 1, 1);
   //primitive_model.WireAxis(2);
   //primitive_model.WireSphere(1, 8, 8);
-  //primitive_model.SolidSphere(1, 16, 16);
+  primitive_model.SolidSphere(1, 16, 16);
   //primitive_model.WireCone(1, 2, 8, 8);
   //primitive_model.SolidCone(1, 2, 8, 8);
   //primitive_model.WireCylinder(1, 2, 8);
@@ -198,7 +199,13 @@ void renderFrame() {
   float cam_y = radius * sin(SR_DEG_2_RAD(aptitude));
   float cam_z = radius * cos(SR_DEG_2_RAD(aptitude)) * cos(SR_DEG_2_RAD(latitude));
 
-  view = glm::lookAt(glm::vec3(cam_x, cam_y, cam_z), glm::vec3(0), glm::vec3(0, 1, 0));
+  sora::Camera cam;
+  cam.set_eye(sora::Vec3f(cam_x, cam_y, cam_z));
+  cam.set_dir(sora::Vec3f(0, 0, 0) - cam.eye());
+  cam.set_up(sora::Vec3f(0, 1, 0));
+  renderer.set_camera(cam);
+  
+  //view = glm::lookAt(glm::vec3(cam_x, cam_y, cam_z), glm::vec3(0), glm::vec3(0, 1, 0));
   //view = glm::lookAt(glm::vec3(0, 0, 3), glm::vec3(0), glm::vec3(0, 1, 0));
   //view = glm::rotate(view, latitude, glm::vec3(0, 1, 0));
   //view = glm::rotate(view, aptitude, glm::vec3(1, 0, 1));
@@ -206,23 +213,14 @@ void renderFrame() {
   //world = glm::scale(world, glm::vec3(0.04, 0.04, 0.04));
   //world = glm::rotate(world, rot, glm::vec3(0, 1, 0));
 
-  //set view position
-  GLint view_pos_handle = shader_prog.GetUniformLocation("u_viewPosition");
-  //glm::vec4 view_pos = glm::vec4(cam_x, cam_y, cam_z, 1);
-  glm::vec4 view_pos = glm::vec4(0, 0, 4, 1);
-  view_pos = view * view_pos;
-  glUniform4fv(view_pos_handle, 1, glm::value_ptr(view_pos));
-  GLHelper::CheckError("Set View Pos Handle");
-
   //set light position
   //GLint light_pos_handle = shader_prog.GetLocation(sora::kLocationWorldLightPosition);
   GLint light_pos_handle = shader_prog.GetUniformLocation("u_worldLightPosition");
-  glm::vec3 light_pos = glm::vec3(0, 0, 4);  //???
+  glm::vec3 light_pos = glm::vec3(0, 0, 1000);  //???
   glUniform3fv(light_pos_handle, 1, glm::value_ptr(light_pos));
   GLHelper::CheckError("Set Light Pos Handle");
 
-  //cam position
-
+  
   //draw cube
   renderer.ApplyMatrix();
   //renderer.DrawObj(obj_model);  

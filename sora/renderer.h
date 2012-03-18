@@ -34,7 +34,7 @@ class Material;
 class ShaderProgram;
 class ObjModel;
 class PrimitiveModel;
-
+class Camera;
 
 struct RendererImpl;
 //opengles 2.0 renderer
@@ -68,6 +68,9 @@ public:
   void set_view_mat(const glm::mat4 &m);
 
   void ApplyMatrix();
+
+  Camera &camera();
+  void set_camera(const Camera &cam);
 
 private:
   float win_width_;

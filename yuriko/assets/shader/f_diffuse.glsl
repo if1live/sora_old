@@ -33,5 +33,7 @@ void main() {
 	
 	//vec4 color = ambient_color + diffuse_color + specular_color;
 	//gl_FragColor = specular_color;
-	gl_FragColor =  texture2D(s_texture, v_texcoord);
+	//vec4 color = diffuse_color;
+	//gl_FragColor =  color * texture2D(s_texture, v_texcoord);
+	gl_FragColor = specular_color;
 }
