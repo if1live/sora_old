@@ -24,6 +24,7 @@
 #include "template_lib.h"
 #if SR_USE_PCH == 0
 #include "gl_inc.h"
+#include <glm/glm.hpp>
 #endif
 
 namespace sora {;
@@ -34,6 +35,8 @@ class ShaderProgram;
 class ObjModel;
 class PrimitiveModel;
 
+
+struct RendererImpl;
 //opengles 2.0 renderer
 class Renderer : public Singleton<Renderer> {
 public:
@@ -56,14 +59,20 @@ public:
   void DrawObj(const ObjModel &model);
   void DrawPrimitiveModel(const PrimitiveModel &model);
 
+  glm::mat4 &world_mat();
+  glm::mat4 &projection_mat();
+  glm::mat4 &view_mat();
+  void set_world_mat(const glm::mat4 &m);
+  void set_projection_mat(const glm::mat4 &m);
+  void set_view_mat(const glm::mat4 &m);
+
+  void ApplyMatrix();
+
 private:
   float win_width_;
   float win_height_;
 
-  //like cache?
-  GLuint last_tex_id_;
-  GLuint last_prog_id_;
-  ShaderProgram *last_prog_;
+  RendererImpl *impl;
 };
 SR_C_DLL Renderer &Renderer_get_instance();
 }

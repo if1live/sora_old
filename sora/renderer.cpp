@@ -27,16 +27,40 @@
 #include "material.h"
 #include "obj_model.h"
 #include "primitive_model.h"
+#include "template_lib.h"
+
+#if SR_USE_PCH == 0
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#endif
 
 namespace sora {;
+
+struct RendererImpl {
+  RendererImpl()
+  : last_tex_id(-1),
+    last_prog_id(-1),
+    last_prog(NULL),
+  projection(1.0f), view(1.0f), world(1.0f) {
+  }
+  //like cache?
+  GLuint last_tex_id;
+  GLuint last_prog_id;
+  ShaderProgram *last_prog;
+
+  //matrix
+  glm::mat4 projection;
+  glm::mat4 view;
+  glm::mat4 world;
+};
+
 Renderer::Renderer() 
 : win_width_(480), 
-win_height_(320),
-last_tex_id_(-1),
-last_prog_id_(-1),
-last_prog_(NULL) {
+win_height_(320), impl(new RendererImpl()) {
 }
 Renderer::~Renderer() {
+  SafeDeleteWithNullCheck(impl);
 }
 
 void Renderer::SetWindowSize(float w, float h) {
@@ -69,22 +93,24 @@ void Renderer::Set3D() {
 }
 
 void Renderer::SetTexture(const Texture &tex) {
-  if(last_tex_id_ != tex.handle()) {
+  if(impl->last_tex_id != tex.handle()) {
     glBindTexture(GL_TEXTURE_2D, tex.handle());
-    last_tex_id_ = tex.handle();
+    impl->last_tex_id = tex.handle();
   }
 }
 
 void Renderer::SetShader(const ShaderProgram &prog) {
-  if(last_prog_id_ != prog.prog) {
+  if(impl->last_prog_id != prog.prog) {
     glUseProgram(prog.prog);
-    last_prog_id_ = prog.prog;
-    last_prog_ = const_cast<ShaderProgram*>(&prog);
+    impl->last_prog_id = prog.prog;
+    impl->last_prog = const_cast<ShaderProgram*>(&prog);
   }
 }
 
 void Renderer::SetMaterial(const Material &material) {
-  int ambient_color_loc = last_prog_->GetLocation(kLocationAmbientColor);
+  SR_ASSERT(impl->last_prog != NULL);
+
+  int ambient_color_loc = impl->last_prog->GetLocation(kLocationAmbientColor);
   if(ambient_color_loc != -1) {
     float color[4];
     memcpy(color, material.ambient, sizeof(material.ambient));
@@ -93,7 +119,7 @@ void Renderer::SetMaterial(const Material &material) {
     GLHelper::CheckError("Uniform AmbientColor");
   }
 
-  int diffuse_color_loc = last_prog_->GetLocation(kLocationDiffuseColor);
+  int diffuse_color_loc = impl->last_prog->GetLocation(kLocationDiffuseColor);
   if(diffuse_color_loc != -1) {
     float color[4];
     memcpy(color, material.diffuse, sizeof(material.diffuse));
@@ -108,7 +134,7 @@ void Renderer::SetMaterial(const Material &material) {
     ;
   } else if(material.illumination_model == 2) {
     //use ks, specular
-    int specular_color_loc = last_prog_->GetLocation(kLocationSpecularColor);
+    int specular_color_loc = impl->last_prog->GetLocation(kLocationSpecularColor);
     if(specular_color_loc != -1) {
       float color[4];
       memcpy(color, material.specular, sizeof(material.specular));
@@ -116,7 +142,7 @@ void Renderer::SetMaterial(const Material &material) {
       glUniform4fv(specular_color_loc, 1, material.specular);
       GLHelper::CheckError("Uniform SpecularColor");
     }
-    int shininess_loc = last_prog_->GetLocation(kLocationSpecularShininess);
+    int shininess_loc = impl->last_prog->GetLocation(kLocationSpecularShininess);
     if(shininess_loc != -1) {
       glUniform1f(shininess_loc, material.shininess);
       GLHelper::CheckError("Uniform Shininess");
@@ -127,17 +153,17 @@ void Renderer::SetMaterial(const Material &material) {
 }
 
 void Renderer::EndRender() {
-  last_tex_id_ = -1;
-  last_prog_id_ = -1;
-  last_prog_ = NULL;
+  impl->last_tex_id = -1;
+  impl->last_prog_id = -1;
+  impl->last_prog = NULL;
 
   GLHelper::CheckError("EndRender");
 }
 
 void Renderer::DrawObj(const ObjModel &model) {
-  int pos_loc = last_prog_->GetLocation(kLocationPosition);
-  int texcoord_loc = last_prog_->GetLocation(kLocationTexcoord);
-  int normal_loc = last_prog_->GetLocation(kLocationNormal);
+  int pos_loc = impl->last_prog->GetLocation(kLocationPosition);
+  int texcoord_loc = impl->last_prog->GetLocation(kLocationTexcoord);
+  int normal_loc = impl->last_prog->GetLocation(kLocationNormal);
 
   //draw cube
   if(pos_loc != -1) {
@@ -153,9 +179,9 @@ void Renderer::DrawObj(const ObjModel &model) {
 }
 
 void Renderer::DrawPrimitiveModel(const PrimitiveModel &model) {
-  int pos_loc = last_prog_->GetLocation(kLocationPosition);
-  int texcoord_loc = last_prog_->GetLocation(kLocationTexcoord);
-  int normal_loc = last_prog_->GetLocation(kLocationNormal);
+  int pos_loc = impl->last_prog->GetLocation(kLocationPosition);
+  int texcoord_loc = impl->last_prog->GetLocation(kLocationTexcoord);
+  int normal_loc = impl->last_prog->GetLocation(kLocationNormal);
 
   //draw primitive model
   for(int i = 0 ; i < model.Count() ; i++) {
@@ -176,6 +202,39 @@ void Renderer::DrawPrimitiveModel(const PrimitiveModel &model) {
     //glDrawElements(GL_TRIANGLES, index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
     glDrawElements(draw_mode, idx_count, GL_UNSIGNED_SHORT, idx_ptr);
     GLHelper::CheckError("DrawElements - primitive model");
+  }
+}
+
+glm::mat4 &Renderer::world_mat() {
+  return impl->world;
+}
+glm::mat4 &Renderer::projection_mat() {
+  return impl->projection;
+}
+glm::mat4 &Renderer::view_mat() {
+  return impl->view;
+}
+void Renderer::set_world_mat(const glm::mat4 &m) {
+  impl->world = m;
+}
+void Renderer::set_projection_mat(const glm::mat4 &m) {
+  impl->projection = m;
+}
+void Renderer::set_view_mat(const glm::mat4 &m) {
+  impl->view = m;
+}
+
+void Renderer::ApplyMatrix() {
+  GLint mvp_handle = impl->last_prog->GetLocation(sora::kLocationModelViewProjection);
+  GLint world_handle = impl->last_prog->GetLocation(sora::kLocationWorld);
+
+  glm::mat4 mvp = impl->projection * impl->view * impl->world;  
+  glUniformMatrix4fv(mvp_handle, 1, GL_FALSE, glm::value_ptr(mvp));
+
+  //set world matrix??
+  if(world_handle != -1) {
+    glUniformMatrix4fv(world_handle, 1, GL_FALSE, glm::value_ptr(impl->world));
+    GLHelper::CheckError("Set Matrix Pos Handle");
   }
 }
 

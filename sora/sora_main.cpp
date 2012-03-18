@@ -152,11 +152,12 @@ void renderFrame() {
   glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   /////////////////////////
-  sora::Renderer::GetInstance().Set3D();
+  sora::Renderer &renderer = sora::Renderer::GetInstance();
+  renderer.Set3D();
 
   //use texture
-  sora::Renderer::GetInstance().SetShader(shader_prog);
-  sora::Renderer::GetInstance().SetTexture(tex);
+  renderer.SetShader(shader_prog);
+  renderer.SetTexture(tex);
 
   //use material
   //sora::Material &mtl = material_list[0];
@@ -164,33 +165,29 @@ void renderFrame() {
   //newmtl shinyred
   //newmtl clearblue
   const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("shinyred");
-  sora::Renderer::GetInstance().SetMaterial(mtl);
+  renderer.SetMaterial(mtl);
 
-  GLint mvp_handle = shader_prog.GetLocation(sora::kLocationModelViewProjection);
   GLint texcoord_handle = shader_prog.GetLocation(sora::kLocationTexcoord);
   GLint position_handle = shader_prog.GetLocation(sora::kLocationPosition);
   GLint normal_handle = shader_prog.GetLocation(sora::kLocationNormal);
-  GLint world_handle = shader_prog.GetLocation(sora::kLocationWorld);
+  
   GLint light_pos_handle = shader_prog.GetLocation(sora::kLocationLightPosition);
   
   glEnableVertexAttribArray(position_handle);
   glEnableVertexAttribArray(texcoord_handle);
   glEnableVertexAttribArray(normal_handle);
 
-  float win_width = sora::Renderer::GetInstance().win_width();
-  float win_height = sora::Renderer::GetInstance().win_height();
-  //glm::mat4 projection = glm::ortho(0.0f, 1.0f, 0.0f, 1.0f, -1.0f, 1.0f);
-  //glm::mat4 modelview = glm::translate(glm::mat4(1.0f), glm::vec3(0.5, 0.5, 0));
-  glm::mat4 projection = glm::perspective(60.0f, win_width / win_height, 1.0f, 100.0f);
-  glm::mat4 view = glm::lookAt(glm::vec3(0, 0, 3), glm::vec3(0), glm::vec3(0, 1, 0));
-  glm::mat4 model = glm::mat4(1.0f);
-  model= glm::rotate(model, rot, glm::vec3(0, 1, 0));
-  glm::mat4 mvp = projection * view * model;  
-  glUniformMatrix4fv(mvp_handle, 1, GL_FALSE, glm::value_ptr(mvp));
-  
-  //set world matrix??
-  glUniformMatrix4fv(world_handle, 1, GL_FALSE, glm::value_ptr(model));
-  GLHelper::CheckError("Set Matrix Pos Handle");
+  //set mvp matrix
+  glm::mat4 &projection = renderer.projection_mat();
+  glm::mat4 &view = renderer.view_mat();
+  glm::mat4 &world = renderer.world_mat();
+
+  float win_width = renderer.win_width();
+  float win_height = renderer.win_height();
+  projection = glm::perspective(60.0f, win_width / win_height, 1.0f, 100.0f);
+  view = glm::lookAt(glm::vec3(0, 0, 3), glm::vec3(0), glm::vec3(0, 1, 0));
+  world = glm::mat4(1.0f);
+  world = glm::rotate(world, rot, glm::vec3(0, 1, 0));
 
   //set light position
   glm::vec3 light_pos = glm::vec3(1.0f, 6.0f, 50.0f);
@@ -204,13 +201,14 @@ void renderFrame() {
   GLHelper::CheckError("Set View Pos Handle");
 
   //draw cube
+  renderer.ApplyMatrix();
   //sora::Renderer::GetInstance().DrawObj(obj_model);  
-  sora::Renderer::GetInstance().DrawPrimitiveModel(primitive_model);
+  renderer.DrawPrimitiveModel(primitive_model);
   
   
 
   //////////////////////////////
-  sora::Renderer::GetInstance().EndRender();
+  renderer.EndRender();
 }
 
 void SORA_setup_graphics(int w, int h) {
