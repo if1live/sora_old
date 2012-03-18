@@ -103,6 +103,9 @@
     <ClCompile Include="material_manager.cpp">
       <Filter>render</Filter>
     </ClCompile>
+    <ClCompile Include="shader_variable.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -217,6 +220,9 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="material_manager.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="shader_variable.h">
       <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>

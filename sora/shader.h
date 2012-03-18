@@ -32,43 +32,24 @@
 #include <vector>
 #endif
 
-#define SORA_MODELVIEWPROJECTION_NAME   "u_modelViewProjection"
-#define SORA_POSITION_NAME              "a_position"
-#define SORA_NORMAL_NAME                "a_normal"
-#define SORA_TEXCOORD_NAME              "a_texcoord"
+#include "shader_variable.h"
+
 #define SORA_AMBIENT_COLOR_NAME         "u_ambientColor"
 #define SORA_DIFFUSE_COLOR_NAME         "u_diffuseColor"
 #define SORA_SPECULAR_COLOR_NAME        "u_specularColor"
 #define SORA_SPECULAR_SHININESS_NAME    "u_specularShininess"
-#define SORA_MATERIAL_ALPHA_NAME        "u_materialAlpha"
-#define SORA_LIGHT_POSITION_NAME        "u_lightPosition"
-#define SORA_WORLD_NAME                 "u_world"
+//#define SORA_WORLD_LIGHT_POSITION_NAME  "u_worldLightPosition"
 
 namespace sora {;
 
 enum {
-  kLocationModelViewProjection,
-  kLocationPosition,
-  kLocationNormal,
-  kLocationTexcoord,
-  kLocationAmbientColor,
+  kLocationAmbientColor = ShaderVariable::kSemanticCount,
   kLocationDiffuseColor,
   kLocationSpecularColor,
   kLocationSpecularShininess,
-  kLocationMaterialAlpha,
-  kLocationLightPosition,
-  kLocationWorld,
+  //kLocationWorldLightPosition,
   kLocationCount,
 };
-enum {
-  kLocationTypeAttrib,
-  kLocationTypeUniform,
-  kLocationTypeCount,
-};
-//0 : location code
-//1 : attrib, uniform
-//2 : name
-typedef std::tr1::tuple<int, int, const char*> LocationTuple;
 
 class SR_DLL Shader {
 public:
@@ -98,8 +79,8 @@ class SR_DLL ShaderProgram {
 public:
   static bool Validate(GLuint prog);
 
-  static const std::vector<LocationTuple> &GetLocationTupleList();
-  static const LocationTuple &GetLocationTuple(int location);
+  static const std::vector<ShaderVariable> &GetVariableList();
+  static const ShaderVariable &GetVariable(int var_code);
 public:
   ShaderProgram();
   ~ShaderProgram();
@@ -123,6 +104,8 @@ private:
   Shader vert_shader_;
   Shader frag_shader_;
 
+
+  //predefined + shader custom part
   int location_list_[kLocationCount];
 };
 

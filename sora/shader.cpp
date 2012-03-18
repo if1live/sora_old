@@ -21,6 +21,7 @@
 #include "sora_stdafx.h"
 #include "shader.h"
 #include "template_lib.h"
+#include "shader_variable.h"
 
 #if SR_ANDROID
 #include "gl_inc.h"
@@ -143,22 +144,65 @@ bool ShaderProgram::Init(const char *v_src, const char *f_src) {
     return false;
   }
 
-  for(int location_code = 0 ; location_code < kLocationCount ; location_code++) {
-    const LocationTuple &location_data = GetLocationTuple(location_code);
-    int location_type = get<1>(location_data);
-    const char *location_name = get<2>(location_data);
-    if(location_type == kLocationTypeAttrib) {
-      int location = GetAttribLocation(location_name);
-      location_list_[location_code] = location;
+  //semantic var 
+  for(int var_code = 0 ; var_code < ShaderVariable::kSemanticCount ; ++var_code) {
+    const ShaderVariable &var_data = ShaderVariable::GetPredefinedVar(var_code);
+    int location_type = var_data.location_type;
+    const char *location_name = var_data.name;
 
-    } else if(location_type == kLocationTypeUniform) {
+    if(location_type == ShaderVariable::kTypeAttrib) {
+      int location = GetAttribLocation(location_name);
+      location_list_[var_code] = location;
+
+    } else if(location_type == ShaderVariable::kTypeUniform) {
       int location = GetUniformLocation(location_name);
-      location_list_[location_code] = location;
+      location_list_[var_code] = location;
+    }
+  }
+
+  //custom var(like light)
+  for(int var_code = ShaderVariable::kSemanticCount ; var_code < kLocationCount ; ++var_code) {
+    const ShaderVariable &var_data = GetVariable(var_code);
+    int location_type = var_data.location_type;
+    const char *location_name = var_data.name;
+
+    if(location_type == ShaderVariable::kTypeAttrib) {
+      int location = GetAttribLocation(location_name);
+      location_list_[var_code] = location;
+
+    } else if(location_type == ShaderVariable::kTypeUniform) {
+      int location = GetUniformLocation(location_name);
+      location_list_[var_code] = location;
+    }
+  }
+
+  //show binded variable list
+  for(int i = 0 ; i < GetArraySize(location_list_) ; ++i) {
+    if(location_list_[i] == -1) {
+      continue;
+    }
+
+    const ShaderVariable *var = NULL;
+    if(i < ShaderVariable::kSemanticCount) {
+      const ShaderVariable &v = ShaderVariable::GetPredefinedVar(i);
+      var = &v;
+    } else {
+      const ShaderVariable &v = GetVariable(i);
+      var = &v;
+    }
+
+    if(var->location_type == ShaderVariable::kTypeAttrib) {
+      LOGI("Attrib  %s : %d", var->name, location_list_[i]);
+    } else if(var->location_type == ShaderVariable::kTypeUniform) {
+      LOGI("Uniform %s : %d", var->name, location_list_[i]);
+    } else {
+      SR_ASSERT(!"not valid");
     }
   }
 
   return true;
 }
+
 bool ShaderProgram::Validate(GLuint prog) {
     GLint logLength, status;
 
@@ -189,58 +233,63 @@ GLint ShaderProgram::GetUniformLocation(const char *name) {
 //  glUseProgram(prog);
 //}
 
-const std::vector<LocationTuple> &ShaderProgram::GetLocationTupleList() {
+const std::vector<ShaderVariable> &ShaderProgram::GetVariableList() {
   static bool run = false;
-  static vector<LocationTuple> tuple_list;
+  static vector<ShaderVariable> tuple_list;
   if(run == false) {
     run = true;
 
     int location_type_table[] = {
-      kLocationTypeUniform,   //kLocationModelViewProjection,
-      kLocationTypeAttrib,   //kLocationPosition,
-      kLocationTypeAttrib,    //kLocationNormal,
-      kLocationTypeAttrib,    //kLocationTexcoord,
-      kLocationTypeUniform,   //kLocationAmbientColor,
-      kLocationTypeUniform,   //kLocationDiffuseColor,
-      kLocationTypeUniform,   //kLocationSpecularColor,
-      kLocationTypeUniform,   //kLocationSpecularShininess,
-      kLocationTypeUniform,   //kLocationMaterialAlpha,
-      kLocationTypeUniform,   //kLocationLightPosition
-      kLocationTypeUniform,   //kLocationWorld
+      ShaderVariable::kTypeUniform,   //kLocationAmbientColor,
+      ShaderVariable::kTypeUniform,   //kLocationDiffuseColor,
+      ShaderVariable::kTypeUniform,   //kLocationSpecularColor,
+      ShaderVariable::kTypeUniform,   //kLocationSpecularShininess,
+      //kLocationTypeUniform,   //kLocationWorldLightPosition
+    };
+    int var_type_table[] = {
+      ShaderVariable::kTypeVec4,   //kLocationAmbientColor,
+      ShaderVariable::kTypeVec4,   //kLocationDiffuseColor,
+      ShaderVariable::kTypeVec4,   //kLocationSpecularColor,
+      ShaderVariable::kTypeFloat,   //kLocationSpecularShininess,
     };
 
     const char *location_name_table[] = {
-      SORA_MODELVIEWPROJECTION_NAME,    //kLocationModelViewProjection,
-      SORA_POSITION_NAME,               //kLocationPosition,
-      SORA_NORMAL_NAME,                 //kLocationNormal,
-      SORA_TEXCOORD_NAME,               //kLocationTexcoord,
       SORA_AMBIENT_COLOR_NAME,           //kLocationAmbientColor,
       SORA_DIFFUSE_COLOR_NAME,           //kLocationDiffuseColor,
       SORA_SPECULAR_COLOR_NAME,          //kLocationSpecularColor,
       SORA_SPECULAR_SHININESS_NAME,      //kLocationSpecularShininess,
-      SORA_MATERIAL_ALPHA_NAME,          //kLocationMaterialAlpha,
-      SORA_LIGHT_POSITION_NAME,          //kLocationLightPosition
-      SORA_WORLD_NAME,                  //kLocationWorld
     };
     const int type_count = GetArraySize(location_type_table);
     const int name_count = GetArraySize(location_name_table);
-    SR_ASSERT(type_count == kLocationCount);
-    SR_ASSERT(name_count == kLocationCount);
+    const int var_type_count = GetArraySize(var_type_table);
+    SR_ASSERT(type_count == name_count);
+    SR_ASSERT(type_count == var_type_count);
     
-    for(int i = 0 ; i < kLocationCount ; ++i) {
-      int location_type = location_type_table[i];
-      const char *location_name = location_name_table[i];
-      LocationTuple t = make_tuple(i, location_type, location_name);
-      tuple_list.push_back(t);
+    for(int code = 0 ; code < type_count ; ++code) {
+      int location_type = location_type_table[code];
+      const char *location_name = location_name_table[code];
+      int var_type = var_type_table[code];
+
+      ShaderVariable v;
+      int var_code = ShaderVariable::kSemanticCount + code;
+      v.Set(var_code, var_type, location_type, location_name);
+      tuple_list.push_back(v);
     }
   }
   return tuple_list;
 }
-const LocationTuple &ShaderProgram::GetLocationTuple(int location) {
-  const vector<LocationTuple> &tpl_list = GetLocationTupleList();
-  SR_ASSERT(location >= 0);
-  SR_ASSERT(location < (int)tpl_list.size());
-  return tpl_list[location];
+const ShaderVariable &ShaderProgram::GetVariable(int var_code) {
+  const vector<ShaderVariable> &var_list = GetVariableList();
+  auto it = var_list.begin();
+  auto endit = var_list.end();
+  for( ; it != endit ; ++it) {
+    if(it->semantic_code == var_code) {
+      return *it;
+    }
+  }
+  SR_ASSERT(!"not valid");
+  static ShaderVariable empty;
+  return empty;
 }
 
 }

@@ -26,12 +26,12 @@ void main() {
 		vec3 reflection = normalize(v_reflection);
 		vec3 viewDir = normalize(v_viewDir);
 
-		float dot_result = clamp(dot(reflection, -viewDir ), 0.0, 1.0);
+		float dot_result = clamp(dot(reflection, viewDir), 0.0, 1.0);
 		float pow_result = pow(dot_result, v_shininess);
 		specular_color = v_specularColor * pow_result;
 	//}
 	
-	vec4 color = ambient_color + diffuse_color + specular_color;
+	//vec4 color = ambient_color + diffuse_color + specular_color;
 	//gl_FragColor = specular_color;
-	gl_FragColor = color * texture2D(s_texture, v_texcoord);
+	gl_FragColor =  texture2D(s_texture, v_texcoord);
 }

@@ -163,9 +163,9 @@ void Renderer::EndRender() {
 }
 
 void Renderer::DrawObj(const ObjModel &model) {
-  int pos_loc = impl->last_prog->GetLocation(kLocationPosition);
-  int texcoord_loc = impl->last_prog->GetLocation(kLocationTexcoord);
-  int normal_loc = impl->last_prog->GetLocation(kLocationNormal);
+  int pos_loc = impl->last_prog->GetLocation(ShaderVariable::kPosition);
+  int texcoord_loc = impl->last_prog->GetLocation(ShaderVariable::kTexcoord);
+  int normal_loc = impl->last_prog->GetLocation(ShaderVariable::kNormal);
 
   //draw cube
   if(pos_loc != -1) {
@@ -181,9 +181,9 @@ void Renderer::DrawObj(const ObjModel &model) {
 }
 
 void Renderer::DrawPrimitiveModel(const PrimitiveModel &model) {
-  int pos_loc = impl->last_prog->GetLocation(kLocationPosition);
-  int texcoord_loc = impl->last_prog->GetLocation(kLocationTexcoord);
-  int normal_loc = impl->last_prog->GetLocation(kLocationNormal);
+  int pos_loc = impl->last_prog->GetLocation(ShaderVariable::kPosition);
+  int texcoord_loc = impl->last_prog->GetLocation(ShaderVariable::kTexcoord);
+  int normal_loc = impl->last_prog->GetLocation(ShaderVariable::kNormal);
 
   //draw primitive model
   for(int i = 0 ; i < model.Count() ; i++) {
@@ -208,9 +208,9 @@ void Renderer::DrawPrimitiveModel(const PrimitiveModel &model) {
 }
 
 void Renderer::DrawSolidTeapot() {
-  int pos_loc = impl->last_prog->GetLocation(kLocationPosition);
-  int texcoord_loc = impl->last_prog->GetLocation(kLocationTexcoord);
-  int normal_loc = impl->last_prog->GetLocation(kLocationNormal);
+  int pos_loc = impl->last_prog->GetLocation(ShaderVariable::kPosition);
+  int texcoord_loc = impl->last_prog->GetLocation(ShaderVariable::kTexcoord);
+  int normal_loc = impl->last_prog->GetLocation(ShaderVariable::kNormal);
 
   if(pos_loc != -1) {
     glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, 0, teapotVertices);
@@ -245,8 +245,8 @@ void Renderer::set_view_mat(const glm::mat4 &m) {
 }
 
 void Renderer::ApplyMatrix() {
-  GLint mvp_handle = impl->last_prog->GetLocation(sora::kLocationModelViewProjection);
-  GLint world_handle = impl->last_prog->GetLocation(sora::kLocationWorld);
+  GLint mvp_handle = impl->last_prog->GetLocation(ShaderVariable::kWorldViewProjection);
+  GLint world_handle = impl->last_prog->GetLocation(ShaderVariable::kWorld);
 
   //glm::mat4 mvp = impl->projection * impl->view * impl->world;  
   glm::mat4 mvp = glm::mat4(1.0f);
@@ -258,8 +258,7 @@ void Renderer::ApplyMatrix() {
 
   //set world matrix??
   if(world_handle != -1) {
-    glm::mat4 modelview = impl->view * impl->world;
-    glUniformMatrix4fv(world_handle, 1, GL_FALSE, glm::value_ptr(modelview));
+    glUniformMatrix4fv(world_handle, 1, GL_FALSE, glm::value_ptr(impl->world));
     GLHelper::CheckError("Set Matrix Pos Handle");
   }
 }
