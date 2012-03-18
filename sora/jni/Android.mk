@@ -26,6 +26,7 @@ LOCAL_C_INCLUDES := \
 	../../boost_1_49_0
 	
 LOCAL_CFLAGS := 
+LOCAL_CXXFLAGS := --std=gnu++0x
 
 LOCAL_MODULE    := sora
 LOCAL_SRC_FILES := \
@@ -52,6 +53,7 @@ LOCAL_SRC_FILES := \
 	../texture.cpp	\
 	../lodepng/lodepng.cpp	\
 	../gl_buffer_object.cpp	\
+	../material_manager.cpp	\
 	../matrix_stack.cpp
 
 #include $(BUILD_SHARED_LIBRARY)
