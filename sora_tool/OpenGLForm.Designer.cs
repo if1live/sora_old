@@ -35,9 +35,9 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.ClientSize = new System.Drawing.Size(284, 262);
-            this.MaximumSize = new System.Drawing.Size(300, 300);
-            this.MinimumSize = new System.Drawing.Size(300, 300);
+            this.ClientSize = new System.Drawing.Size(464, 762);
+            this.MaximumSize = new System.Drawing.Size(480, 800);
+            this.MinimumSize = new System.Drawing.Size(480, 800);
             this.Name = "OpenGLForm";
             this.Text = "OpenGLForm";
             this.Load += new System.EventHandler(this.OnLoad);

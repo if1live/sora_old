@@ -83,15 +83,14 @@ namespace ManagedOpenGL.Engine.Windows
             //Sora.Sora.SORA_init_gl_env();
             if (!WindowsOpenGLNative.wglMakeCurrent(this.hDC, this.hRC))
                 throw new Win32Exception(Marshal.GetLastWin32Error());
-            
-            Sora.SORA_init_gl_env();    //glew
 
+            Sora.SORA_init_gl_env();    //glew
             this.Invalidate();
 
             //아래가 호출되면 생성된 gl ctx를 다시 박살내버려서 좃망
             //WindowsOpenGLNative.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
-            Sora.SORA_setup_graphics(300, 300);
-            
+            //Sora.SORA_setup_graphics(300, 300);
+            Sora.SORA_setup_graphics(480, 800);
         }
 
         private void Init()

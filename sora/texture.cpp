@@ -166,7 +166,11 @@ bool Texture::Loaded() const {
   }
 }
 bool Texture::Init() {
-  SR_ASSERT(Loaded() == false);
+  //SR_ASSERT(Loaded() == false);
+  if(Loaded() == true) {
+    return false;
+  }
+  
   bool result = false;
 
   switch(file_fmt_) {

@@ -121,10 +121,10 @@ void Renderer::SetMaterial(const Material &material) {
 
   int ambient_color_loc = impl->last_prog->GetLocation(kLocationAmbientColor);
   if(ambient_color_loc != -1) {
-    float color[4];
-    memcpy(color, material.ambient, sizeof(material.ambient));
-    color[3] = material.alpha;
-    glUniform4fv(ambient_color_loc, 1, color);
+    //float color[4];
+    //memcpy(color, material.ambient, sizeof(material.ambient));
+    //color[3] = material.alpha;
+    glUniform4f(ambient_color_loc, material.ambient[0], material.ambient[1], material.ambient[2], material.alpha);
     GLHelper::CheckError("Uniform AmbientColor");
   }
 

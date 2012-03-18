@@ -87,7 +87,7 @@ void PrimitiveModel::WireCube(float width, float height, float depth) {
   depth /= 2;
 
   //wirecube는 1개의 메시로 표현 가능
-  SR_ASSERT(impl == NULL);
+  SafeDelete(impl);
   impl = new PrimitiveModelImpl(1);
 
   VertexListType &vert_list = impl->vert_list_group[0];
@@ -149,7 +149,7 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
   depth = depth/2;
 
   //solid cube는 1개의 메시로 표현 가능
-  SR_ASSERT(impl == NULL);
+  SafeDelete(impl);
   impl = new PrimitiveModelImpl(1);
 
   VertexListType &vert_list = impl->vert_list_group[0];
@@ -160,11 +160,10 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
   //GL_TRIANGLES용 index list도 같이 구성한다
   //ccw base
 
+  //normal
   {
     // Front Face
     int baseIndex = vert_list.size();
-
-    Vec3f normal(0, 0, 1);	// Normal Pointing Towards Viewer
 
     Vec2f texCoord1(0, 0);	Vec3f vertex1(-width, -height, depth);
     Vec2f texCoord2(1, 0);	Vec3f vertex2( width, -height, depth);
@@ -175,22 +174,22 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
     Vertex v1;
     v1.pos = vertex1;
     v1.texcoord = texCoord1;
-    v1.normal = normal;
+    v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
 
     Vertex v2;
     v2.pos = vertex2;
     v2.texcoord = texCoord2;
-    v2.normal = normal;
+    v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
 
     Vertex v3;
     v3.pos = vertex3;
     v3.texcoord = texCoord3;
-    v3.normal = normal;
+    v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
 
     Vertex v4;
     v4.pos = vertex4;
     v4.texcoord = texCoord4;
-    v4.normal = normal;
+    v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
 
     vert_list.push_back(v1);
     vert_list.push_back(v2);
@@ -209,7 +208,6 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
   {
     // Back Face
     int baseIndex = vert_list.size();
-    Vec3f normal(0, 0, -1);	// Normal Pointing Away From Viewer
 
     Vec2f texCoord1(1, 0);	Vec3f vertex1(-width, -height, -depth);
     Vec2f texCoord2(1, 1);	Vec3f vertex2(-width,  height, -depth);
@@ -218,13 +216,24 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
 
     //add vertex
     Vertex v1;
-    v1.pos = vertex1; v1.texcoord = texCoord1;  v1.normal = normal;
+    v1.pos = vertex1;
+    v1.texcoord = texCoord1;
+    v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
+
     Vertex v2;
-    v2.pos = vertex2; v2.texcoord = texCoord2; v2.normal = normal;
+    v2.pos = vertex2;
+    v2.texcoord = texCoord2;
+    v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
+
     Vertex v3;
-    v3.pos = vertex3; v3.texcoord = texCoord3; v3.normal = normal;
+    v3.pos = vertex3;
+    v3.texcoord = texCoord3;
+    v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
+
     Vertex v4;
-    v4.pos = vertex4; v4.texcoord = texCoord4; v4.normal = normal;
+    v4.pos = vertex4;
+    v4.texcoord = texCoord4;
+    v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
 
     vert_list.push_back(v1);
     vert_list.push_back(v2);
@@ -244,7 +253,6 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
   {
     // Top Face
     int baseIndex = vert_list.size();
-    Vec3f normal(0, 1, 0);	// Normal Pointing Up
 
     Vec2f texCoord1(0, 1);	Vec3f vertex1(-width, height, -depth);
     Vec2f texCoord2(0, 0);	Vec3f vertex2(-width, height,  depth);
@@ -253,13 +261,24 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
 
     //add vertex
     Vertex v1;
-    v1.pos = vertex1; v1.texcoord = texCoord1;  v1.normal = normal;
+    v1.pos = vertex1;
+    v1.texcoord = texCoord1;
+    v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
+
     Vertex v2;
-    v2.pos = vertex2; v2.texcoord = texCoord2; v2.normal = normal;
+    v2.pos = vertex2;
+    v2.texcoord = texCoord2;
+    v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
+
     Vertex v3;
-    v3.pos = vertex3; v3.texcoord = texCoord3; v3.normal = normal;
+    v3.pos = vertex3;
+    v3.texcoord = texCoord3;
+    v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
+
     Vertex v4;
-    v4.pos = vertex4; v4.texcoord = texCoord4; v4.normal = normal;
+    v4.pos = vertex4;
+    v4.texcoord = texCoord4;
+    v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
 
     vert_list.push_back(v1);
     vert_list.push_back(v2);
@@ -279,7 +298,6 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
   {
     // Bottom Face
     int baseIndex = vert_list.size();
-    Vec3f normal(0, -1, 0);	// Normal Pointing Down
 
     Vec2f texCoord1(1, 1);	Vec3f vertex1(-width, -height, -depth);
     Vec2f texCoord2(0, 1);	Vec3f vertex2( width, -height, -depth);
@@ -288,13 +306,24 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
 
     //add vertex
     Vertex v1;
-    v1.pos = vertex1; v1.texcoord = texCoord1;  v1.normal = normal;
+    v1.pos = vertex1;
+    v1.texcoord = texCoord1;
+    v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
+
     Vertex v2;
-    v2.pos = vertex2; v2.texcoord = texCoord2; v2.normal = normal;
+    v2.pos = vertex2;
+    v2.texcoord = texCoord2;
+    v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
+
     Vertex v3;
-    v3.pos = vertex3; v3.texcoord = texCoord3; v3.normal = normal;
+    v3.pos = vertex3;
+    v3.texcoord = texCoord3;
+    v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
+
     Vertex v4;
-    v4.pos = vertex4; v4.texcoord = texCoord4; v4.normal = normal;
+    v4.pos = vertex4;
+    v4.texcoord = texCoord4;
+    v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
 
     vert_list.push_back(v1);
     vert_list.push_back(v2);
@@ -314,7 +343,6 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
   {
     // Right face
     int baseIndex = vert_list.size();
-    Vec3f normal(1, 0, 0);	// Normal Pointing Right
 
     Vec2f texCoord1(1, 0);	Vec3f vertex1(width, -height, -depth);
     Vec2f texCoord2(1, 1);	Vec3f vertex2(width,  height, -depth);
@@ -323,13 +351,24 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
 
     //add vertex
     Vertex v1;
-    v1.pos = vertex1; v1.texcoord = texCoord1;  v1.normal = normal;
+    v1.pos = vertex1;
+    v1.texcoord = texCoord1;
+    v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
+
     Vertex v2;
-    v2.pos = vertex2; v2.texcoord = texCoord2; v2.normal = normal;
+    v2.pos = vertex2;
+    v2.texcoord = texCoord2;
+    v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
+
     Vertex v3;
-    v3.pos = vertex3; v3.texcoord = texCoord3; v3.normal = normal;
+    v3.pos = vertex3;
+    v3.texcoord = texCoord3;
+    v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
+
     Vertex v4;
-    v4.pos = vertex4; v4.texcoord = texCoord4; v4.normal = normal;
+    v4.pos = vertex4;
+    v4.texcoord = texCoord4;
+    v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
 
     vert_list.push_back(v1);
     vert_list.push_back(v2);
@@ -349,7 +388,6 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
   {
     // Left Face
     int baseIndex = vert_list.size();
-    Vec3f normal(-1, 0, 0);	// Normal Pointing Left
 
     Vec2f texCoord1(0, 0);	Vec3f vertex1(-width, -height, -depth);
     Vec2f texCoord2(1, 0);	Vec3f vertex2(-width, -height,  depth);
@@ -358,13 +396,24 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
 
     //add vertex
     Vertex v1;
-    v1.pos = vertex1; v1.texcoord = texCoord1;  v1.normal = normal;
+    v1.pos = vertex1;
+    v1.texcoord = texCoord1;
+    v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
+
     Vertex v2;
-    v2.pos = vertex2; v2.texcoord = texCoord2; v2.normal = normal;
+    v2.pos = vertex2;
+    v2.texcoord = texCoord2;
+    v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
+
     Vertex v3;
-    v3.pos = vertex3; v3.texcoord = texCoord3; v3.normal = normal;
+    v3.pos = vertex3;
+    v3.texcoord = texCoord3;
+    v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
+
     Vertex v4;
-    v4.pos = vertex4; v4.texcoord = texCoord4; v4.normal = normal;
+    v4.pos = vertex4;
+    v4.texcoord = texCoord4;
+    v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
 
     vert_list.push_back(v1);
     vert_list.push_back(v2);
@@ -387,7 +436,7 @@ void PrimitiveModel::WireSphere(float radius, int slices, int stacks) {
   SR_ASSERT(stacks > 0);
 
   //use one mesh
-  SR_ASSERT(impl == NULL);
+  SafeDelete(impl);
   impl = new PrimitiveModelImpl(1);
 
   VertexListType &vert_list = impl->vert_list_group[0];
@@ -459,7 +508,7 @@ void PrimitiveModel::SolidSphere(float radius, int slices, int stacks) {
   SR_ASSERT(stacks > 0);
 
   //use one mesh
-  SR_ASSERT(impl == NULL);
+  SafeDelete(impl);
   impl = new PrimitiveModelImpl(1);
   VertexListType &vert_list = impl->vert_list_group[0];
   IndexListType &index_list = impl->index_list_group[0];
@@ -530,7 +579,7 @@ void PrimitiveModel::WireCone(float base, float height, int slices, int stacks) 
 
   //밑면/옆면을 다른 메시로 처리하자
   //vertex List는 공유하고 index만 다르게 하자
-  SR_ASSERT(impl == NULL);
+  SafeDelete(impl);
   impl = new PrimitiveModelImpl(2);
   VertexListType &vert_list = impl->vert_list_group[0];
   IndexListType &stackindex_list = impl->index_list_group[0];
@@ -600,7 +649,7 @@ void PrimitiveModel::SolidCone(float base, float height, int slices, int stacks)
 
   //밑면/옆면을 다른 메시로 처리하자
   //vertex List는 공유하고 index만 다르게 하자
-  SR_ASSERT(impl == NULL);
+  SafeDelete(impl);
   impl = new PrimitiveModelImpl(2);
   VertexListType &vert_list = impl->vert_list_group[0];
   IndexListType &sideindex_list = impl->index_list_group[0];
@@ -697,7 +746,7 @@ void PrimitiveModel::WireCylinder(float radius, float height, int slices) {
   SR_ASSERT(slices >= 4);
 
   //1개의 메시로 구성
-  SR_ASSERT(impl == NULL);
+  SafeDelete(impl);
   impl = new PrimitiveModelImpl(1);
   VertexListType &vert_list = impl->vert_list_group[0];
   IndexListType &index_list = impl->index_list_group[0];
@@ -776,7 +825,7 @@ void PrimitiveModel::SolidCylinder(float radius, float height, int slices) {
   SR_ASSERT(slices >= 4);
 
   //use 3 mesh
-  SR_ASSERT(impl == NULL);
+  SafeDelete(impl);
   impl = new PrimitiveModelImpl(3);
   VertexListType &vert_list = impl->vert_list_group[0];
   IndexListType &topindex_list = impl->index_list_group[0];
@@ -897,7 +946,7 @@ void PrimitiveModel::WireAxis(float size) {
   SR_ASSERT(size > 0);
 
   //asiz는 1개의 메시로 표현 가능
-  SR_ASSERT(impl == NULL);
+  SafeDelete(impl);
   impl = new PrimitiveModelImpl(1);
 
   VertexListType &vert_list = impl->vert_list_group[0];
@@ -979,7 +1028,7 @@ void PrimitiveModel::WireTeapot(float size) {
   CalcTeapotSize();
 
   SR_ASSERT(size > 0);
-  SR_ASSERT(impl == NULL);
+  SafeDelete(impl);
   impl = new PrimitiveModelImpl(1);
 
   VertexListType &vert_list = impl->vert_list_group[0];
@@ -1031,7 +1080,7 @@ void PrimitiveModel::SolidTeapot(float size) {
   CalcTeapotSize();
 
   SR_ASSERT(size > 0);
-  SR_ASSERT(impl == NULL);
+  SafeDelete(impl);
   impl = new PrimitiveModelImpl(1);
 
   VertexListType &vert_list = impl->vert_list_group[0];

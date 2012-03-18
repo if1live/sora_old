@@ -150,11 +150,11 @@ bool setupGraphics(int w, int h) {
   sora::MaterialManager::GetInstance().Add(material_list);
 
   //primitive model test
-  //primitive_model.SolidCube(1, 2, 1);
+  primitive_model.SolidCube(1, 2, 1);
   //primitive_model.WireCube(1, 1, 1);
   //primitive_model.WireAxis(2);
   //primitive_model.WireSphere(1, 8, 8);
-  primitive_model.SolidSphere(1, 16, 16);
+  //primitive_model.SolidSphere(1, 16, 16);
   //primitive_model.WireCone(1, 2, 8, 8);
   //primitive_model.SolidCone(1, 2, 8, 8);
   //primitive_model.WireCylinder(1, 2, 8);
