@@ -144,7 +144,7 @@ bool setupGraphics(int w, int h) {
 
 void renderFrame() {
   static float rot = 0;
-  rot += 0.2f;
+  rot += 0.1f;
 
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
@@ -198,29 +198,10 @@ void renderFrame() {
   glUniform4fv(view_pos_handle, 1, glm::value_ptr(view_pos));
   GLHelper::CheckError("Set View Pos Handle");
 
-  /*
   //draw cube
-  glVertexAttribPointer(position_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &obj_model.vertex_ptr()->pos);
-  glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &obj_model.vertex_ptr()->texcoord);
-  glVertexAttribPointer(normal_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &obj_model.vertex_ptr()->normal);
-  glDrawElements(GL_TRIANGLES, obj_model.index_count(), GL_UNSIGNED_SHORT, obj_model.index_ptr());
-  */
-
+  //sora::Renderer::GetInstance().DrawObj(obj_model);  
+  sora::Renderer::GetInstance().DrawPrimitiveModel(primitive_model);
   
-  //draw primitive model
-  for(int i = 0 ; i < primitive_model.Count() ; i++) {
-    const sora::Vertex *vert_ptr = primitive_model.vertex_list(i);
-    const void *idx_ptr = primitive_model.index_list(i);
-    int idx_count = primitive_model.index_count(i);
-    GLenum draw_mode = primitive_model.draw_mode(i);
-
-    glVertexAttribPointer(position_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->pos);
-    glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->texcoord);
-    glVertexAttribPointer(normal_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->normal);
-    //glDrawElements(GL_TRIANGLES, index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
-    glDrawElements(draw_mode, idx_count, GL_UNSIGNED_SHORT, idx_ptr);
-    GLHelper::CheckError("DrawElements - primitive model");
-  }
   
 
   //////////////////////////////

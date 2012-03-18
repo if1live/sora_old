@@ -25,6 +25,8 @@
 #include "gl_helper.h"
 #include "shader.h"
 #include "material.h"
+#include "obj_model.h"
+#include "primitive_model.h"
 
 namespace sora {;
 Renderer::Renderer() 
@@ -79,13 +81,19 @@ void Renderer::SetShader(const ShaderProgram &prog) {
 void Renderer::SetMaterial(const Material &material) {
   int ambient_color_loc = last_prog_->GetLocation(kLocationAmbientColor);
   if(ambient_color_loc != -1) {
-    glUniform3fv(ambient_color_loc, 1, material.ambient);
+    float color[4];
+    memcpy(color, material.ambient, sizeof(material.ambient));
+    color[3] = material.alpha;
+    glUniform4fv(ambient_color_loc, 1, color);
     GLHelper::CheckError("Uniform AmbientColor");
   }
 
   int diffuse_color_loc = last_prog_->GetLocation(kLocationDiffuseColor);
   if(diffuse_color_loc != -1) {
-    glUniform3fv(diffuse_color_loc, 1, material.diffuse);
+    float color[4];
+    memcpy(color, material.diffuse, sizeof(material.diffuse));
+    color[3] = material.alpha;
+    glUniform4fv(diffuse_color_loc, 1, color);
     GLHelper::CheckError("Uniform DiffuseColor");
   }
 
@@ -97,7 +105,10 @@ void Renderer::SetMaterial(const Material &material) {
     //use ks, specular
     int specular_color_loc = last_prog_->GetLocation(kLocationSpecularColor);
     if(specular_color_loc != -1) {
-      glUniform3fv(specular_color_loc, 1, material.specular);
+      float color[4];
+      memcpy(color, material.specular, sizeof(material.specular));
+      color[3] = material.alpha;
+      glUniform4fv(specular_color_loc, 1, material.specular);
       GLHelper::CheckError("Uniform SpecularColor");
     }
     int shininess_loc = last_prog_->GetLocation(kLocationSpecularShininess);
@@ -118,7 +129,54 @@ void Renderer::EndRender() {
   GLHelper::CheckError("EndRender");
 }
 
+void Renderer::DrawObj(const ObjModel &model) {
+  int pos_loc = last_prog_->GetLocation(kLocationPosition);
+  int texcoord_loc = last_prog_->GetLocation(kLocationTexcoord);
+  int normal_loc = last_prog_->GetLocation(kLocationNormal);
+
+  //draw cube
+  if(pos_loc != -1) {
+    glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &model.vertex_ptr()->pos);
+  }
+  if(texcoord_loc != 1) {
+    glVertexAttribPointer(texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &model.vertex_ptr()->texcoord);
+  }
+  if(normal_loc != -1) {
+    glVertexAttribPointer(normal_loc, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &model.vertex_ptr()->normal);
+  }
+  glDrawElements(GL_TRIANGLES, model.index_count(), GL_UNSIGNED_SHORT, model.index_ptr());
+}
+
+void Renderer::DrawPrimitiveModel(const PrimitiveModel &model) {
+  int pos_loc = last_prog_->GetLocation(kLocationPosition);
+  int texcoord_loc = last_prog_->GetLocation(kLocationTexcoord);
+  int normal_loc = last_prog_->GetLocation(kLocationNormal);
+
+  //draw primitive model
+  for(int i = 0 ; i < model.Count() ; i++) {
+    const sora::Vertex *vert_ptr = model.vertex_list(i);
+    const void *idx_ptr = model.index_list(i);
+    int idx_count = model.index_count(i);
+    GLenum draw_mode = model.draw_mode(i);
+
+    if(pos_loc != -1) {
+      glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->pos);
+    }
+    if(texcoord_loc != -1) {
+      glVertexAttribPointer(texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->texcoord);
+    }
+    if(normal_loc != -1) {
+      glVertexAttribPointer(normal_loc, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->normal);
+    }
+    //glDrawElements(GL_TRIANGLES, index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
+    glDrawElements(draw_mode, idx_count, GL_UNSIGNED_SHORT, idx_ptr);
+    GLHelper::CheckError("DrawElements - primitive model");
+  }
+}
+
 SR_C_DLL Renderer &Renderer_get_instance() {
   return Renderer::GetInstance();
 }
+
+
 }

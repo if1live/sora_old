@@ -5,16 +5,16 @@ attribute vec3 a_normal;
 uniform vec4 u_viewPosition;
 uniform mat4 u_modelViewProjection;
 uniform mat4 u_world;
-uniform vec3 u_ambientColor;
-uniform vec3 u_diffuseColor;
-uniform vec3 u_specularColor;
+uniform vec4 u_ambientColor;
+uniform vec4 u_diffuseColor;
+uniform vec4 u_specularColor;
 uniform vec3 u_lightPosition;
 uniform float u_specularShininess;
 
 varying vec2 v_texcoord;
-varying vec3 v_ambientColor;
-varying vec3 v_diffuseColor;
-varying vec3 v_specularColor;
+varying vec4 v_ambientColor;
+varying vec4 v_diffuseColor;
+varying vec4 v_specularColor;
 
 varying float v_diffuse;
 

@@ -31,6 +31,8 @@ namespace sora {;
 class Texture;
 class Material;
 class ShaderProgram;
+class ObjModel;
+class PrimitiveModel;
 
 //opengles 2.0 renderer
 class Renderer : public Singleton<Renderer> {
@@ -50,6 +52,9 @@ public:
   void SetTexture(const Texture &tex);
   void SetShader(const ShaderProgram &prog);
   void SetMaterial(const Material &material);
+
+  void DrawObj(const ObjModel &model);
+  void DrawPrimitiveModel(const PrimitiveModel &model);
 
 private:
   float win_width_;
