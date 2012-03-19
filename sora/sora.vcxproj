@@ -50,6 +50,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>sora_stdafx.h</PrecompiledHeaderFile>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions>SR_NDEBUG=0;SR_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -64,6 +65,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>sora_stdafx.h</PrecompiledHeaderFile>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
+      <PreprocessorDefinitions>SR_NDEBUG=1;SR_DEBUG=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -75,11 +77,13 @@
     <ClCompile Include="arch.cpp" />
     <ClCompile Include="camera.cpp" />
     <ClCompile Include="font.cpp" />
+    <ClCompile Include="free_list_block_pool.cpp" />
     <ClCompile Include="gl_buffer_object.cpp" />
     <ClCompile Include="common_string.cpp" />
     <ClCompile Include="filesystem.cpp" />
     <ClCompile Include="gl_helper.cpp" />
     <ClCompile Include="gl_inc.cpp" />
+    <ClCompile Include="heap.cpp" />
     <ClCompile Include="lodepng\lodepng.cpp" />
     <ClCompile Include="low_level_c_file.cpp" />
     <ClCompile Include="material_manager.cpp" />
@@ -113,12 +117,17 @@
     <ClInclude Include="assert_inc.h" />
     <ClInclude Include="camera.h" />
     <ClInclude Include="font.h" />
+    <ClInclude Include="free_list_block_pool.h" />
+    <ClInclude Include="free_list_manager.h" />
+    <ClInclude Include="free_list_object_pool.h" />
     <ClInclude Include="gl_buffer_object.h" />
     <ClInclude Include="color.h" />
     <ClInclude Include="common_string.h" />
     <ClInclude Include="filesystem.h" />
     <ClInclude Include="gl_helper.h" />
     <ClInclude Include="gl_inc.h" />
+    <ClInclude Include="heap.h" />
+    <ClInclude Include="heap_alloc_header.h" />
     <ClInclude Include="lodepng\lodepng.h" />
     <ClInclude Include="low_level_c_file.h" />
     <ClInclude Include="material.h" />

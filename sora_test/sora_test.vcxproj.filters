@@ -13,6 +13,9 @@
     <Filter Include="io">
       <UniqueIdentifier>{c364ede8-d912-41ab-9cc3-6e98c738ad5f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mem">
+      <UniqueIdentifier>{c23d8141-4d7c-4cb2-97cf-54b8858a5a07}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora_test_stdafx.cpp">
@@ -20,9 +23,6 @@
     </ClCompile>
     <ClCompile Include="testmain.cc">
       <Filter>support</Filter>
-    </ClCompile>
-    <ClCompile Include="mem_test.cpp">
-      <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="template_lib_test.cpp">
       <Filter>core</Filter>
@@ -56,6 +56,21 @@
     </ClCompile>
     <ClCompile Include="obj_loader_test.cpp">
       <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="free_list_block_pool_test.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
+    <ClCompile Include="heap_test.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
+    <ClCompile Include="free_list_manager_test.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
+    <ClCompile Include="free_list_object_pool_test.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem_test.cpp">
+      <Filter>mem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -26,6 +26,12 @@
     <Filter Include="sdk\vincent">
       <UniqueIdentifier>{6ebe6cb7-522d-481a-b7b1-5ce8a670595b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cbes">
+      <UniqueIdentifier>{5ccddd79-4d93-4fd2-9385-12a97ac93b4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mem">
+      <UniqueIdentifier>{2d612f2f-840b-42b9-b522-d4381c726e30}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora_stdafx.cpp">
@@ -41,9 +47,6 @@
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="math_helper.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="mem.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="timer.cpp">
@@ -118,6 +121,15 @@
     <ClCompile Include="font.cpp">
       <Filter>render</Filter>
     </ClCompile>
+    <ClCompile Include="mem.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
+    <ClCompile Include="free_list_block_pool.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
+    <ClCompile Include="heap.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -139,9 +151,6 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="math_helper.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="mem.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="shared_ptr_inc.h">
@@ -245,6 +254,24 @@
     </ClInclude>
     <ClInclude Include="font.h">
       <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="heap.h">
+      <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="free_list_block_pool.h">
+      <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="free_list_manager.h">
+      <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="free_list_object_pool.h">
+      <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="heap_alloc_header.h">
+      <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="mem.h">
+      <Filter>mem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
