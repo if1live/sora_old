@@ -76,6 +76,9 @@
   <ItemGroup>
     <ClCompile Include="arch.cpp" />
     <ClCompile Include="camera.cpp" />
+    <ClCompile Include="component.cpp" />
+    <ClCompile Include="component_list.cpp" />
+    <ClCompile Include="entity.cpp" />
     <ClCompile Include="font.cpp" />
     <ClCompile Include="free_list_block_pool.cpp" />
     <ClCompile Include="gl_buffer_object.cpp" />
@@ -108,6 +111,7 @@
     </ClCompile>
     <ClCompile Include="uber_shader.cpp" />
     <ClCompile Include="vector.cpp" />
+    <ClCompile Include="world.cpp" />
     <ClCompile Include="zip_stream_file.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -116,6 +120,10 @@
     <ClInclude Include="array_inc.h" />
     <ClInclude Include="assert_inc.h" />
     <ClInclude Include="camera.h" />
+    <ClInclude Include="class_type.h" />
+    <ClInclude Include="component.h" />
+    <ClInclude Include="component_list.h" />
+    <ClInclude Include="entity.h" />
     <ClInclude Include="font.h" />
     <ClInclude Include="free_list_block_pool.h" />
     <ClInclude Include="free_list_manager.h" />
@@ -128,6 +136,7 @@
     <ClInclude Include="gl_inc.h" />
     <ClInclude Include="heap.h" />
     <ClInclude Include="heap_alloc_header.h" />
+    <ClInclude Include="id_generator.h" />
     <ClInclude Include="lodepng\lodepng.h" />
     <ClInclude Include="low_level_c_file.h" />
     <ClInclude Include="material.h" />
@@ -141,6 +150,7 @@
     <ClInclude Include="shader.h" />
     <ClInclude Include="primitive_model.h" />
     <ClInclude Include="shader_variable.h" />
+    <ClInclude Include="string_code_dictionary.h" />
     <ClInclude Include="teapot.h" />
     <ClInclude Include="sys_locale.h" />
     <ClInclude Include="texture.h" />
@@ -157,6 +167,7 @@
     <ClInclude Include="unordered_map_inc.h" />
     <ClInclude Include="vector.h" />
     <ClInclude Include="vertex.h" />
+    <ClInclude Include="world.h" />
     <ClInclude Include="zip_stream_file.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

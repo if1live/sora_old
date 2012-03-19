@@ -80,6 +80,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="class_type_test.cpp" />
     <ClCompile Include="color_test.cpp" />
     <ClCompile Include="common_string_test.cpp" />
     <ClCompile Include="filesystem_test.cpp" />
@@ -87,6 +88,7 @@
     <ClCompile Include="free_list_manager_test.cpp" />
     <ClCompile Include="free_list_object_pool_test.cpp" />
     <ClCompile Include="heap_test.cpp" />
+    <ClCompile Include="id_generator_test.cpp" />
     <ClCompile Include="low_level_c_file_test.cpp" />
     <ClCompile Include="math_helper_test.cpp" />
     <ClCompile Include="matrix_stack_test.cpp" />
@@ -101,9 +103,11 @@
     <ClCompile Include="template_lib_test.cpp" />
     <ClCompile Include="testmain.cc" />
     <ClCompile Include="vector_test.cpp" />
+    <ClCompile Include="world_test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="gl_buffer_object_test.cpp" />
+    <ClInclude Include="sample_component.h" />
     <ClInclude Include="sora_test_stdafx.h" />
   </ItemGroup>
   <ItemGroup>

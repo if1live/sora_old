@@ -130,6 +130,18 @@
     <ClCompile Include="heap.cpp">
       <Filter>mem</Filter>
     </ClCompile>
+    <ClCompile Include="component.cpp">
+      <Filter>cbes</Filter>
+    </ClCompile>
+    <ClCompile Include="component_list.cpp">
+      <Filter>cbes</Filter>
+    </ClCompile>
+    <ClCompile Include="entity.cpp">
+      <Filter>cbes</Filter>
+    </ClCompile>
+    <ClCompile Include="world.cpp">
+      <Filter>cbes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -272,6 +284,27 @@
     </ClInclude>
     <ClInclude Include="mem.h">
       <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="entity.h">
+      <Filter>cbes</Filter>
+    </ClInclude>
+    <ClInclude Include="world.h">
+      <Filter>cbes</Filter>
+    </ClInclude>
+    <ClInclude Include="component.h">
+      <Filter>cbes</Filter>
+    </ClInclude>
+    <ClInclude Include="component_list.h">
+      <Filter>cbes</Filter>
+    </ClInclude>
+    <ClInclude Include="class_type.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="string_code_dictionary.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="id_generator.h">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

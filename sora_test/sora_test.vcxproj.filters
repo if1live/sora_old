@@ -16,6 +16,9 @@
     <Filter Include="mem">
       <UniqueIdentifier>{c23d8141-4d7c-4cb2-97cf-54b8858a5a07}</UniqueIdentifier>
     </Filter>
+    <Filter Include="cbes">
+      <UniqueIdentifier>{cfabae0a-9708-46de-87b0-0116bd7caaa5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora_test_stdafx.cpp">
@@ -72,6 +75,15 @@
     <ClCompile Include="mem_test.cpp">
       <Filter>mem</Filter>
     </ClCompile>
+    <ClCompile Include="world_test.cpp">
+      <Filter>cbes</Filter>
+    </ClCompile>
+    <ClCompile Include="class_type_test.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="id_generator_test.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h">
@@ -79,6 +91,9 @@
     </ClInclude>
     <ClInclude Include="gl_buffer_object_test.cpp">
       <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="sample_component.h">
+      <Filter>cbes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
