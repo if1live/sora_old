@@ -21,7 +21,8 @@
 #ifndef SORA_ENTITY_H_
 #define SORA_ENTITY_H_
 
-#include "sora/id_generator.h"
+#include "id_generator.h"
+#include <glm/glm.hpp>
 
 namespace sora {;
 class World;
@@ -54,11 +55,17 @@ public:
 public:
   const std::string &name() const;
 
+  glm::mat4 &world_mat() { return world_mat_; }
+  const glm::mat4 &world_mat() const { return world_mat_; }
+  void set_world_mat(const glm::mat4 &m) { world_mat_ = m; }
+
 private:
   World *world_;
   std::string name_;
   typedef std::vector<Component*> ComponentListType;
   ComponentListType comp_list_;
+
+  glm::mat4 world_mat_; // world로의 좌표계
 };
 }
 

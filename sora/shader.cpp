@@ -65,11 +65,11 @@ bool Shader::InitShader(GLenum shader_type, const char *src) {
     GLint infoLen = 0;
     glGetShaderiv(handle, GL_INFO_LOG_LENGTH, &infoLen);
     if (infoLen) {
-      char* buf = (char*) malloc(infoLen);
+      char* buf = (char*) SR_MALLOC(infoLen);
       if (buf) {
         glGetShaderInfoLog(handle, infoLen, NULL, buf);
         LOGE("Could not compile shader %d:\n%s\n", shader_type, buf);
-        free(buf);
+        SR_FREE(buf);
       }
       glDeleteShader(handle);
       handle = 0;
@@ -131,11 +131,11 @@ bool ShaderProgram::Init(const char *v_src, const char *f_src) {
     GLint bufLength = 0;
     glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &bufLength);
     if (bufLength) {
-      char* buf = (char*) malloc(bufLength);
+      char* buf = (char*) SR_MALLOC(bufLength);
       if (buf) {
         glGetProgramInfoLog(prog, bufLength, NULL, buf);
         LOGE("Could not link program:\n%s\n", buf);
-        free(buf);
+        SR_FREE(buf);
       }
     }
     glDeleteProgram(prog);
@@ -209,9 +209,9 @@ bool ShaderProgram::Validate(GLuint prog) {
   glValidateProgram(prog);
   glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &logLength);
   if (logLength > 0) {
-    GLchar *log = static_cast<GLchar *>(malloc(logLength));
+    GLchar *log = static_cast<GLchar *>(SR_MALLOC(logLength));
     glGetProgramInfoLog(prog, logLength, &logLength, log);
-    free(log);
+    SR_FREE(log);
     //SR_ASSERT(false);
   }
 

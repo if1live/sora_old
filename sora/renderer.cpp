@@ -44,7 +44,7 @@ struct RendererImpl {
   : last_tex_id(-1),
     last_prog_id(-1),
     last_prog(NULL),
-  projection(1.0f), view(1.0f), world(1.0f) {
+  projection(1.0f), view(1.0f) {
   }
   //like cache?
   GLuint last_tex_id;
@@ -54,7 +54,6 @@ struct RendererImpl {
   //matrix
   glm::mat4 projection;
   glm::mat4 view;
-  glm::mat4 world;
 
   Camera cam;
 };
@@ -90,7 +89,6 @@ void Renderer::Set2D() {
   //reset matrix
   impl->projection = glm::ortho(0.0f, (float)win_width_, 0.0f, (float)win_height_);
   impl->view = glm::mat4(1.0f);
-  impl->world = glm::mat4(1.0f);
 }
 
 void Renderer::Set3D() {
@@ -214,17 +212,11 @@ void Renderer::DrawPrimitiveModel(const PrimitiveModel &model) {
   }
 }
 
-glm::mat4 &Renderer::world_mat() {
-  return impl->world;
-}
 glm::mat4 &Renderer::projection_mat() {
   return impl->projection;
 }
 glm::mat4 &Renderer::view_mat() {
   return impl->view;
-}
-void Renderer::set_world_mat(const glm::mat4 &m) {
-  impl->world = m;
 }
 void Renderer::set_projection_mat(const glm::mat4 &m) {
   impl->projection = m;
@@ -233,7 +225,7 @@ void Renderer::set_view_mat(const glm::mat4 &m) {
   impl->view = m;
 }
 
-void Renderer::ApplyMatrix2D() {
+void Renderer::ApplyMatrix2D(const glm::mat4 &world_mat) {
   //world-view-projection
   //world, view, projection 같은것을 등록할수 잇으면 등록하기
   int mvp_handle = impl->last_prog->GetLocation(ShaderVariable::kWorldViewProjection);
@@ -242,13 +234,13 @@ void Renderer::ApplyMatrix2D() {
     glm::mat4 mvp = glm::mat4(1.0f);
     mvp *= impl->projection;
     mvp *= impl->view;
-    mvp *= impl->world;
+    mvp *= world_mat;
     glUniformMatrix4fv(mvp_handle, 1, GL_FALSE, glm::value_ptr(mvp));
   }
 
   int world_handle = impl->last_prog->GetLocation(ShaderVariable::kWorld);
   if(world_handle != -1) {
-    glUniformMatrix4fv(world_handle, 1, GL_FALSE, glm::value_ptr(impl->world));
+    glUniformMatrix4fv(world_handle, 1, GL_FALSE, glm::value_ptr(world_mat));
   }
 
   int view_handle = impl->last_prog->GetLocation(ShaderVariable::kView);
@@ -262,7 +254,7 @@ void Renderer::ApplyMatrix2D() {
   }
 }
 
-void Renderer::ApplyMatrix() {
+void Renderer::ApplyMatrix(const glm::mat4 &world_mat) {
   Camera &cam = impl->cam;
   //apply new viw matrix
   const Vec3f &eye = cam.eye();
@@ -285,13 +277,13 @@ void Renderer::ApplyMatrix() {
     glm::mat4 mvp = glm::mat4(1.0f);
     mvp *= impl->projection;
     mvp *= impl->view;
-    mvp *= impl->world;
+    mvp *= world_mat;
     glUniformMatrix4fv(mvp_handle, 1, GL_FALSE, glm::value_ptr(mvp));
   }
 
   int world_handle = impl->last_prog->GetLocation(ShaderVariable::kWorld);
   if(world_handle != -1) {
-    glUniformMatrix4fv(world_handle, 1, GL_FALSE, glm::value_ptr(impl->world));
+    glUniformMatrix4fv(world_handle, 1, GL_FALSE, glm::value_ptr(world_mat));
   }
 
   int view_handle = impl->last_prog->GetLocation(ShaderVariable::kView);

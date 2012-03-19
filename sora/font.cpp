@@ -38,7 +38,7 @@ Font::Font() : impl(new FontImpl()) {
   // 텍스쳐는 1/0만 처리하면됨. 작게 할당받자
   typedef unsigned char byte;
   int img_size = sizeof(byte) * kTextureWidth * kTextureHeight;
-  byte *data = static_cast<byte*>(malloc(img_size));
+  byte *data = static_cast<byte*>(SR_MALLOC(img_size));
   memset(data, 0, sizeof(byte) * img_size);
 
   // 이미지 생성.
@@ -72,7 +72,7 @@ Font::Font() : impl(new FontImpl()) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   impl->font_tex.Init(tex_id, kTextureWidth, kTextureHeight);
 
-  free(data);
+  SR_FREE(data);
 }
 Font::~Font() {
   impl->font_tex.Deinit();

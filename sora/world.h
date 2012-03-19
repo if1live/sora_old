@@ -29,11 +29,11 @@ class ComponentList;
 class Entity;
 
 class SR_DLL World {
- public:
+public:
   typedef std::tr1::unordered_map<int, Entity*> EntityDictType;
   typedef std::tr1::unordered_map<std::string, Entity*> EntityNameDictType;
   typedef std::tr1::unordered_map<int, ComponentList*> ComponentListDictType;
- public:
+public:
   World();
   ~World();
 
@@ -42,7 +42,7 @@ class SR_DLL World {
   bool DestroyEntity(Entity *entity);
   int EntityCount() const { return entity_dict_.size(); }
 
- public:
+public:
   bool RegisterComponent(Component *comp);
   bool UnregisterComponent(Component *comp);
   ComponentList &GetComponentList(int comp_type);
@@ -50,7 +50,7 @@ class SR_DLL World {
     return GetComponentList(T::ClassType());
   }
 
- private:
+private:
   EntityDictType entity_dict_;
   EntityNameDictType entity_name_dict_;
   ComponentListDictType complist_dict_;

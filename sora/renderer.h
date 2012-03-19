@@ -59,15 +59,13 @@ public:
   void DrawObj(const ObjModel &model);
   void DrawPrimitiveModel(const PrimitiveModel &model);
 
-  glm::mat4 &world_mat();
   glm::mat4 &projection_mat();
   glm::mat4 &view_mat();
-  void set_world_mat(const glm::mat4 &m);
   void set_projection_mat(const glm::mat4 &m);
   void set_view_mat(const glm::mat4 &m);
 
-  void ApplyMatrix();
-  void ApplyMatrix2D();
+  void ApplyMatrix(const glm::mat4 &world_mat);
+  void ApplyMatrix2D(const glm::mat4 &world_mat);
 
   Camera &camera();
   void set_camera(const Camera &cam);

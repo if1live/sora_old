@@ -39,7 +39,9 @@ public:
   ~PrimitiveModel();
   //use GL_TRIANGLES
   void WireCube(float width, float height, float depth);
-  void SolidCube(float width, float height, float depth);
+
+  //discreate normal : true=>면단위로 noraml확정, false=>구같은 느낌의 노멀벡터 사용
+  void SolidCube(float width, float height, float depth, bool discreate_normal);
   void WireSphere(float radius, int slices, int stacks);
   void SolidSphere(float radius, int slices, int stacks);
   void WireCone(float base, float height, int slices, int stacks);

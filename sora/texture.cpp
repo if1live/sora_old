@@ -234,7 +234,7 @@ bool Texture::Init_PNG() {
       tex_width_ = CeilPower(2, src_width_);
       tex_height_ = CeilPower(2, src_height_);
 
-      uchar *new_data = (uchar*)malloc(sizeof(uchar) * tex_width_ * tex_height_ * loader.color_channels());
+      uchar *new_data = (uchar*)SR_MALLOC(sizeof(uchar) * tex_width_ * tex_height_ * loader.color_channels());
       memset(new_data, 128, sizeof(uchar) * tex_width_ * tex_height_ * loader.color_channels());
       for(int y = 0 ; y < src_height_ ; y++) {
         int new_scanline_size = tex_width_ * loader.color_channels();
@@ -247,7 +247,7 @@ bool Texture::Init_PNG() {
       }
 
       glTexImage2D(GL_TEXTURE_2D, 0, format, tex_width_, tex_height_, 0, format, elem_type, new_data);
-      free(new_data);
+      SR_FREE(new_data);
     }
 
   } else {

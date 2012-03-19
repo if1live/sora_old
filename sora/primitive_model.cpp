@@ -142,7 +142,7 @@ void PrimitiveModel::WireCube(float width, float height, float depth) {
   }
 }
 
-void PrimitiveModel::SolidCube(float width, float height, float depth) {
+void PrimitiveModel::SolidCube(float width, float height, float depth, bool discreate_normal) {
   SR_ASSERT(width > 0 && height > 0 && depth > 0);
   width = width/2;
   height = height/2;
@@ -165,31 +165,30 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
     // Front Face
     int baseIndex = vert_list.size();
 
+    Vec3f normal(0, 0, 1);
+
     Vec2f texCoord1(0, 0);	Vec3f vertex1(-width, -height, depth);
     Vec2f texCoord2(1, 0);	Vec3f vertex2( width, -height, depth);
     Vec2f texCoord3(1, 1);	Vec3f vertex3( width,  height, depth);
     Vec2f texCoord4(0, 1);	Vec3f vertex4(-width,  height, depth);
 
     //add vertex
-    Vertex v1;
-    v1.pos = vertex1;
-    v1.texcoord = texCoord1;
-    v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
-
-    Vertex v2;
-    v2.pos = vertex2;
-    v2.texcoord = texCoord2;
-    v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
-
-    Vertex v3;
-    v3.pos = vertex3;
-    v3.texcoord = texCoord3;
-    v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
-
-    Vertex v4;
-    v4.pos = vertex4;
-    v4.texcoord = texCoord4;
-    v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
+    Vertex v1;  v1.pos = vertex1; v1.texcoord = texCoord1;
+    Vertex v2;  v2.pos = vertex2; v2.texcoord = texCoord2;
+    Vertex v3;  v3.pos = vertex3; v3.texcoord = texCoord3;
+    Vertex v4;  v4.pos = vertex4; v4.texcoord = texCoord4;
+    //set normal
+    if(discreate_normal) {
+      v1.normal = normal;
+      v2.normal = normal;
+      v3.normal = normal;
+      v4.normal = normal;
+    } else {
+      v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
+      v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
+      v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
+      v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
+    }
 
     vert_list.push_back(v1);
     vert_list.push_back(v2);
@@ -208,6 +207,7 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
   {
     // Back Face
     int baseIndex = vert_list.size();
+    Vec3f normal(0, 0, -1);
 
     Vec2f texCoord1(1, 0);	Vec3f vertex1(-width, -height, -depth);
     Vec2f texCoord2(1, 1);	Vec3f vertex2(-width,  height, -depth);
@@ -215,25 +215,22 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
     Vec2f texCoord4(0, 0);	Vec3f vertex4( width, -height, -depth);
 
     //add vertex
-    Vertex v1;
-    v1.pos = vertex1;
-    v1.texcoord = texCoord1;
-    v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
-
-    Vertex v2;
-    v2.pos = vertex2;
-    v2.texcoord = texCoord2;
-    v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
-
-    Vertex v3;
-    v3.pos = vertex3;
-    v3.texcoord = texCoord3;
-    v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
-
-    Vertex v4;
-    v4.pos = vertex4;
-    v4.texcoord = texCoord4;
-    v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
+    Vertex v1;  v1.pos = vertex1; v1.texcoord = texCoord1;
+    Vertex v2;  v2.pos = vertex2; v2.texcoord = texCoord2;
+    Vertex v3;  v3.pos = vertex3; v3.texcoord = texCoord3;
+    Vertex v4;  v4.pos = vertex4; v4.texcoord = texCoord4;
+    //set normal
+    if(discreate_normal) {
+      v1.normal = normal;
+      v2.normal = normal;
+      v3.normal = normal;
+      v4.normal = normal;
+    } else {
+      v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
+      v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
+      v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
+      v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
+    }
 
     vert_list.push_back(v1);
     vert_list.push_back(v2);
@@ -253,6 +250,7 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
   {
     // Top Face
     int baseIndex = vert_list.size();
+    Vec3f normal(0, 1, 0);
 
     Vec2f texCoord1(0, 1);	Vec3f vertex1(-width, height, -depth);
     Vec2f texCoord2(0, 0);	Vec3f vertex2(-width, height,  depth);
@@ -260,25 +258,22 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
     Vec2f texCoord4(1, 1);	Vec3f vertex4( width, height, -depth);
 
     //add vertex
-    Vertex v1;
-    v1.pos = vertex1;
-    v1.texcoord = texCoord1;
-    v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
-
-    Vertex v2;
-    v2.pos = vertex2;
-    v2.texcoord = texCoord2;
-    v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
-
-    Vertex v3;
-    v3.pos = vertex3;
-    v3.texcoord = texCoord3;
-    v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
-
-    Vertex v4;
-    v4.pos = vertex4;
-    v4.texcoord = texCoord4;
-    v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
+    Vertex v1;  v1.pos = vertex1; v1.texcoord = texCoord1;
+    Vertex v2;  v2.pos = vertex2; v2.texcoord = texCoord2;
+    Vertex v3;  v3.pos = vertex3; v3.texcoord = texCoord3;
+    Vertex v4;  v4.pos = vertex4; v4.texcoord = texCoord4;
+    //set normal
+    if(discreate_normal) {
+      v1.normal = normal;
+      v2.normal = normal;
+      v3.normal = normal;
+      v4.normal = normal;
+    } else {
+      v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
+      v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
+      v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
+      v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
+    }
 
     vert_list.push_back(v1);
     vert_list.push_back(v2);
@@ -298,6 +293,7 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
   {
     // Bottom Face
     int baseIndex = vert_list.size();
+    Vec3f normal(0, -1, 0);
 
     Vec2f texCoord1(1, 1);	Vec3f vertex1(-width, -height, -depth);
     Vec2f texCoord2(0, 1);	Vec3f vertex2( width, -height, -depth);
@@ -305,25 +301,22 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
     Vec2f texCoord4(1, 0);	Vec3f vertex4(-width, -height,  depth);
 
     //add vertex
-    Vertex v1;
-    v1.pos = vertex1;
-    v1.texcoord = texCoord1;
-    v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
-
-    Vertex v2;
-    v2.pos = vertex2;
-    v2.texcoord = texCoord2;
-    v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
-
-    Vertex v3;
-    v3.pos = vertex3;
-    v3.texcoord = texCoord3;
-    v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
-
-    Vertex v4;
-    v4.pos = vertex4;
-    v4.texcoord = texCoord4;
-    v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
+    Vertex v1;  v1.pos = vertex1; v1.texcoord = texCoord1;
+    Vertex v2;  v2.pos = vertex2; v2.texcoord = texCoord2;
+    Vertex v3;  v3.pos = vertex3; v3.texcoord = texCoord3;
+    Vertex v4;  v4.pos = vertex4; v4.texcoord = texCoord4;
+    //set normal
+    if(discreate_normal) {
+      v1.normal = normal;
+      v2.normal = normal;
+      v3.normal = normal;
+      v4.normal = normal;
+    } else {
+      v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
+      v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
+      v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
+      v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
+    }
 
     vert_list.push_back(v1);
     vert_list.push_back(v2);
@@ -343,6 +336,7 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
   {
     // Right face
     int baseIndex = vert_list.size();
+    Vec3f normal(1, 0, 0);
 
     Vec2f texCoord1(1, 0);	Vec3f vertex1(width, -height, -depth);
     Vec2f texCoord2(1, 1);	Vec3f vertex2(width,  height, -depth);
@@ -350,25 +344,22 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
     Vec2f texCoord4(0, 0);	Vec3f vertex4(width, -height,  depth);
 
     //add vertex
-    Vertex v1;
-    v1.pos = vertex1;
-    v1.texcoord = texCoord1;
-    v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
-
-    Vertex v2;
-    v2.pos = vertex2;
-    v2.texcoord = texCoord2;
-    v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
-
-    Vertex v3;
-    v3.pos = vertex3;
-    v3.texcoord = texCoord3;
-    v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
-
-    Vertex v4;
-    v4.pos = vertex4;
-    v4.texcoord = texCoord4;
-    v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
+    Vertex v1;  v1.pos = vertex1; v1.texcoord = texCoord1;
+    Vertex v2;  v2.pos = vertex2; v2.texcoord = texCoord2;
+    Vertex v3;  v3.pos = vertex3; v3.texcoord = texCoord3;
+    Vertex v4;  v4.pos = vertex4; v4.texcoord = texCoord4;
+    //set normal
+    if(discreate_normal) {
+      v1.normal = normal;
+      v2.normal = normal;
+      v3.normal = normal;
+      v4.normal = normal;
+    } else {
+      v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
+      v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
+      v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
+      v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
+    }
 
     vert_list.push_back(v1);
     vert_list.push_back(v2);
@@ -388,6 +379,7 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
   {
     // Left Face
     int baseIndex = vert_list.size();
+    Vec3f normal(-1, 0, 0);
 
     Vec2f texCoord1(0, 0);	Vec3f vertex1(-width, -height, -depth);
     Vec2f texCoord2(1, 0);	Vec3f vertex2(-width, -height,  depth);
@@ -395,25 +387,22 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
     Vec2f texCoord4(0, 1);	Vec3f vertex4(-width,  height, -depth);
 
     //add vertex
-    Vertex v1;
-    v1.pos = vertex1;
-    v1.texcoord = texCoord1;
-    v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
-
-    Vertex v2;
-    v2.pos = vertex2;
-    v2.texcoord = texCoord2;
-    v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
-
-    Vertex v3;
-    v3.pos = vertex3;
-    v3.texcoord = texCoord3;
-    v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
-
-    Vertex v4;
-    v4.pos = vertex4;
-    v4.texcoord = texCoord4;
-    v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
+    Vertex v1;  v1.pos = vertex1; v1.texcoord = texCoord1;
+    Vertex v2;  v2.pos = vertex2; v2.texcoord = texCoord2;
+    Vertex v3;  v3.pos = vertex3; v3.texcoord = texCoord3;
+    Vertex v4;  v4.pos = vertex4; v4.texcoord = texCoord4;
+    //set normal
+    if(discreate_normal) {
+      v1.normal = normal;
+      v2.normal = normal;
+      v3.normal = normal;
+      v4.normal = normal;
+    } else {
+      v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
+      v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
+      v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
+      v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
+    }
 
     vert_list.push_back(v1);
     vert_list.push_back(v2);

@@ -55,12 +55,12 @@
 #include "math_helper.h"
 #include "camera.h"
 #include "font.h"
+#include "entity.h"
+#include "world.h"
 
 using namespace std;
-using sora::GLHelper;
-using sora::ShaderProgram;
-using sora::MatrixStack;
-using sora::ObjModel;
+using namespace sora;
+using namespace glm;
 
 //fixed
 //sora::Texture tex(sora::Texture::kPolicyForcePOT);
@@ -71,6 +71,10 @@ ShaderProgram shader_2d;
 
 ObjModel obj_model;
 sora::PrimitiveModel primitive_model;
+
+//cbes
+World world;
+Entity *entity_a;
 
 bool setupGraphics(int w, int h) {
   sora::Renderer::GetInstance().SetWindowSize((float)w, (float)h);
@@ -150,17 +154,25 @@ bool setupGraphics(int w, int h) {
   sora::MaterialManager::GetInstance().Add(material_list);
 
   //primitive model test
-  primitive_model.SolidCube(1, 2, 1);
+  //primitive_model.SolidCube(1, 2, 1, false);
   //primitive_model.WireCube(1, 1, 1);
   //primitive_model.WireAxis(2);
   //primitive_model.WireSphere(1, 8, 8);
-  //primitive_model.SolidSphere(1, 16, 16);
+  primitive_model.SolidSphere(1, 16, 16);
   //primitive_model.WireCone(1, 2, 8, 8);
   //primitive_model.SolidCone(1, 2, 8, 8);
   //primitive_model.WireCylinder(1, 2, 8);
   //primitive_model.SolidCylinder(1, 2, 16);
-  //primitive_model.SolidTeapot(1);
+  //primitive_model.SolidTeapot(2);
   //primitive_model.WireTeapot(1);
+
+  //crate entity
+  entity_a = world.CreateEntity();
+  glm::mat4 entity_mat = glm::mat4(1.0f);
+  //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
+  //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
+  entity_mat = glm::rotate(glm::mat4(1.0f), 180.0f, vec3(1, 0, 0));
+  entity_a->set_world_mat(entity_mat);
 
   return true;
 }
@@ -210,8 +222,6 @@ void renderFrame() {
   //set mvp matrix
   glm::mat4 &projection = renderer.projection_mat();
   glm::mat4 &view = renderer.view_mat();
-  glm::mat4 &world = renderer.world_mat();
-  world = glm::mat4(1.0f);  //reset world matrix
 
   float win_width = renderer.win_width();
   float win_height = renderer.win_height();
@@ -235,15 +245,17 @@ void renderFrame() {
   GLHelper::CheckError("Set Light Pos Handle");
   
   //draw cube
-  renderer.ApplyMatrix();
+  renderer.ApplyMatrix(entity_a->world_mat());
   //renderer.DrawObj(obj_model);  
   renderer.DrawPrimitiveModel(primitive_model);
   
   //draw 2d something
   {
+    glm::mat4 world_mat(1.0f);
+
     renderer.Set2D();
     renderer.SetShader(shader_2d);
-    renderer.ApplyMatrix2D();
+    renderer.ApplyMatrix2D(world_mat);
     sora::Font &font = sora::Font::GetInstance();
     renderer.SetTexture(font.font_texture());
 
@@ -261,10 +273,9 @@ void renderFrame() {
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     */
 
-    glm::mat4 &world = renderer.world_mat();
-    world = glm::translate(world, glm::vec3(0, 800, 0));
-    world = glm::scale(world, glm::vec3(2, 2, 1));
-    renderer.ApplyMatrix2D();
+    world_mat = glm::translate(world_mat, glm::vec3(0, 800, 0));
+    world_mat = glm::scale(world_mat, glm::vec3(2, 2, 1));
+    renderer.ApplyMatrix2D(world_mat);
     sora::Label label("PQRS_1234_asdf");
     glVertexAttribPointer(position_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->pos);
     glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->texcoord);
