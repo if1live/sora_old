@@ -38,6 +38,7 @@ JNIEXPORT void JNICALL Java_so_libsora_yuriko_GL2JNILib_init(JNIEnv * env, jobje
 JNIEXPORT void JNICALL Java_so_libsora_yuriko_GL2JNILib_step(JNIEnv * env, jobject obj)
 {
     //renderFrame();
+	SORA_set_cam_pos(0, 1.0f);
 	SORA_draw_frame();
 }
 

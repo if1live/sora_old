@@ -23,24 +23,67 @@
 #include <cstdlib>
 
 namespace sora {;
-void *BasicMalloc(size_t size) {
-  void *ptr = ::malloc(size);
-  // printf("malloc : %x\n", ptr);
-  return ptr;
-}
-void BasicFree(void *ptr) {
-  // printf("free : %x\n", ptr);
-  return ::free(ptr);
-}
-void *BasicCalloc( size_t num, size_t size ) {
-  return ::calloc(num, size);
-}
-void *BasicRealloc( void *memblock, size_t size ) {
-  return ::realloc(memblock, size);
+
+struct BasicAllocHeader {
+  //경계정보 같은거 없음. 그냥 size만 추가해서 메모리 할당을 추적할수 잇도록함
+  BasicAllocHeader() : size(0) { }
+  BasicAllocHeader(int size) : size(size) { }
+  int size;
+};
+
+//for basic allocator
+AllocState basic_alloc_state;
+
+AllocState &BasicAllocator::alloc_state() {
+  return basic_alloc_state;
 }
 
+void *BasicAllocator::Malloc(size_t size) {
+  size_t request_size = size + sizeof(BasicAllocHeader);
+  void *ptr = ::malloc(request_size);
+  BasicAllocHeader *header = (BasicAllocHeader*)ptr;
+  header->size = size;
+  void *result = (void*)((long)ptr + sizeof(BasicAllocHeader));
+  
+  basic_alloc_state.bytes += size;
+  basic_alloc_state.count++;
+
+  return result;
+}
+void BasicAllocator::Free(void *ptr) {
+  void *alloc_start = (void*)((long)ptr - sizeof(BasicAllocHeader));
+  BasicAllocHeader *header = (BasicAllocHeader*)alloc_start;
+  
+  int size = header->size;
+  basic_alloc_state.bytes -= size;
+  basic_alloc_state.count--;
+
+  ::free(header);
+}
+void *BasicAllocator::Calloc( size_t num, size_t size ) {
+  int request_size = num * size;
+  void *ptr = SR_MALLOC(request_size);
+  memset(ptr, 0, request_size);
+  return ptr;
+}
+void *BasicAllocator::Realloc( void *memblock, size_t size ) {
+  void *alloc_start = (void*)((long)memblock - sizeof(BasicAllocHeader));
+  BasicAllocHeader *prev_header = (BasicAllocHeader*)alloc_start;
+
+  int prev_size = prev_header->size;
+
+  void *new_block = ::realloc(alloc_start, size);
+  BasicAllocHeader *new_header = (BasicAllocHeader*)new_block;
+  new_header->size = size;
+  basic_alloc_state.bytes += (size - prev_size);
+
+  void *result = (void*)((long)new_block + sizeof(BasicAllocHeader));
+  return result;
+}
+
+//for tag allocator
+/*
 const ushort MagicNumber = 1234;
-const ushort NoTag = 0;
 const ushort kMaxTag = 16;
 
 struct AllocHeader {
@@ -60,15 +103,13 @@ struct AllocHeader {
   ushort tag;
   int size;
 };
-AllocHeader mem_chain[kMaxTag];  //tag는 총 16개
-int alloc_bytes = 0;  // 할당받은 총 용량
-int alloc_count = 0;  // 할당받은 조각의 갯수
+*/
+//AllocHeader mem_chain[kMaxTag];  //tag는 총 16개
+//int alloc_bytes = 0;  // 할당받은 총 용량
+//int alloc_count = 0;  // 할당받은 조각의 갯수
 
-void *Malloc(size_t size) {
-  return TagMalloc(size, NoTag);
-};
-
-void Free(void *ptr) {
+/*
+void TagFree(void *ptr) {
   void *alloc_start = (void*)((long)ptr - sizeof(AllocHeader));
   AllocHeader *header = (AllocHeader*)alloc_start;
 
@@ -80,12 +121,13 @@ void Free(void *ptr) {
   alloc_bytes -= header->size;
   alloc_count --;
 
-  MM_FREE(alloc_start);
+  SR_FREE(alloc_start);
   return;
 }
+
 void *TagMalloc(size_t size, int tag) {
   size_t request_size = size + sizeof(AllocHeader);
-  void *ptr = MM_MALLOC(request_size);
+  void *ptr = SR_MALLOC(request_size);
   
   AllocHeader *header = (AllocHeader*)ptr;
   header->magic = MagicNumber;
@@ -104,18 +146,15 @@ void *TagMalloc(size_t size, int tag) {
   void *result = (void*)((long)ptr + sizeof(AllocHeader));
   return result;
 }
-void TagFree(int tag) {
-  if (tag == NoTag) {
-    return;
-  }
 
+void TagFlush(int tag) {
   AllocHeader *header = mem_chain[tag].next;
   AllocHeader *next = NULL;
   for ( ; header != &mem_chain[tag] ; header = next) {
     next = header->next;
     if (header->tag == tag) {
       void *alloc_ptr = (void*)((long)header + sizeof(AllocHeader));
-      Free(alloc_ptr);
+      TagFree(alloc_ptr);
     }
   }
 }
@@ -123,4 +162,5 @@ void AllocStat(AllocState *data) {
   data->bytes = alloc_bytes;
   data->count = alloc_count;
 }
+*/
 }

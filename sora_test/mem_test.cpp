@@ -21,6 +21,67 @@
 #include "sora_test_stdafx.h"
 #include "sora/mem.h"
 
+TEST(BasicAllocator, malloc_free) {
+  using sora::AllocState;
+  using sora::BasicAllocator;
+
+  //empty
+  AllocState &state = BasicAllocator::alloc_state();
+  EXPECT_EQ(0, state.bytes);
+  EXPECT_EQ(0, state.count);
+
+  void *mem1 = SR_MALLOC(128);
+  EXPECT_EQ(128, state.bytes);
+  EXPECT_EQ(1, state.count);
+
+  void *mem2 = SR_MALLOC(64);
+  EXPECT_EQ(128+64, state.bytes);
+  EXPECT_EQ(2, state.count);
+
+  void *mem3 = SR_MALLOC(128);
+  EXPECT_EQ(128+64+128, state.bytes);
+  EXPECT_EQ(3, state.count);
+
+  SR_FREE(mem2);
+  EXPECT_EQ(128+128, state.bytes);
+  EXPECT_EQ(2, state.count);
+
+  SR_FREE(mem1);
+  EXPECT_EQ(128, state.bytes);
+  EXPECT_EQ(1, state.count);
+
+  SR_FREE(mem3);
+  EXPECT_EQ(0, state.bytes);
+  EXPECT_EQ(0, state.count);
+}
+
+TEST(BasicAllocator, realloc) {
+  using sora::AllocState;
+  using sora::BasicAllocator;
+
+  //empty
+  AllocState &state = BasicAllocator::alloc_state();
+  EXPECT_EQ(0, state.bytes);
+  EXPECT_EQ(0, state.count);
+
+  void *mem1 = SR_MALLOC(16);
+  EXPECT_EQ(16, state.bytes);
+  EXPECT_EQ(1, state.count);
+
+  mem1 = SR_REALLOC(mem1, 32);
+  EXPECT_EQ(32, state.bytes);
+  EXPECT_EQ(1, state.count);
+
+  mem1 = SR_REALLOC(mem1, 64);
+  EXPECT_EQ(64, state.bytes);
+  EXPECT_EQ(1, state.count);
+
+  SR_FREE(mem1);
+  EXPECT_EQ(0, state.bytes);
+  EXPECT_EQ(0, state.count);
+}
+
+/*
 TEST(Memory, Malloc_Free) {
   using sora::AllocStat;
   sora::AllocState alloc_state;
@@ -29,42 +90,44 @@ TEST(Memory, Malloc_Free) {
   EXPECT_EQ(0, alloc_state.bytes);
   EXPECT_EQ(0, alloc_state.count);
 
-  void *ptr1 = SR_MALLOC(4);
+  int tag = 0x01;
+
+  void *ptr1 = SR_TAG_MALLOC(4, tag);
   AllocStat(&alloc_state);
   EXPECT_EQ(4, alloc_state.bytes);
   EXPECT_EQ(1, alloc_state.count);
 
-  void *ptr2 = SR_MALLOC(8);
+  void *ptr2 = SR_TAG_MALLOC(8, tag);
   AllocStat(&alloc_state);
   EXPECT_EQ(4+8, alloc_state.bytes);
   EXPECT_EQ(2, alloc_state.count);
 
-  void *ptr3 = SR_MALLOC(16);
+  void *ptr3 = SR_TAG_MALLOC(16, tag);
   AllocStat(&alloc_state);
   EXPECT_EQ(4+8+16, alloc_state.bytes);
   EXPECT_EQ(3, alloc_state.count);
 
-  void *ptr4 = SR_MALLOC(32);
+  void *ptr4 = SR_TAG_MALLOC(32, tag);
   AllocStat(&alloc_state);
   EXPECT_EQ(4+8+16+32, alloc_state.bytes);
   EXPECT_EQ(4, alloc_state.count);
 
-  SR_FREE(ptr1);  // 4byte
+  SR_TAG_FREE(ptr1);  // 4byte
   AllocStat(&alloc_state);
   EXPECT_EQ(8+16+32, alloc_state.bytes);
   EXPECT_EQ(3, alloc_state.count);
 
-  SR_FREE(ptr4);  // 32byte
+  SR_TAG_FREE(ptr4);  // 32byte
   AllocStat(&alloc_state);
   EXPECT_EQ(8+16, alloc_state.bytes);
   EXPECT_EQ(2, alloc_state.count);
 
-  SR_FREE(ptr2);  // 8byte
+  SR_TAG_FREE(ptr2);  // 8byte
   AllocStat(&alloc_state);
   EXPECT_EQ(16, alloc_state.bytes);
   EXPECT_EQ(1, alloc_state.count);
 
-  SR_FREE(ptr3);  // 16byte
+  SR_TAG_FREE(ptr3);  // 16byte
   AllocStat(&alloc_state);
   EXPECT_EQ(0, alloc_state.bytes);
   EXPECT_EQ(0, alloc_state.count);
@@ -78,49 +141,51 @@ TEST(Memory, Malloc_Free_1) {
   EXPECT_EQ(0, alloc_state.bytes);
   EXPECT_EQ(0, alloc_state.count);
 
-  void *ptr1 = SR_MALLOC(4);
+  int tag = 0x01;
+
+  void *ptr1 = SR_TAG_MALLOC(4, tag);
   AllocStat(&alloc_state);
   EXPECT_EQ(4, alloc_state.bytes);
   EXPECT_EQ(1, alloc_state.count);
 
-  void *ptr2 = SR_MALLOC(8);
+  void *ptr2 = SR_TAG_MALLOC(8, tag);
   AllocStat(&alloc_state);
   EXPECT_EQ(4+8, alloc_state.bytes);
   EXPECT_EQ(2, alloc_state.count);
 
   ///////////
-  SR_FREE(ptr1);  // 4byte
+  SR_TAG_FREE(ptr1);  // 4byte
   AllocStat(&alloc_state);
   EXPECT_EQ(8, alloc_state.bytes);
   EXPECT_EQ(1, alloc_state.count);
 
-  void *ptr3 = SR_MALLOC(16);
+  void *ptr3 = SR_TAG_MALLOC(16, tag);
   AllocStat(&alloc_state);
   EXPECT_EQ(8+16, alloc_state.bytes);
   EXPECT_EQ(2, alloc_state.count);
 
-  void *ptr4 = SR_MALLOC(32);
+  void *ptr4 = SR_TAG_MALLOC(32, tag);
   AllocStat(&alloc_state);
   EXPECT_EQ(8+16+32, alloc_state.bytes);
   EXPECT_EQ(3, alloc_state.count);
 
-  SR_FREE(ptr3);  // 16byte
+  SR_TAG_FREE(ptr3);  // 16byte
   AllocStat(&alloc_state);
   EXPECT_EQ(8+32, alloc_state.bytes);
   EXPECT_EQ(2, alloc_state.count);
 
-  SR_FREE(ptr2);  // 8byte
+  SR_TAG_FREE(ptr2);  // 8byte
   AllocStat(&alloc_state);
   EXPECT_EQ(32, alloc_state.bytes);
   EXPECT_EQ(1, alloc_state.count);
 
-  SR_FREE(ptr4);  // 32byte
+  SR_TAG_FREE(ptr4);  // 32byte
   AllocStat(&alloc_state);
   EXPECT_EQ(0, alloc_state.bytes);
   EXPECT_EQ(0, alloc_state.count);
 }
 
-TEST(Memory, TagMalloc_TagFree) {
+TEST(Memory, TagMalloc_TagFlush) {
   using sora::AllocStat;
   sora::AllocState alloc_state;
 
@@ -133,13 +198,14 @@ TEST(Memory, TagMalloc_TagFree) {
   EXPECT_EQ(4+8+16+32, alloc_state.bytes);
   EXPECT_EQ(4, alloc_state.count);
   
-  SR_TAG_FREE(2);
+  SR_TAG_FLUSH(2);
   AllocStat(&alloc_state);
   EXPECT_EQ(4+16, alloc_state.bytes);
   EXPECT_EQ(2, alloc_state.count);
 
-  SR_TAG_FREE(1);
+  SR_TAG_FLUSH(1);
   AllocStat(&alloc_state);
   EXPECT_EQ(0, alloc_state.bytes);
   EXPECT_EQ(0, alloc_state.count);
 }
+*/

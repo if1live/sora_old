@@ -49,7 +49,7 @@ MemoryFile::~MemoryFile() {
 }
 
 void MemoryFile::Close() {
-  MM_FREE(data);
+  SR_FREE(data);
   start = NULL;
   curr = NULL;
   end = NULL;
@@ -84,7 +84,7 @@ bool MemoryFile::Open() {
   }
 
   int length = Filesystem::GetFileSize(fd);
-  start = (uchar*)MM_MALLOC(length + 1); 
+  start = (uchar*)SR_MALLOC(length + 1); 
   data = start;
   _read(fd, start, length);
 

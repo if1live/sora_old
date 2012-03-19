@@ -3,7 +3,7 @@
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
-    <IncludePath>C:\devel\sora\sdk\glfw\include;C:\devel\sora\sdk\glew\include;C:\devel\sora\sdk\glm-0.9.3.1;$(IncludePath)</IncludePath>
+    <IncludePath>..\sdk\glfw\include;..\sdk\glew\include;..\sdk\glm-0.9.3.1;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
