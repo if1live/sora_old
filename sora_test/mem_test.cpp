@@ -23,7 +23,7 @@
 
 TEST(BasicAllocator, malloc_free) {
   using sora::AllocState;
-  using sora::BasicAllocator;
+  using namespace sora;
 
   //empty
   AllocState &state = BasicAllocator::alloc_state();
@@ -57,7 +57,7 @@ TEST(BasicAllocator, malloc_free) {
 
 TEST(BasicAllocator, realloc) {
   using sora::AllocState;
-  using sora::BasicAllocator;
+  using namespace sora;
 
   //empty
   AllocState &state = BasicAllocator::alloc_state();
@@ -81,131 +81,129 @@ TEST(BasicAllocator, realloc) {
   EXPECT_EQ(0, state.count);
 }
 
-/*
-TEST(Memory, Malloc_Free) {
-  using sora::AllocStat;
+TEST(TagAllocator, Malloc_Free) {
+  using sora::TagAllocator;
   sora::AllocState alloc_state;
-  
-  AllocStat(&alloc_state);
+
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(0, alloc_state.bytes);
   EXPECT_EQ(0, alloc_state.count);
 
   int tag = 0x01;
 
   void *ptr1 = SR_TAG_MALLOC(4, tag);
-  AllocStat(&alloc_state);
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(4, alloc_state.bytes);
   EXPECT_EQ(1, alloc_state.count);
 
   void *ptr2 = SR_TAG_MALLOC(8, tag);
-  AllocStat(&alloc_state);
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(4+8, alloc_state.bytes);
   EXPECT_EQ(2, alloc_state.count);
 
   void *ptr3 = SR_TAG_MALLOC(16, tag);
-  AllocStat(&alloc_state);
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(4+8+16, alloc_state.bytes);
   EXPECT_EQ(3, alloc_state.count);
 
   void *ptr4 = SR_TAG_MALLOC(32, tag);
-  AllocStat(&alloc_state);
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(4+8+16+32, alloc_state.bytes);
   EXPECT_EQ(4, alloc_state.count);
 
   SR_TAG_FREE(ptr1);  // 4byte
-  AllocStat(&alloc_state);
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(8+16+32, alloc_state.bytes);
   EXPECT_EQ(3, alloc_state.count);
 
   SR_TAG_FREE(ptr4);  // 32byte
-  AllocStat(&alloc_state);
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(8+16, alloc_state.bytes);
   EXPECT_EQ(2, alloc_state.count);
 
   SR_TAG_FREE(ptr2);  // 8byte
-  AllocStat(&alloc_state);
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(16, alloc_state.bytes);
   EXPECT_EQ(1, alloc_state.count);
 
   SR_TAG_FREE(ptr3);  // 16byte
-  AllocStat(&alloc_state);
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(0, alloc_state.bytes);
   EXPECT_EQ(0, alloc_state.count);
 }
 
-TEST(Memory, Malloc_Free_1) {
-  using sora::AllocStat;
+TEST(TagAllocator, Malloc_Free_1) {
+  using sora::TagAllocator;
   sora::AllocState alloc_state;
-  
-  AllocStat(&alloc_state);
+
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(0, alloc_state.bytes);
   EXPECT_EQ(0, alloc_state.count);
 
   int tag = 0x01;
 
   void *ptr1 = SR_TAG_MALLOC(4, tag);
-  AllocStat(&alloc_state);
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(4, alloc_state.bytes);
   EXPECT_EQ(1, alloc_state.count);
 
   void *ptr2 = SR_TAG_MALLOC(8, tag);
-  AllocStat(&alloc_state);
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(4+8, alloc_state.bytes);
   EXPECT_EQ(2, alloc_state.count);
 
   ///////////
   SR_TAG_FREE(ptr1);  // 4byte
-  AllocStat(&alloc_state);
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(8, alloc_state.bytes);
   EXPECT_EQ(1, alloc_state.count);
 
   void *ptr3 = SR_TAG_MALLOC(16, tag);
-  AllocStat(&alloc_state);
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(8+16, alloc_state.bytes);
   EXPECT_EQ(2, alloc_state.count);
 
   void *ptr4 = SR_TAG_MALLOC(32, tag);
-  AllocStat(&alloc_state);
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(8+16+32, alloc_state.bytes);
   EXPECT_EQ(3, alloc_state.count);
 
   SR_TAG_FREE(ptr3);  // 16byte
-  AllocStat(&alloc_state);
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(8+32, alloc_state.bytes);
   EXPECT_EQ(2, alloc_state.count);
 
   SR_TAG_FREE(ptr2);  // 8byte
-  AllocStat(&alloc_state);
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(32, alloc_state.bytes);
   EXPECT_EQ(1, alloc_state.count);
 
   SR_TAG_FREE(ptr4);  // 32byte
-  AllocStat(&alloc_state);
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(0, alloc_state.bytes);
   EXPECT_EQ(0, alloc_state.count);
 }
 
-TEST(Memory, TagMalloc_TagFlush) {
-  using sora::AllocStat;
+TEST(TagAllocator, TagMalloc_TagFlush) {
+  using sora::TagAllocator;
   sora::AllocState alloc_state;
 
   void *ptr1 = SR_TAG_MALLOC(4, 1);
   void *ptr2 = SR_TAG_MALLOC(8, 2);
   void *ptr3 = SR_TAG_MALLOC(16, 1);
   void *ptr4 = SR_TAG_MALLOC(32, 2);
-  
-  AllocStat(&alloc_state);
+
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(4+8+16+32, alloc_state.bytes);
   EXPECT_EQ(4, alloc_state.count);
-  
+
   SR_TAG_FLUSH(2);
-  AllocStat(&alloc_state);
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(4+16, alloc_state.bytes);
   EXPECT_EQ(2, alloc_state.count);
 
   SR_TAG_FLUSH(1);
-  AllocStat(&alloc_state);
+  TagAllocator::TotalAllocStat(&alloc_state);
   EXPECT_EQ(0, alloc_state.bytes);
   EXPECT_EQ(0, alloc_state.count);
 }
-*/

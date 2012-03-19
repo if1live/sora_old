@@ -34,21 +34,32 @@ struct AllocState {
 
 // low level alloc, support only simple log
 // replace basic alloc
-class SR_DLL BasicAllocator {
-public:
-  static void *Malloc(size_t size);
-  static void Free(void *ptr);
-  static void *Calloc( size_t num, size_t size );
-  static void *Realloc( void *memblock, size_t size );
-  static AllocState &alloc_state();
-};
+namespace BasicAllocator {;
+SR_C_DLL void *Malloc(size_t size);
+SR_C_DLL void Free(void *ptr);
+SR_C_DLL void *Calloc( size_t num, size_t size );
+SR_C_DLL void *Realloc( void *memblock, size_t size );
+SR_C_DLL AllocState &alloc_state();
+} //namespace BasicAlloc
 
 // add header alloc. tag계열에서 삭제
-//SR_C_DLL void *TagMalloc(size_t size, int tag);
-//SR_C_DLL void TagFree(void *ptr);
-//SR_C_DLL void TagFlush(int tag);  //동일한 tag를 달고잇는거 한방에 삭제
+struct TagAllocatorImpl;
+class SR_DLL TagAllocator {
+public:
+  enum {
+    kMagicNumber = 1234,
+    kMaxTag = 16,
+  };
+  static void *Malloc(size_t size, int tag);
+  static void Free(void *ptr);
+  static void Flush(int tag);  //동일한 tag를 달고잇는거 한방에 삭제
+  static AllocState &tag_alloc_state(int tag);
+  static void TotalAllocStat(AllocState *data);
 
-//SR_C_DLL void AllocStat(AllocState *data);
+private:
+  static TagAllocatorImpl &impl();
+};
+
 }
 
 #define SR_MALLOC(X) sora::BasicAllocator::Malloc(X)
@@ -56,10 +67,10 @@ public:
 #define SR_CALLOC(NUM, SIZE)  sora::BasicAllocator::Calloc(NUM, SIZE)
 #define SR_REALLOC(MEMBLOCK, SIZE)  sora::BasicAllocator::Realloc(MEMBLOCK, SIZE)
 
-/*
-#define SR_TAG_MALLOC(SIZE, TAG)  sora::TagMalloc(SIZE, TAG)
-#define SR_TAG_FREE(X)  sora::TagFree(X)
-#define SR_TAG_FLUSH(TAG)  sora::TagFlush(TAG)
-*/
+
+#define SR_TAG_MALLOC(SIZE, TAG)  sora::TagAllocator::Malloc(SIZE, TAG)
+#define SR_TAG_FREE(X)  sora::TagAllocator::Free(X)
+#define SR_TAG_FLUSH(TAG)  sora::TagAllocator::Flush(TAG)
+
 
 #endif  // SORA_MEM_H_
