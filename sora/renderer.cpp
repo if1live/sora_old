@@ -204,7 +204,7 @@ void Renderer::DrawPrimitiveModel(const PrimitiveModel &model) {
       glVertexAttribPointer(texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->texcoord);
     }
     if(normal_loc != -1) {
-      glVertexAttribPointer(normal_loc, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->normal);
+      glVertexAttribPointer(normal_loc, 3, GL_FLOAT, GL_TRUE, sizeof(sora::Vertex), &vert_ptr->normal);
     }
     //glDrawElements(GL_TRIANGLES, index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
     glDrawElements(draw_mode, idx_count, GL_UNSIGNED_SHORT, idx_ptr);

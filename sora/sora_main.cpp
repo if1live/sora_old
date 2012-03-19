@@ -58,6 +58,7 @@
 #include "entity.h"
 #include "world.h"
 #include "mesh_component.h"
+#include "component_list.h"
 
 using namespace std;
 using namespace sora;
@@ -72,7 +73,6 @@ ShaderProgram shader_2d;
 
 //cbes
 World world;
-Entity *entity_a;
 
 bool setupGraphics(int w, int h) {
   sora::Renderer::GetInstance().SetWindowSize((float)w, (float)h);
@@ -158,7 +158,7 @@ bool setupGraphics(int w, int h) {
   //primitive_model.WireCube(1, 1, 1);
   //primitive_model.WireAxis(2);
   //primitive_model.WireSphere(1, 8, 8);
-  primitive_model.SolidSphere(1, 16, 16);
+  
   //primitive_model.WireCone(1, 2, 8, 8);
   //primitive_model.SolidCone(1, 2, 8, 8);
   //primitive_model.WireCylinder(1, 2, 8);
@@ -167,16 +167,34 @@ bool setupGraphics(int w, int h) {
   //primitive_model.WireTeapot(1);
 
   //crate entity
-  entity_a = world.CreateEntity();
-  glm::mat4 entity_mat = glm::mat4(1.0f);
-  //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
-  //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
-  entity_mat = glm::rotate(glm::mat4(1.0f), 180.0f, vec3(1, 0, 0));
-  entity_a->set_world_mat(entity_mat);
-  MeshComponent *mesh_comp = new MeshComponent(entity_a);
-  entity_a->AddComponent(mesh_comp);
-  mesh_comp->SetMesh(primitive_model);
-  //mesh_comp->SetMesh(obj_model);
+  {
+    Entity *entity_a = world.CreateEntity();
+    glm::mat4 entity_mat = glm::mat4(1.0f);
+    //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
+    //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
+    entity_mat = glm::rotate(glm::mat4(1.0f), 180.0f, vec3(1, 0, 0));
+    entity_a->set_world_mat(entity_mat);
+
+    MeshComponent *mesh_comp = new MeshComponent(entity_a);
+    primitive_model.SolidSphere(0.5, 16, 16);
+    mesh_comp->SetMesh(primitive_model);
+    entity_a->AddComponent(mesh_comp);
+    //mesh_comp->SetMesh(obj_model);
+  }
+  {
+    Entity *entity_a = world.CreateEntity();
+    glm::mat4 entity_mat = glm::mat4(1.0f);
+    //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
+    //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
+    entity_mat = glm::translate(entity_mat, vec3(0.5, 1, 0));
+    entity_mat = glm::rotate(entity_mat, 180.0f, vec3(1, 0, 0));
+    entity_a->set_world_mat(entity_mat);
+    
+    MeshComponent *mesh_comp = new MeshComponent(entity_a);
+    primitive_model.SolidCube(0.5, 1, 0.5, true);
+    mesh_comp->SetMesh(primitive_model);
+    entity_a->AddComponent(mesh_comp);
+  }
 
   return true;
 }
@@ -245,12 +263,18 @@ void renderFrame() {
     //set light position
     //GLint light_pos_handle = shader_prog.GetLocation(sora::kLocationWorldLightPosition);
     GLint light_pos_handle = shader_prog.GetUniformLocation("u_worldLightPosition");
-    glm::vec3 light_pos = glm::vec3(0, 0, 100);
+    glm::vec3 light_pos = glm::vec3(10, 10, 100);
     glUniform3fv(light_pos_handle, 1, glm::value_ptr(light_pos));
     GLHelper::CheckError("Set Light Pos Handle");
   
-    //draw cube
-    entity_a->GetComponent<MeshComponent>()->Draw(&renderer);
+    //draw world
+    ComponentList &mesh_comp_list = world.GetComponentList<MeshComponent>();
+    auto it = mesh_comp_list.Begin();
+    auto endit = mesh_comp_list.End();
+    for( ; it != endit ; it++) {
+      MeshComponent *comp = static_cast<MeshComponent*>(*it);
+      comp->Draw(&renderer);
+    }
   }
   {
     //draw 2d something
