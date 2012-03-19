@@ -64,7 +64,7 @@ public:
   void set_projection_mat(const glm::mat4 &m);
   void set_view_mat(const glm::mat4 &m);
 
-  void ApplyMatrix(const glm::mat4 &world_mat);
+  void ApplyMatrix3D(const glm::mat4 &world_mat);
   void ApplyMatrix2D(const glm::mat4 &world_mat);
 
   Camera &camera();

@@ -29,6 +29,8 @@ struct ObjModelImpl;
 struct SR_DLL ObjModel {
   ObjModel();
   ~ObjModel();
+  ObjModel(const ObjModel &o);
+  ObjModel& operator=(const ObjModel &o);
 
   const Vertex *vertex_ptr() const;
   const void *index_ptr() const;

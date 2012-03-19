@@ -92,6 +92,7 @@
     <ClCompile Include="material_manager.cpp" />
     <ClCompile Include="matrix_stack.cpp" />
     <ClCompile Include="memory_file.cpp" />
+    <ClCompile Include="mesh_component.cpp" />
     <ClCompile Include="obj_loader.cpp" />
     <ClCompile Include="obj_model.cpp" />
     <ClCompile Include="renderer.cpp" />
@@ -143,6 +144,7 @@
     <ClInclude Include="material_manager.h" />
     <ClInclude Include="matrix_stack.h" />
     <ClInclude Include="memory_file.h" />
+    <ClInclude Include="mesh_component.h" />
     <ClInclude Include="obj_loader.h" />
     <ClInclude Include="obj_model.h" />
     <ClInclude Include="rect.h" />

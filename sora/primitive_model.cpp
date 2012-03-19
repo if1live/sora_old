@@ -45,6 +45,22 @@ struct PrimitiveModelImpl {
 
 PrimitiveModel::PrimitiveModel() : impl(NULL) {
 }
+PrimitiveModel::PrimitiveModel(const PrimitiveModel &o) {
+  SafeDelete(impl);
+  impl = new PrimitiveModelImpl(o.impl->index_list_group.size());
+  impl->index_list_group = o.impl->index_list_group;
+  impl->vert_list_group = o.impl->vert_list_group;
+  impl->mode_group = o.impl->mode_group;
+}
+PrimitiveModel& PrimitiveModel::operator=(const PrimitiveModel &o) {
+  SafeDelete(impl);
+  impl = new PrimitiveModelImpl(o.impl->index_list_group.size());
+  impl->index_list_group = o.impl->index_list_group;
+  impl->vert_list_group = o.impl->vert_list_group;
+  impl->mode_group = o.impl->mode_group;
+  return *this;
+}
+
 PrimitiveModel::~PrimitiveModel() {
   SafeDelete(impl);
 }

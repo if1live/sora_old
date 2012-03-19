@@ -252,9 +252,11 @@ void Renderer::ApplyMatrix2D(const glm::mat4 &world_mat) {
   if(projection_handle != -1) {
     glUniformMatrix4fv(projection_handle, 1, GL_FALSE, glm::value_ptr(impl->projection));
   }
+
+  //2d에는 카메라가 필요없다. world행렬를 가지고 그냥 다루자
 }
 
-void Renderer::ApplyMatrix(const glm::mat4 &world_mat) {
+void Renderer::ApplyMatrix3D(const glm::mat4 &world_mat) {
   Camera &cam = impl->cam;
   //apply new viw matrix
   const Vec3f &eye = cam.eye();

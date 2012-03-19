@@ -37,6 +37,8 @@ class SR_DLL PrimitiveModel {
 public:
   PrimitiveModel();
   ~PrimitiveModel();
+  PrimitiveModel(const PrimitiveModel &o);
+  PrimitiveModel& operator=(const PrimitiveModel &o);
   //use GL_TRIANGLES
   void WireCube(float width, float height, float depth);
 

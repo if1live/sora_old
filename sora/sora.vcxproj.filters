@@ -142,6 +142,9 @@
     <ClCompile Include="world.cpp">
       <Filter>cbes</Filter>
     </ClCompile>
+    <ClCompile Include="mesh_component.cpp">
+      <Filter>cbes</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -305,6 +308,9 @@
     </ClInclude>
     <ClInclude Include="id_generator.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh_component.h">
+      <Filter>cbes</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -22,7 +22,10 @@
 #include "component.h"
 
 namespace sora {;
-Component::Component(int class_type) {
+Component::Component(int class_type) : entity_(NULL) {
+  set_class_type(class_type);   // 자동화된 컴포넌트 타입 생성에 필요
+}
+Component::Component(Entity *entity, int class_type) : entity_(entity) {
   set_class_type(class_type);   // 자동화된 컴포넌트 타입 생성에 필요
 }
 Component::~Component() {

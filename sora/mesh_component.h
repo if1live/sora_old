@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2011 by if1live */
+﻿/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,25 +18,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_COMPONENT_H_
-#define SORA_COMPONENT_H_
+#ifndef SORA_MESH_COMPONENT_H_
+#define SORA_MESH_COMPONENT_H_
 
-#include "class_type.h"
+#include "component.h"
 
 namespace sora {;
-class Entity;
-class SR_DLL Component {
-public:
-  SR_SUPER_CLASS_2(Component);
-public:
-  Component(Entity *entity, int class_type);
-  Component(int class_type);
-  virtual ~Component();
+struct MeshComponentImpl;
+class Renderer;
+class PrimitiveModel;
+class ObjModel;
 
-  Entity *entity() { return entity_; }
-  const Entity *entity() const { return entity_; }
+class MeshComponent : public Component {
+public:
+  SR_CHILD_CLASS_2("mesh");
+  MeshComponent(Entity *entity);
+  ~MeshComponent();
+
+public:
+  void Draw(Renderer *renderer);
+  void SetMesh(const PrimitiveModel &primitive);
+  void SetMesh(const ObjModel &obj);
+
 private:
-  Entity *entity_;
+  MeshComponentImpl *impl;
 };
 }
-#endif  // SORA_COMPONENT_H_
+
+#endif  // SORA_MESH_COMPONENT_H_

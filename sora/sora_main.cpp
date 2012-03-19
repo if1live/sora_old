@@ -57,6 +57,7 @@
 #include "font.h"
 #include "entity.h"
 #include "world.h"
+#include "mesh_component.h"
 
 using namespace std;
 using namespace sora;
@@ -68,9 +69,6 @@ sora::Texture tex;
 
 ShaderProgram shader_prog;
 ShaderProgram shader_2d;
-
-ObjModel obj_model;
-sora::PrimitiveModel primitive_model;
 
 //cbes
 World world;
@@ -137,12 +135,13 @@ bool setupGraphics(int w, int h) {
   tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
   tex.Init();
 
+  sora::ObjLoader loader;
 
   //load model
   std::string path1 = sora::Filesystem::GetAppPath("obj/cube.obj");
   sora::MemoryFile file1(path1);
   file1.Open();
-  sora::ObjLoader loader;
+  ObjModel obj_model;
   loader.LoadObj(file1.start, file1.end, &obj_model);
 
   //load material
@@ -154,6 +153,7 @@ bool setupGraphics(int w, int h) {
   sora::MaterialManager::GetInstance().Add(material_list);
 
   //primitive model test
+  sora::PrimitiveModel primitive_model;
   //primitive_model.SolidCube(1, 2, 1, false);
   //primitive_model.WireCube(1, 1, 1);
   //primitive_model.WireAxis(2);
@@ -173,6 +173,10 @@ bool setupGraphics(int w, int h) {
   //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
   entity_mat = glm::rotate(glm::mat4(1.0f), 180.0f, vec3(1, 0, 0));
   entity_a->set_world_mat(entity_mat);
+  MeshComponent *mesh_comp = new MeshComponent(entity_a);
+  entity_a->AddComponent(mesh_comp);
+  mesh_comp->SetMesh(primitive_model);
+  //mesh_comp->SetMesh(obj_model);
 
   return true;
 }
@@ -196,61 +200,60 @@ void renderFrame() {
 
   /////////////////////////
   sora::Renderer &renderer = sora::Renderer::GetInstance();
-  renderer.Set3D();
 
-  //use texture
-  renderer.SetShader(shader_prog);
-  renderer.SetTexture(tex);
-
-  //use material
-  //sora::Material &mtl = material_list[0];
-  //newmtl flatwhite
-  //newmtl shinyred
-  //newmtl clearblue
-  //const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("sample");
-  const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("sample");
-  renderer.SetMaterial(mtl);
-  
-  int position_handle = shader_prog.GetLocation(sora::ShaderVariable::kPosition);
-  int texcoord_handle = shader_prog.GetLocation(sora::ShaderVariable::kTexcoord);
-  int normal_handle = shader_prog.GetLocation(sora::ShaderVariable::kNormal);
-  
-  glEnableVertexAttribArray(position_handle);
-  glEnableVertexAttribArray(texcoord_handle);
-  glEnableVertexAttribArray(normal_handle);
-
-  //set mvp matrix
-  glm::mat4 &projection = renderer.projection_mat();
-  glm::mat4 &view = renderer.view_mat();
-
-  float win_width = renderer.win_width();
-  float win_height = renderer.win_height();
-  projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 100.0f);
-  float radius = 4;
-  float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
-  float cam_y = radius * sin(SR_DEG_2_RAD(aptitude));
-  float cam_z = radius * cos(SR_DEG_2_RAD(aptitude)) * cos(SR_DEG_2_RAD(latitude));
-
-  sora::Camera cam;
-  cam.set_eye(sora::Vec3f(cam_x, cam_y, cam_z));
-  cam.set_dir(sora::Vec3f(0, 0, 0) - cam.eye());
-  cam.set_up(sora::Vec3f(0, 1, 0));
-  renderer.set_camera(cam);
-
-  //set light position
-  //GLint light_pos_handle = shader_prog.GetLocation(sora::kLocationWorldLightPosition);
-  GLint light_pos_handle = shader_prog.GetUniformLocation("u_worldLightPosition");
-  glm::vec3 light_pos = glm::vec3(0, 0, 100);
-  glUniform3fv(light_pos_handle, 1, glm::value_ptr(light_pos));
-  GLHelper::CheckError("Set Light Pos Handle");
-  
-  //draw cube
-  renderer.ApplyMatrix(entity_a->world_mat());
-  //renderer.DrawObj(obj_model);  
-  renderer.DrawPrimitiveModel(primitive_model);
-  
-  //draw 2d something
   {
+    //render 3d
+    renderer.Set3D();
+
+    //use texture
+    renderer.SetShader(shader_prog);
+    renderer.SetTexture(tex);
+
+    //use material
+    //sora::Material &mtl = material_list[0];
+    //newmtl flatwhite
+    //newmtl shinyred
+    //newmtl clearblue
+    //const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("sample");
+    const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("sample");
+    renderer.SetMaterial(mtl);
+  
+    int position_handle = shader_prog.GetLocation(sora::ShaderVariable::kPosition);
+    int texcoord_handle = shader_prog.GetLocation(sora::ShaderVariable::kTexcoord);
+    int normal_handle = shader_prog.GetLocation(sora::ShaderVariable::kNormal);
+  
+    glEnableVertexAttribArray(position_handle);
+    glEnableVertexAttribArray(texcoord_handle);
+    glEnableVertexAttribArray(normal_handle);
+
+    //set camera + projection
+    float win_width = renderer.win_width();
+    float win_height = renderer.win_height();
+    glm::mat4 &projection = renderer.projection_mat();
+    projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 100.0f);
+    float radius = 4;
+    float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
+    float cam_y = radius * sin(SR_DEG_2_RAD(aptitude));
+    float cam_z = radius * cos(SR_DEG_2_RAD(aptitude)) * cos(SR_DEG_2_RAD(latitude));
+
+    sora::Camera cam;
+    cam.set_eye(sora::Vec3f(cam_x, cam_y, cam_z));
+    cam.set_dir(sora::Vec3f(0, 0, 0) - cam.eye());
+    cam.set_up(sora::Vec3f(0, 1, 0));
+    renderer.set_camera(cam);
+
+    //set light position
+    //GLint light_pos_handle = shader_prog.GetLocation(sora::kLocationWorldLightPosition);
+    GLint light_pos_handle = shader_prog.GetUniformLocation("u_worldLightPosition");
+    glm::vec3 light_pos = glm::vec3(0, 0, 100);
+    glUniform3fv(light_pos_handle, 1, glm::value_ptr(light_pos));
+    GLHelper::CheckError("Set Light Pos Handle");
+  
+    //draw cube
+    entity_a->GetComponent<MeshComponent>()->Draw(&renderer);
+  }
+  {
+    //draw 2d something
     glm::mat4 world_mat(1.0f);
 
     renderer.Set2D();
@@ -262,16 +265,14 @@ void renderFrame() {
     int position_handle = shader_2d.GetLocation(sora::ShaderVariable::kPosition);
     int texcoord_handle = shader_2d.GetLocation(sora::ShaderVariable::kTexcoord);
 
-    /*
     vector<sora::Vertex2D> vert_list;
-    vert_list.push_back(sora::Vertex2D(100, 100, 0, 0));
-    vert_list.push_back(sora::Vertex2D(100+128*2, 100, 1, 0));
-    vert_list.push_back(sora::Vertex2D(100+128*2, 100+128*2, 1, 1));
-    vert_list.push_back(sora::Vertex2D(100, 100+128*2, 0, 1));
+    vert_list.push_back(sora::Vertex2D(100, 100, 0, 1));
+    vert_list.push_back(sora::Vertex2D(100+128*2, 100, 1, 1));
+    vert_list.push_back(sora::Vertex2D(100+128*2, 100+128*2, 1, 0));
+    vert_list.push_back(sora::Vertex2D(100, 100+128*2, 0, 0));
     glVertexAttribPointer(position_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &vert_list[0].pos);
     glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &vert_list[0].texcoord);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-    */
 
     world_mat = glm::translate(world_mat, glm::vec3(0, 800, 0));
     world_mat = glm::scale(world_mat, glm::vec3(2, 2, 1));

@@ -38,6 +38,16 @@ ObjModel::ObjModel()
 ObjModel::~ObjModel() {
   delete(impl);
 }
+ObjModel::ObjModel(const ObjModel &o)
+: impl(new ObjModelImpl()) {
+  impl->vert_list = o.impl->vert_list;
+  impl->index_list = o.impl->index_list;
+}
+ObjModel& ObjModel::operator=(const ObjModel &o) {
+  impl->vert_list = o.impl->vert_list;
+  impl->index_list = o.impl->index_list;
+  return *this;
+}
 
 const Vertex *ObjModel::vertex_ptr() const {
   return &impl->vert_list[0];
