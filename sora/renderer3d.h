@@ -18,46 +18,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_MESH_COMPONENT_H_
-#define SORA_MESH_COMPONENT_H_
+#ifndef SORA_RENDERER3D_H_
+#define SORA_RENDERER3D_H_
 
-#include "component.h"
-
-#include "primitive_model.h"
-#include "obj_model.h"
+#include "renderer.h"
+#include "template_lib.h"
 
 namespace sora {;
-class Renderer;
+
 class PrimitiveModel;
 class ObjModel;
 
-class MeshComponent : public Component {
+class Renderer3D : public Renderer, public Singleton<Renderer3D> {
 public:
-  enum {
-    kMeshNone,
-    kMeshObj,
-    kMeshPrimitive,
-  };
-public:
-  SR_CHILD_CLASS_2("mesh");
-  MeshComponent(Entity *entity);
-  ~MeshComponent();
+  Renderer3D();
+  ~Renderer3D();
 
-public:
-  void SetMesh(const PrimitiveModel &primitive);
-  void SetMesh(const ObjModel &obj);
+  void SetInitState();
 
-  int mesh_type() const { return mesh_type_; }
-  const ObjModel &obj_model() const { return obj_model_; }
-  const PrimitiveModel &primitive_model() const { return primitive_model_; }
+  void ApplyMatrix(const glm::mat4 &world_mat);
 
-private:
-  //model을 타입열로 간단히 분기하기
-  //나중에 구조가 복잡해지면 그떄 분리같은거 생각하자
-  int mesh_type_;
-  ObjModel obj_model_;
-  PrimitiveModel primitive_model_; 
+  void DrawObj(const ObjModel &model);
+  void DrawPrimitiveModel(const PrimitiveModel &model);
 };
 }
 
-#endif  // SORA_MESH_COMPONENT_H_
+#endif  // SORA_RENDERER3D_H_

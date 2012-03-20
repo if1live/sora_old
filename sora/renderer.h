@@ -21,7 +21,7 @@
 #ifndef SORA_RENDERER_H_
 #define SORA_RENDERER_H_
 
-#include "template_lib.h"
+#include "camera.h"
 #if SR_USE_PCH == 0
 #include "gl_inc.h"
 #include <glm/glm.hpp>
@@ -36,47 +36,58 @@ class ObjModel;
 class PrimitiveModel;
 class Camera;
 
-struct RendererImpl;
 //opengles 2.0 renderer
-class Renderer : public Singleton<Renderer> {
+class Renderer {
 public:
   Renderer();
-  ~Renderer();
+  virtual ~Renderer();
 
-  void SetWindowSize(float w, float h);
-  float win_width() const { return win_width_; }
-  float win_height() const { return win_height_; }
+  static void SetWindowSize(float w, float h);
+  static float win_width() { return win_width_; }
+  static float win_height() { return win_height_; }
 
-  void Set2D();
-  void Set3D();
-
-  void EndRender();
+  virtual void SetInitState() = 0;
+  static void EndRender();
 
   void SetTexture(const Texture &tex);
   void SetShader(const ShaderProgram &prog);
   void SetMaterial(const Material &material);
 
-  void DrawObj(const ObjModel &model);
-  void DrawPrimitiveModel(const PrimitiveModel &model);
+  
 
-  glm::mat4 &projection_mat();
-  glm::mat4 &view_mat();
-  void set_projection_mat(const glm::mat4 &m);
-  void set_view_mat(const glm::mat4 &m);
+  glm::mat4 &projection_mat() { return projection_; }
+  glm::mat4 &view_mat() { return view_; }
+  void set_projection_mat(const glm::mat4 &m) { projection_ = m; }
+  void set_view_mat(const glm::mat4 &m) { view_ = m; }
 
-  void ApplyMatrix3D(const glm::mat4 &world_mat);
-  void ApplyMatrix2D(const glm::mat4 &world_mat);
-
+  virtual void ApplyMatrix(const glm::mat4 &world_mat) = 0;
+  
   Camera &camera();
   void set_camera(const Camera &cam);
 
-private:
-  float win_width_;
-  float win_height_;
+protected:
+  //access cache like data
+  static GLuint last_tex_id() { return last_tex_id_; }
+  static GLuint last_prog_id() { return last_prog_id_; }
+  static ShaderProgram *last_prog() { return last_prog_; }
 
-  RendererImpl *impl;
+private:
+  //다른 렌더러를 쓴다고해도 윈도우 크기는 사실상 동일
+  static float win_width_;
+  static float win_height_;
+
+  //마지막에 잡은 opengl resource는 캐시를 공유하도록하자. 
+  //사실상 상속은 이걸 위해서 등장한것에 더 가깝다
+  static GLuint last_tex_id_;
+  static GLuint last_prog_id_;
+  static ShaderProgram *last_prog_;
+
+  //행렬의 경우, 렌더러 각각이 공유하지 않는다. 2d와 3d를 완전히 분리시킨다는 의미
+  glm::mat4 projection_;
+  glm::mat4 view_;
+
+  Camera cam_;
 };
-SR_C_DLL Renderer &Renderer_get_instance();
 }
 
 #endif  // SORA_RENDERER_H_

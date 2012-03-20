@@ -148,6 +148,12 @@
     <ClCompile Include="texture_manager.cpp">
       <Filter>render</Filter>
     </ClCompile>
+    <ClCompile Include="renderer2d.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer3d.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -316,6 +322,12 @@
       <Filter>cbes</Filter>
     </ClInclude>
     <ClInclude Include="texture_manager.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer2d.h">
+      <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer3d.h">
       <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>

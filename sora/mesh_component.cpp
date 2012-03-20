@@ -29,48 +29,20 @@
 #include "filesystem.h"
 
 namespace sora {;
-enum {
-  kMeshNone,
-  kMeshObj,
-  kMeshPrimitive,
-};
-struct MeshComponentImpl {
-  MeshComponentImpl() : mesh_type(kMeshNone) {}
-  //model을 타입열로 간단히 분기하기
-  //나중에 구조가 복잡해지면 그떄 분리같은거 생각하자
-  int mesh_type;
-  ObjModel obj_model;
-  PrimitiveModel primitive_model;
-};
 
 MeshComponent::MeshComponent(Entity *entity)
-: Component(entity, ClassType()), impl(new MeshComponentImpl()) {
+: Component(entity, ClassType()),
+mesh_type_(kMeshNone) {
 }
 MeshComponent::~MeshComponent() {
-  SafeDelete(impl);
-}
-
-void MeshComponent::Draw(Renderer *renderer) {
-  switch(impl->mesh_type) {
-  case kMeshObj:
-    renderer->ApplyMatrix3D(entity()->world_mat());
-    renderer->DrawObj(impl->obj_model);
-    break;
-  case kMeshPrimitive:
-    renderer->ApplyMatrix3D(entity()->world_mat());
-    renderer->DrawPrimitiveModel(impl->primitive_model);
-    break;
-  default:
-    break;
-  }
 }
 
 void MeshComponent::SetMesh(const PrimitiveModel &primitive) {
-  impl->mesh_type = kMeshPrimitive;
-  impl->primitive_model = primitive;
+  mesh_type_ = kMeshPrimitive;
+  primitive_model_ = primitive;
 }
 void MeshComponent::SetMesh(const ObjModel &obj) {
-  impl->mesh_type = kMeshObj;
-  impl->obj_model = obj;
+  mesh_type_ = kMeshObj;
+  obj_model_ = obj;
 }
 }

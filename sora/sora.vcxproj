@@ -96,6 +96,8 @@
     <ClCompile Include="obj_loader.cpp" />
     <ClCompile Include="obj_model.cpp" />
     <ClCompile Include="renderer.cpp" />
+    <ClCompile Include="renderer2d.cpp" />
+    <ClCompile Include="renderer3d.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="primitive_model.cpp" />
     <ClCompile Include="shader_variable.cpp" />
@@ -150,6 +152,8 @@
     <ClInclude Include="obj_model.h" />
     <ClInclude Include="rect.h" />
     <ClInclude Include="renderer.h" />
+    <ClInclude Include="renderer2d.h" />
+    <ClInclude Include="renderer3d.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="primitive_model.h" />
     <ClInclude Include="shader_variable.h" />

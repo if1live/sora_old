@@ -51,6 +51,9 @@
 
 #include "texture.h"
 #include "renderer.h"
+#include "renderer2d.h"
+#include "renderer3d.h"
+
 #include "material.h"
 #include "math_helper.h"
 #include "camera.h"
@@ -75,7 +78,7 @@ ShaderProgram shader_2d;
 World world;
 
 bool setupGraphics(int w, int h) {
-  sora::Renderer::GetInstance().SetWindowSize((float)w, (float)h);
+  sora::Renderer::SetWindowSize((float)w, (float)h);
  
   //load shader file
   {
@@ -212,15 +215,14 @@ void renderFrame() {
   glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 
   /////////////////////////
-  sora::Renderer &renderer = sora::Renderer::GetInstance();
-
   {
+    Renderer3D &render3d = Renderer3D::GetInstance();
     //render 3d
-    renderer.Set3D();
+    render3d.SetInitState();
 
     //use texture
-    renderer.SetShader(shader_prog);
-    renderer.SetTexture(tex);
+    render3d.SetShader(shader_prog);
+    render3d.SetTexture(tex);
 
     //use material
     //sora::Material &mtl = material_list[0];
@@ -229,7 +231,7 @@ void renderFrame() {
     //newmtl clearblue
     //const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("sample");
     const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("sample");
-    renderer.SetMaterial(mtl);
+    render3d.SetMaterial(mtl);
   
     int position_handle = shader_prog.GetLocation(sora::ShaderVariable::kPosition);
     int texcoord_handle = shader_prog.GetLocation(sora::ShaderVariable::kTexcoord);
@@ -240,9 +242,9 @@ void renderFrame() {
     glEnableVertexAttribArray(normal_handle);
 
     //set camera + projection
-    float win_width = renderer.win_width();
-    float win_height = renderer.win_height();
-    glm::mat4 &projection = renderer.projection_mat();
+    float win_width = render3d.win_width();
+    float win_height = render3d.win_height();
+    glm::mat4 &projection = render3d.projection_mat();
     projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 100.0f);
     float radius = 4;
     float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
@@ -253,7 +255,7 @@ void renderFrame() {
     cam.set_eye(sora::Vec3f(cam_x, cam_y, cam_z));
     cam.set_dir(sora::Vec3f(0, 0, 0) - cam.eye());
     cam.set_up(sora::Vec3f(0, 1, 0));
-    renderer.set_camera(cam);
+    render3d.set_camera(cam);
 
     //set light position
     //GLint light_pos_handle = shader_prog.GetLocation(sora::kLocationWorldLightPosition);
@@ -268,18 +270,31 @@ void renderFrame() {
     auto endit = mesh_comp_list.End();
     for( ; it != endit ; it++) {
       MeshComponent *comp = static_cast<MeshComponent*>(*it);
-      comp->Draw(&renderer);
+      switch(comp->mesh_type()) {
+      case MeshComponent::kMeshObj:
+        render3d.ApplyMatrix(comp->entity()->world_mat());
+        render3d.DrawObj(comp->obj_model());
+        break;
+      case MeshComponent::kMeshPrimitive:
+        render3d.ApplyMatrix(comp->entity()->world_mat());
+        render3d.DrawPrimitiveModel(comp->primitive_model());
+        break;
+      default:
+        break;
+      }
     }
   }
   {
+    Renderer2D &render2d = Renderer2D::GetInstance();
+
     //draw 2d something
     glm::mat4 world_mat(1.0f);
 
-    renderer.Set2D();
-    renderer.SetShader(shader_2d);
-    renderer.ApplyMatrix2D(world_mat);
+    render2d.SetInitState();
+    render2d.SetShader(shader_2d);
+    render2d.ApplyMatrix(world_mat);
     sora::Font &font = sora::Font::GetInstance();
-    renderer.SetTexture(font.font_texture());
+    render2d.SetTexture(font.font_texture());
 
     int position_handle = shader_2d.GetLocation(sora::ShaderVariable::kPosition);
     int texcoord_handle = shader_2d.GetLocation(sora::ShaderVariable::kTexcoord);
@@ -295,7 +310,7 @@ void renderFrame() {
 
     world_mat = glm::translate(world_mat, glm::vec3(0, 800, 0));
     world_mat = glm::scale(world_mat, glm::vec3(2, 2, 1));
-    renderer.ApplyMatrix2D(world_mat);
+    render2d.ApplyMatrix(world_mat);
     sora::Label label("PQRS_1234_asdf");
     glVertexAttribPointer(position_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->pos);
     glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->texcoord);
@@ -305,7 +320,7 @@ void renderFrame() {
   
 
   //////////////////////////////
-  renderer.EndRender();
+  Renderer::EndRender();
 }
 
 void SORA_setup_graphics(int w, int h) {
