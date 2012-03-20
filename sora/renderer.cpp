@@ -290,6 +290,7 @@ void RendererPolicy_2D::SetInitState() {
 }
 
 glm::mat4 RendererPolicy_2D::ToViewMatrixFromCamera(const Camera &cam) {
+  //TODO 2D renderer의 경우, 아직 cam속성을 갖다쓰지 않는다. 이부분을 적절히 고쳐주기
   //apply new viw matrix
   float win_width = Renderer::win_width();
   float win_height = Renderer::win_height();

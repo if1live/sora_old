@@ -58,19 +58,22 @@ public:
   static Renderer &Renderer2D();
 public:
   Renderer(RendererPolicy *policy);
-  virtual ~Renderer();
+  ~Renderer();
 
+  //renderer을 여러개 만든다고하더라도 사실상 공유되는 속성
+public:
   static void SetWindowSize(float w, float h);
   static float win_width() { return win_width_; }
   static float win_height() { return win_height_; }
 
+  //bind gl resource
+  static void SetTexture(const Texture &tex);
+  static void SetShader(const ShaderProgram &prog);
+  static void SetMaterial(const Material &material);
+
+public:
   void SetInitState();
   static void EndRender();
-
-  //bind gl resource
-  void SetTexture(const Texture &tex);
-  void SetShader(const ShaderProgram &prog);
-  void SetMaterial(const Material &material);
 
   glm::mat4 &projection_mat() { return projection_; }
   glm::mat4 &view_mat() { return view_; }

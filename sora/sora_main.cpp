@@ -68,6 +68,7 @@ using namespace glm;
 //fixed
 //sora::Texture tex(sora::Texture::kPolicyForcePOT);
 sora::Texture tex;
+sora::Texture tex_a;
 
 ShaderProgram shader_prog;
 ShaderProgram shader_2d;
@@ -130,11 +131,20 @@ bool setupGraphics(int w, int h) {
   tex.Init(tex_id, 2, 2);
   */
   //lodepng
-  std::string tex_path = sora::Filesystem::GetAppPath("texture/sora.png");
-  sora::MemoryFile tex_file(tex_path);
-  tex_file.Open();
-  tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
-  tex.Init();
+  {
+    std::string tex_path = sora::Filesystem::GetAppPath("texture/sora.png");
+    sora::MemoryFile tex_file(tex_path);
+    tex_file.Open();
+    tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
+    tex.Init();
+  }
+  {
+    std::string tex_path = sora::Filesystem::GetAppPath("texture/sora2.png");
+    sora::MemoryFile tex_file(tex_path);
+    tex_file.Open();
+    tex_a.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
+    tex_a.Init();
+  }
 
   sora::ObjLoader loader;
 
@@ -217,20 +227,9 @@ void renderFrame() {
     Renderer &render3d = Renderer::Renderer3D();
     //render 3d
     render3d.SetInitState();
-
-    //use texture
     render3d.SetShader(shader_prog);
-    render3d.SetTexture(tex);
 
-    //use material
-    //sora::Material &mtl = material_list[0];
-    //newmtl flatwhite
-    //newmtl shinyred
-    //newmtl clearblue
-    //const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("sample");
-    const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("sample");
-    render3d.SetMaterial(mtl);
-  
+    
     int position_handle = shader_prog.GetLocation(sora::ShaderVariable::kPosition);
     int texcoord_handle = shader_prog.GetLocation(sora::ShaderVariable::kTexcoord);
     int normal_handle = shader_prog.GetLocation(sora::ShaderVariable::kNormal);
@@ -266,7 +265,20 @@ void renderFrame() {
     ComponentList &mesh_comp_list = world.GetComponentList<MeshComponent>();
     auto it = mesh_comp_list.Begin();
     auto endit = mesh_comp_list.End();
-    for( ; it != endit ; it++) {
+    for(int i = 0; it != endit ; it++, i++) {
+      //newmtl flatwhite
+      //newmtl shinyred
+      //newmtl clearblue
+      if(i % 2 == 0) {
+        Renderer::SetTexture(tex);
+        const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("clearblue");
+        render3d.SetMaterial(mtl);
+      } else {
+        Renderer::SetTexture(tex_a);
+        const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("shinyred");
+        render3d.SetMaterial(mtl);
+      }
+
       MeshComponent *comp = static_cast<MeshComponent*>(*it);
       switch(comp->mesh_type()) {
       case MeshComponent::kMeshObj:
@@ -313,7 +325,6 @@ void renderFrame() {
     glVertexAttribPointer(position_handle, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->pos);
     glVertexAttribPointer(texcoord_handle, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->texcoord);
     glDrawElements(GL_TRIANGLES, label.index_count(), GL_UNSIGNED_SHORT, label.index_data());
-
   }
   
 
