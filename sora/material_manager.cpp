@@ -29,22 +29,14 @@
 using namespace std;
 
 namespace sora {;
-struct MaterialManagerImpl {
-  //일단은 몇개 안될테니까 간단하게 구현
-  //재질정보는 그렇게 크지도 않고 많지도 않을테니까 전부 떄려박아도 심각한 문제가
-  //발생하지는 않을것이다.
-  std::vector<Material> material_list;
-};
-
-MaterialManager::MaterialManager() : impl(new MaterialManagerImpl()) {
+MaterialManager::MaterialManager() {
 }
 MaterialManager::~MaterialManager() {
-  SafeDelete(impl);
 }
 
 bool MaterialManager::IsExist(const std::string &name) const {
-  auto it = impl->material_list.begin();
-  auto endit = impl->material_list.end();
+  auto it = material_list_.begin();
+  auto endit = material_list_.end();
   for( ; it != endit ; ++it) {
     const Material &mtl = *it;
     if(name == mtl.name) {
@@ -52,9 +44,6 @@ bool MaterialManager::IsExist(const std::string &name) const {
     }
   }
   return false;
-}
-bool MaterialManager::IsExist(const char *name) const {
-  return IsExist(string(name));
 }
 
 bool MaterialManager::Add(const std::vector<Material> &mtl_list) {
@@ -74,11 +63,11 @@ bool MaterialManager::Add(const Material &mtl) {
     //name collision
     return false;
   }
-  impl->material_list.push_back(mtl);
+  material_list_.push_back(mtl);
 }
 const Material &MaterialManager::Get(const std::string &name) {
-  auto it = impl->material_list.begin();
-  auto endit = impl->material_list.end();
+  auto it = material_list_.begin();
+  auto endit = material_list_.end();
   for( ; it != endit ; ++it) {
     if(name == it->name) {
       return *it;
@@ -88,12 +77,22 @@ const Material &MaterialManager::Get(const std::string &name) {
   static Material basic_material;
   return basic_material;
 }
-const Material &MaterialManager::Get(const char *name) {
-  return Get(string(name));
+void MaterialManager::Clear() {
+  material_list_.clear();
 }
 
-bool MaterialManager::LoadFromFile() {
-  impl->material_list.clear();
+SR_C_DLL const Material &MaterialMgr_get(const std::string &name) {
+  MaterialManager &mgr = MaterialManager::GetInstance();
+  return mgr.Get(name);
+}
+SR_C_DLL bool &MaterialMgr_is_exist(const std::string &name) {
+  MaterialManager &mgr = MaterialManager::GetInstance();
+  bool retval = mgr.IsExist(name);
+  return retval;
+}
+SR_C_DLL bool MaterialMgr_initialize_from_file() {
+  MaterialManager &mgr = MaterialManager::GetInstance();
+  mgr.Clear();
 
   std::string mtl_path = Filesystem::GetAppPath("material/example.mtl");
   MemoryFile mtl_file(mtl_path);
@@ -101,11 +100,7 @@ bool MaterialManager::LoadFromFile() {
   vector<sora::Material> material_list;
   ObjLoader loader;
   loader.LoadMtl(mtl_file.start, mtl_file.end, &material_list);
-  Add(material_list);
+  mgr.Add(material_list);
   return true;
 }
-}
-
-SR_C_DLL sora::MaterialManager &MaterialManger_get_instance() {
-  return sora::MaterialManager::GetInstance();
 }

@@ -69,4 +69,13 @@ TexturePtr TextureManager::Get(const std::string &name) {
     return found->second;
   }
 }
+
+TexturePtr TextureMgr_get(const std::string &name) {
+  TextureManager &mgr = TextureManager::GetInstance();
+  return mgr.Get(name);
+}
+Texture *TextureMgr_get_ptr(const std::string &name) {
+  TextureManager &mgr = TextureManager::GetInstance();
+  return mgr.Get_ptr(name);
+}
 }

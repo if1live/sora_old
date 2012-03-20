@@ -155,6 +155,23 @@ void Texture::SetData(int file, uchar *start, uchar *end) {
   end_ = end;
 }
 
+/** create sample texture
+강제로 텍스쳐 생성하는 예제
+GLubyte pixel_data[4*3] = {
+  255, 0, 0,
+  0, 255, 0,
+  0, 0, 255,
+  255, 255, 0,
+};
+glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+GLuint tex_id = -1;
+glGenTextures(1, &tex_id);
+glBindTexture(GL_TEXTURE_2D, tex_id);
+glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, pixel_data);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+tex.Init(tex_id, 2, 2);
+*/
 bool Texture::Init(GLuint tex_id, int width, int height) {
   SR_ASSERT(Loaded() == false);
   if(Loaded() == true) {

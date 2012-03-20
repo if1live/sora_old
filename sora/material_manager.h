@@ -30,28 +30,33 @@
 #endif
 
 namespace sora {;
-struct MaterialManagerImpl;
 class MaterialManager : public Singleton<MaterialManager> {
 public:
   MaterialManager();
   ~MaterialManager();
 
+public:
   //이름중복이 발생한 경우 false
   bool Add(const std::vector<Material> &mtl_list);
   bool Add(const Material &mtl);
   bool IsExist(const std::string &name) const;
-  bool IsExist(const char *name) const;
   const Material &Get(const std::string &name);
-  const Material &Get(const char *name);
-
-  //initialize material list
-  bool LoadFromFile();
+  void Clear();
 
 private:
-
-  MaterialManagerImpl *impl;
+  //일단은 몇개 안될테니까 간단하게 구현
+  //재질정보는 그렇게 크지도 않고 많지도 않을테니까 전부 떄려박아도 심각한 문제가
+  //발생하지는 않을것이다.
+  std::vector<Material> material_list_;
 };
+
+//어차피 자주쓸 메모스를 GetInstance로 거쳐서 받는것도 삽질같아서 그냥 함수 뚫음
+SR_C_DLL const Material &MaterialMgr_get(const std::string &name);
+SR_C_DLL bool &MaterialMgr_is_exist(const std::string &name);
+
+//initialize material list
+SR_C_DLL bool MaterialMgr_initialize_from_file();
 }
-SR_C_DLL sora::MaterialManager &MaterialManger_get_instance();
+
 
 #endif  // SORA_MATERIAL_MANAGER_H_

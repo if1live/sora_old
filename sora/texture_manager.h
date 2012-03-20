@@ -33,7 +33,7 @@ namespace sora {;
 class Texture;
 typedef std::tr1::shared_ptr<Texture> TexturePtr;
 
-class SR_DLL TextureManager {
+class TextureManager {
 public:
   static TextureManager& GetInstance();
   TextureManager();
@@ -44,28 +44,18 @@ public:
   bool Add(const Texture &tex);
 
   bool IsExist(const std::string &name) const;
-  bool IsExist(const char *name) const {
-    return IsExist(std::string(name));
-  }
-
   TexturePtr Get(const std::string &name);
-  TexturePtr Get(const char *name) {
-    return Get(std::string(name));
-  }
-  Texture *Get_ptr(const std::string &name) {
-    TexturePtr tex = Get(name);
-    return tex.get();
-  }
-  Texture *Get_ptr(const char *name) {
-    return Get_ptr(std::string(name));
-  }
+  Texture *Get_ptr(const std::string &name) { return Get(name).get(); }
 
 private:
   typedef std::tr1::unordered_map<std::string, TexturePtr> TexDictType;
   
   TexDictType tex_dict_;
-  
 };
+
+TexturePtr TextureMgr_get(const std::string &name);
+SR_DLL Texture *TextureMgr_get_ptr(const std::string &name);
+
 }
 
 #endif  // SORA_TEXTURE_MANAGER_H_

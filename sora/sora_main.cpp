@@ -110,21 +110,7 @@ bool setupGraphics(int w, int h) {
   }
 
   /*
-  //create sample texture
-  GLubyte pixel_data[4*3] = {
-    255, 0, 0,
-    0, 255, 0,
-    0, 0, 255,
-    255, 255, 0,
-  };
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-  GLuint tex_id = -1;
-  glGenTextures(1, &tex_id);
-  glBindTexture(GL_TEXTURE_2D, tex_id);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, pixel_data);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-  tex.Init(tex_id, 2, 2);
+  
   */
   //lodepng
   {
@@ -154,7 +140,7 @@ bool setupGraphics(int w, int h) {
   loader.LoadObj(file1.start, file1.end, &obj_model);
 
   //load material
-  MaterialManager::GetInstance().LoadFromFile();
+  MaterialMgr_initialize_from_file();
 
   //primitive model test
   sora::PrimitiveModel primitive_model;
@@ -279,14 +265,14 @@ void renderFrame() {
       //newmtl shinyred
       //newmtl clearblue
       if(i % 2 == 0) {
-        Texture *tex = TextureManager::GetInstance().Get_ptr("sora");
+        Texture *tex = TextureMgr_get_ptr(string("sora"));
         Renderer::SetTexture(*tex);
-        const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("clearblue");
+        const sora::Material &mtl = MaterialMgr_get("clearblue");
         render3d.SetMaterial(mtl);
       } else {
-        Texture *tex = TextureManager::GetInstance().Get_ptr("sora2");
+        Texture *tex = TextureMgr_get_ptr(string("sora2"));
         Renderer::SetTexture(*tex);
-        const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("shinyred");
+        const sora::Material &mtl = MaterialMgr_get("shinyred");
         render3d.SetMaterial(mtl);
       }
 
