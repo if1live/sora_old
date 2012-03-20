@@ -100,10 +100,11 @@ void Renderer::SetMaterial(const Material &material) {
 
   int ambient_color_loc = last_prog_->GetLocation(kLocationAmbientColor);
   if(ambient_color_loc != -1) {
-    //float color[4];
-    //memcpy(color, material.ambient, sizeof(material.ambient));
+    float color[4];
+    memcpy(color, material.ambient, sizeof(material.ambient));
     //color[3] = material.alpha;
-    glUniform4f(ambient_color_loc, material.ambient[0], material.ambient[1], material.ambient[2], material.alpha);
+    color[3] = 1.0f;
+    glUniform4fv(ambient_color_loc, 1, color);
     GLHelper::CheckError("Uniform AmbientColor");
   }
 
@@ -111,7 +112,8 @@ void Renderer::SetMaterial(const Material &material) {
   if(diffuse_color_loc != -1) {
     float color[4];
     memcpy(color, material.diffuse, sizeof(material.diffuse));
-    color[3] = material.alpha;
+    //color[3] = material.alpha;
+    color[3] = 1.0f;
     glUniform4fv(diffuse_color_loc, 1, color);
     GLHelper::CheckError("Uniform DiffuseColor");
   }
@@ -126,7 +128,8 @@ void Renderer::SetMaterial(const Material &material) {
     if(specular_color_loc != -1) {
       float color[4];
       memcpy(color, material.specular, sizeof(material.specular));
-      color[3] = material.alpha;
+      //color[3] = material.alpha;
+      color[3] = 1.0f;
       glUniform4fv(specular_color_loc, 1, color);
       GLHelper::CheckError("Uniform SpecularColor");
     }

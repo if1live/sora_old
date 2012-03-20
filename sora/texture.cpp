@@ -114,7 +114,7 @@ void PNGLoader::PrintLog() {
 
 ////////////////////////////////////////////
 
-Texture::Texture(uint policy)
+Texture::Texture(const char *name, uint policy)
 : start_(NULL), 
 end_(NULL), 
 handle_(0),
@@ -123,7 +123,21 @@ tex_width_(0),
 tex_height_(0),
 src_width_(0),
 src_height_(0),
-policy_(policy) {
+policy_(policy),
+name_(name) {
+}
+
+Texture::Texture(const std::string &name, uint policy)
+: start_(NULL), 
+end_(NULL), 
+handle_(0),
+file_fmt_(kFileUnknown),
+tex_width_(0),
+tex_height_(0),
+src_width_(0),
+src_height_(0),
+policy_(policy),
+name_(name) {
 }
 
 Texture::~Texture() {

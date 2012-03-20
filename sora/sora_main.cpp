@@ -60,15 +60,11 @@
 #include "world.h"
 #include "mesh_component.h"
 #include "component_list.h"
+#include "texture_manager.h"
 
 using namespace std;
 using namespace sora;
 using namespace glm;
-
-//fixed
-//sora::Texture tex(sora::Texture::kPolicyForcePOT);
-sora::Texture tex;
-sora::Texture tex_a;
 
 ShaderProgram shader_prog;
 ShaderProgram shader_2d;
@@ -135,15 +131,17 @@ bool setupGraphics(int w, int h) {
     std::string tex_path = sora::Filesystem::GetAppPath("texture/sora.png");
     sora::MemoryFile tex_file(tex_path);
     tex_file.Open();
+    Texture tex("sora");
     tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
-    tex.Init();
+    TextureManager::GetInstance().Add(tex);
   }
   {
     std::string tex_path = sora::Filesystem::GetAppPath("texture/sora2.png");
     sora::MemoryFile tex_file(tex_path);
     tex_file.Open();
-    tex_a.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
-    tex_a.Init();
+    Texture tex("sora2");
+    tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
+    TextureManager::GetInstance().Add(tex);
   }
 
   sora::ObjLoader loader;
@@ -199,6 +197,17 @@ bool setupGraphics(int w, int h) {
     MeshComponent *mesh_comp = new MeshComponent(entity_a);
     primitive_model.SolidCube(0.5, 1, 0.5, true);
     mesh_comp->SetMesh(primitive_model);
+    entity_a->AddComponent(mesh_comp);
+  }
+  
+  {
+    Entity *entity_a = world.CreateEntity();
+    glm::mat4 entity_mat = glm::mat4(1.0f);
+    entity_mat = glm::translate(entity_mat, vec3(0, 0, -2.0f));
+    entity_a->set_world_mat(entity_mat);
+    
+    MeshComponent *mesh_comp = new MeshComponent(entity_a);
+    mesh_comp->SetMesh(obj_model);
     entity_a->AddComponent(mesh_comp);
   }
 
@@ -270,11 +279,13 @@ void renderFrame() {
       //newmtl shinyred
       //newmtl clearblue
       if(i % 2 == 0) {
-        Renderer::SetTexture(tex);
+        Texture *tex = TextureManager::GetInstance().Get_ptr("sora");
+        Renderer::SetTexture(*tex);
         const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("clearblue");
         render3d.SetMaterial(mtl);
       } else {
-        Renderer::SetTexture(tex_a);
+        Texture *tex = TextureManager::GetInstance().Get_ptr("sora2");
+        Renderer::SetTexture(*tex);
         const sora::Material &mtl = sora::MaterialManager::GetInstance().Get("shinyred");
         render3d.SetMaterial(mtl);
       }

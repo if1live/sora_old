@@ -37,7 +37,8 @@ public:
   };
 
 public:
-  Texture(uint policy = 0);
+  Texture(const char *name, uint policy = 0);
+  Texture(const std::string &name, uint policy = 0);
   ~Texture();
 
   void Deinit();
@@ -48,15 +49,15 @@ public:
   bool Loaded() const;
 
   uint handle() const { return handle_; }
+  const std::string &name() const { return name_; }
 
 private:
   uint handle_;
+  //텍스쳐 고유이름을 둬서 디버깅이나 검색이나 뭐 기타 용도로 쓰자
+  std::string name_;
+  
   //텍스쳐 정보가 잇는 메모리를 올려서
   //텍스쳐를 나중에 생성하는것이 가능하도록하자
-  char name_[128];
-  std::vector<int> a;
-  std::list<int> b;
-  
   int file_fmt_;
   uchar *start_;
   uchar *end_;

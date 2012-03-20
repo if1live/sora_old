@@ -30,7 +30,7 @@
 
 namespace sora {;
 struct FontImpl {
-  FontImpl() {}
+  FontImpl() : font_tex("SYSTEM_FONT") {}
   Texture font_tex; //수동으로 생성한 텍스쳐를 관리하기 위한 용도
 };
 

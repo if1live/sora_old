@@ -23,17 +23,48 @@
 
 #include "template_lib.h"
 
+#if SR_USE_PCH == 0
+#include <string>
+#include "unordered_map_inc.h"
+#include "shared_ptr_inc.h"
+#endif
+
 namespace sora {;
-struct TextureManagerImpl;
+class Texture;
+typedef std::tr1::shared_ptr<Texture> TexturePtr;
+
 class SR_DLL TextureManager {
 public:
   static TextureManager& GetInstance();
-
   TextureManager();
   ~TextureManager();
+  
+  //텍스쳐 파일정보와 메모리를 설정한 다음에 텍스쳐를 넣으면
+  //복사해서 적절히 생성함
+  bool Add(const Texture &tex);
+
+  bool IsExist(const std::string &name) const;
+  bool IsExist(const char *name) const {
+    return IsExist(std::string(name));
+  }
+
+  TexturePtr Get(const std::string &name);
+  TexturePtr Get(const char *name) {
+    return Get(std::string(name));
+  }
+  Texture *Get_ptr(const std::string &name) {
+    TexturePtr tex = Get(name);
+    return tex.get();
+  }
+  Texture *Get_ptr(const char *name) {
+    return Get_ptr(std::string(name));
+  }
 
 private:
-  TextureManagerImpl &impl();
+  typedef std::tr1::unordered_map<std::string, TexturePtr> TexDictType;
+  
+  TexDictType tex_dict_;
+  
 };
 }
 

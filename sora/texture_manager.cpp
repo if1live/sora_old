@@ -21,22 +21,52 @@
 #include "sora_stdafx.h"
 #include "texture_manager.h"
 #include "template_lib.h"
+#include "texture.h"
+
+using namespace std;
 
 namespace sora {;
-struct TextureManagerImpl {
-};
 
 TextureManager& TextureManager::GetInstance() {
   static TextureManager ctx;
   return ctx;
 }
 
-TextureManagerImpl &TextureManager::impl() {
-  static TextureManagerImpl ctx;
-  return ctx;
-}
 TextureManager::TextureManager() {
 }
 TextureManager::~TextureManager() {
+}
+
+bool TextureManager::Add(const Texture &tex) {
+  const string &name = tex.name();
+  if(IsExist(name) == true) {
+    //already exist
+    return false;
+  }
+
+  TexturePtr cpy_tex(new Texture(tex));
+  cpy_tex->Init();
+  tex_dict_[name] = cpy_tex;
+  
+  return true;
+}
+
+bool TextureManager::IsExist(const std::string &name) const {
+  auto found = tex_dict_.find(name);
+  if(found == tex_dict_.end()) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+TexturePtr TextureManager::Get(const std::string &name) {
+  auto found = tex_dict_.find(name);
+  if(found == tex_dict_.end()) {
+    static TexturePtr empty;
+    return empty;
+  } else {
+    return found->second;
+  }
 }
 }
