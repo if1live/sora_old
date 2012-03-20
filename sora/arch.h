@@ -86,6 +86,17 @@ int PositionToWhere(int pos);
 #if SR_WIN
 #define SR_DLL __declspec(dllexport)
 #define SR_C_DLL extern "C" __declspec(dllexport)
+
+#include <vector>
+#include <string>
+//for pass c4251 warning
+//http://www.unknownroad.com/rtfm/VisualStudio/warningC4251.html
+template class SR_DLL std::allocator<int>;
+template class SR_DLL std::vector<int, std::allocator<int> >;
+//for stl
+template class SR_DLL std::allocator<char>;
+template class SR_DLL std::basic_string<char>;
+
 #else
 #define SR_DLL
 #define SR_C_DLL

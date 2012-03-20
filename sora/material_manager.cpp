@@ -22,11 +22,17 @@
 #include "material_manager.h"
 #include "template_lib.h"
 
+#include "filesystem.h"
+#include "memory_file.h"
+#include "obj_loader.h"
+
 using namespace std;
 
 namespace sora {;
 struct MaterialManagerImpl {
   //일단은 몇개 안될테니까 간단하게 구현
+  //재질정보는 그렇게 크지도 않고 많지도 않을테니까 전부 떄려박아도 심각한 문제가
+  //발생하지는 않을것이다.
   std::vector<Material> material_list;
 };
 
@@ -84,6 +90,19 @@ const Material &MaterialManager::Get(const std::string &name) {
 }
 const Material &MaterialManager::Get(const char *name) {
   return Get(string(name));
+}
+
+bool MaterialManager::LoadFromFile() {
+  impl->material_list.clear();
+
+  std::string mtl_path = Filesystem::GetAppPath("material/example.mtl");
+  MemoryFile mtl_file(mtl_path);
+  mtl_file.Open();
+  vector<sora::Material> material_list;
+  ObjLoader loader;
+  loader.LoadMtl(mtl_file.start, mtl_file.end, &material_list);
+  Add(material_list);
+  return true;
 }
 }
 

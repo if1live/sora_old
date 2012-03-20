@@ -145,12 +145,7 @@ bool setupGraphics(int w, int h) {
   loader.LoadObj(file1.start, file1.end, &obj_model);
 
   //load material
-  std::string mtl_path = sora::Filesystem::GetAppPath("material/example.mtl");
-  sora::MemoryFile mtl_file(mtl_path);
-  mtl_file.Open();
-  std::vector<sora::Material> material_list;
-  loader.LoadMtl(mtl_file.start, mtl_file.end, &material_list);
-  sora::MaterialManager::GetInstance().Add(material_list);
+  MaterialManager::GetInstance().LoadFromFile();
 
   //primitive model test
   sora::PrimitiveModel primitive_model;

@@ -145,6 +145,9 @@
     <ClCompile Include="mesh_component.cpp">
       <Filter>cbes</Filter>
     </ClCompile>
+    <ClCompile Include="texture_manager.cpp">
+      <Filter>render</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -311,6 +314,9 @@
     </ClInclude>
     <ClInclude Include="mesh_component.h">
       <Filter>cbes</Filter>
+    </ClInclude>
+    <ClInclude Include="texture_manager.h">
+      <Filter>render</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

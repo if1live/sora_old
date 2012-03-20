@@ -51,8 +51,8 @@ Font::Font() : impl(new FontImpl()) {
     for (int y = 0 ; y < kFontSize ; y++) {
       char character_scanline = character_font[y];
       for (int x = 0 ; x < kFontSize ; x++) {
-        bool pixel = (1 << (kFontSize - 1 - x)) & character_scanline;
-        SR_ASSERT(pixel == 0 || pixel == 1);
+        int raw_pixel = (1 << (kFontSize - 1 - x)) & character_scanline;
+        bool pixel = raw_pixel > 0 ? true : false;
         int pixel_index = GetCharacterPixelIndex(base_x, base_y, x, y);
 
         if(pixel == true) {
@@ -138,10 +138,10 @@ void Label::Init(const std::string &text) {
     font.GetCharacterTextureQuad(ch, &tex_left, &tex_right, &tex_top, &tex_bottom);
 
     float left, right, top, bottom;
-    left = i * Font::kFontSize;
-    right = left + Font::kFontSize;
-    top = 0;
-    bottom = top - Font::kFontSize;
+    left = i * (float)Font::kFontSize;
+    right = left + (float)Font::kFontSize;
+    top = 0.0f;
+    bottom = top - (float)Font::kFontSize;
 
     // 3 2
     // 0 1

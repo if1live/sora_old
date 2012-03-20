@@ -18,40 +18,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_MATERIAL_MANAGER_H_
-#define SORA_MATERIAL_MANAGER_H_
-
+#include "sora_stdafx.h"
+#include "texture_manager.h"
 #include "template_lib.h"
-#include "material.h"
-
-#if SR_USE_PCH == 0
-#include <string>
-#include <vector>
-#endif
 
 namespace sora {;
-struct MaterialManagerImpl;
-class MaterialManager : public Singleton<MaterialManager> {
-public:
-  MaterialManager();
-  ~MaterialManager();
-
-  //이름중복이 발생한 경우 false
-  bool Add(const std::vector<Material> &mtl_list);
-  bool Add(const Material &mtl);
-  bool IsExist(const std::string &name) const;
-  bool IsExist(const char *name) const;
-  const Material &Get(const std::string &name);
-  const Material &Get(const char *name);
-
-  //initialize material list
-  bool LoadFromFile();
-
-private:
-
-  MaterialManagerImpl *impl;
+struct TextureManagerImpl {
 };
-}
-SR_C_DLL sora::MaterialManager &MaterialManger_get_instance();
 
-#endif  // SORA_MATERIAL_MANAGER_H_
+TextureManager& TextureManager::GetInstance() {
+  static TextureManager ctx;
+  return ctx;
+}
+
+TextureManagerImpl &TextureManager::impl() {
+  static TextureManagerImpl ctx;
+  return ctx;
+}
+TextureManager::TextureManager() {
+}
+TextureManager::~TextureManager() {
+}
+}

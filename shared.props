@@ -9,7 +9,7 @@
   <ItemDefinitionGroup>
     <ClCompile>
       <AdditionalIncludeDirectories>..\sdk\vincent;..\boost;..\glfw\include;..\glew\include;..;..\sora</AdditionalIncludeDirectories>
-      <DisableSpecificWarnings>4819;4099</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4819;4099;4251</DisableSpecificWarnings>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <MinimalRebuild>false</MinimalRebuild>
     </ClCompile>

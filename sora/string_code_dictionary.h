@@ -58,7 +58,7 @@ public:
     using std::string;
     static std::string empty("");
     vector<string> &name_list = str_list_;
-    if (code < 0 || code >= name_list.size()) {
+    if ((int)code < 0 || code >= (int)name_list.size()) {
       return empty;
     } else {
       return name_list[code];

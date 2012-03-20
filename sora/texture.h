@@ -23,7 +23,10 @@
 
 namespace sora {;
 
-class Texture {
+class SR_DLL Texture;
+typedef std::tr1::shared_ptr<Texture> TexturePtr;
+
+class SR_DLL Texture {
 public:
   enum {
     kFileUnknown = -1,
@@ -50,6 +53,10 @@ private:
   uint handle_;
   //텍스쳐 정보가 잇는 메모리를 올려서
   //텍스쳐를 나중에 생성하는것이 가능하도록하자
+  char name_[128];
+  std::vector<int> a;
+  std::list<int> b;
+  
   int file_fmt_;
   uchar *start_;
   uchar *end_;
@@ -64,7 +71,6 @@ private:
 private:
   bool Init_PNG();  //파일 포맷별 로딩을 다르게 할수잇도록. 함수깊이를 얕게 하기 위해서
 };
-
 }
 
 #endif  // SORA_TEXTURE_H_
