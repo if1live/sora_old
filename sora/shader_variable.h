@@ -57,7 +57,7 @@ struct ShaderVariable {
     //kViewProjectionInverse,
     //kViewProjectionTranspose,
     //kViewProjectionInverseTranspose,
-  
+
     kView,
     //kViewInverse,
     //kViewTranspose,
@@ -91,11 +91,28 @@ struct ShaderVariable {
     kSemanticCount,
   };
   enum {
-    kTypeFloat,
-    kTypeVec2,
-    kTypeVec3,
-    kTypeVec4,
-    kTypeMat4
+    //uniform type list / variable type list
+    kTypeFloat = GL_FLOAT,
+    kTypeVec2 = GL_FLOAT_VEC2,
+    kTypeVec3 = GL_FLOAT_VEC3,
+    kTypeVec4 = GL_FLOAT_VEC4,
+
+    kTypeInt = GL_INT,
+    kTypeIntVec2 = GL_INT_VEC2,
+    kTypeIntVec3 = GL_INT_VEC3,
+    kTypeIntVec4 = GL_INT_VEC4,
+
+    kTypeBool = GL_BOOL,
+    kTypeBoolVec2 = GL_BOOL_VEC2,
+    kTypeBoolVec3 = GL_BOOL_VEC3,
+    kTypeBoolVec4 = GL_BOOL_VEC4,
+
+    kTypeMat2 = GL_FLOAT_MAT2,
+    kTypeMat3 = GL_FLOAT_MAT3,
+    kTypeMat4 = GL_FLOAT_MAT4,
+
+    kTypeSampler2D = GL_SAMPLER_2D,
+    kTypeSamplerCube = GL_SAMPLER_CUBE,
   };
   enum {
     kTypeAttrib,
@@ -107,14 +124,34 @@ struct ShaderVariable {
 
 public:
   ShaderVariable();
-  void Set(int code, int var_type, int loc_type, const char *attr_name);
+  void Set(int code, int var_type, int loc_type, const char *attr_name, int size);
 
-  int semantic_code;
-  int var_type;
-  int location_type;
-  char name[64];
-
+  int semantic_code;  //렌더러 구현에서 쓰이는 의미를 가지는 코드 kModel이라든가 그런것들
+  int var_type; //vec2? mat4?
+  int location_type;  //attrib/uniform
+  char name[64];  //shader코드에서의 변수이름
+  int size; //속성의 크기
 };
+
+////////////////////////////////////////
+
+//쉐이더 위치 정보. 쌩으로 덤프뜰때 사용한다
+class ShaderLocation {
+public:
+  ShaderLocation(int loc_type, const char *name, GLint location, GLint size, GLenum type);
+
+  bool operator==(const ShaderLocation &o) const;
+  bool operator!=(const ShaderLocation &o) const;
+
+  std::string str() const;
+
+  int location_type;  //attrib/uniform
+  std::string name;
+  GLint location;
+  GLint size;
+  GLenum type;
+};
+
 
 }
 

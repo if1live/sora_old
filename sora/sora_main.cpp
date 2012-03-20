@@ -70,7 +70,9 @@ using namespace glm;
 
 //ShaderProgram shader_prog;
 ShaderProgram shader_2d;
-UberShader uber_shader;
+//소멸자에서 만들엇던 gl을 해제하는데
+//소멸자 호출 시점이 gl해제보다 늦어서 뻑난다. 그래서 임시로 동적할당해서 안놓음
+UberShader &uber_shader = *(new UberShader());  
 
 //cbes
 World world;

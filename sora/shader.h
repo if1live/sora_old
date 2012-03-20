@@ -81,6 +81,8 @@ public:
   int GetLocation(int location_code) const;
   void SetLocation(int location_code, int loc);
 
+  std::vector<ShaderLocation> GetActiveUniformLocationList();
+  std::vector<ShaderLocation> GetActiveAttributeLocationList();
 public:
   GLuint prog;
 

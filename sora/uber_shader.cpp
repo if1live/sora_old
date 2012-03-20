@@ -23,6 +23,7 @@
 #include "template_lib.h"
 #include "filesystem.h"
 #include "memory_file.h"
+#include "gl_helper.h"
 
 namespace sora {;
 
@@ -86,6 +87,7 @@ bool UberShader::Init() {
 }
 
 UberShader::~UberShader() {
+  GLHelper::CheckError("uber shader end");
   prog_.Deinit();
 }
 
@@ -128,7 +130,7 @@ const std::vector<ShaderVariable> &UberShader::GetVariableList() {
 
       ShaderVariable v;
       int var_code = ShaderVariable::kSemanticCount + code;
-      v.Set(var_code, var_type, location_type, location_name);
+      v.Set(var_code, var_type, location_type, location_name, 1);
       tuple_list.push_back(v);
     }
   }

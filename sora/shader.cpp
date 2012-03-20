@@ -83,10 +83,10 @@ bool Shader::InitShader(GLenum shader_type, const char *src) {
 }
 /////////////////////
 ShaderProgram::ShaderProgram()
-: prog(0) {
-  for(int i = 0 ; i < GetArraySize(location_list_) ; i++) {
-    location_list_[i] = -1;
-  }
+  : prog(0) {
+    for(int i = 0 ; i < GetArraySize(location_list_) ; i++) {
+      location_list_[i] = -1;
+    }
 }
 ShaderProgram::~ShaderProgram() {
   // deinit is manual call
@@ -163,11 +163,11 @@ bool ShaderProgram::Init(const char *v_src, const char *f_src) {
   }
 
   //show binded variable list
+  LOGI("Predefined Uniform/Attrib list");
   for(int i = 0 ; i < ShaderVariable::kSemanticCount ; ++i) {
     if(location_list_[i] == -1) {
       continue;
     }
-
     const ShaderVariable *var = &ShaderVariable::GetPredefinedVar(i);
     if(var->location_type == ShaderVariable::kTypeAttrib) {
       LOGI("Attrib  %s : %d", var->name, location_list_[i]);
@@ -178,11 +178,21 @@ bool ShaderProgram::Init(const char *v_src, const char *f_src) {
     }
   }
 
+  LOGI("Active Uniform/Attrib list");
+  vector<ShaderLocation> uniform_list = GetActiveUniformLocationList();
+  BOOST_FOREACH(const ShaderLocation &loc, uniform_list) {
+    LOGI("%s", loc.str().c_str());
+  }
+  vector<ShaderLocation> attrib_list = GetActiveAttributeLocationList();
+  BOOST_FOREACH(const ShaderLocation &loc, attrib_list) {
+    LOGI("%s", loc.str().c_str());
+  }
+
   return true;
 }
 
 bool ShaderProgram::Validate(GLuint prog) {
-    GLint logLength, status;
+  GLint logLength, status;
 
   glValidateProgram(prog);
   glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &logLength);
@@ -220,6 +230,55 @@ void ShaderProgram::SetLocation(int location_code, int loc) {
   SR_ASSERT(location_code >= 0);
   SR_ASSERT(location_code < kMaxLocationCount);
   location_list_[location_code] = loc; 
+}
+
+std::vector<ShaderLocation> ShaderProgram::GetActiveUniformLocationList() {
+  vector<ShaderLocation> list;
+  
+  GLint maxUniformLen;
+  GLint numUniform;
+
+  glGetProgramiv(prog, GL_ACTIVE_UNIFORMS, &numUniform);
+  glGetProgramiv(prog, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformLen);
+
+  const int MaxNameLength = 1024;
+  char uniformName[MaxNameLength];
+  SR_ASSERT(maxUniformLen < MaxNameLength);
+  for (int i = 0 ; i < numUniform ; i++) {
+    GLint size;
+    GLenum type;
+    // get uniform information
+    glGetActiveUniform(prog, i, maxUniformLen, NULL, &size, &type, uniformName);
+    GLint location = glGetUniformLocation(prog, uniformName);
+
+    ShaderLocation sl(ShaderVariable::kTypeUniform, uniformName, location, size, type);
+    list.push_back(sl);
+  }
+
+  return list;
+}
+
+std::vector<ShaderLocation> ShaderProgram::GetActiveAttributeLocationList() {
+  vector<ShaderLocation> list;
+
+  GLint maxAttributeLen;
+  GLint numAttribute;
+  glGetProgramiv(prog, GL_ACTIVE_ATTRIBUTES, &numAttribute);
+  glGetProgramiv(prog, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxAttributeLen);
+
+  const int MaxNameLength = 1024;
+  char attributeName[MaxNameLength];
+  SR_ASSERT(maxAttributeLen < MaxNameLength);
+  for (int i = 0 ; i < numAttribute ; i++) {
+    GLint size;
+    GLenum type;
+    glGetActiveAttrib(prog, i, maxAttributeLen, NULL, &size, &type, attributeName);
+    GLint location = glGetAttribLocation(prog, attributeName);
+
+    ShaderLocation sl(ShaderVariable::kTypeAttrib, attributeName, location, size, type);
+    list.push_back(sl);
+  }
+  return list;
 }
 
 } //namespace sora
