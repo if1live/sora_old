@@ -28,6 +28,7 @@
 #include "obj_model.h"
 #include "primitive_model.h"
 #include "template_lib.h"
+#include "uber_shader.h"
 
 #if SR_USE_PCH == 0
 #include <glm/glm.hpp>
@@ -98,7 +99,7 @@ void Renderer::SetShader(const ShaderProgram &prog) {
 void Renderer::SetMaterial(const Material &material) {
   SR_ASSERT(last_prog_ != NULL);
 
-  int ambient_color_loc = last_prog_->GetLocation(kLocationAmbientColor);
+  int ambient_color_loc = last_prog_->GetLocation(UberShader::kAmbientColor);
   if(ambient_color_loc != -1) {
     float color[4];
     memcpy(color, material.ambient, sizeof(material.ambient));
@@ -108,7 +109,7 @@ void Renderer::SetMaterial(const Material &material) {
     GLHelper::CheckError("Uniform AmbientColor");
   }
 
-  int diffuse_color_loc = last_prog_->GetLocation(kLocationDiffuseColor);
+  int diffuse_color_loc = last_prog_->GetLocation(UberShader::kDiffuseColor);
   if(diffuse_color_loc != -1) {
     float color[4];
     memcpy(color, material.diffuse, sizeof(material.diffuse));
@@ -124,7 +125,7 @@ void Renderer::SetMaterial(const Material &material) {
     ;
   } else if(material.illumination_model == 2) {
     //use ks, specular
-    int specular_color_loc = last_prog_->GetLocation(kLocationSpecularColor);
+    int specular_color_loc = last_prog_->GetLocation(UberShader::kSpecularColor);
     if(specular_color_loc != -1) {
       float color[4];
       memcpy(color, material.specular, sizeof(material.specular));
@@ -133,7 +134,7 @@ void Renderer::SetMaterial(const Material &material) {
       glUniform4fv(specular_color_loc, 1, color);
       GLHelper::CheckError("Uniform SpecularColor");
     }
-    int shininess_loc = last_prog_->GetLocation(kLocationSpecularShininess);
+    int shininess_loc = last_prog_->GetLocation(UberShader::kSpecularShininess);
     if(shininess_loc != -1) {
       glUniform1f(shininess_loc, material.shininess);
       GLHelper::CheckError("Uniform Shininess");

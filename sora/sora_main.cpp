@@ -42,6 +42,7 @@
 #include "memory_file.h"
 
 #include "shader.h"
+#include "uber_shader.h"
 #include "matrix_stack.h"
 
 #include "obj_model.h"
@@ -62,12 +63,14 @@
 #include "component_list.h"
 #include "texture_manager.h"
 
+
 using namespace std;
 using namespace sora;
 using namespace glm;
 
-ShaderProgram shader_prog;
+//ShaderProgram shader_prog;
 ShaderProgram shader_2d;
+UberShader uber_shader;
 
 //cbes
 World world;
@@ -75,6 +78,8 @@ World world;
 bool setupGraphics(int w, int h) {
   sora::Renderer::SetWindowSize((float)w, (float)h);
  
+  uber_shader.Init();
+  /*
   //load shader file
   {
     std::string app_vert_path = sora::Filesystem::GetAppPath("shader/v_diffuse.glsl");
@@ -91,6 +96,7 @@ bool setupGraphics(int w, int h) {
       return false;
     }
   }
+  */
 
   {
     //2d shader
@@ -222,12 +228,12 @@ void renderFrame() {
     Renderer &render3d = Renderer::Renderer3D();
     //render 3d
     render3d.SetInitState();
-    render3d.SetShader(shader_prog);
+    render3d.SetShader(uber_shader.prog());
 
     
-    int position_handle = shader_prog.GetLocation(sora::ShaderVariable::kPosition);
-    int texcoord_handle = shader_prog.GetLocation(sora::ShaderVariable::kTexcoord);
-    int normal_handle = shader_prog.GetLocation(sora::ShaderVariable::kNormal);
+    int position_handle = uber_shader.prog().GetLocation(sora::ShaderVariable::kPosition);
+    int texcoord_handle = uber_shader.prog().GetLocation(sora::ShaderVariable::kTexcoord);
+    int normal_handle = uber_shader.prog().GetLocation(sora::ShaderVariable::kNormal);
   
     glEnableVertexAttribArray(position_handle);
     glEnableVertexAttribArray(texcoord_handle);
@@ -251,7 +257,7 @@ void renderFrame() {
 
     //set light position
     //GLint light_pos_handle = shader_prog.GetLocation(sora::kLocationWorldLightPosition);
-    GLint light_pos_handle = shader_prog.GetUniformLocation("u_worldLightPosition");
+    GLint light_pos_handle = uber_shader.prog().GetUniformLocation("u_worldLightPosition");
     glm::vec3 light_pos = glm::vec3(10, 10, 100);
     glUniform3fv(light_pos_handle, 1, glm::value_ptr(light_pos));
     GLHelper::CheckError("Set Light Pos Handle");

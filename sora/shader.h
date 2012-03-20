@@ -34,22 +34,7 @@
 
 #include "shader_variable.h"
 
-#define SORA_AMBIENT_COLOR_NAME         "u_ambientColor"
-#define SORA_DIFFUSE_COLOR_NAME         "u_diffuseColor"
-#define SORA_SPECULAR_COLOR_NAME        "u_specularColor"
-#define SORA_SPECULAR_SHININESS_NAME    "u_specularShininess"
-//#define SORA_WORLD_LIGHT_POSITION_NAME  "u_worldLightPosition"
-
 namespace sora {;
-
-enum {
-  kLocationAmbientColor = ShaderVariable::kSemanticCount,
-  kLocationDiffuseColor,
-  kLocationSpecularColor,
-  kLocationSpecularShininess,
-  //kLocationWorldLightPosition,
-  kLocationCount,
-};
 
 class SR_DLL Shader {
 public:
@@ -79,8 +64,6 @@ class SR_DLL ShaderProgram {
 public:
   static bool Validate(GLuint prog);
 
-  static const std::vector<ShaderVariable> &GetVariableList();
-  static const ShaderVariable &GetVariable(int var_code);
 public:
   ShaderProgram();
   ~ShaderProgram();
@@ -93,9 +76,10 @@ public:
   bool IsInit() const { return (prog != 0); }
   //void Use();
 
-  GLint GetAttribLocation(const char *name);
-  GLint GetUniformLocation(const char *name);
-  int GetLocation(int location_code) { return location_list_[location_code]; }
+  GLint GetAttribLocation(const char *name) const;
+  GLint GetUniformLocation(const char *name) const;
+  int GetLocation(int location_code) const;
+  void SetLocation(int location_code, int loc);
 
 public:
   GLuint prog;
@@ -105,8 +89,10 @@ private:
   Shader frag_shader_;
 
 
-  //predefined + shader custom part
-  int location_list_[kLocationCount];
+  //predefined + 여유공간
+  static const int kMaxLocationCount = 32;
+  //SR_STATIC_ASSERT_NOMSG(ShaderProgram::kMaxLocationCount > ShaderVariable::kSemanticCount);
+  int location_list_[kMaxLocationCount];
 };
 
 }

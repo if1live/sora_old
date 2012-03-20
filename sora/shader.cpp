@@ -84,7 +84,9 @@ bool Shader::InitShader(GLenum shader_type, const char *src) {
 /////////////////////
 ShaderProgram::ShaderProgram()
 : prog(0) {
-  memset(location_list_, 0, sizeof(location_list_));
+  for(int i = 0 ; i < GetArraySize(location_list_) ; i++) {
+    location_list_[i] = -1;
+  }
 }
 ShaderProgram::~ShaderProgram() {
   // deinit is manual call
@@ -160,37 +162,13 @@ bool ShaderProgram::Init(const char *v_src, const char *f_src) {
     }
   }
 
-  //custom var(like light)
-  for(int var_code = ShaderVariable::kSemanticCount ; var_code < kLocationCount ; ++var_code) {
-    const ShaderVariable &var_data = GetVariable(var_code);
-    int location_type = var_data.location_type;
-    const char *location_name = var_data.name;
-
-    if(location_type == ShaderVariable::kTypeAttrib) {
-      int location = GetAttribLocation(location_name);
-      location_list_[var_code] = location;
-
-    } else if(location_type == ShaderVariable::kTypeUniform) {
-      int location = GetUniformLocation(location_name);
-      location_list_[var_code] = location;
-    }
-  }
-
   //show binded variable list
-  for(int i = 0 ; i < GetArraySize(location_list_) ; ++i) {
+  for(int i = 0 ; i < ShaderVariable::kSemanticCount ; ++i) {
     if(location_list_[i] == -1) {
       continue;
     }
 
-    const ShaderVariable *var = NULL;
-    if(i < ShaderVariable::kSemanticCount) {
-      const ShaderVariable &v = ShaderVariable::GetPredefinedVar(i);
-      var = &v;
-    } else {
-      const ShaderVariable &v = GetVariable(i);
-      var = &v;
-    }
-
+    const ShaderVariable *var = &ShaderVariable::GetPredefinedVar(i);
     if(var->location_type == ShaderVariable::kTypeAttrib) {
       LOGI("Attrib  %s : %d", var->name, location_list_[i]);
     } else if(var->location_type == ShaderVariable::kTypeUniform) {
@@ -222,74 +200,26 @@ bool ShaderProgram::Validate(GLuint prog) {
   }
   return true;
 }
-GLint ShaderProgram::GetAttribLocation(const char *name) {
+GLint ShaderProgram::GetAttribLocation(const char *name) const {
   return glGetAttribLocation(prog, name);
 }
 
-GLint ShaderProgram::GetUniformLocation(const char *name) {
+GLint ShaderProgram::GetUniformLocation(const char *name) const {
   return glGetUniformLocation(prog, name);
 }
 //void ShaderProgram::Use() {
 //  glUseProgram(prog);
 //}
 
-const std::vector<ShaderVariable> &ShaderProgram::GetVariableList() {
-  static bool run = false;
-  static vector<ShaderVariable> tuple_list;
-  if(run == false) {
-    run = true;
-
-    int location_type_table[] = {
-      ShaderVariable::kTypeUniform,   //kLocationAmbientColor,
-      ShaderVariable::kTypeUniform,   //kLocationDiffuseColor,
-      ShaderVariable::kTypeUniform,   //kLocationSpecularColor,
-      ShaderVariable::kTypeUniform,   //kLocationSpecularShininess,
-      //kLocationTypeUniform,   //kLocationWorldLightPosition
-    };
-    int var_type_table[] = {
-      ShaderVariable::kTypeVec4,   //kLocationAmbientColor,
-      ShaderVariable::kTypeVec4,   //kLocationDiffuseColor,
-      ShaderVariable::kTypeVec4,   //kLocationSpecularColor,
-      ShaderVariable::kTypeFloat,   //kLocationSpecularShininess,
-    };
-
-    const char *location_name_table[] = {
-      SORA_AMBIENT_COLOR_NAME,           //kLocationAmbientColor,
-      SORA_DIFFUSE_COLOR_NAME,           //kLocationDiffuseColor,
-      SORA_SPECULAR_COLOR_NAME,          //kLocationSpecularColor,
-      SORA_SPECULAR_SHININESS_NAME,      //kLocationSpecularShininess,
-    };
-    const int type_count = GetArraySize(location_type_table);
-    const int name_count = GetArraySize(location_name_table);
-    const int var_type_count = GetArraySize(var_type_table);
-    SR_ASSERT(type_count == name_count);
-    SR_ASSERT(type_count == var_type_count);
-    
-    for(int code = 0 ; code < type_count ; ++code) {
-      int location_type = location_type_table[code];
-      const char *location_name = location_name_table[code];
-      int var_type = var_type_table[code];
-
-      ShaderVariable v;
-      int var_code = ShaderVariable::kSemanticCount + code;
-      v.Set(var_code, var_type, location_type, location_name);
-      tuple_list.push_back(v);
-    }
-  }
-  return tuple_list;
+int ShaderProgram::GetLocation(int location_code) const {
+  SR_ASSERT(location_code >= 0);
+  SR_ASSERT(location_code < kMaxLocationCount);
+  return location_list_[location_code]; 
 }
-const ShaderVariable &ShaderProgram::GetVariable(int var_code) {
-  const vector<ShaderVariable> &var_list = GetVariableList();
-  auto it = var_list.begin();
-  auto endit = var_list.end();
-  for( ; it != endit ; ++it) {
-    if(it->semantic_code == var_code) {
-      return *it;
-    }
-  }
-  SR_ASSERT(!"not valid");
-  static ShaderVariable empty;
-  return empty;
+void ShaderProgram::SetLocation(int location_code, int loc) {
+  SR_ASSERT(location_code >= 0);
+  SR_ASSERT(location_code < kMaxLocationCount);
+  location_list_[location_code] = loc; 
 }
 
-}
+} //namespace sora
