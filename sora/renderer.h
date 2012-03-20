@@ -36,34 +36,55 @@ class ObjModel;
 class PrimitiveModel;
 class Camera;
 
+//2d / 3d는 미묘한 정책만 수정해도 충분할듯하다
+struct RendererPolicy {
+  virtual void SetInitState() = 0;
+  virtual glm::mat4 ToViewMatrixFromCamera(const Camera &cam) = 0;
+};
+struct RendererPolicy_2D : public RendererPolicy {
+  void SetInitState();
+  glm::mat4 ToViewMatrixFromCamera(const Camera &cam);
+};
+
+struct RendererPolicy_3D : public RendererPolicy {
+  void SetInitState();
+  glm::mat4 ToViewMatrixFromCamera(const Camera &cam);
+};
+
 //opengles 2.0 renderer
 class Renderer {
 public:
-  Renderer();
+  static Renderer &Renderer3D();
+  static Renderer &Renderer2D();
+public:
+  Renderer(RendererPolicy *policy);
   virtual ~Renderer();
 
   static void SetWindowSize(float w, float h);
   static float win_width() { return win_width_; }
   static float win_height() { return win_height_; }
 
-  virtual void SetInitState() = 0;
+  void SetInitState();
   static void EndRender();
 
+  //bind gl resource
   void SetTexture(const Texture &tex);
   void SetShader(const ShaderProgram &prog);
   void SetMaterial(const Material &material);
-
-  
 
   glm::mat4 &projection_mat() { return projection_; }
   glm::mat4 &view_mat() { return view_; }
   void set_projection_mat(const glm::mat4 &m) { projection_ = m; }
   void set_view_mat(const glm::mat4 &m) { view_ = m; }
 
-  virtual void ApplyMatrix(const glm::mat4 &world_mat) = 0;
+  void ApplyMatrix(const glm::mat4 &world_mat);
   
   Camera &camera();
   void set_camera(const Camera &cam);
+
+  //draw method
+  void DrawObj(const ObjModel &model);
+  void DrawPrimitiveModel(const PrimitiveModel &model);
 
 protected:
   //access cache like data
@@ -87,6 +108,8 @@ private:
   glm::mat4 view_;
 
   Camera cam_;
+
+  RendererPolicy *policy_;
 };
 }
 

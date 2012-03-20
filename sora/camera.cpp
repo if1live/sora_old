@@ -23,47 +23,24 @@
 #include "template_lib.h"
 
 namespace sora {;
-struct CameraImpl {
-  CameraImpl()
-    : eye(0, 0, 1), dir(0, 0, -1), up(0, 1, 0) {}
-  Vec3f eye;
-  Vec3f dir;
-  Vec3f up;
-};
-
-Camera::Camera() : impl(new CameraImpl()) {
+Camera::Camera() 
+: eye_(0, 0, 1), 
+dir_(0, 0, -1), 
+up_(0, 1, 0) {
 }
 Camera::~Camera() {
-  SafeDeleteWithNullCheck(impl);
 }
-Vec3f &Camera::eye() {
-  return impl->eye;
-}
-Vec3f &Camera::dir() {
-  return impl->dir;
-}
-Vec3f &Camera::up() {
-  return impl->up;
-}
-const Vec3f &Camera::eye() const {
-  return impl->eye;
-}
-const Vec3f &Camera::dir() const {
-  return impl->dir;
-}
-const Vec3f &Camera::up() const {
-  return impl->up;
-}
+
 void Camera::set_eye(const Vec3f &v) {
-  impl->eye = v;
+  eye_ = v;
 }
 void Camera::set_dir(const Vec3f &v) {
-  impl->dir = v;
-  impl->dir.Normalized();
+  dir_ = v;
+  dir_.Normalized();
 }
 void Camera::set_up(const Vec3f &v) {
-  impl->up = v;
-  impl->up.Normalized();
+  up_ = v;
+  up_.Normalized();
 }
 }
 

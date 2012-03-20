@@ -51,8 +51,6 @@
 
 #include "texture.h"
 #include "renderer.h"
-#include "renderer2d.h"
-#include "renderer3d.h"
 
 #include "material.h"
 #include "math_helper.h"
@@ -216,7 +214,7 @@ void renderFrame() {
 
   /////////////////////////
   {
-    Renderer3D &render3d = Renderer3D::GetInstance();
+    Renderer &render3d = Renderer::Renderer3D();
     //render 3d
     render3d.SetInitState();
 
@@ -285,7 +283,7 @@ void renderFrame() {
     }
   }
   {
-    Renderer2D &render2d = Renderer2D::GetInstance();
+    Renderer &render2d = Renderer::Renderer2D();
 
     //draw 2d something
     glm::mat4 world_mat(1.0f);
