@@ -25,6 +25,7 @@
 #if SR_USE_PCH == 0
 #include "gl_inc.h"
 #include <glm/glm.hpp>
+#include <vector>
 #endif
 
 namespace sora {;

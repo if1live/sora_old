@@ -21,6 +21,10 @@
 #ifndef SORA_COMPONENT_LIST_H_
 #define SORA_COMPONENT_LIST_H_
 
+#if SR_USE_PCH == 0
+#include <list>
+#endif
+
 namespace sora {;
 class Component;
 

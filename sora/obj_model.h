@@ -23,6 +23,9 @@
 
 #include "vertex.h"
 #include "mesh.h"
+#if SR_USE_PCH == 0
+#include <vector>
+#endif
 
 namespace sora {;
 

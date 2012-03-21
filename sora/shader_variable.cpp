@@ -21,6 +21,10 @@
 #include "sora_stdafx.h"
 #include "shader_variable.h"
 
+#if SR_USE_PCH == 0
+#include <sstream>
+#endif
+
 using namespace std;
 
 namespace sora {;

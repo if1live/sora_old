@@ -22,10 +22,6 @@
 #include "sora_main.h"
 
 //android  OpenGL ES 2.0 code based
-#if SR_ANDROID
-#include <jni.h>
-#endif
-
 #if SR_USE_PCH == 0
 #include "gl_inc.h"
 #include <glm/glm.hpp>
@@ -184,12 +180,12 @@ bool setupGraphics(int w, int h) {
     glm::mat4 entity_mat = glm::mat4(1.0f);
     //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
     //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
-    entity_mat = glm::translate(entity_mat, vec3(0.5, 1, 0));
+    entity_mat = glm::translate(entity_mat, vec3(0.8, 0.3, 0));
     entity_mat = glm::rotate(entity_mat, 180.0f, vec3(1, 0, 0));
     entity_a->set_world_mat(entity_mat);
     
     MeshComponent *mesh_comp = new MeshComponent(entity_a);
-    primitive_model.SolidCube(0.5, 1, 0.5, true);
+    primitive_model.SolidCube(0.5, 0.5, 0.5, true);
     mesh_comp->SetMesh(primitive_model);
     entity_a->AddComponent(mesh_comp);
   }

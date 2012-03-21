@@ -104,7 +104,7 @@ bool MemoryFile::Open() {
   zip_stream_file.Open();
   int length = zip_stream_file.GetLength();
 
-  start = (uchar*)MM_MALLOC(length + 1); 
+  start = (uchar*)SR_MALLOC(length + 1); 
   data = start;
   zip_stream_file.Read(data, length);
 

@@ -23,6 +23,10 @@
 
 #include "id_generator.h"
 #include <glm/glm.hpp>
+#if SR_USE_PCH == 0
+#include <string>
+#include <vector>
+#endif
 
 namespace sora {;
 class World;

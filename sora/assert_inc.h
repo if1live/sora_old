@@ -33,10 +33,10 @@
 #define SR_ASSERT(EXPR) do { assert(EXPR); } while(0);
 
 #elif SR_ANDROID
-#include "logger.h"
+#include <android/log.h>
 #define SR_ASSERT(EXPR) do { \
   if (!(EXPR)) {  \
-    LOGE("%s : %d : %s", __FILE__, __LINE__, #EXPR); \
+    __android_log_print(ANDROID_LOG_FATAL, "ASSERT", "%s : %d : %s", __FILE__, __LINE__, #EXPR); \
     assert(EXPR); \
     exit(-1); \
   } } while(0);

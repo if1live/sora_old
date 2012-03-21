@@ -55,10 +55,17 @@ LOCAL_SRC_FILES := \
 	../lodepng/lodepng.cpp	\
 	../gl_buffer_object.cpp	\
 	../material_manager.cpp	\
+	../texture_manager.cpp	\
 	../matrix_stack.cpp	\
 	../font.cpp	\
 	../shader_variable.cpp	\
-	../camera.cpp
+	../camera.cpp	\
+	../component.cpp	\
+	../component_list.cpp	\
+	../entity.cpp	\
+	../mesh_component.cpp	\
+	../world.cpp	\
+	../uber_shader.cpp
 
 #include $(BUILD_SHARED_LIBRARY)
 include $(BUILD_STATIC_LIBRARY)

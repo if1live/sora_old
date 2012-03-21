@@ -23,6 +23,10 @@
 #include "world.h"
 #include "component.h"
 
+#if SR_USE_PCH == 0
+#include <boost/foreach.hpp>
+#endif
+
 namespace sora {;
 class ComponentTypeFind {
 public:

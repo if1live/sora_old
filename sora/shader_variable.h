@@ -23,6 +23,8 @@
 
 #if SR_USE_PCH == 0
 #include <vector>
+#include <string>
+#include "gl_inc.h"
 #endif
 
 namespace sora {;

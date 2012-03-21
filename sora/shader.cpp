@@ -25,6 +25,7 @@
 
 #if SR_ANDROID
 #include "gl_inc.h"
+#include <boost/foreach.hpp>
 #endif
 
 using namespace std;

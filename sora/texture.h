@@ -21,6 +21,11 @@
 #ifndef SORA_TEXTURE_H_
 #define SORA_TEXTURE_H_
 
+#if SR_USE_PCH == 0
+#include "shared_ptr_inc.h"
+#include <string>
+#endif
+
 namespace sora {;
 
 class SR_DLL Texture;

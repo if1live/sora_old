@@ -52,7 +52,7 @@ private:
 
 //어차피 자주쓸 메모스를 GetInstance로 거쳐서 받는것도 삽질같아서 그냥 함수 뚫음
 SR_C_DLL const Material &MaterialMgr_get(const std::string &name);
-SR_C_DLL bool &MaterialMgr_is_exist(const std::string &name);
+SR_C_DLL bool MaterialMgr_is_exist(const std::string &name);
 
 //initialize material list
 SR_C_DLL bool MaterialMgr_initialize_from_file();

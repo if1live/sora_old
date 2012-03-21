@@ -22,6 +22,9 @@
 #define SORA_MESH_H_
 
 #include "vertex.h"
+#if SR_USE_PCH == 0
+#include "gl_inc.h"
+#endif
 
 namespace sora {;
 

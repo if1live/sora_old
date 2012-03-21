@@ -85,7 +85,7 @@ SR_C_DLL const Material &MaterialMgr_get(const std::string &name) {
   MaterialManager &mgr = MaterialManager::GetInstance();
   return mgr.Get(name);
 }
-SR_C_DLL bool &MaterialMgr_is_exist(const std::string &name) {
+SR_C_DLL bool MaterialMgr_is_exist(const std::string &name) {
   MaterialManager &mgr = MaterialManager::GetInstance();
   bool retval = mgr.IsExist(name);
   return retval;
