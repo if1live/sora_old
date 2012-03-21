@@ -150,7 +150,7 @@ bool ShaderProgram::Init(const char *v_src, const char *f_src) {
   for(int var_code = 0 ; var_code < ShaderVariable::kSemanticCount ; ++var_code) {
     const ShaderVariable &var_data = ShaderVariable::GetPredefinedVar(var_code);
     int location_type = var_data.location_type;
-    const char *location_name = var_data.name;
+    const char *location_name = var_data.name.c_str();
 
     if(location_type == ShaderVariable::kTypeAttrib) {
       int location = GetAttribLocation(location_name);
@@ -162,29 +162,13 @@ bool ShaderProgram::Init(const char *v_src, const char *f_src) {
     }
   }
 
-  //show binded variable list
-  LOGI("Predefined Uniform/Attrib list");
-  for(int i = 0 ; i < ShaderVariable::kSemanticCount ; ++i) {
-    if(location_list_[i] == -1) {
-      continue;
-    }
-    const ShaderVariable *var = &ShaderVariable::GetPredefinedVar(i);
-    if(var->location_type == ShaderVariable::kTypeAttrib) {
-      LOGI("Attrib  %s : %d", var->name, location_list_[i]);
-    } else if(var->location_type == ShaderVariable::kTypeUniform) {
-      LOGI("Uniform %s : %d", var->name, location_list_[i]);
-    } else {
-      SR_ASSERT(!"not valid");
-    }
-  }
-
   LOGI("Active Uniform/Attrib list");
-  vector<ShaderLocation> uniform_list = GetActiveUniformLocationList();
-  BOOST_FOREACH(const ShaderLocation &loc, uniform_list) {
+  vector<ShaderVariable> uniform_list = GetActiveUniformVarList();
+  BOOST_FOREACH(const ShaderVariable &loc, uniform_list) {
     LOGI("%s", loc.str().c_str());
   }
-  vector<ShaderLocation> attrib_list = GetActiveAttributeLocationList();
-  BOOST_FOREACH(const ShaderLocation &loc, attrib_list) {
+  vector<ShaderVariable> attrib_list = GetActiveAttributeVarList();
+  BOOST_FOREACH(const ShaderVariable &loc, attrib_list) {
     LOGI("%s", loc.str().c_str());
   }
 
@@ -232,8 +216,8 @@ void ShaderProgram::SetLocation(int location_code, int loc) {
   location_list_[location_code] = loc; 
 }
 
-std::vector<ShaderLocation> ShaderProgram::GetActiveUniformLocationList() {
-  vector<ShaderLocation> list;
+std::vector<ShaderVariable> ShaderProgram::GetActiveUniformVarList() {
+  vector<ShaderVariable> list;
   
   GLint maxUniformLen;
   GLint numUniform;
@@ -251,15 +235,22 @@ std::vector<ShaderLocation> ShaderProgram::GetActiveUniformLocationList() {
     glGetActiveUniform(prog, i, maxUniformLen, NULL, &size, &type, uniformName);
     GLint location = glGetUniformLocation(prog, uniformName);
 
-    ShaderLocation sl(ShaderVariable::kTypeUniform, uniformName, location, size, type);
+    ShaderVariable sl;
+    sl.location = location;
+    sl.location_type = ShaderVariable::kTypeUniform;
+    sl.name = uniformName;
+    sl.semantic_code = ShaderVariable::ToSemanticFromName(uniformName);
+    sl.size = size;
+    sl.var_type = type;
+
     list.push_back(sl);
   }
 
   return list;
 }
 
-std::vector<ShaderLocation> ShaderProgram::GetActiveAttributeLocationList() {
-  vector<ShaderLocation> list;
+std::vector<ShaderVariable> ShaderProgram::GetActiveAttributeVarList() {
+  vector<ShaderVariable> list;
 
   GLint maxAttributeLen;
   GLint numAttribute;
@@ -275,7 +266,14 @@ std::vector<ShaderLocation> ShaderProgram::GetActiveAttributeLocationList() {
     glGetActiveAttrib(prog, i, maxAttributeLen, NULL, &size, &type, attributeName);
     GLint location = glGetAttribLocation(prog, attributeName);
 
-    ShaderLocation sl(ShaderVariable::kTypeAttrib, attributeName, location, size, type);
+    ShaderVariable sl;
+    sl.location = location;
+    sl.location_type = ShaderVariable::kTypeAttrib;
+    sl.name = attributeName;
+    sl.semantic_code = ShaderVariable::ToSemanticFromName(attributeName);
+    sl.size = size;
+    sl.var_type = type;
+
     list.push_back(sl);
   }
   return list;

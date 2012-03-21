@@ -25,8 +25,12 @@ using namespace std;
 
 namespace sora {;
 ShaderVariable::ShaderVariable()
-  : semantic_code(kUnknown), var_type(0), location_type(0), size(0) {
-    strcpy(name, ""); 
+  : semantic_code(kUnknown),
+  var_type(0),
+  location_type(0),
+  size(0),
+  name(""),
+  location(-1) {
 }
 
 void ShaderVariable::Set(int code, int var_type, int loc_type, const char *attr_name, int size) {
@@ -34,7 +38,8 @@ void ShaderVariable::Set(int code, int var_type, int loc_type, const char *attr_
   this->var_type = var_type;
   this->location_type = loc_type;
   this->size = size;
-  strcpy(name, attr_name);
+  this->name = attr_name;
+  this->location = -1;
 }
 
 const std::vector<ShaderVariable> &ShaderVariable::GetPredefinedVarList() {
@@ -79,6 +84,7 @@ const std::vector<ShaderVariable> &ShaderVariable::GetPredefinedVarList() {
   }
   return var_list;
 }
+
 const ShaderVariable &ShaderVariable::GetPredefinedVar(int semantic_code) {
   if(semantic_code >= 0 && semantic_code < kSemanticCount) {
     const ShaderVariable &var = GetPredefinedVarList().at(semantic_code);
@@ -92,34 +98,62 @@ const ShaderVariable &ShaderVariable::GetPredefinedVar(int semantic_code) {
   return empty;
 }
 
-////////////////////////////////
-ShaderLocation::ShaderLocation(int loc_type, 
-  const char *name,
-  GLint location, GLint size, GLenum type)
-  : location_type(loc_type),
-  name(name),
-  location(location),
-  size(size),
-  type(type) {
-}
-std::string ShaderLocation::str() const {
-  std::ostringstream oss;
-  if(location_type == ShaderVariable::kTypeAttrib) {
-    oss << "[Attrib ] " << location << "/" << name;
-  } else if(location_type == ShaderVariable::kTypeUniform) {
-    oss << "[Uniform] " << location << "/" << name;
+int ShaderVariable::ToSemanticFromName(const char *name) {
+  string name_str(name);
+  const std::vector<ShaderVariable> &predef_list = GetPredefinedVarList();
+  auto it = predef_list.begin();
+  auto endit = predef_list.end();
+  for( ; it != endit ; ++it) {
+    const ShaderVariable &predef_var = *it;
+    if(name_str == predef_var.name) {
+      return predef_var.semantic_code;
+    }
   }
+  return -1;
+}
+
+const std::string &ShaderVariable::ToNameFromSemantic(int code) {
+  const std::vector<ShaderVariable> &predef_list = GetPredefinedVarList();
+  auto it = predef_list.begin();
+  auto endit = predef_list.end();
+  for( ; it != endit ; ++it) {
+    const ShaderVariable &predef_var = *it;
+    if(predef_var.semantic_code == code) {
+      return predef_var.name;
+    }
+  }
+  //else...
+  static string empty;
+  return empty;
+}
+
+std::string ShaderVariable::str() const {
+  std::ostringstream oss;
+
+  
+
+  if(location_type == ShaderVariable::kTypeAttrib) {
+    oss << "[Attrib ] " << location << " / " << name;
+  } else if(location_type == ShaderVariable::kTypeUniform) {
+    oss << "[Uniform] " << location << " / " << name;
+  }
+  const std::string &semantic = ToNameFromSemantic(semantic_code);
+  if(semantic.empty() == false) {
+    oss << "  [" << semantic << "]";
+  }
+
   return oss.str();
 }
 
-bool ShaderLocation::operator==(const ShaderLocation &o) const {
+bool ShaderVariable::operator==(const ShaderVariable &o) const {
   return (name == o.name 
     && location == o.location
     && size == o.size 
-    && type == o.type
-    && location_type == o.location_type);
+    && var_type == o.var_type
+    && location_type == o.location_type
+    && location == o.location);
 }
-bool ShaderLocation::operator!=(const ShaderLocation &o) const {
+bool ShaderVariable::operator!=(const ShaderVariable &o) const {
   return !(*this == o);
 }
 }

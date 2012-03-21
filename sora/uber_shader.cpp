@@ -53,7 +53,7 @@ bool UberShader::Init() {
   for(int var_code = kAmbientColor ; var_code < kCount ; ++var_code) {
     const ShaderVariable &var_data = GetVariable(var_code);
     int location_type = var_data.location_type;
-    const char *location_name = var_data.name;
+    const char *location_name = var_data.name.c_str();
 
     if(location_type == ShaderVariable::kTypeAttrib) {
       int location = prog_.GetAttribLocation(location_name);
@@ -64,24 +64,6 @@ bool UberShader::Init() {
       prog_.SetLocation(var_code, location);
     }
   }
-
-  /*
-  //show binded variable list
-  for(int i = 0 ; i < GetArraySize(location_list_) ; ++i) {
-    if(location_list_[i] == -1) {
-      continue;
-    }
-
-    const ShaderVariable *var = &ShaderVariable::GetPredefinedVar(i);
-    if(var->location_type == ShaderVariable::kTypeAttrib) {
-      LOGI("Attrib  %s : %d", var->name, location_list_[i]);
-    } else if(var->location_type == ShaderVariable::kTypeUniform) {
-      LOGI("Uniform %s : %d", var->name, location_list_[i]);
-    } else {
-      SR_ASSERT(!"not valid");
-    }
-  }
-  */
 
   return true;
 }

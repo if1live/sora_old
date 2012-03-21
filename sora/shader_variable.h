@@ -121,37 +121,26 @@ struct ShaderVariable {
 
   static const std::vector<ShaderVariable> &GetPredefinedVarList();
   static const ShaderVariable &GetPredefinedVar(int semantic_code);
+  static int ToSemanticFromName(const char *name);
+  static const std::string &ToNameFromSemantic(int code);
 
 public:
   ShaderVariable();
   void Set(int code, int var_type, int loc_type, const char *attr_name, int size);
 
-  int semantic_code;  //렌더러 구현에서 쓰이는 의미를 가지는 코드 kModel이라든가 그런것들
-  int var_type; //vec2? mat4?
-  int location_type;  //attrib/uniform
-  char name[64];  //shader코드에서의 변수이름
-  int size; //속성의 크기
-};
-
-////////////////////////////////////////
-
-//쉐이더 위치 정보. 쌩으로 덤프뜰때 사용한다
-class ShaderLocation {
-public:
-  ShaderLocation(int loc_type, const char *name, GLint location, GLint size, GLenum type);
-
-  bool operator==(const ShaderLocation &o) const;
-  bool operator!=(const ShaderLocation &o) const;
+  bool operator==(const ShaderVariable &o) const;
+  bool operator!=(const ShaderVariable &o) const;
 
   std::string str() const;
 
+public:
+  int semantic_code;  //렌더러 구현에서 쓰이는 의미를 가지는 코드 kModel이라든가 그런것들
+  int var_type; //vec2? mat4?
   int location_type;  //attrib/uniform
-  std::string name;
-  GLint location;
-  GLint size;
-  GLenum type;
+  std::string name;  //shader코드에서의 변수이름
+  int size; //속성의 크기. 쉐이더에서 배열이 아니면 전부1이다
+  GLint location; //쉐이더에서의 위치값. 연결안되잇으면 일단 -1
 };
-
 
 }
 

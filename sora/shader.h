@@ -81,15 +81,14 @@ public:
   int GetLocation(int location_code) const;
   void SetLocation(int location_code, int loc);
 
-  std::vector<ShaderLocation> GetActiveUniformLocationList();
-  std::vector<ShaderLocation> GetActiveAttributeLocationList();
+  std::vector<ShaderVariable> GetActiveUniformVarList();
+  std::vector<ShaderVariable> GetActiveAttributeVarList();
 public:
   GLuint prog;
 
 private:
   Shader vert_shader_;
   Shader frag_shader_;
-
 
   //predefined + 여유공간
   static const int kMaxLocationCount = 32;
