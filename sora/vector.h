@@ -50,6 +50,9 @@ typedef Vector4<float> Vec4;
 typedef Vector2<ushort> Vec2us;
 typedef Vector3<ushort> Vec3us;
 typedef Vector4<ushort> Vec4us;
+typedef Vector2<uchar> Vec2ub;
+typedef Vector3<uchar> Vec3ub;
+typedef Vector4<uchar> Vec4ub;
 
 template<typename T>
 struct SR_DLL Vector2 {

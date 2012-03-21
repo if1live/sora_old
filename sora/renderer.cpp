@@ -37,6 +37,7 @@
 #endif
 
 #include "camera.h"
+#include "mesh.h"
 
 namespace sora {;
 
@@ -172,49 +173,34 @@ void Renderer::set_camera(const Camera &cam) {
   view = glm::lookAt(eye_v, center_v, up_v);
 }
 
-void Renderer::DrawObj(const ObjModel &model) {
+void Renderer::Draw(const DrawCommand &cmd) {
+  if(cmd.vert_ptr == NULL) { return; }
+  if(cmd.index_ptr == NULL) { return; }
+  if(cmd.index_count == 0) { return; }
+
   int pos_loc = last_prog()->GetLocation(ShaderVariable::kPosition);
   int texcoord_loc = last_prog()->GetLocation(ShaderVariable::kTexcoord);
   int normal_loc = last_prog()->GetLocation(ShaderVariable::kNormal);
+
+
+  const Vertex *vert_ptr = cmd.vert_ptr;
 
   //draw cube
   if(pos_loc != -1) {
-    glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &model.vertex_ptr()->pos);
+    glVertexAttribPointer(pos_loc, 3, Vertex::kPosType, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->pos);
   }
   if(texcoord_loc != 1) {
-    glVertexAttribPointer(texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &model.vertex_ptr()->texcoord);
+    glVertexAttribPointer(texcoord_loc, 2, Vertex::kTexcoordType, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->texcoord);
   }
   if(normal_loc != -1) {
-    glVertexAttribPointer(normal_loc, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &model.vertex_ptr()->normal);
+    glVertexAttribPointer(normal_loc, 3, Vertex::kNormalType, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->normal);
   }
-  glDrawElements(GL_TRIANGLES, model.index_count(), GL_UNSIGNED_SHORT, model.index_ptr());
-}
 
-void Renderer::DrawPrimitiveModel(const PrimitiveModel &model) {
-  int pos_loc = last_prog()->GetLocation(ShaderVariable::kPosition);
-  int texcoord_loc = last_prog()->GetLocation(ShaderVariable::kTexcoord);
-  int normal_loc = last_prog()->GetLocation(ShaderVariable::kNormal);
-
-  //draw primitive model
-  for(int i = 0 ; i < model.Count() ; i++) {
-    const sora::Vertex *vert_ptr = model.vertex_list(i);
-    const void *idx_ptr = model.index_list(i);
-    int idx_count = model.index_count(i);
-    GLenum draw_mode = model.draw_mode(i);
-
-    if(pos_loc != -1) {
-      glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->pos);
-    }
-    if(texcoord_loc != -1) {
-      glVertexAttribPointer(texcoord_loc, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->texcoord);
-    }
-    if(normal_loc != -1) {
-      glVertexAttribPointer(normal_loc, 3, GL_FLOAT, GL_TRUE, sizeof(sora::Vertex), &vert_ptr->normal);
-    }
-    //glDrawElements(GL_TRIANGLES, index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
-    glDrawElements(draw_mode, idx_count, GL_UNSIGNED_SHORT, idx_ptr);
-    GLHelper::CheckError("DrawElements - primitive model");
-  }
+  int index_count = cmd.index_count;
+  GLenum draw_mode = cmd.draw_mode;
+  GLenum index_type = cmd.index_type;
+  const void *index_ptr = cmd.index_ptr;
+  glDrawElements(draw_mode, index_count, index_type, index_ptr);
 }
 
 void Renderer::ApplyMatrix(const glm::mat4 &world_mat) {

@@ -145,6 +145,7 @@
     <ClInclude Include="material_manager.h" />
     <ClInclude Include="matrix_stack.h" />
     <ClInclude Include="memory_file.h" />
+    <ClInclude Include="mesh.h" />
     <ClInclude Include="mesh_component.h" />
     <ClInclude Include="obj_loader.h" />
     <ClInclude Include="obj_model.h" />

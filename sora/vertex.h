@@ -29,6 +29,10 @@ struct TangentVertex;
 struct Vertex2D;
 
 struct Vertex2D {
+  enum {
+    kPosType = GL_FLOAT,
+    kTexcoordType = GL_FLOAT,
+  };
   Vertex2D() : pos(0, 0), texcoord(0, 0) {}
   Vertex2D(float x, float y, float s, float t)
     : pos(x, y), texcoord(s, t) {}
@@ -38,13 +42,19 @@ struct Vertex2D {
 };
 
 struct Vertex {
+  enum {
+    kPosType = GL_FLOAT,
+    kTexcoordType = GL_FLOAT,
+    kNormalType = GL_FLOAT,
+    kColorType = GL_UNSIGNED_BYTE,
+  };
   Vertex() : pos(0, 0, 0), texcoord(0, 0), normal(1, 0, 0), color(1, 1, 1, 1) {}
-  Vertex(float x, float y, float z, float s, float t, float nx, float ny, float nz, float r, float g, float b, float a)
+  Vertex(float x, float y, float z, float s, float t, float nx, float ny, float nz, uchar r, uchar g, uchar b, uchar a)
     : pos(x, y, z), texcoord(s, t), normal(nx, ny, nz), color(r, g, b, a) {}
   Vec3f pos;
   Vec2f texcoord;
   Vec3f normal;
-  Vec4f color;
+  Vec4ub color;
 };
 
 struct TangentVertex {

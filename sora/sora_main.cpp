@@ -288,11 +288,11 @@ void renderFrame() {
       switch(comp->mesh_type()) {
       case MeshComponent::kMeshObj:
         render3d.ApplyMatrix(comp->entity()->world_mat());
-        render3d.DrawObj(comp->obj_model());
+        render3d.DrawMesh(comp->obj_model());
         break;
       case MeshComponent::kMeshPrimitive:
         render3d.ApplyMatrix(comp->entity()->world_mat());
-        render3d.DrawPrimitiveModel(comp->primitive_model());
+        render3d.DrawMesh(comp->primitive_model());
         break;
       default:
         break;

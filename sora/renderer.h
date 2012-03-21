@@ -35,6 +35,7 @@ class ShaderProgram;
 class ObjModel;
 class PrimitiveModel;
 class Camera;
+struct DrawCommand;
 
 //2d / 3d는 미묘한 정책만 수정해도 충분할듯하다
 struct RendererPolicy {
@@ -86,8 +87,9 @@ public:
   void set_camera(const Camera &cam);
 
   //draw method
-  void DrawObj(const ObjModel &model);
-  void DrawPrimitiveModel(const PrimitiveModel &model);
+  template<typename T>
+  void DrawMesh(const T &mesh);
+  void Draw(const DrawCommand &cmd);
 
 protected:
   //access cache like data
@@ -114,6 +116,16 @@ private:
 
   RendererPolicy *policy_;
 };
+
+template<typename T>
+void Renderer::DrawMesh(const T &mesh) {
+  std::vector<DrawCommand> cmd_list = mesh.GetDrawCmdList();
+  auto it = cmd_list.begin();
+  auto endit = cmd_list.end();
+  for( ; it != endit ; ++it) {
+    Draw(*it);
+  }
+}
 }
 
 #endif  // SORA_RENDERER_H_

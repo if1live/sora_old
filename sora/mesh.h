@@ -18,36 +18,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_OBJ_MODEL_H_
-#define SORA_OBJ_MODEL_H_
+#ifndef SORA_MESH_H_
+#define SORA_MESH_H_
 
 #include "vertex.h"
-#include "mesh.h"
 
 namespace sora {;
 
-struct ObjModel;
-struct ObjModelImpl;
+struct DrawCommand;
 
-struct SR_DLL ObjModel {
-  ObjModel();
-  ~ObjModel();
-  ObjModel(const ObjModel &o);
-  ObjModel& operator=(const ObjModel &o);
+//메시를 그리는데 필요한 정보. 렌더러는 이 정보를 얻어서 돌아가도록했다
+struct DrawCommand {
+  DrawCommand() 
+    : draw_mode(GL_TRIANGLES), 
+    vert_ptr(NULL),
+    index_ptr(NULL), 
+    index_count(0),
+    index_type(GL_UNSIGNED_SHORT) { }
 
-  const Vertex *vertex_ptr() const;
-  const void *index_ptr() const;
-  int vertex_count() const;
-  int index_count() const;
-
-  std::vector<DrawCommand> GetDrawCmdList() const;
-
-  void AddVertex(const Vertex &v);
-  void AddIndex(ushort idx);
-
-private:
-  ObjModelImpl *impl;
+  GLenum draw_mode;
+  const Vertex *vert_ptr;
+  const void *index_ptr;
+  int index_count;
+  GLenum index_type;
 };
+
 }
 
-#endif  // SORA_OBJ_MODEL_H_
+#endif  // SORA_MESH_H_

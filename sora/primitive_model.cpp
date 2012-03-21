@@ -65,6 +65,22 @@ PrimitiveModel::~PrimitiveModel() {
   SafeDelete(impl);
 }
 
+std::vector<DrawCommand> PrimitiveModel::GetDrawCmdList() const {
+  vector<DrawCommand> cmd_list;
+  //draw primitive model
+  for(int i = 0 ; i < Count() ; i++) {
+    DrawCommand draw_cmd;
+    draw_cmd.vert_ptr = vertex_list(i);
+    draw_cmd.index_ptr= index_list(i);
+    draw_cmd.index_count = index_count(i);
+    draw_cmd.draw_mode = draw_mode(i);
+    draw_cmd.index_type = GL_UNSIGNED_SHORT;
+
+    cmd_list.push_back(draw_cmd);
+  }
+  return cmd_list;
+}
+
 int PrimitiveModel::Count() const {
   return impl->mode_group.size();
 }
@@ -964,9 +980,9 @@ void PrimitiveModel::WireAxis(float size) {
   Vec3f zPos(0, 0, size);
   Vec3f zero(0, 0, 0);
 
-  Vec4f red(1, 0, 0, 1);
-  Vec4f green(0, 1, 0, 1);
-  Vec4f blue(0, 0, 1, 1);
+  Vec4ub red(255, 0, 0, 255);
+  Vec4ub green(0, 255, 0, 255);
+  Vec4ub blue(0, 0, 255, 255);
 
   //x axis - r
   Vertex vx0; vx0.pos = zero; vx0.color = red;

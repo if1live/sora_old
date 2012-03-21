@@ -318,5 +318,8 @@
     <ClInclude Include="texture_manager.h">
       <Filter>render</Filter>
     </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>render</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

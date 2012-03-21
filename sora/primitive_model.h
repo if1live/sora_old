@@ -22,6 +22,7 @@
 #define SORA_PRIMITIVE_MODEL_H_
 
 #include "vertex.h"
+#include "mesh.h"
 #if SR_USE_PCH == 0
 #include <vector>
 #include "gl_inc.h"
@@ -61,6 +62,8 @@ public:
   int vertex_count(int idx) const;
   int index_count(int idx) const;
   GLenum draw_mode(int idx) const;
+
+  std::vector<DrawCommand> GetDrawCmdList() const;
 
 private:
   PrimitiveModelImpl *impl;

@@ -49,6 +49,18 @@ ObjModel& ObjModel::operator=(const ObjModel &o) {
   return *this;
 }
 
+std::vector<DrawCommand> ObjModel::GetDrawCmdList() const {
+  vector<DrawCommand> cmd_list;
+  DrawCommand draw_cmd;
+  draw_cmd.vert_ptr = vertex_ptr();
+  draw_cmd.draw_mode = GL_TRIANGLES;
+  draw_cmd.index_ptr = index_ptr();
+  draw_cmd.index_type = GL_UNSIGNED_SHORT;
+  draw_cmd.index_count = index_count();
+  cmd_list.push_back(draw_cmd);
+  return cmd_list;
+}
+
 const Vertex *ObjModel::vertex_ptr() const {
   return &impl->vert_list[0];
 }
