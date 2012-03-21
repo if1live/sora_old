@@ -148,6 +148,9 @@
     <ClCompile Include="texture_manager.cpp">
       <Filter>render</Filter>
     </ClCompile>
+    <ClCompile Include="string_hash.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -320,6 +323,9 @@
     </ClInclude>
     <ClInclude Include="mesh.h">
       <Filter>render</Filter>
+    </ClInclude>
+    <ClInclude Include="string_hash.h">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

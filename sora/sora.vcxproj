@@ -99,6 +99,7 @@
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="primitive_model.cpp" />
     <ClCompile Include="shader_variable.cpp" />
+    <ClCompile Include="string_hash.cpp" />
     <ClCompile Include="sys_locale.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="texture_manager.cpp" />
@@ -155,6 +156,7 @@
     <ClInclude Include="primitive_model.h" />
     <ClInclude Include="shader_variable.h" />
     <ClInclude Include="string_code_dictionary.h" />
+    <ClInclude Include="string_hash.h" />
     <ClInclude Include="teapot.h" />
     <ClInclude Include="sys_locale.h" />
     <ClInclude Include="texture.h" />
