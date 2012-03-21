@@ -163,12 +163,12 @@ bool ShaderProgram::Init(const char *v_src, const char *f_src) {
   }
 
   LOGI("Active Uniform/Attrib list");
-  vector<ShaderVariable> uniform_list = GetActiveUniformVarList();
-  BOOST_FOREACH(const ShaderVariable &loc, uniform_list) {
+  uniform_var_list_ = GetActiveUniformVarList();
+  BOOST_FOREACH(const ShaderVariable &loc, uniform_var_list_) {
     LOGI("%s", loc.str().c_str());
   }
-  vector<ShaderVariable> attrib_list = GetActiveAttributeVarList();
-  BOOST_FOREACH(const ShaderVariable &loc, attrib_list) {
+  attrib_var_list_ = GetActiveAttributeVarList();
+  BOOST_FOREACH(const ShaderVariable &loc, attrib_var_list_) {
     LOGI("%s", loc.str().c_str());
   }
 

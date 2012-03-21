@@ -33,5 +33,49 @@ sora::Logger<ConsoleLogStream> &SharedConsoleLogger() {
   static sora::Logger<ConsoleLogStream> logger("Shared");
   return logger;
 }
+
+struct LoggerNameFinder {
+  LoggerNameFinder(const char *name) : name(name) {}
+  bool operator()(const AutoGenLoggerList::LoggerType &logger) {
+    return logger.name() == name;
+  };
+  const char *name;
+};
+
+AutoGenLoggerList::AutoGenLoggerList() {
+}
+AutoGenLoggerList::~AutoGenLoggerList() {
+}
+AutoGenLoggerList::LoggerType &AutoGenLoggerList::GetLogger(const char *name) {
+  LoggerListType &logger_list = GetInstance().logger_list_;
+  auto found = find_if(logger_list.begin(), logger_list.end(), LoggerNameFinder(name));
+  if(found != logger_list.end()) {
+    return *found;
+  } else {
+    LoggerType logger(name);
+    logger_list.push_back(logger);
+    return logger_list.back();
+  }
+}
+
+void AutoGenLoggerList::SetAllState(bool state) {
+  //지금까지 생성된 로그에 대해서만 처리가 가능
+  LoggerListType &logger_list = GetInstance().logger_list_;
+  auto it = logger_list.begin();
+  auto endit = logger_list.end();
+  for( ; it != endit ; it++) {
+    it->enable = state;
+  }
+}
+void AutoGenLoggerList::SetState(const char *name, bool state) {
+  GetLogger(name);        //빈로그 미리 생성해야 이후에 확실히 적용
+
+  LoggerListType &logger_list = GetInstance().logger_list_;
+  auto found = find_if(logger_list.begin(), logger_list.end(), LoggerNameFinder(name));
+  if(found != logger_list.end()) {
+    found->enable = state;
+  }
+}
+
 }
 #endif

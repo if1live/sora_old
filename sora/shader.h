@@ -81,8 +81,10 @@ public:
   int GetLocation(int location_code) const;
   void SetLocation(int location_code, int loc);
 
+  //최초실행시에는 모든목록을 얻을수잇다
   std::vector<ShaderVariable> GetActiveUniformVarList();
   std::vector<ShaderVariable> GetActiveAttributeVarList();
+
 public:
   GLuint prog;
 
@@ -94,6 +96,9 @@ private:
   static const int kMaxLocationCount = 32;
   //SR_STATIC_ASSERT_NOMSG(ShaderProgram::kMaxLocationCount > ShaderVariable::kSemanticCount);
   int location_list_[kMaxLocationCount];
+
+  std::vector<ShaderVariable> uniform_var_list_;
+  std::vector<ShaderVariable> attrib_var_list_;
 };
 
 }
