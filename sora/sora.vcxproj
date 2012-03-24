@@ -89,6 +89,8 @@
     <ClCompile Include="core\string_hash.cpp" />
     <ClCompile Include="core\timer.cpp" />
     <ClCompile Include="core\vector.cpp" />
+    <ClCompile Include="event\touch_device.cpp" />
+    <ClCompile Include="event\touch_event.cpp" />
     <ClCompile Include="lodepng\lodepng.cpp" />
     <ClCompile Include="renderer\camera.cpp" />
     <ClCompile Include="renderer\font.cpp" />
@@ -149,6 +151,8 @@
     <ClInclude Include="core\tuple_inc.h" />
     <ClInclude Include="core\unordered_map_inc.h" />
     <ClInclude Include="core\vector.h" />
+    <ClInclude Include="event\touch_device.h" />
+    <ClInclude Include="event\touch_event.h" />
     <ClInclude Include="lodepng\lodepng.h" />
     <ClInclude Include="renderer\camera.h" />
     <ClInclude Include="renderer\font.h" />

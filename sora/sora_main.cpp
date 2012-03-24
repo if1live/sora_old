@@ -61,6 +61,8 @@
 
 #include "renderer/shader_bind_policy.h"
 
+#include "event/touch_device.h"
+#include "event/touch_event.h"
 
 using namespace std;
 using namespace sora;
@@ -81,7 +83,7 @@ void SORA_set_window_size(int w, int h) {
 }
 void SORA_test_draw(int w, int h) {
   static float a = 0;
-  a += 0.1;
+  a += 0.1f;
 
   glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
@@ -413,7 +415,75 @@ SR_C_DLL void SORA_init_gl_env() {
 #endif
 }
 
+TouchEventQueue touch_evt_queue;
+
 void SORA_update_frame(float dt) {
+  static float elapsed_time = 0;
+  static int elapsed_tick_count = 0;
+  elapsed_tick_count++;
+  elapsed_time += dt;
+
+#if SR_WIN
+  // touch event
+  TouchDevice &touch_device = TouchDevice::GetInstance();
+  //glfw 대응 소스
+  int posx, posy;
+  glfwGetMousePos(&posx, &posy);
+  int left_state = glfwGetMouseButton(GLFW_MOUSE_BUTTON_LEFT);
+  int left_btn_state = false;
+  if(left_state == GLFW_RELEASE) {
+    left_btn_state = kInputRelease;
+  } else {
+    left_btn_state = kInputPress;
+  }
+  touch_device.UpdateState(left_btn_state, posx, posy, elapsed_tick_count, elapsed_time);
+  const vector<TouchEvent> &touch_evt_list = touch_device.GetCreatedEvent();
+  auto touch_evt_it = touch_evt_list.begin();
+  auto touch_evt_endit = touch_evt_list.end();
+  for( ; touch_evt_it != touch_evt_endit ; ++touch_evt_it) {
+    touch_evt_queue.Push(*touch_evt_it);
+  }
+#endif
+
+  //터치 메세지 꺼내서 실제로 까보기
+  while(touch_evt_queue.IsEmpty() == false) {
+    TouchEvent evt = touch_evt_queue.Get();
+    /*
+    switch(evt.evt_type) {
+    case kTouchBegan:
+      LOGD("began [%d] %d,%d", evt.uid, evt.x, evt.y);
+      break;
+    case kTouchMoved:
+      LOGD("moved [%d] %d,%d <- %d,%d", evt.uid, evt.x, evt.y, evt.prev_x, evt.prev_y);
+      break;
+    case kTouchEnded:
+      LOGD("ended [%d] %d,%d", evt.uid, evt.x, evt.y);
+      break;
+    case kTouchCancelled:
+      LOGD("canxx [%d] %d,%d", evt.uid, evt.x, evt.y);
+      break;
+    default:
+      SR_ASSERT(!"do not reach");
+      break;
+    }
+    */
+  }
+
+
+  float x = 0.1;
+  //check key
+  if(glfwGetKey('W') == GLFW_PRESS || glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS) {
+    SORA_set_cam_pos(x, 0);
+  }
+  if(glfwGetKey('S') == GLFW_PRESS || glfwGetKey(GLFW_KEY_DOWN) == GLFW_PRESS) {
+    SORA_set_cam_pos(-x, 0);
+  }
+  if(glfwGetKey('A') == GLFW_PRESS || glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS) {
+    SORA_set_cam_pos(0, x);
+  }
+  if(glfwGetKey('D') == GLFW_PRESS || glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS) {
+    SORA_set_cam_pos(0, -x);
+  }
 }
 
 void SORA_cleanup_graphics() {

@@ -50,6 +50,8 @@
 #include <algorithm>
 #include <memory>
 #include <map>
+#include <stack>
+#include <queue>
 
 #if SR_WIN
 #include <Windows.h>
