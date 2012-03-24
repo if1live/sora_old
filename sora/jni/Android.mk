@@ -30,42 +30,60 @@ LOCAL_CFLAGS :=
 LOCAL_CXXFLAGS := --std=gnu++0x
 
 LOCAL_MODULE    := sora
+
 LOCAL_SRC_FILES := \
-	../arch.cpp	\
-	../common_string.cpp	\
-	../timer.cpp	\
-	../math_helper.cpp	\
-	../logger.cpp	\
-	../mem.cpp	\
-	../vector.cpp	\
-	../gl_helper.cpp	\
-	../gl_inc.cpp	\
-	../sys_locale.cpp	\
-	../shader.cpp	\
-	../filesystem.cpp	\
-	../low_level_c_file.cpp	\
-	../memory_file.cpp	\
-	../zip_stream_file.cpp	\
-	../sora_main.cpp	\
-	../renderer.cpp	\
-	../obj_loader.cpp	\
-	../obj_model.cpp	\
-	../primitive_model.cpp	\
-	../texture.cpp	\
+	../cbes/component.cpp	\
+	../cbes/component_list.cpp	\
+	../cbes/entity.cpp	\
+	../cbes/mesh_component.cpp	\
+	../cbes/world.cpp
+	
+LOCAL_SRC_FILES += 	\
+	../core/arch.cpp	\
+	../core/common_string.cpp	\
+	../core/free_list_block_pool.cpp	\
+	../core/heap.cpp	\
+	../core/mem.cpp	\
+	../core/timer.cpp	\
+	../core/math_helper.cpp	\
+	../core/logger.cpp	\
+	../core/vector.cpp	\
+	../core/string_hash.cpp
+	
+LOCAL_SRC_FILES += 	\
+	../event/touch_device.cpp	\
+	../event/touch_event.cpp
+	
+LOCAL_SRC_FILES += \
 	../lodepng/lodepng.cpp	\
-	../gl_buffer_object.cpp	\
-	../material_manager.cpp	\
-	../texture_manager.cpp	\
-	../matrix_stack.cpp	\
-	../font.cpp	\
-	../shader_variable.cpp	\
-	../camera.cpp	\
-	../component.cpp	\
-	../component_list.cpp	\
-	../entity.cpp	\
-	../mesh_component.cpp	\
-	../world.cpp	\
-	../uber_shader.cpp
+	../renderer/gl_helper.cpp	\
+	../renderer/gl_inc.cpp	\
+	../renderer/shader.cpp	\
+	../renderer/renderer.cpp	\
+	../renderer/obj_loader.cpp	\
+	../renderer/obj_model.cpp	\
+	../renderer/primitive_model.cpp	\
+	../renderer/texture.cpp	\
+	../renderer/gl_buffer_object.cpp	\
+	../renderer/material_manager.cpp	\
+	../renderer/texture_manager.cpp	\
+	../renderer/matrix_stack.cpp	\
+	../renderer/font.cpp	\
+	../renderer/shader_variable.cpp	\
+	../renderer/camera.cpp	\
+	../renderer/uber_shader.cpp	\
+	../renderer/shader_bind_policy.cpp
+	
+LOCAL_SRC_FILES += \
+	../sys/sys_locale.cpp	\
+	../sys/filesystem.cpp	\
+	../sys/low_level_c_file.cpp	\
+	../sys/memory_file.cpp	\
+	../sys/zip_stream_file.cpp	\
+	
+LOCAL_SRC_FILES += \
+	../sora_main.cpp
+	
 
 #include $(BUILD_SHARED_LIBRARY)
 include $(BUILD_STATIC_LIBRARY)

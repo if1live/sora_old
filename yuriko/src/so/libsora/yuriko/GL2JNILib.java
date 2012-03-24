@@ -31,4 +31,11 @@ public class GL2JNILib {
      public static native void init(int width, int height);
      public static native void step();
      public static native void setApkPath(String path);
+     
+     //touch
+     public static native void touchBegan(int x, int y, int uid, int tick_count, float timestamp);
+     public static native void touchMoved(int curr_x, int curr_y, int prev_x, int prev_y, int uid, int tick_count, float timestamp);
+     public static native void touchEnded(int curr_x, int curr_y, int prev_x, int prev_y, int uid, int tick_count, float timestamp);
+     public static native void touchCancelled(int curr_x, int curr_y, int prev_x, int prev_y, int uid, int tick_count, float timestamp);
+     
 }

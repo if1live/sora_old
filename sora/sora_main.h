@@ -36,6 +36,11 @@ SR_C_DLL void SORA_test_draw(int w, int h);
 
 SR_C_DLL void SORA_set_cam_pos(float a, float b);
 
+SR_C_DLL void SORA_touch_began(int x, int y, int uid, int tick_count, float timestamp);
+SR_C_DLL void SORA_touch_moved(int x, int y, int prev_x, int prev_y, int uid, int tick_count, float timestamp);
+SR_C_DLL void SORA_touch_ended(int x, int y, int prev_x, int prev_y, int uid, int tick_count, float timestamp);
+SR_C_DLL void SORA_touch_cancelled(int x, int y, int prev_x, int prev_y, int uid, int tick_count, float timestamp);
+
 #if SR_ANDROID
 void SORA_set_apk_file_path(const char *abs_path);
 #endif

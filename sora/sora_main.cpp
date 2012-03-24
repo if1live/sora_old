@@ -23,7 +23,7 @@
 
 //android  OpenGL ES 2.0 code based
 #if SR_USE_PCH == 0
-#include "gl_inc.h"
+#include "renderer/gl_inc.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -81,6 +81,8 @@ void SORA_set_window_size(int w, int h) {
   sora::Renderer::SetWindowSize((float)w, (float)h);
 
 }
+
+#if SR_WIN
 void SORA_test_draw(int w, int h) {
   static float a = 0;
   a += 0.1f;
@@ -113,6 +115,7 @@ void SORA_test_draw(int w, int h) {
   glColorPointer(3, GL_UNSIGNED_BYTE, 0, color);
   glDrawArrays(GL_TRIANGLES, 0, 3);
 }
+#endif
 
 bool setupGraphics(int w, int h) {
   sora::Renderer::SetWindowSize((float)w, (float)h); 
@@ -448,7 +451,48 @@ void SORA_update_frame(float dt) {
   //터치 메세지 꺼내서 실제로 까보기
   while(touch_evt_queue.IsEmpty() == false) {
     TouchEvent evt = touch_evt_queue.Get();
-    /*
+    float x = (float)evt.x;
+    float y = (float)evt.y;
+
+    //x u x
+    //l x r
+    //x d x
+    bool is_left = false;
+    bool is_right = false;
+    bool is_bottom = false;
+    bool is_top = false;
+    float scr_width = Renderer::win_width();
+    float scr_height = Renderer::win_height();
+    if(x < scr_width / 3) {
+      is_left = true;
+    }
+    if(x > scr_width / 3.0f * 2) {
+      is_right = true;
+    }
+    if(y < scr_height / 3.0f) {
+      is_bottom = true;
+    }
+    if(y > scr_height / 3.0f * 2) {
+      is_top = true;
+    }
+
+    float move_x = 5;
+    if(is_top) {
+      SORA_set_cam_pos(move_x, 0);
+    }
+    if(is_bottom) {
+      SORA_set_cam_pos(-move_x, 0);
+    }
+    if(is_left) {
+      SORA_set_cam_pos(0, move_x);
+    }
+    if(is_right) {
+      SORA_set_cam_pos(0, -move_x);
+    }
+
+
+    //9버튼으로 조작할수 잇도록하자
+    
     switch(evt.evt_type) {
     case kTouchBegan:
       LOGD("began [%d] %d,%d", evt.uid, evt.x, evt.y);
@@ -466,10 +510,10 @@ void SORA_update_frame(float dt) {
       SR_ASSERT(!"do not reach");
       break;
     }
-    */
   }
 
 
+#if SR_WIN
   float x = 0.1;
   //check key
   if(glfwGetKey('W') == GLFW_PRESS || glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS) {
@@ -484,13 +528,74 @@ void SORA_update_frame(float dt) {
   if(glfwGetKey('D') == GLFW_PRESS || glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS) {
     SORA_set_cam_pos(0, -x);
   }
+#endif
 }
 
 void SORA_cleanup_graphics() {
 }
 
+SR_C_DLL void SORA_touch_began(int x, int y, int uid, int tick_count, float timestamp) {
+  TouchEvent evt;
+  evt.evt_type = kTouchBegan;
+  evt.prev_x = x;
+  evt.prev_y = y;
+  evt.x = x;
+  evt.y = y;
+  evt.tick_count = tick_count;
+  evt.timestamp = timestamp;
+  evt.uid = uid;
+
+  touch_evt_queue.Push(evt);
+  SR_ASSERT(touch_evt_queue.IsEmpty() == false);
+  //LOGD("began");
+}
+SR_C_DLL void SORA_touch_moved(int x, int y, int prev_x, int prev_y, int uid, int tick_count, float timestamp) {
+  TouchEvent evt;
+  evt.evt_type = kTouchMoved;
+  evt.prev_x = prev_x;
+  evt.prev_y = prev_y;
+  evt.x = x;
+  evt.y = y;
+  evt.tick_count = tick_count;
+  evt.timestamp = timestamp;
+  evt.uid = uid;
+
+  touch_evt_queue.Push(evt);
+  SR_ASSERT(touch_evt_queue.IsEmpty() == false);
+  //LOGD("moved");
+}
+SR_C_DLL void SORA_touch_ended(int x, int y, int prev_x, int prev_y, int uid, int tick_count, float timestamp) {
+  TouchEvent evt;
+  evt.evt_type = kTouchEnded;
+  evt.prev_x = prev_x;
+  evt.prev_y = prev_y;
+  evt.x = x;
+  evt.y = y;
+  evt.tick_count = tick_count;
+  evt.timestamp = timestamp;
+  evt.uid = uid;
+
+  touch_evt_queue.Push(evt);
+  SR_ASSERT(touch_evt_queue.IsEmpty() == false);
+  //LOGD("ended");
+}
+SR_C_DLL void SORA_touch_cancelled(int x, int y, int prev_x, int prev_y, int uid, int tick_count, float timestamp) {
+  TouchEvent evt;
+  evt.evt_type = kTouchCancelled;
+  evt.prev_x = prev_x;
+  evt.prev_y = prev_y;
+  evt.x = x;
+  evt.y = y;
+  evt.tick_count = tick_count;
+  evt.timestamp = timestamp;
+  evt.uid = uid;
+
+  touch_evt_queue.Push(evt);
+  SR_ASSERT(touch_evt_queue.IsEmpty() == false);
+}
+
 #if SR_ANDROID
-#include "zip_stream_file.h"
+#include "sys/zip_stream_file.h"
 void SORA_set_apk_file_path(const char *abs_path) {
   sora::ZipStreamFile::SetApkFile(abs_path);
 }

@@ -21,12 +21,16 @@
 #include "sora_stdafx.h"
 #include "touch_device.h"
 
+#if SR_WIN
+
 namespace sora {;
 
 TouchDevice &TouchDevice::GetInstance() {
   static TouchDevice_glfw device;
   return device;
 }
+
+
 
 static int next_touch_id = 1;
 
@@ -115,5 +119,6 @@ void TouchDevice_glfw::UpdateState(int state, int xpos, int ypos, int tick_count
 	prev_y_ = ypos;
 }
 
-
 }
+
+#endif

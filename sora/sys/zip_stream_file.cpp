@@ -23,7 +23,7 @@
 
 #if SR_ANDROID
 
-#include "sora/logger.h"
+#include "sora/core/logger.h"
 
 namespace sora {;
 

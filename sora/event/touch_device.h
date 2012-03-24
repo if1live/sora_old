@@ -23,6 +23,8 @@
 
 #include "touch_event.h"
 
+#if SR_WIN
+
 namespace sora {;
 
 class TouchDevice {
@@ -36,6 +38,7 @@ public:
   // 실행 환경에 따라서 적절한 장치를 리턴한다
   static TouchDevice &GetInstance();
 };
+
 
 class TouchDevice_glfw : public TouchDevice {
 public:
@@ -54,7 +57,8 @@ protected:
 
   std::vector<TouchEvent> fired_evt_list_;
 };
-
 }
+
+#endif  // SR_WIN
 
 #endif  // SORA_TOUCH_DEVICE_H_
