@@ -79,6 +79,38 @@ void SORA_set_window_size(int w, int h) {
   sora::Renderer::SetWindowSize((float)w, (float)h);
 
 }
+void SORA_test_draw(int w, int h) {
+  static float a = 0;
+  a += 0.1;
+
+  glClearColor(0.1, 0.1, 0.1, 1.0);
+  glClear(GL_COLOR_BUFFER_BIT);
+
+  float vertex[] = {
+    -0.5, -0.5,
+    0.5, -0.5, 
+    0, 0.5
+  };
+  unsigned char color[] = {
+    255, 0, 0,
+    0, 255, 0,
+    0, 0, 255,
+  };
+
+  glViewport(0, 0, w, h);
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  glRotatef(a, 0, 0, 1);
+
+  glEnableClientState(GL_COLOR_ARRAY);
+  glEnableClientState(GL_VERTEX_ARRAY);
+  glVertexPointer(2, GL_FLOAT, 0, vertex);
+  glColorPointer(3, GL_UNSIGNED_BYTE, 0, color);
+  glDrawArrays(GL_TRIANGLES, 0, 3);
+}
 
 bool setupGraphics(int w, int h) {
   sora::Renderer::SetWindowSize((float)w, (float)h); 

@@ -20,6 +20,8 @@ namespace ManagedOpenGL.Engine.Windows
         private readonly HiResTimer hiResTimer = new HiResTimer();
         #endregion
 
+        private bool initialized = false;
+
         #region Constructors
         public OpenGLForm()
         {
@@ -27,16 +29,13 @@ namespace ManagedOpenGL.Engine.Windows
             this.SetStyle(ControlStyles.UserPaint, true);
             this.SetStyle(ControlStyles.ResizeRedraw, true);
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer, false);
+            //this.SetStyle(ControlStyles.DoubleBuffer, true);
 
             this.InitializeComponent();
-
-            this.ClientSize = new Size(300, 300);
 
             System.Windows.Forms.Application.Idle += new EventHandler(UpdateElapsed);
         }
         #endregion
-
-        public Size WindowSize { get; set; }
 
         protected void OnLoad(object sender, EventArgs e)
         {
@@ -46,7 +45,6 @@ namespace ManagedOpenGL.Engine.Windows
             WindowsOpenGLNative.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
 
             //this.Init();
-            this.ClientSize = WindowSize;
             //this.InitGL();
         }
 
@@ -85,14 +83,18 @@ namespace ManagedOpenGL.Engine.Windows
         {
             System.Console.WriteLine("OnSizeChanged");
             //base.OnSizeChanged(e);
-            this.Init();
-            this.InitGL();
+
+            if (initialized == false)
+            {
+                this.Init();
+                this.InitGL();
+            }
         }
 
         private void InitGL()
         {
             System.Console.WriteLine("Init GL");
-            //Sora.Sora.SORA_init_gl_env();
+            
             if (!WindowsOpenGLNative.wglMakeCurrent(this.hDC, this.hRC))
                 throw new Win32Exception(Marshal.GetLastWin32Error());
 
@@ -101,8 +103,10 @@ namespace ManagedOpenGL.Engine.Windows
 
             //아래가 호출되면 생성된 gl ctx를 다시 박살내버려서 좃망
             //WindowsOpenGLNative.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
-            //Sora.SORA_setup_graphics(300, 300);
-            view.SetupGraphics(480, 800);
+
+            view.SetupGraphics(this.Size.Width, this.Size.Height);
+
+            AfterInitGL();
         }
 
         private void Init()
@@ -142,7 +146,7 @@ namespace ManagedOpenGL.Engine.Windows
             if (!WindowsOpenGLNative.wglMakeCurrent(this.hDC, this.hRC))
                 throw new Win32Exception(Marshal.GetLastWin32Error());
 
-            //Renderer.Initialized = true;
+            initialized = true;
 
             WindowsOpenGLNative.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
         }
@@ -159,6 +163,11 @@ namespace ManagedOpenGL.Engine.Windows
             WindowsOpenGLNative.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
         }
 
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            //base.OnPaintBackground(e);
+        }
+
         internal void UpdateElapsed(object sender, EventArgs e)
         {
             if (hiResTimer.Paused) return;
@@ -170,6 +179,7 @@ namespace ManagedOpenGL.Engine.Windows
         protected virtual void Draw()
         {
             view.DrawFrame();
+            //view.TestDraw(this.Size.Width, this.Size.Height);
         }
 
         protected virtual void Update(float elapsed)

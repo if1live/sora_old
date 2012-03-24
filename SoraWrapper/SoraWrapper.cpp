@@ -31,4 +31,8 @@ namespace SoraWrapper {
   {
     SORA_set_window_size(w, h);
   }
+  void GLView::TestDraw(int w, int h)
+  {
+    SORA_test_draw(w, h);
+  }
 }

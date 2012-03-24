@@ -13,5 +13,7 @@ namespace SoraWrapper {
     void InitGLEnv();
     void UpdateFrame(float dt);
     void Cleanup();
+
+    void TestDraw(int w, int h);
 	};
 }

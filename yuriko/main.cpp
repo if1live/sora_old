@@ -37,6 +37,13 @@ int main(int argc, char *argv[]) {
     glfwTerminate();
     exit( EXIT_FAILURE );
   }
+
+  //gl test
+  while(true) {
+    SORA_test_draw(kWinWidth, kWinHeight);
+    glfwSwapBuffers();
+  }
+
   // init glew
   SORA_init_gl_env(); //glewInit();
   Timer_Init();
