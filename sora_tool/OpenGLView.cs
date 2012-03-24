@@ -1,18 +1,22 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Runtime.InteropServices;
+using System.Data;
+using System.Linq;
+using System.Text;
 using System.Windows.Forms;
-using sora_tool;
 using SoraWrapper;
+using System.Runtime.InteropServices;
+using ManagedOpenGL;
+using ManagedOpenGL.Engine.Windows;
 
-namespace ManagedOpenGL.Engine.Windows
+namespace sora_tool
 {
-    //public partial class OpenGLForm : Form
-    public partial class OpenGLForm : Form
+    public partial class OpenGLView : PictureBox
     {
-        GLView view;
-
+        private GLView view;
+        private bool initialized = false;
 
         #region Fields
         private IntPtr hDC = IntPtr.Zero;
@@ -20,10 +24,7 @@ namespace ManagedOpenGL.Engine.Windows
         private readonly HiResTimer hiResTimer = new HiResTimer();
         #endregion
 
-        private bool initialized = false;
-
-        #region Constructors
-        public OpenGLForm()
+        public OpenGLView()
         {
             this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             this.SetStyle(ControlStyles.UserPaint, true);
@@ -31,12 +32,11 @@ namespace ManagedOpenGL.Engine.Windows
             this.SetStyle(ControlStyles.OptimizedDoubleBuffer, false);
             //this.SetStyle(ControlStyles.DoubleBuffer, true);
 
-            this.InitializeComponent();
+            InitializeComponent();
 
-            System.Windows.Forms.Application.Idle += new EventHandler(UpdateElapsed);
             view = new GLView();
+            System.Windows.Forms.Application.Idle += new EventHandler(UpdateElapsed);
         }
-        #endregion
 
         protected void OnLoad(object sender, EventArgs e)
         {
@@ -95,7 +95,7 @@ namespace ManagedOpenGL.Engine.Windows
         private void InitGL()
         {
             System.Console.WriteLine("Init GL");
-            
+
             if (!WindowsOpenGLNative.wglMakeCurrent(this.hDC, this.hRC))
                 throw new Win32Exception(Marshal.GetLastWin32Error());
 

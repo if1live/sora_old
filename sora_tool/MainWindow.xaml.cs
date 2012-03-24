@@ -38,38 +38,21 @@ namespace sora_tool
         {
             
         }
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            // Create the interop host control.
-            System.Windows.Forms.Integration.WindowsFormsHost host =
-                new System.Windows.Forms.Integration.WindowsFormsHost();
-
-            /*
-            // Create the MaskedTextBox control.
-            MaskedTextBox mtbDate = new MaskedTextBox("00/00/0000");
-            // Assign the MaskedTextBox control as the host control's child.
-            host.Child = mtbDate;
-             */
-         
-            /*
-            OpenGLForm form = new OpenGLForm();
-            host.Child = form;
-            
-
-            // Add the interop host control to the Grid
-            // control's collection of child controls.
-            this.grid1.Children.Add(host);
-             * */
-            
+            WindowsFormsHost host = new WindowsFormsHost();
+            OpenGLView child = new OpenGLView();
+            windowsFormsHost1.Child = child;
+            //System.Windows.Forms.Button btn = new System.Windows.Forms.Button();
+            //btn.Text = "asdf";
+            //windowsFormsHost1.Child = btn;
         }
 
         private void button1_Click_1(object sender, RoutedEventArgs e)
         {
-            OpenGLForm form = new OpenGLForm();
-            form.ClientSize = new System.Drawing.Size(300, 300);
-
-            form.ShowDialog();
+            //OpenGLForm form = new OpenGLForm();
+            //form.ClientSize = new System.Drawing.Size(300, 300);
+            //form.ShowDialog();
         }
    }
 }

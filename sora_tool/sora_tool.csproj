@@ -69,6 +69,12 @@
     <Compile Include="OpenGLForm.Designer.cs">
       <DependentUpon>OpenGLForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="OpenGLView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="OpenGLView.Designer.cs">
+      <DependentUpon>OpenGLView.cs</DependentUpon>
+    </Compile>
     <Compile Include="PixelFormatDescriptor.cs" />
     <Compile Include="WindowsOpenGLNative.cs" />
     <Page Include="MainWindow.xaml">
@@ -101,6 +107,9 @@
     <EmbeddedResource Include="OpenGLForm.resx">
       <DependentUpon>OpenGLForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="OpenGLView.resx">
+      <DependentUpon>OpenGLView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -119,6 +128,9 @@
       <Project>{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}</Project>
       <Name>SoraWrapper</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\b0004363_4f2bbcb3c656f.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
