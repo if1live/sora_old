@@ -84,10 +84,7 @@ bool Shader::InitShader(GLenum shader_type, const char *src) {
 }
 /////////////////////
 ShaderProgram::ShaderProgram()
-  : prog(0) {
-    for(int i = 0 ; i < GetArraySize(location_list_) ; i++) {
-      location_list_[i] = -1;
-    }
+: prog(0) {
 }
 ShaderProgram::~ShaderProgram() {
   // deinit is manual call
@@ -147,22 +144,6 @@ bool ShaderProgram::Init(const char *v_src, const char *f_src) {
     return false;
   }
 
-  //semantic var 
-  for(int var_code = 0 ; var_code < ShaderVariable::kSemanticCount ; ++var_code) {
-    const ShaderVariable &var_data = ShaderVariable::GetPredefinedVar(var_code);
-    int location_type = var_data.location_type;
-    const char *location_name = var_data.name.c_str();
-
-    if(location_type == ShaderVariable::kTypeAttrib) {
-      int location = GetAttribLocation(location_name);
-      location_list_[var_code] = location;
-
-    } else if(location_type == ShaderVariable::kTypeUniform) {
-      int location = GetUniformLocation(location_name);
-      location_list_[var_code] = location;
-    }
-  }
-
   LOGI("Active Uniform/Attrib list");
   uniform_var_list_ = GetActiveUniformVarList();
   BOOST_FOREACH(const ShaderVariable &loc, uniform_var_list_) {
@@ -206,17 +187,6 @@ GLint ShaderProgram::GetUniformLocation(const char *name) const {
 //  glUseProgram(prog);
 //}
 
-int ShaderProgram::GetLocation(int location_code) const {
-  SR_ASSERT(location_code >= 0);
-  SR_ASSERT(location_code < kMaxLocationCount);
-  return location_list_[location_code]; 
-}
-void ShaderProgram::SetLocation(int location_code, int loc) {
-  SR_ASSERT(location_code >= 0);
-  SR_ASSERT(location_code < kMaxLocationCount);
-  location_list_[location_code] = loc; 
-}
-
 std::vector<ShaderVariable> ShaderProgram::GetActiveUniformVarList() {
   vector<ShaderVariable> list;
   
@@ -240,7 +210,6 @@ std::vector<ShaderVariable> ShaderProgram::GetActiveUniformVarList() {
     sl.location = location;
     sl.location_type = ShaderVariable::kTypeUniform;
     sl.name = uniformName;
-    sl.semantic_code = ShaderVariable::ToSemanticFromName(uniformName);
     sl.size = size;
     sl.var_type = type;
 
@@ -271,13 +240,33 @@ std::vector<ShaderVariable> ShaderProgram::GetActiveAttributeVarList() {
     sl.location = location;
     sl.location_type = ShaderVariable::kTypeAttrib;
     sl.name = attributeName;
-    sl.semantic_code = ShaderVariable::ToSemanticFromName(attributeName);
     sl.size = size;
     sl.var_type = type;
 
     list.push_back(sl);
   }
   return list;
+}
+
+const ShaderVariable &ShaderProgram::uniform_var(const char *name) const {
+  return FindShaderVar(name, uniform_var_list_);
+}
+const ShaderVariable &ShaderProgram::attrib_var(const char *name) const {
+  return FindShaderVar(name, attrib_var_list_);
+}
+
+const ShaderVariable &ShaderProgram::FindShaderVar(const char *name, const std::vector<ShaderVariable> &var_list) const {
+  auto it = var_list.begin();
+  auto endit = var_list.end();
+  for( ; it != endit ; ++it) {
+    if(it->name == name) {
+      return (*it);
+    }
+  }
+  //else...not found
+  SR_ASSERT(!"not exist");
+  static ShaderVariable null_obj;
+  return null_obj;
 }
 
 } //namespace sora

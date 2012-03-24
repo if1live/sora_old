@@ -102,6 +102,7 @@
     <ClCompile Include="renderer\primitive_model.cpp" />
     <ClCompile Include="renderer\renderer.cpp" />
     <ClCompile Include="renderer\shader.cpp" />
+    <ClCompile Include="renderer\shader_bind_policy.cpp" />
     <ClCompile Include="renderer\shader_variable.cpp" />
     <ClCompile Include="renderer\texture.cpp" />
     <ClCompile Include="renderer\texture_manager.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="renderer\primitive_model.h" />
     <ClInclude Include="renderer\renderer.h" />
     <ClInclude Include="renderer\shader.h" />
+    <ClInclude Include="renderer\shader_bind_policy.h" />
     <ClInclude Include="renderer\shader_variable.h" />
     <ClInclude Include="renderer\teapot.h" />
     <ClInclude Include="renderer\texture.h" />

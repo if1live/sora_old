@@ -78,12 +78,13 @@ public:
 
   GLint GetAttribLocation(const char *name) const;
   GLint GetUniformLocation(const char *name) const;
-  int GetLocation(int location_code) const;
-  void SetLocation(int location_code, int loc);
 
   //최초실행시에는 모든목록을 얻을수잇다
   std::vector<ShaderVariable> GetActiveUniformVarList();
   std::vector<ShaderVariable> GetActiveAttributeVarList();
+
+  const ShaderVariable &uniform_var(const char *name) const;
+  const ShaderVariable &attrib_var(const char *name) const;
 
 public:
   GLuint prog;
@@ -92,13 +93,9 @@ private:
   Shader vert_shader_;
   Shader frag_shader_;
 
-  //predefined + 여유공간
-  static const int kMaxLocationCount = 32;
-  //SR_STATIC_ASSERT_NOMSG(ShaderProgram::kMaxLocationCount > ShaderVariable::kSemanticCount);
-  int location_list_[kMaxLocationCount];
-
   std::vector<ShaderVariable> uniform_var_list_;
   std::vector<ShaderVariable> attrib_var_list_;
+  const ShaderVariable &FindShaderVar(const char *name, const std::vector<ShaderVariable> &var_list) const;
 };
 
 }

@@ -18,29 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_UBER_SHADER_H_
-#define SORA_UBER_SHADER_H_
-
-#include "shader.h"
-#include "shader_variable.h"
-
-
+#include "sora_stdafx.h"
+#include "shader_bind_policy.h"
 
 namespace sora {;
-//ambient / diffuse / specular같은거 기본 지원하기 위한 용도
-//설계 테스트용
-class SR_DLL UberShader {
-public:
-  UberShader();
-  ~UberShader();
 
-  bool Init();
-
-  const ShaderProgram &prog() { return prog_; }
-
-private:
-  ShaderProgram prog_;
-};
+ShaderBindPolicy::ShaderBindPolicy() {
+  for(int i = 0 ; i < kSemanticCount ; i++) {
+  }
+}
+ShaderBindPolicy::~ShaderBindPolicy() {
 }
 
-#endif  // SORA_UBER_SHADER_H_
+void ShaderBindPolicy::set_var(int code, const ShaderVariable &v) {
+  SR_ASSERT(code >= 0);
+  SR_ASSERT(code < kSemanticCount);
+  var_list_[code] = v;
+}
+const ShaderVariable &ShaderBindPolicy::var(int code) const {
+  SR_ASSERT(code >= 0);
+  SR_ASSERT(code < kSemanticCount);
+  return var_list_[code];
+}
+
+}

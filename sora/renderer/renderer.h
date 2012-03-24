@@ -22,6 +22,7 @@
 #define SORA_RENDERER_H_
 
 #include "camera.h"
+#include "shader_bind_policy.h"
 #if SR_USE_PCH == 0
 #include "gl_inc.h"
 #include <glm/glm.hpp>
@@ -70,7 +71,7 @@ public:
 
   //bind gl resource
   static void SetTexture(const Texture &tex);
-  static void SetShader(const ShaderProgram &prog);
+  static void SetShader(const ShaderProgram &prog, const ShaderBindPolicy &policy);
   static void SetMaterial(const Material &material);
 
 public:
@@ -108,6 +109,7 @@ private:
   static GLuint last_tex_id_;
   static GLuint last_prog_id_;
   static ShaderProgram *last_prog_;
+  static ShaderBindPolicy bind_policy_;
 
   //행렬의 경우, 렌더러 각각이 공유하지 않는다. 2d와 3d를 완전히 분리시킨다는 의미
   glm::mat4 projection_;

@@ -29,69 +29,7 @@
 
 namespace sora {;
 
-const char kViewDirectionName[] = "u_viewDirection";
-const char kViewPositionName[] = "u_viewPosition";
-const char kViewSideName[] = "u_viewSide";
-const char kViewUpName[] = "u_viewUp";
-
-const char kViewName[] = "u_view";
-const char kProjectionName[] = "u_projection";
-const char kWorldViewProjectionName[] = "u_worldViewProjection";
-const char kWorldName[] = "u_world";
-
-const char kPositionName[] = "a_position";
-const char kNormalName[] = "a_normal";
-const char kTexcoordName[] = "a_texcoord";
-
-//render monkey predefine list
 struct ShaderVariable {
-  enum {
-    kUnknown = -1,
-    //predefined semantic list
-    //vec4
-    kViewDirection,
-    kViewPosition,
-    kViewSide,
-    kViewUp,
-
-    //mat4
-    //kViewProjection,
-    //kViewProjectionInverse,
-    //kViewProjectionTranspose,
-    //kViewProjectionInverseTranspose,
-
-    kView,
-    //kViewInverse,
-    //kViewTranspose,
-    //kViewInverseTrsnspose,
-
-    kProjection,
-    //kProjectionInverse,
-    //kProjectionTranspose,
-    //kProjectionInverseTranspose,
-
-    kWorldViewProjection,
-    //kWorldViewProjectionInverse,
-    //kWorldViewProjectionTranspose,
-    //kWorldViewProjectionInverseTranspose,
-
-    kWorld,
-    //kWorldInverse,
-    //kWorldTranspose,
-    //kWorldInverseTranspose,
-
-    //kWorldView,
-    //kWorldViewInverse,
-    //kWorldViewTranspose,    
-    //kWorldViewInverseTranspose,
-
-    //position, normal...등등 항상 뻔한것들까지 일단 떄려박자
-    kPosition,
-    kNormal,
-    kTexcoord,
-
-    kSemanticCount,
-  };
   enum {
     //uniform type list / variable type list
     kTypeFloat = GL_FLOAT,
@@ -121,14 +59,9 @@ struct ShaderVariable {
     kTypeUniform,
   };
 
-  static const std::vector<ShaderVariable> &GetPredefinedVarList();
-  static const ShaderVariable &GetPredefinedVar(int semantic_code);
-  static int ToSemanticFromName(const char *name);
-  static const std::string &ToNameFromSemantic(int code);
-
 public:
   ShaderVariable();
-  void Set(int code, int var_type, int loc_type, const char *attr_name, int size);
+  void Set(int var_type, int loc_type, const char *attr_name, int size);
 
   bool operator==(const ShaderVariable &o) const;
   bool operator!=(const ShaderVariable &o) const;
@@ -136,7 +69,6 @@ public:
   std::string str() const;
 
 public:
-  int semantic_code;  //렌더러 구현에서 쓰이는 의미를 가지는 코드 kModel이라든가 그런것들
   int var_type; //vec2? mat4?
   int location_type;  //attrib/uniform
   std::string name;  //shader코드에서의 변수이름

@@ -45,6 +45,8 @@ GLuint Renderer::last_tex_id_ = -1;
 GLuint Renderer::last_prog_id_ = -1;
 ShaderProgram *Renderer::last_prog_ = NULL;
 
+ShaderBindPolicy Renderer::bind_policy_;
+
 float Renderer::win_width_ = 480;
 float Renderer::win_height_ = 320;
 
@@ -89,34 +91,35 @@ void Renderer::SetTexture(const Texture &tex) {
   }
 }
 
-void Renderer::SetShader(const ShaderProgram &prog) {
+void Renderer::SetShader(const ShaderProgram &prog, const ShaderBindPolicy &policy) {
   if(last_prog_id_ != prog.prog) {
     glUseProgram(prog.prog);
     last_prog_id_ = prog.prog;
     last_prog_ = const_cast<ShaderProgram*>(&prog);
   }
+  bind_policy_ = policy;
 }
 
 void Renderer::SetMaterial(const Material &material) {
   SR_ASSERT(last_prog_ != NULL);
 
-  int ambient_color_loc = last_prog_->GetLocation(UberShader::kAmbientColor);
-  if(ambient_color_loc != -1) {
+  const ShaderVariable &ambient_var = bind_policy_.var(ShaderBindPolicy::kAmbientColor);
+  if(ambient_var.location != -1) {
     float color[4];
     memcpy(color, material.ambient, sizeof(material.ambient));
     //color[3] = material.alpha;
     color[3] = 1.0f;
-    glUniform4fv(ambient_color_loc, 1, color);
+    glUniform4fv(ambient_var.location, 1, color);
     GLHelper::CheckError("Uniform AmbientColor");
   }
 
-  int diffuse_color_loc = last_prog_->GetLocation(UberShader::kDiffuseColor);
-  if(diffuse_color_loc != -1) {
+  const ShaderVariable &diffuse_var = bind_policy_.var(ShaderBindPolicy::kDiffuseColor);
+  if(diffuse_var.location != -1) {
     float color[4];
     memcpy(color, material.diffuse, sizeof(material.diffuse));
     //color[3] = material.alpha;
     color[3] = 1.0f;
-    glUniform4fv(diffuse_color_loc, 1, color);
+    glUniform4fv(diffuse_var.location, 1, color);
     GLHelper::CheckError("Uniform DiffuseColor");
   }
 
@@ -126,18 +129,19 @@ void Renderer::SetMaterial(const Material &material) {
     ;
   } else if(material.illumination_model == 2) {
     //use ks, specular
-    int specular_color_loc = last_prog_->GetLocation(UberShader::kSpecularColor);
-    if(specular_color_loc != -1) {
+    const ShaderVariable &specular_var = bind_policy_.var(ShaderBindPolicy::kSpecularColor);
+    if(specular_var.location != -1) {
       float color[4];
       memcpy(color, material.specular, sizeof(material.specular));
       //color[3] = material.alpha;
       color[3] = 1.0f;
-      glUniform4fv(specular_color_loc, 1, color);
+      glUniform4fv(specular_var.location, 1, color);
       GLHelper::CheckError("Uniform SpecularColor");
     }
-    int shininess_loc = last_prog_->GetLocation(UberShader::kSpecularShininess);
-    if(shininess_loc != -1) {
-      glUniform1f(shininess_loc, material.shininess);
+
+    const ShaderVariable &shininess_var = bind_policy_.var(ShaderBindPolicy::kSpecularShininess);
+    if(shininess_var.location != -1) {
+      glUniform1f(shininess_var.location, material.shininess);
       GLHelper::CheckError("Uniform Shininess");
     }
   } else {
@@ -178,22 +182,21 @@ void Renderer::Draw(const DrawCommand &cmd) {
   if(cmd.index_ptr == NULL) { return; }
   if(cmd.index_count == 0) { return; }
 
-  int pos_loc = last_prog()->GetLocation(ShaderVariable::kPosition);
-  int texcoord_loc = last_prog()->GetLocation(ShaderVariable::kTexcoord);
-  int normal_loc = last_prog()->GetLocation(ShaderVariable::kNormal);
-
+  const ShaderVariable &pos_var = bind_policy_.var(ShaderBindPolicy::kPosition);
+  const ShaderVariable &texcoord_var = bind_policy_.var(ShaderBindPolicy::kTexcoord);
+  const ShaderVariable &normal_var = bind_policy_.var(ShaderBindPolicy::kNormal);
 
   const Vertex *vert_ptr = cmd.vert_ptr;
 
   //draw cube
-  if(pos_loc != -1) {
-    glVertexAttribPointer(pos_loc, 3, Vertex::kPosType, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->pos);
+  if(pos_var.location != -1) {
+    glVertexAttribPointer(pos_var.location, 3, Vertex::kPosType, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->pos);
   }
-  if(texcoord_loc != 1) {
-    glVertexAttribPointer(texcoord_loc, 2, Vertex::kTexcoordType, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->texcoord);
+  if(texcoord_var.location != 1) {
+    glVertexAttribPointer(texcoord_var.location, 2, Vertex::kTexcoordType, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->texcoord);
   }
-  if(normal_loc != -1) {
-    glVertexAttribPointer(normal_loc, 3, Vertex::kNormalType, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->normal);
+  if(normal_var.location != -1) {
+    glVertexAttribPointer(normal_var.location, 3, Vertex::kNormalType, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->normal);
   }
 
   int index_count = cmd.index_count;
@@ -220,51 +223,51 @@ void Renderer::ApplyMatrix(const glm::mat4 &world_mat) {
 
   //world-view-projection
   //world, view, projection 같은것을 등록할수 잇으면 등록하기
-  int mvp_handle = last_prog()->GetLocation(ShaderVariable::kWorldViewProjection);
-  if(mvp_handle != -1) {
+  const ShaderVariable &mvp_var = bind_policy_.var(ShaderBindPolicy::kWorldViewProjection);
+  if(mvp_var.location != -1) {
     //glm::mat4 mvp = impl->projection * impl->view * impl->world;  
     glm::mat4 mvp = glm::mat4(1.0f);
     mvp *= projection_mat();
     mvp *= view_mat();
     mvp *= world_mat;
-    glUniformMatrix4fv(mvp_handle, 1, GL_FALSE, glm::value_ptr(mvp));
+    glUniformMatrix4fv(mvp_var.location, 1, GL_FALSE, glm::value_ptr(mvp));
   }
 
-  int world_handle = last_prog()->GetLocation(ShaderVariable::kWorld);
-  if(world_handle != -1) {
-    glUniformMatrix4fv(world_handle, 1, GL_FALSE, glm::value_ptr(world_mat));
+  const ShaderVariable &world_var = bind_policy_.var(ShaderBindPolicy::kWorld);
+  if(world_var.location != -1) {
+    glUniformMatrix4fv(world_var.location, 1, GL_FALSE, glm::value_ptr(world_mat));
   }
 
-  int view_handle = last_prog()->GetLocation(ShaderVariable::kView);
-  if(view_handle != -1) {
-    glUniformMatrix4fv(view_handle, 1, GL_FALSE, glm::value_ptr(view_mat()));
+  const ShaderVariable &view_var = bind_policy_.var(ShaderBindPolicy::kView);
+  if(view_var.location != -1) {
+    glUniformMatrix4fv(view_var.location, 1, GL_FALSE, glm::value_ptr(view_mat()));
   }
 
-  int projection_handle = last_prog()->GetLocation(ShaderVariable::kProjection);
-  if(projection_handle != -1) {
-    glUniformMatrix4fv(projection_handle, 1, GL_FALSE, glm::value_ptr(projection_mat()));
+  const ShaderVariable &projection_var = bind_policy_.var(ShaderBindPolicy::kProjection);
+  if(projection_var.location != -1) {
+    glUniformMatrix4fv(projection_var.location, 1, GL_FALSE, glm::value_ptr(projection_mat()));
   }
 
-  int view_pos_handle = last_prog()->GetLocation(ShaderVariable::kViewPosition);
-  if(view_pos_handle != -1) {
-    glUniform4f(view_pos_handle, eye.x, eye.y, eye.z, 1.0f);
+  const ShaderVariable &view_pos_handle = bind_policy_.var(ShaderBindPolicy::kViewPosition);
+  if(view_pos_handle.location != -1) {
+    glUniform4f(view_pos_handle.location, eye.x, eye.y, eye.z, 1.0f);
   }
 
-  int view_side_handle = last_prog()->GetLocation(ShaderVariable::kViewSide);
-  if(view_side_handle != -1) {
+  const ShaderVariable &view_side_var = bind_policy_.var(ShaderBindPolicy::kViewSide);
+  if(view_side_var.location != -1) {
     Vec3f view_side;
     VecCross(dir.data, up.data, view_side.data);
-    glUniform4f(view_side_handle, view_side.x, view_side.y, view_side.z, 1.0f);
+    glUniform4f(view_side_var.location, view_side.x, view_side.y, view_side.z, 1.0f);
   }
 
-  int view_up_handle = last_prog()->GetLocation(ShaderVariable::kViewUp);
-  if(view_up_handle != -1) {
-    glUniform4f(view_up_handle, up.x, up.y, up.z, 1.0f);
+  const ShaderVariable &view_up_var = bind_policy_.var(ShaderBindPolicy::kViewUp);
+  if(view_up_var.location != -1) {
+    glUniform4f(view_up_var.location, up.x, up.y, up.z, 1.0f);
   }
 
-  int view_dir_handle = last_prog()->GetLocation(ShaderVariable::kViewDirection);
-  if(view_dir_handle != -1) {
-    glUniform4f(view_dir_handle, dir.x, dir.y, dir.z, 1.0f);
+  const ShaderVariable &view_dir_var = bind_policy_.var(ShaderBindPolicy::kViewDirection);
+  if(view_dir_var.location != -1) {
+    glUniform4f(view_dir_var.location, dir.x, dir.y, dir.z, 1.0f);
   }
 }
 

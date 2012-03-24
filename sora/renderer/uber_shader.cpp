@@ -49,22 +49,6 @@ bool UberShader::Init() {
     //dead???
   }
 
-  //custom var(like light)
-  for(int var_code = kAmbientColor ; var_code < kCount ; ++var_code) {
-    const ShaderVariable &var_data = GetVariable(var_code);
-    int location_type = var_data.location_type;
-    const char *location_name = var_data.name.c_str();
-
-    if(location_type == ShaderVariable::kTypeAttrib) {
-      int location = prog_.GetAttribLocation(location_name);
-      prog_.SetLocation(var_code, location);
-
-    } else if(location_type == ShaderVariable::kTypeUniform) {
-      int location = prog_.GetUniformLocation(location_name);
-      prog_.SetLocation(var_code, location);
-    }
-  }
-
   return true;
 }
 
@@ -73,6 +57,7 @@ UberShader::~UberShader() {
   prog_.Deinit();
 }
 
+/*
 const std::vector<ShaderVariable> &UberShader::GetVariableList() {
   static bool run = false;
   static vector<ShaderVariable> tuple_list;
@@ -110,27 +95,14 @@ const std::vector<ShaderVariable> &UberShader::GetVariableList() {
       const char *location_name = location_name_table[code];
       int var_type = var_type_table[code];
 
-      ShaderVariable v;
-      int var_code = ShaderVariable::kSemanticCount + code;
-      v.Set(var_code, var_type, location_type, location_name, 1);
-      tuple_list.push_back(v);
+      //ShaderVariable v;
+      //int var_code = ShaderVariable::kSemanticCount + code;
+      //v.Set(var_code, var_type, location_type, location_name, 1);
+      //tuple_list.push_back(v);
     }
   }
   return tuple_list;
 }
-const ShaderVariable &UberShader::GetVariable(int var_code) {
-  const vector<ShaderVariable> &var_list = GetVariableList();
-  auto it = var_list.begin();
-  auto endit = var_list.end();
-  for( ; it != endit ; ++it) {
-    if(it->semantic_code == var_code) {
-      return *it;
-    }
-  }
-  SR_ASSERT(!"not valid");
-  static ShaderVariable empty;
-  return empty;
-}
-
+*/
 
 }
