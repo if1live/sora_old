@@ -17,6 +17,7 @@ namespace sora_tool
     {
         private GLView view;
         private bool initialized = false;
+        private Timer timer;
 
         #region Fields
         private IntPtr hDC = IntPtr.Zero;
@@ -35,12 +36,16 @@ namespace sora_tool
             InitializeComponent();
 
             view = new GLView();
-            System.Windows.Forms.Application.Idle += new EventHandler(UpdateElapsed);
+            //System.Windows.Forms.Application.Idle += new EventHandler(UpdateElapsed);
+            timer = new Timer();
+            timer.Interval = (int)(1000 / 60.0f);
+            timer.Tick += new EventHandler(UpdateElapsed);
+            timer.Start();
         }
 
         protected void OnLoad(object sender, EventArgs e)
         {
-            System.Console.WriteLine("OnLoad");
+            //System.Console.WriteLine("OnLoad");
 
             //base.OnLoad(e);
             WindowsOpenGLNative.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
@@ -51,7 +56,7 @@ namespace sora_tool
 
         protected void OnClosed(object sender, EventArgs e)
         {
-            System.Console.WriteLine("OnClosed");
+            //System.Console.WriteLine("OnClosed");
             //base.OnClosed(e);
 
             WindowsOpenGLNative.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
@@ -61,28 +66,28 @@ namespace sora_tool
 
         private void OnResize(object sender, EventArgs e)
         {
-            System.Console.WriteLine("OnResize");
+            //System.Console.WriteLine("OnResize");
             //base.OnResize(e);
             this.Invalidate();
         }
 
         protected void OnResizeBegin(object sender, EventArgs e)
         {
-            System.Console.WriteLine("OnResizeBegin");
+            //System.Console.WriteLine("OnResizeBegin");
             //base.OnResizeBegin(e);
             hiResTimer.Paused = true;
         }
 
         protected void OnResizeEnd(object sender, EventArgs e)
         {
-            System.Console.WriteLine("OnResizeEnd");
+            //System.Console.WriteLine("OnResizeEnd");
             //base.OnResizeEnd(e);
             hiResTimer.Paused = false;
         }
 
         protected void OnSizeChanged(object sender, EventArgs e)
         {
-            System.Console.WriteLine("OnSizeChanged");
+            //System.Console.WriteLine("OnSizeChanged");
             //base.OnSizeChanged(e);
 
             if (initialized == false)
@@ -179,6 +184,7 @@ namespace sora_tool
 
         protected virtual void Draw()
         {
+            view.SetWindowSize(this.Size.Width, this.Size.Height);
             view.DrawFrame();
             //view.TestDraw(this.Size.Width, this.Size.Height);
         }

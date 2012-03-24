@@ -70,18 +70,15 @@ Renderer::~Renderer() {
 }
 
 void Renderer::SetWindowSize(float w, float h) {
-  LOGI("setupGraphics(%d, %d)", (int)w, (int)h);
+  if(win_width_ != w || win_height_ != h) {
+    LOGI("setupGraphics(%d, %d)", (int)w, (int)h);
 
-  win_width_ = w;
-  win_height_ = h;
+    win_width_ = w;
+    win_height_ = h;
 
-  LOGI("Version : %s", GLHelper::GetVersion().c_str());
-  LOGI("Vendor : %s", GLHelper::GetVender().c_str());
-  LOGI("Renderer : %s", GLHelper::GetRenderer().c_str());
-  LOGI("Extensions : %s", GLHelper::GetExtensions().c_str());
-
-  glViewport(0, 0, (int)w, (int)h);
-  GLHelper::CheckError("glViewport");
+    glViewport(0, 0, (int)w, (int)h);
+    GLHelper::CheckError("glViewport");
+  }
 }
 
 void Renderer::SetTexture(const Texture &tex) {

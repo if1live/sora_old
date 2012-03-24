@@ -83,13 +83,13 @@ void SORA_test_draw(int w, int h) {
   static float a = 0;
   a += 0.1;
 
-  glClearColor(0.1, 0.1, 0.1, 1.0);
+  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
 
   float vertex[] = {
-    -0.5, -0.5,
-    0.5, -0.5, 
-    0, 0.5
+    -0.5f, -0.5f,
+    0.5f, -0.5f, 
+    0.0f, 0.5f
   };
   unsigned char color[] = {
     255, 0, 0,
@@ -114,6 +114,12 @@ void SORA_test_draw(int w, int h) {
 
 bool setupGraphics(int w, int h) {
   sora::Renderer::SetWindowSize((float)w, (float)h); 
+
+  LOGI("Version : %s", GLHelper::GetVersion().c_str());
+  LOGI("Vendor : %s", GLHelper::GetVender().c_str());
+  LOGI("Renderer : %s", GLHelper::GetRenderer().c_str());
+  LOGI("Extensions : %s", GLHelper::GetExtensions().c_str());
+
   uber_shader.Init();
 
   {
