@@ -6,11 +6,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sora_test", "sora_test\sora_test.vcxproj", "{A8701353-1E8D-46F3-9512-5A3D38D1D7C4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sora_tool", "sora_tool\sora_tool.csproj", "{11A8099D-9A44-4E08-A5FE-3FA5C36EDA71}"
-	ProjectSection(ProjectDependencies) = postProject
-		{9EB895AB-D40F-4B99-B063-432571E6D799} = {9EB895AB-D40F-4B99-B063-432571E6D799}
-	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yuriko", "yuriko\yuriko.vcxproj", "{F2894000-CDDF-4329-94B5-A3D8F671D0AC}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SoraWrapper", "SoraWrapper\SoraWrapper.vcxproj", "{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,6 +61,16 @@ Global
 		{F2894000-CDDF-4329-94B5-A3D8F671D0AC}.Release|Win32.ActiveCfg = Release|Win32
 		{F2894000-CDDF-4329-94B5-A3D8F671D0AC}.Release|Win32.Build.0 = Release|Win32
 		{F2894000-CDDF-4329-94B5-A3D8F671D0AC}.Release|x86.ActiveCfg = Release|Win32
+		{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}.Debug|Win32.Build.0 = Debug|Win32
+		{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}.Debug|x86.ActiveCfg = Debug|Win32
+		{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}.Release|Win32.ActiveCfg = Release|Win32
+		{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}.Release|Win32.Build.0 = Release|Win32
+		{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}.Release|x86.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

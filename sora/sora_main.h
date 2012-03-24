@@ -26,6 +26,7 @@
 #endif
 
 SR_C_DLL void SORA_setup_graphics(int w, int h);
+SR_C_DLL void SORA_set_window_size(int w, int h);
 SR_C_DLL void SORA_cleanup_graphics();
 SR_C_DLL void SORA_draw_frame();
 SR_C_DLL void SORA_update_frame(float dt);

@@ -36,10 +36,7 @@ namespace sora_tool
 
         private void button1_Click(object sender, RoutedEventArgs e)
         {
-            float a = 1;
-            float b = 2;
-            float c = Sora.Vec2f_testFunc(a, b);
-            System.Console.WriteLine(c);
+            
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)

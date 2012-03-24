@@ -75,9 +75,13 @@ UberShader &uber_shader = *(new UberShader());
 //cbes
 World world;
 
-bool setupGraphics(int w, int h) {
+void SORA_set_window_size(int w, int h) {
   sora::Renderer::SetWindowSize((float)w, (float)h);
- 
+
+}
+
+bool setupGraphics(int w, int h) {
+  sora::Renderer::SetWindowSize((float)w, (float)h); 
   uber_shader.Init();
 
   {
@@ -372,7 +376,6 @@ SR_C_DLL void SORA_init_gl_env() {
 }
 
 void SORA_update_frame(float dt) {
-  
 }
 
 void SORA_cleanup_graphics() {

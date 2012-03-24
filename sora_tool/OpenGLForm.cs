@@ -4,12 +4,16 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using sora_tool;
+using SoraWrapper;
 
 namespace ManagedOpenGL.Engine.Windows
 {
     //public partial class OpenGLForm : Form
     public partial class OpenGLForm : Form
     {
+        static GLView view = new GLView();
+
+
         #region Fields
         private IntPtr hDC = IntPtr.Zero;
         private IntPtr hRC = IntPtr.Zero;
@@ -36,16 +40,19 @@ namespace ManagedOpenGL.Engine.Windows
 
         protected void OnLoad(object sender, EventArgs e)
         {
+            System.Console.WriteLine("OnLoad");
+
             //base.OnLoad(e);
             WindowsOpenGLNative.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
 
-            this.Init();
+            //this.Init();
             this.ClientSize = WindowSize;
-            this.InitGL();
+            //this.InitGL();
         }
 
         protected void OnClosed(object sender, EventArgs e)
         {
+            System.Console.WriteLine("OnClosed");
             //base.OnClosed(e);
 
             WindowsOpenGLNative.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
@@ -55,24 +62,28 @@ namespace ManagedOpenGL.Engine.Windows
 
         private void OnResize(object sender, EventArgs e)
         {
+            System.Console.WriteLine("OnResize");
             //base.OnResize(e);
             this.Invalidate();
         }
 
         protected void OnResizeBegin(object sender, EventArgs e)
         {
+            System.Console.WriteLine("OnResizeBegin");
             //base.OnResizeBegin(e);
             hiResTimer.Paused = true;
         }
 
         protected void OnResizeEnd(object sender, EventArgs e)
         {
+            System.Console.WriteLine("OnResizeEnd");
             //base.OnResizeEnd(e);
             hiResTimer.Paused = false;
         }
 
         protected void OnSizeChanged(object sender, EventArgs e)
         {
+            System.Console.WriteLine("OnSizeChanged");
             //base.OnSizeChanged(e);
             this.Init();
             this.InitGL();
@@ -80,17 +91,18 @@ namespace ManagedOpenGL.Engine.Windows
 
         private void InitGL()
         {
+            System.Console.WriteLine("Init GL");
             //Sora.Sora.SORA_init_gl_env();
             if (!WindowsOpenGLNative.wglMakeCurrent(this.hDC, this.hRC))
                 throw new Win32Exception(Marshal.GetLastWin32Error());
 
-            Sora.SORA_init_gl_env();    //glew
+            view.InitGLEnv();    //glew
             this.Invalidate();
 
             //아래가 호출되면 생성된 gl ctx를 다시 박살내버려서 좃망
             //WindowsOpenGLNative.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
             //Sora.SORA_setup_graphics(300, 300);
-            Sora.SORA_setup_graphics(480, 800);
+            view.SetupGraphics(480, 800);
         }
 
         private void Init()
@@ -157,9 +169,7 @@ namespace ManagedOpenGL.Engine.Windows
 
         protected virtual void Draw()
         {
-            Sora.SORA_draw_frame();
-            int a = 1;
-            int b = a + 1;
+            view.DrawFrame();
         }
 
         protected virtual void Update(float elapsed)

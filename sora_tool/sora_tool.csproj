@@ -70,7 +70,6 @@
       <DependentUpon>OpenGLForm.cs</DependentUpon>
     </Compile>
     <Compile Include="PixelFormatDescriptor.cs" />
-    <Compile Include="Sora.cs" />
     <Compile Include="WindowsOpenGLNative.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -114,6 +113,12 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SoraWrapper\SoraWrapper.vcxproj">
+      <Project>{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}</Project>
+      <Name>SoraWrapper</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -23,6 +23,8 @@
 
 #include <cstdio>
 #include <cstdarg>
+#include <string>
+#include <vector>
 #include "core/template_lib.h"
 
 #if SR_ANDROID

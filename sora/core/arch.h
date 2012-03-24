@@ -83,7 +83,8 @@ int PositionToWhere(int pos);
 #endif
 
 // for dll
-#if SR_WIN
+//#if SR_WIN
+#if 0
 #define SR_DLL __declspec(dllexport)
 #define SR_C_DLL extern "C" __declspec(dllexport)
 
