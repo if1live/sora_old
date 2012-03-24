@@ -154,8 +154,7 @@ class GL2JNIView extends GLSurfaceView {
 
 
 		}
-		// TODO Auto-generated method stub
-		return super.onTouchEvent(event);
+		return true;
 	}
 
 
