@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2012 by if1live */
+﻿/*  Copyright (C) 2011 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora/core/arch.h"
+#include "sora_test_stdafx.h"
+#include "sora/sys/sys_locale.h"
 
-#if SR_USE_PCH
-#if SR_WIN
-#include <gtest/gtest.h>
-#else
-#error "not support"
-#endif
+TEST(Locale, static_set_country) {
+  using namespace sora;
+	Locale locale;
+	locale.SetKorea();
+	EXPECT_EQ(kCountryKorea, locale.country());
+	EXPECT_EQ(kLanguageKorean, locale.language());
 
-//#include "sora/sora_stdafx.h"
+	locale.SetUSA();
+	EXPECT_EQ(kCountryUSA, locale.country());
+	EXPECT_EQ(kLanguageEnglish, locale.language());
 
-#include <GL/glew.h>
-#include <GL/glfw.h>
+	locale.SetETC();
+	EXPECT_EQ(kCountryETC, locale.country());
+	EXPECT_EQ(kLanguageETC, locale.language());
+}
 
-//boost
+TEST(Locale, Setter_Getter) {
+  using namespace sora;
+	Locale locale;
 
-#endif
+	locale.set_country(kCountryKorea);
+	locale.set_language(kLanguageEnglish);
+	EXPECT_EQ(kCountryKorea, locale.country());
+	EXPECT_EQ(kLanguageEnglish, locale.language());
+}

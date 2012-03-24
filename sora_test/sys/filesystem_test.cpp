@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2012 by if1live */
+﻿/*  Copyright (C) 2011 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora/core/arch.h"
+#include "sora_test_stdafx.h"
+#include "sora/sys/filesystem.h"
 
-#if SR_USE_PCH
-#if SR_WIN
-#include <gtest/gtest.h>
-#else
-#error "not support"
-#endif
+TEST(Filesystem, GetExtension) {
+  using std::string;
+  using sora::Filesystem;
 
-//#include "sora/sora_stdafx.h"
-
-#include <GL/glew.h>
-#include <GL/glfw.h>
-
-//boost
-
-#endif
+  const char file1[] = "asdf.txt";
+  EXPECT_STREQ("txt", Filesystem::GetExtension(file1).c_str());
+  const char file2[] = "ad/sdf/asdf.txt";
+  EXPECT_STREQ("txt", Filesystem::GetExtension(file2).c_str());
+  const char file3[] = "ad\\sdf\\asdf.txt";
+  EXPECT_STREQ("txt", Filesystem::GetExtension(file3).c_str());
+  const char file4[] = "sdf";
+  EXPECT_STREQ("", Filesystem::GetExtension(file4).c_str());
+  const char file5[] = "ad/sd.f/asdf.txt";
+  EXPECT_STREQ("txt", Filesystem::GetExtension(file5).c_str());
+  const char file6[] = "ad/sd.f/asdf";
+  EXPECT_STREQ("", Filesystem::GetExtension(file6).c_str());
+}

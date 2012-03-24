@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2012 by if1live */
+﻿/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora/core/arch.h"
+#include "sora_stdafx.h"
+#include "core/vector.h"
 
-#if SR_USE_PCH
-#if SR_WIN
-#include <gtest/gtest.h>
-#else
-#error "not support"
+#if SR_USE_PCH == 0
+#include <cstring>
 #endif
 
-//#include "sora/sora_stdafx.h"
-
-#include <GL/glew.h>
-#include <GL/glfw.h>
-
-//boost
-
-#endif
+namespace sora {;
+float Vec2f_testFunc(float x, float y) {
+  float result = x + y;
+  return result;
+}
+}

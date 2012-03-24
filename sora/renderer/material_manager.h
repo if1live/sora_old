@@ -18,22 +18,45 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_SORA_MAIN_H_
-#define SORA_SORA_MAIN_H_
+#ifndef SORA_MATERIAL_MANAGER_H_
+#define SORA_MATERIAL_MANAGER_H_
+
+#include "core/template_lib.h"
+#include "material.h"
 
 #if SR_USE_PCH == 0
-#include "core/arch.h"
+#include <string>
+#include <vector>
 #endif
 
-SR_C_DLL void SORA_setup_graphics(int w, int h);
-SR_C_DLL void SORA_cleanup_graphics();
-SR_C_DLL void SORA_draw_frame();
-SR_C_DLL void SORA_update_frame(float dt);
-SR_C_DLL void SORA_init_gl_env();
+namespace sora {;
+class MaterialManager : public Singleton<MaterialManager> {
+public:
+  MaterialManager();
+  ~MaterialManager();
 
-SR_C_DLL void SORA_set_cam_pos(float a, float b);
+public:
+  //이름중복이 발생한 경우 false
+  bool Add(const std::vector<Material> &mtl_list);
+  bool Add(const Material &mtl);
+  bool IsExist(const std::string &name) const;
+  const Material &Get(const std::string &name);
+  void Clear();
 
-#if SR_ANDROID
-void SORA_set_apk_file_path(const char *abs_path);
-#endif
-#endif  // SORA_SORA_MAIN_H_
+private:
+  //일단은 몇개 안될테니까 간단하게 구현
+  //재질정보는 그렇게 크지도 않고 많지도 않을테니까 전부 떄려박아도 심각한 문제가
+  //발생하지는 않을것이다.
+  std::vector<Material> material_list_;
+};
+
+//어차피 자주쓸 메모스를 GetInstance로 거쳐서 받는것도 삽질같아서 그냥 함수 뚫음
+SR_C_DLL const Material &MaterialMgr_get(const std::string &name);
+SR_C_DLL bool MaterialMgr_is_exist(const std::string &name);
+
+//initialize material list
+SR_C_DLL bool MaterialMgr_initialize_from_file();
+}
+
+
+#endif  // SORA_MATERIAL_MANAGER_H_

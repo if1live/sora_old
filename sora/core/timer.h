@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2012 by if1live */
+﻿/*  Copyright (C) 2011 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora/core/arch.h"
+#ifndef SORA_TIMER_H_
+#define SORA_TIMER_H_
 
-#if SR_USE_PCH
-#if SR_WIN
-#include <gtest/gtest.h>
-#else
-#error "not support"
-#endif
+#include "core/template_lib.h"
 
-//#include "sora/sora_stdafx.h"
+//c style
+SR_C_DLL int Timer_GetMilliSecond();
+SR_C_DLL float Timer_GetSecond();
+SR_C_DLL void Timer_Init();
+SR_C_DLL void Timer_Tick();
 
-#include <GL/glew.h>
-#include <GL/glfw.h>
+namespace sora {;
+class Timer : public Singleton<Timer> {
+public:
+  Timer();
+  ~Timer();
 
-//boost
+  static int GetMilliSecond();
+  static float GetSecond();
 
-#endif
+  static void Tick();   //system call
+
+private:
+  static int GetSysMilliSecond(); //system call로 얻은 시간을 반환
+
+  int start_ms_;
+  int curr_ms_;
+};
+}
+
+#endif  // SORA_TIMER_H_

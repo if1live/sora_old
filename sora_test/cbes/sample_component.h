@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2012 by if1live */
+﻿/*  Copyright (C) 2011 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora/core/arch.h"
+#pragma once
 
-#if SR_USE_PCH
-#if SR_WIN
-#include <gtest/gtest.h>
-#else
-#error "not support"
-#endif
+#include "cbes/component.h"
 
-//#include "sora/sora_stdafx.h"
+namespace {;
+class Sample1Component : public sora::Component {
+public:
+  SR_CHILD_CLASS_2("sample1");
+  Sample1Component() : sora::Component(ClassType()) {}
+};
 
-#include <GL/glew.h>
-#include <GL/glfw.h>
-
-//boost
-
-#endif
+class Sample2Component : public sora::Component {
+public:
+  SR_CHILD_CLASS_2("sample2");
+  Sample2Component() : sora::Component(ClassType()) {}
+};
+}

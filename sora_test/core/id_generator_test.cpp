@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2012 by if1live */
+﻿/*  Copyright (C) 2011 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora/core/arch.h"
+#include "sora_test_stdafx.h"
+#include "core/id_generator.h"
 
-#if SR_USE_PCH
-#if SR_WIN
-#include <gtest/gtest.h>
-#else
-#error "not support"
-#endif
+class IdGenTestClass : public sora::IdGenerator<IdGenTestClass> {
+};
 
-//#include "sora/sora_stdafx.h"
+TEST(IdGenerator, Test) {
+  //static alloc
+  IdGenTestClass obj1;
+  IdGenTestClass obj2;
+  EXPECT_EQ(1, obj1.id());
+  EXPECT_EQ(2, obj2.id());
 
-#include <GL/glew.h>
-#include <GL/glfw.h>
+  //copy construct
+  IdGenTestClass obj3(obj1);
+  EXPECT_EQ(obj1.id(), obj3.id());
 
-//boost
+  //new alloc
+  IdGenTestClass *obj4 = new IdGenTestClass();
+  EXPECT_EQ(3, obj4->id());
+  delete(obj4);
 
-#endif
+}

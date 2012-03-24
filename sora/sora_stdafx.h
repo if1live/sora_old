@@ -20,10 +20,10 @@
 #ifndef SORA_SORA_STDAFX_H_
 #define SORA_SORA_STDAFX_H_
 // 사실상 모든 소스에서 필요한건 미리 인클루드
-#include "arch.h"
-#include "assert_inc.h"
-#include "mem.h"
-#include "logger.h"
+#include "core/arch.h"
+#include "core/assert_inc.h"
+#include "core/mem.h"
+#include "core/logger.h"
 
 #if SR_USE_PCH
 #include <cmath>
@@ -57,14 +57,13 @@
 #include <direct.h>
 #endif
 
-#include "shared_ptr_inc.h"
-#include "unordered_map_inc.h"
-#include "gl_inc.h"
-#include "assert_inc.h"
-#include "tuple_inc.h"
+#include "core/shared_ptr_inc.h"
+#include "core/unordered_map_inc.h"
+#include "renderer/gl_inc.h"
+#include "core/tuple_inc.h"
 
 //vector는 뻔하니까
-#include "vector.h"
+#include "core/vector.h"
 //#include "matrix.h"
 //#include "color.h"
 

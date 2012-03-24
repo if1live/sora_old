@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2012 by if1live */
+﻿/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora/core/arch.h"
+#include "sora_test_stdafx.h"
+#include "sora/core/template_lib.h"
 
-#if SR_USE_PCH
-#if SR_WIN
-#include <gtest/gtest.h>
-#else
-#error "not support"
-#endif
+struct CtorDtorSample {
+  CtorDtorSample() { value = 1; }
+  ~CtorDtorSample() { value = 0;}
+  static int value;
+};
+int CtorDtorSample::value = -1;
 
-//#include "sora/sora_stdafx.h"
+TEST(CallConstructor_CallDestructor, test) {
+  using namespace sora;
+  EXPECT_EQ(-1, CtorDtorSample::value);
 
-#include <GL/glew.h>
-#include <GL/glfw.h>
+  CtorDtorSample *ptr = (CtorDtorSample*)malloc(sizeof(CtorDtorSample));
+  CallConstructor(ptr);
+  EXPECT_EQ(1, CtorDtorSample::value);
 
-//boost
-
-#endif
+  CallDestructor(ptr);
+  free(ptr);
+  EXPECT_EQ(0, CtorDtorSample::value);
+}

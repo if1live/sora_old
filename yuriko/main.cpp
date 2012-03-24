@@ -24,7 +24,7 @@
 #include <cstdio>
 
 #include "sora/sora_main.h"
-#include "sora/timer.h"
+#include "sora/core/timer.h"
 
 const int kWinWidth = 480;
 const int kWinHeight = 800;

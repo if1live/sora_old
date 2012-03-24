@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2012 by if1live */
+﻿/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,44 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora/core/arch.h"
+#ifndef SORA_TEXTURE_MANAGER_H_
+#define SORA_TEXTURE_MANAGER_H_
 
-#if SR_USE_PCH
-#if SR_WIN
-#include <gtest/gtest.h>
-#else
-#error "not support"
+#include "core/template_lib.h"
+
+#if SR_USE_PCH == 0
+#include <string>
+#include "core/unordered_map_inc.h"
+#include "core/shared_ptr_inc.h"
 #endif
 
-//#include "sora/sora_stdafx.h"
+namespace sora {;
+class Texture;
+typedef std::tr1::shared_ptr<Texture> TexturePtr;
 
-#include <GL/glew.h>
-#include <GL/glfw.h>
+class TextureManager {
+public:
+  static TextureManager& GetInstance();
+  TextureManager();
+  ~TextureManager();
+  
+  //텍스쳐 파일정보와 메모리를 설정한 다음에 텍스쳐를 넣으면
+  //복사해서 적절히 생성함
+  bool Add(const Texture &tex);
 
-//boost
+  bool IsExist(const std::string &name) const;
+  TexturePtr Get(const std::string &name);
+  Texture *Get_ptr(const std::string &name) { return Get(name).get(); }
 
-#endif
+private:
+  typedef std::tr1::unordered_map<std::string, TexturePtr> TexDictType;
+  
+  TexDictType tex_dict_;
+};
+
+TexturePtr TextureMgr_get(const std::string &name);
+SR_DLL Texture *TextureMgr_get_ptr(const std::string &name);
+
+}
+
+#endif  // SORA_TEXTURE_MANAGER_H_

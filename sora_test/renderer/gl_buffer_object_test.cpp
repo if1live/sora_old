@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2012 by if1live */
+﻿/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora/core/arch.h"
+#include "sora_test_stdafx.h"
+#include "renderer/gl_buffer_object.h"
 
-#if SR_USE_PCH
-#if SR_WIN
-#include <gtest/gtest.h>
-#else
-#error "not support"
-#endif
+#include "renderer/vertex.h"
 
-//#include "sora/sora_stdafx.h"
+TEST(GLBufferData, test) {
+  using namespace sora;
+  using namespace std;
 
-#include <GL/glew.h>
-#include <GL/glfw.h>
+  vector<Vertex2D> vert_list;
+  vert_list.push_back(Vertex2D(0, 0, 0, 0));
+  vert_list.push_back(Vertex2D(1, 0, 0, 1));
+  vert_list.push_back(Vertex2D(1, 1, 1, 0));
 
-//boost
+  VertexBufferObject vbo;
+  EXPECT_EQ(false, vbo.Loaded());
 
-#endif
+  vbo.Init(sizeof(Vertex2D) * vert_list.size(), &vert_list[0], GL_STATIC_DRAW);
+  EXPECT_EQ(true, vbo.Loaded());
+
+  vbo.Deinit();
+  EXPECT_EQ(false, vbo.Loaded());
+}

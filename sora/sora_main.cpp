@@ -33,31 +33,31 @@
 #include <cmath>
 #endif
 
-#include "vector.h"
-#include "gl_helper.h"
-#include "memory_file.h"
+#include "core/vector.h"
+#include "renderer/gl_helper.h"
+#include "sys/memory_file.h"
 
-#include "shader.h"
-#include "uber_shader.h"
-#include "matrix_stack.h"
+#include "renderer/shader.h"
+#include "renderer/uber_shader.h"
+#include "renderer/matrix_stack.h"
 
-#include "obj_model.h"
-#include "obj_loader.h"
-#include "primitive_model.h"
-#include "material_manager.h"
+#include "renderer/obj_model.h"
+#include "renderer/obj_loader.h"
+#include "renderer/primitive_model.h"
+#include "renderer/material_manager.h"
 
-#include "texture.h"
-#include "renderer.h"
+#include "renderer/texture.h"
+#include "renderer/renderer.h"
 
-#include "material.h"
-#include "math_helper.h"
-#include "camera.h"
-#include "font.h"
-#include "entity.h"
-#include "world.h"
-#include "mesh_component.h"
-#include "component_list.h"
-#include "texture_manager.h"
+#include "renderer/material.h"
+#include "core/math_helper.h"
+#include "renderer/camera.h"
+#include "renderer/font.h"
+#include "cbes/entity.h"
+#include "cbes/world.h"
+#include "cbes/mesh_component.h"
+#include "cbes/component_list.h"
+#include "renderer/texture_manager.h"
 
 
 using namespace std;

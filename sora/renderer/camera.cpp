@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2012 by if1live */
+﻿/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora/core/arch.h"
+#include "sora_stdafx.h"
+#include "camera.h"
+#include "core/template_lib.h"
 
-#if SR_USE_PCH
-#if SR_WIN
-#include <gtest/gtest.h>
-#else
-#error "not support"
-#endif
+namespace sora {;
+Camera::Camera() 
+: eye_(0, 0, 1), 
+dir_(0, 0, -1), 
+up_(0, 1, 0) {
+}
+Camera::~Camera() {
+}
 
-//#include "sora/sora_stdafx.h"
+void Camera::set_eye(const Vec3f &v) {
+  eye_ = v;
+}
+void Camera::set_dir(const Vec3f &v) {
+  dir_ = v;
+  dir_.Normalized();
+}
+void Camera::set_up(const Vec3f &v) {
+  up_ = v;
+  up_.Normalized();
+}
+}
 
-#include <GL/glew.h>
-#include <GL/glfw.h>
-
-//boost
-
-#endif

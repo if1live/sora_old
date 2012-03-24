@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2012 by if1live */
+﻿/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora/core/arch.h"
+#include "sora_stdafx.h"
+#include "mesh_component.h"
+#include "core/template_lib.h"
+#include "entity.h"
 
-#if SR_USE_PCH
-#if SR_WIN
-#include <gtest/gtest.h>
-#else
-#error "not support"
-#endif
+#include "renderer/obj_model.h"
+#include "renderer/primitive_model.h"
+#include "renderer/renderer.h"
+#include "sys/filesystem.h"
 
-//#include "sora/sora_stdafx.h"
+namespace sora {;
 
-#include <GL/glew.h>
-#include <GL/glfw.h>
+MeshComponent::MeshComponent(Entity *entity)
+: Component(entity, ClassType()),
+mesh_type_(kMeshNone) {
+}
+MeshComponent::~MeshComponent() {
+}
 
-//boost
-
-#endif
+void MeshComponent::SetMesh(const PrimitiveModel &primitive) {
+  mesh_type_ = kMeshPrimitive;
+  primitive_model_ = primitive;
+}
+void MeshComponent::SetMesh(const ObjModel &obj) {
+  mesh_type_ = kMeshObj;
+  obj_model_ = obj;
+}
+}

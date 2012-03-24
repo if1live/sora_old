@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2012 by if1live */
+﻿/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora/core/arch.h"
+#include "sora_test_stdafx.h"
+#include "renderer/matrix_stack.h"
+#include <glm/gtc/matrix_transform.hpp>
 
-#if SR_USE_PCH
-#if SR_WIN
-#include <gtest/gtest.h>
-#else
-#error "not support"
-#endif
+TEST(MatrixStack, Push_Pop) {
+  using sora::MatrixStack;
+  using glm::mat4;
 
-//#include "sora/sora_stdafx.h"
+  MatrixStack mat_stack;
 
-#include <GL/glew.h>
-#include <GL/glfw.h>
+  //최초에는 초기행렬 존재하도록했다
+  EXPECT_EQ(1, mat_stack.Size());
 
-//boost
+  //맨 밑은 항상 단위행렬로 유지되도록함
+  mat_stack.Pop();
+  EXPECT_EQ(1, mat_stack.Size());
+  EXPECT_EQ(mat_stack.Top(), glm::mat4(1.0f));
 
-#endif
+  mat_stack.Scale(1, 2, 3);
+  EXPECT_EQ(1, mat_stack.Size());
+  EXPECT_EQ(mat_stack.Top(), glm::scale(glm::mat4(1.0f), glm::vec3(1, 2, 3)));
+
+  mat_stack.Push();
+  EXPECT_EQ(2, mat_stack.Size());
+  EXPECT_EQ(mat_stack.Top(), glm::scale(glm::mat4(1.0f), glm::vec3(1, 2, 3)));
+
+  mat_stack.Translate(1, 2, 3);
+  EXPECT_NE(mat_stack.Top(), glm::scale(glm::mat4(1.0f), glm::vec3(1, 2, 3)));
+
+  mat_stack.Pop();
+  EXPECT_EQ(1, mat_stack.Size());
+  EXPECT_EQ(mat_stack.Top(), glm::scale(glm::mat4(1.0f), glm::vec3(1, 2, 3)));
+}

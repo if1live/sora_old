@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2012 by if1live */
+﻿/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,53 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora/core/arch.h"
+#include "sora_stdafx.h"
+#include "sora/core/math_helper.h"
 
-#if SR_USE_PCH
-#if SR_WIN
-#include <gtest/gtest.h>
-#else
-#error "not support"
-#endif
+namespace sora {;
+float DegToRad(float degree) {
+  return SR_DEG_2_RAD(degree);
+}
+float RadToDeg(float radian) {
+  return SR_RAD_2_DEG(radian);
+}
 
-//#include "sora/sora_stdafx.h"
+bool EqualAbsError(float a, float b, float maxError) {
+  if(a == b) {
+    return true;
+  }
+  if(abs(a - b) <= maxError) {
+    return true;
+  }
+  return false;
+}
 
-#include <GL/glew.h>
-#include <GL/glfw.h>
+bool EqualRelError(float a, float b, float maxError) {
+  if(fabs(a - b) < maxError) {
+    return true;
+  }
+  float relativeError = 0;
+  if(abs(b) > abs(a)) {
+    relativeError = abs((a-b) / b);
+  }	else {
+    relativeError = abs((a-b) / a);
+  }
+  if(relativeError <= maxError) {
+    return true;
+  }
+  return false;
+}
 
-//boost
-
-#endif
+bool EqualUlps(float a, float b, int maxUlps) {
+  //http://www.cygnus-software.com/papers/comparingfloats/comparingfloats.htm
+  SR_ASSERT(sizeof(float) == sizeof(int));
+  if (a == b) {
+    return true;
+  }
+  int intDiff = abs(*(int*)&a - *(int*)&b);
+  if (intDiff <= maxUlps) {
+    return true;
+  }
+  return false;
+}
+}

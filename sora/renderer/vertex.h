@@ -18,22 +18,58 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_SORA_MAIN_H_
-#define SORA_SORA_MAIN_H_
+#ifndef SORA_VERTEX_H_
+#define SORA_VERTEX_H_
+
+#include "core/vector.h"
 
 #if SR_USE_PCH == 0
-#include "core/arch.h"
+#include "gl_inc.h"
 #endif
 
-SR_C_DLL void SORA_setup_graphics(int w, int h);
-SR_C_DLL void SORA_cleanup_graphics();
-SR_C_DLL void SORA_draw_frame();
-SR_C_DLL void SORA_update_frame(float dt);
-SR_C_DLL void SORA_init_gl_env();
+namespace sora {;
+struct Vertex;
+struct TangentVertex;
+struct Vertex2D;
 
-SR_C_DLL void SORA_set_cam_pos(float a, float b);
+struct Vertex2D {
+  enum {
+    kPosType = GL_FLOAT,
+    kTexcoordType = GL_FLOAT,
+  };
+  Vertex2D() : pos(0, 0), texcoord(0, 0) {}
+  Vertex2D(float x, float y, float s, float t)
+    : pos(x, y), texcoord(s, t) {}
 
-#if SR_ANDROID
-void SORA_set_apk_file_path(const char *abs_path);
-#endif
-#endif  // SORA_SORA_MAIN_H_
+  Vec2f pos;
+  Vec2f texcoord;
+};
+
+struct Vertex {
+  enum {
+    kPosType = GL_FLOAT,
+    kTexcoordType = GL_FLOAT,
+    kNormalType = GL_FLOAT,
+    kColorType = GL_UNSIGNED_BYTE,
+  };
+  Vertex() : pos(0, 0, 0), texcoord(0, 0), normal(1, 0, 0), color(1, 1, 1, 1) {}
+  Vertex(float x, float y, float z, float s, float t, float nx, float ny, float nz, uchar r, uchar g, uchar b, uchar a)
+    : pos(x, y, z), texcoord(s, t), normal(nx, ny, nz), color(r, g, b, a) {}
+  Vec3f pos;
+  Vec2f texcoord;
+  Vec3f normal;
+  Vec4ub color;
+};
+
+struct TangentVertex {
+  Vec3f pos;
+  Vec2f texcoord;
+  Vec3f normal;
+  
+  Vec3f tangent;
+  Vec3f binormal;
+};
+
+}
+
+#endif  // SORA_VERTEX_H_

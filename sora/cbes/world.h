@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2012 by if1live */
+﻿/*  Copyright (C) 2011 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora/core/arch.h"
+#ifndef SORA_WORLD_H_
+#define SORA_WORLD_H_
 
-#if SR_USE_PCH
-#if SR_WIN
-#include <gtest/gtest.h>
-#else
-#error "not support"
-#endif
+#include "core/unordered_map_inc.h"
+#include "component.h"
 
-//#include "sora/sora_stdafx.h"
+namespace sora {;
+class ComponentList;
+class Entity;
 
-#include <GL/glew.h>
-#include <GL/glfw.h>
+class SR_DLL World {
+public:
+  typedef std::tr1::unordered_map<int, Entity*> EntityDictType;
+  typedef std::tr1::unordered_map<std::string, Entity*> EntityNameDictType;
+  typedef std::tr1::unordered_map<int, ComponentList*> ComponentListDictType;
+public:
+  World();
+  ~World();
 
-//boost
+  Entity *CreateEntity();
+  Entity *CreateEntity(const std::string &name);
+  bool DestroyEntity(Entity *entity);
+  int EntityCount() const { return entity_dict_.size(); }
 
-#endif
+public:
+  bool RegisterComponent(Component *comp);
+  bool UnregisterComponent(Component *comp);
+  ComponentList &GetComponentList(int comp_type);
+  template<typename T>  ComponentList &GetComponentList() {
+    return GetComponentList(T::ClassType());
+  }
+
+private:
+  EntityDictType entity_dict_;
+  EntityNameDictType entity_name_dict_;
+  ComponentListDictType complist_dict_;
+};
+}
+
+#endif  // SORA_WORLD_H_

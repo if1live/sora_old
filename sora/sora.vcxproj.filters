@@ -11,15 +11,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="render">
-      <UniqueIdentifier>{8e36d648-98db-4b5a-b12d-13efc65cd515}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="main">
-      <UniqueIdentifier>{fcbd9d8f-30e0-426e-9ac1-0ada23bc159e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="io">
-      <UniqueIdentifier>{795d0241-e4df-4d6d-9b84-4d223b2bb0bf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="sdk\lodepng">
       <UniqueIdentifier>{ba0d8e2b-7aa3-4b06-a0f7-f4d3c6b5c943}</UniqueIdentifier>
     </Filter>
@@ -29,243 +20,133 @@
     <Filter Include="cbes">
       <UniqueIdentifier>{5ccddd79-4d93-4fd2-9385-12a97ac93b4a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="mem">
-      <UniqueIdentifier>{2d612f2f-840b-42b9-b522-d4381c726e30}</UniqueIdentifier>
+    <Filter Include="sys">
+      <UniqueIdentifier>{795d0241-e4df-4d6d-9b84-4d223b2bb0bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="renderer">
+      <UniqueIdentifier>{8e36d648-98db-4b5a-b12d-13efc65cd515}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora_stdafx.cpp">
       <Filter>support</Filter>
     </ClCompile>
-    <ClCompile Include="vector.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="arch.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="logger.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="math_helper.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="timer.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="gl_inc.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="gl_helper.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="common_string.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="sys_locale.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="sora_main.cpp">
-      <Filter>main</Filter>
-    </ClCompile>
-    <ClCompile Include="shader.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="filesystem.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="low_level_c_file.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="memory_file.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="zip_stream_file.cpp">
-      <Filter>io</Filter>
-    </ClCompile>
-    <ClCompile Include="matrix_stack.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="gl_buffer_object.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="obj_model.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="obj_loader.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="primitive_model.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="texture.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="uber_shader.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="material_manager.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="shader_variable.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="camera.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
     <ClCompile Include="lodepng\lodepng.cpp">
       <Filter>sdk\lodepng</Filter>
     </ClCompile>
-    <ClCompile Include="font.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="mem.cpp">
-      <Filter>mem</Filter>
-    </ClCompile>
-    <ClCompile Include="free_list_block_pool.cpp">
-      <Filter>mem</Filter>
-    </ClCompile>
-    <ClCompile Include="heap.cpp">
-      <Filter>mem</Filter>
-    </ClCompile>
-    <ClCompile Include="component.cpp">
+    <ClCompile Include="sora_main.cpp" />
+    <ClCompile Include="cbes\mesh_component.cpp">
       <Filter>cbes</Filter>
     </ClCompile>
-    <ClCompile Include="component_list.cpp">
+    <ClCompile Include="cbes\world.cpp">
       <Filter>cbes</Filter>
     </ClCompile>
-    <ClCompile Include="entity.cpp">
+    <ClCompile Include="cbes\component.cpp">
       <Filter>cbes</Filter>
     </ClCompile>
-    <ClCompile Include="world.cpp">
+    <ClCompile Include="cbes\component_list.cpp">
       <Filter>cbes</Filter>
     </ClCompile>
-    <ClCompile Include="mesh_component.cpp">
+    <ClCompile Include="cbes\entity.cpp">
       <Filter>cbes</Filter>
     </ClCompile>
-    <ClCompile Include="texture_manager.cpp">
-      <Filter>render</Filter>
-    </ClCompile>
-    <ClCompile Include="string_hash.cpp">
+    <ClCompile Include="core\common_string.cpp">
       <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\free_list_block_pool.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\heap.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\logger.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\math_helper.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\mem.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\string_hash.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\timer.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\vector.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="core\arch.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\gl_helper.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\gl_inc.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\material_manager.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\matrix_stack.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\obj_loader.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\obj_model.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\primitive_model.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\renderer.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\shader.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\shader_variable.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\texture.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\texture_manager.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\uber_shader.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\camera.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\font.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\gl_buffer_object.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\memory_file.cpp">
+      <Filter>sys</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\sys_locale.cpp">
+      <Filter>sys</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\zip_stream_file.cpp">
+      <Filter>sys</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\filesystem.cpp">
+      <Filter>sys</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\low_level_c_file.cpp">
+      <Filter>sys</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
       <Filter>support</Filter>
-    </ClInclude>
-    <ClInclude Include="vector.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="arch.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="array_inc.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="assert_inc.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="logger.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="math_helper.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="shared_ptr_inc.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="template_lib.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="unordered_map_inc.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="timer.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="color.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="rect.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="gl_inc.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="gl_helper.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="common_string.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="sys_locale.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="sora_main.h">
-      <Filter>main</Filter>
-    </ClInclude>
-    <ClInclude Include="shader.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="filesystem.h">
-      <Filter>io</Filter>
-    </ClInclude>
-    <ClInclude Include="low_level_c_file.h">
-      <Filter>io</Filter>
-    </ClInclude>
-    <ClInclude Include="memory_file.h">
-      <Filter>io</Filter>
-    </ClInclude>
-    <ClInclude Include="zip_stream_file.h">
-      <Filter>io</Filter>
-    </ClInclude>
-    <ClInclude Include="matrix_stack.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="vertex.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="gl_buffer_object.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="obj_model.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="material.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="obj_loader.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="teapot.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="primitive_model.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="texture.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="uber_shader.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="tuple_inc.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="material_manager.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="shader_variable.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="camera.h">
-      <Filter>render</Filter>
     </ClInclude>
     <ClInclude Include="lodepng\lodepng.h">
       <Filter>sdk\lodepng</Filter>
@@ -273,59 +154,168 @@
     <ClInclude Include="..\sdk\vincent\vincent.h">
       <Filter>sdk\vincent</Filter>
     </ClInclude>
-    <ClInclude Include="font.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="heap.h">
-      <Filter>mem</Filter>
-    </ClInclude>
-    <ClInclude Include="free_list_block_pool.h">
-      <Filter>mem</Filter>
-    </ClInclude>
-    <ClInclude Include="free_list_manager.h">
-      <Filter>mem</Filter>
-    </ClInclude>
-    <ClInclude Include="free_list_object_pool.h">
-      <Filter>mem</Filter>
-    </ClInclude>
-    <ClInclude Include="heap_alloc_header.h">
-      <Filter>mem</Filter>
-    </ClInclude>
-    <ClInclude Include="mem.h">
-      <Filter>mem</Filter>
-    </ClInclude>
-    <ClInclude Include="entity.h">
+    <ClInclude Include="sora_main.h" />
+    <ClInclude Include="cbes\entity.h">
       <Filter>cbes</Filter>
     </ClInclude>
-    <ClInclude Include="world.h">
+    <ClInclude Include="cbes\mesh_component.h">
       <Filter>cbes</Filter>
     </ClInclude>
-    <ClInclude Include="component.h">
+    <ClInclude Include="cbes\world.h">
       <Filter>cbes</Filter>
     </ClInclude>
-    <ClInclude Include="component_list.h">
+    <ClInclude Include="cbes\component.h">
       <Filter>cbes</Filter>
     </ClInclude>
-    <ClInclude Include="class_type.h">
+    <ClInclude Include="cbes\component_list.h">
+      <Filter>cbes</Filter>
+    </ClInclude>
+    <ClInclude Include="core\class_type.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="string_code_dictionary.h">
+    <ClInclude Include="core\color.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="id_generator.h">
+    <ClInclude Include="core\common_string.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="mesh_component.h">
-      <Filter>cbes</Filter>
-    </ClInclude>
-    <ClInclude Include="texture_manager.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh.h">
-      <Filter>render</Filter>
-    </ClInclude>
-    <ClInclude Include="string_hash.h">
+    <ClInclude Include="core\free_list_block_pool.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\free_list_manager.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\free_list_object_pool.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\heap.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\heap_alloc_header.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\id_generator.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\logger.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\math_helper.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\mem.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\rect.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\shared_ptr_inc.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\string_code_dictionary.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\string_hash.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\template_lib.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\timer.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\tuple_inc.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\unordered_map_inc.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\vector.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\arch.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\array_inc.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="core\assert_inc.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\gl_buffer_object.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\gl_helper.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\gl_inc.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\material.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\material_manager.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\matrix_stack.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\mesh.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\obj_loader.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\obj_model.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\primitive_model.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\renderer.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shader.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shader_variable.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\teapot.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\texture.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\texture_manager.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\uber_shader.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\vertex.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\camera.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\font.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\low_level_c_file.h">
+      <Filter>sys</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\memory_file.h">
+      <Filter>sys</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\sys_locale.h">
+      <Filter>sys</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\zip_stream_file.h">
+      <Filter>sys</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\filesystem.h">
+      <Filter>sys</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

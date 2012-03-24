@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2012 by if1live */
+﻿/*  Copyright (C) 2011 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora/core/arch.h"
+#ifndef SORA_COMPONENT_H_
+#define SORA_COMPONENT_H_
 
-#if SR_USE_PCH
-#if SR_WIN
-#include <gtest/gtest.h>
-#else
-#error "not support"
-#endif
+#include "core/class_type.h"
 
-//#include "sora/sora_stdafx.h"
+namespace sora {;
+class Entity;
+class SR_DLL Component {
+public:
+  SR_SUPER_CLASS_2(Component);
+public:
+  Component(Entity *entity, int class_type);
+  Component(int class_type);
+  virtual ~Component();
 
-#include <GL/glew.h>
-#include <GL/glfw.h>
-
-//boost
-
-#endif
+  Entity *entity() { return entity_; }
+  const Entity *entity() const { return entity_; }
+private:
+  Entity *entity_;
+};
+}
+#endif  // SORA_COMPONENT_H_

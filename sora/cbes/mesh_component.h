@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2012 by if1live */
+﻿/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,20 +18,46 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora/core/arch.h"
+#ifndef SORA_MESH_COMPONENT_H_
+#define SORA_MESH_COMPONENT_H_
 
-#if SR_USE_PCH
-#if SR_WIN
-#include <gtest/gtest.h>
-#else
-#error "not support"
-#endif
+#include "component.h"
 
-//#include "sora/sora_stdafx.h"
+#include "renderer/primitive_model.h"
+#include "renderer/obj_model.h"
 
-#include <GL/glew.h>
-#include <GL/glfw.h>
+namespace sora {;
+class Renderer;
+class PrimitiveModel;
+class ObjModel;
 
-//boost
+class MeshComponent : public Component {
+public:
+  enum {
+    kMeshNone,
+    kMeshObj,
+    kMeshPrimitive,
+  };
+public:
+  SR_CHILD_CLASS_2("mesh");
+  MeshComponent(Entity *entity);
+  ~MeshComponent();
 
-#endif
+public:
+  void SetMesh(const PrimitiveModel &primitive);
+  void SetMesh(const ObjModel &obj);
+
+  int mesh_type() const { return mesh_type_; }
+  const ObjModel &obj_model() const { return obj_model_; }
+  const PrimitiveModel &primitive_model() const { return primitive_model_; }
+
+private:
+  //model을 타입열로 간단히 분기하기
+  //나중에 구조가 복잡해지면 그떄 분리같은거 생각하자
+  int mesh_type_;
+  ObjModel obj_model_;
+  PrimitiveModel primitive_model_; 
+};
+}
+
+#endif  // SORA_MESH_COMPONENT_H_
