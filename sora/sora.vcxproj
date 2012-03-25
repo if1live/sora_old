@@ -99,6 +99,8 @@
     <ClCompile Include="renderer\gl_inc.cpp" />
     <ClCompile Include="renderer\material_manager.cpp" />
     <ClCompile Include="renderer\matrix_stack.cpp" />
+    <ClCompile Include="renderer\mesh.cpp" />
+    <ClCompile Include="renderer\mesh_manager.cpp" />
     <ClCompile Include="renderer\obj_loader.cpp" />
     <ClCompile Include="renderer\obj_model.cpp" />
     <ClCompile Include="renderer\parametric_surface.cpp" />
@@ -164,6 +166,7 @@
     <ClInclude Include="renderer\material_manager.h" />
     <ClInclude Include="renderer\matrix_stack.h" />
     <ClInclude Include="renderer\mesh.h" />
+    <ClInclude Include="renderer\mesh_manager.h" />
     <ClInclude Include="renderer\obj_loader.h" />
     <ClInclude Include="renderer\obj_model.h" />
     <ClInclude Include="renderer\parametric_equations.h" />

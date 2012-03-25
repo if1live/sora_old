@@ -71,8 +71,9 @@ std::vector<DrawCommand> PrimitiveModel::GetDrawCmdList() const {
   for(int i = 0 ; i < Count() ; i++) {
     DrawCommand draw_cmd;
     draw_cmd.vert_ptr = vertex_list(i);
-    draw_cmd.index_ptr= index_list(i);
+    draw_cmd.index_ptr = index_list(i);
     draw_cmd.index_count = index_count(i);
+    draw_cmd.vert_count = vertex_count(i);
     draw_cmd.draw_mode = draw_mode(i);
     draw_cmd.index_type = GL_UNSIGNED_SHORT;
 

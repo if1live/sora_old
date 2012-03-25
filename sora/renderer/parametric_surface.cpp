@@ -5,10 +5,15 @@ using namespace std;
 
 namespace sora {;
 
+enum VertexFlags {
+    kVertexFlagsNormals = 1 << 0,
+    kVertexFlagsTexCoords = 1 << 1,
+};
+
 void ParametricSurface::SetInterval(const ParametricInterval& interval) {
-  m_divisions = interval.Divisions;
-  m_upperBound = interval.UpperBound;
-  m_textureCount = interval.TextureCount;
+  m_divisions = interval.divisions;
+  m_upperBound = interval.upper_bound;
+  m_textureCount = interval.texture_count;
   m_slices = m_divisions - Vec2i(1, 1);
 }
 
@@ -42,13 +47,13 @@ void ParametricSurface::GenerateVertices(vector<float>& vertices, unsigned char 
     for (int i = 0; i < m_divisions.x; i++) {
 
       // Compute Position
-      Vec2f domain = ComputeDomain(i, j);
+      Vec2f domain = ComputeDomain((float)i, (float)j);
       Vec3f range = Evaluate(domain);
       attribute = range.Write(attribute);
 
       // Compute Normal
       if (flags & kVertexFlagsNormals) {
-        float s = i, t = j;
+        float s = (float)i, t = (float)j;
 
         // Nudge the point if the normal is indeterminate.
         if (i == 0) s += 0.01f;
@@ -108,4 +113,25 @@ void ParametricSurface::GenerateTriangleIndices(vector<unsigned short>& indices)
   }
 }
 
+void ParametricSurface::GenerateVertices(std::vector<Vertex> &vertices) const {
+  vector<float> raw_vert_list;
+  GenerateVertices(raw_vert_list, kVertexFlagsNormals | kVertexFlagsTexCoords);
+
+  vertices.clear();
+  vertices.resize(raw_vert_list.size() / 8);
+
+  for(size_t i = 0 ; i < raw_vert_list.size() / 8 ; i++) {
+    Vertex &v = vertices[i];
+    v.pos.x = raw_vert_list[i*8 + 0];
+    v.pos.y = raw_vert_list[i*8 + 1];
+    v.pos.z = raw_vert_list[i*8 + 2];
+
+    v.normal.x = raw_vert_list[i*8 + 3];
+    v.normal.y = raw_vert_list[i*8 + 4];
+    v.normal.z = raw_vert_list[i*8 + 5];
+
+    v.texcoord.x = raw_vert_list[i*8 + 6];
+    v.texcoord.y = raw_vert_list[i*8 + 7];
+  }
+}
 }

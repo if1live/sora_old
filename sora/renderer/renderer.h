@@ -38,6 +38,7 @@ class ObjModel;
 class PrimitiveModel;
 class Camera;
 struct DrawCommand;
+class MeshBufferObject;
 
 //2d / 3d는 미묘한 정책만 수정해도 충분할듯하다
 struct RendererPolicy {
@@ -92,6 +93,7 @@ public:
   template<typename T>
   void DrawMesh(const T &mesh);
   void Draw(const DrawCommand &cmd);
+  void Draw(const MeshBufferObject &mesh);
 
 protected:
   //access cache like data

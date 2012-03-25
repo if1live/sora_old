@@ -203,6 +203,39 @@ void Renderer::Draw(const DrawCommand &cmd) {
   glDrawElements(draw_mode, index_count, index_type, index_ptr);
 }
 
+void Renderer::Draw(const MeshBufferObject &mesh) {
+  const ShaderVariable &pos_var = bind_policy_.var(ShaderBindPolicy::kPosition);
+  const ShaderVariable &texcoord_var = bind_policy_.var(ShaderBindPolicy::kTexcoord);
+  const ShaderVariable &normal_var = bind_policy_.var(ShaderBindPolicy::kNormal);
+
+  for(int i = 0 ; i < mesh.BufferCount() ; i++) {
+    const VertexBufferObject &vbo = mesh.vbo(i);
+    const IndexBufferObject &ibo = mesh.ibo(i);
+    int index_count = mesh.index_count(i);
+    GLenum draw_mode = mesh.draw_mode(i);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo.buffer());
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo.buffer());
+
+    if(pos_var.location != -1) {
+      int offset = offsetof(Vertex, pos);
+      glVertexAttribPointer(pos_var.location, 3, Vertex::kPosType, GL_FALSE, sizeof(sora::Vertex), (void*)offset);
+    }
+    if(texcoord_var.location != 1) {
+      int offset = offsetof(Vertex, texcoord);
+      glVertexAttribPointer(texcoord_var.location, 2, Vertex::kTexcoordType, GL_FALSE, sizeof(sora::Vertex), (void*)offset);
+    }
+    if(normal_var.location != -1) {
+      int offset = offsetof(Vertex, normal);
+      glVertexAttribPointer(normal_var.location, 3, Vertex::kNormalType, GL_FALSE, sizeof(sora::Vertex), (void*)offset);
+    }
+    glDrawElements(draw_mode, index_count, GL_UNSIGNED_SHORT, 0);
+  }
+
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
 void Renderer::ApplyMatrix(const glm::mat4 &world_mat) {
   const Camera &cam = camera();
   glm::mat4 &view = view_mat();

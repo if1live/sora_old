@@ -57,6 +57,7 @@ std::vector<DrawCommand> ObjModel::GetDrawCmdList() const {
   draw_cmd.index_ptr = index_ptr();
   draw_cmd.index_type = GL_UNSIGNED_SHORT;
   draw_cmd.index_count = index_count();
+  draw_cmd.vert_count = vertex_count();
   cmd_list.push_back(draw_cmd);
   return cmd_list;
 }

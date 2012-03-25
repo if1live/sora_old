@@ -18,59 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_MESH_H_
-#define SORA_MESH_H_
+#ifndef SORA_MESH_MANAGER_H_
+#define SORA_MESH_MANAGER_H_
 
-#include "vertex.h"
-#include "gl_buffer_object.h"
+#include "core/template_lib.h"
+#include "mesh.h"
+
 #if SR_USE_PCH == 0
-#include "gl_inc.h"
+#include "core/unordered_map_inc.h"
 #endif
 
 namespace sora {;
 
-struct DrawCommand;
+struct ISurface;  //for parametric surface
 
-//메시를 그리는데 필요한 정보. 렌더러는 이 정보를 얻어서 돌아가도록했다
-struct DrawCommand {
-  DrawCommand() 
-    : draw_mode(GL_TRIANGLES), 
-    vert_ptr(NULL),
-    index_ptr(NULL), 
-    index_count(0),
-    index_type(GL_UNSIGNED_SHORT) { }
-
-  GLenum draw_mode;
-  const Vertex *vert_ptr;
-  const void *index_ptr;
-  int index_count;
-  int vert_count;
-  GLenum index_type;
-};
-
-class MeshBufferObject {
+class MeshManager : public Singleton<MeshManager> {
 public:
-  MeshBufferObject();
-  ~MeshBufferObject();
+  MeshManager();
+  ~MeshManager();
 
-  void Add(const DrawCommand &cmd);
-  void Deinit();
+  bool AddSurface_line(const ISurface &surface, const char *name);
+  bool AddSurface_triangle(const ISurface &surface, const char *name);
+  bool Add(const std::vector<DrawCommand> &cmd_list, const char *name);
 
-  int BufferCount() const;
-  VertexBufferObject &vbo(int idx);
-  IndexBufferObject &ibo(int idx);
-  const VertexBufferObject &vbo(int idx) const;
-  const IndexBufferObject &ibo(int idx) const;
-  int index_count(int idx) const;
-  GLenum draw_mode(int idx) const;
+  MeshBufferObject *Get(const char *name);
+  bool IsExist(const char *name) const;
 
 private:
-  std::vector<VertexBufferObject> vbo_list_;
-  std::vector<IndexBufferObject> ibo_list_;
-  std::vector<int> index_count_list_;
-  std::vector<GLenum> draw_mode_list_;
+  typedef std::tr1::unordered_map<std::string, MeshBufferObject> MeshDictType;
+  MeshDictType mesh_dict_;
 };
-
 }
 
-#endif  // SORA_MESH_H_
+#endif  // SORA_MESH_MANAGER_H_
