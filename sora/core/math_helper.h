@@ -36,6 +36,7 @@ namespace sora {;
 const float kPi = SR_PI;
 const float kPiOver2 = SR_PI_OVER_2;
 const float kPiOver4 = SR_PI_OVER_4;
+const float kTwoPi = SR_PI * 2;
 
 template<typename T>
 bool IsNaN(T value) {

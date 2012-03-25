@@ -64,6 +64,9 @@
 #include "event/touch_device.h"
 #include "event/touch_event.h"
 
+#include "renderer/parametric_equations.h"
+#include "renderer/parametric_surface.h"
+
 using namespace std;
 using namespace sora;
 using namespace glm;
@@ -76,6 +79,8 @@ UberShader &uber_shader = *(new UberShader());
 
 //cbes
 World world;
+
+vector<ISurface*> surfaces;
 
 void SORA_set_window_size(int w, int h) {
   sora::Renderer::SetWindowSize((float)w, (float)h);
@@ -229,6 +234,17 @@ bool setupGraphics(int w, int h) {
     entity_a->AddComponent(mesh_comp);
   }
 
+  {
+    surfaces.resize(6);
+    surfaces[0] = new Cone(2, 1);
+    surfaces[1] = new Sphere(0.5f);
+    surfaces[2] = new Torus(0.5f, 0.2f);
+    surfaces[3] = new TrefoilKnot(1.0f);
+    surfaces[4] = new KleinBottle(0.2f);
+    surfaces[5] = new MobiusStrip(1);
+
+  }
+
   return true;
 }
 
@@ -312,7 +328,48 @@ void renderFrame() {
     glm::vec3 light_pos = glm::vec3(10, 10, 100);
     glUniform3fv(light_pos_handle, 1, glm::value_ptr(light_pos));
     GLHelper::CheckError("Set Light Pos Handle");
-  
+
+    //simple draw
+    mat4 world_mat = mat4(1.0f);
+    render3d.ApplyMatrix(world_mat);
+
+    vector<float> raw_vert_list;
+    vector<unsigned short> index_list;
+    surfaces[5]->GenerateVertices(raw_vert_list, kVertexFlagsNormals | kVertexFlagsTexCoords);
+    surfaces[5]->GenerateTriangleIndices(index_list);
+
+    //float로된 vertex목록을 진짜 vertex로 변환
+    vector<Vertex> vert_list;
+    for(int i = 0 ; i < raw_vert_list.size() / 8 ; i++) {
+      Vertex v;
+      v.pos.x = raw_vert_list[i*8 + 0];
+      v.pos.y = raw_vert_list[i*8 + 1];
+      v.pos.z = raw_vert_list[i*8 + 2];
+
+      v.normal.x = raw_vert_list[i*8 + 3];
+      v.normal.y = raw_vert_list[i*8 + 4];
+      v.normal.z = raw_vert_list[i*8 + 5];
+
+      v.texcoord.x = raw_vert_list[i*8 + 6];
+      v.texcoord.y = raw_vert_list[i*8 + 7];
+      vert_list.push_back(v);
+    }
+
+    Texture *tex = TextureMgr_get_ptr(string("sora2"));
+    Renderer::SetTexture(*tex);
+
+    const sora::Material &mtl = MaterialMgr_get("shinyred");
+    render3d.SetMaterial(mtl);
+
+    DrawCommand draw_cmd;
+    draw_cmd.draw_mode = GL_TRIANGLES;
+    draw_cmd.index_count = index_list.size();
+    draw_cmd.index_type = GL_UNSIGNED_SHORT;
+    draw_cmd.vert_ptr = &vert_list[0];
+    draw_cmd.index_ptr = &index_list[0];
+    render3d.Draw(draw_cmd);
+
+    /*
     //draw world
     ComponentList &mesh_comp_list = world.GetComponentList<MeshComponent>();
     auto it = mesh_comp_list.Begin();
@@ -347,6 +404,7 @@ void renderFrame() {
         break;
       }
     }
+    */
   }
   {
     Renderer &render2d = Renderer::Renderer2D();
@@ -514,7 +572,7 @@ void SORA_update_frame(float dt) {
 
 
 #if SR_WIN
-  float x = 0.1;
+  float x = 1.0f;
   //check key
   if(glfwGetKey('W') == GLFW_PRESS || glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS) {
     SORA_set_cam_pos(x, 0);

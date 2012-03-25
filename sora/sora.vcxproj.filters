@@ -155,6 +155,9 @@
     <ClCompile Include="event\touch_device.cpp">
       <Filter>event</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\parametric_surface.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -337,6 +340,12 @@
     </ClInclude>
     <ClInclude Include="event\touch_device.h">
       <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\parametric_equations.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\parametric_surface.h">
+      <Filter>renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

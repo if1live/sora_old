@@ -101,6 +101,7 @@
     <ClCompile Include="renderer\matrix_stack.cpp" />
     <ClCompile Include="renderer\obj_loader.cpp" />
     <ClCompile Include="renderer\obj_model.cpp" />
+    <ClCompile Include="renderer\parametric_surface.cpp" />
     <ClCompile Include="renderer\primitive_model.cpp" />
     <ClCompile Include="renderer\renderer.cpp" />
     <ClCompile Include="renderer\shader.cpp" />
@@ -165,6 +166,8 @@
     <ClInclude Include="renderer\mesh.h" />
     <ClInclude Include="renderer\obj_loader.h" />
     <ClInclude Include="renderer\obj_model.h" />
+    <ClInclude Include="renderer\parametric_equations.h" />
+    <ClInclude Include="renderer\parametric_surface.h" />
     <ClInclude Include="renderer\primitive_model.h" />
     <ClInclude Include="renderer\renderer.h" />
     <ClInclude Include="renderer\shader.h" />

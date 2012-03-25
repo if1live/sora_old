@@ -53,6 +53,9 @@ typedef Vector4<ushort> Vec4us;
 typedef Vector2<uchar> Vec2ub;
 typedef Vector3<uchar> Vec3ub;
 typedef Vector4<uchar> Vec4ub;
+typedef Vector2<int> Vec2i;
+typedef Vector3<int> Vec3i;
+typedef Vector4<int> Vec4i;
 
 template<typename T>
 struct SR_DLL Vector2 {
@@ -137,6 +140,13 @@ struct SR_DLL Vector2 {
   T& operator[](int idx) {
     return data[idx];
   }
+
+  template<typename P>
+  P* Write(P* input_data) {
+    Vector2 *vec = (Vector2*)input_data;
+    *vec++ = *this;
+    return (P*) vec;
+  }
 };
 
 template<typename T>
@@ -210,6 +220,11 @@ struct SR_DLL Vector3 {
   T Dot(const Vector3 &o) const {
     return VecDot(data, o.data);
   }
+  Vector3 Cross(const Vector3 &o) const {
+    Vector3 tmp;
+    VecCross(this->data, o.data, tmp.data);
+    return tmp;
+  }
   bool operator==(const Vector3 &o) const {
     return (memcmp(data, o.data, sizeof(T) * Dim) == 0);
   }
@@ -221,6 +236,13 @@ struct SR_DLL Vector3 {
   }
   T& operator[](int idx) {
     return data[idx];
+  }
+
+  template<typename P>
+  P* Write(P* input_data) {
+    Vector3 *vec = (Vector3*)input_data;
+    *vec++ = *this;
+    return (P*) vec;
   }
 };
 
