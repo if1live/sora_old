@@ -38,9 +38,6 @@
       <Filter>sdk\lodepng</Filter>
     </ClCompile>
     <ClCompile Include="sora_main.cpp" />
-    <ClCompile Include="cbes\mesh_component.cpp">
-      <Filter>cbes</Filter>
-    </ClCompile>
     <ClCompile Include="cbes\world.cpp">
       <Filter>cbes</Filter>
     </ClCompile>
@@ -177,9 +174,6 @@
     </ClInclude>
     <ClInclude Include="sora_main.h" />
     <ClInclude Include="cbes\entity.h">
-      <Filter>cbes</Filter>
-    </ClInclude>
-    <ClInclude Include="cbes\mesh_component.h">
       <Filter>cbes</Filter>
     </ClInclude>
     <ClInclude Include="cbes\world.h">

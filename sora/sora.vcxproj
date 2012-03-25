@@ -77,7 +77,6 @@
     <ClCompile Include="cbes\component.cpp" />
     <ClCompile Include="cbes\component_list.cpp" />
     <ClCompile Include="cbes\entity.cpp" />
-    <ClCompile Include="cbes\mesh_component.cpp" />
     <ClCompile Include="cbes\world.cpp" />
     <ClCompile Include="core\arch.cpp" />
     <ClCompile Include="core\common_string.cpp" />
@@ -128,7 +127,6 @@
     <ClInclude Include="cbes\component.h" />
     <ClInclude Include="cbes\component_list.h" />
     <ClInclude Include="cbes\entity.h" />
-    <ClInclude Include="cbes\mesh_component.h" />
     <ClInclude Include="cbes\world.h" />
     <ClInclude Include="core\arch.h" />
     <ClInclude Include="core\array_inc.h" />

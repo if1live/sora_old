@@ -85,9 +85,8 @@ bool MeshManager::Add(const std::vector<DrawCommand> &cmd_list, const char *name
   return true;
 }
 
-MeshBufferObject *MeshManager::Get(const char *name) {
-  std::string name_str(name);
-  auto found = mesh_dict_.find(name_str);
+MeshBufferObject *MeshManager::Get(const std::string &name) {
+  auto found = mesh_dict_.find(name);
   if(found == mesh_dict_.end()) {
     return NULL;
   } else {

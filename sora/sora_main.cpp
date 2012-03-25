@@ -53,10 +53,6 @@
 #include "core/math_helper.h"
 #include "renderer/camera.h"
 #include "renderer/font.h"
-#include "cbes/entity.h"
-#include "cbes/world.h"
-#include "cbes/mesh_component.h"
-#include "cbes/component_list.h"
 #include "renderer/texture_manager.h"
 
 #include "renderer/shader_bind_policy.h"
@@ -78,10 +74,12 @@ ShaderProgram shader_2d;
 //소멸자 호출 시점이 gl해제보다 늦어서 뻑난다. 그래서 임시로 동적할당해서 안놓음
 UberShader &uber_shader = *(new UberShader());  
 
-//cbes
-World world;
 
-//vector<ISurface*> surfaces;
+//테스트용 물체를 그릴수있도록 필요한 변수를 하드코딩으로 떄려박자
+const int kMaxObject = 10;
+vector<glm::mat4> world_mat_list(kMaxObject);
+vector<string> mesh_name_list(kMaxObject);
+
 
 void SORA_set_window_size(int w, int h) {
   sora::Renderer::SetWindowSize((float)w, (float)h);
@@ -170,69 +168,71 @@ bool setupGraphics(int w, int h) {
 
   sora::ObjLoader loader;
 
-  //load model
-  std::string path1 = sora::Filesystem::GetAppPath("obj/cube.obj");
-  sora::MemoryFile file1(path1);
-  file1.Open();
-  ObjModel obj_model;
-  loader.LoadObj(file1.start, file1.end, &obj_model);
-
   //load material
   MaterialMgr_initialize_from_file();
 
-  //primitive model test
-  sora::PrimitiveModel primitive_model;
-  //primitive_model.SolidCube(1, 2, 1, false);
-  //primitive_model.WireCube(1, 1, 1);
-  //primitive_model.WireAxis(2);
-  //primitive_model.WireSphere(1, 8, 8);
-  
-  //primitive_model.WireCone(1, 2, 8, 8);
-  //primitive_model.SolidCone(1, 2, 8, 8);
-  //primitive_model.WireCylinder(1, 2, 8);
-  //primitive_model.SolidCylinder(1, 2, 16);
-  //primitive_model.SolidTeapot(2);
-  //primitive_model.WireTeapot(1);
-
-  //crate entity
   {
-    Entity *entity_a = world.CreateEntity();
+    //load model
+    std::string path1 = sora::Filesystem::GetAppPath("obj/cube.obj");
+    sora::MemoryFile file1(path1);
+    file1.Open();
+    ObjModel obj_model;
+    loader.LoadObj(file1.start, file1.end, &obj_model);
+
+    //첫번쨰 물체 = obj model
+    int obj_model_idx = 0;
     glm::mat4 entity_mat = glm::mat4(1.0f);
     //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
     //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
     entity_mat = glm::rotate(glm::mat4(1.0f), 180.0f, vec3(1, 0, 0));
-    entity_a->set_world_mat(entity_mat);
+    world_mat_list[obj_model_idx] = entity_mat;
 
-    MeshComponent *mesh_comp = new MeshComponent(entity_a);
-    primitive_model.SolidSphere(0.5, 16, 16);
-    mesh_comp->SetMesh(primitive_model);
-    entity_a->AddComponent(mesh_comp);
-    //mesh_comp->SetMesh(obj_model);
+    MeshManager::GetInstance().Add(obj_model.GetDrawCmdList(), "obj_model");
+    mesh_name_list[obj_model_idx] = "obj_model";
   }
+
   {
-    Entity *entity_a = world.CreateEntity();
+    //primitive model test
+    sora::PrimitiveModel primitive_model;
+    //primitive_model.SolidCube(1, 2, 1, false);
+    //primitive_model.WireCube(1, 1, 1);
+    //primitive_model.WireAxis(2);
+    //primitive_model.WireSphere(1, 8, 8);
+    //primitive_model.WireCone(1, 2, 8, 8);
+    //primitive_model.SolidCone(1, 2, 8, 8);
+    //primitive_model.WireCylinder(1, 2, 8);
+    //primitive_model.SolidCylinder(1, 2, 16);
+    //primitive_model.SolidTeapot(2);
+    //primitive_model.WireTeapot(1);
+
+    //두번쨰 물체 = 썡물체
+    int obj_model_idx = 1;
+    glm::mat4 entity_mat = glm::mat4(1.0f);
+    //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
+    //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
+    entity_mat = glm::rotate(glm::mat4(1.0f), 180.0f, vec3(1, 0, 0));
+    world_mat_list[obj_model_idx] = entity_mat;
+
+    primitive_model.SolidSphere(0.5, 16, 16);
+    MeshManager::GetInstance().Add(primitive_model.GetDrawCmdList(), "model1");
+    mesh_name_list[obj_model_idx] = "model1";
+  }
+
+  {
+    //세번쨰 물체 = 썡물체
+    int obj_model_idx = 2;
     glm::mat4 entity_mat = glm::mat4(1.0f);
     //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
     //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
     entity_mat = glm::translate(entity_mat, vec3(0.8, 0.3, 0));
     entity_mat = glm::rotate(entity_mat, 180.0f, vec3(1, 0, 0));
-    entity_a->set_world_mat(entity_mat);
+    world_mat_list[obj_model_idx] = entity_mat;
     
-    MeshComponent *mesh_comp = new MeshComponent(entity_a);
+    sora::PrimitiveModel primitive_model;
     primitive_model.SolidCube(0.5, 0.5, 0.5, true);
-    mesh_comp->SetMesh(primitive_model);
-    entity_a->AddComponent(mesh_comp);
-  }
-  
-  {
-    Entity *entity_a = world.CreateEntity();
-    glm::mat4 entity_mat = glm::mat4(1.0f);
-    entity_mat = glm::translate(entity_mat, vec3(0, 0, -2.0f));
-    entity_a->set_world_mat(entity_mat);
-    
-    MeshComponent *mesh_comp = new MeshComponent(entity_a);
-    mesh_comp->SetMesh(obj_model);
-    entity_a->AddComponent(mesh_comp);
+    MeshManager::GetInstance().Add(primitive_model.GetDrawCmdList(), "model2");
+    mesh_name_list[obj_model_idx] = "model2";
+
   }
 
   {
@@ -242,8 +242,19 @@ bool setupGraphics(int w, int h) {
     //surfaces[3] = new TrefoilKnot(1.0f);
     //surfaces[4] = new KleinBottle(0.2f);
     //surfaces[5] = new MobiusStrip(1);
+    
+    //네번째 물체
+    int obj_model_idx = 3;
+
+    glm::mat4 entity_mat = glm::mat4(1.0f);
+    //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
+    //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
+    entity_mat = glm::translate(entity_mat, vec3(0, 1, 0));
+    world_mat_list[obj_model_idx] = entity_mat;
+
     TrefoilKnot surface(1.0f);
     MeshManager::GetInstance().AddSurface_line(surface, "knot");
+    mesh_name_list[obj_model_idx] = "knot";
   }
 
   return true;
@@ -331,55 +342,35 @@ void renderFrame() {
     GLHelper::CheckError("Set Light Pos Handle");
 
     //simple draw
-    mat4 world_mat = mat4(1.0f);
-    render3d.ApplyMatrix(world_mat);
+    for(int i = 0 ; i < kMaxObject ; i++) {
+      const string &mesh_name = mesh_name_list[i];
+      if(mesh_name.empty()) {
+        break;
+      }
+      
+      const mat4 &world_mat = world_mat_list[i];
+      render3d.ApplyMatrix(world_mat);
 
-    Texture *tex = TextureMgr_get_ptr(string("sora2"));
-    Renderer::SetTexture(*tex);
-
-    const sora::Material &mtl = MaterialMgr_get("shinyred");
-    render3d.SetMaterial(mtl);
-
-    MeshBufferObject *mesh = MeshManager::GetInstance().Get("knot");
-    SR_ASSERT(mesh != NULL);
-    render3d.Draw(*mesh);
-    
-    /*
-    //draw world
-    ComponentList &mesh_comp_list = world.GetComponentList<MeshComponent>();
-    auto it = mesh_comp_list.Begin();
-    auto endit = mesh_comp_list.End();
-    for(int i = 0; it != endit ; it++, i++) {
-      //newmtl flatwhite
-      //newmtl shinyred
-      //newmtl clearblue
       if(i % 2 == 0) {
-        Texture *tex = TextureMgr_get_ptr(string("sora"));
-        Renderer::SetTexture(*tex);
-        const sora::Material &mtl = MaterialMgr_get("clearblue");
-        render3d.SetMaterial(mtl);
-      } else {
         Texture *tex = TextureMgr_get_ptr(string("sora2"));
         Renderer::SetTexture(*tex);
+      } else {
+        Texture *tex = TextureMgr_get_ptr(string("sora"));
+        Renderer::SetTexture(*tex);
+      }
+
+      if(i % 2 == 0) {
         const sora::Material &mtl = MaterialMgr_get("shinyred");
+        render3d.SetMaterial(mtl);
+      } else {
+        const sora::Material &mtl = MaterialMgr_get("clearblue");
         render3d.SetMaterial(mtl);
       }
 
-      MeshComponent *comp = static_cast<MeshComponent*>(*it);
-      switch(comp->mesh_type()) {
-      case MeshComponent::kMeshObj:
-        render3d.ApplyMatrix(comp->entity()->world_mat());
-        render3d.DrawMesh(comp->obj_model());
-        break;
-      case MeshComponent::kMeshPrimitive:
-        render3d.ApplyMatrix(comp->entity()->world_mat());
-        render3d.DrawMesh(comp->primitive_model());
-        break;
-      default:
-        break;
-      }
+      MeshBufferObject *mesh = MeshManager::GetInstance().Get(mesh_name);
+      SR_ASSERT(mesh != NULL);
+      render3d.Draw(*mesh);
     }
-    */
   }
   {
     Renderer &render2d = Renderer::Renderer2D();

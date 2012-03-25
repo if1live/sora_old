@@ -41,7 +41,8 @@ public:
   bool AddSurface_triangle(const ISurface &surface, const char *name);
   bool Add(const std::vector<DrawCommand> &cmd_list, const char *name);
 
-  MeshBufferObject *Get(const char *name);
+  MeshBufferObject *Get(const char *name) { return Get(std::string(name)); }
+  MeshBufferObject *Get(const std::string &name);
   bool IsExist(const char *name) const;
 
 private:
