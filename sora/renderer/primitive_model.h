@@ -55,6 +55,11 @@ public:
   void WireTeapot(float size);
   void SolidTeapot(float size);
 
+  std::vector<DrawCommand> GetDrawCmdList_wire() const;
+  std::vector<DrawCommand> GetDrawCmdList_solid() const;
+  std::vector<DrawCommand> GetDrawCmdList() const;
+
+private:
   // 몇개의 submodel로 구성되는가
   int Count() const;
   const Vertex* vertex_list(int idx) const;
@@ -63,9 +68,6 @@ public:
   int index_count(int idx) const;
   GLenum draw_mode(int idx) const;
 
-  std::vector<DrawCommand> GetDrawCmdList() const;
-
-private:
   PrimitiveModelImpl *impl;
 
   static void CalcTeapotSize();

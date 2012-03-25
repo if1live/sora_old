@@ -37,8 +37,8 @@ public:
   MeshManager();
   ~MeshManager();
 
-  bool AddSurface_line(const ISurface &surface, const char *name);
-  bool AddSurface_triangle(const ISurface &surface, const char *name);
+  bool AddWire(const ISurface &surface, const char *name);
+  bool AddSolid(const ISurface &surface, const char *name);
   bool Add(const std::vector<DrawCommand> &cmd_list, const char *name);
 
   MeshBufferObject *Get(const char *name) { return Get(std::string(name)); }

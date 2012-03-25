@@ -91,7 +91,9 @@ public:
 
   //draw method
   template<typename T>
-  void DrawMesh(const T &mesh);
+  void DrawSolid(const T &mesh);
+  template<typename T>
+  void DrawWire(const T &mesh);
   void Draw(const DrawCommand &cmd);
   void Draw(const MeshBufferObject &mesh);
 
@@ -123,8 +125,18 @@ private:
 };
 
 template<typename T>
-void Renderer::DrawMesh(const T &mesh) {
-  std::vector<DrawCommand> cmd_list = mesh.GetDrawCmdList();
+void Renderer::DrawSolid(const T &mesh) {
+  std::vector<DrawCommand> cmd_list = mesh.GetDrawCmdList_solid();
+  auto it = cmd_list.begin();
+  auto endit = cmd_list.end();
+  for( ; it != endit ; ++it) {
+    Draw(*it);
+  }
+}
+
+template<typename T>
+void Renderer::DrawWire(const T &mesh) {
+  std::vector<DrawCommand> cmd_list = mesh.GetDrawCmdList_wire();
   auto it = cmd_list.begin();
   auto endit = cmd_list.end();
   for( ; it != endit ; ++it) {

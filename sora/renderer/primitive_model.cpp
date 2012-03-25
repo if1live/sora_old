@@ -33,7 +33,7 @@ using namespace std;
 
 namespace sora {;
 struct PrimitiveModelImpl {
-  PrimitiveModelImpl(int size) {
+  PrimitiveModelImpl(int size, bool is_solid) : is_solid(is_solid) {
     vert_list_group.resize(size);
     index_list_group.resize(size);
     mode_group.resize(size);
@@ -41,20 +41,21 @@ struct PrimitiveModelImpl {
   std::vector<VertexListType> vert_list_group;
   std::vector<IndexListType> index_list_group;
   std::vector<GLenum> mode_group;
+  bool is_solid;
 };
 
 PrimitiveModel::PrimitiveModel() : impl(NULL) {
 }
 PrimitiveModel::PrimitiveModel(const PrimitiveModel &o) {
   SafeDelete(impl);
-  impl = new PrimitiveModelImpl(o.impl->index_list_group.size());
+  impl = new PrimitiveModelImpl(o.impl->index_list_group.size(), o.impl->is_solid);
   impl->index_list_group = o.impl->index_list_group;
   impl->vert_list_group = o.impl->vert_list_group;
   impl->mode_group = o.impl->mode_group;
 }
 PrimitiveModel& PrimitiveModel::operator=(const PrimitiveModel &o) {
   SafeDelete(impl);
-  impl = new PrimitiveModelImpl(o.impl->index_list_group.size());
+  impl = new PrimitiveModelImpl(o.impl->index_list_group.size(), o.impl->is_solid);
   impl->index_list_group = o.impl->index_list_group;
   impl->vert_list_group = o.impl->vert_list_group;
   impl->mode_group = o.impl->mode_group;
@@ -63,6 +64,16 @@ PrimitiveModel& PrimitiveModel::operator=(const PrimitiveModel &o) {
 
 PrimitiveModel::~PrimitiveModel() {
   SafeDelete(impl);
+}
+
+std::vector<DrawCommand> PrimitiveModel::GetDrawCmdList_wire() const {
+  SR_ASSERT(impl->is_solid == false);
+  return GetDrawCmdList();
+}
+
+std::vector<DrawCommand> PrimitiveModel::GetDrawCmdList_solid() const {
+  SR_ASSERT(impl->is_solid == true);
+  return GetDrawCmdList();
 }
 
 std::vector<DrawCommand> PrimitiveModel::GetDrawCmdList() const {
@@ -121,7 +132,7 @@ void PrimitiveModel::WireCube(float width, float height, float depth) {
 
   //wirecube는 1개의 메시로 표현 가능
   SafeDelete(impl);
-  impl = new PrimitiveModelImpl(1);
+  impl = new PrimitiveModelImpl(1, false);
 
   VertexListType &vert_list = impl->vert_list_group[0];
   IndexListType &index_list = impl->index_list_group[0];
@@ -183,7 +194,7 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
 
   //solid cube는 1개의 메시로 표현 가능
   SafeDelete(impl);
-  impl = new PrimitiveModelImpl(1);
+  impl = new PrimitiveModelImpl(1, true);
 
   VertexListType &vert_list = impl->vert_list_group[0];
   IndexListType &index_list = impl->index_list_group[0];
@@ -459,7 +470,7 @@ void PrimitiveModel::WireSphere(float radius, int slices, int stacks) {
 
   //use one mesh
   SafeDelete(impl);
-  impl = new PrimitiveModelImpl(1);
+  impl = new PrimitiveModelImpl(1, false);
 
   VertexListType &vert_list = impl->vert_list_group[0];
   IndexListType &index_list = impl->index_list_group[0];
@@ -531,7 +542,7 @@ void PrimitiveModel::SolidSphere(float radius, int slices, int stacks) {
 
   //use one mesh
   SafeDelete(impl);
-  impl = new PrimitiveModelImpl(1);
+  impl = new PrimitiveModelImpl(1, true);
   VertexListType &vert_list = impl->vert_list_group[0];
   IndexListType &index_list = impl->index_list_group[0];
   impl->mode_group[0] = GL_TRIANGLES;
@@ -602,7 +613,7 @@ void PrimitiveModel::WireCone(float base, float height, int slices, int stacks) 
   //밑면/옆면을 다른 메시로 처리하자
   //vertex List는 공유하고 index만 다르게 하자
   SafeDelete(impl);
-  impl = new PrimitiveModelImpl(2);
+  impl = new PrimitiveModelImpl(2, false);
   VertexListType &vert_list = impl->vert_list_group[0];
   IndexListType &stackindex_list = impl->index_list_group[0];
   IndexListType &sliceindex_list = impl->index_list_group[1];
@@ -672,7 +683,7 @@ void PrimitiveModel::SolidCone(float base, float height, int slices, int stacks)
   //밑면/옆면을 다른 메시로 처리하자
   //vertex List는 공유하고 index만 다르게 하자
   SafeDelete(impl);
-  impl = new PrimitiveModelImpl(2);
+  impl = new PrimitiveModelImpl(2, true);
   VertexListType &vert_list = impl->vert_list_group[0];
   IndexListType &sideindex_list = impl->index_list_group[0];
   IndexListType &bottomindex_list = impl->index_list_group[1];
@@ -769,7 +780,7 @@ void PrimitiveModel::WireCylinder(float radius, float height, int slices) {
 
   //1개의 메시로 구성
   SafeDelete(impl);
-  impl = new PrimitiveModelImpl(1);
+  impl = new PrimitiveModelImpl(1, false);
   VertexListType &vert_list = impl->vert_list_group[0];
   IndexListType &index_list = impl->index_list_group[0];
   impl->mode_group[0] = GL_LINES;
@@ -848,7 +859,7 @@ void PrimitiveModel::SolidCylinder(float radius, float height, int slices) {
 
   //use 3 mesh
   SafeDelete(impl);
-  impl = new PrimitiveModelImpl(3);
+  impl = new PrimitiveModelImpl(3, true);
   VertexListType &vert_list = impl->vert_list_group[0];
   IndexListType &topindex_list = impl->index_list_group[0];
   IndexListType &bottomindex_list = impl->index_list_group[1];
@@ -969,7 +980,7 @@ void PrimitiveModel::WireAxis(float size) {
 
   //asiz는 1개의 메시로 표현 가능
   SafeDelete(impl);
-  impl = new PrimitiveModelImpl(1);
+  impl = new PrimitiveModelImpl(1, false);
 
   VertexListType &vert_list = impl->vert_list_group[0];
   IndexListType &index_list = impl->index_list_group[0];
@@ -1051,7 +1062,7 @@ void PrimitiveModel::WireTeapot(float size) {
 
   SR_ASSERT(size > 0);
   SafeDelete(impl);
-  impl = new PrimitiveModelImpl(1);
+  impl = new PrimitiveModelImpl(1, false);
 
   VertexListType &vert_list = impl->vert_list_group[0];
   IndexListType &index_list = impl->index_list_group[0];
@@ -1103,7 +1114,7 @@ void PrimitiveModel::SolidTeapot(float size) {
 
   SR_ASSERT(size > 0);
   SafeDelete(impl);
-  impl = new PrimitiveModelImpl(1);
+  impl = new PrimitiveModelImpl(1, true);
 
   VertexListType &vert_list = impl->vert_list_group[0];
   IndexListType &index_list = impl->index_list_group[0];

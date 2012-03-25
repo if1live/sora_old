@@ -187,7 +187,7 @@ bool setupGraphics(int w, int h) {
     entity_mat = glm::rotate(glm::mat4(1.0f), 180.0f, vec3(1, 0, 0));
     world_mat_list[obj_model_idx] = entity_mat;
 
-    MeshManager::GetInstance().Add(obj_model.GetDrawCmdList(), "obj_model");
+    MeshManager::GetInstance().Add(obj_model.GetDrawCmdList_wire(), "obj_model");
     mesh_name_list[obj_model_idx] = "obj_model";
   }
 
@@ -253,7 +253,8 @@ bool setupGraphics(int w, int h) {
     world_mat_list[obj_model_idx] = entity_mat;
 
     TrefoilKnot surface(1.0f);
-    MeshManager::GetInstance().AddSurface_line(surface, "knot");
+    MeshManager::GetInstance().AddSolid(surface, "knot");
+    //MeshManager::GetInstance().AddWire(surface, "knot");
     mesh_name_list[obj_model_idx] = "knot";
   }
 

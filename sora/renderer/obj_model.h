@@ -30,7 +30,6 @@
 namespace sora {;
 
 struct ObjModel;
-struct ObjModelImpl;
 
 struct SR_DLL ObjModel {
   ObjModel();
@@ -43,13 +42,18 @@ struct SR_DLL ObjModel {
   int vertex_count() const;
   int index_count() const;
 
-  std::vector<DrawCommand> GetDrawCmdList() const;
+  std::vector<DrawCommand> GetDrawCmdList_wire() const;
+  std::vector<DrawCommand> GetDrawCmdList_solid() const;
 
   void AddVertex(const Vertex &v);
   void AddIndex(ushort idx);
 
 private:
-  ObjModelImpl *impl;
+  std::vector<Vertex> vert_list_;
+  // GL_TRIANGLES로 그릴수 잇도록 정렬된 인덱스 리스트
+  std::vector<ushort> index_list_;
+  // GL_LINES로 그릴수 잇도록 정렬된거. 거의 테스트용으로 쓰일테니까 최적화는 안함
+  mutable std::vector<ushort> line_index_list_;
 };
 }
 

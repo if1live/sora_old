@@ -26,30 +26,12 @@
 using namespace std;
 
 namespace sora {;
-struct ObjModelImpl {;
-  std::vector<Vertex> vert_list;
-  // GL_TRIANGLES로 그릴수 잇도록 정렬된 인덱스 리스트
-  std::vector<ushort> index_list;
-};
-
-ObjModel::ObjModel()
-: impl(new ObjModelImpl()) {
+ObjModel::ObjModel() {
 }
 ObjModel::~ObjModel() {
-  delete(impl);
-}
-ObjModel::ObjModel(const ObjModel &o)
-: impl(new ObjModelImpl()) {
-  impl->vert_list = o.impl->vert_list;
-  impl->index_list = o.impl->index_list;
-}
-ObjModel& ObjModel::operator=(const ObjModel &o) {
-  impl->vert_list = o.impl->vert_list;
-  impl->index_list = o.impl->index_list;
-  return *this;
 }
 
-std::vector<DrawCommand> ObjModel::GetDrawCmdList() const {
+std::vector<DrawCommand> ObjModel::GetDrawCmdList_solid() const {
   vector<DrawCommand> cmd_list;
   DrawCommand draw_cmd;
   draw_cmd.vert_ptr = vertex_ptr();
@@ -62,24 +44,55 @@ std::vector<DrawCommand> ObjModel::GetDrawCmdList() const {
   return cmd_list;
 }
 
+std::vector<DrawCommand> ObjModel::GetDrawCmdList_wire() const {
+  //lines 인덱스 구성하기
+  if(line_index_list_.empty()) {
+    for(size_t i = 0 ; i < index_list_.size() / 3 ; i++) {
+      int idx1 = i*3 + 0;
+      int idx2 = i*3 + 1;
+      int idx3 = i*3 + 2;
+
+      line_index_list_.push_back(idx1);
+      line_index_list_.push_back(idx2);
+
+      line_index_list_.push_back(idx2);
+      line_index_list_.push_back(idx3);
+
+      line_index_list_.push_back(idx3);
+      line_index_list_.push_back(idx1);
+    }
+  }
+
+  vector<DrawCommand> cmd_list;
+  DrawCommand draw_cmd;
+  draw_cmd.vert_ptr = vertex_ptr();
+  draw_cmd.draw_mode = GL_LINES;
+  draw_cmd.index_ptr = &line_index_list_[0];
+  draw_cmd.index_type = GL_UNSIGNED_SHORT;
+  draw_cmd.index_count = line_index_list_.size();
+  draw_cmd.vert_count = vertex_count();
+  cmd_list.push_back(draw_cmd);
+  return cmd_list;
+}
+
 const Vertex *ObjModel::vertex_ptr() const {
-  return &impl->vert_list[0];
+  return &vert_list_[0];
 }
 const void *ObjModel::index_ptr() const {
-  return &impl->index_list[0];
+  return &index_list_[0];
 }
 int ObjModel::vertex_count() const {
-  return impl->vert_list.size();
+  return vert_list_.size();
 }
 int ObjModel::index_count() const {
-  return impl->index_list.size();
+  return index_list_.size();
 }
 
 void ObjModel::AddVertex(const Vertex &v) {
-  impl->vert_list.push_back(v);
+  vert_list_.push_back(v);
 }
 void ObjModel::AddIndex(ushort idx) {
-  impl->index_list.push_back(idx);
+  index_list_.push_back(idx);
 }
 
 }

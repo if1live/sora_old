@@ -32,7 +32,7 @@ MeshManager::MeshManager() {
 MeshManager::~MeshManager() {
 }
 
-bool MeshManager::AddSurface_line(const ISurface &surface, const char *name) {
+bool MeshManager::AddSolid(const ISurface &surface, const char *name) {
   vector<Vertex> vert_list;
   vector<unsigned short> index_list;
   surface.GenerateVertices(vert_list);
@@ -51,7 +51,7 @@ bool MeshManager::AddSurface_line(const ISurface &surface, const char *name) {
   return Add(draw_cmd_list, name);
 }
 
-bool MeshManager::AddSurface_triangle(const ISurface &surface, const char *name) {
+bool MeshManager::AddWire(const ISurface &surface, const char *name) {
   vector<Vertex> vert_list;
   vector<unsigned short> index_list;
   surface.GenerateVertices(vert_list);
