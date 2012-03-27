@@ -18,29 +18,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_stdafx.h"
-#include "shader_bind_policy.h"
+#ifndef SORA_LIGHT_H_
+#define SORA_LIGHT_H_
+
+#include "core/vector.h"
 
 namespace sora {;
 
-ShaderBindPolicy::ShaderBindPolicy(GLuint shader_prog)
-: shader_prog_(shader_prog) {
-}
-ShaderBindPolicy::ShaderBindPolicy()
-: shader_prog_(0) {
-}
-ShaderBindPolicy::~ShaderBindPolicy() {
-}
+struct Light {
+  Light()
+  : ambient(1.0f, 1.0f, 1.0f, 1.0f),
+    specular(1.0f, 1.0f, 1.0f, 1.0f),
+    diffuse(1.0f, 1.0f, 1.0f, 1.0f),
+    shininess(10) {
+  }
 
-void ShaderBindPolicy::set_var(int code, const ShaderVariable &v) {
-  SR_ASSERT(code >= 0);
-  SR_ASSERT(code < kSemanticCount);
-  var_list_[code] = v;
-}
-const ShaderVariable &ShaderBindPolicy::var(int code) const {
-  SR_ASSERT(code >= 0);
-  SR_ASSERT(code < kSemanticCount);
-  return var_list_[code];
-}
+  Vec3f pos;
+  //Vec3f up;
+  //Vec3f dir;
+  
+  Vec4f ambient;
+  Vec4f diffuse;
+  Vec4f specular;
+  float shininess;
+};
 
 }
+
+#endif  // SORA_LIGHT_H_

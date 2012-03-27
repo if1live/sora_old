@@ -97,46 +97,92 @@ void Renderer::SetShader(const ShaderProgram &prog, const ShaderBindPolicy &poli
   bind_policy_ = policy;
 }
 
-void Renderer::SetMaterial(const Material &material) {
+void Renderer::SetMaterial(const Light &light, const Material &material) {
   SR_ASSERT(last_prog_ != NULL);
+  SR_ASSERT(bind_policy_.shader_prog() == last_prog_->prog);
 
+  material_ = material;
+  light_ = light;
+
+  //apply light pos
+  const ShaderVariable &light_pos_var = bind_policy_.var(ShaderBindPolicy::kLightPosition);
+  if(light_pos_var.location != -1) {
+    glUniform3fv(light_pos_var.location, 1, light.pos.data);
+    GLHelper::CheckError("Set Light Pos Handle");
+  }
+
+  //ambient, diffuse, specular 계산하기
+  //light * 재질정보를 합쳐서 쓴다
   const ShaderVariable &ambient_var = bind_policy_.var(ShaderBindPolicy::kAmbientColor);
+  const ShaderVariable &diffuse_var = bind_policy_.var(ShaderBindPolicy::kDiffuseColor);
+  const ShaderVariable &specular_var = bind_policy_.var(ShaderBindPolicy::kSpecularColor);
+  const ShaderVariable &shininess_var = bind_policy_.var(ShaderBindPolicy::kSpecularShininess);
+
+  bool use_ambient = false;
+  bool use_diffuse = false;
+  bool use_specular = false;
+
+  float ambient_color[4];
+  float diffuse_color[4];
+  float specular_color[4];
+  //memset(ambient_color, 0, sizeof(ambient_color));
+  //memset(diffuse_color, 0, sizeof(diffuse_color));
+  //memset(specular_color, 0, sizeof(specular_color));
+
   if(ambient_var.location != -1) {
-    float color[4];
-    memcpy(color, material.ambient, sizeof(material.ambient));
-    //color[3] = material.alpha;
-    color[3] = 1.0f;
-    glUniform4fv(ambient_var.location, 1, color);
+    use_ambient = true;
+
+    //material의 색속성
+    memcpy(ambient_color, material.ambient, sizeof(material.ambient));
+    ambient_color[3] = 1.0f;
+    //빛속성과 조합
+    for(int i = 0 ; i < 4 ; ++i) {
+      ambient_color[i] *= light.ambient[i];
+    }
+  }
+  if(diffuse_var.location != -1) {
+    use_diffuse = true;
+
+    memcpy(diffuse_color, material.diffuse, sizeof(material.diffuse));
+    diffuse_color[3] = 1.0f;
+    for(int i = 0 ; i < 4 ; ++i) {
+      diffuse_color[i] *= light.diffuse[i];
+    }
+  }
+  if(specular_var.location != -1) {
+    use_specular = true;
+
+    memcpy(specular_color, material.specular, sizeof(material.specular));
+    specular_color[3] = 1.0f;
+    for(int i = 0 ; i < 4 ; ++i) {
+      specular_color[i] *= light.specular[i];
+    }
+  }
+
+
+  if(use_ambient) {
+    glUniform4fv(ambient_var.location, 1, ambient_color);
     GLHelper::CheckError("Uniform AmbientColor");
   }
 
-  const ShaderVariable &diffuse_var = bind_policy_.var(ShaderBindPolicy::kDiffuseColor);
-  if(diffuse_var.location != -1) {
-    float color[4];
-    memcpy(color, material.diffuse, sizeof(material.diffuse));
-    //color[3] = material.alpha;
-    color[3] = 1.0f;
-    glUniform4fv(diffuse_var.location, 1, color);
+  
+  if(use_diffuse) {
+    glUniform4fv(diffuse_var.location, 1, diffuse_color);
     GLHelper::CheckError("Uniform DiffuseColor");
   }
 
+  //재질에 따라서 uber값이 바뀐다.
   //specular
   if(material.illumination_model == 1) {
     //not use ks
     ;
   } else if(material.illumination_model == 2) {
-    //use ks, specular
-    const ShaderVariable &specular_var = bind_policy_.var(ShaderBindPolicy::kSpecularColor);
-    if(specular_var.location != -1) {
-      float color[4];
-      memcpy(color, material.specular, sizeof(material.specular));
-      //color[3] = material.alpha;
-      color[3] = 1.0f;
-      glUniform4fv(specular_var.location, 1, color);
+    //use ks, specular    
+    if(use_specular) {
+      glUniform4fv(specular_var.location, 1, specular_color);
       GLHelper::CheckError("Uniform SpecularColor");
     }
-
-    const ShaderVariable &shininess_var = bind_policy_.var(ShaderBindPolicy::kSpecularShininess);
+    
     if(shininess_var.location != -1) {
       glUniform1f(shininess_var.location, material.shininess);
       GLHelper::CheckError("Uniform Shininess");
@@ -175,6 +221,8 @@ void Renderer::set_camera(const Camera &cam) {
 }
 
 void Renderer::Draw(const DrawCommand &cmd) {
+  SR_ASSERT(bind_policy_.shader_prog() == last_prog_->prog);
+
   if(cmd.vert_ptr == NULL) { return; }
   if(cmd.index_ptr == NULL) { return; }
   if(cmd.index_count == 0) { return; }
@@ -204,6 +252,8 @@ void Renderer::Draw(const DrawCommand &cmd) {
 }
 
 void Renderer::Draw(const MeshBufferObject &mesh) {
+  SR_ASSERT(bind_policy_.shader_prog() == last_prog_->prog);
+
   const ShaderVariable &pos_var = bind_policy_.var(ShaderBindPolicy::kPosition);
   const ShaderVariable &texcoord_var = bind_policy_.var(ShaderBindPolicy::kTexcoord);
   const ShaderVariable &normal_var = bind_policy_.var(ShaderBindPolicy::kNormal);
@@ -237,6 +287,8 @@ void Renderer::Draw(const MeshBufferObject &mesh) {
 }
 
 void Renderer::ApplyMatrix(const glm::mat4 &world_mat) {
+  SR_ASSERT(bind_policy_.shader_prog() == last_prog_->prog);
+
   const Camera &cam = camera();
   glm::mat4 &view = view_mat();
   view = policy_->ToViewMatrixFromCamera(cam);

@@ -328,6 +328,12 @@ struct SR_DLL Vector4 {
   T& operator[](int idx) {
     return data[idx];
   }
+  const T& operator()(int idx) const {
+    return data[idx];
+  }
+  const T& operator[](int idx) const {
+    return data[idx];
+  }
 };
 
 template<typename T, int D>

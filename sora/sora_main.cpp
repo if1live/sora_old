@@ -63,6 +63,7 @@
 #include "renderer/parametric_equations.h"
 #include "renderer/parametric_surface.h"
 #include "renderer/mesh_manager.h"
+#include "renderer/light.h"
 
 using namespace std;
 using namespace sora;
@@ -80,6 +81,8 @@ const int kMaxObject = 10;
 vector<glm::mat4> world_mat_list(kMaxObject);
 vector<string> mesh_name_list(kMaxObject);
 
+//빛1개를 전역변수처럼 쓰자
+Light light;
 
 void SORA_set_window_size(int w, int h) {
   sora::Renderer::SetWindowSize((float)w, (float)h);
@@ -260,6 +263,11 @@ bool setupGraphics(int w, int h) {
     mesh_name_list[obj_model_idx] = "knot";
   }
 
+  {
+    //빛에 대한 기본 설정
+    light.pos = Vec3f(10, 10, 100);
+    light.ambient = Vec4f(3.0f, 0, 0, 1.0f);
+  }
   return true;
 }
 
@@ -303,7 +311,7 @@ void renderFrame() {
     render3d.set_camera(cam);
 
     //shader 속성 설정
-    ShaderBindPolicy bind_policy;
+    ShaderBindPolicy bind_policy(uber_shader.prog().prog);
     //기본 속성
     const ShaderVariable &pos_var = uber_shader.prog().attrib_var("a_position");
     const ShaderVariable &texcoord_var = uber_shader.prog().attrib_var("a_texcoord");
@@ -334,15 +342,12 @@ void renderFrame() {
     bind_policy.set_var(ShaderBindPolicy::kSpecularColor, specular_var);
     bind_policy.set_var(ShaderBindPolicy::kSpecularShininess, shininess_var);
 
+    //빛에 필요한거 추가로
+    const ShaderVariable &light_pos_var = uber_shader.prog().uniform_var("u_worldLightPosition");
+    bind_policy.set_var(ShaderBindPolicy::kLightPosition, light_pos_var);
+
     //apply bind policy
     render3d.SetShader(uber_shader.prog(), bind_policy);
-
-    //set light position
-    //GLint light_pos_handle = shader_prog.GetLocation(sora::kLocationWorldLightPosition);
-    GLint light_pos_handle = uber_shader.prog().GetUniformLocation("u_worldLightPosition");
-    glm::vec3 light_pos = glm::vec3(10, 10, 100);
-    glUniform3fv(light_pos_handle, 1, glm::value_ptr(light_pos));
-    GLHelper::CheckError("Set Light Pos Handle");
 
     //simple draw
     for(int i = 0 ; i < kMaxObject ; i++) {
@@ -364,10 +369,10 @@ void renderFrame() {
 
       if(i % 2 == 0) {
         const sora::Material &mtl = MaterialMgr_get("shinyred");
-        render3d.SetMaterial(mtl);
+        render3d.SetMaterial(light, mtl);
       } else {
         const sora::Material &mtl = MaterialMgr_get("clearblue");
-        render3d.SetMaterial(mtl);
+        render3d.SetMaterial(light, mtl);
       }
 
       MeshBufferObject *mesh = MeshManager::GetInstance().Get(mesh_name);
@@ -382,7 +387,7 @@ void renderFrame() {
     glm::mat4 world_mat(1.0f);
 
     //shader 속성 설정
-    ShaderBindPolicy bind_policy;
+    ShaderBindPolicy bind_policy(shader_2d.prog);
     //기본 속성
     const ShaderVariable &pos_var = shader_2d.attrib_var("a_position");
     const ShaderVariable &texcoord_var = shader_2d.attrib_var("a_texcoord");

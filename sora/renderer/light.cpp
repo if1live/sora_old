@@ -19,28 +19,7 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_stdafx.h"
-#include "shader_bind_policy.h"
+#include "light.h"
 
 namespace sora {;
-
-ShaderBindPolicy::ShaderBindPolicy(GLuint shader_prog)
-: shader_prog_(shader_prog) {
-}
-ShaderBindPolicy::ShaderBindPolicy()
-: shader_prog_(0) {
-}
-ShaderBindPolicy::~ShaderBindPolicy() {
-}
-
-void ShaderBindPolicy::set_var(int code, const ShaderVariable &v) {
-  SR_ASSERT(code >= 0);
-  SR_ASSERT(code < kSemanticCount);
-  var_list_[code] = v;
-}
-const ShaderVariable &ShaderBindPolicy::var(int code) const {
-  SR_ASSERT(code >= 0);
-  SR_ASSERT(code < kSemanticCount);
-  return var_list_[code];
-}
-
 }

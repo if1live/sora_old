@@ -77,18 +77,23 @@ public:
     kDiffuseColor,
     kSpecularColor,
     kSpecularShininess,
+    kLightPosition,
 
     kSemanticCount,
   };
 
 public:
   ShaderBindPolicy();
+  ShaderBindPolicy(GLuint shader_prog);
   ~ShaderBindPolicy();
 
   void set_var(int code, const ShaderVariable &v);
   const ShaderVariable &var(int code) const;
+  GLuint shader_prog() const { return shader_prog_; }
+  bool IsValid() const { return (shader_prog_ != 0); }
 
 private:
+  GLuint shader_prog_; //어떤 쉐이더를 위한 bind변수모음인가
   ShaderVariable var_list_[kSemanticCount];
 };
 }

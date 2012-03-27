@@ -23,6 +23,9 @@
 
 #include "camera.h"
 #include "shader_bind_policy.h"
+#include "light.h"
+#include "material.h"
+
 #if SR_USE_PCH == 0
 #include "gl_inc.h"
 #include <glm/glm.hpp>
@@ -39,6 +42,7 @@ class PrimitiveModel;
 class Camera;
 struct DrawCommand;
 class MeshBufferObject;
+class Light;
 
 //2d / 3d는 미묘한 정책만 수정해도 충분할듯하다
 struct RendererPolicy {
@@ -73,11 +77,12 @@ public:
   //bind gl resource
   static void SetTexture(const Texture &tex);
   static void SetShader(const ShaderProgram &prog, const ShaderBindPolicy &policy);
-  static void SetMaterial(const Material &material);
 
 public:
   void SetInitState();
   static void EndRender();
+
+  void SetMaterial(const Light &light, const Material &material);
 
   glm::mat4 &projection_mat() { return projection_; }
   glm::mat4 &view_mat() { return view_; }
@@ -120,6 +125,8 @@ private:
   glm::mat4 view_;
 
   Camera cam_;
+  Light light_;
+  Material material_;
 
   RendererPolicy *policy_;
 };
