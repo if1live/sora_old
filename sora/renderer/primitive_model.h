@@ -55,6 +55,10 @@ public:
   void WireTeapot(float size);
   void SolidTeapot(float size);
 
+public:
+  void WirePlane(float half_size, float grid_size);
+  void SolidPlane(float half_size);
+
   std::vector<DrawCommand> GetDrawCmdList_wire() const;
   std::vector<DrawCommand> GetDrawCmdList_solid() const;
   std::vector<DrawCommand> GetDrawCmdList() const;

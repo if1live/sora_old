@@ -1020,6 +1020,197 @@ void PrimitiveModel::WireAxis(float size) {
   }
 }
 
+void PrimitiveModel::WirePlane(float half_size, float grid_size) {
+  SR_ASSERT(half_size > 0);
+  SR_ASSERT(grid_size > 0);
+
+  SafeDelete(impl);
+  //평면 + 축 총 2개의 속성으로 구성된다
+  impl = new PrimitiveModelImpl(2, false);
+  
+  {
+    //평면 부분
+    VertexListType &vert_list = impl->vert_list_group[0];
+    IndexListType &index_list = impl->index_list_group[0];
+    impl->is_solid = false;
+    impl->mode_group[0] = GL_LINES;
+
+    int grid_range = (int)(half_size / grid_size);
+    vert_list.resize((grid_range * 2 + 1) * 4);
+
+    //left line(-half_size, 0, half_size) ~ (-half_size, 0, -half_size)
+    //right line(+half_size, 0, half_size) ~ (+half_size, 0, -half_size)
+    //front line(-half_size, 0, +half_size) ~ (+half_size, 0, +half_size)
+    //back line(-half_size, 0, -half_size) ~ (+half_size, 0, -half_size)
+
+    enum {
+      kLeft = 0,
+      kRight,
+      kFront,
+      kBack
+    };
+
+    //([0], 0, [1]) ~ ([2], 0, [3])
+    float xz_axis_mark[][4] = {
+      { -1, -1, -1, +1 },
+      { +1, -1, +1, +1 },
+      { -1, +1, +1, +1 },
+      { -1, -1, +1, -1 },
+    };
+    for(int axis_idx = 0 ; axis_idx < 4 ; ++axis_idx) {
+      int line_vert_size = grid_range * 2 + 1;
+      for(int i = 0 ; i < line_vert_size ; ++i) {
+        int start_index = line_vert_size * axis_idx;
+        int vert_idx = start_index + i;
+        Vertex &v = vert_list[vert_idx];
+
+        v.color = Vec4ub(255, 255, 255, 255);
+        v.normal = Vec3f(0, 1, 0);
+        
+        float left_x = xz_axis_mark[axis_idx][0] * half_size;
+        float right_x = xz_axis_mark[axis_idx][2] * half_size;
+        float front_z = xz_axis_mark[axis_idx][3] * half_size;
+        float back_z = xz_axis_mark[axis_idx][1] * half_size;
+        SR_ASSERT(left_x <= right_x);
+        SR_ASSERT(back_z <= front_z);
+
+        float x, z;
+        float scale = ((float)i / (line_vert_size-1.0f));
+        if(left_x == right_x) {
+          x = left_x;
+        } else {
+          x = scale * (right_x - left_x) + left_x;
+        }
+        if(front_z == back_z) {
+          z = front_z;
+        } else {
+          z = scale * (front_z - back_z) + back_z;
+        }
+        v.pos = Vec3f(x, 0, z);
+
+        switch(axis_idx) {
+        case kLeft:
+          v.texcoord = Vec2f(0, scale);
+          break;
+        case kRight:
+          v.texcoord = Vec2f(1, scale);
+          break;
+        case kFront:
+          v.texcoord = Vec2f(0, scale);
+          break;
+        case kBack:
+          v.texcoord = Vec2f(1, scale);
+          break;
+        default:
+          SR_ASSERT(!"not valid");
+        }
+      }
+    }
+
+    //build index list
+    int line_vert_size = grid_range * 2 + 1;
+    index_list.reserve(line_vert_size * 2 * 4);
+    //left .... right를 잇는 선
+    int left_start_index = line_vert_size * kLeft;
+    int right_start_index = line_vert_size * kRight;
+    for(int i = 0 ; i < line_vert_size ; i++) {
+      index_list.push_back(left_start_index + i);
+      index_list.push_back(right_start_index + i);
+    }
+
+    //front...back를 잇는 선
+    int front_start_index = line_vert_size * kFront;
+    int back_start_index = line_vert_size * kBack;
+    for(int i = 0 ; i < line_vert_size ; i++) {
+      index_list.push_back(front_start_index + i);
+      index_list.push_back(back_start_index + i);
+    }
+  }
+  {
+    //축 부분
+    VertexListType &vert_list = impl->vert_list_group[1];
+    IndexListType &index_list = impl->index_list_group[1];
+    impl->mode_group[0] = GL_LINES;
+
+    vert_list.resize(4);
+    //공통 속성 설정
+    for(size_t i = 0 ; i < vert_list.size() ; ++i) {
+      Vertex &v = vert_list[i];
+      v.normal = Vec3f(0, 1, 0);
+      v.texcoord = Vec2f(0, 0);
+    }
+
+    Vertex &left = vert_list[0];
+    Vertex &right = vert_list[1];
+    Vertex &front = vert_list[2];
+    Vertex &back = vert_list[3];
+
+    left.color = Vec4ub(255, 0, 0, 255);
+    left.pos = Vec3f(-half_size, 0, 0);
+    right.color = Vec4ub(255, 0, 0, 255);
+    right.pos = Vec3f(+half_size, 0, 0);
+
+    front.color = Vec4ub(0, 255, 0, 255);
+    front.pos = Vec3f(0, 0, +half_size);
+    back.color = Vec4ub(0, 255, 0, 255);
+    back.pos = Vec3f(0, 0, -half_size);
+
+    //build index list
+    index_list.reserve(4);
+    index_list.push_back(0);  index_list.push_back(1);
+    index_list.push_back(2);  index_list.push_back(3);
+  }
+}
+
+void PrimitiveModel::SolidPlane(float half_size) {
+  SR_ASSERT(half_size > 0);
+
+  SafeDelete(impl);
+  impl = new PrimitiveModelImpl(1, false);
+
+  VertexListType &vert_list = impl->vert_list_group[0];
+  IndexListType &index_list = impl->index_list_group[0];
+  impl->mode_group[0] = GL_TRIANGLES;
+  impl->is_solid = true;
+
+  vert_list.resize(4);
+  for(size_t i = 0 ; i < vert_list.size() ; i++) {
+    Vertex &v = vert_list[i];
+    v.color = Vec4ub(255, 255, 255, 255);
+    v.normal = Vec3f(0, 1, 0);
+  }
+
+  enum {
+    kLeftBack,
+    kLeftFront,
+    kRightBack,
+    kRightFront,
+  };
+  // x scale, z scale, s, t
+  float table[][4] = {
+    { -1, -1, 0, 0 },
+    { -1, +1, 0, 1 },
+    { +1, -1, 1, 0 },
+    { +1, +1, 1, 1 }
+  };
+  for(int i = 0 ; i < 4 ; ++i) {
+    float x_scale = table[i][0];
+    float z_scale = table[i][1];
+    float s = table[i][2];
+    float t = table[i][3];
+    vert_list[i].pos = Vec3f(x_scale * half_size, 0, z_scale * half_size);
+    vert_list[i].texcoord = Vec2f(s, t);
+  }
+
+  index_list.reserve(6);
+  index_list.push_back(kLeftBack); 
+  index_list.push_back(kLeftFront);  
+  index_list.push_back(kRightBack);  
+  
+  index_list.push_back(kRightBack);
+  index_list.push_back(kLeftFront);
+  index_list.push_back(kRightFront);
+}
 
 void PrimitiveModel::CalcTeapotSize() {
   if(teapot_created_ == true) {

@@ -210,10 +210,12 @@ bool setupGraphics(int w, int h) {
     glm::mat4 entity_mat = glm::mat4(1.0f);
     //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
     //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
-    entity_mat = glm::rotate(glm::mat4(1.0f), 180.0f, vec3(1, 0, 0));
+    //entity_mat = glm::rotate(glm::mat4(1.0f), 180.0f, vec3(1, 0, 0));
     world_mat_list[obj_model_idx] = entity_mat;
 
-    primitive_model.SolidSphere(0.5, 16, 16);
+    //primitive_model.SolidSphere(0.5, 16, 16);
+    //primitive_model.WirePlane(10.0f, 0.5f);
+    primitive_model.SolidPlane(2.0f);
     MeshManager::GetInstance().Add(primitive_model.GetDrawCmdList(), "model1");
     mesh_name_list[obj_model_idx] = "model1";
   }
@@ -261,8 +263,8 @@ bool setupGraphics(int w, int h) {
   return true;
 }
 
-float aptitude = 0; //위도. -90~90. 세로 위치 표현
-float latitude = 0; //경도
+float aptitude = 10; //위도. -90~90. 세로 위치 표현
+float latitude = 10; //경도
 
 void SORA_set_cam_pos(float a, float b) {
   aptitude += a;
