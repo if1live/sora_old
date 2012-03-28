@@ -39,10 +39,10 @@ private:
 };
 
 Entity::Entity(World *world)
-  : world_(world), user_data(NULL), world_mat_(1.0f) {
+  : user_data(NULL), world_(world), world_mat_(1.0f) {
 }
 Entity::Entity(World *world, const std::string &name)
-  : world_(world), user_data(NULL), name_(name), world_mat_(1.0f) {
+  : user_data(NULL), world_(world), name_(name), world_mat_(1.0f) {
 }
 Entity::~Entity() {
   BOOST_FOREACH(Component *comp, comp_list_) {

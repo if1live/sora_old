@@ -74,6 +74,14 @@ UberShader::~UberShader() {
   prog_dict_.clear();
 }
 
+//테이블 구성해서 타자치는거 좀 줄이자
+struct ShaderBindParam {
+  ShaderBindParam(const char *name, int semantic)
+    : name(name), semantic(semantic) {}
+  string name;
+  int semantic;
+};
+
 ShaderProgram &UberShader::Load(uint flag) {
   auto found = prog_dict_.find(flag);
   if(found != prog_dict_.end()) {
@@ -107,15 +115,6 @@ ShaderProgram &UberShader::Load(uint flag) {
   SR_ASSERT(bind_policy.shader_prog() == shader_prog.prog);
 
   //bind되는 변수는 uber shader의 경우는 코드레벨에서 떄려박을수 있다
-
-  //테이블 구성해서 타자치는거 좀 줄이자
-  struct ShaderBindParam {
-    ShaderBindParam(const char *name, int semantic)
-      : name(name), semantic(semantic) {}
-    string name;
-    int semantic;
-  };
-
   vector<ShaderBindParam> attr_bind_param;
   vector<ShaderBindParam> uniform_bind_param;
   

@@ -27,7 +27,7 @@ LOCAL_C_INCLUDES := \
 	../sdk/vincent
 	
 LOCAL_CFLAGS := 
-LOCAL_CXXFLAGS := --std=gnu++0x
+LOCAL_CXXFLAGS := --std=gnu++0x -W
 
 LOCAL_MODULE    := sora
 
@@ -35,7 +35,6 @@ LOCAL_SRC_FILES := \
 	../cbes/component.cpp	\
 	../cbes/component_list.cpp	\
 	../cbes/entity.cpp	\
-	../cbes/mesh_component.cpp	\
 	../cbes/world.cpp
 	
 LOCAL_SRC_FILES += 	\
@@ -72,7 +71,10 @@ LOCAL_SRC_FILES += \
 	../renderer/shader_variable.cpp	\
 	../renderer/camera.cpp	\
 	../renderer/uber_shader.cpp	\
-	../renderer/shader_bind_policy.cpp
+	../renderer/shader_bind_policy.cpp	\
+	../renderer/mesh.cpp	\
+	../renderer/mesh_manager.cpp	\
+	../renderer/parametric_surface.cpp
 	
 LOCAL_SRC_FILES += \
 	../sys/sys_locale.cpp	\

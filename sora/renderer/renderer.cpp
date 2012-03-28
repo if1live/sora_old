@@ -274,25 +274,41 @@ void Renderer::Draw(const MeshBufferObject &mesh) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo.buffer());
 
     if(pos_var.location != -1) {
-      int offset = offsetof(Vertex, pos);
+      Vertex tmp_v;
+      const void *ptr = &tmp_v.pos;
+      const void *base = &tmp_v;
+      int offset = (long)ptr - (long)base;
+
       glEnableVertexAttribArray(pos_var.location);
       glVertexAttribPointer(pos_var.location, 3, Vertex::kPosType, GL_FALSE, sizeof(sora::Vertex), (void*)offset);
       GLHelper::CheckError("glVertexAttribPointer");
     }
     if(texcoord_var.location != -1) {
-      int offset = offsetof(Vertex, texcoord);
+      Vertex tmp_v;
+      const void *ptr = &tmp_v.texcoord;
+      const void *base = &tmp_v;
+      int offset = (long)ptr - (long)base;
+      
       glEnableVertexAttribArray(texcoord_var.location);
       glVertexAttribPointer(texcoord_var.location, 2, Vertex::kTexcoordType, GL_FALSE, sizeof(sora::Vertex), (void*)offset);
       GLHelper::CheckError("glVertexAttribPointer");
     }
     if(normal_var.location != -1) {
-      int offset = offsetof(Vertex, normal);
+      Vertex tmp_v;
+      const void *ptr = &tmp_v.normal;
+      const void *base = &tmp_v;
+      int offset = (long)ptr - (long)base;
+
       glEnableVertexAttribArray(normal_var.location);
       glVertexAttribPointer(normal_var.location, 3, Vertex::kNormalType, GL_FALSE, sizeof(sora::Vertex), (void*)offset);
       GLHelper::CheckError("glVertexAttribPointer");
     }
     if(color_var.location != -1) {
-      int offset = offsetof(Vertex, color);
+      Vertex tmp_v;
+      const void *ptr = &tmp_v.color;
+      const void *base = &tmp_v;
+      int offset = (long)ptr - (long)base;
+
       glEnableVertexAttribArray(color_var.location);
       glVertexAttribPointer(color_var.location, 4, Vertex::kColorType, GL_FALSE, sizeof(sora::Vertex), (void*)offset);
       GLHelper::CheckError("glVertexAttribPointer");

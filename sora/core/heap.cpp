@@ -25,10 +25,10 @@
 namespace sora {;
 int Heap::next_id_ = 1;
 Heap::Heap()
-  : name_(""), allocated_size_(0), id_(next_id_++) {
+  : id_(next_id_++), name_(""), allocated_size_(0) {
 }
 Heap::Heap(const std::string &name)
-  : name_(name), allocated_size_(0), id_(next_id_++) {
+  : id_(next_id_++), name_(name), allocated_size_(0) {
 }
 Heap::~Heap() {
 }

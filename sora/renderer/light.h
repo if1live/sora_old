@@ -28,8 +28,8 @@ namespace sora {;
 struct Light {
   Light()
   : ambient(1.0f, 1.0f, 1.0f, 1.0f),
-    specular(1.0f, 1.0f, 1.0f, 1.0f),
     diffuse(1.0f, 1.0f, 1.0f, 1.0f),
+    specular(1.0f, 1.0f, 1.0f, 1.0f),
     shininess(10) {
   }
 
