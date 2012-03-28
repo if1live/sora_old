@@ -17,14 +17,18 @@ varying vec4 v_ambientColor;
 #endif
 
 #ifdef USE_DIFFUSE
+#ifndef DIFFUSE_SPECULAR
 #define DIFFUSE_SPECULAR 1
+#endif
 uniform vec4 u_diffuseColor;
 varying vec4 v_diffuseColor;
 varying float v_diffuse;
 #endif
 
 #ifdef USE_SPECULAR
+#ifndef DIFFUSE_SPECULAR
 #define DIFFUSE_SPECULAR 1
+#endif
 uniform vec4 u_specularColor;
 varying vec4 v_specularColor;
 uniform float u_specularShininess;
