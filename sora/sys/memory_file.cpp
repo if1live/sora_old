@@ -45,15 +45,16 @@ data(NULL) {
   strcpy(filepath_, filepath.c_str());
 }
 MemoryFile::~MemoryFile() {
-  Close();
 }
 
 void MemoryFile::Close() {
-  SR_FREE(data);
-  start = NULL;
-  curr = NULL;
-  end = NULL;
-  data = NULL;
+  if(data != NULL) {
+    SR_FREE(data);
+    start = NULL;
+    curr = NULL;
+    end = NULL;
+    data = NULL;
+  }
 }
 
 int MemoryFile::Read(void *buf, int size) {

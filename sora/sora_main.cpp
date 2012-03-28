@@ -69,12 +69,7 @@ using namespace std;
 using namespace sora;
 using namespace glm;
 
-//ShaderProgram shader_prog;
 ShaderProgram shader_2d;
-//소멸자에서 만들엇던 gl을 해제하는데
-//소멸자 호출 시점이 gl해제보다 늦어서 뻑난다. 그래서 임시로 동적할당해서 안놓음
-UberShader &uber_shader = *(new UberShader());  
-
 
 //테스트용 물체를 그릴수있도록 필요한 변수를 하드코딩으로 떄려박자
 const int kMaxObject = 10;
@@ -90,6 +85,82 @@ void SORA_set_window_size(int w, int h) {
 }
 
 #if SR_WIN
+
+void SORA_test_draw2(int w, int h) {
+  static bool init = false;
+  static ShaderProgram shader;
+  
+  if(init == false) {
+    init = true;
+    //create shader
+    //2d shader
+    std::string app_vert_path = sora::Filesystem::GetAppPath("shader/v_simple.glsl");
+    std::string app_frag_path = sora::Filesystem::GetAppPath("shader/f_simple.glsl");
+    sora::MemoryFile vert_file(app_vert_path);
+    sora::MemoryFile frag_file(app_frag_path);
+    vert_file.Open();
+    frag_file.Open();
+    const char *vert_src = (const char*)(vert_file.start);
+    const char *frag_src = (const char*)(frag_file.start);
+    bool prog_result = shader.Init(vert_src, frag_src);
+    if(prog_result == false) {
+      LOGE("Could not create program.");
+    }
+
+    {
+      std::string tex_path = sora::Filesystem::GetAppPath("texture/sora.png");
+      sora::MemoryFile tex_file(tex_path);
+      tex_file.Open();
+      Texture tex("sora");
+      tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
+      TextureManager::GetInstance().Add(tex);
+    }
+
+  }
+  static float a = 0;
+  a += 0.1f;
+
+  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+  glViewport(0, 0, w, h);
+
+  GLHelper::CheckError("Render 2d start");
+  //draw 2d something
+  glm::mat4 world_mat(1.0f);
+
+  int pos_loc = shader.GetAttribLocation("a_position");
+  int tex_loc = shader.GetAttribLocation("a_texcoord");
+  glEnableVertexAttribArray(pos_loc);
+  glEnableVertexAttribArray(tex_loc);
+  
+  int mvp_loc = shader.GetUniformLocation("u_worldViewProjection");
+
+  float vertex[] = {
+    -0.5, -0.5, 0,
+    0.5, -0.5, 0,
+    0, 0.5, 0,
+  };
+  float texcoord[] = {
+    0, 0,
+    1, 0,
+    0.5, 1,
+  };
+
+
+  glUseProgram(shader.prog);
+
+  Texture *tex = TextureMgr_get_ptr(string("sora"));
+  Renderer::SetTexture(*tex);
+  glBindTexture(GL_TEXTURE_2D, tex->handle());
+
+  glUniformMatrix4fv(mvp_loc, 1, GL_FALSE, glm::value_ptr(world_mat));
+  glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, 0, vertex);
+  glVertexAttribPointer(tex_loc, 2, GL_FLOAT, GL_FALSE, 0, texcoord);
+  glDrawArrays(GL_TRIANGLE_FAN, 0, 3);
+  GLHelper::CheckError("glDrawArrays");
+
+}
+
 void SORA_test_draw(int w, int h) {
   static float a = 0;
   a += 0.1f;
@@ -131,8 +202,6 @@ bool setupGraphics(int w, int h) {
   LOGI("Vendor : %s", GLHelper::GetVender().c_str());
   LOGI("Renderer : %s", GLHelper::GetRenderer().c_str());
   LOGI("Extensions : %s", GLHelper::GetExtensions().c_str());
-
-  uber_shader.Init();
 
   {
     //2d shader
@@ -285,15 +354,14 @@ void SORA_set_cam_pos(float a, float b) {
 }
 
 void renderFrame() {
-  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-  glClear( GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
+  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  /////////////////////////
   {
+    //uber shader
     Renderer &render3d = Renderer::Renderer3D();
-    //render 3d
     render3d.SetInitState();
-
+    
     //set camera + projection
     float win_width = render3d.win_width();
     float win_height = render3d.win_height();
@@ -310,46 +378,25 @@ void renderFrame() {
     cam.set_up(sora::Vec3f(0, 1, 0));
     render3d.set_camera(cam);
 
-    //shader 속성 설정
-    ShaderBindPolicy bind_policy(uber_shader.prog().prog);
-    //기본 속성
-    const ShaderVariable &pos_var = uber_shader.prog().attrib_var("a_position");
-    const ShaderVariable &texcoord_var = uber_shader.prog().attrib_var("a_texcoord");
-    const ShaderVariable &normal_var = uber_shader.prog().attrib_var("a_normal");
+    unsigned int flag = 0;
+    //flag |= UberShader::kConstColor;
+    flag |= UberShader::kTexture;
+    flag |= UberShader::kAmbient;
+    flag |= UberShader::kDiffuse;
+    flag |= UberShader::kSpecular;
+    ShaderProgram &shader = UberShader::GetInstance().Load(flag);
+    render3d.SetShader(shader);
 
-    glEnableVertexAttribArray(pos_var.location);
-    glEnableVertexAttribArray(texcoord_var.location);
-    glEnableVertexAttribArray(normal_var.location);
+    ShaderBindPolicy &bind_policy = shader.bind_policy;
 
-    bind_policy.set_var(ShaderBindPolicy::kPosition, pos_var);
-    bind_policy.set_var(ShaderBindPolicy::kTexcoord, texcoord_var);
-    bind_policy.set_var(ShaderBindPolicy::kNormal, normal_var);
+    const ShaderVariable &const_color_var = bind_policy.var(ShaderBindPolicy::kConstColor);
+    if(const_color_var.location != -1) {
+      //Vec4f const_color(1.0f, 0.5f, 0.8f, 1.0f);
+      Vec4f const_color(1.0f, 1.0f, 1.0f, 1.0f);
+      glUniform4fv(const_color_var.location, 1, const_color.data);
+    }
 
-    const ShaderVariable &view_pos_var = uber_shader.prog().uniform_var("u_viewPosition");
-    const ShaderVariable &mvp_var = uber_shader.prog().uniform_var("u_worldViewProjection");
-    const ShaderVariable &world_var = uber_shader.prog().uniform_var("u_world");
-    bind_policy.set_var(ShaderBindPolicy::kViewPosition, view_pos_var);
-    bind_policy.set_var(ShaderBindPolicy::kWorldViewProjection, mvp_var);
-    bind_policy.set_var(ShaderBindPolicy::kWorld, world_var);
-
-    //set material 
-    const ShaderVariable &ambient_var = uber_shader.prog().uniform_var("u_ambientColor");
-    const ShaderVariable &diffuse_var = uber_shader.prog().uniform_var("u_diffuseColor");
-    const ShaderVariable &specular_var = uber_shader.prog().uniform_var("u_specularColor");
-    const ShaderVariable &shininess_var = uber_shader.prog().uniform_var("u_specularShininess");
-    bind_policy.set_var(ShaderBindPolicy::kAmbientColor, ambient_var);
-    bind_policy.set_var(ShaderBindPolicy::kDiffuseColor, diffuse_var);
-    bind_policy.set_var(ShaderBindPolicy::kSpecularColor, specular_var);
-    bind_policy.set_var(ShaderBindPolicy::kSpecularShininess, shininess_var);
-
-    //빛에 필요한거 추가로
-    const ShaderVariable &light_pos_var = uber_shader.prog().uniform_var("u_worldLightPosition");
-    bind_policy.set_var(ShaderBindPolicy::kLightPosition, light_pos_var);
-
-    //apply bind policy
-    render3d.SetShader(uber_shader.prog(), bind_policy);
-
-    //simple draw
+    render3d.SetLight(light);
     for(int i = 0 ; i < kMaxObject ; i++) {
       const string &mesh_name = mesh_name_list[i];
       if(mesh_name.empty()) {
@@ -369,63 +416,69 @@ void renderFrame() {
 
       if(i % 2 == 0) {
         const sora::Material &mtl = MaterialMgr_get("shinyred");
-        render3d.SetMaterial(light, mtl);
+        render3d.SetMaterial(mtl);
       } else {
         const sora::Material &mtl = MaterialMgr_get("clearblue");
-        render3d.SetMaterial(light, mtl);
+        render3d.SetMaterial(mtl);
       }
+      render3d.ApplyMaterialLight();
 
       MeshBufferObject *mesh = MeshManager::GetInstance().Get(mesh_name);
       SR_ASSERT(mesh != NULL);
       render3d.Draw(*mesh);
+      GLHelper::CheckError("Render End");
     }
+
+    GLHelper::CheckError("Render End");
   }
+
   {
+    GLHelper::CheckError("Render 2d start");
     Renderer &render2d = Renderer::Renderer2D();
 
     //draw 2d something
     glm::mat4 world_mat(1.0f);
 
     //shader 속성 설정
-    ShaderBindPolicy bind_policy(shader_2d.prog);
+    ShaderBindPolicy &bind_policy = shader_2d.bind_policy;
     //기본 속성
-    const ShaderVariable &pos_var = shader_2d.attrib_var("a_position");
-    const ShaderVariable &texcoord_var = shader_2d.attrib_var("a_texcoord");
+    const ShaderVariable *pos_var = shader_2d.attrib_var("a_position");
+    const ShaderVariable *texcoord_var = shader_2d.attrib_var("a_texcoord");
     
-    glEnableVertexAttribArray(pos_var.location);
-    glEnableVertexAttribArray(texcoord_var.location);
+    glEnableVertexAttribArray(pos_var->location);
+    glEnableVertexAttribArray(texcoord_var->location);
     
-    bind_policy.set_var(ShaderBindPolicy::kPosition, pos_var);
-    bind_policy.set_var(ShaderBindPolicy::kTexcoord, texcoord_var);
+    bind_policy.set_var(ShaderBindPolicy::kPosition, *pos_var);
+    bind_policy.set_var(ShaderBindPolicy::kTexcoord, *texcoord_var);
 
-    const ShaderVariable &mvp_var = shader_2d.uniform_var("u_worldViewProjection");
-    bind_policy.set_var(ShaderBindPolicy::kWorldViewProjection, mvp_var);
-
+    const ShaderVariable *mvp_var = shader_2d.uniform_var("u_worldViewProjection");
+    bind_policy.set_var(ShaderBindPolicy::kWorldViewProjection, *mvp_var);
 
     render2d.SetInitState();
-    render2d.SetShader(shader_2d, bind_policy);
+    render2d.SetShader(shader_2d);
     render2d.ApplyMatrix(world_mat);
     sora::Font &font = sora::Font::GetInstance();
     render2d.SetTexture(font.font_texture());
-
+    
     vector<sora::Vertex2D> vert_list;
     vert_list.push_back(sora::Vertex2D(100, 100, 0, 1));
     vert_list.push_back(sora::Vertex2D(100+128*2, 100, 1, 1));
     vert_list.push_back(sora::Vertex2D(100+128*2, 100+128*2, 1, 0));
     vert_list.push_back(sora::Vertex2D(100, 100+128*2, 0, 0));
-    glVertexAttribPointer(pos_var.location, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &vert_list[0].pos);
-    glVertexAttribPointer(texcoord_var.location, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &vert_list[0].texcoord);
+    glVertexAttribPointer(pos_var->location, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &vert_list[0].pos);
+    glVertexAttribPointer(texcoord_var->location, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &vert_list[0].texcoord);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    GLHelper::CheckError("glDrawArrays");
 
     world_mat = glm::translate(world_mat, glm::vec3(0, 800, 0));
     world_mat = glm::scale(world_mat, glm::vec3(2, 2, 1));
     render2d.ApplyMatrix(world_mat);
     sora::Label label("PQRS_1234_asdf");
-    glVertexAttribPointer(pos_var.location, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->pos);
-    glVertexAttribPointer(texcoord_var.location, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->texcoord);
+    glVertexAttribPointer(pos_var->location, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->pos);
+    glVertexAttribPointer(texcoord_var->location, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->texcoord);
     glDrawElements(GL_TRIANGLES, label.index_count(), GL_UNSIGNED_SHORT, label.index_data());
+    GLHelper::CheckError("glDrawArrays");
   }
-  
 
   //////////////////////////////
   Renderer::EndRender();

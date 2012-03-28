@@ -29,56 +29,49 @@ class ShaderBindPolicy {
 public:
   enum {
     kUnknown = -1,
-    //predefined semantic list
-    //vec4
+    
+    //camera
     kViewDirection,
     kViewPosition,
     kViewSide,
     kViewUp,
 
-    //mat4
-    //kViewProjection,
-    //kViewProjectionInverse,
-    //kViewProjectionTranspose,
-    //kViewProjectionInverseTranspose,
-
+    //basic matrix
     kView,
-    //kViewInverse,
-    //kViewTranspose,
-    //kViewInverseTrsnspose,
-
     kProjection,
-    //kProjectionInverse,
-    //kProjectionTranspose,
-    //kProjectionInverseTranspose,
-
-    kWorldViewProjection,
-    //kWorldViewProjectionInverse,
-    //kWorldViewProjectionTranspose,
-    //kWorldViewProjectionInverseTranspose,
-
     kWorld,
-    //kWorldInverse,
-    //kWorldTranspose,
-    //kWorldInverseTranspose,
-
-    //kWorldView,
-    //kWorldViewInverse,
-    //kWorldViewTranspose,    
-    //kWorldViewInverseTranspose,
-
-    //position, normal...등등 항상 뻔한것들까지 일단 떄려박자
+    kWorldViewProjection,
+    
+    //model data
     kPosition,
     kNormal,
+    kColor,
     kTexcoord,
+    kTangent,
+    kBinormal,
 
-    //기본적인 빛을 구현하는데 사용되는 속성
+    //디버깅에 쓰일수 잇는 특수 속성
+    kConstColor,
+
+    //빛+재질은 섞어서 한번에 다룰수 있도록 하자
     kAmbientColor,
     kDiffuseColor,
     kSpecularColor,
     kSpecularShininess,
     kLightPosition,
 
+    /*
+    kLightAmbient,
+    kLightDiffuse,
+    kLightSpecular,
+    kLightShininess,
+    kLightPosition,
+
+    //재질
+    kMaterialAmbient,
+    kMaterialDiffuse,
+    kMaterialSpecular,
+    */
     kSemanticCount,
   };
 

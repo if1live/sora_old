@@ -23,23 +23,35 @@
 
 #include "shader.h"
 #include "shader_variable.h"
-
-
+#include "core/template_lib.h"
 
 namespace sora {;
 //ambient / diffuse / specular같은거 기본 지원하기 위한 용도
 //설계 테스트용
-class SR_DLL UberShader {
+class UberShader : public Singleton<UberShader> {
+public:
+  enum {
+    kConstColor = 1 << 0,
+    kTexture = 1 << 1,
+    kAmbient = 1 << 2,
+    kDiffuse = 1 << 3,
+    kSpecular = 1 << 4,
+  };
 public:
   UberShader();
   ~UberShader();
-
-  bool Init();
-
-  const ShaderProgram &prog() { return prog_; }
+  
+  ShaderProgram &Load(uint flag);
 
 private:
-  ShaderProgram prog_;
+  void LoadRawSrc();
+
+  typedef std::tr1::unordered_map<unsigned int, ShaderProgram> ShaderDictType;
+  ShaderDictType prog_dict_;
+
+
+  std::string orig_vert_src_;
+  std::string orig_frag_src_;
 };
 }
 

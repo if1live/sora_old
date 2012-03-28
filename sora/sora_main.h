@@ -33,6 +33,7 @@ SR_C_DLL void SORA_update_frame(float dt);
 SR_C_DLL void SORA_init_gl_env();
 
 SR_C_DLL void SORA_test_draw(int w, int h);
+SR_C_DLL void SORA_test_draw2(int w, int h);
 
 SR_C_DLL void SORA_set_cam_pos(float a, float b);
 

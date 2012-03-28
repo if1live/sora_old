@@ -22,7 +22,6 @@
 #define SORA_RENDERER_H_
 
 #include "camera.h"
-#include "shader_bind_policy.h"
 #include "light.h"
 #include "material.h"
 
@@ -76,13 +75,11 @@ public:
 
   //bind gl resource
   static void SetTexture(const Texture &tex);
-  static void SetShader(const ShaderProgram &prog, const ShaderBindPolicy &policy);
+  static void SetShader(const ShaderProgram &prog);
 
 public:
   void SetInitState();
   static void EndRender();
-
-  void SetMaterial(const Light &light, const Material &material);
 
   glm::mat4 &projection_mat() { return projection_; }
   glm::mat4 &view_mat() { return view_; }
@@ -102,6 +99,11 @@ public:
   void Draw(const DrawCommand &cmd);
   void Draw(const MeshBufferObject &mesh);
 
+  //light / material
+  void SetLight(const Light &light);
+  void SetMaterial(const Material &material);
+  void ApplyMaterialLight();
+
 protected:
   //access cache like data
   static GLuint last_tex_id() { return last_tex_id_; }
@@ -118,17 +120,16 @@ private:
   static GLuint last_tex_id_;
   static GLuint last_prog_id_;
   static ShaderProgram *last_prog_;
-  static ShaderBindPolicy bind_policy_;
 
   //행렬의 경우, 렌더러 각각이 공유하지 않는다. 2d와 3d를 완전히 분리시킨다는 의미
   glm::mat4 projection_;
   glm::mat4 view_;
 
+  RendererPolicy *policy_;
+
   Camera cam_;
   Light light_;
   Material material_;
-
-  RendererPolicy *policy_;
 };
 
 template<typename T>

@@ -33,6 +33,7 @@
 #endif
 
 #include "shader_variable.h"
+#include "shader_bind_policy.h"
 
 namespace sora {;
 
@@ -41,6 +42,8 @@ public:
   Shader();
   ~Shader();
 
+  bool InitVertexShader(const std::vector<const char*> &src_list);
+  bool InitFragmentShader(const std::vector<const char*> &src_list);
   bool InitVertexShader(const char *src);
   bool InitFragmentShader(const char *src);
   bool InitVertexShader(const std::string &src) {
@@ -54,7 +57,7 @@ public:
   
 private:
   bool InitShader(GLenum shader_type, const char *src);
-
+  bool InitShader(GLenum shader_type, const std::vector<const char*> &src_list);
 public:
   GLuint handle;
   GLenum type;
@@ -72,9 +75,10 @@ public:
   bool Init(const std::string &v_src, const std::string &f_src) {
     return Init(v_src.c_str(), f_src.c_str());
   }
+  bool Init(const std::vector<const char*> &v_src_list, const std::vector<const char*> &f_src_list);
+
   void Deinit();
   bool IsInit() const { return (prog != 0); }
-  //void Use();
 
   GLint GetAttribLocation(const char *name) const;
   GLint GetUniformLocation(const char *name) const;
@@ -83,11 +87,18 @@ public:
   std::vector<ShaderVariable> GetActiveUniformVarList();
   std::vector<ShaderVariable> GetActiveAttributeVarList();
 
-  const ShaderVariable &uniform_var(const char *name) const;
-  const ShaderVariable &attrib_var(const char *name) const;
+  const ShaderVariable *uniform_var(const char *name) const {
+    return uniform_var(std::string(name));
+  }
+  const ShaderVariable *attrib_var(const char *name) const {
+    return attrib_var(std::string(name));
+  }
+  const ShaderVariable *uniform_var(const std::string &name) const;
+  const ShaderVariable *attrib_var(const std::string &name) const;
 
 public:
   GLuint prog;
+  ShaderBindPolicy bind_policy;
 
 private:
   Shader vert_shader_;
@@ -95,7 +106,7 @@ private:
 
   std::vector<ShaderVariable> uniform_var_list_;
   std::vector<ShaderVariable> attrib_var_list_;
-  const ShaderVariable &FindShaderVar(const char *name, const std::vector<ShaderVariable> &var_list) const;
+  const ShaderVariable *FindShaderVar(const std::string &name, const std::vector<ShaderVariable> &var_list) const;
 };
 
 }

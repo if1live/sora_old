@@ -82,6 +82,62 @@ bool Shader::InitShader(GLenum shader_type, const char *src) {
   }
   return true;
 }
+
+bool Shader::InitShader(GLenum shader_type, const std::vector<const char*> &src_list) {
+  SR_ASSERT(handle == 0);
+  this->type = shader_type;
+
+  handle = glCreateShader(shader_type);
+
+  //const char *tmp = (src_list[0]);
+  //const char **src_list_ptr = &tmp;
+  //glShaderSource(handle, src_list.size(), src_list_ptr, 0);
+
+  string src;
+  for(size_t i = 0 ; i < src_list.size() ; i++) {
+    src += src_list[i];
+    src += '\n';
+  }
+  const char *tmp = src.c_str();
+  const char **src_ptr = &tmp;
+  glShaderSource(handle, 1, src_ptr, 0);
+
+
+  glCompileShader(handle);
+
+  GLint status;
+  glGetShaderiv(handle, GL_COMPILE_STATUS, &status);
+  if (status == GL_FALSE) {
+    GLint infoLen = 0;
+    glGetShaderiv(handle, GL_INFO_LOG_LENGTH, &infoLen);
+    if (infoLen) {
+      char* buf = (char*) SR_MALLOC(infoLen);
+      if (buf) {
+        glGetShaderInfoLog(handle, infoLen, NULL, buf);
+        LOGE("Could not compile shader %d:\n%s\n", shader_type, buf);
+        SR_FREE(buf);
+      }
+      glDeleteShader(handle);
+      handle = 0;
+
+      string src;
+      for(size_t i = 0 ; i < src_list.size() ; i++) {
+        src += src_list[i];
+        src += '\n';
+      }
+      LOGE("ShaderSrc : %s", src.c_str());
+      SR_ASSERT(false);
+    }
+    return false;
+  }
+  return true;
+}
+bool Shader::InitVertexShader(const std::vector<const char*> &src_list) {
+  return InitShader(GL_VERTEX_SHADER, src_list);
+}
+bool Shader::InitFragmentShader(const std::vector<const char*> &src_list) {
+  return InitShader(GL_FRAGMENT_SHADER, src_list);
+}
 /////////////////////
 ShaderProgram::ShaderProgram()
 : prog(0) {
@@ -100,7 +156,63 @@ void ShaderProgram::Deinit() {
   if (prog != 0) {
     glDeleteProgram(prog);
     prog = 0;
+    bind_policy = ShaderBindPolicy();
   }
+}
+
+bool ShaderProgram::Init(const std::vector<const char*> &v_src_list, const std::vector<const char*> &f_src_list) {
+  if(prog != 0) {
+    Deinit();
+  }
+
+  if(false == vert_shader_.InitVertexShader(v_src_list)) {
+    return false;
+  }
+  if(false == frag_shader_.InitFragmentShader(f_src_list)) {
+    return false;
+  }
+
+  prog = glCreateProgram();
+  if(!prog) {
+    return false;
+  }
+
+  glAttachShader(prog, vert_shader_.handle);
+  glAttachShader(prog, frag_shader_.handle);
+
+  glLinkProgram(prog);
+  GLint linkStatus = GL_FALSE;
+  glGetProgramiv(prog, GL_LINK_STATUS, &linkStatus);
+  if (linkStatus != GL_TRUE) {
+    //link fail
+    GLint bufLength = 0;
+    glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &bufLength);
+    if (bufLength) {
+      char* buf = (char*) SR_MALLOC(bufLength);
+      if (buf) {
+        glGetProgramInfoLog(prog, bufLength, NULL, buf);
+        LOGE("Could not link program:\n%s\n", buf);
+        SR_FREE(buf);
+      }
+    }
+    glDeleteProgram(prog);
+    prog = 0;
+    SR_ASSERT(false);
+    return false;
+  }
+
+  LOGI("Active Uniform/Attrib list");
+  uniform_var_list_ = GetActiveUniformVarList();
+  BOOST_FOREACH(const ShaderVariable &loc, uniform_var_list_) {
+    LOGI("%s", loc.str().c_str());
+  }
+  attrib_var_list_ = GetActiveAttributeVarList();
+  BOOST_FOREACH(const ShaderVariable &loc, attrib_var_list_) {
+    LOGI("%s", loc.str().c_str());
+  }
+
+  bind_policy = ShaderBindPolicy(prog);
+  return true;
 }
 
 bool ShaderProgram::Init(const char *v_src, const char *f_src) {
@@ -154,6 +266,7 @@ bool ShaderProgram::Init(const char *v_src, const char *f_src) {
     LOGI("%s", loc.str().c_str());
   }
 
+  bind_policy = ShaderBindPolicy(prog);
   return true;
 }
 
@@ -183,9 +296,6 @@ GLint ShaderProgram::GetAttribLocation(const char *name) const {
 GLint ShaderProgram::GetUniformLocation(const char *name) const {
   return glGetUniformLocation(prog, name);
 }
-//void ShaderProgram::Use() {
-//  glUseProgram(prog);
-//}
 
 std::vector<ShaderVariable> ShaderProgram::GetActiveUniformVarList() {
   vector<ShaderVariable> list;
@@ -248,25 +358,23 @@ std::vector<ShaderVariable> ShaderProgram::GetActiveAttributeVarList() {
   return list;
 }
 
-const ShaderVariable &ShaderProgram::uniform_var(const char *name) const {
+const ShaderVariable *ShaderProgram::uniform_var(const std::string &name) const {
   return FindShaderVar(name, uniform_var_list_);
 }
-const ShaderVariable &ShaderProgram::attrib_var(const char *name) const {
+const ShaderVariable *ShaderProgram::attrib_var(const std::string &name) const {
   return FindShaderVar(name, attrib_var_list_);
 }
 
-const ShaderVariable &ShaderProgram::FindShaderVar(const char *name, const std::vector<ShaderVariable> &var_list) const {
+const ShaderVariable *ShaderProgram::FindShaderVar(const std::string &name, const std::vector<ShaderVariable> &var_list) const {
   auto it = var_list.begin();
   auto endit = var_list.end();
   for( ; it != endit ; ++it) {
     if(it->name == name) {
-      return (*it);
+      const ShaderVariable &var = *it;
+      return &var;
     }
   }
-  //else...not found
-  SR_ASSERT(!"not exist");
-  static ShaderVariable null_obj;
-  return null_obj;
+  return NULL;
 }
 
 } //namespace sora

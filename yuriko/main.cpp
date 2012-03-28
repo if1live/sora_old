@@ -44,6 +44,13 @@ int main(int argc, char *argv[]) {
   //  glfwSwapBuffers();
   //}
 
+  //gl2 test
+  //SORA_init_gl_env(); //glewInit();
+  //while(true) {
+  //  SORA_test_draw2(kWinWidth, kWinHeight);
+  //  glfwSwapBuffers();
+  //}
+
   // init glew
   SORA_init_gl_env(); //glewInit();
   Timer_Init();

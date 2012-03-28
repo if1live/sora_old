@@ -24,16 +24,32 @@
 #include "sys/filesystem.h"
 #include "sys/memory_file.h"
 #include "gl_helper.h"
-
-namespace sora {;
+#include "shader_bind_policy.h"
 
 using namespace std;
 
+namespace sora {;
+//uber shader의 enum에 정의된 순서대로 맞춰서 쓴다
+const char *enable_define_list[] = {
+  "#define USE_CONST_COLOR 1\n",
+  "#define USE_TEXTURE 1\n",
+  "#define USE_AMBIENT 1\n",
+  "#define USE_DIFFUSE 1\n",
+  "#define USE_SPECULAR 1\n",
+};
+const char *disable_define_list[] = {
+  "#undef USE_CONST_COLOR\n",
+  "#undef USE_TEXTURE\n",
+  "#undef USE_AMBIENT\n",
+  "#undef USE_DIFFUSE\n",
+  "#undef USE_SPECULAR\n",
+};
+
 UberShader::UberShader() {
+  LoadRawSrc();
 }
 
-bool UberShader::Init() {
-  //TODO flag달아서 uber느낌 살리기
+void UberShader::LoadRawSrc() {
   //uber shader 로딩
   std::string app_vert_path = Filesystem::GetAppPath("shader/v_uber.glsl");
   std::string app_frag_path = Filesystem::GetAppPath("shader/f_uber.glsl");
@@ -43,66 +59,103 @@ bool UberShader::Init() {
   frag_file.Open();
   const char *vert_src = (const char*)(vert_file.start);
   const char *frag_src = (const char*)(frag_file.start);
-  bool prog_result = prog_.Init(vert_src, frag_src);
-  if(prog_result == false) {
-    LOGE("Could not create program.");
-    //dead???
-  }
-
-  return true;
+  orig_vert_src_ = vert_src;
+  orig_frag_src_ = frag_src;
+  vert_file.Close();
+  frag_file.Close();
 }
 
 UberShader::~UberShader() {
-  GLHelper::CheckError("uber shader end");
-  prog_.Deinit();
+  auto it = prog_dict_.begin();
+  auto endit = prog_dict_.end();
+  for( ; it != endit ; ++it) {
+    it->second.Deinit();
+  }
+  prog_dict_.clear();
 }
 
-/*
-const std::vector<ShaderVariable> &UberShader::GetVariableList() {
-  static bool run = false;
-  static vector<ShaderVariable> tuple_list;
-  if(run == false) {
-    run = true;
+ShaderProgram &UberShader::Load(uint flag) {
+  auto found = prog_dict_.find(flag);
+  if(found != prog_dict_.end()) {
+    return found->second;
+  }
+  //없으면 적절히 생성하기
+  vector<const char*> vert_src_list;
+  vector<const char*> frag_src_list;
 
-    int location_type_table[] = {
-      ShaderVariable::kTypeUniform,   //kLocationAmbientColor,
-      ShaderVariable::kTypeUniform,   //kLocationDiffuseColor,
-      ShaderVariable::kTypeUniform,   //kLocationSpecularColor,
-      ShaderVariable::kTypeUniform,   //kLocationSpecularShininess,
-      //kLocationTypeUniform,   //kLocationWorldLightPosition
-    };
-    int var_type_table[] = {
-      ShaderVariable::kTypeVec4,   //kLocationAmbientColor,
-      ShaderVariable::kTypeVec4,   //kLocationDiffuseColor,
-      ShaderVariable::kTypeVec4,   //kLocationSpecularColor,
-      ShaderVariable::kTypeFloat,   //kLocationSpecularShininess,
-    };
-
-    const char *location_name_table[] = {
-      SORA_AMBIENT_COLOR_NAME,           //kLocationAmbientColor,
-      SORA_DIFFUSE_COLOR_NAME,           //kLocationDiffuseColor,
-      SORA_SPECULAR_COLOR_NAME,          //kLocationSpecularColor,
-      SORA_SPECULAR_SHININESS_NAME,      //kLocationSpecularShininess,
-    };
-    const int type_count = GetArraySize(location_type_table);
-    const int name_count = GetArraySize(location_name_table);
-    const int var_type_count = GetArraySize(var_type_table);
-    SR_ASSERT(type_count == name_count);
-    SR_ASSERT(type_count == var_type_count);
-    
-    for(int code = 0 ; code < type_count ; ++code) {
-      int location_type = location_type_table[code];
-      const char *location_name = location_name_table[code];
-      int var_type = var_type_table[code];
-
-      //ShaderVariable v;
-      //int var_code = ShaderVariable::kSemanticCount + code;
-      //v.Set(var_code, var_type, location_type, location_name, 1);
-      //tuple_list.push_back(v);
+  const int enable_count = sizeof(enable_define_list) / sizeof(enable_define_list[0]);
+  const int disable_count = sizeof(disable_define_list) / sizeof(disable_define_list[0]);
+  SR_STATIC_ASSERT(enable_count == disable_count, "must same size");
+  for(int i = 0 ; i < enable_count ; i++) {
+    unsigned int mask = 1 << i;
+    if((flag & mask) == mask) {
+      vert_src_list.push_back(enable_define_list[i]);
+      frag_src_list.push_back(enable_define_list[i]);
+    } else {
+      vert_src_list.push_back(disable_define_list[i]);
+      frag_src_list.push_back(disable_define_list[i]);
     }
   }
-  return tuple_list;
+  vert_src_list.push_back(orig_vert_src_.c_str());
+  frag_src_list.push_back(orig_frag_src_.c_str());
+
+  //쉐이더 프로그램 적절히 생성
+  ShaderProgram shader_prog;
+  shader_prog.Init(vert_src_list, frag_src_list);
+
+  ShaderBindPolicy &bind_policy = shader_prog.bind_policy;
+  SR_ASSERT(bind_policy.shader_prog() == shader_prog.prog);
+
+  //bind되는 변수는 uber shader의 경우는 코드레벨에서 떄려박을수 있다
+
+  //테이블 구성해서 타자치는거 좀 줄이자
+  struct ShaderBindParam {
+    ShaderBindParam(const char *name, int semantic)
+      : name(name), semantic(semantic) {}
+    string name;
+    int semantic;
+  };
+
+  vector<ShaderBindParam> attr_bind_param;
+  vector<ShaderBindParam> uniform_bind_param;
+  
+  uniform_bind_param.push_back(ShaderBindParam("u_constColor", ShaderBindPolicy::kConstColor));
+  uniform_bind_param.push_back(ShaderBindParam("u_viewPosition", ShaderBindPolicy::kViewPosition));
+  uniform_bind_param.push_back(ShaderBindParam("u_viewSide", ShaderBindPolicy::kViewSide));
+  uniform_bind_param.push_back(ShaderBindParam("u_viewUp", ShaderBindPolicy::kViewUp));
+  uniform_bind_param.push_back(ShaderBindParam("u_viewDir", ShaderBindPolicy::kViewDirection));
+  uniform_bind_param.push_back(ShaderBindParam("u_worldViewProjection", ShaderBindPolicy::kWorldViewProjection));
+  uniform_bind_param.push_back(ShaderBindParam("u_world", ShaderBindPolicy::kWorld));
+  uniform_bind_param.push_back(ShaderBindParam("u_projection", ShaderBindPolicy::kProjection));
+  uniform_bind_param.push_back(ShaderBindParam("u_view", ShaderBindPolicy::kView));
+  uniform_bind_param.push_back(ShaderBindParam("u_ambientColor", ShaderBindPolicy::kAmbientColor));
+  uniform_bind_param.push_back(ShaderBindParam("u_diffuseColor", ShaderBindPolicy::kDiffuseColor));
+  uniform_bind_param.push_back(ShaderBindParam("u_specularColor", ShaderBindPolicy::kSpecularColor));
+  uniform_bind_param.push_back(ShaderBindParam("u_specularShininess", ShaderBindPolicy::kSpecularShininess));
+  uniform_bind_param.push_back(ShaderBindParam("u_worldLightPosition", ShaderBindPolicy::kLightPosition));
+
+  attr_bind_param.push_back(ShaderBindParam("a_position", ShaderBindPolicy::kPosition));
+  attr_bind_param.push_back(ShaderBindParam("a_texcoord", ShaderBindPolicy::kTexcoord));
+  attr_bind_param.push_back(ShaderBindParam("a_normal", ShaderBindPolicy::kNormal));
+  attr_bind_param.push_back(ShaderBindParam("a_color", ShaderBindPolicy::kColor));
+
+  for(size_t i = 0 ; i < attr_bind_param.size() ; i++) {
+    const ShaderBindParam &param = attr_bind_param[i];
+    const ShaderVariable *var = shader_prog.attrib_var(param.name);
+    if(var != NULL) {
+      bind_policy.set_var(param.semantic, *var);
+    }
+  }
+  for(size_t i = 0 ; i < uniform_bind_param.size() ; i++) {
+    const ShaderBindParam &param = uniform_bind_param[i];
+    const ShaderVariable *var = shader_prog.uniform_var(param.name);
+    if(var != NULL) {
+      bind_policy.set_var(param.semantic, *var);
+    }
+  }
+  
+  prog_dict_[flag] = shader_prog;
+  return prog_dict_[flag];
 }
-*/
 
 }

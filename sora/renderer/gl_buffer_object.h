@@ -66,6 +66,9 @@ void GLBufferObject<Target>::Init(int size, void *data, GLenum usage) {
   }
   glBindBuffer(Target, buffer_);
   glBufferData(Target, size, data, usage);
+
+  //unbind
+  glBindBuffer(Target, 0);
 }
 
 template<GLenum Target>

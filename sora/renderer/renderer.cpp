@@ -45,8 +45,6 @@ GLuint Renderer::last_tex_id_ = -1;
 GLuint Renderer::last_prog_id_ = -1;
 ShaderProgram *Renderer::last_prog_ = NULL;
 
-ShaderBindPolicy Renderer::bind_policy_;
-
 float Renderer::win_width_ = 480;
 float Renderer::win_height_ = 320;
 
@@ -88,35 +86,39 @@ void Renderer::SetTexture(const Texture &tex) {
   }
 }
 
-void Renderer::SetShader(const ShaderProgram &prog, const ShaderBindPolicy &policy) {
+void Renderer::SetShader(const ShaderProgram &prog) {
   if(last_prog_id_ != prog.prog) {
     glUseProgram(prog.prog);
     last_prog_id_ = prog.prog;
     last_prog_ = const_cast<ShaderProgram*>(&prog);
   }
-  bind_policy_ = policy;
 }
 
-void Renderer::SetMaterial(const Light &light, const Material &material) {
-  SR_ASSERT(last_prog_ != NULL);
-  SR_ASSERT(bind_policy_.shader_prog() == last_prog_->prog);
-
-  material_ = material;
+void Renderer::SetLight(const Light &light) {
   light_ = light;
+}
+
+void Renderer::ApplyMaterialLight() {
+  //렌더러에 저장된 빛재질을 적절히 적용
+  SR_ASSERT(last_prog_ != NULL);
+
+  const ShaderBindPolicy &bind_policy = last_prog_->bind_policy;
+  const Light &light = light_;
+  const Material &material = material_;
 
   //apply light pos
-  const ShaderVariable &light_pos_var = bind_policy_.var(ShaderBindPolicy::kLightPosition);
+  const ShaderVariable &light_pos_var = bind_policy.var(ShaderBindPolicy::kLightPosition);
   if(light_pos_var.location != -1) {
-    glUniform3fv(light_pos_var.location, 1, light.pos.data);
+    glUniform3fv(light_pos_var.location, 1, light_.pos.data);
     GLHelper::CheckError("Set Light Pos Handle");
   }
 
   //ambient, diffuse, specular 계산하기
   //light * 재질정보를 합쳐서 쓴다
-  const ShaderVariable &ambient_var = bind_policy_.var(ShaderBindPolicy::kAmbientColor);
-  const ShaderVariable &diffuse_var = bind_policy_.var(ShaderBindPolicy::kDiffuseColor);
-  const ShaderVariable &specular_var = bind_policy_.var(ShaderBindPolicy::kSpecularColor);
-  const ShaderVariable &shininess_var = bind_policy_.var(ShaderBindPolicy::kSpecularShininess);
+  const ShaderVariable &ambient_var = bind_policy.var(ShaderBindPolicy::kAmbientColor);
+  const ShaderVariable &diffuse_var = bind_policy.var(ShaderBindPolicy::kDiffuseColor);
+  const ShaderVariable &specular_var = bind_policy.var(ShaderBindPolicy::kSpecularColor);
+  const ShaderVariable &shininess_var = bind_policy.var(ShaderBindPolicy::kSpecularShininess);
 
   bool use_ambient = false;
   bool use_diffuse = false;
@@ -191,6 +193,9 @@ void Renderer::SetMaterial(const Light &light, const Material &material) {
     SR_ASSERT(!"not support yet");
   }
 }
+void Renderer::SetMaterial(const Material &material) {
+  material_ = material;
+}
 
 void Renderer::EndRender() {
   last_tex_id_ = -1;
@@ -221,15 +226,15 @@ void Renderer::set_camera(const Camera &cam) {
 }
 
 void Renderer::Draw(const DrawCommand &cmd) {
-  SR_ASSERT(bind_policy_.shader_prog() == last_prog_->prog);
-
   if(cmd.vert_ptr == NULL) { return; }
   if(cmd.index_ptr == NULL) { return; }
   if(cmd.index_count == 0) { return; }
 
-  const ShaderVariable &pos_var = bind_policy_.var(ShaderBindPolicy::kPosition);
-  const ShaderVariable &texcoord_var = bind_policy_.var(ShaderBindPolicy::kTexcoord);
-  const ShaderVariable &normal_var = bind_policy_.var(ShaderBindPolicy::kNormal);
+  const ShaderBindPolicy &bind_policy = last_prog_->bind_policy;
+
+  const ShaderVariable &pos_var = bind_policy.var(ShaderBindPolicy::kPosition);
+  const ShaderVariable &texcoord_var = bind_policy.var(ShaderBindPolicy::kTexcoord);
+  const ShaderVariable &normal_var = bind_policy.var(ShaderBindPolicy::kNormal);
 
   const Vertex *vert_ptr = cmd.vert_ptr;
 
@@ -252,11 +257,12 @@ void Renderer::Draw(const DrawCommand &cmd) {
 }
 
 void Renderer::Draw(const MeshBufferObject &mesh) {
-  SR_ASSERT(bind_policy_.shader_prog() == last_prog_->prog);
+  const ShaderBindPolicy &bind_policy = last_prog_->bind_policy;
 
-  const ShaderVariable &pos_var = bind_policy_.var(ShaderBindPolicy::kPosition);
-  const ShaderVariable &texcoord_var = bind_policy_.var(ShaderBindPolicy::kTexcoord);
-  const ShaderVariable &normal_var = bind_policy_.var(ShaderBindPolicy::kNormal);
+  const ShaderVariable &pos_var = bind_policy.var(ShaderBindPolicy::kPosition);
+  const ShaderVariable &texcoord_var = bind_policy.var(ShaderBindPolicy::kTexcoord);
+  const ShaderVariable &normal_var = bind_policy.var(ShaderBindPolicy::kNormal);
+  const ShaderVariable &color_var = bind_policy.var(ShaderBindPolicy::kColor);
 
   for(int i = 0 ; i < mesh.BufferCount() ; i++) {
     const VertexBufferObject &vbo = mesh.vbo(i);
@@ -269,17 +275,31 @@ void Renderer::Draw(const MeshBufferObject &mesh) {
 
     if(pos_var.location != -1) {
       int offset = offsetof(Vertex, pos);
+      glEnableVertexAttribArray(pos_var.location);
       glVertexAttribPointer(pos_var.location, 3, Vertex::kPosType, GL_FALSE, sizeof(sora::Vertex), (void*)offset);
+      GLHelper::CheckError("glVertexAttribPointer");
     }
-    if(texcoord_var.location != 1) {
+    if(texcoord_var.location != -1) {
       int offset = offsetof(Vertex, texcoord);
+      glEnableVertexAttribArray(texcoord_var.location);
       glVertexAttribPointer(texcoord_var.location, 2, Vertex::kTexcoordType, GL_FALSE, sizeof(sora::Vertex), (void*)offset);
+      GLHelper::CheckError("glVertexAttribPointer");
     }
     if(normal_var.location != -1) {
       int offset = offsetof(Vertex, normal);
+      glEnableVertexAttribArray(normal_var.location);
       glVertexAttribPointer(normal_var.location, 3, Vertex::kNormalType, GL_FALSE, sizeof(sora::Vertex), (void*)offset);
+      GLHelper::CheckError("glVertexAttribPointer");
     }
+    if(color_var.location != -1) {
+      int offset = offsetof(Vertex, color);
+      glEnableVertexAttribArray(color_var.location);
+      glVertexAttribPointer(color_var.location, 4, Vertex::kColorType, GL_FALSE, sizeof(sora::Vertex), (void*)offset);
+      GLHelper::CheckError("glVertexAttribPointer");
+    }
+
     glDrawElements(draw_mode, index_count, GL_UNSIGNED_SHORT, 0);
+    GLHelper::CheckError("DrawElement");
   }
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -287,7 +307,7 @@ void Renderer::Draw(const MeshBufferObject &mesh) {
 }
 
 void Renderer::ApplyMatrix(const glm::mat4 &world_mat) {
-  SR_ASSERT(bind_policy_.shader_prog() == last_prog_->prog);
+  const ShaderBindPolicy &bind_policy = last_prog_->bind_policy;
 
   const Camera &cam = camera();
   glm::mat4 &view = view_mat();
@@ -305,7 +325,7 @@ void Renderer::ApplyMatrix(const glm::mat4 &world_mat) {
 
   //world-view-projection
   //world, view, projection 같은것을 등록할수 잇으면 등록하기
-  const ShaderVariable &mvp_var = bind_policy_.var(ShaderBindPolicy::kWorldViewProjection);
+  const ShaderVariable &mvp_var = bind_policy.var(ShaderBindPolicy::kWorldViewProjection);
   if(mvp_var.location != -1) {
     //glm::mat4 mvp = impl->projection * impl->view * impl->world;  
     glm::mat4 mvp = glm::mat4(1.0f);
@@ -315,39 +335,39 @@ void Renderer::ApplyMatrix(const glm::mat4 &world_mat) {
     glUniformMatrix4fv(mvp_var.location, 1, GL_FALSE, glm::value_ptr(mvp));
   }
 
-  const ShaderVariable &world_var = bind_policy_.var(ShaderBindPolicy::kWorld);
+  const ShaderVariable &world_var = bind_policy.var(ShaderBindPolicy::kWorld);
   if(world_var.location != -1) {
     glUniformMatrix4fv(world_var.location, 1, GL_FALSE, glm::value_ptr(world_mat));
   }
 
-  const ShaderVariable &view_var = bind_policy_.var(ShaderBindPolicy::kView);
+  const ShaderVariable &view_var = bind_policy.var(ShaderBindPolicy::kView);
   if(view_var.location != -1) {
     glUniformMatrix4fv(view_var.location, 1, GL_FALSE, glm::value_ptr(view_mat()));
   }
 
-  const ShaderVariable &projection_var = bind_policy_.var(ShaderBindPolicy::kProjection);
+  const ShaderVariable &projection_var = bind_policy.var(ShaderBindPolicy::kProjection);
   if(projection_var.location != -1) {
     glUniformMatrix4fv(projection_var.location, 1, GL_FALSE, glm::value_ptr(projection_mat()));
   }
 
-  const ShaderVariable &view_pos_handle = bind_policy_.var(ShaderBindPolicy::kViewPosition);
+  const ShaderVariable &view_pos_handle = bind_policy.var(ShaderBindPolicy::kViewPosition);
   if(view_pos_handle.location != -1) {
     glUniform4f(view_pos_handle.location, eye.x, eye.y, eye.z, 1.0f);
   }
 
-  const ShaderVariable &view_side_var = bind_policy_.var(ShaderBindPolicy::kViewSide);
+  const ShaderVariable &view_side_var = bind_policy.var(ShaderBindPolicy::kViewSide);
   if(view_side_var.location != -1) {
     Vec3f view_side;
     VecCross(dir.data, up.data, view_side.data);
     glUniform4f(view_side_var.location, view_side.x, view_side.y, view_side.z, 1.0f);
   }
 
-  const ShaderVariable &view_up_var = bind_policy_.var(ShaderBindPolicy::kViewUp);
+  const ShaderVariable &view_up_var = bind_policy.var(ShaderBindPolicy::kViewUp);
   if(view_up_var.location != -1) {
     glUniform4f(view_up_var.location, up.x, up.y, up.z, 1.0f);
   }
 
-  const ShaderVariable &view_dir_var = bind_policy_.var(ShaderBindPolicy::kViewDirection);
+  const ShaderVariable &view_dir_var = bind_policy.var(ShaderBindPolicy::kViewDirection);
   if(view_dir_var.location != -1) {
     glUniform4f(view_dir_var.location, dir.x, dir.y, dir.z, 1.0f);
   }
