@@ -4,16 +4,24 @@
 
 using namespace System;
 
-namespace SoraWrapper {
-	public ref class GLView {
-  public:
-    void SetupGraphics(int w, int h);
-    void SetWindowSize(int w, int h);
-    void DrawFrame();
-    void InitGLEnv();
-    void UpdateFrame(float dt);
-    void Cleanup();
+namespace sora {;
+class Device;
+}
 
-    void TestDraw(int w, int h);
-	};
+namespace SoraWrapper {;
+public ref class GLView {;
+public:
+  GLView();
+  ~GLView();
+  void SetupGraphics(int w, int h);
+  void SetWindowSize(int w, int h);
+  void DrawFrame();
+  void InitGLEnv();
+  void UpdateFrame(float dt);
+  void Cleanup();
+
+  void TestDraw(int w, int h);
+private:
+  sora::Device *device_;
+};
 }

@@ -164,6 +164,12 @@
     <ClCompile Include="renderer\light.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
+    <ClCompile Include="test_function.cpp">
+      <Filter>support</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\device.cpp">
+      <Filter>sys</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -355,6 +361,12 @@
     </ClInclude>
     <ClInclude Include="renderer\light.h">
       <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="test_function.h">
+      <Filter>support</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\device.h">
+      <Filter>sys</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

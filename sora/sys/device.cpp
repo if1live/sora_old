@@ -19,50 +19,52 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_stdafx.h"
-#include "texture_manager.h"
-#include "core/template_lib.h"
-#include "texture.h"
+#include "device.h"
 
-using namespace std;
+#include "renderer/material_manager.h"
+#include "renderer/texture_manager.h"
+#include "core/template_lib.h"
 
 namespace sora {;
 
-TextureManager::TextureManager() {
-}
-TextureManager::~TextureManager() {
-}
+struct DevicePrivate {
+  MaterialManager material_mgr;
+  TextureManager texture_mgr;
+};
 
-bool TextureManager::Add(const Texture &tex) {
-  const string &name = tex.name();
-  if(IsExist(name) == true) {
-    //already exist
-    return false;
-  }
-
-  TexturePtr cpy_tex(new Texture(tex));
-  cpy_tex->Init();
-  tex_dict_[name] = cpy_tex;
-  
-  return true;
+Device::Device() : pimpl_(NULL) {
 }
 
-bool TextureManager::IsExist(const std::string &name) const {
-  auto found = tex_dict_.find(name);
-  if(found == tex_dict_.end()) {
-    return false;
-  } else {
-    return true;
+Device::~Device() {
+  if(pimpl_ != NULL) {
+    SafeDelete(pimpl_);
   }
 }
 
-TexturePtr TextureManager::Get(const std::string &name) {
-  auto found = tex_dict_.find(name);
-  if(found == tex_dict_.end()) {
-    static TexturePtr empty;
-    return empty;
-  } else {
-    return found->second;
-  }
+TextureManager &Device::texture_mgr() {
+  return pimpl().texture_mgr;
+}
+const TextureManager &Device::texture_mgr() const {
+  return pimpl().texture_mgr;
 }
 
+MaterialManager &Device::material_mgr() {
+  return pimpl().material_mgr;
+}
+const MaterialManager &Device::material_mgr() const {
+  return pimpl().material_mgr;
+}
+
+DevicePrivate &Device::pimpl() {
+  if(pimpl_ == NULL) {
+    pimpl_ = new DevicePrivate();
+  }
+  return *pimpl_;
+}
+const DevicePrivate &Device::pimpl() const {
+  if(pimpl_ == NULL) {
+    pimpl_ = new DevicePrivate();
+  }
+  return *pimpl_;
+}
 }

@@ -25,15 +25,16 @@
 #include "core/arch.h"
 #endif
 
-SR_C_DLL void SORA_setup_graphics(int w, int h);
-SR_C_DLL void SORA_set_window_size(int w, int h);
-SR_C_DLL void SORA_cleanup_graphics();
-SR_C_DLL void SORA_draw_frame();
-SR_C_DLL void SORA_update_frame(float dt);
-SR_C_DLL void SORA_init_gl_env();
+namespace sora {;
+class Device;
+}
 
-SR_C_DLL void SORA_test_draw(int w, int h);
-SR_C_DLL void SORA_test_draw2(int w, int h);
+SR_C_DLL void SORA_setup_graphics(sora::Device *device, int w, int h);
+SR_C_DLL void SORA_set_window_size(sora::Device *device, int w, int h);
+SR_C_DLL void SORA_cleanup_graphics(sora::Device *device);
+SR_C_DLL void SORA_draw_frame(sora::Device *device);
+SR_C_DLL void SORA_update_frame(sora::Device *device, float dt);
+SR_C_DLL void SORA_init_gl_env();
 
 SR_C_DLL void SORA_set_cam_pos(float a, float b);
 

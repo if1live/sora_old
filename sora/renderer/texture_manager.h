@@ -21,8 +21,6 @@
 #ifndef SORA_TEXTURE_MANAGER_H_
 #define SORA_TEXTURE_MANAGER_H_
 
-#include "core/template_lib.h"
-
 #if SR_USE_PCH == 0
 #include <string>
 #include "core/unordered_map_inc.h"
@@ -35,7 +33,6 @@ typedef std::tr1::shared_ptr<Texture> TexturePtr;
 
 class TextureManager {
 public:
-  static TextureManager& GetInstance();
   TextureManager();
   ~TextureManager();
   
@@ -52,9 +49,6 @@ private:
   
   TexDictType tex_dict_;
 };
-
-TexturePtr TextureMgr_get(const std::string &name);
-SR_DLL Texture *TextureMgr_get_ptr(const std::string &name);
 
 }
 

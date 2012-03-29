@@ -18,51 +18,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_stdafx.h"
-#include "texture_manager.h"
-#include "core/template_lib.h"
-#include "texture.h"
-
-using namespace std;
+#ifndef SORA_DEVICE_H_
+#define SORA_DEVICE_H_
 
 namespace sora {;
 
-TextureManager::TextureManager() {
-}
-TextureManager::~TextureManager() {
+struct DevicePrivate;
+
+class TextureManager;
+class MaterialManager;
+
+class Device {
+public:
+  Device();
+  ~Device();
+
+  TextureManager &texture_mgr();
+  const TextureManager &texture_mgr() const;
+  MaterialManager &material_mgr();
+  const MaterialManager &material_mgr() const;
+
+private:
+  DevicePrivate &pimpl();
+  const DevicePrivate &pimpl() const;
+  mutable DevicePrivate *pimpl_;
+};
 }
 
-bool TextureManager::Add(const Texture &tex) {
-  const string &name = tex.name();
-  if(IsExist(name) == true) {
-    //already exist
-    return false;
-  }
-
-  TexturePtr cpy_tex(new Texture(tex));
-  cpy_tex->Init();
-  tex_dict_[name] = cpy_tex;
-  
-  return true;
-}
-
-bool TextureManager::IsExist(const std::string &name) const {
-  auto found = tex_dict_.find(name);
-  if(found == tex_dict_.end()) {
-    return false;
-  } else {
-    return true;
-  }
-}
-
-TexturePtr TextureManager::Get(const std::string &name) {
-  auto found = tex_dict_.find(name);
-  if(found == tex_dict_.end()) {
-    static TexturePtr empty;
-    return empty;
-  } else {
-    return found->second;
-  }
-}
-
-}
+#endif  // SORA_RENDER_DEVICE_H_

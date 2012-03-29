@@ -80,27 +80,4 @@ const Material &MaterialManager::Get(const std::string &name) {
 void MaterialManager::Clear() {
   material_list_.clear();
 }
-
-SR_C_DLL const Material &MaterialMgr_get(const std::string &name) {
-  MaterialManager &mgr = MaterialManager::GetInstance();
-  return mgr.Get(name);
-}
-SR_C_DLL bool MaterialMgr_is_exist(const std::string &name) {
-  MaterialManager &mgr = MaterialManager::GetInstance();
-  bool retval = mgr.IsExist(name);
-  return retval;
-}
-SR_C_DLL bool MaterialMgr_initialize_from_file() {
-  MaterialManager &mgr = MaterialManager::GetInstance();
-  mgr.Clear();
-
-  std::string mtl_path = Filesystem::GetAppPath("material/example.mtl");
-  MemoryFile mtl_file(mtl_path);
-  mtl_file.Open();
-  vector<sora::Material> material_list;
-  ObjLoader loader;
-  loader.LoadMtl(mtl_file.start, mtl_file.end, &material_list);
-  mgr.Add(material_list);
-  return true;
-}
 }

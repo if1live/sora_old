@@ -24,6 +24,7 @@
 #include <cstdio>
 
 #include "sora/sora_main.h"
+#include "sora/sys/device.h"
 #include "sora/core/timer.h"
 
 const int kWinWidth = 480;
@@ -55,16 +56,18 @@ int main(int argc, char *argv[]) {
   SORA_init_gl_env(); //glewInit();
   Timer_Init();
 
-	//logic begin
-  SORA_setup_graphics(kWinWidth, kWinHeight);
+  sora::Device device;
 
+
+	//logic begin
+  SORA_setup_graphics(&device, kWinWidth, kWinHeight);
   
   float prev_time = Timer_GetSecond();
   while(true) {
-    SORA_draw_frame();
+    SORA_draw_frame(&device);
     float curr_time = Timer_GetSecond();
     float dt = curr_time - prev_time;
-    SORA_update_frame(dt);
+    SORA_update_frame(&device, dt);
 
     glfwSwapBuffers();
     prev_time = curr_time;

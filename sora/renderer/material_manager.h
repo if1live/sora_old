@@ -21,7 +21,6 @@
 #ifndef SORA_MATERIAL_MANAGER_H_
 #define SORA_MATERIAL_MANAGER_H_
 
-#include "core/template_lib.h"
 #include "material.h"
 
 #if SR_USE_PCH == 0
@@ -30,7 +29,7 @@
 #endif
 
 namespace sora {;
-class MaterialManager : public Singleton<MaterialManager> {
+class MaterialManager {
 public:
   MaterialManager();
   ~MaterialManager();
@@ -49,13 +48,6 @@ private:
   //발생하지는 않을것이다.
   std::vector<Material> material_list_;
 };
-
-//어차피 자주쓸 메모스를 GetInstance로 거쳐서 받는것도 삽질같아서 그냥 함수 뚫음
-SR_C_DLL const Material &MaterialMgr_get(const std::string &name);
-SR_C_DLL bool MaterialMgr_is_exist(const std::string &name);
-
-//initialize material list
-SR_C_DLL bool MaterialMgr_initialize_from_file();
 }
 
 

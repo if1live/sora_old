@@ -33,6 +33,7 @@
 #include <cmath>
 #endif
 
+#include "sys/device.h"
 #include "core/vector.h"
 #include "renderer/gl_helper.h"
 #include "sys/memory_file.h"
@@ -65,6 +66,7 @@
 #include "renderer/mesh_manager.h"
 #include "renderer/light.h"
 
+
 using namespace std;
 using namespace sora;
 using namespace glm;
@@ -79,123 +81,14 @@ vector<string> mesh_name_list(kMaxObject);
 //빛1개를 전역변수처럼 쓰자
 Light light;
 
-void SORA_set_window_size(int w, int h) {
+void SORA_set_window_size(Device *device, int w, int h) {
   sora::Renderer::SetWindowSize((float)w, (float)h);
 
 }
 
-#if SR_WIN
-
-void SORA_test_draw2(int w, int h) {
-  static bool init = false;
-  static ShaderProgram shader;
-  
-  if(init == false) {
-    init = true;
-    //create shader
-    //2d shader
-    std::string app_vert_path = sora::Filesystem::GetAppPath("shader/v_simple.glsl");
-    std::string app_frag_path = sora::Filesystem::GetAppPath("shader/f_simple.glsl");
-    sora::MemoryFile vert_file(app_vert_path);
-    sora::MemoryFile frag_file(app_frag_path);
-    vert_file.Open();
-    frag_file.Open();
-    const char *vert_src = (const char*)(vert_file.start);
-    const char *frag_src = (const char*)(frag_file.start);
-    bool prog_result = shader.Init(vert_src, frag_src);
-    if(prog_result == false) {
-      LOGE("Could not create program.");
-    }
-
-    {
-      std::string tex_path = sora::Filesystem::GetAppPath("texture/sora.png");
-      sora::MemoryFile tex_file(tex_path);
-      tex_file.Open();
-      Texture tex("sora");
-      tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
-      TextureManager::GetInstance().Add(tex);
-    }
-
-  }
-  static float a = 0;
-  a += 0.1f;
-
-  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
-  glViewport(0, 0, w, h);
-
-  GLHelper::CheckError("Render 2d start");
-  //draw 2d something
-  glm::mat4 world_mat(1.0f);
-
-  int pos_loc = shader.GetAttribLocation("a_position");
-  int tex_loc = shader.GetAttribLocation("a_texcoord");
-  glEnableVertexAttribArray(pos_loc);
-  glEnableVertexAttribArray(tex_loc);
-  
-  int mvp_loc = shader.GetUniformLocation("u_worldViewProjection");
-
-  float vertex[] = {
-    -0.5, -0.5, 0,
-    0.5, -0.5, 0,
-    0, 0.5, 0,
-  };
-  float texcoord[] = {
-    0, 0,
-    1, 0,
-    0.5, 1,
-  };
 
 
-  glUseProgram(shader.prog);
-
-  Texture *tex = TextureMgr_get_ptr(string("sora"));
-  Renderer::SetTexture(*tex);
-  glBindTexture(GL_TEXTURE_2D, tex->handle());
-
-  glUniformMatrix4fv(mvp_loc, 1, GL_FALSE, glm::value_ptr(world_mat));
-  glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, 0, vertex);
-  glVertexAttribPointer(tex_loc, 2, GL_FLOAT, GL_FALSE, 0, texcoord);
-  glDrawArrays(GL_TRIANGLE_FAN, 0, 3);
-  GLHelper::CheckError("glDrawArrays");
-
-}
-
-void SORA_test_draw(int w, int h) {
-  static float a = 0;
-  a += 0.1f;
-
-  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT);
-
-  float vertex[] = {
-    -0.5f, -0.5f,
-    0.5f, -0.5f, 
-    0.0f, 0.5f
-  };
-  unsigned char color[] = {
-    255, 0, 0,
-    0, 255, 0,
-    0, 0, 255,
-  };
-
-  glViewport(0, 0, w, h);
-  glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
-
-  glMatrixMode(GL_MODELVIEW);
-  glLoadIdentity();
-  glRotatef(a, 0, 0, 1);
-
-  glEnableClientState(GL_COLOR_ARRAY);
-  glEnableClientState(GL_VERTEX_ARRAY);
-  glVertexPointer(2, GL_FLOAT, 0, vertex);
-  glColorPointer(3, GL_UNSIGNED_BYTE, 0, color);
-  glDrawArrays(GL_TRIANGLES, 0, 3);
-}
-#endif
-
-bool setupGraphics(int w, int h) {
+bool setupGraphics(Device *device, int w, int h) {
   sora::Renderer::SetWindowSize((float)w, (float)h); 
 
   LOGI("Version : %s", GLHelper::GetVersion().c_str());
@@ -227,7 +120,7 @@ bool setupGraphics(int w, int h) {
     tex_file.Open();
     Texture tex("sora");
     tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
-    TextureManager::GetInstance().Add(tex);
+    device->texture_mgr().Add(tex);
   }
   {
     std::string tex_path = sora::Filesystem::GetAppPath("texture/sora2.png");
@@ -235,13 +128,22 @@ bool setupGraphics(int w, int h) {
     tex_file.Open();
     Texture tex("sora2");
     tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
-    TextureManager::GetInstance().Add(tex);
+    device->texture_mgr().Add(tex);
   }
 
   sora::ObjLoader loader;
 
   //load material
-  MaterialMgr_initialize_from_file();
+  {
+    std::string mtl_path = Filesystem::GetAppPath("material/example.mtl");
+    MemoryFile mtl_file(mtl_path);
+    mtl_file.Open();
+    vector<sora::Material> material_list;
+    ObjLoader loader;
+    loader.LoadMtl(mtl_file.start, mtl_file.end, &material_list);
+    
+    device->material_mgr().Add(material_list);
+  }
 
   {
     //load model
@@ -353,7 +255,7 @@ void SORA_set_cam_pos(float a, float b) {
   }
 }
 
-void renderFrame() {
+void renderFrame(Device *device) {
   glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -407,18 +309,18 @@ void renderFrame() {
       render3d.ApplyMatrix(world_mat);
 
       if(i % 2 == 0) {
-        Texture *tex = TextureMgr_get_ptr(string("sora2"));
+        Texture *tex = device->texture_mgr().Get_ptr(string("sora2"));
         Renderer::SetTexture(*tex);
       } else {
-        Texture *tex = TextureMgr_get_ptr(string("sora"));
+        Texture *tex = device->texture_mgr().Get_ptr(string("sora"));
         Renderer::SetTexture(*tex);
       }
 
       if(i % 2 == 0) {
-        const sora::Material &mtl = MaterialMgr_get("shinyred");
+        const sora::Material &mtl = device->material_mgr().Get("shinyred");
         render3d.SetMaterial(mtl);
       } else {
-        const sora::Material &mtl = MaterialMgr_get("clearblue");
+        const sora::Material &mtl = device->material_mgr().Get("clearblue");
         render3d.SetMaterial(mtl);
       }
       render3d.ApplyMaterialLight();
@@ -484,12 +386,12 @@ void renderFrame() {
   Renderer::EndRender();
 }
 
-void SORA_setup_graphics(int w, int h) {
-  setupGraphics(w, h);
+void SORA_setup_graphics(Device *device, int w, int h) {
+  setupGraphics(device, w, h);
 }
 
-void SORA_draw_frame() {
-  renderFrame();
+void SORA_draw_frame(Device *device) {
+  renderFrame(device);
 }
 
 SR_C_DLL void SORA_init_gl_env() {
@@ -505,7 +407,7 @@ SR_C_DLL void SORA_init_gl_env() {
 
 TouchEventQueue touch_evt_queue;
 
-void SORA_update_frame(float dt) {
+void SORA_update_frame(Device *device, float dt) {
   static float elapsed_time = 0;
   static int elapsed_tick_count = 0;
   elapsed_tick_count++;
@@ -616,7 +518,7 @@ void SORA_update_frame(float dt) {
 #endif
 }
 
-void SORA_cleanup_graphics() {
+void SORA_cleanup_graphics(Device *device) {
 }
 
 SR_C_DLL void SORA_touch_began(int x, int y, int uid, int tick_count, float timestamp) {

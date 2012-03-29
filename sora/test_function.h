@@ -18,51 +18,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_stdafx.h"
-#include "texture_manager.h"
-#include "core/template_lib.h"
-#include "texture.h"
+#ifndef SORA_TEST_FUNCTION_H_
+#define SORA_TEST_FUNCTION_H_
 
-using namespace std;
+#if SR_USE_PCH == 0
+#include "core/arch.h"
+#endif 
 
-namespace sora {;
+SR_C_DLL void SORA_test_draw(int w, int h);
+SR_C_DLL void SORA_test_draw2(int w, int h);
 
-TextureManager::TextureManager() {
-}
-TextureManager::~TextureManager() {
-}
-
-bool TextureManager::Add(const Texture &tex) {
-  const string &name = tex.name();
-  if(IsExist(name) == true) {
-    //already exist
-    return false;
-  }
-
-  TexturePtr cpy_tex(new Texture(tex));
-  cpy_tex->Init();
-  tex_dict_[name] = cpy_tex;
-  
-  return true;
-}
-
-bool TextureManager::IsExist(const std::string &name) const {
-  auto found = tex_dict_.find(name);
-  if(found == tex_dict_.end()) {
-    return false;
-  } else {
-    return true;
-  }
-}
-
-TexturePtr TextureManager::Get(const std::string &name) {
-  auto found = tex_dict_.find(name);
-  if(found == tex_dict_.end()) {
-    static TexturePtr empty;
-    return empty;
-  } else {
-    return found->second;
-  }
-}
-
-}
+#endif  // SORA_TEST_FUNCTION_H_
