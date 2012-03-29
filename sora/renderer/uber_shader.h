@@ -22,15 +22,13 @@
 #define SORA_UBER_SHADER_H_
 
 #include "shader.h"
-#include "shader_variable.h"
 
 #if SR_USE_PCH == 0
 #include "core/unordered_map_inc.h"
 #endif
 
 namespace sora {;
-//ambient / diffuse / specular같은거 기본 지원하기 위한 용도
-//설계 테스트용
+
 class UberShader {
 public:
   enum {
@@ -39,23 +37,69 @@ public:
     kAmbient = 1 << 2,
     kDiffuse = 1 << 3,
     kSpecular = 1 << 4,
+    kModelColor = 1 << 5
   };
 public:
   UberShader();
-  ~UberShader();
-  
+  virtual ~UberShader();
+
+  template<typename T>
+  void Init();
   ShaderProgram &Load(uint flag);
 
-private:
-  void LoadRawSrc();
+protected:
+  void LoadRawSrc(const std::string &v_file, const std::string &f_file);
 
   typedef std::tr1::unordered_map<unsigned int, ShaderProgram> ShaderDictType;
   ShaderDictType prog_dict_;
 
-
   std::string orig_vert_src_;
   std::string orig_frag_src_;
+  uint avail_mask_;
 };
+
+
+//const color + model color + texture
+//기본적인 디버깅이나 2d에서 사용하기 위해서 만들엇다
+//이것을 둔 이유는
+//빛계산은 색을 0으로 두고 시작해야하는데
+//텍스쳐는 곱셈들어갈때 적절한 색이 있어야하기떄문이다
+//사용가능한 플래그 : kConstColor | kTexture | kModelColor
+struct SimpleUberShaderLoadPolicy {
+  static const char *vert_file() { return "shader/v_simple_uber.glsl"; }
+  static const char *frag_file() { return "shader/f_simple_uber.glsl"; }
+  static uint avail_mask() {
+    uint flag = 0;
+    flag |= UberShader::kConstColor;
+    flag |= UberShader::kTexture;
+    flag |= UberShader::kModelColor;
+    return flag;
+  }
+};
+
+//ambient / diffuse / specular 지원
+//쌩텍스쳐는 곧 diffuse map라고 생각해서 연결한다
+struct LightUberShaderLoadPolicy {
+  static const char *vert_file() { return "shader/v_uber.glsl"; }
+  static const char *frag_file() { return "shader/f_uber.glsl"; }
+  static uint avail_mask() {
+    uint flag = 0;
+    flag |= UberShader::kAmbient;
+    flag |= UberShader::kDiffuse;
+    flag |= UberShader::kSpecular;
+    return flag;
+  }
+};
+
+
+template<typename T>
+void UberShader::Init() {
+  std::string vert_file(T::vert_file());
+  std::string frag_file(T::frag_file());
+  avail_mask_ = T::avail_mask();
+  LoadRawSrc(vert_file, frag_file);
+}
+
 }
 
 #endif  // SORA_UBER_SHADER_H_

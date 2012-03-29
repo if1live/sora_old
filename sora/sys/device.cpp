@@ -39,19 +39,24 @@ struct DevicePrivate {
   render2d(dev), 
   render3d(dev) {
     render2d.SetPolicy_2D();
+    simple_uber_shader.Init<SimpleUberShaderLoadPolicy>();
+    light_uber_shader.Init<LightUberShaderLoadPolicy>();
   }
   DevicePrivate(const Device *dev)
   : render_state(const_cast<Device*>(dev)),
   render2d(const_cast<Device*>(dev)), 
   render3d(const_cast<Device*>(dev)) {
     render2d.SetPolicy_2D();
+    simple_uber_shader.Init<SimpleUberShaderLoadPolicy>();
+    light_uber_shader.Init<LightUberShaderLoadPolicy>();
   }
 
   MaterialManager material_mgr;
   TextureManager texture_mgr;
   TouchEventQueue touch_evt_queue;
   MeshManager mesh_mgr;
-  UberShader uber_shader;
+  UberShader simple_uber_shader;
+  UberShader light_uber_shader;
   RenderState render_state;
   Renderer render2d;
   Renderer render3d;
@@ -118,11 +123,17 @@ MeshManager &Device::mesh_mgr() {
 const MeshManager &Device::mesh_mgr() const {
   return pimpl().mesh_mgr;
 }
-UberShader &Device::uber_shader() {
-  return pimpl().uber_shader;
+UberShader &Device::simple_uber_shader() {
+  return pimpl().simple_uber_shader;
 }
-const UberShader &Device::uber_shader() const {
-  return pimpl().uber_shader;
+const UberShader &Device::simple_uber_shader() const {
+  return pimpl().simple_uber_shader;
+}
+UberShader &Device::light_uber_shader() {
+  return pimpl().light_uber_shader;
+}
+const UberShader &Device::light_uber_shader() const {
+  return pimpl().light_uber_shader;
 }
 
 RenderState &Device::render_state() {

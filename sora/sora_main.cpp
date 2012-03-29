@@ -267,7 +267,7 @@ void renderFrame(Device *device) {
     flag |= UberShader::kAmbient;
     flag |= UberShader::kDiffuse;
     flag |= UberShader::kSpecular;
-    ShaderProgram &shader = device->uber_shader().Load(flag);
+    ShaderProgram &shader = device->light_uber_shader().Load(flag);
     render3d.SetShader(shader);
 
     ShaderBindPolicy &bind_policy = shader.bind_policy;
@@ -323,10 +323,10 @@ void renderFrame(Device *device) {
     //draw 2d something
     glm::mat4 world_mat(1.0f);
 
-    UberShader &uber_shader = device->uber_shader();
+    UberShader &uber_shader = device->simple_uber_shader();
     unsigned int flag = 0;
     flag |= UberShader::kTexture;
-    ShaderProgram &shader = device->uber_shader().Load(flag);
+    ShaderProgram &shader = uber_shader.Load(flag);
     render2d.SetShader(shader);
 
     ShaderBindPolicy &bind_policy = shader.bind_policy;

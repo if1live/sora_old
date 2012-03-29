@@ -57,8 +57,11 @@ public:
   TouchEventQueue &touch_evt_queue();
   const TouchEventQueue &touch_evt_queue() const;
 
-  UberShader &uber_shader();
-  const UberShader &uber_shader() const;
+  //종류별 uber shader
+  UberShader &simple_uber_shader();
+  const UberShader &simple_uber_shader() const;
+  UberShader &light_uber_shader();
+  const UberShader &light_uber_shader() const;
 
   static Device *GetAnyDevice();
 
