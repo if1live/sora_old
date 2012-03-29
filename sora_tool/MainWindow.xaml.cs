@@ -40,9 +40,11 @@ namespace sora_tool
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            WindowsFormsHost host = new WindowsFormsHost();
-            OpenGLView child = new OpenGLView();
-            windowsFormsHost1.Child = child;
+            OpenGLView child1 = new OpenGLView();
+            windowsFormsHost1.Child = child1;
+
+            OpenGLView child2 = new OpenGLView();
+            windowsFormsHost2.Child = child2;
             //System.Windows.Forms.Button btn = new System.Windows.Forms.Button();
             //btn.Text = "asdf";
             //windowsFormsHost1.Child = btn;
@@ -50,9 +52,12 @@ namespace sora_tool
 
         private void button1_Click_1(object sender, RoutedEventArgs e)
         {
-            //OpenGLForm form = new OpenGLForm();
-            //form.ClientSize = new System.Drawing.Size(300, 300);
-            //form.ShowDialog();
+            /*
+            Form form = new Form();
+            OpenGLView view = new OpenGLView();
+            form.Container.Add(view);
+            form.ShowDialog();
+             */
         }
    }
 }
