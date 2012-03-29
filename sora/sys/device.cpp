@@ -24,22 +24,38 @@
 #include "renderer/material_manager.h"
 #include "renderer/texture_manager.h"
 #include "core/template_lib.h"
+#include "event/touch_event.h"
 
 namespace sora {;
 
 struct DevicePrivate {
   MaterialManager material_mgr;
   TextureManager texture_mgr;
+  TouchEventQueue touch_evt_queue;
 };
 
 Device::Device() : pimpl_(NULL) {
+  device_list_.push_back(this);
 }
 
 Device::~Device() {
   if(pimpl_ != NULL) {
     SafeDelete(pimpl_);
   }
+
+  auto found = std::find(device_list_.begin(), device_list_.end(), this);
+  SR_ASSERT(found != device_list_.end());
+  device_list_.erase(found);
 }
+
+Device *Device::GetAnyDevice() {
+  if(device_list_.empty()) {
+    return NULL;
+  } else {
+    return device_list_.front();
+  }
+}
+std::vector<Device*> Device::device_list_;
 
 TextureManager &Device::texture_mgr() {
   return pimpl().texture_mgr;
@@ -53,6 +69,13 @@ MaterialManager &Device::material_mgr() {
 }
 const MaterialManager &Device::material_mgr() const {
   return pimpl().material_mgr;
+}
+
+TouchEventQueue &Device::touch_evt_queue() {
+  return pimpl().touch_evt_queue;
+}
+const TouchEventQueue &Device::touch_evt_queue() const {
+  return pimpl().touch_evt_queue;
 }
 
 DevicePrivate &Device::pimpl() {
