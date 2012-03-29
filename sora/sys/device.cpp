@@ -25,6 +25,8 @@
 #include "renderer/texture_manager.h"
 #include "core/template_lib.h"
 #include "event/touch_event.h"
+#include "renderer/mesh_manager.h"
+#include "renderer/uber_shader.h"
 
 namespace sora {;
 
@@ -32,6 +34,8 @@ struct DevicePrivate {
   MaterialManager material_mgr;
   TextureManager texture_mgr;
   TouchEventQueue touch_evt_queue;
+  MeshManager mesh_mgr;
+  UberShader uber_shader;
 };
 
 Device::Device() : pimpl_(NULL) {
@@ -76,6 +80,19 @@ TouchEventQueue &Device::touch_evt_queue() {
 }
 const TouchEventQueue &Device::touch_evt_queue() const {
   return pimpl().touch_evt_queue;
+}
+
+MeshManager &Device::mesh_mgr() {
+  return pimpl().mesh_mgr;
+}
+const MeshManager &Device::mesh_mgr() const {
+  return pimpl().mesh_mgr;
+}
+UberShader &Device::uber_shader() {
+  return pimpl().uber_shader;
+}
+const UberShader &Device::uber_shader() const {
+  return pimpl().uber_shader;
 }
 
 DevicePrivate &Device::pimpl() {

@@ -23,7 +23,6 @@
 
 #include "shader.h"
 #include "shader_variable.h"
-#include "core/template_lib.h"
 
 #if SR_USE_PCH == 0
 #include "core/unordered_map_inc.h"
@@ -32,7 +31,7 @@
 namespace sora {;
 //ambient / diffuse / specular같은거 기본 지원하기 위한 용도
 //설계 테스트용
-class UberShader : public Singleton<UberShader> {
+class UberShader {
 public:
   enum {
     kConstColor = 1 << 0,

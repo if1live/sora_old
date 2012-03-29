@@ -30,6 +30,8 @@ struct DevicePrivate;
 class TextureManager;
 class MaterialManager;
 class TouchEventQueue;
+class MeshManager;
+class UberShader;
 
 class Device {
 public:
@@ -40,9 +42,14 @@ public:
   const TextureManager &texture_mgr() const;
   MaterialManager &material_mgr();
   const MaterialManager &material_mgr() const;
+  MeshManager &mesh_mgr();
+  const MeshManager &mesh_mgr() const;
 
   TouchEventQueue &touch_evt_queue();
   const TouchEventQueue &touch_evt_queue() const;
+
+  UberShader &uber_shader();
+  const UberShader &uber_shader() const;
 
   static Device *GetAnyDevice();
 

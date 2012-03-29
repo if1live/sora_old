@@ -21,7 +21,6 @@
 #ifndef SORA_MESH_MANAGER_H_
 #define SORA_MESH_MANAGER_H_
 
-#include "core/template_lib.h"
 #include "mesh.h"
 
 #if SR_USE_PCH == 0
@@ -32,7 +31,7 @@ namespace sora {;
 
 struct ISurface;  //for parametric surface
 
-class MeshManager : public Singleton<MeshManager> {
+class MeshManager {
 public:
   MeshManager();
   ~MeshManager();

@@ -161,7 +161,7 @@ bool setupGraphics(Device *device, int w, int h) {
     entity_mat = glm::rotate(glm::mat4(1.0f), 180.0f, vec3(1, 0, 0));
     world_mat_list[obj_model_idx] = entity_mat;
 
-    MeshManager::GetInstance().Add(obj_model.GetDrawCmdList_wire(), "obj_model");
+    device->mesh_mgr().Add(obj_model.GetDrawCmdList_wire(), "obj_model");
     mesh_name_list[obj_model_idx] = "obj_model";
   }
 
@@ -190,7 +190,7 @@ bool setupGraphics(Device *device, int w, int h) {
     //primitive_model.SolidSphere(0.5, 16, 16);
     //primitive_model.WirePlane(10.0f, 0.5f);
     primitive_model.SolidPlane(2.0f);
-    MeshManager::GetInstance().Add(primitive_model.GetDrawCmdList(), "model1");
+    device->mesh_mgr().Add(primitive_model.GetDrawCmdList(), "model1");
     mesh_name_list[obj_model_idx] = "model1";
   }
 
@@ -206,7 +206,7 @@ bool setupGraphics(Device *device, int w, int h) {
     
     sora::PrimitiveModel primitive_model;
     primitive_model.SolidCube(0.5, 0.5, 0.5, true);
-    MeshManager::GetInstance().Add(primitive_model.GetDrawCmdList(), "model2");
+    device->mesh_mgr().Add(primitive_model.GetDrawCmdList(), "model2");
     mesh_name_list[obj_model_idx] = "model2";
 
   }
@@ -229,7 +229,7 @@ bool setupGraphics(Device *device, int w, int h) {
     world_mat_list[obj_model_idx] = entity_mat;
 
     TrefoilKnot surface(1.0f);
-    MeshManager::GetInstance().AddSolid(surface, "knot");
+    device->mesh_mgr().AddSolid(surface, "knot");
     //MeshManager::GetInstance().AddWire(surface, "knot");
     mesh_name_list[obj_model_idx] = "knot";
   }
@@ -286,7 +286,7 @@ void renderFrame(Device *device) {
     flag |= UberShader::kAmbient;
     flag |= UberShader::kDiffuse;
     flag |= UberShader::kSpecular;
-    ShaderProgram &shader = UberShader::GetInstance().Load(flag);
+    ShaderProgram &shader = device->uber_shader().Load(flag);
     render3d.SetShader(shader);
 
     ShaderBindPolicy &bind_policy = shader.bind_policy;
@@ -325,7 +325,7 @@ void renderFrame(Device *device) {
       }
       render3d.ApplyMaterialLight();
 
-      MeshBufferObject *mesh = MeshManager::GetInstance().Get(mesh_name);
+      MeshBufferObject *mesh = device->mesh_mgr().Get(mesh_name);
       SR_ASSERT(mesh != NULL);
       render3d.Draw(*mesh);
       GLHelper::CheckError("Render End");
