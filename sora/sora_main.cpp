@@ -95,25 +95,24 @@ bool setupGraphics(Device *device, int w, int h) {
   LOGI("Extensions : %s", GLHelper::GetExtensions().c_str());
   
   //lodepng
-  {
-    std::string tex_path = sora::Filesystem::GetAppPath("texture/sora.png");
+  const char *texture_table[][2] = {
+    //{ "sora", "texture/sora.png" },
+    { "sora2", "texture/sora2.png" },
+    { "mtl_diffuse", "texture/glazed_brick_D.png" },
+    { "mtl_specular", "texture/glazed_brick_S.png" },
+    //{ "mtl_normal", "texture/glazed_brick_N.png" },
+  };
+  int tex_count = sizeof(texture_table) / sizeof(texture_table[0]);
+  for(int i = 0 ; i < tex_count ; i++) {
+    std::string tex_path = sora::Filesystem::GetAppPath(texture_table[i][1]);
     sora::MemoryFile tex_file(tex_path);
     tex_file.Open();
-    Texture tex("sora");
-    tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
-    device->texture_mgr().Add(tex);
-  }
-  {
-    std::string tex_path = sora::Filesystem::GetAppPath("texture/sora2.png");
-    sora::MemoryFile tex_file(tex_path);
-    tex_file.Open();
-    Texture tex("sora2");
+    Texture tex(texture_table[i][0]);
     tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
     device->texture_mgr().Add(tex);
   }
 
   sora::ObjLoader loader;
-
   //load material
   {
     std::string mtl_path = Filesystem::GetAppPath("material/example.mtl");
@@ -181,12 +180,13 @@ bool setupGraphics(Device *device, int w, int h) {
     glm::mat4 entity_mat = glm::mat4(1.0f);
     //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
     //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
-    entity_mat = glm::translate(entity_mat, vec3(0.8, 0.3, 0));
-    entity_mat = glm::rotate(entity_mat, 180.0f, vec3(1, 0, 0));
+    //entity_mat = glm::translate(entity_mat, vec3(0.8, 0.3, 0));
+    //entity_mat = glm::rotate(entity_mat, 180.0f, vec3(1, 0, 0));
     world_mat_list[obj_model_idx] = entity_mat;
     
     sora::PrimitiveModel primitive_model;
-    primitive_model.SolidCube(0.5, 0.5, 0.5, true);
+    //primitive_model.SolidCube(0.5, 0.5, 0.5, true);
+    primitive_model.SolidSphere(0.5, 16, 16);
     device->mesh_mgr().Add(primitive_model.GetDrawCmdList(), "model2");
     mesh_name_list[obj_model_idx] = "model2";
 
@@ -218,7 +218,7 @@ bool setupGraphics(Device *device, int w, int h) {
   {
     //빛에 대한 기본 설정
     light.pos = Vec3f(10, 10, 100);
-    light.ambient = Vec4f(3.0f, 0, 0, 1.0f);
+    //light.ambient = Vec4f(3.0f, 0, 0, 1.0f);
   }
   return true;
 }
@@ -263,10 +263,12 @@ void renderFrame(Device *device) {
 
     unsigned int flag = 0;
     //flag |= UberShader::kConstColor;
-    flag |= UberShader::kTexture;
-    flag |= UberShader::kAmbient;
-    flag |= UberShader::kDiffuse;
-    flag |= UberShader::kSpecular;
+    //flag |= UberShader::kTexture;
+    flag |= UberShader::kAmbientColor;
+    flag |= UberShader::kDiffuseColor;
+    flag |= UberShader::kDiffuseMap;
+    flag |= UberShader::kSpecularColor;
+    flag |= UberShader::kSpecularMap;
     ShaderProgram &shader = device->light_uber_shader().Load(flag);
     render3d.SetShader(shader);
 
@@ -279,7 +281,36 @@ void renderFrame(Device *device) {
       glUniform4fv(const_color_var.location, 1, const_color.data);
     }
 
-    //render3d.SetLight(light);
+    //평면하나만 일단 렌더링해서 테스트하자
+    render3d.SetLight(light);
+    int obj_idx = 2;
+    const mat4 &world_mat = world_mat_list[obj_idx];
+    render3d.ApplyMatrix(world_mat);
+
+    //재질데이터 적절히 설정하기
+    
+    Material mtl;
+    mtl.diffuse_map = "mtl_diffuse";
+    mtl.specular_map = "mtl_specular";
+    mtl.illumination_model = 2;
+    mtl.diffuse[0] = 0.1;
+    mtl.diffuse[1] = 0.1;
+    mtl.diffuse[2] = 0.1;
+    mtl.ambient[0] = 0.01;
+    mtl.ambient[1] = 0.01;
+    mtl.ambient[2] = 0.01;
+    mtl.shininess = 50;
+    render3d.SetMaterial(mtl);
+    
+    //const sora::Material &mtl = device->material_mgr().Get("shinyred");
+    //render3d.SetMaterial(mtl);
+
+    render3d.ApplyMaterialLight();
+      
+    MeshBufferObject *mesh = device->mesh_mgr().Get(mesh_name_list[obj_idx]);
+    SR_ASSERT(mesh != NULL);
+    render3d.Draw(*mesh);
+    /*
     for(int i = 0 ; i < kMaxObject ; i++) {
       const string &mesh_name = mesh_name_list[i];
       if(mesh_name.empty()) {
@@ -312,10 +343,12 @@ void renderFrame(Device *device) {
 
       GLHelper::CheckError("Render End");
     }
+    */
 
     GLHelper::CheckError("Render End");
   }
   
+
   {
     GLHelper::CheckError("Render 2d start");
     Renderer &render2d = device->render2d();

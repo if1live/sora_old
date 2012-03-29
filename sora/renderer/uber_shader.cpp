@@ -41,20 +41,24 @@ struct ShaderBindParam {
 
 //uber shader의 enum에 정의된 순서대로 맞춰서 쓴다
 const char *enable_define_list[] = {
-  "#define USE_CONST_COLOR 1\n",
-  "#define USE_TEXTURE 1\n",
-  "#define USE_AMBIENT 1\n",
-  "#define USE_DIFFUSE 1\n",
-  "#define USE_SPECULAR 1\n",
-  "#define USE_MODEL_COLOR 1\n"
+  "#define USE_CONST_COLOR 1",
+  "#define USE_TEXTURE 1",
+  "#define USE_AMBIENT 1",
+  "#define USE_DIFFUSE 1",
+  "#define USE_SPECULAR 1",
+  "#define USE_MODEL_COLOR 1",
+  "#define USE_DIFFUSE_MAP 1",
+  "#define USE_SPECULAR_MAP 1",
 };
 const char *disable_define_list[] = {
-  "#undef USE_CONST_COLOR\n",
-  "#undef USE_TEXTURE\n",
-  "#undef USE_AMBIENT\n",
-  "#undef USE_DIFFUSE\n",
-  "#undef USE_SPECULAR\n",
-  "#undef USE_MODEL_COLOR\n"
+  "#undef USE_CONST_COLOR",
+  "#undef USE_TEXTURE",
+  "#undef USE_AMBIENT",
+  "#undef USE_DIFFUSE",
+  "#undef USE_SPECULAR",
+  "#undef USE_MODEL_COLOR",
+  "#undef USE_DIFFUSE_MAP",
+  "#undef USE_SPECULAR_MAP",
 };
 
 std::vector<ShaderBindParam> &GetPredefinedAttribList() {
@@ -79,10 +83,16 @@ std::vector<ShaderBindParam> &GetPredefinedUniformList() {
     uniform_bind_param.push_back(ShaderBindParam("u_world", ShaderBindPolicy::kWorld));
     uniform_bind_param.push_back(ShaderBindParam("u_projection", ShaderBindPolicy::kProjection));
     uniform_bind_param.push_back(ShaderBindParam("u_view", ShaderBindPolicy::kView));
+
     uniform_bind_param.push_back(ShaderBindParam("u_ambientColor", ShaderBindPolicy::kAmbientColor));
     uniform_bind_param.push_back(ShaderBindParam("u_diffuseColor", ShaderBindPolicy::kDiffuseColor));
     uniform_bind_param.push_back(ShaderBindParam("u_specularColor", ShaderBindPolicy::kSpecularColor));
     uniform_bind_param.push_back(ShaderBindParam("u_specularShininess", ShaderBindPolicy::kSpecularShininess));
+
+    uniform_bind_param.push_back(ShaderBindParam("s_diffuseMap", ShaderBindPolicy::kDiffuseMap));
+    uniform_bind_param.push_back(ShaderBindParam("s_specularMap", ShaderBindPolicy::kSpecularMap));
+    uniform_bind_param.push_back(ShaderBindParam("s_texture", ShaderBindPolicy::kAlbedo));
+
     uniform_bind_param.push_back(ShaderBindParam("u_worldLightPosition", ShaderBindPolicy::kLightPosition));
   }
   return uniform_bind_param;

@@ -56,6 +56,10 @@ struct Material {
   //illum = 2 denotes the presence of specular highlights, and so a specification for Ks is required.
   uint illumination_model;
   char tex_map[128];   //names a file containing a texture map, which should just be an ASCII dump of RGB values;
+
+  std::string diffuse_map;
+  std::string specular_map;
+  std::string normal_map;
 };
 }
 

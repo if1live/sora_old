@@ -49,6 +49,7 @@ public:
     kTexcoord,
     kTangent,
     kBinormal,
+    kAlbedo,  //그냥 텍스쳐
 
     //디버깅에 쓰일수 잇는 특수 속성
     kConstColor,
@@ -59,6 +60,8 @@ public:
     kSpecularColor,
     kSpecularShininess,
     kLightPosition,
+    kDiffuseMap,
+    kSpecularMap,
 
     /*
     kLightAmbient,

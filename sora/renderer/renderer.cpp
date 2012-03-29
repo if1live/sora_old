@@ -29,6 +29,7 @@
 #include "primitive_model.h"
 #include "core/template_lib.h"
 #include "uber_shader.h"
+#include "texture_manager.h"
 
 #if SR_USE_PCH == 0
 #include <glm/glm.hpp>
@@ -110,6 +111,8 @@ void Renderer::ApplyMaterialLight() {
   const ShaderVariable &diffuse_var = bind_policy.var(ShaderBindPolicy::kDiffuseColor);
   const ShaderVariable &specular_var = bind_policy.var(ShaderBindPolicy::kSpecularColor);
   const ShaderVariable &shininess_var = bind_policy.var(ShaderBindPolicy::kSpecularShininess);
+  const ShaderVariable &diffuse_map_var = bind_policy.var(ShaderBindPolicy::kDiffuseMap);
+  const ShaderVariable &specular_map_var = bind_policy.var(ShaderBindPolicy::kSpecularMap);
 
   bool use_ambient = false;
   bool use_diffuse = false;
@@ -162,6 +165,13 @@ void Renderer::ApplyMaterialLight() {
   if(use_diffuse) {
     glUniform4fv(diffuse_var.location, 1, diffuse_color);
     GLHelper::CheckError("Uniform DiffuseColor");
+
+    Texture *diffuse_map = dev_->texture_mgr().Get_ptr(material_.diffuse_map);
+    if(diffuse_map != NULL && diffuse_map_var.location != -1) {
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, diffuse_map->handle());
+      glUniform1i(diffuse_map_var.location, 0);
+    }
   }
 
   //재질에 따라서 uber값이 바뀐다.
@@ -174,6 +184,13 @@ void Renderer::ApplyMaterialLight() {
     if(use_specular) {
       glUniform4fv(specular_var.location, 1, specular_color);
       GLHelper::CheckError("Uniform SpecularColor");
+
+      Texture *specular_map = dev_->texture_mgr().Get_ptr(material_.specular_map);
+      if(specular_map != NULL && specular_map_var.location != -1) {
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, specular_map->handle());
+        glUniform1i(specular_map_var.location, 1);
+      }
     }
     
     if(shininess_var.location != -1) {
@@ -183,6 +200,9 @@ void Renderer::ApplyMaterialLight() {
   } else {
     SR_ASSERT(!"not support yet");
   }
+
+  //최초 상태로 돌려놓기
+  glActiveTexture(GL_TEXTURE0);
 }
 void Renderer::SetMaterial(const Material &material) {
   material_ = material;
