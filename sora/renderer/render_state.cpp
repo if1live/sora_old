@@ -18,55 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_DEVICE_H_
-#define SORA_DEVICE_H_
+#include "sora_stdafx.h"
+#include "render_state.h"
 
-#include <vector>
+#include "sys/device.h"
+#include "renderer/gl_helper.h"
 
 namespace sora {;
-
-struct DevicePrivate;
-
-class TextureManager;
-class MaterialManager;
-class TouchEventQueue;
-class MeshManager;
-class UberShader;
-
-struct RenderState;
-
-class Device {
-public:
-  Device();
-  ~Device();
-
-  RenderState &render_state();
-  const RenderState &render_state() const;
-
-  TextureManager &texture_mgr();
-  const TextureManager &texture_mgr() const;
-  MaterialManager &material_mgr();
-  const MaterialManager &material_mgr() const;
-  MeshManager &mesh_mgr();
-  const MeshManager &mesh_mgr() const;
-
-  TouchEventQueue &touch_evt_queue();
-  const TouchEventQueue &touch_evt_queue() const;
-
-  UberShader &uber_shader();
-  const UberShader &uber_shader() const;
-
-  static Device *GetAnyDevice();
-
-private:
-  DevicePrivate &pimpl();
-  const DevicePrivate &pimpl() const;
-  mutable DevicePrivate *pimpl_;
-
-  //싱글턴스럽게 시스템상에서 생성되는 경우를 위해서
-  //보관한다. jni같이 골치아픈 경우, 어차피 device는 1개일테니까 적절히 챙겨갈수 있을것이다
-  static std::vector<Device*> device_list_;
-};
+RenderState::RenderState(Device *dev) {
+  memset(this, 0, sizeof(RenderState));
+  dev_ = dev;
 }
+RenderState::~RenderState() {
+}
+void RenderState::SetWinSize(int w, int h) {
+  if(win_width_ != w || win_height_ != h) {
+    LOGI("setupGraphics(%d, %d)", (int)w, (int)h);
+    win_width_ = w;
+    win_height_ = h;
 
-#endif  // SORA_RENDER_DEVICE_H_
+    glViewport(0, 0, (int)w, (int)h);
+    GLHelper::CheckError("glViewport");
+  }
+}
+}

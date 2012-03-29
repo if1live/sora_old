@@ -45,9 +45,6 @@ GLuint Renderer::last_tex_id_ = -1;
 GLuint Renderer::last_prog_id_ = -1;
 ShaderProgram *Renderer::last_prog_ = NULL;
 
-float Renderer::win_width_ = 480;
-float Renderer::win_height_ = 320;
-
 Renderer &Renderer::Renderer3D() {
   static Renderer renderer(new RendererPolicy_3D());
   return renderer;
@@ -65,18 +62,6 @@ policy_(policy) {
 
 Renderer::~Renderer() {
   SafeDelete(policy_);
-}
-
-void Renderer::SetWindowSize(float w, float h) {
-  if(win_width_ != w || win_height_ != h) {
-    LOGI("setupGraphics(%d, %d)", (int)w, (int)h);
-
-    win_width_ = w;
-    win_height_ = h;
-
-    glViewport(0, 0, (int)w, (int)h);
-    GLHelper::CheckError("glViewport");
-  }
 }
 
 void Renderer::SetTexture(const Texture &tex) {
@@ -403,9 +388,9 @@ void RendererPolicy_2D::SetInitState() {
 glm::mat4 RendererPolicy_2D::ToViewMatrixFromCamera(const Camera &cam) {
   //TODO 2D renderer의 경우, 아직 cam속성을 갖다쓰지 않는다. 이부분을 적절히 고쳐주기
   //apply new viw matrix
-  float win_width = Renderer::win_width();
-  float win_height = Renderer::win_height();
-  glm::mat4 view = glm::ortho(0.0f, win_width, 0.0f, win_height);
+  //float win_width = Renderer::win_width();
+  //float win_height = Renderer::win_height();
+  glm::mat4 view = glm::ortho(0.0f, 480.0f, 0.0f, 800.0f);
   return view;
 }
 

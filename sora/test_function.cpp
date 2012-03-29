@@ -34,7 +34,6 @@ using namespace std;
 #if SR_WIN
 
 void SORA_test_draw2(int w, int h) {
-/*
   static bool init = false;
   static ShaderProgram shader;
   static TextureManager tex_mgr;
@@ -98,8 +97,7 @@ void SORA_test_draw2(int w, int h) {
 
   glUseProgram(shader.prog);
 
-  Texture *tex = tex_mgr.Get(string("sora"));
-  Renderer::SetTexture(*tex);
+  Texture *tex = tex_mgr.Get_ptr(string("sora"));
   glBindTexture(GL_TEXTURE_2D, tex->handle());
 
   glUniformMatrix4fv(mvp_loc, 1, GL_FALSE, glm::value_ptr(world_mat));
@@ -107,7 +105,6 @@ void SORA_test_draw2(int w, int h) {
   glVertexAttribPointer(tex_loc, 2, GL_FLOAT, GL_FALSE, 0, texcoord);
   glDrawArrays(GL_TRIANGLE_FAN, 0, 3);
   GLHelper::CheckError("glDrawArrays");
-  */
 }
 
 void SORA_test_draw(int w, int h) {

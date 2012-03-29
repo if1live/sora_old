@@ -21,6 +21,8 @@
 #include "sora_stdafx.h"
 #include "sora_main.h"
 
+#include "test_function.h"
+
 //android  OpenGL ES 2.0 code based
 #if SR_USE_PCH == 0
 #include "renderer/gl_inc.h"
@@ -34,6 +36,7 @@
 #endif
 
 #include "sys/device.h"
+#include "renderer/render_state.h"
 #include "core/vector.h"
 #include "renderer/gl_helper.h"
 #include "sys/memory_file.h"
@@ -71,7 +74,7 @@ using namespace std;
 using namespace sora;
 using namespace glm;
 
-ShaderProgram shader_2d;
+//ShaderProgram shader_2d;
 
 //테스트용 물체를 그릴수있도록 필요한 변수를 하드코딩으로 떄려박자
 const int kMaxObject = 10;
@@ -82,20 +85,20 @@ vector<string> mesh_name_list(kMaxObject);
 Light light;
 
 void SORA_set_window_size(Device *device, int w, int h) {
-  sora::Renderer::SetWindowSize((float)w, (float)h);
-
+  device->render_state().SetWinSize(w, h);
 }
 
 
 
 bool setupGraphics(Device *device, int w, int h) {
-  sora::Renderer::SetWindowSize((float)w, (float)h); 
+  device->render_state().SetWinSize(w, h);
 
   LOGI("Version : %s", GLHelper::GetVersion().c_str());
   LOGI("Vendor : %s", GLHelper::GetVender().c_str());
   LOGI("Renderer : %s", GLHelper::GetRenderer().c_str());
   LOGI("Extensions : %s", GLHelper::GetExtensions().c_str());
 
+  /*
   {
     //2d shader
     std::string app_vert_path = sora::Filesystem::GetAppPath("shader/v_simple.glsl");
@@ -112,6 +115,7 @@ bool setupGraphics(Device *device, int w, int h) {
       return false;
     }
   }
+  */
 
   //lodepng
   {
@@ -256,7 +260,7 @@ void SORA_set_cam_pos(float a, float b) {
 }
 
 void renderFrame(Device *device) {
-  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+  glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   {
@@ -265,8 +269,8 @@ void renderFrame(Device *device) {
     render3d.SetInitState();
     
     //set camera + projection
-    float win_width = render3d.win_width();
-    float win_height = render3d.win_height();
+    float win_width = device->render_state().win_width();
+    float win_height = device->render_state().win_height();
     glm::mat4 &projection = render3d.projection_mat();
     projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 100.0f);
     float radius = 4;
@@ -298,7 +302,7 @@ void renderFrame(Device *device) {
       glUniform4fv(const_color_var.location, 1, const_color.data);
     }
 
-    render3d.SetLight(light);
+    //render3d.SetLight(light);
     for(int i = 0 ; i < kMaxObject ; i++) {
       const string &mesh_name = mesh_name_list[i];
       if(mesh_name.empty()) {
@@ -324,22 +328,25 @@ void renderFrame(Device *device) {
         render3d.SetMaterial(mtl);
       }
       render3d.ApplyMaterialLight();
-
+      
       MeshBufferObject *mesh = device->mesh_mgr().Get(mesh_name);
       SR_ASSERT(mesh != NULL);
       render3d.Draw(*mesh);
+
       GLHelper::CheckError("Render End");
     }
 
     GLHelper::CheckError("Render End");
   }
-
+  /*
   {
     GLHelper::CheckError("Render 2d start");
     Renderer &render2d = Renderer::Renderer2D();
 
     //draw 2d something
     glm::mat4 world_mat(1.0f);
+
+    UberShader &uber_shader = device->uber_shader();
 
     //shader 속성 설정
     ShaderBindPolicy &bind_policy = shader_2d.bind_policy;
@@ -381,7 +388,7 @@ void renderFrame(Device *device) {
     glDrawElements(GL_TRIANGLES, label.index_count(), GL_UNSIGNED_SHORT, label.index_data());
     GLHelper::CheckError("glDrawArrays");
   }
-
+  */
   //////////////////////////////
   Renderer::EndRender();
 }
@@ -449,8 +456,8 @@ void SORA_update_frame(Device *device, float dt) {
     bool is_right = false;
     bool is_bottom = false;
     bool is_top = false;
-    float scr_width = Renderer::win_width();
-    float scr_height = Renderer::win_height();
+    float scr_width = device->render_state().win_width();
+    float scr_height = device->render_state().win_height();
     if(x < scr_width / 3) {
       is_left = true;
     }

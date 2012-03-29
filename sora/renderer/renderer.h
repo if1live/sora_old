@@ -69,10 +69,6 @@ public:
 
   //renderer을 여러개 만든다고하더라도 사실상 공유되는 속성
 public:
-  static void SetWindowSize(float w, float h);
-  static float win_width() { return win_width_; }
-  static float win_height() { return win_height_; }
-
   //bind gl resource
   static void SetTexture(const Texture &tex);
   static void SetShader(const ShaderProgram &prog);
@@ -111,10 +107,6 @@ protected:
   static ShaderProgram *last_prog() { return last_prog_; }
 
 private:
-  //다른 렌더러를 쓴다고해도 윈도우 크기는 사실상 동일
-  static float win_width_;
-  static float win_height_;
-
   //마지막에 잡은 opengl resource는 캐시를 공유하도록하자. 
   //사실상 상속은 이걸 위해서 등장한것에 더 가깝다
   static GLuint last_tex_id_;

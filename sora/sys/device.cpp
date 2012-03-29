@@ -27,15 +27,23 @@
 #include "event/touch_event.h"
 #include "renderer/mesh_manager.h"
 #include "renderer/uber_shader.h"
+#include "renderer/render_state.h"
 
 namespace sora {;
 
 struct DevicePrivate {
+  DevicePrivate(Device *dev)
+  : render_state(dev) {
+  }
+  DevicePrivate(const Device *dev)
+  : render_state(const_cast<Device*>(dev)) {
+  }
   MaterialManager material_mgr;
   TextureManager texture_mgr;
   TouchEventQueue touch_evt_queue;
   MeshManager mesh_mgr;
   UberShader uber_shader;
+  RenderState render_state;
 };
 
 Device::Device() : pimpl_(NULL) {
@@ -95,15 +103,22 @@ const UberShader &Device::uber_shader() const {
   return pimpl().uber_shader;
 }
 
+RenderState &Device::render_state() {
+  return pimpl().render_state;
+}
+const RenderState &Device::render_state() const {
+  return pimpl().render_state;
+}
+
 DevicePrivate &Device::pimpl() {
   if(pimpl_ == NULL) {
-    pimpl_ = new DevicePrivate();
+    pimpl_ = new DevicePrivate(this);
   }
   return *pimpl_;
 }
 const DevicePrivate &Device::pimpl() const {
   if(pimpl_ == NULL) {
-    pimpl_ = new DevicePrivate();
+    pimpl_ = new DevicePrivate(this);
   }
   return *pimpl_;
 }
