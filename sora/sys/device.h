@@ -32,6 +32,7 @@ class MaterialManager;
 class TouchEventQueue;
 class MeshManager;
 class UberShader;
+class Renderer;
 
 struct RenderState;
 
@@ -57,6 +58,9 @@ public:
   const UberShader &uber_shader() const;
 
   static Device *GetAnyDevice();
+
+  Renderer &render3d();
+  Renderer &render2d();
 
 private:
   DevicePrivate &pimpl();

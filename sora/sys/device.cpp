@@ -28,22 +28,30 @@
 #include "renderer/mesh_manager.h"
 #include "renderer/uber_shader.h"
 #include "renderer/render_state.h"
+#include "renderer/renderer.h"
 
 namespace sora {;
 
 struct DevicePrivate {
   DevicePrivate(Device *dev)
-  : render_state(dev) {
+  : render_state(dev),
+  render2d(dev), 
+  render3d(dev) {
   }
   DevicePrivate(const Device *dev)
-  : render_state(const_cast<Device*>(dev)) {
+  : render_state(const_cast<Device*>(dev)),
+  render2d(const_cast<Device*>(dev)), 
+  render3d(const_cast<Device*>(dev)) {
   }
+
   MaterialManager material_mgr;
   TextureManager texture_mgr;
   TouchEventQueue touch_evt_queue;
   MeshManager mesh_mgr;
   UberShader uber_shader;
   RenderState render_state;
+  Renderer render2d;
+  Renderer render3d;
 };
 
 Device::Device() : pimpl_(NULL) {
@@ -68,6 +76,13 @@ Device *Device::GetAnyDevice() {
   }
 }
 std::vector<Device*> Device::device_list_;
+
+Renderer &Device::render3d() {
+  return pimpl().render3d;
+}
+Renderer &Device::render2d() {
+  return pimpl().render2d;
+}
 
 TextureManager &Device::texture_mgr() {
   return pimpl().texture_mgr;

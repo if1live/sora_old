@@ -42,30 +42,39 @@ class Camera;
 struct DrawCommand;
 class MeshBufferObject;
 class Light;
+class Device;
 
 //2d / 3d는 미묘한 정책만 수정해도 충분할듯하다
+enum {
+  kRenderPolicy2D,
+  kRenderPolicy3D,
+};
 struct RendererPolicy {
+  RendererPolicy(int policy_type) : policy_type(policy_type) {}
   virtual void SetInitState() = 0;
-  virtual glm::mat4 ToViewMatrixFromCamera(const Camera &cam) = 0;
+  virtual glm::mat4 ToViewMatrixFromCamera(const Camera &cam, float win_w, float win_h) = 0;
+  const int policy_type;
 };
 struct RendererPolicy_2D : public RendererPolicy {
+  RendererPolicy_2D() : RendererPolicy(kRenderPolicy2D) {}
   void SetInitState();
-  glm::mat4 ToViewMatrixFromCamera(const Camera &cam);
+  glm::mat4 ToViewMatrixFromCamera(const Camera &cam, float win_w, float win_h);
 };
 
 struct RendererPolicy_3D : public RendererPolicy {
+  RendererPolicy_3D() : RendererPolicy(kRenderPolicy3D) {}
   void SetInitState();
-  glm::mat4 ToViewMatrixFromCamera(const Camera &cam);
+  glm::mat4 ToViewMatrixFromCamera(const Camera &cam, float win_w, float win_h);
 };
 
 //opengles 2.0 renderer
 class Renderer {
 public:
-  static Renderer &Renderer3D();
-  static Renderer &Renderer2D();
-public:
-  Renderer(RendererPolicy *policy);
+  Renderer(Device *dev);
   ~Renderer();
+
+  void SetPolicy_2D();
+  void SetPolicy_3D();
 
   //renderer을 여러개 만든다고하더라도 사실상 공유되는 속성
 public:
@@ -118,6 +127,7 @@ private:
   glm::mat4 view_;
 
   RendererPolicy *policy_;
+  Device *dev_;
 
   Camera cam_;
   Light light_;

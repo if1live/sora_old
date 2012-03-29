@@ -265,7 +265,7 @@ void renderFrame(Device *device) {
 
   {
     //uber shader
-    Renderer &render3d = Renderer::Renderer3D();
+    Renderer &render3d = device->render3d();
     render3d.SetInitState();
     
     //set camera + projection
@@ -341,7 +341,7 @@ void renderFrame(Device *device) {
   /*
   {
     GLHelper::CheckError("Render 2d start");
-    Renderer &render2d = Renderer::Renderer2D();
+    Renderer &render2d = device->render2d();
 
     //draw 2d something
     glm::mat4 world_mat(1.0f);

@@ -38,6 +38,8 @@
 
 #include "camera.h"
 #include "mesh.h"
+#include "sys/device.h"
+#include "render_state.h"
 
 namespace sora {;
 
@@ -45,19 +47,23 @@ GLuint Renderer::last_tex_id_ = -1;
 GLuint Renderer::last_prog_id_ = -1;
 ShaderProgram *Renderer::last_prog_ = NULL;
 
-Renderer &Renderer::Renderer3D() {
-  static Renderer renderer(new RendererPolicy_3D());
-  return renderer;
+void Renderer::SetPolicy_2D() {
+  if(policy_->policy_type != kRenderPolicy2D) {
+    SafeDelete(policy_);
+    policy_ = new RendererPolicy_2D();
+  }
 }
-Renderer &Renderer::Renderer2D() {
-  static Renderer renderer(new RendererPolicy_2D());
-  return renderer;
+void Renderer::SetPolicy_3D() {
+  if(policy_->policy_type != kRenderPolicy3D) {
+    SafeDelete(policy_);
+    policy_ = new RendererPolicy_3D();
+  }
 }
-
-Renderer::Renderer(RendererPolicy *policy) 
+Renderer::Renderer(Device *dev) 
 : projection_(1.0f),
 view_(1.0f),
-policy_(policy) {
+policy_(new RendererPolicy_3D()),
+dev_(dev) {
 }
 
 Renderer::~Renderer() {
@@ -312,7 +318,9 @@ void Renderer::ApplyMatrix(const glm::mat4 &world_mat) {
 
   const Camera &cam = camera();
   glm::mat4 &view = view_mat();
-  view = policy_->ToViewMatrixFromCamera(cam);
+  float win_w = dev_->render_state().win_width();
+  float win_h = dev_->render_state().win_height();
+  view = policy_->ToViewMatrixFromCamera(cam, win_w, win_h);
   //apply new viw matrix
 
   //camera vector
@@ -385,12 +393,10 @@ void RendererPolicy_2D::SetInitState() {
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-glm::mat4 RendererPolicy_2D::ToViewMatrixFromCamera(const Camera &cam) {
+glm::mat4 RendererPolicy_2D::ToViewMatrixFromCamera(const Camera &cam, float win_w, float win_h) {
   //TODO 2D renderer의 경우, 아직 cam속성을 갖다쓰지 않는다. 이부분을 적절히 고쳐주기
   //apply new viw matrix
-  //float win_width = Renderer::win_width();
-  //float win_height = Renderer::win_height();
-  glm::mat4 view = glm::ortho(0.0f, 480.0f, 0.0f, 800.0f);
+  glm::mat4 view = glm::ortho(0.0f, win_w, 0.0f, win_h);
   return view;
 }
 
@@ -403,7 +409,7 @@ void RendererPolicy_3D::SetInitState() {
   //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 
-glm::mat4 RendererPolicy_3D::ToViewMatrixFromCamera(const Camera &cam) {
+glm::mat4 RendererPolicy_3D::ToViewMatrixFromCamera(const Camera &cam, float win_w, float win_h) {
   //apply new viw matrix
   const Vec3f &eye = cam.eye();
   const Vec3f &dir = cam.dir();
