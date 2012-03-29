@@ -107,19 +107,21 @@ void Font::GetCharacterTextureQuad(unsigned char ch, float *left, float *right, 
 
 ///////////////////////////////////
 struct LabelImpl {
+  LabelImpl(Font *font) : font(font) {}
   std::string text;
 
   std::vector<Vertex2D> vert_list;
   std::vector<ushort> index_list;
+  Font *font;
 };
 
-Label::Label() : impl(new LabelImpl()) {
+Label::Label(Font *font) : impl(new LabelImpl(font)) {
 }
-Label::Label(const std::string &msg) : impl(new LabelImpl()) {
+Label::Label(Font *font, const std::string &msg) : impl(new LabelImpl(font)) {
   impl->text = msg;
   Init(impl->text);
 }
-Label::Label(const char *msg) : impl(new LabelImpl()) {
+Label::Label(Font *font, const char *msg) : impl(new LabelImpl(font)) {
   impl->text = msg;
   Init(impl->text);
 }
@@ -127,15 +129,13 @@ Label::~Label() {
   SafeDeleteWithNullCheck(impl);
 }
 void Label::Init(const std::string &text) {
-  Font &font = Font::GetInstance();
-
   Font::VertexListType &vertex_list = impl->vert_list;
   Font::IndexListType &index_list = impl->index_list;
 
   for (size_t i = 0 ; i < text.size() ; i++) {
     unsigned char ch = text[i];
     float tex_left, tex_right, tex_top, tex_bottom;
-    font.GetCharacterTextureQuad(ch, &tex_left, &tex_right, &tex_top, &tex_bottom);
+    impl->font->GetCharacterTextureQuad(ch, &tex_left, &tex_right, &tex_top, &tex_bottom);
 
     float left, right, top, bottom;
     left = i * (float)Font::kFontSize;

@@ -21,7 +21,6 @@
 #ifndef SORA_FONT_H_
 #define SORA_FONT_H_
 
-#include "core/template_lib.h"
 #include "vertex.h"
 #if SR_USE_PCH == 0
 #include <vector>
@@ -35,7 +34,7 @@ class TextArea;
 class Texture;
 
 struct FontImpl;
-class Font : public sora::Singleton<Font> {
+class Font {
 public:
   // vincent 폰트를 기반으로 텍스쳐 만들기
   // 128글자, 8*8폰트니까
@@ -72,9 +71,9 @@ private:
 struct LabelImpl;
 class Label {
 public:
-  Label();
-  Label(const std::string &msg);
-  Label(const char *msg);
+  Label(Font *font);
+  Label(Font *font, const std::string &msg);
+  Label(Font *font, const char *msg);
   ~Label();
 
   void set_text(const std::string &text);

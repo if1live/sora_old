@@ -74,8 +74,6 @@ using namespace std;
 using namespace sora;
 using namespace glm;
 
-//ShaderProgram shader_2d;
-
 //테스트용 물체를 그릴수있도록 필요한 변수를 하드코딩으로 떄려박자
 const int kMaxObject = 10;
 vector<glm::mat4> world_mat_list(kMaxObject);
@@ -88,8 +86,6 @@ void SORA_set_window_size(Device *device, int w, int h) {
   device->render_state().SetWinSize(w, h);
 }
 
-
-
 bool setupGraphics(Device *device, int w, int h) {
   device->render_state().SetWinSize(w, h);
 
@@ -97,26 +93,7 @@ bool setupGraphics(Device *device, int w, int h) {
   LOGI("Vendor : %s", GLHelper::GetVender().c_str());
   LOGI("Renderer : %s", GLHelper::GetRenderer().c_str());
   LOGI("Extensions : %s", GLHelper::GetExtensions().c_str());
-
-  /*
-  {
-    //2d shader
-    std::string app_vert_path = sora::Filesystem::GetAppPath("shader/v_simple.glsl");
-    std::string app_frag_path = sora::Filesystem::GetAppPath("shader/f_simple.glsl");
-    sora::MemoryFile vert_file(app_vert_path);
-    sora::MemoryFile frag_file(app_frag_path);
-    vert_file.Open();
-    frag_file.Open();
-    const char *vert_src = (const char*)(vert_file.start);
-    const char *frag_src = (const char*)(frag_file.start);
-    bool prog_result = shader_2d.Init(vert_src, frag_src);
-    if(prog_result == false) {
-      LOGE("Could not create program.");
-      return false;
-    }
-  }
-  */
-
+  
   //lodepng
   {
     std::string tex_path = sora::Filesystem::GetAppPath("texture/sora.png");
@@ -338,7 +315,7 @@ void renderFrame(Device *device) {
 
     GLHelper::CheckError("Render End");
   }
-  /*
+  
   {
     GLHelper::CheckError("Render 2d start");
     Renderer &render2d = device->render2d();
@@ -347,26 +324,23 @@ void renderFrame(Device *device) {
     glm::mat4 world_mat(1.0f);
 
     UberShader &uber_shader = device->uber_shader();
+    unsigned int flag = 0;
+    flag |= UberShader::kTexture;
+    ShaderProgram &shader = device->uber_shader().Load(flag);
+    render2d.SetShader(shader);
 
-    //shader 속성 설정
-    ShaderBindPolicy &bind_policy = shader_2d.bind_policy;
-    //기본 속성
-    const ShaderVariable *pos_var = shader_2d.attrib_var("a_position");
-    const ShaderVariable *texcoord_var = shader_2d.attrib_var("a_texcoord");
+    ShaderBindPolicy &bind_policy = shader.bind_policy;
+    const ShaderVariable &pos_var = bind_policy.var(ShaderBindPolicy::kPosition);
+    const ShaderVariable &texcoord_var = bind_policy.var(ShaderBindPolicy::kTexcoord);
+    const ShaderVariable &mvp_var = bind_policy.var(ShaderBindPolicy::kWorldViewProjection);
     
-    glEnableVertexAttribArray(pos_var->location);
-    glEnableVertexAttribArray(texcoord_var->location);
+    //glEnableVertexAttribArray(pos_var.location);
+    //glEnableVertexAttribArray(texcoord_var.location);
     
-    bind_policy.set_var(ShaderBindPolicy::kPosition, *pos_var);
-    bind_policy.set_var(ShaderBindPolicy::kTexcoord, *texcoord_var);
-
-    const ShaderVariable *mvp_var = shader_2d.uniform_var("u_worldViewProjection");
-    bind_policy.set_var(ShaderBindPolicy::kWorldViewProjection, *mvp_var);
-
     render2d.SetInitState();
-    render2d.SetShader(shader_2d);
+    render2d.SetShader(shader);
     render2d.ApplyMatrix(world_mat);
-    sora::Font &font = sora::Font::GetInstance();
+    sora::Font &font = device->font();
     render2d.SetTexture(font.font_texture());
     
     vector<sora::Vertex2D> vert_list;
@@ -374,21 +348,21 @@ void renderFrame(Device *device) {
     vert_list.push_back(sora::Vertex2D(100+128*2, 100, 1, 1));
     vert_list.push_back(sora::Vertex2D(100+128*2, 100+128*2, 1, 0));
     vert_list.push_back(sora::Vertex2D(100, 100+128*2, 0, 0));
-    glVertexAttribPointer(pos_var->location, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &vert_list[0].pos);
-    glVertexAttribPointer(texcoord_var->location, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &vert_list[0].texcoord);
+    glVertexAttribPointer(pos_var.location, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &vert_list[0].pos);
+    glVertexAttribPointer(texcoord_var.location, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &vert_list[0].texcoord);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     GLHelper::CheckError("glDrawArrays");
 
     world_mat = glm::translate(world_mat, glm::vec3(0, 800, 0));
     world_mat = glm::scale(world_mat, glm::vec3(2, 2, 1));
     render2d.ApplyMatrix(world_mat);
-    sora::Label label("PQRS_1234_asdf");
-    glVertexAttribPointer(pos_var->location, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->pos);
-    glVertexAttribPointer(texcoord_var->location, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->texcoord);
+    sora::Label label(&font, "PQRS_1234_asdf");
+    glVertexAttribPointer(pos_var.location, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->pos);
+    glVertexAttribPointer(texcoord_var.location, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->texcoord);
     glDrawElements(GL_TRIANGLES, label.index_count(), GL_UNSIGNED_SHORT, label.index_data());
     GLHelper::CheckError("glDrawArrays");
   }
-  */
+  
   //////////////////////////////
   Renderer::EndRender();
 }

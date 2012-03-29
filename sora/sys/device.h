@@ -33,6 +33,7 @@ class TouchEventQueue;
 class MeshManager;
 class UberShader;
 class Renderer;
+class Font;
 
 struct RenderState;
 
@@ -40,6 +41,8 @@ class Device {
 public:
   Device();
   ~Device();
+
+  Font &font();
 
   RenderState &render_state();
   const RenderState &render_state() const;

@@ -29,6 +29,7 @@
 #include "renderer/uber_shader.h"
 #include "renderer/render_state.h"
 #include "renderer/renderer.h"
+#include "renderer/font.h"
 
 namespace sora {;
 
@@ -37,11 +38,13 @@ struct DevicePrivate {
   : render_state(dev),
   render2d(dev), 
   render3d(dev) {
+    render2d.SetPolicy_2D();
   }
   DevicePrivate(const Device *dev)
   : render_state(const_cast<Device*>(dev)),
   render2d(const_cast<Device*>(dev)), 
   render3d(const_cast<Device*>(dev)) {
+    render2d.SetPolicy_2D();
   }
 
   MaterialManager material_mgr;
@@ -52,6 +55,7 @@ struct DevicePrivate {
   RenderState render_state;
   Renderer render2d;
   Renderer render3d;
+  Font font;
 };
 
 Device::Device() : pimpl_(NULL) {
@@ -77,6 +81,9 @@ Device *Device::GetAnyDevice() {
 }
 std::vector<Device*> Device::device_list_;
 
+Font &Device::font() {
+  return pimpl().font;
+}
 Renderer &Device::render3d() {
   return pimpl().render3d;
 }

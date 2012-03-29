@@ -10,15 +10,24 @@ varying vec4 v_constColor;
 #endif
 
 #ifdef USE_AMBIENT
+#ifndef LIGHT_ENABLED
+#define LIGHT_ENABLED 1
+#endif
 varying vec4 v_ambientColor;
 #endif
 
 #ifdef USE_DIFFUSE
+#ifndef LIGHT_ENABLED
+#define LIGHT_ENABLED 1
+#endif
 varying vec4 v_diffuseColor;
 varying float v_diffuse;
 #endif
 
 #ifdef USE_SPECULAR
+#ifndef LIGHT_ENABLED
+#define LIGHT_ENABLED 1
+#endif
 varying vec4 v_specularColor;
 varying float v_shininess;
 varying vec3 v_reflection;
@@ -26,9 +35,10 @@ varying vec3 v_viewDir;
 #endif
 
 void main() {	
+#ifdef LIGHT_ENABLED
 	vec4 color = vec4(0.0);
-#ifdef USE_CONST_COLOR
-	color = v_constColor;	//base color
+#else
+	vec4 color = vec4(1.0);
 #endif
 
 #ifdef USE_AMBIENT
@@ -55,6 +65,9 @@ void main() {
 	color = color + specular_color;
 #endif
 
+#ifdef USE_CONST_COLOR
+	color = v_constColor;	//base color
+#endif
 #ifdef USE_TEXTURE
 	color = color * texture2D(s_texture, v_texcoord);
 #endif
