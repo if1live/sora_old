@@ -43,8 +43,6 @@ namespace sora_tool
             OpenGLView child1 = new OpenGLView();
             windowsFormsHost1.Child = child1;
 
-            OpenGLView child2 = new OpenGLView();
-            windowsFormsHost2.Child = child2;
             //System.Windows.Forms.Button btn = new System.Windows.Forms.Button();
             //btn.Text = "asdf";
             //windowsFormsHost1.Child = btn;
