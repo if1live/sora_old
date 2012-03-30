@@ -1,9 +1,10 @@
 ﻿<Window x:Class="sora_tool.RunaWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="RunaWindow" Height="567" Width="576" Loaded="Window_Loaded">
+        xmlns:pt="clr-namespace:PropertyTools.Wpf;assembly=PropertyTools.Wpf" 
+        Title="RunaWindow" Height="567" Width="746" Loaded="Window_Loaded">
     <Grid>
-        <WindowsFormsHost Margin="12,12,175,12" Name="windowsFormsHost1" />
-        <Slider Height="23" HorizontalAlignment="Left" Margin="415,291,0,0" Name="slider1" VerticalAlignment="Top" Width="100" />
+        <WindowsFormsHost Margin="12,12,243,10" Name="windowsFormsHost1" />
+        <pt:PropertyControl Name="propertyctl" Margin="0,9,7,8" SelectedObject="{Binding SelectedMaterial}" HorizontalAlignment="Right" Width="231"/>
     </Grid>
 </Window>

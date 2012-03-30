@@ -256,6 +256,7 @@ struct SR_DLL Vector4 {
   };
 
   //operator 
+  Vector4() : x(0), y(0), z(0), w(0) {}
   Vector4(T x, T y, T z, T w) : x(x), y(y), z(z), w(w) {}
   Vector4(T (&v)[4]) { memcpy(data, v, sizeof(T) * Dim); }
   Vector4&  operator+=(const Vector4 &o) {

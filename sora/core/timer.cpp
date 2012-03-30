@@ -63,7 +63,7 @@ int gettimeofday(struct timeval *tv, struct timezone *tz) {
     tmpres -= DELTA_EPOCH_IN_MICROSECS;    
 
     // sec와 micorsec으로 맞추기
-    tv->tv_sec = (tmpres / 1000000UL);
+    tv->tv_sec = (long)(tmpres / 1000000UL);
     tv->tv_usec = (tmpres % 1000000UL);
   }
 

@@ -246,8 +246,8 @@ void renderFrame(Device *device) {
     render3d.SetInitState();
     
     //set camera + projection
-    float win_width = device->render_state().win_width();
-    float win_height = device->render_state().win_height();
+    float win_width = (float)device->render_state().win_width();
+    float win_height = (float)device->render_state().win_height();
     glm::mat4 &projection = render3d.projection_mat();
     projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 100.0f);
     float radius = 4;
@@ -269,7 +269,7 @@ void renderFrame(Device *device) {
     flag |= UberShader::kDiffuseMap;
     flag |= UberShader::kSpecularColor;
     flag |= UberShader::kSpecularMap;
-    ShaderProgram &shader = device->light_uber_shader().Load(flag);
+    ShaderProgram &shader = device->uber_shader(flag);
     render3d.SetShader(shader);
 
     ShaderBindPolicy &bind_policy = shader.bind_policy;
@@ -293,12 +293,12 @@ void renderFrame(Device *device) {
     mtl.diffuse_map = "mtl_diffuse";
     mtl.specular_map = "mtl_specular";
     mtl.illumination_model = 2;
-    mtl.diffuse[0] = 0.1;
-    mtl.diffuse[1] = 0.1;
-    mtl.diffuse[2] = 0.1;
-    mtl.ambient[0] = 0.01;
-    mtl.ambient[1] = 0.01;
-    mtl.ambient[2] = 0.01;
+    mtl.diffuse[0] = 0.1f;
+    mtl.diffuse[1] = 0.1f;
+    mtl.diffuse[2] = 0.1f;
+    mtl.ambient[0] = 0.01f;
+    mtl.ambient[1] = 0.01f;
+    mtl.ambient[2] = 0.01f;
     mtl.shininess = 50;
     render3d.SetMaterial(mtl);
     
@@ -356,10 +356,9 @@ void renderFrame(Device *device) {
     //draw 2d something
     glm::mat4 world_mat(1.0f);
 
-    UberShader &uber_shader = device->simple_uber_shader();
     unsigned int flag = 0;
     flag |= UberShader::kTexture;
-    ShaderProgram &shader = uber_shader.Load(flag);
+    ShaderProgram &shader = device->uber_shader(flag);
     render2d.SetShader(shader);
 
     ShaderBindPolicy &bind_policy = shader.bind_policy;
@@ -463,8 +462,8 @@ void SORA_update_frame(Device *device, float dt) {
     bool is_right = false;
     bool is_bottom = false;
     bool is_top = false;
-    float scr_width = device->render_state().win_width();
-    float scr_height = device->render_state().win_height();
+    float scr_width = (float)device->render_state().win_width();
+    float scr_height = (float)device->render_state().win_height();
     if(x < scr_width / 3) {
       is_left = true;
     }

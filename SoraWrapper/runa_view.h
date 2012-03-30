@@ -24,9 +24,22 @@
 //하나의 독립된 프로그램으로써 material editor를 만들기로 햇다
 //코드명은 RUNA
 #include "gl_view.h"
+#include "renderer/uber_shader.h"
 
 namespace sora {;
 struct RunaViewPrivate;
+
+public enum class ShaderFlag : unsigned int {
+  kNone = 0,
+  kConstColor = UberShader::kConstColor,
+  kTexture = UberShader::kTexture,
+  kAmbientColor = UberShader::kAmbientColor,
+  kDiffuseColor = UberShader::kDiffuseColor,
+  kSpecularColor = UberShader::kSpecularColor,
+  kModelColor = UberShader::kModelColor,
+  kDiffuseMap = UberShader::kDiffuseMap,
+  kSpecularMap = UberShader::kSpecularMap
+};
 
 public ref class RunaView : public GLView {
 public:
@@ -38,6 +51,25 @@ public:
   virtual void InitGLEnv() override;
   virtual void UpdateFrame(float dt) override;
   virtual void Cleanup() override;
+  
+  //material editor니까 외부에서 기본 속성을 조절할수 있어야한다. 간단하게 몇개 뚫어놓자
+public:
+  ShaderFlag GetShaderFlag();
+  void EnableShaderFlag(ShaderFlag value);
+  void DisableShaderFlag(ShaderFlag value);
+  bool IsEnabledShaderFlag(ShaderFlag value);
+  void SetShaderFlag(bool b, ShaderFlag value);
+
+  void SetAmbientColor(float r, float g, float b);
+  void SetDiffuseColor(float r, float g, float b);
+  void SetSpecularColor(float r, float g, float b);
+  void SetConstColor(float r, float g, float b);
+
+  void GetAmbientColor(float color[3]);
+  void GetDiffuseColor(float color[3]);
+  void GetSpecularColor(float color[3]);
+  void GetConstColor(float color[3]);
+
 private:
   RunaViewPrivate &pimpl();
   RunaViewPrivate *pimpl_;

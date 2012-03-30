@@ -64,6 +64,7 @@ bool MaterialManager::Add(const Material &mtl) {
     return false;
   }
   material_list_.push_back(mtl);
+  return true;
 }
 const Material &MaterialManager::Get(const std::string &name) {
   auto it = material_list_.begin();

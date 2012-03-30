@@ -338,8 +338,8 @@ void Renderer::ApplyMatrix(const glm::mat4 &world_mat) {
 
   const Camera &cam = camera();
   glm::mat4 &view = view_mat();
-  float win_w = dev_->render_state().win_width();
-  float win_h = dev_->render_state().win_height();
+  float win_w = (float)dev_->render_state().win_width();
+  float win_h = (float)dev_->render_state().win_height();
   view = policy_->ToViewMatrixFromCamera(cam, win_w, win_h);
   //apply new viw matrix
 

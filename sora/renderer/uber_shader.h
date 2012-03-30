@@ -49,6 +49,8 @@ public:
   void Init();
   ShaderProgram &Load(uint flag);
 
+  bool IsValidFlag(uint flag) const;
+
 protected:
   void LoadRawSrc(const std::string &v_file, const std::string &f_file);
 

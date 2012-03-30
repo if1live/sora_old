@@ -136,6 +136,17 @@ const UberShader &Device::light_uber_shader() const {
   return pimpl().light_uber_shader;
 }
 
+ShaderProgram &Device::uber_shader(uint flag) {
+  if(light_uber_shader().IsValidFlag(flag) == true) {
+    return light_uber_shader().Load(flag);
+  }
+  if(simple_uber_shader().IsValidFlag(flag) == true) {
+    return simple_uber_shader().Load(flag);
+  }
+  //적절한것이 존재하지 않는 경우, 빛을 기본값으로 사용하자
+  return light_uber_shader().Load(flag);
+}
+
 RenderState &Device::render_state() {
   return pimpl().render_state;
 }

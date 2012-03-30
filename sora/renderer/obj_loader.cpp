@@ -157,7 +157,7 @@ void ObjLoader::ParseObjLine(uchar *str, int n) {
         seperator_count++;
       } else {
         string str = *tok_iter;
-        value_list.push_back(atof(str.c_str()));
+        value_list.push_back(atoi(str.c_str()));
         index_count++;
       }
     }

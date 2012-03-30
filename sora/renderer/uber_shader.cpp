@@ -126,7 +126,13 @@ UberShader::~UberShader() {
   prog_dict_.clear();
 }
 
-
+bool UberShader::IsValidFlag(uint flag) const {
+  if((~avail_mask_ & flag) != 0) {
+    return false;
+  } else {
+    return true;
+  }
+}
 
 ShaderProgram &UberShader::Load(uint flag) {
   SR_ASSERT(orig_vert_src_.empty() == false && "not initialized yet");

@@ -80,6 +80,13 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+
+//disable warning
+#if SR_WIN
+//http://winapi.co.kr/clec/cpp2/18-3-3.htm
+#pragma warning(disable:4996)
+#endif
+
 #endif
 
 #endif  // SORA_SORA_STDAFX_H_
