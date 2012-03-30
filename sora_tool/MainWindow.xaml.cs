@@ -19,6 +19,7 @@ using System.ComponentModel;
 using System.Windows.Forms.Integration;
 
 using ManagedOpenGL.Engine.Windows;
+using sora;
 
 namespace sora_tool
 {
@@ -40,7 +41,7 @@ namespace sora_tool
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            OpenGLView child1 = new OpenGLView();
+            OpenGLView child1 = new OpenGLView(new SoraView());
             windowsFormsHost1.Child = child1;
 
             //System.Windows.Forms.Button btn = new System.Windows.Forms.Button();

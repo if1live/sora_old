@@ -6,12 +6,11 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using SoraWrapper;
 using System.Runtime.InteropServices;
 using ManagedOpenGL;
 using ManagedOpenGL.Engine.Windows;
 
-namespace sora_tool
+namespace sora
 {
     public partial class OpenGLView : PictureBox
     {
@@ -25,7 +24,7 @@ namespace sora_tool
         private readonly HiResTimer hiResTimer = new HiResTimer();
         #endregion
 
-        public OpenGLView()
+        public OpenGLView(GLView gl_view)
         {
             this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
             this.SetStyle(ControlStyles.UserPaint, true);
@@ -35,7 +34,7 @@ namespace sora_tool
 
             InitializeComponent();
 
-            view = new GLView();
+            this.view = gl_view;
             //System.Windows.Forms.Application.Idle += new EventHandler(UpdateElapsed);
             timer = new Timer();
             timer.Interval = (int)(1000 / 60.0f);

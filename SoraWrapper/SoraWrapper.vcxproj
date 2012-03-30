@@ -78,13 +78,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gl_view.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="SoraWrapper.h" />
+    <ClInclude Include="runa_main.h" />
+    <ClInclude Include="sora_view.h" />
     <ClInclude Include="Stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
-    <ClCompile Include="SoraWrapper.cpp" />
+    <ClCompile Include="gl_view.cpp" />
+    <ClCompile Include="runa_main.cpp" />
+    <ClCompile Include="sora_view.cpp" />
     <ClCompile Include="Stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

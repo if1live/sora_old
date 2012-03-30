@@ -1,4 +1,4 @@
-﻿namespace sora_tool
+﻿namespace sora
 {
     partial class OpenGLView
     {
