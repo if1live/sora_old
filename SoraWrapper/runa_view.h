@@ -18,11 +18,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_RUNA_MAIN_H_
-#define SORA_RUNA_MAIN_H_
+#ifndef SORA_RUNA_VIEW_H_
+#define SORA_RUNA_VIEW_H_
 
 //하나의 독립된 프로그램으로써 material editor를 만들기로 햇다
 //코드명은 RUNA
+#include "gl_view.h"
+
+namespace sora {;
+struct RunaViewPrivate;
+
+public ref class RunaView : public GLView {
+public:
+  RunaView();
+  ~RunaView();
+  virtual void SetupGraphics(int w, int h) override;
+  virtual void SetWindowSize(int w, int h) override;
+  virtual void DrawFrame() override;
+  virtual void InitGLEnv() override;
+  virtual void UpdateFrame(float dt) override;
+  virtual void Cleanup() override;
+private:
+  RunaViewPrivate &pimpl();
+  RunaViewPrivate *pimpl_;
+};
+}
 
 
-#endif  // SORA_RUNA_MAIN_H_
+#endif  // SORA_RUNA_VIEW_H_

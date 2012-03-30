@@ -1343,6 +1343,7 @@ internal::CartesianProductHolder8<Generator1, Generator2, Generator3,
       g1, g2, g3, g4, g5, g6, g7, g8);
 }
 
+/*
 template <typename Generator1, typename Generator2, typename Generator3,
     typename Generator4, typename Generator5, typename Generator6,
     typename Generator7, typename Generator8, typename Generator9>
@@ -1356,7 +1357,8 @@ internal::CartesianProductHolder9<Generator1, Generator2, Generator3,
       Generator4, Generator5, Generator6, Generator7, Generator8, Generator9>(
       g1, g2, g3, g4, g5, g6, g7, g8, g9);
 }
-
+*/
+/*
 template <typename Generator1, typename Generator2, typename Generator3,
     typename Generator4, typename Generator5, typename Generator6,
     typename Generator7, typename Generator8, typename Generator9,
@@ -1373,6 +1375,7 @@ internal::CartesianProductHolder10<Generator1, Generator2, Generator3,
       Generator10>(
       g1, g2, g3, g4, g5, g6, g7, g8, g9, g10);
 }
+*/
 # endif  // GTEST_HAS_COMBINE
 
 

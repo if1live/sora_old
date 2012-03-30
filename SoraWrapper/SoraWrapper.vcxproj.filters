@@ -16,9 +16,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="runa_main.h">
-      <Filter>runa</Filter>
-    </ClInclude>
     <ClInclude Include="Stdafx.h">
       <Filter>base</Filter>
     </ClInclude>
@@ -31,6 +28,9 @@
     <ClInclude Include="sora_view.h">
       <Filter>sora</Filter>
     </ClInclude>
+    <ClInclude Include="runa_view.h">
+      <Filter>runa</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp">
@@ -39,14 +39,14 @@
     <ClCompile Include="Stdafx.cpp">
       <Filter>base</Filter>
     </ClCompile>
-    <ClCompile Include="runa_main.cpp">
-      <Filter>runa</Filter>
-    </ClCompile>
     <ClCompile Include="gl_view.cpp">
       <Filter>base</Filter>
     </ClCompile>
     <ClCompile Include="sora_view.cpp">
       <Filter>sora</Filter>
+    </ClCompile>
+    <ClCompile Include="runa_view.cpp">
+      <Filter>runa</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

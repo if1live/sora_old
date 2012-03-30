@@ -5,3 +5,17 @@
 #pragma once
 
 
+#include <cstdlib>
+#include <cstdio>
+#include <cstring>
+#include <climits>
+
+#include <vector>
+#include <string>
+#include <map>
+#include <unordered_map>
+#include <memory>
+#include <algorithm>
+#include <set>
+#include <stack>
+#include <queue>

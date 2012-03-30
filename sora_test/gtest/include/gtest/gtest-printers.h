@@ -545,6 +545,7 @@ void PrintTo(const ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8>& t,
   PrintTupleTo(t, os);
 }
 
+/*
 template <typename T1, typename T2, typename T3, typename T4, typename T5,
           typename T6, typename T7, typename T8, typename T9>
 void PrintTo(const ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9>& t,
@@ -559,6 +560,7 @@ void PrintTo(
     ::std::ostream* os) {
   PrintTupleTo(t, os);
 }
+*/
 #endif  // GTEST_HAS_TR1_TUPLE
 
 // Overload for std::pair.

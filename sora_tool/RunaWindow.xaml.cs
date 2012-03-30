@@ -1,0 +1,34 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Documents;
+using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using System.Windows.Shapes;
+
+using sora;
+
+namespace sora_tool
+{
+    /// <summary>
+    /// Interaction logic for RunaWindow.xaml
+    /// </summary>
+    public partial class RunaWindow : Window
+    {
+        public RunaWindow()
+        {
+            InitializeComponent();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            OpenGLView child1 = new OpenGLView(new RunaView());
+            windowsFormsHost1.Child = child1;
+        }
+    }
+}

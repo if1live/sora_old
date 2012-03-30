@@ -4009,7 +4009,7 @@ class CartesianProductGenerator8
   const ParamGenerator<T8> g8_;
 };  // class CartesianProductGenerator8
 
-
+/*
 template <typename T1, typename T2, typename T3, typename T4, typename T5,
     typename T6, typename T7, typename T8, typename T9>
 class CartesianProductGenerator9
@@ -4247,8 +4247,8 @@ class CartesianProductGenerator9
   const ParamGenerator<T8> g8_;
   const ParamGenerator<T9> g9_;
 };  // class CartesianProductGenerator9
-
-
+*/
+/*
 template <typename T1, typename T2, typename T3, typename T4, typename T5,
     typename T6, typename T7, typename T8, typename T9, typename T10>
 class CartesianProductGenerator10
@@ -4503,7 +4503,7 @@ class CartesianProductGenerator10
   const ParamGenerator<T9> g9_;
   const ParamGenerator<T10> g10_;
 };  // class CartesianProductGenerator10
-
+*/
 
 // INTERNAL IMPLEMENTATION - DO NOT USE IN USER CODE.
 //
@@ -4721,6 +4721,7 @@ CartesianProductHolder8(const Generator1& g1, const Generator2& g2,
   const Generator8 g8_;
 };  // class CartesianProductHolder8
 
+/*
 template <class Generator1, class Generator2, class Generator3,
     class Generator4, class Generator5, class Generator6, class Generator7,
     class Generator8, class Generator9>
@@ -4764,7 +4765,8 @@ CartesianProductHolder9(const Generator1& g1, const Generator2& g2,
   const Generator8 g8_;
   const Generator9 g9_;
 };  // class CartesianProductHolder9
-
+*/
+/*
 template <class Generator1, class Generator2, class Generator3,
     class Generator4, class Generator5, class Generator6, class Generator7,
     class Generator8, class Generator9, class Generator10>
@@ -4811,7 +4813,7 @@ CartesianProductHolder10(const Generator1& g1, const Generator2& g2,
   const Generator9 g9_;
   const Generator10 g10_;
 };  // class CartesianProductHolder10
-
+*/
 # endif  // GTEST_HAS_COMBINE
 
 }  // namespace internal

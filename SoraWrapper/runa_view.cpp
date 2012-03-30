@@ -19,3 +19,38 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "Stdafx.h"
+#include "runa_view.h"
+
+namespace sora {;
+
+struct RunaViewPrivate {
+};
+
+RunaView::RunaView() : pimpl_(NULL) {
+}
+RunaView::~RunaView() {
+  if(pimpl_ != NULL) {
+    delete(pimpl_);
+    pimpl_ = NULL;
+  }
+}
+void RunaView::SetupGraphics(int w, int h) {
+}
+void RunaView::SetWindowSize(int w, int h) {
+}
+void RunaView::DrawFrame() {
+}
+void RunaView::InitGLEnv() {
+}
+void RunaView::UpdateFrame(float dt) {
+}
+void RunaView::Cleanup() {
+}
+
+RunaViewPrivate &RunaView::pimpl() {
+  if(pimpl_ == NULL) {
+    pimpl_ = new RunaViewPrivate();
+  }
+  return *pimpl_;
+}
+}
