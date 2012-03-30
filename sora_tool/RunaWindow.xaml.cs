@@ -28,9 +28,9 @@ namespace sora_tool
         public RunaWindow()
         {
             InitializeComponent();
-            //glView = new RunaView();
-            //MaterialModel model = new MaterialModel(glView);
-            MainViewModel model = new MainViewModel();
+            glView = new RunaView();
+            MainViewModel model = new MainViewModel(glView);
+            //MainViewModel model = new MainViewModel();
             DataContext = model;
         }
 

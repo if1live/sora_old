@@ -6,18 +6,22 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sora_test", "sora_test\sora_test.vcxproj", "{A8701353-1E8D-46F3-9512-5A3D38D1D7C4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sora_tool", "sora_tool\sora_tool.csproj", "{11A8099D-9A44-4E08-A5FE-3FA5C36EDA71}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3A9FED3D-0EC6-412F-B690-5119A9EE2AD9} = {3A9FED3D-0EC6-412F-B690-5119A9EE2AD9}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yuriko", "yuriko\yuriko.vcxproj", "{F2894000-CDDF-4329-94B5-A3D8F671D0AC}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SoraWrapper", "SoraWrapper\SoraWrapper.vcxproj", "{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoraToolLibrary", "SoraToolLibrary\SoraToolLibrary.csproj", "{FAAF516F-3C4F-4661-9FF1-80B13D403A56}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TestLibrary", "TestLibrary\TestLibrary.csproj", "{3A9FED3D-0EC6-412F-B690-5119A9EE2AD9}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PropertyTools", "PropertyTools\PropertyTools.csproj", "{37466829-61F5-47FA-9E3E-9CEDCD9535C0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PropertyTools.Wpf", "PropertyTools.Wpf\PropertyTools.Wpf.csproj", "{7168F82F-288A-42C4-9EB1-FBBE5112F211}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoraToolLibrary", "SoraToolLibrary\SoraToolLibrary.csproj", "{3A9FED3D-0EC6-412F-B690-5119A9EE2AD9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{974A14C4-F0BF-4EE6-BEA8-257F668DABC1} = {974A14C4-F0BF-4EE6-BEA8-257F668DABC1}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -127,18 +131,6 @@ Global
 		{F2894000-CDDF-4329-94B5-A3D8F671D0AC}.Release|Win32.ActiveCfg = Release|Win32
 		{F2894000-CDDF-4329-94B5-A3D8F671D0AC}.Release|Win32.Build.0 = Release|Win32
 		{F2894000-CDDF-4329-94B5-A3D8F671D0AC}.Release|x86.ActiveCfg = Release|Win32
-		{FAAF516F-3C4F-4661-9FF1-80B13D403A56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FAAF516F-3C4F-4661-9FF1-80B13D403A56}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FAAF516F-3C4F-4661-9FF1-80B13D403A56}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{FAAF516F-3C4F-4661-9FF1-80B13D403A56}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{FAAF516F-3C4F-4661-9FF1-80B13D403A56}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{FAAF516F-3C4F-4661-9FF1-80B13D403A56}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{FAAF516F-3C4F-4661-9FF1-80B13D403A56}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FAAF516F-3C4F-4661-9FF1-80B13D403A56}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FAAF516F-3C4F-4661-9FF1-80B13D403A56}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{FAAF516F-3C4F-4661-9FF1-80B13D403A56}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{FAAF516F-3C4F-4661-9FF1-80B13D403A56}.Release|Win32.ActiveCfg = Release|Any CPU
-		{FAAF516F-3C4F-4661-9FF1-80B13D403A56}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
