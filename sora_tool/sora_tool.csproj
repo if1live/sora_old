@@ -43,6 +43,10 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="PropertyTools, Version=2012.2.1.53, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\sdk\PropertyTools\PropertyTools.dll</HintPath>
+    </Reference>
     <Reference Include="PropertyTools.Wpf">
       <HintPath>..\sdk\PropertyTools\PropertyTools.Wpf.dll</HintPath>
     </Reference>

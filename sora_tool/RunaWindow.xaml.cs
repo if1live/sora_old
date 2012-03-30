@@ -13,6 +13,7 @@ using System.Windows.Shapes;
 
 using sora;
 using System.ComponentModel;
+using PropertyTools.DataAnnotations;
 
 namespace sora_tool
 {
@@ -24,12 +25,13 @@ namespace sora_tool
             this.glView = glView;
         }
 
-        [Category("ConstColor")]
+        [Category("Material|ConstColor")]
         public bool UseConstColor 
         {
             get { return glView.IsEnabledShaderFlag(ShaderFlag.kConstColor); }
             set { glView.SetShaderFlag(value, ShaderFlag.kConstColor); }
         }
+
         public Color ConstColor 
         {
             get 
@@ -59,14 +61,18 @@ namespace sora_tool
             }
         }
 
-        [Category("Texture")]
+        [Category("Material|Texture")]
         public bool UseTexture 
         {
             get { return glView.IsEnabledShaderFlag(ShaderFlag.kTexture); }
             set { glView.SetShaderFlag(value, ShaderFlag.kTexture); }
         }
+        [FilePath(".png", true)]
+        [FilterProperty("Filter")]
+        [VisibleBy("UseTexture")]
+        public string TexturePath { get; set; }
 
-        [Category("Ambient")]
+        [Category("Material|Ambient")]
         public bool UseAmbient
         {
             get { return glView.IsEnabledShaderFlag(ShaderFlag.kAmbientColor); }
@@ -101,12 +107,13 @@ namespace sora_tool
             }
         }
 
-        [Category("Diffuse")]
+        [Category("Material|Diffuse")]
         public bool UseDiffuse
         {
             get { return glView.IsEnabledShaderFlag(ShaderFlag.kDiffuseColor); }
             set { glView.SetShaderFlag(value, ShaderFlag.kDiffuseColor); }
         }
+        [VisibleBy("UseDiffuse")]
         public Color DiffuseColor
         {
             get
@@ -135,18 +142,24 @@ namespace sora_tool
                 glView.SetDiffuseColor(r, g, b);
             }
         }
+        [VisibleBy("UseDiffuse")]
         public bool UseDiffuseMap
         {
             get { return glView.IsEnabledShaderFlag(ShaderFlag.kDiffuseMap); }
             set { glView.SetShaderFlag(value, ShaderFlag.kDiffuseMap); }
         }
+        [FilePath(".png", true)]
+        [FilterProperty("Filter")]
+        [VisibleBy("UseDiffuseMap")]
+        public string DiffuseMapPath { get; set; }
 
-        [Category("Specular")]
+        [Category("Material|Specular")]
         public bool UseSpecular
         {
             get { return glView.IsEnabledShaderFlag(ShaderFlag.kSpecularColor); }
             set { glView.SetShaderFlag(value, ShaderFlag.kSpecularColor); }
         }
+        [VisibleBy("UseSpecular")]
         public Color SpecularColor
         {
             get
@@ -175,11 +188,35 @@ namespace sora_tool
                 glView.SetSpecularColor(r, g, b);
             }
         }
+        [VisibleBy("UseSpecular")]
+        [Slidable(1, 200, 45, 1)]
+        public float SpecularShiness
+        {
+            get
+            {
+                return glView.GetSpecularShininess();
+            }
+            set
+            {
+                glView.SetSpecularShininess(value);
+            }
+        }
+        [VisibleBy("UseSpecular")]
         public bool UseSpecularMap
         {
             get { return glView.IsEnabledShaderFlag(ShaderFlag.kSpecularMap); }
             set { glView.SetShaderFlag(value, ShaderFlag.kSpecularMap); }
         }
+        [FilePath(".png", true)]
+        [FilterProperty("Filter")]
+        [VisibleBy("UseSpecularMap")]
+        public string SpecularMapPath { get; set; }
+
+        [Category("Light|Light")]
+        public Color AmbientLight { get; set; }
+        public Color DiffuseLight { get; set; }
+        public Color SpecularLight { get; set; }
+        public bool MoveLight { get; set; }
     }
 
     public class MaterialModel

@@ -138,6 +138,14 @@ void RunaView::GetSpecularColor(float color[3]) {
   }
 }
 
+float RunaView::GetSpecularShininess() {
+  return pimpl().mtl.shininess;
+}
+
+void RunaView::SetSpecularShininess(float shininess) {
+  pimpl().mtl.shininess = shininess;
+}
+
 ShaderFlag RunaView::GetShaderFlag() {
   return pimpl().uber_flag;
 }

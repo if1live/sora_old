@@ -64,11 +64,13 @@ public:
   void SetDiffuseColor(float r, float g, float b);
   void SetSpecularColor(float r, float g, float b);
   void SetConstColor(float r, float g, float b);
+  void SetSpecularShininess(float shininess);
 
   void GetAmbientColor(float color[3]);
   void GetDiffuseColor(float color[3]);
   void GetSpecularColor(float color[3]);
   void GetConstColor(float color[3]);
+  float GetSpecularShininess();
 
 private:
   RunaViewPrivate &pimpl();
