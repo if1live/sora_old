@@ -2,9 +2,9 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:pt="clr-namespace:PropertyTools.Wpf;assembly=PropertyTools.Wpf" 
-        Title="RunaWindow" Height="823.2" Width="827" Loaded="Window_Loaded">
+        Title="RunaWindow" Height="823.2" Width="827">
     <Grid>
         <WindowsFormsHost Margin="12,12,289,10" Name="windowsFormsHost1"/>
-        <pt:PropertyControl Name="propertyctl" Margin="0,9,7,8" SelectedObject="{Binding SelectedMaterial}" HorizontalAlignment="Right" Width="277"/>
+        <pt:PropertyControl Name="propertyctl" Margin="0,9,7,8" SelectedObject="{Binding SelectedItem}" HorizontalAlignment="Right" Width="277"/>
     </Grid>
 </Window>

@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{11A8099D-9A44-4E08-A5FE-3FA5C36EDA71}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>sora_tool</RootNamespace>
     <AssemblyName>sora_tool</AssemblyName>
@@ -43,13 +43,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PropertyTools, Version=2012.2.1.53, Culture=neutral, PublicKeyToken=ea0c9f2b460934d0, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\sdk\PropertyTools\PropertyTools.dll</HintPath>
-    </Reference>
-    <Reference Include="PropertyTools.Wpf">
-      <HintPath>..\sdk\PropertyTools\PropertyTools.Wpf.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -74,6 +67,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="HiResTimer.cs" />
+    <Compile Include="Material.cs" />
+    <Compile Include="MainViewModel.cs" />
     <Compile Include="OpenGLView.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -134,9 +129,25 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PropertyTools.Wpf\PropertyTools.Wpf.csproj">
+      <Project>{7168f82f-288a-42c4-9eb1-fbbe5112f211}</Project>
+      <Name>PropertyTools.Wpf</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PropertyTools\PropertyTools.csproj">
+      <Project>{37466829-61f5-47fa-9e3e-9cedcd9535c0}</Project>
+      <Name>PropertyTools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SoraToolLibrary\SoraToolLibrary.csproj">
+      <Project>{faaf516f-3c4f-4661-9ff1-80b13d403a56}</Project>
+      <Name>SoraToolLibrary</Name>
+    </ProjectReference>
     <ProjectReference Include="..\SoraWrapper\SoraWrapper.vcxproj">
       <Project>{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}</Project>
       <Name>SoraWrapper</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TestLibrary\TestLibrary.csproj">
+      <Project>{3a9fed3d-0ec6-412f-b690-5119a9ee2ad9}</Project>
+      <Name>TestLibrary</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
