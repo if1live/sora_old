@@ -11,10 +11,10 @@ uniform vec4 u_constColor;
 varying vec4 v_constColor;
 #endif
 
-//#ifdef USE_MODEL_COLOR
-//attribute vec4 a_color;
-//varying vec4 v_color;
-//#endif
+#ifdef USE_MODEL_COLOR
+attribute vec4 a_color;
+varying vec4 v_color;
+#endif
 
 void main() {
 #ifdef USE_TEXTURE
@@ -23,9 +23,9 @@ void main() {
 #ifdef USE_CONST_COLOR
 	v_constColor = u_constColor;
 #endif
-//#ifdef USE_MODEL_COLOR
-//	v_color = a_color;
-//#endif
+#ifdef USE_MODEL_COLOR
+	v_color = a_color;
+#endif
 
 	gl_Position = u_worldViewProjection * a_position;
 }

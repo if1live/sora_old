@@ -343,7 +343,7 @@ void RunaView::SetupGraphics(int w, int h) {
     world_mat_list[idx] = glm::mat4(1.0f);
 
     Material &mtl = mtl_list[idx];
-    mtl.uber_flag = UberShader::kConstColor;
+    mtl.uber_flag = UberShader::kModelColor;
 
     sora::PrimitiveModel primitive_model;
     primitive_model.WireAxis(5);
@@ -405,6 +405,8 @@ void RunaView::DrawFrame() {
   render3d.set_camera(cam);
 
   //plane, axis같은 디버깅 관련 요소 그리기
+  //선을 겹쳐 그릴수 잇으니까 깊이끈다
+  glDisable(GL_DEPTH_TEST);
   for(size_t i = 0 ; i < world_mat_list.size() ; i++) {
     unsigned int flag = mtl_list[i].uber_flag;
     ShaderProgram &shader = device().uber_shader(flag);
@@ -412,8 +414,10 @@ void RunaView::DrawFrame() {
 
     ShaderBindPolicy &bind_policy = shader.bind_policy;
     const ShaderVariable &const_color_var = bind_policy.var(ShaderBindPolicy::kConstColor);
-    Vec4f const_color(1.0f, 1.0f, 1.0f, 1.0f);
-    glUniform4fv(const_color_var.location, 1, const_color.data);
+    if(const_color_var.location != -1) {
+      Vec4f const_color(1.0f, 1.0f, 1.0f, 1.0f);
+      glUniform4fv(const_color_var.location, 1, const_color.data);
+    }
 
     //색만 잇는걸로 디버깅할테니 다른 속성은 빼자
     const glm::mat4 &world_mat = world_mat_list[i];
@@ -423,7 +427,7 @@ void RunaView::DrawFrame() {
     //SR_ASSERT(mesh != NULL);
     render3d.Draw(*mesh);
   }
-  
+  glEnable(GL_DEPTH_TEST);
 
   {
     //모델 적절히 그리기
