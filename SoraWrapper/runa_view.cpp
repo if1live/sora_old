@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "Stdafx.h"
-#include "runa_view.h"
 
+#include "runa_view.h"
 
 #include "sys/device.h"
 #include "renderer/render_state.h"
@@ -58,8 +58,15 @@
 
 #include "core/math_helper.h"
 
+
 using namespace std;
 using namespace glm;
+
+#include <msclr/marshal_cppstd.h>
+
+
+using namespace System;
+//using namespace System::Configuration;
 
 namespace sora {;
 
@@ -86,6 +93,8 @@ struct RunaViewPrivate {
       mtl.ambient[1] = 0.01f;
       mtl.ambient[2] = 0.01f;
       mtl.shininess = 50;
+
+
   }
   Material mtl;
   Light light;
@@ -93,6 +102,17 @@ struct RunaViewPrivate {
   ShaderFlag uber_flag;
   bool light_move;
   float light_pos_deg;
+
+  //쓰레드 제약떄문에 확실한 한 쓰레드에서 객체 생성을 보장하기 위해서
+  //큐를 달고 update에서 몰아서 처리하는 방식으로 하기로 했다
+  std::string simple_tex_path;
+  std::string simple_tex_ext;
+
+  std::string diffuse_map_path;
+  std::string diffuse_map_ext;
+
+  std::string specular_map_path;
+  std::string specular_map_ext;
 };
 
 
@@ -222,9 +242,20 @@ void RunaView::GetLightSpecularColor(array<Byte> ^%color) {
   }
 }
 
+void RunaView::SetTexturePath(String ^tex_path, String ^ext) {
+  //.ext로 확장자는 넘어온다
+  String ^png_ext = gcnew String(".png");
+  String ^jpg_ext = gcnew String(".jpg");
+  
+  string path_str = msclr::interop::marshal_as<std::string>(tex_path);
+  string ext_str = msclr::interop::marshal_as<std::string>(ext);
+  pimpl().simple_tex_path = path_str;
+  pimpl().simple_tex_ext = ext_str;
+}
 ///////////////////////////////////////////
 
-RunaView::RunaView() : pimpl_(NULL) {
+RunaView::RunaView() 
+: pimpl_(NULL) {
 }
 RunaView::~RunaView() {
   if(pimpl_ != NULL) {
@@ -238,14 +269,15 @@ void RunaView::SetupGraphics(int w, int h) {
   LOGI("Version : %s", GLHelper::GetVersion().c_str());
   LOGI("Vendor : %s", GLHelper::GetVender().c_str());
   LOGI("Renderer : %s", GLHelper::GetRenderer().c_str());
-  LOGI("Extensions : %s", GLHelper::GetExtensions().c_str());
+  //LOGI("Extensions : %s", GLHelper::GetExtensions().c_str());
   
   //lodepng
   const char *texture_table[][2] = {
     //{ "sora", "texture/sora.png" },
     { "sora2", "texture/sora2.png" },
-    { "mtl_diffuse", "texture/glazed_brick_D.png" },
     { "mtl_specular", "texture/glazed_brick_S.png" },
+    { "mtl_diffuse", "texture/glazed_brick_D.png" },
+    
     //{ "mtl_normal", "texture/glazed_brick_N.png" },
   };
   int tex_count = sizeof(texture_table) / sizeof(texture_table[0]);
@@ -257,7 +289,6 @@ void RunaView::SetupGraphics(int w, int h) {
     tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
     device().texture_mgr().Add(tex);
   }
-
   sora::ObjLoader loader;
   //load material
   {
@@ -377,6 +408,7 @@ void SORA_set_cam_pos(float a, float b) {
 void RunaView::SetWindowSize(int w, int h) {
   device().render_state().SetWinSize(w, h);
 }
+
 void RunaView::DrawFrame() {
   glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -428,6 +460,12 @@ void RunaView::DrawFrame() {
     const mat4 &world_mat = world_mat_list[obj_idx];
     render3d.ApplyMatrix(world_mat);
 
+    //텍스쳐 적당히 설정
+    Texture *tex = device().texture_mgr().Get_ptr(pimpl().simple_tex_path);
+    if(tex != NULL) {
+      render3d.SetTexture(*tex);
+    }
+
     //재질데이터 적절히 설정하기
     render3d.SetMaterial(pimpl().mtl);
     /*
@@ -451,7 +489,6 @@ void RunaView::DrawFrame() {
     render3d.Draw(*mesh);
     GLHelper::CheckError("Render End");
   }
-  
 }
 void RunaView::InitGLEnv() {
   GLenum err = glewInit();
@@ -461,7 +498,56 @@ void RunaView::InitGLEnv() {
   }
   fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 }
+
 void RunaView::UpdateFrame(float dt) {
+  GLHelper::CheckError("Update Begin");
+  //load simple tex
+  //텍스쳐 로딩 여부는 확장자를 이요해서 처리하자
+  if(pimpl().simple_tex_ext.empty() == false) {
+    const string &ext = pimpl().simple_tex_ext;
+    const string &tex_path = pimpl().simple_tex_path;
+
+    //데이터 바꿔치기식의 접근은 가능한가?
+    Texture *tex = device().texture_mgr().Get_ptr(string("mtl_specular"));
+    GLuint tex_id = tex->handle();
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glBindTexture(GL_TEXTURE_2D, tex_id);
+
+    unsigned char data[] = {
+      255, 0, 0,
+      0, 255, 0,
+      0, 0, 255,
+      255, 0, 255
+    };
+
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    /*
+    sora::MemoryFile tex_file(tex_path);
+    tex_file.Open();
+    Texture tex(tex_path);  //파일명==텍스쳐이름
+
+    //메모리 복사해서 
+
+    if(ext == ".png") {
+      tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);  
+    } else if(ext == ".jpg") {
+      tex.SetData(sora::Texture::kFileJPEG, tex_file.start, tex_file.end);
+    }
+    //TODO 기존을 텍스쳐를 적절히 제거하기
+
+    //등록
+    device().texture_mgr().Add(tex);
+    tex_file.Close();
+    */
+    pimpl().simple_tex_ext = "";
+    
+  }
+
   float prev_light_deg = pimpl().light_pos_deg;
   if(pimpl().light_move == true) {
     //적절한 속도로 빛 움직이기

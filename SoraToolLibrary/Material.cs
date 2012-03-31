@@ -5,6 +5,7 @@ using System.Windows.Media.Imaging;
 
 using PropertyTools.DataAnnotations;
 using System.ComponentModel;
+using System.IO;
 
 using sora;
 
@@ -68,7 +69,12 @@ namespace SoraToolLibrary
                 Uri uri = new Uri(this.texturePath);
                 BitmapImage bitmap = new BitmapImage(uri);
                 this.TextureImage = bitmap;
-                //TODO 
+                
+                //get file extension
+                FileInfo info = new FileInfo(texturePath);
+                string ext = info.Extension;
+                ext = ext.ToLower();
+                glView.SetTexturePath(texturePath, ext);
             }
         }
 

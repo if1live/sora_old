@@ -10,6 +10,8 @@ using System.Runtime.InteropServices;
 using ManagedOpenGL;
 using ManagedOpenGL.Engine.Windows;
 
+using System.Windows.Threading;
+
 namespace sora
 {
     public partial class OpenGLView : PictureBox
@@ -38,6 +40,14 @@ namespace sora
             timer.Interval = (int)(1000 / 60.0f);
             timer.Tick += new EventHandler(UpdateElapsed);
             timer.Start();
+
+            //System.Windows.Forms.Application.Idle += new EventHandler(UpdateElapsed);
+
+            //DispatcherTimer timer = new DispatcherTimer(DispatcherPriority.Render); // Happens on render
+            //timer.Tick += UpdateElapsed; // Fire your "tick" handler directly here!
+            //timer.Interval = new TimeSpan(0, 0, 0, 0, 15); // Asking for 66.6 fps here, since WPF really renders at about 60-62 FPS anyways, there's no need to ask for more
+            //timer.Start();
+
         }
 
         protected void OnLoad(object sender, EventArgs e)
@@ -98,6 +108,11 @@ namespace sora
         {
             System.Console.WriteLine("Init GL");
 
+            //int threadID = (int)AppDomain.GetCurrentThreadId();
+            //int managedThreadId = System.Threading.Thread.CurrentThread.ManagedThreadId;
+            //Console.WriteLine("ThreadId = " + threadID);
+            //Console.WriteLine("ManagedThreadId = " + managedThreadId);
+
             if (!WindowsOpenGLNative.wglMakeCurrent(this.hDC, this.hRC))
                 throw new Win32Exception(Marshal.GetLastWin32Error());
 
@@ -106,9 +121,7 @@ namespace sora
 
             //아래가 호출되면 생성된 gl ctx를 다시 박살내버려서 좃망
             //WindowsOpenGLNative.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
-
             view.SetupGraphics(this.Size.Width, this.Size.Height);
-
             AfterInitGL();
         }
 
@@ -119,51 +132,78 @@ namespace sora
 
             this.hDC = WindowsOpenGLNative.GetDC(this.Handle);
             if (this.hDC == IntPtr.Zero)
+            {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
 
             var iPixelformat = WindowsOpenGLNative.ChoosePixelFormat(this.hDC, ref pfd);
             if (iPixelformat == 0)
+            {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
 
             // Set the pixel format
             if (!WindowsOpenGLNative.SetPixelFormat(this.hDC, iPixelformat, ref pfd))
+            {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
 
             // Create a new OpenGL rendering context
             this.hRC = WindowsOpenGLNative.wglCreateContext(this.hDC);
             if (this.hRC == IntPtr.Zero)
+            {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
         }
 
         private void DeInit()
         {
             if (this.hRC != IntPtr.Zero)
+            {
                 WindowsOpenGLNative.wglDeleteContext(this.hRC);
+            }
 
             if (this.hDC != IntPtr.Zero)
+            {
                 WindowsOpenGLNative.ReleaseDC(this.Handle, this.hDC);
+            }
         }
 
         private void AfterInitGL()
         {
             if (!WindowsOpenGLNative.wglMakeCurrent(this.hDC, this.hRC))
+            {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
 
             initialized = true;
 
-            WindowsOpenGLNative.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
+            //gl context가 폭파되면 안된다
+            //WindowsOpenGLNative.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
         }
 
         protected void OnPaint(object sender, PaintEventArgs e)
         {
             if (!WindowsOpenGLNative.wglMakeCurrent(this.hDC, this.hRC))
+            {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
+            }
 
             this.Draw();
-
+            //((RunaView)view).CheckGL();
             WindowsOpenGLNative.SwapBuffers(this.hDC);
+            //((RunaView)view).CheckGL();
 
-            WindowsOpenGLNative.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
+            //이거 하면 gl폭파되서 이후 작업이 뒤진다
+            //WindowsOpenGLNative.wglMakeCurrent(IntPtr.Zero, IntPtr.Zero);
+
+            //int thd = System.Threading.Thread.CurrentThread.ManagedThreadId;
+            //System.Console.WriteLine(thd);
+            //int threadID = (int)AppDomain.GetCurrentThreadId();
+            //int managedThreadId = System.Threading.Thread.CurrentThread.ManagedThreadId;
+            //Console.WriteLine("ThreadId = " + threadID);
+            //Console.WriteLine("ManagedThreadId = " + managedThreadId);
+            //((RunaView)view).CheckGL();
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
@@ -191,5 +231,6 @@ namespace sora
         {
             view.UpdateFrame(elapsed);
         }
+
     }
 }

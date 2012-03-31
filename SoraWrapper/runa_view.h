@@ -45,6 +45,7 @@ public ref class RunaView : public GLView {
 public:
   RunaView();
   ~RunaView();
+
   virtual void SetupGraphics(int w, int h) override;
   virtual void SetWindowSize(int w, int h) override;
   virtual void DrawFrame() override;
@@ -60,29 +61,31 @@ public:
   bool IsEnabledShaderFlag(ShaderFlag value);
   void SetShaderFlag(bool b, ShaderFlag value);
 
-  void SetAmbientColor(Byte r, Byte g, Byte b);
-  void SetDiffuseColor(Byte r, Byte g, Byte b);
-  void SetSpecularColor(Byte r, Byte g, Byte b);
-  void SetConstColor(Byte r, Byte g, Byte b);
+  void SetAmbientColor(System::Byte r, System::Byte g, System::Byte b);
+  void SetDiffuseColor(System::Byte r, System::Byte g, System::Byte b);
+  void SetSpecularColor(System::Byte r, System::Byte g, System::Byte b);
+  void SetConstColor(System::Byte r, System::Byte g, System::Byte b);
   void SetSpecularShininess(float shininess);
 
-
-  void GetAmbientColor(array<Byte> ^%color);
-  void GetDiffuseColor(array<Byte> ^%color);
-  void GetSpecularColor(array<Byte> ^%color);
-  void GetConstColor(array<Byte> ^%color);
+  void GetAmbientColor(array<System::Byte> ^%color);
+  void GetDiffuseColor(array<System::Byte> ^%color);
+  void GetSpecularColor(array<System::Byte> ^%color);
+  void GetConstColor(array<System::Byte> ^%color);
   float GetSpecularShininess();
 
   //light 속성 관련
   void SetLightMove(bool b);
-  void SetLightAmbientColor(Byte r, Byte g, Byte b);
-  void SetLightDiffuseColor(Byte r, Byte g, Byte b);
-  void SetLightSpecularColor(Byte r, Byte g, Byte b);
+  void SetLightAmbientColor(System::Byte r, System::Byte g, System::Byte b);
+  void SetLightDiffuseColor(System::Byte r, System::Byte g, System::Byte b);
+  void SetLightSpecularColor(System::Byte r, System::Byte g, System::Byte b);
   
   bool IsLightMove();
-  void GetLightAmbientColor(array<Byte> ^%color);
-  void GetLightDiffuseColor(array<Byte> ^%color);
-  void GetLightSpecularColor(array<Byte> ^%color);
+  void GetLightAmbientColor(array<System::Byte> ^%color);
+  void GetLightDiffuseColor(array<System::Byte> ^%color);
+  void GetLightSpecularColor(array<System::Byte> ^%color);
+
+  //texture 설정. 경로와 연결되어 있으니까 좀 귀찮게 처리해야될듯
+  void SetTexturePath(System::String ^tex_path, System::String ^ext);
 
 private:
   RunaViewPrivate &pimpl();

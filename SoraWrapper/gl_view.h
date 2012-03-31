@@ -21,8 +21,6 @@
 #ifndef SORA_GL_VIEW_H_
 #define SORA_GL_VIEW_H_
 
-using namespace System;
-
 namespace sora {;
 class Device;
 }

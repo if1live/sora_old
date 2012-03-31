@@ -302,9 +302,9 @@ bool Texture::LoadImage(unsigned char *image, int width, int height, GLenum form
   src_height_ = height;
 
   //create opengl texture
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   glGenTextures(1, &handle_);
   glBindTexture(GL_TEXTURE_2D, handle_);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
   if((policy_ & kPolicyForcePOT) == kPolicyForcePOT) {
     if(IsPower(2, src_width_) && IsPower(2, src_height_)) {
@@ -354,10 +354,6 @@ bool Texture::LoadImage(unsigned char *image, int width, int height, GLenum form
   } else {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-    //npot는 mipmap불가능
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    //glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   }
