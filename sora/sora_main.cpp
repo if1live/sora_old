@@ -113,7 +113,7 @@ bool setupGraphics(Device *device, int w, int h) {
   }
   {
     //load jpeg
-    std::string tex_path = sora::Filesystem::GetAppPath("texture/Jellyfish.jpg");
+    std::string tex_path = sora::Filesystem::GetAppPath("texture/img_cheryl.jpg");
     sora::MemoryFile tex_file(tex_path);
     tex_file.Open();
     Texture tex("jellyfish");
@@ -546,25 +546,7 @@ void SORA_update_frame(Device *device, float dt) {
 void SORA_cleanup_graphics(Device *device) {
 }
 
-
-SR_C_DLL void SORA_touch_began(int x, int y, int uid, int tick_count, float timestamp) {
-  Device *dev = Device::GetAnyDevice();
-  SORA_touch_began_device(dev, x, y, uid, tick_count, timestamp);
-}
-SR_C_DLL void SORA_touch_moved(int x, int y, int prev_x, int prev_y, int uid, int tick_count, float timestamp) {
-  Device *dev = Device::GetAnyDevice();
-  SORA_touch_moved_device(dev, x, y, prev_x, prev_y, uid, tick_count, timestamp);
-}
-SR_C_DLL void SORA_touch_ended(int x, int y, int prev_x, int prev_y, int uid, int tick_count, float timestamp) {
-  Device *dev = Device::GetAnyDevice();
-  SORA_touch_ended_device(dev, x, y, prev_x, prev_y, uid, tick_count, timestamp);
-}
-SR_C_DLL void SORA_touch_cancelled(int x, int y, int prev_x, int prev_y, int uid, int tick_count, float timestamp) {
-  Device *dev = Device::GetAnyDevice();
-  SORA_touch_cancelled_device(dev, x, y, prev_x, prev_y, uid, tick_count, timestamp);
-}
-
-SR_C_DLL void SORA_touch_began_device(Device *device, int x, int y, int uid, int tick_count, float timestamp) {
+SR_C_DLL void SORA_touch_began(Device *device, int x, int y, int uid, int tick_count, float timestamp) {
   TouchEvent evt;
   evt.evt_type = kTouchBegan;
   evt.prev_x = x;
@@ -580,7 +562,7 @@ SR_C_DLL void SORA_touch_began_device(Device *device, int x, int y, int uid, int
   SR_ASSERT(touch_evt_queue.IsEmpty() == false);
   //LOGD("began");
 }
-SR_C_DLL void SORA_touch_moved_device(Device *device, int x, int y, int prev_x, int prev_y, int uid, int tick_count, float timestamp) {
+SR_C_DLL void SORA_touch_moved(Device *device, int x, int y, int prev_x, int prev_y, int uid, int tick_count, float timestamp) {
   TouchEvent evt;
   evt.evt_type = kTouchMoved;
   evt.prev_x = prev_x;
@@ -596,7 +578,7 @@ SR_C_DLL void SORA_touch_moved_device(Device *device, int x, int y, int prev_x, 
   SR_ASSERT(touch_evt_queue.IsEmpty() == false);
   //LOGD("moved");
 }
-SR_C_DLL void SORA_touch_ended_device(Device *device, int x, int y, int prev_x, int prev_y, int uid, int tick_count, float timestamp) {
+SR_C_DLL void SORA_touch_ended(Device *device, int x, int y, int prev_x, int prev_y, int uid, int tick_count, float timestamp) {
   TouchEvent evt;
   evt.evt_type = kTouchEnded;
   evt.prev_x = prev_x;
@@ -612,7 +594,7 @@ SR_C_DLL void SORA_touch_ended_device(Device *device, int x, int y, int prev_x, 
   SR_ASSERT(touch_evt_queue.IsEmpty() == false);
   //LOGD("ended");
 }
-SR_C_DLL void SORA_touch_cancelled_device(Device *device, int x, int y, int prev_x, int prev_y, int uid, int tick_count, float timestamp) {
+SR_C_DLL void SORA_touch_cancelled(Device *device, int x, int y, int prev_x, int prev_y, int uid, int tick_count, float timestamp) {
   TouchEvent evt;
   evt.evt_type = kTouchCancelled;
   evt.prev_x = prev_x;

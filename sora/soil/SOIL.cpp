@@ -1,4 +1,8 @@
 #include "sora_stdafx.h"
+
+#if SR_ANDROID
+#include "renderer/gl_inc.h"
+#endif
 /*
 	Jonathan Dummer
 	2007-07-26-10.36
@@ -27,7 +31,7 @@
 	#include <Carbon/Carbon.h>
 	#define APIENTRY
 #else
-	#include <GL/gl.h>
+	//#include <GL/gl.h>
 	//#include <GL/glx.h>
 #endif
 
@@ -79,8 +83,8 @@ int query_DXT_capability( void );
 #define SOIL_RGBA_S3TC_DXT1		0x83F1
 #define SOIL_RGBA_S3TC_DXT3		0x83F2
 #define SOIL_RGBA_S3TC_DXT5		0x83F3
-typedef void (APIENTRY * P_SOIL_GLCOMPRESSEDTEXIMAGE2DPROC) (GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLsizei imageSize, const GLvoid * data);
-P_SOIL_GLCOMPRESSEDTEXIMAGE2DPROC soilGlCompressedTexImage2D = NULL;
+//typedef void (APIENTRY * P_SOIL_GLCOMPRESSEDTEXIMAGE2DPROC) (GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLint border, GLsizei imageSize, const GLvoid * data);
+//P_SOIL_GLCOMPRESSEDTEXIMAGE2DPROC glCompressedTexImage2D = NULL;
 unsigned int SOIL_direct_load_DDS(
 		const char *filename,
 		unsigned int reuse_texture_ID,
@@ -1229,7 +1233,7 @@ unsigned int
 			}
 			if( DDS_data )
 			{
-				soilGlCompressedTexImage2D(
+				glCompressedTexImage2D(
 					opengl_texture_target, 0,
 					internal_texture_format, width, height, 0,
 					DDS_size, DDS_data );
@@ -1289,7 +1293,7 @@ unsigned int
 					}
 					if( DDS_data )
 					{
-						soilGlCompressedTexImage2D(
+						glCompressedTexImage2D(
 							opengl_texture_target, MIPlevel,
 							internal_texture_format, MIPwidth, MIPheight, 0,
 							DDS_size, DDS_data );
@@ -1344,7 +1348,8 @@ unsigned int
 		} else
 		{
 			/*	unsigned int clamp_mode = SOIL_CLAMP_TO_EDGE;	*/
-			unsigned int clamp_mode = GL_CLAMP;
+			//unsigned int clamp_mode = GL_CLAMP;
+      unsigned int clamp_mode = GL_CLAMP_TO_EDGE;
 			glTexParameteri( opengl_texture_type, GL_TEXTURE_WRAP_S, clamp_mode );
 			glTexParameteri( opengl_texture_type, GL_TEXTURE_WRAP_T, clamp_mode );
 			if( opengl_texture_type == SOIL_TEXTURE_CUBE_MAP )
@@ -1739,7 +1744,7 @@ unsigned int SOIL_direct_load_DDS_from_memory(
 					S3TC_type, GL_UNSIGNED_BYTE, DDS_data );
 			} else
 			{
-				soilGlCompressedTexImage2D(
+				glCompressedTexImage2D(
 					cf_target, 0,
 					S3TC_type, width, height, 0,
 					DDS_main_size, DDS_data );
@@ -1769,7 +1774,7 @@ unsigned int SOIL_direct_load_DDS_from_memory(
 				} else
 				{
 					mip_size = ((w+3)/4)*((h+3)/4)*block_size;
-					soilGlCompressedTexImage2D(
+					glCompressedTexImage2D(
 						cf_target, i,
 						S3TC_type, w, h, 0,
 						mip_size, &DDS_data[byte_offset] );
@@ -1811,7 +1816,8 @@ unsigned int SOIL_direct_load_DDS_from_memory(
 		} else
 		{
 			/*	unsigned int clamp_mode = SOIL_CLAMP_TO_EDGE;	*/
-			unsigned int clamp_mode = GL_CLAMP;
+			//unsigned int clamp_mode = GL_CLAMP;
+      unsigned int clamp_mode = GL_CLAMP_TO_EDGE;
 			glTexParameteri( opengl_texture_type, GL_TEXTURE_WRAP_S, clamp_mode );
 			glTexParameteri( opengl_texture_type, GL_TEXTURE_WRAP_T, clamp_mode );
 			glTexParameteri( opengl_texture_type, SOIL_TEXTURE_WRAP_R, clamp_mode );
@@ -1964,7 +1970,7 @@ int query_DXT_capability( void )
 		} else
 		{
 			/*	and find the address of the extension function	*/
-			P_SOIL_GLCOMPRESSEDTEXIMAGE2DPROC ext_addr = NULL;
+			//P_SOIL_GLCOMPRESSEDTEXIMAGE2DPROC ext_addr = NULL;
 			#ifdef WIN32
 				ext_addr = (P_SOIL_GLCOMPRESSEDTEXIMAGE2DPROC)
 						wglGetProcAddress
@@ -1996,7 +2002,7 @@ int query_DXT_capability( void )
 				CFRelease( extensionName );
 				CFRelease( bundle );
 			#else
-      ext_addr = glCompressedTexImage2DARB;
+      //ext_addr = glCompressedTexImage2DARB;
         /*
         (P_SOIL_GLCOMPRESSEDTEXIMAGE2DPROC)
 						glXGetProcAddressARB
@@ -2006,7 +2012,8 @@ int query_DXT_capability( void )
             */
 			#endif
 			/*	Flag it so no checks needed later	*/
-			if( NULL == ext_addr )
+      //if( NULL == glCompressedTexImage2DARB )
+			if( NULL == glCompressedTexImage2D )
 			{
 				/*	hmm, not good!!  This should not happen, but does on my
 					laptop's VIA chipset.  The GL_EXT_texture_compression_s3tc
@@ -2018,7 +2025,7 @@ int query_DXT_capability( void )
 			} else
 			{
 				/*	all's well!	*/
-				soilGlCompressedTexImage2D = ext_addr;
+				//glCompressedTexImage2D = ext_addr;
 				has_DXT_capability = SOIL_CAPABILITY_PRESENT;
 			}
 		}

@@ -9,18 +9,18 @@ uniform sampler2D s_texture;
 varying vec4 v_constColor;
 #endif
 
-#ifdef USE_MODEL_COLOR
-varying vec2 v_color;
-#endif
+//#ifdef USE_MODEL_COLOR
+//varying vec4 v_color;
+//#endif
 
-void main() {	
-#ifdef USE_CONST_COLOR
-	vec4 color = v_constColor;	//base color
-#elif USE_MODEL_COLOR
-	vec4 color = v_color;
-#else
+void main() {
 	vec4 color = vec4(1.0);
+#ifdef USE_CONST_COLOR
+	color = v_constColor;	//base color
 #endif
+//#if USE_MODEL_COLOR
+//	color = v_color;
+//#endif
 
 #ifdef USE_TEXTURE
 	color = color * texture2D(s_texture, v_texcoord);

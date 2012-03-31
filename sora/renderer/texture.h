@@ -24,6 +24,7 @@
 #if SR_USE_PCH == 0
 #include "core/shared_ptr_inc.h"
 #include <string>
+#include "gl_inc.h"
 #endif
 
 namespace sora {;

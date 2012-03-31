@@ -55,6 +55,14 @@ LOCAL_SRC_FILES += 	\
 	
 LOCAL_SRC_FILES += \
 	../lodepng/lodepng.cpp	\
+	
+LOCAL_SRC_FILES += \
+	../soil/image_DXT.cpp	\
+	../soil/image_helper.cpp	\
+	../soil/SOIL.cpp	\
+	../soil/stb_image_aug.cpp
+
+LOCAL_SRC_FILES += \
 	../renderer/gl_helper.cpp	\
 	../renderer/gl_inc.cpp	\
 	../renderer/shader.cpp	\
@@ -74,7 +82,8 @@ LOCAL_SRC_FILES += \
 	../renderer/shader_bind_policy.cpp	\
 	../renderer/mesh.cpp	\
 	../renderer/mesh_manager.cpp	\
-	../renderer/parametric_surface.cpp
+	../renderer/parametric_surface.cpp	\
+	../renderer/render_state.cpp
 	
 LOCAL_SRC_FILES += \
 	../sys/sys_locale.cpp	\
@@ -82,6 +91,7 @@ LOCAL_SRC_FILES += \
 	../sys/low_level_c_file.cpp	\
 	../sys/memory_file.cpp	\
 	../sys/zip_stream_file.cpp	\
+	../sys/device.cpp
 	
 LOCAL_SRC_FILES += \
 	../sora_main.cpp

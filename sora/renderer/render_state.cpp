@@ -24,6 +24,10 @@
 #include "sys/device.h"
 #include "renderer/gl_helper.h"
 
+#if SR_ANDROID
+#include "gl_inc.h"
+#endif
+
 namespace sora {;
 RenderState::RenderState(Device *dev) {
   memset(this, 0, sizeof(RenderState));

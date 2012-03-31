@@ -21,6 +21,8 @@
 #include "sora_stdafx.h"
 #include "device.h"
 
+#include <algorithm>
+
 #include "renderer/material_manager.h"
 #include "renderer/texture_manager.h"
 #include "core/template_lib.h"

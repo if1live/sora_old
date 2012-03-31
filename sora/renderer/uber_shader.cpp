@@ -41,24 +41,24 @@ struct ShaderBindParam {
 
 //uber shader의 enum에 정의된 순서대로 맞춰서 쓴다
 const char *enable_define_list[] = {
-  "#define USE_CONST_COLOR 1",
-  "#define USE_TEXTURE 1",
-  "#define USE_AMBIENT 1",
-  "#define USE_DIFFUSE 1",
-  "#define USE_SPECULAR 1",
-  "#define USE_MODEL_COLOR 1",
-  "#define USE_DIFFUSE_MAP 1",
-  "#define USE_SPECULAR_MAP 1",
+  "#define USE_CONST_COLOR \n",
+  "#define USE_TEXTURE \n",
+  "#define USE_AMBIENT \n",
+  "#define USE_DIFFUSE \n",
+  "#define USE_SPECULAR \n",
+  "#define USE_MODEL_COLOR \n",
+  "#define USE_DIFFUSE_MAP \n",
+  "#define USE_SPECULAR_MAP \n",
 };
 const char *disable_define_list[] = {
-  "#undef USE_CONST_COLOR",
-  "#undef USE_TEXTURE",
-  "#undef USE_AMBIENT",
-  "#undef USE_DIFFUSE",
-  "#undef USE_SPECULAR",
-  "#undef USE_MODEL_COLOR",
-  "#undef USE_DIFFUSE_MAP",
-  "#undef USE_SPECULAR_MAP",
+  "#undef USE_CONST_COLOR \n",
+  "#undef USE_TEXTURE \n",
+  "#undef USE_AMBIENT \n",
+  "#undef USE_DIFFUSE \n",
+  "#undef USE_SPECULAR \n",
+  "#undef USE_MODEL_COLOR \n",
+  "#undef USE_DIFFUSE_MAP \n",
+  "#undef USE_SPECULAR_MAP \n",
 };
 
 std::vector<ShaderBindParam> &GetPredefinedAttribList() {

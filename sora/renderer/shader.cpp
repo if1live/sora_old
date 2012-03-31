@@ -96,7 +96,6 @@ bool Shader::InitShader(GLenum shader_type, const std::vector<const char*> &src_
   string src;
   for(size_t i = 0 ; i < src_list.size() ; i++) {
     src += src_list[i];
-    src += '\n';
   }
   const char *tmp = src.c_str();
   const char **src_ptr = &tmp;
