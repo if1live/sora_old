@@ -88,7 +88,9 @@ struct RunaViewPrivate {
       mtl.diffuse_map = kDiffuseMapKey;
       mtl.specular_map = kSpecularMapKey;
 
-      mtl.illumination_model = 2;
+      //uber flag를 적절히 줘야 정상적인 쉐이더 겟지만 
+      //이거는 에디터같은 느낌으로 만들엇기 떄문에 무시하고 쓸수 있도록해놨다
+
       mtl.diffuse[0] = 0.1f;
       mtl.diffuse[1] = 0.1f;
       mtl.diffuse[2] = 0.1f;
@@ -315,6 +317,11 @@ void RunaView::SetupGraphics(int w, int h) {
     device().texture_mgr().Add(tex);
   }
   
+  //0번물체는 line 평면
+  {
+  }
+
+  /*
   {
     sora::ObjLoader loader;
     //load model
@@ -335,6 +342,7 @@ void RunaView::SetupGraphics(int w, int h) {
     device().mesh_mgr().Add(obj_model.GetDrawCmdList_wire(), "obj_model");
     mesh_name_list[obj_model_idx] = "obj_model";
   }
+  */
 
   {
     //primitive model test

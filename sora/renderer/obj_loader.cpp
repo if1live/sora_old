@@ -25,6 +25,7 @@
 #include "material.h"
 
 #include <boost/tokenizer.hpp>
+#include "uber_shader.h"
 
 using namespace std;
 
@@ -327,7 +328,7 @@ void ObjLoader::ParseMtlLine(uchar *str, int n) {
   if(cmd == "newmtl") {
     string mtl_name = *tok_iter;
     Material mtl;
-    strcpy(mtl.name, mtl_name.c_str());
+    mtl.name = mtl_name;
     impl->mtl_list->push_back(mtl);
 
   } else if(cmd == "Ka") {
@@ -338,6 +339,7 @@ void ObjLoader::ParseMtlLine(uchar *str, int n) {
       float color = (float)atof(color_str.c_str());
       mtl->ambient[i] = color;
     }
+    mtl->uber_flag |= UberShader::kAmbientColor;
 
   } else if(cmd == "Kd") {
     Material *mtl = impl->GetLastMtl();
@@ -347,6 +349,7 @@ void ObjLoader::ParseMtlLine(uchar *str, int n) {
       float color = (float)atof(color_str.c_str());
       mtl->diffuse[i] = color;
     }
+    mtl->uber_flag |= UberShader::kDiffuseColor;
 
   } else if(cmd == "Ks") {
     Material *mtl = impl->GetLastMtl();
@@ -356,18 +359,23 @@ void ObjLoader::ParseMtlLine(uchar *str, int n) {
       float color = (float)atof(color_str.c_str());
       mtl->specular[i] = color;
     }
+    mtl->uber_flag |= UberShader::kSpecularColor;
 
   } else if(cmd == "illum") {
+    ;
+    /*
     string illum_str = *tok_iter;
     int illum = atoi(illum_str.c_str());
     Material *mtl = impl->GetLastMtl();
     mtl->illumination_model = illum;
+    */
 
   } else if(cmd == "Ns") {
     string s_str = *tok_iter;
     float s = (float)atof(s_str.c_str());
     Material *mtl = impl->GetLastMtl();
     mtl->shininess = s;
+    mtl->uber_flag |= UberShader::kSpecularColor;
 
   } else if(cmd == "d") {
     string alpha_str = *tok_iter;
@@ -384,8 +392,8 @@ void ObjLoader::ParseMtlLine(uchar *str, int n) {
   } else if(cmd == "map_Ka") {
     string filename= *tok_iter;
     Material *mtl = impl->GetLastMtl();
-    strcpy(mtl->tex_map, filename.c_str());
-
+    mtl->tex_map = filename.c_str();
+    
   } else {
     SR_ASSERT(!"not valid cmd");
   }

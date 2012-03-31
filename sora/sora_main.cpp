@@ -303,7 +303,6 @@ void renderFrame(Device *device) {
     Material mtl;
     mtl.diffuse_map = "mtl_diffuse";
     mtl.specular_map = "mtl_specular";
-    mtl.illumination_model = 2;
     mtl.diffuse[0] = 0.1f;
     mtl.diffuse[1] = 0.1f;
     mtl.diffuse[2] = 0.1f;

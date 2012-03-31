@@ -29,9 +29,6 @@ namespace sora {;
 //재질데이터는 MTL을 기반으로 일단 구현한다. 나중에 다른 포맷에 맞춰서 확장하자
 struct Material {
   Material() {
-    strcpy(name, "");
-    strcpy(tex_map, "");
-
     //http://people.sc.fsu.edu/~jburkardt/data/mtl/mtl.html
     //mtl format default value
     for(int i = 0 ; i < 3 ; i++) {
@@ -40,10 +37,11 @@ struct Material {
       specular[i] = 1.0f;
     }
     alpha = 1.0f;  //not transparent
-    illumination_model = 1;
     shininess = 0.0f;
+
+    uber_flag = 0;
   };
-  char name[64];
+  std::string name;
 
   float ambient[3];
   float diffuse[3];
@@ -51,12 +49,13 @@ struct Material {
   
   float alpha;   //tr or d
   float shininess;
-  //denotes the illumination model used by the material.
-  //illum = 1 indicates a flat material with no specular highlights, so the value of Ks is not used.
-  //illum = 2 denotes the presence of specular highlights, and so a specification for Ks is required.
-  uint illumination_model;
-  char tex_map[128];   //names a file containing a texture map, which should just be an ASCII dump of RGB values;
+  
+  uint uber_flag;
 
+  //단색으로 쓸떄의 텍스쳐
+  std::string tex_map;   
+
+  //빛과 섞어쓸 텍스쳐
   std::string diffuse_map;
   std::string specular_map;
   std::string normal_map;

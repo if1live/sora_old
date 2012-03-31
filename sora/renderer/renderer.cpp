@@ -174,31 +174,22 @@ void Renderer::ApplyMaterialLight() {
     }
   }
 
-  //재질에 따라서 uber값이 바뀐다.
   //specular
-  if(material.illumination_model == 1) {
-    //not use ks
-    ;
-  } else if(material.illumination_model == 2) {
-    //use ks, specular    
-    if(use_specular) {
-      glUniform4fv(specular_var.location, 1, specular_color);
-      GLHelper::CheckError("Uniform SpecularColor");
+  if(use_specular) {
+    glUniform4fv(specular_var.location, 1, specular_color);
+    GLHelper::CheckError("Uniform SpecularColor");
 
-      Texture *specular_map = dev_->texture_mgr().Get_ptr(material_.specular_map);
-      if(specular_map != NULL && specular_map_var.location != -1) {
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, specular_map->handle());
-        glUniform1i(specular_map_var.location, 1);
-      }
+    Texture *specular_map = dev_->texture_mgr().Get_ptr(material_.specular_map);
+    if(specular_map != NULL && specular_map_var.location != -1) {
+      glActiveTexture(GL_TEXTURE1);
+      glBindTexture(GL_TEXTURE_2D, specular_map->handle());
+      glUniform1i(specular_map_var.location, 1);
     }
+  }
     
-    if(shininess_var.location != -1) {
-      glUniform1f(shininess_var.location, material.shininess);
-      GLHelper::CheckError("Uniform Shininess");
-    }
-  } else {
-    SR_ASSERT(!"not support yet");
+  if(shininess_var.location != -1) {
+    glUniform1f(shininess_var.location, material.shininess);
+    GLHelper::CheckError("Uniform Shininess");
   }
 
   //최초 상태로 돌려놓기
