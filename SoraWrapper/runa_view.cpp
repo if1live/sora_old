@@ -70,11 +70,6 @@ using namespace System;
 
 namespace sora {;
 
-//테스트용 물체를 그릴수있도록 필요한 변수를 하드코딩으로 떄려박자
-const int kMaxObject = 10;
-vector<glm::mat4> world_mat_list(kMaxObject);
-vector<string> mesh_name_list(kMaxObject);
-
 const char *kTextureKey = "texture";
 const char *kDiffuseMapKey = "diffuse";
 const char *kSpecularMapKey = "specular";
@@ -292,6 +287,17 @@ RunaView::~RunaView() {
     pimpl_ = NULL;
   }
 }
+
+//테스트용 물체를 그릴수있도록 필요한 변수를 하드코딩으로 떄려박자
+//wire plane + wire axis
+vector<glm::mat4> world_mat_list(2);
+vector<string> mesh_name_list(2);
+vector<Material> mtl_list(2);
+
+//테스트용으로 그려지는 모델에 대한 정보
+glm::mat4 obj_world_mat;
+string obj_mesh_name("model2");
+
 void RunaView::SetupGraphics(int w, int h) {
   device().render_state().SetWinSize(w, h);
 
@@ -317,101 +323,44 @@ void RunaView::SetupGraphics(int w, int h) {
     device().texture_mgr().Add(tex);
   }
   
-  //0번물체는 line 평면
+  //0번물체는 wire 평면
   {
-  }
+    const int idx = 0;
+    world_mat_list[idx] = glm::mat4(1.0f);
 
-  /*
-  {
-    sora::ObjLoader loader;
-    //load model
-    std::string path1 = sora::Filesystem::GetAppPath("obj/cube.obj");
-    sora::MemoryFile file1(path1);
-    file1.Open();
-    ObjModel obj_model;
-    loader.LoadObj(file1.start, file1.end, &obj_model);
+    Material &mtl = mtl_list[idx];
+    mtl.uber_flag = UberShader::kConstColor;
 
-    //첫번쨰 물체 = obj model
-    int obj_model_idx = 0;
-    glm::mat4 entity_mat = glm::mat4(1.0f);
-    //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
-    //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
-    entity_mat = glm::rotate(glm::mat4(1.0f), 180.0f, vec3(1, 0, 0));
-    world_mat_list[obj_model_idx] = entity_mat;
-
-    device().mesh_mgr().Add(obj_model.GetDrawCmdList_wire(), "obj_model");
-    mesh_name_list[obj_model_idx] = "obj_model";
-  }
-  */
-
-  {
-    //primitive model test
     sora::PrimitiveModel primitive_model;
-    //primitive_model.SolidCube(1, 2, 1, false);
-    //primitive_model.WireCube(1, 1, 1);
-    //primitive_model.WireAxis(2);
-    //primitive_model.WireSphere(1, 8, 8);
-    //primitive_model.WireCone(1, 2, 8, 8);
-    //primitive_model.SolidCone(1, 2, 8, 8);
-    //primitive_model.WireCylinder(1, 2, 8);
-    //primitive_model.SolidCylinder(1, 2, 16);
-    //primitive_model.SolidTeapot(2);
-    //primitive_model.WireTeapot(1);
+    primitive_model.WirePlane(5, 0.2);
+    std::string mesh_name = "wire[plane";
+    device().mesh_mgr().Add(primitive_model.GetDrawCmdList(), mesh_name.c_str());
+    mesh_name_list[idx] = mesh_name;
+  }
+  //1번은 wire axis
+  {
+    const int idx = 1;
+    world_mat_list[idx] = glm::mat4(1.0f);
 
-    //두번쨰 물체 = 썡물체
-    int obj_model_idx = 1;
-    glm::mat4 entity_mat = glm::mat4(1.0f);
-    //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
-    //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
-    //entity_mat = glm::rotate(glm::mat4(1.0f), 180.0f, vec3(1, 0, 0));
-    world_mat_list[obj_model_idx] = entity_mat;
+    Material &mtl = mtl_list[idx];
+    mtl.uber_flag = UberShader::kConstColor;
 
-    //primitive_model.SolidSphere(0.5, 16, 16);
-    //primitive_model.WirePlane(10.0f, 0.5f);
-    primitive_model.SolidPlane(2.0f);
-    device().mesh_mgr().Add(primitive_model.GetDrawCmdList(), "model1");
-    mesh_name_list[obj_model_idx] = "model1";
+    sora::PrimitiveModel primitive_model;
+    primitive_model.WireAxis(5);
+    std::string mesh_name = "wire_axis";
+    device().mesh_mgr().Add(primitive_model.GetDrawCmdList(), mesh_name.c_str());
+    mesh_name_list[idx] = mesh_name;
   }
 
   {
-    //세번쨰 물체 = 썡물체
-    int obj_model_idx = 2;
+    //그려질 물체
     glm::mat4 entity_mat = glm::mat4(1.0f);
-    //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
-    //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
-    //entity_mat = glm::translate(entity_mat, vec3(0.8, 0.3, 0));
-    //entity_mat = glm::rotate(entity_mat, 180.0f, vec3(1, 0, 0));
-    world_mat_list[obj_model_idx] = entity_mat;
+    obj_world_mat = entity_mat;
     
     sora::PrimitiveModel primitive_model;
     //primitive_model.SolidCube(0.5, 0.5, 0.5, true);
     primitive_model.SolidSphere(0.5, 16, 16);
-    device().mesh_mgr().Add(primitive_model.GetDrawCmdList(), "model2");
-    mesh_name_list[obj_model_idx] = "model2";
-
-  }
-
-  {
-    //surfaces[0] = new Cone(2, 1);
-    //surfaces[1] = new Sphere(0.5f);
-    //surfaces[2] = new Torus(0.5f, 0.2f);
-    //surfaces[3] = new TrefoilKnot(1.0f);
-    //surfaces[4] = new KleinBottle(0.2f);
-    //surfaces[5] = new MobiusStrip(1);
-    
-    //네번째 물체
-    int obj_model_idx = 3;
-
-    glm::mat4 entity_mat = glm::mat4(1.0f);
-    //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
-    //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
-    entity_mat = glm::translate(entity_mat, vec3(0, 1, 0));
-    world_mat_list[obj_model_idx] = entity_mat;
-
-    TrefoilKnot surface(1.0f);
-    device().mesh_mgr().AddSolid(surface, "knot");
-    //MeshManager::GetInstance().AddWire(surface, "knot");
-    mesh_name_list[obj_model_idx] = "knot";
+    device().mesh_mgr().Add(primitive_model.GetDrawCmdList(), obj_mesh_name.c_str());
   }
 }
 
@@ -435,39 +384,52 @@ void RunaView::DrawFrame() {
   glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  {
-    //uber shader
-    Renderer &render3d = device().render3d();
-    render3d.SetInitState();
+  //uber shader
+  Renderer &render3d = device().render3d();
+  render3d.SetInitState();
     
-    //set camera + projection
-    float win_width = (float)device().render_state().win_width();
-    float win_height = (float)device().render_state().win_height();
-    glm::mat4 &projection = render3d.projection_mat();
-    projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 100.0f);
-    float radius = 4;
-    float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
-    float cam_y = radius * sin(SR_DEG_2_RAD(aptitude));
-    float cam_z = radius * cos(SR_DEG_2_RAD(aptitude)) * cos(SR_DEG_2_RAD(latitude));
+  //set camera + projection
+  float win_width = (float)device().render_state().win_width();
+  float win_height = (float)device().render_state().win_height();
+  glm::mat4 &projection = render3d.projection_mat();
+  projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 100.0f);
+  float radius = 4;
+  float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
+  float cam_y = radius * sin(SR_DEG_2_RAD(aptitude));
+  float cam_z = radius * cos(SR_DEG_2_RAD(aptitude)) * cos(SR_DEG_2_RAD(latitude));
 
-    sora::Camera cam;
-    cam.set_eye(sora::Vec3f(cam_x, cam_y, cam_z));
-    cam.set_dir(sora::Vec3f(0, 0, 0) - cam.eye());
-    cam.set_up(sora::Vec3f(0, 1, 0));
-    render3d.set_camera(cam);
+  sora::Camera cam;
+  cam.set_eye(sora::Vec3f(cam_x, cam_y, cam_z));
+  cam.set_dir(sora::Vec3f(0, 0, 0) - cam.eye());
+  cam.set_up(sora::Vec3f(0, 1, 0));
+  render3d.set_camera(cam);
 
-    unsigned int flag = (unsigned int)pimpl().uber_flag;
-    //unsigned int flag = 0;
-    //flag |= UberShader::kConstColor;
-    //flag |= UberShader::kTexture;
-    //flag |= UberShader::kAmbientColor;
-    //flag |= UberShader::kDiffuseColor;
-    //flag |= UberShader::kDiffuseMap;
-    //flag |= UberShader::kSpecularColor;
-    //flag |= UberShader::kSpecularMap;
+  //plane, axis같은 디버깅 관련 요소 그리기
+  for(size_t i = 0 ; i < world_mat_list.size() ; i++) {
+    unsigned int flag = mtl_list[i].uber_flag;
     ShaderProgram &shader = device().uber_shader(flag);
     render3d.SetShader(shader);
 
+    ShaderBindPolicy &bind_policy = shader.bind_policy;
+    const ShaderVariable &const_color_var = bind_policy.var(ShaderBindPolicy::kConstColor);
+    Vec4f const_color(1.0f, 1.0f, 1.0f, 1.0f);
+    glUniform4fv(const_color_var.location, 1, const_color.data);
+
+    //색만 잇는걸로 디버깅할테니 다른 속성은 빼자
+    const glm::mat4 &world_mat = world_mat_list[i];
+    render3d.ApplyMatrix(world_mat);
+  
+    MeshBufferObject *mesh = device().mesh_mgr().Get(mesh_name_list[i]);
+    //SR_ASSERT(mesh != NULL);
+    render3d.Draw(*mesh);
+  }
+  
+
+  {
+    //모델 적절히 그리기
+    unsigned int flag = (unsigned int)pimpl().uber_flag;
+    ShaderProgram &shader = device().uber_shader(flag);
+    render3d.SetShader(shader);
     ShaderBindPolicy &bind_policy = shader.bind_policy;
 
     const ShaderVariable &const_color_var = bind_policy.var(ShaderBindPolicy::kConstColor);
@@ -478,9 +440,7 @@ void RunaView::DrawFrame() {
 
     //평면하나만 일단 렌더링해서 테스트하자
     render3d.SetLight(pimpl().light);
-    int obj_idx = 2;
-    const mat4 &world_mat = world_mat_list[obj_idx];
-    render3d.ApplyMatrix(world_mat);
+    render3d.ApplyMatrix(obj_world_mat);
 
     //텍스쳐 적당히 설정
     Texture *tex = device().texture_mgr().Get_ptr(string(kTextureKey));
@@ -492,11 +452,11 @@ void RunaView::DrawFrame() {
     render3d.SetMaterial(pimpl().mtl);
     render3d.ApplyMaterialLight();
       
-    MeshBufferObject *mesh = device().mesh_mgr().Get(mesh_name_list[obj_idx]);
+    MeshBufferObject *mesh = device().mesh_mgr().Get(obj_mesh_name);
     //SR_ASSERT(mesh != NULL);
     render3d.Draw(*mesh);
-    GLHelper::CheckError("Render End");
   }
+  GLHelper::CheckError("Render End");
 }
 void RunaView::InitGLEnv() {
   GLenum err = glewInit();
