@@ -6,6 +6,8 @@ using System.Windows.Media.Imaging;
 using PropertyTools.DataAnnotations;
 using System.ComponentModel;
 using System.IO;
+using System.Collections;
+using System.Collections.Generic;
 
 using sora;
 
@@ -22,6 +24,18 @@ namespace SoraToolLibrary
         public Material(RunaView glView)
         {
             this.glView = glView;
+
+            //model list
+            Models = new List<string> {
+                "sphere",
+                "cube",
+                "teapot",
+                "TrefoilKnot",
+                "Torus",
+                "KleinBottle",
+                "MobiusStrip",
+            };
+            this.ModelName = "sphere";
         }
 
         [Category("Simple|ConstColor")]
@@ -251,8 +265,21 @@ namespace SoraToolLibrary
             set { glView.SetLightMove(value); }
         }
 
+        [Browsable(false)]
+        public List<string> Models { get; set; }
+
+        private string modelName;
         [Category("Model|Model")]
-        public string ModelName { get; set; }
+        [ItemsSourceProperty("Models")]
+        public string ModelName 
+        {
+            get { return modelName; }
+            set
+            {
+                modelName = value;
+                glView.SetModel(value);
+            }
+        }
 
         private Color ByteArrayToColor(Byte[] arr)
         {

@@ -89,6 +89,9 @@ public:
   void SetDiffuseMapPath(System::String ^tex_path, System::String ^ext);
   void SetSpecularMapPath(System::String ^tex_path, System::String ^ext);
 
+  void SetCamRotateDeg(float deg);
+  void SetModel(System::String ^name);
+
 private:
   RunaViewPrivate &pimpl();
   RunaViewPrivate *pimpl_;

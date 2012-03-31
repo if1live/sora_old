@@ -78,7 +78,8 @@ struct RunaViewPrivate {
   RunaViewPrivate()
     : uber_flag(ShaderFlag::kNone),
     light_move(false),
-    light_pos_deg(0) {
+    light_pos_deg(0),
+    camDeg(0) {
       const_color = Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
       mtl.diffuse_map = kDiffuseMapKey;
       mtl.specular_map = kSpecularMapKey;
@@ -94,7 +95,7 @@ struct RunaViewPrivate {
       mtl.ambient[2] = 0.01f;
       mtl.shininess = 50;
 
-
+      model_name = "sphere";
   }
   Material mtl;
   Light light;
@@ -102,6 +103,9 @@ struct RunaViewPrivate {
   ShaderFlag uber_flag;
   bool light_move;
   float light_pos_deg;
+
+  float camDeg;
+  string model_name;
 
   //나중에 세이브 로드 위해서 남겨놓자
   std::string simple_tex_path;
@@ -259,6 +263,10 @@ void RunaView::SetSpecularMapPath(System::String ^tex_path, System::String ^ext)
   ReloadTexture(path_str, ext_str, kSpecularMapKey);
 }
 
+void RunaView::SetModel(System::String ^name) {
+  string model_name = msclr::interop::marshal_as<std::string>(name);
+  pimpl().model_name = model_name;
+}
 void RunaView::ReloadTexture(const std::string &path, const std::string &ext, const char *key) {
   sora::MemoryFile tex_file(path);
   tex_file.Open();
@@ -294,9 +302,9 @@ vector<glm::mat4> world_mat_list(2);
 vector<string> mesh_name_list(2);
 vector<Material> mtl_list(2);
 
-//테스트용으로 그려지는 모델에 대한 정보
-glm::mat4 obj_world_mat;
-string obj_mesh_name("model2");
+//테스트용으로 그려지는 모델에 대한 정보. 일단 대충 만들기
+vector<glm::mat4> obj_world_mat_list;
+vector<string> obj_mesh_name_list;
 
 void RunaView::SetupGraphics(int w, int h) {
   device().render_state().SetWinSize(w, h);
@@ -354,28 +362,73 @@ void RunaView::SetupGraphics(int w, int h) {
 
   {
     //그려질 물체
-    glm::mat4 entity_mat = glm::mat4(1.0f);
-    obj_world_mat = entity_mat;
-    
-    sora::PrimitiveModel primitive_model;
-    //primitive_model.SolidCube(0.5, 0.5, 0.5, true);
-    primitive_model.SolidSphere(0.5, 16, 16);
-    device().mesh_mgr().Add(primitive_model.GetDrawCmdList(), obj_mesh_name.c_str());
+    glm::mat4 reverse_mat = glm::mat4(1.0f);  //대부분 180뒤집기가 필요할거다
+    reverse_mat = glm::rotate(reverse_mat, 180.0f, vec3(1, 0, 0));
+
+    {
+      //0 : sphere
+      obj_world_mat_list.push_back(reverse_mat);
+      PrimitiveModel primitive_model;
+      primitive_model.SolidSphere(0.5, 16, 16);
+      const char *name = "sphere";
+      device().mesh_mgr().Add(primitive_model.GetDrawCmdList(), name);
+      obj_mesh_name_list.push_back(string(name));
+    }
+    {
+      //1 : cube
+      obj_world_mat_list.push_back(reverse_mat);
+      PrimitiveModel primitive_model;
+      primitive_model.SolidCube(1, 1, 1, true);
+      const char *name = "cube";
+      device().mesh_mgr().Add(primitive_model.GetDrawCmdList(), name);
+      obj_mesh_name_list.push_back(string(name));
+      
+    }
+    {
+      //2 teapot
+      mat4 entity_mat = glm::rotate(reverse_mat, 90.0f, vec3(1, 0, 0));
+      obj_world_mat_list.push_back(entity_mat);
+      
+      PrimitiveModel primitive_model;
+      primitive_model.SolidTeapot(2);
+      const char *name = "teapot";
+      device().mesh_mgr().Add(primitive_model.GetDrawCmdList(), name);
+      obj_mesh_name_list.push_back(string(name));
+    }
+    {
+      obj_world_mat_list.push_back(glm::mat4(1.0f));
+      TrefoilKnot surface(1.0f);
+      const char *name = "TrefoilKnot";
+      device().mesh_mgr().AddSolid(surface, name);
+      obj_mesh_name_list.push_back(string(name));
+    }
+    {
+      obj_world_mat_list.push_back(glm::mat4(1.0f));
+      Torus surface(0.5f, 0.2f);
+      const char *name = "Torus";
+      device().mesh_mgr().AddSolid(surface, name);
+      obj_mesh_name_list.push_back(string(name));
+    }
+    {
+      obj_world_mat_list.push_back(glm::mat4(1.0f));
+      KleinBottle surface(0.14f);
+      const char *name = "KleinBottle";
+      device().mesh_mgr().AddSolid(surface, name);
+      obj_mesh_name_list.push_back(string(name));
+    }
+    {
+      obj_world_mat_list.push_back(glm::mat4(1.0f));
+      MobiusStrip surface(0.7);
+      const char *name = "MobiusStrip";
+      device().mesh_mgr().AddSolid(surface, name);
+      obj_mesh_name_list.push_back(string(name));
+    }
   }
 }
 
 float aptitude = 10; //위도. -90~90. 세로 위치 표현
-float latitude = 10; //경도
+//float latitude = 10; //경도
 
-void SORA_set_cam_pos(float a, float b) {
-  aptitude += a;
-  latitude += b;
-  if(aptitude > 90) {
-    aptitude = 90;
-  } else if(aptitude < -90) {
-    aptitude = -90;
-  }
-}
 void RunaView::SetWindowSize(int w, int h) {
   device().render_state().SetWinSize(w, h);
 }
@@ -394,6 +447,7 @@ void RunaView::DrawFrame() {
   glm::mat4 &projection = render3d.projection_mat();
   projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 100.0f);
   float radius = 4;
+  float latitude = pimpl().camDeg;
   float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
   float cam_y = radius * sin(SR_DEG_2_RAD(aptitude));
   float cam_z = radius * cos(SR_DEG_2_RAD(aptitude)) * cos(SR_DEG_2_RAD(latitude));
@@ -406,7 +460,6 @@ void RunaView::DrawFrame() {
 
   //plane, axis같은 디버깅 관련 요소 그리기
   //선을 겹쳐 그릴수 잇으니까 깊이끈다
-  glDisable(GL_DEPTH_TEST);
   for(size_t i = 0 ; i < world_mat_list.size() ; i++) {
     unsigned int flag = mtl_list[i].uber_flag;
     ShaderProgram &shader = device().uber_shader(flag);
@@ -425,40 +478,59 @@ void RunaView::DrawFrame() {
   
     MeshBufferObject *mesh = device().mesh_mgr().Get(mesh_name_list[i]);
     //SR_ASSERT(mesh != NULL);
-    render3d.Draw(*mesh);
+
+    if(i == 1) {
+      glDisable(GL_DEPTH_TEST);
+      render3d.Draw(*mesh);
+      glEnable(GL_DEPTH_TEST);
+    } else {
+      render3d.Draw(*mesh);
+    } 
   }
-  glEnable(GL_DEPTH_TEST);
 
   {
-    //모델 적절히 그리기
-    unsigned int flag = (unsigned int)pimpl().uber_flag;
-    ShaderProgram &shader = device().uber_shader(flag);
-    render3d.SetShader(shader);
-    ShaderBindPolicy &bind_policy = shader.bind_policy;
-
-    const ShaderVariable &const_color_var = bind_policy.var(ShaderBindPolicy::kConstColor);
-    if(const_color_var.location != -1) {
-      Vec4f &const_color = pimpl().const_color;
-      glUniform4fv(const_color_var.location, 1, const_color.data);
+    //원하는 이름의 모델 얻기
+    int model_idx = -1;
+    for(size_t i = 0 ; i < obj_mesh_name_list.size() ; i++) {
+      if(obj_mesh_name_list[i] == pimpl().model_name) {
+        model_idx = i;
+        break;
+      }
     }
+    if(model_idx >= 0) {
+      glm::mat4 &world_mat = obj_world_mat_list[model_idx];
+      const string &mesh_name = obj_mesh_name_list[model_idx];
 
-    //평면하나만 일단 렌더링해서 테스트하자
-    render3d.SetLight(pimpl().light);
-    render3d.ApplyMatrix(obj_world_mat);
+      //모델 적절히 그리기
+      unsigned int flag = (unsigned int)pimpl().uber_flag;
+      ShaderProgram &shader = device().uber_shader(flag);
+      render3d.SetShader(shader);
+      ShaderBindPolicy &bind_policy = shader.bind_policy;
 
-    //텍스쳐 적당히 설정
-    Texture *tex = device().texture_mgr().Get_ptr(string(kTextureKey));
-    if(tex != NULL) {
-      render3d.SetTexture(*tex);
-    }
+      const ShaderVariable &const_color_var = bind_policy.var(ShaderBindPolicy::kConstColor);
+      if(const_color_var.location != -1) {
+        Vec4f &const_color = pimpl().const_color;
+        glUniform4fv(const_color_var.location, 1, const_color.data);
+      }
 
-    //재질데이터 적절히 설정하기
-    render3d.SetMaterial(pimpl().mtl);
-    render3d.ApplyMaterialLight();
+      //평면하나만 일단 렌더링해서 테스트하자
+      render3d.SetLight(pimpl().light);
+      render3d.ApplyMatrix(world_mat);
+
+      //텍스쳐 적당히 설정
+      Texture *tex = device().texture_mgr().Get_ptr(string(kTextureKey));
+      if(tex != NULL) {
+        render3d.SetTexture(*tex);
+      }
+
+      //재질데이터 적절히 설정하기
+      render3d.SetMaterial(pimpl().mtl);
+      render3d.ApplyMaterialLight();
       
-    MeshBufferObject *mesh = device().mesh_mgr().Get(obj_mesh_name);
-    //SR_ASSERT(mesh != NULL);
-    render3d.Draw(*mesh);
+      MeshBufferObject *mesh = device().mesh_mgr().Get(mesh_name);
+      //SR_ASSERT(mesh != NULL);
+      render3d.Draw(*mesh);
+    }
   }
   GLHelper::CheckError("Render End");
 }
@@ -487,6 +559,12 @@ void RunaView::UpdateFrame(float dt) {
 
   //apply
   pimpl().light_pos_deg = prev_light_deg;
+
+  //카메라 적절히 설정
+}
+
+void RunaView::SetCamRotateDeg(float deg) {
+  pimpl().camDeg = deg;
 }
 void RunaView::Cleanup() {
 }
