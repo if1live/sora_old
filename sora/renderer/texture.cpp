@@ -210,15 +210,18 @@ bool Texture::Init() {
 
   switch(file_fmt_) {
   case kFileUnknown:
-    result = Init_ImageBySOIL();
+    glGenTextures(1, &handle_);
+    result = Load_ImageBySOIL(handle_);
     break;
 
   case kFilePNG:
-    result = Init_PNG();
+    glGenTextures(1, &handle_);
+    result = Load_PNG(handle_);
     break;
 
   case kFileJPEG:
-    result = Init_JPEG();
+    glGenTextures(1, &handle_);
+    result = Load_JPEG(handle_);
     break;
 
   default:
@@ -232,7 +235,42 @@ bool Texture::Init() {
   return result;
 }
 
-bool Texture::Init_ImageBySOIL() {
+bool Texture::Reload(Texture &data) {
+  if(Loaded() == false) {
+    SetData(data.file_fmt_, data.start_, data.end_);
+    bool result = Init();
+    return result;
+  }
+  //else...reload
+  SetData(data.file_fmt_, data.start_, data.end_);
+  bool result = false;
+
+  switch(file_fmt_) {
+  case kFileUnknown:
+    result = Load_ImageBySOIL(handle_);
+    break;
+
+  case kFilePNG:
+    result = Load_PNG(handle_);
+    break;
+
+  case kFileJPEG:
+    result = Load_JPEG(handle_);
+    break;
+
+  default:
+    result = false;
+    break;
+  }
+  //clear data
+  file_fmt_ = kFileUnknown;
+  start_ = NULL;
+  end_ = NULL;
+  return result;
+
+}
+
+bool Texture::Load_ImageBySOIL(GLuint tex_id) {
   //귀찮은 관계로 soil에 떠넘기자
   unsigned char *data = start_;
   int size = end_ - start_;
@@ -262,18 +300,18 @@ bool Texture::Init_ImageBySOIL() {
       SR_ASSERT(!"do not reach");
       break;
     }
-    bool result = LoadImage(img, width, height, format);
+    bool result = LoadTexture(tex_id, img, width, height, format);
     SOIL_free_image_data(img);
     return result;
   } else {
     return false;
   }
 }
-bool Texture::Init_JPEG() {
-  return Init_ImageBySOIL();
+bool Texture::Load_JPEG(GLuint tex_id) {
+  return Load_ImageBySOIL(tex_id);
 }
 
-bool Texture::LoadImage(unsigned char *image, int width, int height, GLenum format) {
+bool Texture::LoadTexture(GLuint tex_id, unsigned char *image, int width, int height, GLenum format) {
   //알파 있는거/없는거 분류
   if(format == GL_RGBA || format == GL_LUMINANCE_ALPHA) {
     has_alpha_ = true;
@@ -301,9 +339,7 @@ bool Texture::LoadImage(unsigned char *image, int width, int height, GLenum form
   src_width_ = width;
   src_height_ = height;
 
-  //create opengl texture
-  glGenTextures(1, &handle_);
-  glBindTexture(GL_TEXTURE_2D, handle_);
+  glBindTexture(GL_TEXTURE_2D, tex_id);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
   if((policy_ & kPolicyForcePOT) == kPolicyForcePOT) {
@@ -360,7 +396,7 @@ bool Texture::LoadImage(unsigned char *image, int width, int height, GLenum form
   return true;
 }
 
-bool Texture::Init_PNG() {
+bool Texture::Load_PNG(GLuint tex_id) {
   int size = end_ - start_;
   PNGLoader loader;
   bool decode_result = loader.Decode(start_, size);
@@ -389,7 +425,7 @@ bool Texture::Init_PNG() {
   int width = loader.width();
   int height = loader.height();
   unsigned char *data = (unsigned char*)loader.data();
-  bool result = LoadImage(data, width, height, format);
+  bool result = LoadTexture(tex_id, data, width, height, format);
   return result;
 }
 

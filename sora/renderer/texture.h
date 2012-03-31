@@ -55,6 +55,8 @@ public:
   bool Init(uint tex_id, int width, int height);
   bool Loaded() const;
 
+  bool Reload(Texture &data);
+
   uint handle() const { return handle_; }
   const std::string &name() const { return name_; }
   bool has_alpha() const { return has_alpha_; }
@@ -79,12 +81,12 @@ private:
   uint policy_;
 
 private:
-  bool Init_PNG();  //파일 포맷별 로딩을 다르게 할수잇도록. 함수깊이를 얕게 하기 위해서
-  bool Init_JPEG();
-  bool Init_ImageBySOIL();
+  bool Load_PNG(GLuint tex_id);  //파일 포맷별 로딩을 다르게 할수잇도록. 함수깊이를 얕게 하기 위해서
+  bool Load_JPEG(GLuint tex_id);
+  bool Load_ImageBySOIL(GLuint tex_id);
 
   //압축이 풀린 데이터로부터 적절히 텍스쳐 생성하기
-  bool LoadImage(unsigned char *image, int width, int height, GLenum channel);
+  bool LoadTexture(GLuint tex_id, unsigned char *image, int width, int height, GLenum format);
 };
 }
 

@@ -507,26 +507,6 @@ void RunaView::UpdateFrame(float dt) {
     const string &ext = pimpl().simple_tex_ext;
     const string &tex_path = pimpl().simple_tex_path;
 
-    //데이터 바꿔치기식의 접근은 가능한가?
-    Texture *tex = device().texture_mgr().Get_ptr(string("mtl_specular"));
-    GLuint tex_id = tex->handle();
-
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    glBindTexture(GL_TEXTURE_2D, tex_id);
-
-    unsigned char data[] = {
-      255, 0, 0,
-      0, 255, 0,
-      0, 0, 255,
-      255, 0, 255
-    };
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    /*
     sora::MemoryFile tex_file(tex_path);
     tex_file.Open();
     Texture tex(tex_path);  //파일명==텍스쳐이름
@@ -538,12 +518,14 @@ void RunaView::UpdateFrame(float dt) {
     } else if(ext == ".jpg") {
       tex.SetData(sora::Texture::kFileJPEG, tex_file.start, tex_file.end);
     }
-    //TODO 기존을 텍스쳐를 적절히 제거하기
 
-    //등록
-    device().texture_mgr().Add(tex);
+    //바꿔치기
+    //데이터 바꿔치기식의 접근은 가능한가?
+    Texture *orig_tex = device().texture_mgr().Get_ptr(string("mtl_specular"));
+    tex.Reload(tex);
+
     tex_file.Close();
-    */
+    
     pimpl().simple_tex_ext = "";
     
   }
