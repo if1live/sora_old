@@ -60,16 +60,17 @@ public:
   bool IsEnabledShaderFlag(ShaderFlag value);
   void SetShaderFlag(bool b, ShaderFlag value);
 
-  void SetAmbientColor(float r, float g, float b);
-  void SetDiffuseColor(float r, float g, float b);
-  void SetSpecularColor(float r, float g, float b);
-  void SetConstColor(float r, float g, float b);
+  void SetAmbientColor(Byte r, Byte g, Byte b);
+  void SetDiffuseColor(Byte r, Byte g, Byte b);
+  void SetSpecularColor(Byte r, Byte g, Byte b);
+  void SetConstColor(Byte r, Byte g, Byte b);
   void SetSpecularShininess(float shininess);
 
-  void GetAmbientColor(float color[3]);
-  void GetDiffuseColor(float color[3]);
-  void GetSpecularColor(float color[3]);
-  void GetConstColor(float color[3]);
+
+  void GetAmbientColor(array<Byte> ^%color);
+  void GetDiffuseColor(array<Byte> ^%color);
+  void GetSpecularColor(array<Byte> ^%color);
+  void GetConstColor(array<Byte> ^%color);
   float GetSpecularShininess();
 
 private:

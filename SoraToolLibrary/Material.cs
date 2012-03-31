@@ -16,6 +16,7 @@ namespace SoraToolLibrary
         public event PropertyChangedEventHandler PropertyChanged;
 #pragma warning restore 67
 
+        
         RunaView glView;
         public Material(RunaView glView)
         {
@@ -33,29 +34,12 @@ namespace SoraToolLibrary
         {
             get
             {
-                float[] colorData = new float[3];
-                Color color = new Color();
-                unsafe
-                {
-                    fixed (float* ptr = colorData)
-                    {
-                        glView.GetConstColor(ptr);
-                        color.R = (byte)(ptr[0] * 255);
-                        color.G = (byte)(ptr[1] * 255);
-                        color.B = (byte)(ptr[2] * 255);
-                        color.A = 255;
-                    }
-
-                }
+                Byte[] colorData = new Byte[3];
+                glView.GetConstColor(ref colorData);
+                Color color = ByteArrayToColor(colorData);
                 return color;
             }
-            set
-            {
-                float r = value.R / 255.0f;
-                float g = value.G / 255.0f;
-                float b = value.B / 255.0f;
-                glView.SetConstColor(r, g, b);
-            }
+            set { glView.SetConstColor(value.R, value.G, value.B); }
         }
 
         [Category("Simple|Texture")]
@@ -99,29 +83,12 @@ namespace SoraToolLibrary
         {
             get
             {
-                float[] colorData = new float[3];
-                Color color = new Color();
-                unsafe
-                {
-                    fixed (float* ptr = colorData)
-                    {
-                        glView.GetAmbientColor(ptr);
-                        color.R = (byte)(ptr[0] * 255);
-                        color.G = (byte)(ptr[1] * 255);
-                        color.B = (byte)(ptr[2] * 255);
-                        color.A = 255;
-                    }
-
-                }
+                Byte[] colorData = new Byte[3];
+                glView.GetAmbientColor(ref colorData);
+                Color color = ByteArrayToColor(colorData);
                 return color;
             }
-            set
-            {
-                float r = value.R / 255.0f;
-                float g = value.G / 255.0f;
-                float b = value.B / 255.0f;
-                glView.SetAmbientColor(r, g, b);
-            }
+            set { glView.SetAmbientColor(value.R, value.G, value.B); }
         }
 
         [Category("Material|Diffuse")]
@@ -135,29 +102,12 @@ namespace SoraToolLibrary
         {
             get
             {
-                float[] colorData = new float[3];
-                Color color = new Color();
-                unsafe
-                {
-                    fixed (float* ptr = colorData)
-                    {
-                        glView.GetDiffuseColor(ptr);
-                        color.R = (byte)(ptr[0] * 255);
-                        color.G = (byte)(ptr[1] * 255);
-                        color.B = (byte)(ptr[2] * 255);
-                        color.A = 255;
-                    }
-
-                }
+                Byte[] colorData = new Byte[3];
+                glView.GetDiffuseColor(ref colorData);
+                Color color = ByteArrayToColor(colorData);
                 return color;
             }
-            set
-            {
-                float r = value.R / 255.0f;
-                float g = value.G / 255.0f;
-                float b = value.B / 255.0f;
-                glView.SetDiffuseColor(r, g, b);
-            }
+            set { glView.SetDiffuseColor(value.R, value.G, value.R); }
         }
         [VisibleBy("UseDiffuse")]
         public bool UseDiffuseMap
@@ -202,42 +152,19 @@ namespace SoraToolLibrary
         {
             get
             {
-                float[] colorData = new float[3];
-                Color color = new Color();
-                unsafe
-                {
-                    fixed (float* ptr = colorData)
-                    {
-                        glView.GetSpecularColor(ptr);
-                        color.R = (byte)(ptr[0] * 255);
-                        color.G = (byte)(ptr[1] * 255);
-                        color.B = (byte)(ptr[2] * 255);
-                        color.A = 255;
-                    }
-
-                }
+                Byte[] colorData = new Byte[3];
+                glView.GetSpecularColor(ref colorData);
+                Color color = ByteArrayToColor(colorData);
                 return color;
             }
-            set
-            {
-                float r = value.R / 255.0f;
-                float g = value.G / 255.0f;
-                float b = value.B / 255.0f;
-                glView.SetSpecularColor(r, g, b);
-            }
+            set { glView.SetSpecularColor(value.R, value.G, value.R); }
         }
         [VisibleBy("UseSpecular")]
         [Slidable(1, 200, 45, 1)]
         public float SpecularShiness
         {
-            get
-            {
-                return glView.GetSpecularShininess();
-            }
-            set
-            {
-                glView.SetSpecularShininess(value);
-            }
+            get { return glView.GetSpecularShininess(); }
+            set { glView.SetSpecularShininess(value); }
         }
         [VisibleBy("UseSpecular")]
         public bool UseSpecularMap
@@ -276,5 +203,15 @@ namespace SoraToolLibrary
 
         [Category("Model|Model")]
         public string ModelName { get; set; }
+
+        private Color ByteArrayToColor(Byte[] arr)
+        {
+            Color color = new Color();
+            color.R = arr[0];
+            color.G = arr[1];
+            color.B = arr[2];
+            color.A = 255;
+            return color;
+        }
     }
 }

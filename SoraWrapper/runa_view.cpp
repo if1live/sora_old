@@ -90,51 +90,53 @@ struct RunaViewPrivate {
 };
 
 
-void RunaView::SetAmbientColor(float r, float g, float b) {
+void RunaView::SetAmbientColor(Byte r, Byte g, Byte b) {
   RunaViewPrivate &impl = pimpl();
-  impl.mtl.ambient[0] = r;
-  impl.mtl.ambient[1] = g;
-  impl.mtl.ambient[2] = b;
+  impl.mtl.ambient[0] = r / 255.0f;
+  impl.mtl.ambient[1] = g / 255.0f;
+  impl.mtl.ambient[2] = b / 255.0f;
 }
-void RunaView::SetDiffuseColor(float r, float g, float b) {
+void RunaView::SetDiffuseColor(Byte r, Byte g, Byte b) {
   RunaViewPrivate &impl = pimpl();
-  impl.mtl.diffuse[0] = r;
-  impl.mtl.diffuse[1] = g;
-  impl.mtl.diffuse[2] = b;
+  impl.mtl.diffuse[0] = r / 255.0f;
+  impl.mtl.diffuse[1] = g / 255.0f;
+  impl.mtl.diffuse[2] = b / 255.0f;
 }
-void RunaView::SetSpecularColor(float r, float g, float b) {
+void RunaView::SetSpecularColor(Byte r, Byte g, Byte b) {
   RunaViewPrivate &impl = pimpl();
-  impl.mtl.specular[0] = r;
-  impl.mtl.specular[1] = g;
-  impl.mtl.specular[2] = b;
+  impl.mtl.specular[0] = r / 255.0f;
+  impl.mtl.specular[1] = g / 255.0f;
+  impl.mtl.specular[2] = b / 255.0f;
 }
-void RunaView::SetConstColor(float r, float g, float b) {
+void RunaView::SetConstColor(Byte r, Byte g, Byte b) {
   RunaViewPrivate &impl = pimpl();
-  impl.const_color = Vec4f(r, g, b, 1.0f);
+  impl.const_color = Vec4f(r / 255.0f, g / 255.0f, b / 255.0f, 1.0f);
 }
-void RunaView::GetConstColor(float color[3]) {
+void RunaView::GetConstColor(array<Byte> ^%color) {
   RunaViewPrivate &impl = pimpl();
-  color[0] = impl.const_color.x;
-  color[1] = impl.const_color.y;
-  color[2] = impl.const_color.z;
+  color[0] = (Byte)(impl.const_color.x * 255);
+  color[1] = (Byte)(impl.const_color.y * 255);
+  color[2] = (Byte)(impl.const_color.z * 255);
 }
 
-void RunaView::GetAmbientColor(float color[3]) {
+void RunaView::GetAmbientColor(array<Byte> ^%color) {
   RunaViewPrivate &impl = pimpl();
   for(int i = 0 ; i < 3 ; i++) {
-    color[i] = impl.mtl.ambient[i];
+    color[i] = (Byte)(impl.mtl.ambient[i] * 255);
+  }
+
+}
+
+void RunaView::GetDiffuseColor(array<Byte> ^%color) {
+  RunaViewPrivate &impl = pimpl();
+  for(int i = 0 ; i < 3 ; i++) {
+    color[i] = (Byte)(impl.mtl.diffuse[i] * 255);
   }
 }
-void RunaView::GetDiffuseColor(float color[3]) {
+void RunaView::GetSpecularColor(array<Byte> ^%color) {
   RunaViewPrivate &impl = pimpl();
   for(int i = 0 ; i < 3 ; i++) {
-    color[i] = impl.mtl.diffuse[i];
-  }
-}
-void RunaView::GetSpecularColor(float color[3]) {
-  RunaViewPrivate &impl = pimpl();
-  for(int i = 0 ; i < 3 ; i++) {
-    color[i] = impl.mtl.specular[i];
+    color[i] = (Byte)(impl.mtl.specular[i] * 255);
   }
 }
 
