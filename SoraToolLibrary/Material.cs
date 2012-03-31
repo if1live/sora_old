@@ -71,10 +71,10 @@ namespace SoraToolLibrary
                 this.TextureImage = bitmap;
                 
                 //get file extension
-                FileInfo info = new FileInfo(texturePath);
+                FileInfo info = new FileInfo(value);
                 string ext = info.Extension;
                 ext = ext.ToLower();
-                glView.SetTexturePath(texturePath, ext);
+                glView.SetTexturePath(value, ext);
             }
         }
 
@@ -115,7 +115,7 @@ namespace SoraToolLibrary
             }
             set { glView.SetDiffuseColor(value.R, value.G, value.R); }
         }
-        [VisibleBy("UseDiffuse")]
+        //[VisibleBy("UseDiffuse")]
         public bool UseDiffuseMap
         {
             get { return glView.IsEnabledShaderFlag(ShaderFlag.kDiffuseMap); }
@@ -142,7 +142,12 @@ namespace SoraToolLibrary
                 Uri uri = new Uri(this.diffuseMapPath);
                 BitmapImage bitmap = new BitmapImage(uri);
                 this.DiffuseMapImage = bitmap;
-                //TODO 
+
+                //get file extension
+                FileInfo info = new FileInfo(value);
+                string ext = info.Extension;
+                ext = ext.ToLower();
+                glView.SetDiffuseMapPath(value, ext);
             }
         }
 
@@ -172,7 +177,7 @@ namespace SoraToolLibrary
             get { return glView.GetSpecularShininess(); }
             set { glView.SetSpecularShininess(value); }
         }
-        [VisibleBy("UseSpecular")]
+        //[VisibleBy("UseSpecular")]
         public bool UseSpecularMap
         {
             get { return glView.IsEnabledShaderFlag(ShaderFlag.kSpecularMap); }
@@ -197,7 +202,12 @@ namespace SoraToolLibrary
                 Uri uri = new Uri(this.specularMapPath);
                 BitmapImage bitmap = new BitmapImage(uri);
                 this.SpecularMapImage = bitmap;
-                //TODO 
+
+                //get file extension
+                FileInfo info = new FileInfo(value);
+                string ext = info.Extension;
+                ext = ext.ToLower();
+                glView.SetSpecularMapPath(value, ext);
             }
         }
 

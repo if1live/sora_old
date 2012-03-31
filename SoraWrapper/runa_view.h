@@ -86,10 +86,14 @@ public:
 
   //texture 설정. 경로와 연결되어 있으니까 좀 귀찮게 처리해야될듯
   void SetTexturePath(System::String ^tex_path, System::String ^ext);
+  void SetDiffuseMapPath(System::String ^tex_path, System::String ^ext);
+  void SetSpecularMapPath(System::String ^tex_path, System::String ^ext);
 
 private:
   RunaViewPrivate &pimpl();
   RunaViewPrivate *pimpl_;
+
+  void ReloadTexture(const std::string &path, const std::string &ext, const char *key);
 };
 }
 

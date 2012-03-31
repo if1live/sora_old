@@ -75,6 +75,9 @@ const int kMaxObject = 10;
 vector<glm::mat4> world_mat_list(kMaxObject);
 vector<string> mesh_name_list(kMaxObject);
 
+const char *kTextureKey = "texture";
+const char *kDiffuseMapKey = "diffuse";
+const char *kSpecularMapKey = "specular";
 
 struct RunaViewPrivate {
   RunaViewPrivate()
@@ -82,8 +85,8 @@ struct RunaViewPrivate {
     light_move(false),
     light_pos_deg(0) {
       const_color = Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
-      mtl.diffuse_map = "mtl_diffuse";
-      mtl.specular_map = "mtl_specular";
+      mtl.diffuse_map = kDiffuseMapKey;
+      mtl.specular_map = kSpecularMapKey;
 
       mtl.illumination_model = 2;
       mtl.diffuse[0] = 0.1f;
@@ -103,16 +106,10 @@ struct RunaViewPrivate {
   bool light_move;
   float light_pos_deg;
 
-  //쓰레드 제약떄문에 확실한 한 쓰레드에서 객체 생성을 보장하기 위해서
-  //큐를 달고 update에서 몰아서 처리하는 방식으로 하기로 했다
+  //나중에 세이브 로드 위해서 남겨놓자
   std::string simple_tex_path;
-  std::string simple_tex_ext;
-
   std::string diffuse_map_path;
-  std::string diffuse_map_ext;
-
   std::string specular_map_path;
-  std::string specular_map_ext;
 };
 
 
@@ -245,12 +242,42 @@ void RunaView::GetLightSpecularColor(array<Byte> ^%color) {
 void RunaView::SetTexturePath(String ^tex_path, String ^ext) {
   //.ext로 확장자는 넘어온다
   String ^png_ext = gcnew String(".png");
-  String ^jpg_ext = gcnew String(".jpg");
-  
+  String ^jpg_ext = gcnew String(".jpg"); 
   string path_str = msclr::interop::marshal_as<std::string>(tex_path);
   string ext_str = msclr::interop::marshal_as<std::string>(ext);
-  pimpl().simple_tex_path = path_str;
-  pimpl().simple_tex_ext = ext_str;
+  ReloadTexture(path_str, ext_str, kTextureKey);
+}
+void RunaView::SetDiffuseMapPath(System::String ^tex_path, System::String ^ext) {
+  String ^png_ext = gcnew String(".png");
+  String ^jpg_ext = gcnew String(".jpg"); 
+  string path_str = msclr::interop::marshal_as<std::string>(tex_path);
+  string ext_str = msclr::interop::marshal_as<std::string>(ext);
+  ReloadTexture(path_str, ext_str, kDiffuseMapKey);
+}
+void RunaView::SetSpecularMapPath(System::String ^tex_path, System::String ^ext) {
+  String ^png_ext = gcnew String(".png");
+  String ^jpg_ext = gcnew String(".jpg"); 
+  string path_str = msclr::interop::marshal_as<std::string>(tex_path);
+  string ext_str = msclr::interop::marshal_as<std::string>(ext);
+  ReloadTexture(path_str, ext_str, kSpecularMapKey);
+}
+
+void RunaView::ReloadTexture(const std::string &path, const std::string &ext, const char *key) {
+  sora::MemoryFile tex_file(path);
+  tex_file.Open();
+  Texture tex(path);
+  if(ext == ".png") {
+    tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);  
+  } else if(ext == ".jpg") {
+    tex.SetData(sora::Texture::kFileJPEG, tex_file.start, tex_file.end);
+  }
+
+  //바꿔치기
+  //데이터 바꿔치기식의 접근은 가능한가?
+  Texture *orig_tex = device().texture_mgr().Get_ptr(string(key));
+  orig_tex->Reload(tex);
+
+  tex_file.Close();
 }
 ///////////////////////////////////////////
 
@@ -272,13 +299,11 @@ void RunaView::SetupGraphics(int w, int h) {
   //LOGI("Extensions : %s", GLHelper::GetExtensions().c_str());
   
   //lodepng
+  //그냥, diffuse specular용으로 사용할것을 미리 만들어놓자
   const char *texture_table[][2] = {
-    //{ "sora", "texture/sora.png" },
-    { "sora2", "texture/sora2.png" },
-    { "mtl_specular", "texture/glazed_brick_S.png" },
-    { "mtl_diffuse", "texture/glazed_brick_D.png" },
-    
-    //{ "mtl_normal", "texture/glazed_brick_N.png" },
+    { kTextureKey, "texture/sora2.png" },
+    { kSpecularMapKey, "texture/glazed_brick_S.png" },
+    { kDiffuseMapKey, "texture/glazed_brick_D.png" },
   };
   int tex_count = sizeof(texture_table) / sizeof(texture_table[0]);
   for(int i = 0 ; i < tex_count ; i++) {
@@ -289,20 +314,9 @@ void RunaView::SetupGraphics(int w, int h) {
     tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
     device().texture_mgr().Add(tex);
   }
-  sora::ObjLoader loader;
-  //load material
+  
   {
-    std::string mtl_path = Filesystem::GetAppPath("material/example.mtl");
-    MemoryFile mtl_file(mtl_path);
-    mtl_file.Open();
-    vector<sora::Material> material_list;
-    ObjLoader loader;
-    loader.LoadMtl(mtl_file.start, mtl_file.end, &material_list);
-    
-    device().material_mgr().Add(material_list);
-  }
-
-  {
+    sora::ObjLoader loader;
     //load model
     std::string path1 = sora::Filesystem::GetAppPath("obj/cube.obj");
     sora::MemoryFile file1(path1);
@@ -461,27 +475,13 @@ void RunaView::DrawFrame() {
     render3d.ApplyMatrix(world_mat);
 
     //텍스쳐 적당히 설정
-    Texture *tex = device().texture_mgr().Get_ptr(pimpl().simple_tex_path);
+    Texture *tex = device().texture_mgr().Get_ptr(string(kTextureKey));
     if(tex != NULL) {
       render3d.SetTexture(*tex);
     }
 
     //재질데이터 적절히 설정하기
     render3d.SetMaterial(pimpl().mtl);
-    /*
-    Material mtl;
-    mtl.diffuse_map = "mtl_diffuse";
-    mtl.specular_map = "mtl_specular";
-    mtl.illumination_model = 2;
-    mtl.diffuse[0] = 0.1f;
-    mtl.diffuse[1] = 0.1f;
-    mtl.diffuse[2] = 0.1f;
-    mtl.ambient[0] = 0.01f;
-    mtl.ambient[1] = 0.01f;
-    mtl.ambient[2] = 0.01f;
-    mtl.shininess = 50;
-    render3d.SetMaterial(mtl);
-    */
     render3d.ApplyMaterialLight();
       
     MeshBufferObject *mesh = device().mesh_mgr().Get(mesh_name_list[obj_idx]);
@@ -501,34 +501,6 @@ void RunaView::InitGLEnv() {
 
 void RunaView::UpdateFrame(float dt) {
   GLHelper::CheckError("Update Begin");
-  //load simple tex
-  //텍스쳐 로딩 여부는 확장자를 이요해서 처리하자
-  if(pimpl().simple_tex_ext.empty() == false) {
-    const string &ext = pimpl().simple_tex_ext;
-    const string &tex_path = pimpl().simple_tex_path;
-
-    sora::MemoryFile tex_file(tex_path);
-    tex_file.Open();
-    Texture tex(tex_path);  //파일명==텍스쳐이름
-
-    //메모리 복사해서 
-
-    if(ext == ".png") {
-      tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);  
-    } else if(ext == ".jpg") {
-      tex.SetData(sora::Texture::kFileJPEG, tex_file.start, tex_file.end);
-    }
-
-    //바꿔치기
-    //데이터 바꿔치기식의 접근은 가능한가?
-    Texture *orig_tex = device().texture_mgr().Get_ptr(string("mtl_specular"));
-    tex.Reload(tex);
-
-    tex_file.Close();
-    
-    pimpl().simple_tex_ext = "";
-    
-  }
 
   float prev_light_deg = pimpl().light_pos_deg;
   if(pimpl().light_move == true) {
