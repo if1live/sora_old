@@ -196,10 +196,44 @@ namespace SoraToolLibrary
         }
 
         [Category("Light|Light")]
-        public Color AmbientLight { get; set; }
-        public Color DiffuseLight { get; set; }
-        public Color SpecularLight { get; set; }
-        public bool MoveLight { get; set; }
+        public Color AmbientLight
+        {
+            get
+            {
+                Byte[] colorData = new Byte[3];
+                glView.GetLightAmbientColor(ref colorData);
+                Color color = ByteArrayToColor(colorData);
+                return color;
+            }
+            set { glView.SetLightAmbientColor(value.R, value.G, value.R); }
+        }
+        public Color DiffuseLight
+        {
+            get
+            {
+                Byte[] colorData = new Byte[3];
+                glView.GetLightDiffuseColor(ref colorData);
+                Color color = ByteArrayToColor(colorData);
+                return color;
+            }
+            set { glView.SetLightDiffuseColor(value.R, value.G, value.R); }
+        }
+        public Color SpecularLight
+        {
+            get
+            {
+                Byte[] colorData = new Byte[3];
+                glView.GetLightSpecularColor(ref colorData);
+                Color color = ByteArrayToColor(colorData);
+                return color;
+            }
+            set { glView.SetLightSpecularColor(value.R, value.G, value.R); }
+        }
+        public bool MoveLight
+        {
+            get { return glView.IsLightMove(); }
+            set { glView.SetLightMove(value); }
+        }
 
         [Category("Model|Model")]
         public string ModelName { get; set; }

@@ -18,11 +18,9 @@ namespace sora
         private bool initialized = false;
         private Timer timer;
 
-        #region Fields
         private IntPtr hDC = IntPtr.Zero;
         private IntPtr hRC = IntPtr.Zero;
         private readonly HiResTimer hiResTimer = new HiResTimer();
-        #endregion
 
         public OpenGLView(GLView gl_view)
         {
@@ -188,8 +186,10 @@ namespace sora
             //view.TestDraw(this.Size.Width, this.Size.Height);
         }
 
+        
         protected virtual void Update(float elapsed)
         {
+            view.UpdateFrame(elapsed);
         }
     }
 }

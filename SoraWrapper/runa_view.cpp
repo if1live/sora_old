@@ -56,6 +56,8 @@
 #include "renderer/mesh_manager.h"
 #include "renderer/light.h"
 
+#include "core/math_helper.h"
+
 using namespace std;
 using namespace glm;
 
@@ -69,7 +71,9 @@ vector<string> mesh_name_list(kMaxObject);
 
 struct RunaViewPrivate {
   RunaViewPrivate()
-    : uber_flag(ShaderFlag::kNone) {
+    : uber_flag(ShaderFlag::kNone),
+    light_move(false),
+    light_pos_deg(0) {
       const_color = Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
       mtl.diffuse_map = "mtl_diffuse";
       mtl.specular_map = "mtl_specular";
@@ -87,6 +91,8 @@ struct RunaViewPrivate {
   Light light;
   Vec4f const_color;
   ShaderFlag uber_flag;
+  bool light_move;
+  float light_pos_deg;
 };
 
 
@@ -170,14 +176,53 @@ bool RunaView::IsEnabledShaderFlag(ShaderFlag value) {
   }
 }
 
-void RunaView::SetShaderFlag(bool b, ShaderFlag value)
-{
+void RunaView::SetShaderFlag(bool b, ShaderFlag value) {
   if(b) {
     EnableShaderFlag(value);
   } else {
     DisableShaderFlag(value);
   }
 }
+
+void RunaView::SetLightMove(bool b) {
+  pimpl().light_move = b;
+}
+void RunaView::SetLightAmbientColor(Byte r, Byte g, Byte b) {
+  pimpl().light.ambient[0] = r / 255.0f;
+  pimpl().light.ambient[1] = g / 255.0f;
+  pimpl().light.ambient[2] = b / 255.0f;
+}
+void RunaView::SetLightDiffuseColor(Byte r, Byte g, Byte b) {
+  pimpl().light.diffuse[0] = r / 255.0f;
+  pimpl().light.diffuse[1] = g / 255.0f;
+  pimpl().light.diffuse[2] = b / 255.0f;
+}
+void RunaView::SetLightSpecularColor(Byte r, Byte g, Byte b)  {
+  pimpl().light.specular[0] = r / 255.0f;
+  pimpl().light.specular[1] = g / 255.0f;
+  pimpl().light.specular[2] = b / 255.0f;
+}
+  
+bool RunaView::IsLightMove() {
+  return pimpl().light_move;
+}
+void RunaView::GetLightAmbientColor(array<Byte> ^%color) {
+  for(int i = 0 ; i < 3 ; i++) {
+    color[i] = (Byte)(pimpl().light.ambient[0] * 255);
+  }
+}
+void RunaView::GetLightDiffuseColor(array<Byte> ^%color) {
+  for(int i = 0 ; i < 3 ; i++) {
+    color[i] = (Byte)(pimpl().light.diffuse[0] * 255);
+  }
+}
+void RunaView::GetLightSpecularColor(array<Byte> ^%color) {
+  for(int i = 0 ; i < 3 ; i++) {
+    color[i] = (Byte)(pimpl().light.specular[0] * 255);
+  }
+}
+
+///////////////////////////////////////////
 
 RunaView::RunaView() : pimpl_(NULL) {
 }
@@ -315,12 +360,6 @@ void RunaView::SetupGraphics(int w, int h) {
     //MeshManager::GetInstance().AddWire(surface, "knot");
     mesh_name_list[obj_model_idx] = "knot";
   }
-
-  {
-    //빛에 대한 기본 설정
-    pimpl().light.pos = Vec3f(10, 10, 100);
-    //light.ambient = Vec4f(3.0f, 0, 0, 1.0f);
-  }
 }
 
 float aptitude = 10; //위도. -90~90. 세로 위치 표현
@@ -423,6 +462,19 @@ void RunaView::InitGLEnv() {
   fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 }
 void RunaView::UpdateFrame(float dt) {
+  float prev_light_deg = pimpl().light_pos_deg;
+  if(pimpl().light_move == true) {
+    //적절한 속도로 빛 움직이기
+    prev_light_deg += 100 * dt;
+  }
+  //빛 위치 적절히 재설정
+  float light_pos_radius = 100;
+  float light_pos_x = sin(DegToRad(prev_light_deg)) * light_pos_radius;
+  float light_pos_z = cos(DegToRad(prev_light_deg)) * light_pos_radius;
+  pimpl().light.pos = Vec3f(light_pos_x, 10, light_pos_z);
+
+  //apply
+  pimpl().light_pos_deg = prev_light_deg;
 }
 void RunaView::Cleanup() {
 }

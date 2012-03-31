@@ -73,6 +73,17 @@ public:
   void GetConstColor(array<Byte> ^%color);
   float GetSpecularShininess();
 
+  //light 속성 관련
+  void SetLightMove(bool b);
+  void SetLightAmbientColor(Byte r, Byte g, Byte b);
+  void SetLightDiffuseColor(Byte r, Byte g, Byte b);
+  void SetLightSpecularColor(Byte r, Byte g, Byte b);
+  
+  bool IsLightMove();
+  void GetLightAmbientColor(array<Byte> ^%color);
+  void GetLightDiffuseColor(array<Byte> ^%color);
+  void GetLightSpecularColor(array<Byte> ^%color);
+
 private:
   RunaViewPrivate &pimpl();
   RunaViewPrivate *pimpl_;
