@@ -29,6 +29,8 @@
 
 #include "core/math_helper.h"
 
+#include "soil/SOIL.h"
+
 namespace sora {;
 
 //format별 image loader
@@ -124,7 +126,8 @@ tex_height_(0),
 src_width_(0),
 src_height_(0),
 policy_(policy),
-name_(name) {
+name_(name),
+has_alpha_(false) {
 }
 
 Texture::Texture(const std::string &name, uint policy)
@@ -137,7 +140,8 @@ tex_height_(0),
 src_width_(0),
 src_height_(0),
 policy_(policy),
-name_(name) {
+name_(name),
+has_alpha_(false) {
 }
 
 Texture::~Texture() {
@@ -206,11 +210,15 @@ bool Texture::Init() {
 
   switch(file_fmt_) {
   case kFileUnknown:
-    result = false;
+    result = Init_ImageBySOIL();
     break;
 
   case kFilePNG:
     result = Init_PNG();
+    break;
+
+  case kFileJPEG:
+    result = Init_JPEG();
     break;
 
   default:
@@ -224,56 +232,100 @@ bool Texture::Init() {
   return result;
 }
 
-bool Texture::Init_PNG() {
+bool Texture::Init_ImageBySOIL() {
+  //귀찮은 관계로 soil에 떠넘기자
+  unsigned char *data = start_;
   int size = end_ - start_;
-  PNGLoader loader;
-  bool decode_result = loader.Decode(start_, size);
-  if(decode_result == false) {
+
+  //압축된거같은 데이터에서 쌩 데이터로 떠내기
+  int width, height, channels;
+  unsigned char *img = SOIL_load_image_from_memory(
+    data, size, &width, &height, &channels, SOIL_LOAD_AUTO
+  );
+  if(img != NULL) {
+    //텍스쳐로 생성
+    GLenum format = 0;
+    switch(channels) {
+    case SOIL_LOAD_L:
+      format = GL_LUMINANCE;
+      break;
+    case SOIL_LOAD_LA:
+      format = GL_LUMINANCE_ALPHA;
+      break;
+    case SOIL_LOAD_RGB:
+      format = GL_RGB;
+      break;
+    case SOIL_LOAD_RGBA:
+      format = GL_RGBA;
+      break;
+    default:
+      SR_ASSERT(!"do not reach");
+      break;
+    }
+    bool result = LoadImage(img, width, height, format);
+    SOIL_free_image_data(img);
+    return result;
+  } else {
     return false;
   }
+}
+bool Texture::Init_JPEG() {
+  return Init_ImageBySOIL();
+}
+
+bool Texture::LoadImage(unsigned char *image, int width, int height, GLenum format) {
+  //알파 있는거/없는거 분류
+  if(format == GL_RGBA || format == GL_LUMINANCE_ALPHA) {
+    has_alpha_ = true;
+  } else {
+    has_alpha_ = false;
+  }
+
+  int color_channel_table[][2] = {
+    { GL_LUMINANCE, 1 },
+    { GL_LUMINANCE_ALPHA, 2 },
+    { GL_RGB, 3 },
+    { GL_RGBA, 4 },
+  };
+  int color_channel = 0;
+  for(int i = 0 ; i < 4 ; ++i) {
+    if(format == color_channel_table[i][0]) {
+      color_channel = color_channel_table[i][1];
+      break;
+    }
+  }
+  SR_ASSERT(color_channel > 0);
+
+
+  GLenum elem_type = GL_UNSIGNED_BYTE;
+  src_width_ = width;
+  src_height_ = height;
+
   //create opengl texture
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   glGenTextures(1, &handle_);
   glBindTexture(GL_TEXTURE_2D, handle_);
 
-  GLenum format = GL_RGBA;
-  if(loader.color_channels() == 4) {
-    format = GL_RGBA;
-  } else if(loader.color_channels() == 3) {
-    format = GL_RGB;
-  } else {
-    SR_ASSERT(!"unknown color channel");
-  }
-
-  GLenum elem_type = GL_UNSIGNED_BYTE;
-  if(loader.bit_depth() == 8) {
-    elem_type = GL_UNSIGNED_BYTE;
-  } else {
-    SR_ASSERT(!"unknowkn bit depth");
-  }
-
-  src_width_ = loader.width();
-  src_height_ = loader.height();
   if((policy_ & kPolicyForcePOT) == kPolicyForcePOT) {
     if(IsPower(2, src_width_) && IsPower(2, src_height_)) {
-      tex_width_ = loader.width();
-      tex_height_ = loader.height();
-      glTexImage2D(GL_TEXTURE_2D, 0, format, tex_width_, tex_height_, 0, format, elem_type, loader.data());
+      tex_width_ = width;
+      tex_height_ = height;
+      glTexImage2D(GL_TEXTURE_2D, 0, format, tex_width_, tex_height_, 0, format, elem_type, image);
 
     } else {
       //2의 승수가 아니면 가상 이미지로 적절히 복사
       tex_width_ = CeilPower(2, src_width_);
       tex_height_ = CeilPower(2, src_height_);
 
-      uchar *new_data = (uchar*)SR_MALLOC(sizeof(uchar) * tex_width_ * tex_height_ * loader.color_channels());
-      memset(new_data, 128, sizeof(uchar) * tex_width_ * tex_height_ * loader.color_channels());
+      uchar *new_data = (uchar*)SR_MALLOC(sizeof(uchar) * tex_width_ * tex_height_ * color_channel);
+      memset(new_data, 128, sizeof(uchar) * tex_width_ * tex_height_ * color_channel);
       for(int y = 0 ; y < src_height_ ; y++) {
-        int new_scanline_size = tex_width_ * loader.color_channels();
-        int old_scanline_size = src_width_ * loader.color_channels();
+        int new_scanline_size = tex_width_ * color_channel;
+        int old_scanline_size = src_width_ * color_channel;
         int new_data_idx = y * new_scanline_size;
         int old_data_idx = y * old_scanline_size;
         uchar *new_scanline = new_data + new_data_idx;
-        uchar *old_scanline = (uchar*)loader.data() + old_data_idx;
+        uchar *old_scanline = (uchar*)image + old_data_idx;
         memcpy(new_scanline, old_scanline, old_scanline_size);
       }
 
@@ -283,9 +335,9 @@ bool Texture::Init_PNG() {
 
   } else {
     //npot 사용 가능
-    tex_width_ = loader.width();
-    tex_height_ = loader.height();
-    glTexImage2D(GL_TEXTURE_2D, 0, format, tex_width_, tex_height_, 0, format, elem_type, loader.data());
+    tex_width_ = width;
+    tex_height_ = height;
+    glTexImage2D(GL_TEXTURE_2D, 0, format, tex_width_, tex_height_, 0, format, elem_type, image);
   }
   
   if(IsPower(2, tex_width_) == false || IsPower(2, tex_height_) == false) {
@@ -309,9 +361,40 @@ bool Texture::Init_PNG() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   }
-  
-
   return true;
+}
+
+bool Texture::Init_PNG() {
+  int size = end_ - start_;
+  PNGLoader loader;
+  bool decode_result = loader.Decode(start_, size);
+  if(decode_result == false) {
+    return false;
+  }
+  
+  GLenum format = GL_RGBA;
+  if(loader.color_channels() == 4) {
+    format = GL_RGBA;
+  } else if(loader.color_channels() == 3) {
+    format = GL_RGB;
+  } else {
+    SR_ASSERT(!"unknown color channel");
+  }
+
+  /*
+  GLenum elem_type = GL_UNSIGNED_BYTE;
+  if(loader.bit_depth() == 8) {
+    elem_type = GL_UNSIGNED_BYTE;
+  } else {
+    SR_ASSERT(!"unknowkn bit depth");
+  }
+  */
+
+  int width = loader.width();
+  int height = loader.height();
+  unsigned char *data = (unsigned char*)loader.data();
+  bool result = LoadImage(data, width, height, format);
+  return result;
 }
 
 }

@@ -111,6 +111,15 @@ bool setupGraphics(Device *device, int w, int h) {
     tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
     device->texture_mgr().Add(tex);
   }
+  {
+    //load jpeg
+    std::string tex_path = sora::Filesystem::GetAppPath("texture/Jellyfish.jpg");
+    sora::MemoryFile tex_file(tex_path);
+    tex_file.Open();
+    Texture tex("jellyfish");
+    tex.SetData(sora::Texture::kFileJPEG, tex_file.start, tex_file.end);
+    device->texture_mgr().Add(tex);
+  }
 
   sora::ObjLoader loader;
   //load material
@@ -263,12 +272,12 @@ void renderFrame(Device *device) {
 
     unsigned int flag = 0;
     //flag |= UberShader::kConstColor;
-    //flag |= UberShader::kTexture;
-    flag |= UberShader::kAmbientColor;
-    flag |= UberShader::kDiffuseColor;
-    flag |= UberShader::kDiffuseMap;
-    flag |= UberShader::kSpecularColor;
-    flag |= UberShader::kSpecularMap;
+    flag |= UberShader::kTexture;
+    //flag |= UberShader::kAmbientColor;
+    //flag |= UberShader::kDiffuseColor;
+    //flag |= UberShader::kDiffuseMap;
+    //flag |= UberShader::kSpecularColor;
+    //flag |= UberShader::kSpecularMap;
     ShaderProgram &shader = device->uber_shader(flag);
     render3d.SetShader(shader);
 
@@ -287,8 +296,10 @@ void renderFrame(Device *device) {
     const mat4 &world_mat = world_mat_list[obj_idx];
     render3d.ApplyMatrix(world_mat);
 
+    Texture *tex = device->texture_mgr().Get_ptr(string("jellyfish"));
+    render3d.SetTexture(*tex);
+
     //재질데이터 적절히 설정하기
-    
     Material mtl;
     mtl.diffuse_map = "mtl_diffuse";
     mtl.specular_map = "mtl_specular";

@@ -29,6 +29,9 @@
     <Filter Include="event">
       <UniqueIdentifier>{5b172744-a4e4-4aaa-96b5-0607e780fa7f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="sdk\soil">
+      <UniqueIdentifier>{676724de-b9dd-476e-b498-ac1125d85eab}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora_stdafx.cpp">
@@ -172,6 +175,18 @@
     </ClCompile>
     <ClCompile Include="renderer\render_state.cpp">
       <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="soil\image_DXT.cpp">
+      <Filter>sdk\soil</Filter>
+    </ClCompile>
+    <ClCompile Include="soil\image_helper.cpp">
+      <Filter>sdk\soil</Filter>
+    </ClCompile>
+    <ClCompile Include="soil\SOIL.cpp">
+      <Filter>sdk\soil</Filter>
+    </ClCompile>
+    <ClCompile Include="soil\stb_image_aug.cpp">
+      <Filter>sdk\soil</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -373,6 +388,24 @@
     </ClInclude>
     <ClInclude Include="renderer\render_state.h">
       <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="soil\image_helper.h">
+      <Filter>sdk\soil</Filter>
+    </ClInclude>
+    <ClInclude Include="soil\SOIL.h">
+      <Filter>sdk\soil</Filter>
+    </ClInclude>
+    <ClInclude Include="soil\stb_image_aug.h">
+      <Filter>sdk\soil</Filter>
+    </ClInclude>
+    <ClInclude Include="soil\stbi_DDS_aug.h">
+      <Filter>sdk\soil</Filter>
+    </ClInclude>
+    <ClInclude Include="soil\stbi_DDS_aug_c.h">
+      <Filter>sdk\soil</Filter>
+    </ClInclude>
+    <ClInclude Include="soil\image_DXT.h">
+      <Filter>sdk\soil</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

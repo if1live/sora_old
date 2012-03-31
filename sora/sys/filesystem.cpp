@@ -31,8 +31,14 @@
 #endif
 
 #if SR_WIN
+
+#include <Windows.h>
+#include <tchar.h>
+#include <direct.h>
+
 #define tell _tell
 #define lseek _lseek
+
 #endif
 
 namespace sora {;

@@ -53,11 +53,11 @@
 #include <stack>
 #include <queue>
 
-#if SR_WIN
-#include <Windows.h>
-#include <tchar.h>
-#include <direct.h>
-#endif
+//#if SR_WIN
+//#include <Windows.h>
+//#include <tchar.h>
+//#include <direct.h>
+//#endif
 
 #include "core/shared_ptr_inc.h"
 #include "core/unordered_map_inc.h"

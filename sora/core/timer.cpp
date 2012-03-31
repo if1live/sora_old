@@ -27,9 +27,9 @@
 
 #if SR_WIN
 #pragma comment(lib, "winmm.lib")
-#endif
+#include <Windows.h>
+#include <tchar.h>
 
-#if SR_WIN
 //http://alones.kr/tag/gettimeofday
 // epoch time으로 변환할 상수
 #if defined(_MSC_VER) || defined(_MSC_EXTENSIONS)

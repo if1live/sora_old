@@ -55,6 +55,7 @@
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>
       <PreprocessorDefinitions>SR_NDEBUG=0;SR_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4819;4099;4251;4996;</DisableSpecificWarnings>
+      <AdditionalIncludeDirectories>..\sdk\libjpeg;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -118,6 +119,10 @@
     <ClCompile Include="renderer\texture.cpp" />
     <ClCompile Include="renderer\texture_manager.cpp" />
     <ClCompile Include="renderer\uber_shader.cpp" />
+    <ClCompile Include="soil\image_DXT.cpp" />
+    <ClCompile Include="soil\image_helper.cpp" />
+    <ClCompile Include="soil\SOIL.cpp" />
+    <ClCompile Include="soil\stb_image_aug.cpp" />
     <ClCompile Include="sora_main.cpp" />
     <ClCompile Include="sora_stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -190,6 +195,12 @@
     <ClInclude Include="renderer\texture_manager.h" />
     <ClInclude Include="renderer\uber_shader.h" />
     <ClInclude Include="renderer\vertex.h" />
+    <ClInclude Include="soil\image_DXT.h" />
+    <ClInclude Include="soil\image_helper.h" />
+    <ClInclude Include="soil\SOIL.h" />
+    <ClInclude Include="soil\stbi_DDS_aug.h" />
+    <ClInclude Include="soil\stbi_DDS_aug_c.h" />
+    <ClInclude Include="soil\stb_image_aug.h" />
     <ClInclude Include="sora_main.h" />
     <ClInclude Include="sora_stdafx.h" />
     <ClInclude Include="sys\device.h" />

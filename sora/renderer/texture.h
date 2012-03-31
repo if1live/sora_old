@@ -34,8 +34,9 @@ typedef std::tr1::shared_ptr<Texture> TexturePtr;
 class SR_DLL Texture {
 public:
   enum {
-    kFileUnknown = -1,
+    kFileUnknown = -1,  //soil로 일단 시도해보자
     kFilePNG,
+    kFileJPEG,
   };
   enum {
     kPolicyForcePOT = 0x01, //2의 승수로 강제 보정할것인가
@@ -55,6 +56,7 @@ public:
 
   uint handle() const { return handle_; }
   const std::string &name() const { return name_; }
+  bool has_alpha() const { return has_alpha_; }
 
 private:
   uint handle_;
@@ -71,11 +73,17 @@ private:
   int tex_height_;
   int src_width_;
   int src_height_;
+  bool has_alpha_;
 
   uint policy_;
 
 private:
   bool Init_PNG();  //파일 포맷별 로딩을 다르게 할수잇도록. 함수깊이를 얕게 하기 위해서
+  bool Init_JPEG();
+  bool Init_ImageBySOIL();
+
+  //압축이 풀린 데이터로부터 적절히 텍스쳐 생성하기
+  bool LoadImage(unsigned char *image, int width, int height, GLenum channel);
 };
 }
 
