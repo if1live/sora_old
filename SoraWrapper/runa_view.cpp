@@ -88,8 +88,7 @@ struct SimpleUberShaderLoadPolicy {
 
 struct RunaViewPrivate {
   RunaViewPrivate()
-    : uber_flag(ShaderFlag::kNone),
-    light_move(false),
+    : light_move(false),
     light_pos_deg(0),
     camDeg(0) {
       mtl.ambient_map = kAmbientMapKey;
@@ -98,13 +97,11 @@ struct RunaViewPrivate {
 
       //uber flag를 적절히 줘야 정상적인 쉐이더 겟지만 
       //이거는 에디터같은 느낌으로 만들엇기 떄문에 무시하고 쓸수 있도록해놨다
-
-      mtl.diffuse[0] = 0.1f;
-      mtl.diffuse[1] = 0.1f;
-      mtl.diffuse[2] = 0.1f;
-      mtl.ambient[0] = 0.01f;
-      mtl.ambient[1] = 0.01f;
-      mtl.ambient[2] = 0.01f;
+      for(int i = 0 ; i < 3 ; i++) {
+        mtl.ambient[i] = 0.2f;
+        mtl.diffuse[i] = 0.8f;
+        mtl.specular[i] = 1.0f;
+      }
       mtl.shininess = 50;
 
       model_name = "sphere";
@@ -113,7 +110,6 @@ struct RunaViewPrivate {
   }
   Material mtl;
   Light light;
-  ShaderFlag uber_flag;
   bool light_move;
   float light_pos_deg;
 
@@ -172,18 +168,18 @@ void RunaView::SetSpecularShininess(float shininess) {
   pimpl().mtl.shininess = shininess;
 }
 
-ShaderFlag RunaView::GetShaderFlag() {
-  return pimpl().uber_flag;
+ShaderFlag RunaView::GetShaderFlag() {  
+  return (ShaderFlag)pimpl().mtl.uber_flag;
 }
 void RunaView::EnableShaderFlag(ShaderFlag value) {
   ShaderFlag curr_flag = GetShaderFlag();
   ShaderFlag flag = curr_flag | value;
-  pimpl().uber_flag = flag;
+  pimpl().mtl.uber_flag = (unsigned int)flag;
 }
 void RunaView::DisableShaderFlag(ShaderFlag value) {
   ShaderFlag curr_flag = GetShaderFlag();
   ShaderFlag flag = curr_flag & (~value);
-  pimpl().uber_flag = flag;
+  pimpl().mtl.uber_flag = (unsigned int)flag;
 }
 bool RunaView::IsEnabledShaderFlag(ShaderFlag value) {
   ShaderFlag curr_flag = GetShaderFlag();
@@ -505,7 +501,7 @@ void RunaView::DrawFrame() {
       const string &mesh_name = obj_mesh_name_list[model_idx];
 
       //모델 적절히 그리기
-      unsigned int flag = (unsigned int)pimpl().uber_flag;
+      unsigned int flag = (unsigned int)pimpl().mtl.uber_flag;
       ShaderProgram &shader = device().uber_shader(flag);
       render3d.SetShader(shader);
       ShaderBindPolicy &bind_policy = shader.bind_policy;
