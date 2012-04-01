@@ -271,24 +271,16 @@ void renderFrame(Device *device) {
     render3d.set_camera(cam);
 
     unsigned int flag = 0;
-    //flag |= UberShader::kConstColor;
-    flag |= UberShader::kTexture;
     //flag |= UberShader::kAmbientColor;
-    //flag |= UberShader::kDiffuseColor;
-    //flag |= UberShader::kDiffuseMap;
-    //flag |= UberShader::kSpecularColor;
-    //flag |= UberShader::kSpecularMap;
+    //flag |= UberShader::kAmbientMap;
+    flag |= UberShader::kDiffuseColor;
+    flag |= UberShader::kDiffuseMap;
+    flag |= UberShader::kSpecularColor;
+    flag |= UberShader::kSpecularMap;
     ShaderProgram &shader = device->uber_shader(flag);
     render3d.SetShader(shader);
 
     ShaderBindPolicy &bind_policy = shader.bind_policy;
-
-    const ShaderVariable &const_color_var = bind_policy.var(ShaderBindPolicy::kConstColor);
-    if(const_color_var.location != -1) {
-      //Vec4f const_color(1.0f, 0.5f, 0.8f, 1.0f);
-      Vec4f const_color(1.0f, 1.0f, 1.0f, 1.0f);
-      glUniform4fv(const_color_var.location, 1, const_color.data);
-    }
 
     //평면하나만 일단 렌더링해서 테스트하자
     render3d.SetLight(light);
@@ -296,25 +288,19 @@ void renderFrame(Device *device) {
     const mat4 &world_mat = world_mat_list[obj_idx];
     render3d.ApplyMatrix(world_mat);
 
-    Texture *tex = device->texture_mgr().Get_ptr(string("jellyfish"));
-    render3d.SetTexture(*tex);
+    //Texture *tex = device->texture_mgr().Get_ptr(string("sora2"));
+    //render3d.SetTexture(*tex);
 
     //재질데이터 적절히 설정하기
     Material mtl;
+    mtl.ambient_map = "sora2";
     mtl.diffuse_map = "mtl_diffuse";
     mtl.specular_map = "mtl_specular";
-    mtl.diffuse[0] = 0.1f;
-    mtl.diffuse[1] = 0.1f;
-    mtl.diffuse[2] = 0.1f;
-    mtl.ambient[0] = 0.01f;
-    mtl.ambient[1] = 0.01f;
-    mtl.ambient[2] = 0.01f;
+    mtl.ambient = Vec3f(0.1, 0.1, 0.1);
+    mtl.diffuse = Vec3f(0.5, 0.5, 0.5);
+    mtl.specular = Vec3f(0.5, 0.5, 0.0);
     mtl.shininess = 50;
     render3d.SetMaterial(mtl);
-    
-    //const sora::Material &mtl = device->material_mgr().Get("shinyred");
-    //render3d.SetMaterial(mtl);
-
     render3d.ApplyMaterialLight();
       
     MeshBufferObject *mesh = device->mesh_mgr().Get(mesh_name_list[obj_idx]);
@@ -357,8 +343,6 @@ void renderFrame(Device *device) {
 
     GLHelper::CheckError("Render End");
   }
-  
-
   {
     GLHelper::CheckError("Render 2d start");
     Renderer &render2d = device->render2d();
@@ -366,9 +350,7 @@ void renderFrame(Device *device) {
     //draw 2d something
     glm::mat4 world_mat(1.0f);
 
-    unsigned int flag = 0;
-    flag |= UberShader::kTexture;
-    ShaderProgram &shader = device->uber_shader(flag);
+    ShaderProgram &shader = device->simple_shader();
     render2d.SetShader(shader);
 
     ShaderBindPolicy &bind_policy = shader.bind_policy;
@@ -376,8 +358,8 @@ void renderFrame(Device *device) {
     const ShaderVariable &texcoord_var = bind_policy.var(ShaderBindPolicy::kTexcoord);
     const ShaderVariable &mvp_var = bind_policy.var(ShaderBindPolicy::kWorldViewProjection);
     
-    //glEnableVertexAttribArray(pos_var.location);
-    //glEnableVertexAttribArray(texcoord_var.location);
+    glEnableVertexAttribArray(pos_var.location);
+    glEnableVertexAttribArray(texcoord_var.location);
     
     render2d.SetInitState();
     render2d.SetShader(shader);
@@ -404,7 +386,6 @@ void renderFrame(Device *device) {
     glDrawElements(GL_TRIANGLES, label.index_count(), GL_UNSIGNED_SHORT, label.index_data());
     GLHelper::CheckError("glDrawArrays");
   }
-  
   //////////////////////////////
   Renderer::EndRender();
 }

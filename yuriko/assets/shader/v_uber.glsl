@@ -1,34 +1,28 @@
 attribute vec4 a_position;
 uniform mat4 u_worldViewProjection;
 
-#ifdef USE_TEXTURE
-attribute vec2 a_texcoord;
-varying vec2 v_texcoord;
-#endif
-
-#ifdef USE_CONST_COLOR
-uniform vec4 u_constColor;
-varying vec4 v_constColor;
-#endif
-
+// TEXTURE_MAP : ambient/diffuse/specular map이 설정될 경우
+// 각각은 텍스쳐 좌표를 아마도 공유할테니까 그떄 쓰자
+// DIFFUSE_SPECULAR : diffuse/specular의 경우 계산로직 일부를 공유하니까 하나만 초기화되도 
+// 활성화 시키도록함
 #ifdef USE_AMBIENT
 uniform vec4 u_ambientColor;
 varying vec4 v_ambientColor;
 #endif
 
 #ifdef USE_DIFFUSE
-#ifndef DIFFUSE_SPECULAR
-#define DIFFUSE_SPECULAR 1
-#endif
+	#ifndef DIFFUSE_SPECULAR
+	#define DIFFUSE_SPECULAR 1
+	#endif
 uniform vec4 u_diffuseColor;
 varying vec4 v_diffuseColor;
 varying float v_diffuse;
 #endif
 
 #ifdef USE_SPECULAR
-#ifndef DIFFUSE_SPECULAR
-#define DIFFUSE_SPECULAR 1
-#endif
+	#ifndef DIFFUSE_SPECULAR
+	#define DIFFUSE_SPECULAR 1
+	#endif
 uniform vec4 u_specularColor;
 varying vec4 v_specularColor;
 uniform float u_specularShininess;
@@ -44,16 +38,30 @@ attribute vec3 a_normal;
 uniform vec4 u_viewPosition;
 #endif
 
+//텍스쳐 관련 속성은 공유
+#ifdef USE_AMBIENT_MAP
+	#ifndef TEXTURE_MAP
+	#define TEXTURE_MAP
+	#endif
+#endif
+#ifdef USE_DIFFUSE_MAP
+	#ifndef TEXTURE_MAP
+	#define TEXTURE_MAP
+	#endif
+#endif
+#ifdef USE_SPECULAR_MAP
+	#ifndef TEXTURE_MAP
+	#define TEXTURE_MAP
+	#endif
+#endif
+
+#ifdef TEXTURE_MAP
+attribute vec2 a_texcoord;
+varying vec2 v_texcoord;
+#endif
+
+
 void main() {
-
-#ifdef USE_TEXTURE
-	v_texcoord = a_texcoord;
-#endif
-
-#ifdef USE_CONST_COLOR
-	v_constColor = u_constColor;
-#endif
-
 #ifdef USE_AMBIENT
 	v_ambientColor = u_ambientColor;
 #endif
@@ -66,6 +74,10 @@ void main() {
 					u_world[2].x, u_world[2].y, u_world[2].z);
 	vec3 world_normal = u_world_3 * a_normal;
 	world_normal = normalize(world_normal);
+#endif
+
+#ifdef TEXTURE_MAP
+	v_texcoord = a_texcoord;
 #endif
 
 #ifdef USE_DIFFUSE

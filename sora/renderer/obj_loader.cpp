@@ -392,8 +392,18 @@ void ObjLoader::ParseMtlLine(uchar *str, int n) {
   } else if(cmd == "map_Ka") {
     string filename= *tok_iter;
     Material *mtl = impl->GetLastMtl();
-    mtl->tex_map = filename.c_str();
+    mtl->ambient_map = filename;
     
+  } else if(cmd == "map_Ks") {
+    string filename= *tok_iter;
+    Material *mtl = impl->GetLastMtl();
+    mtl->specular_map = filename;
+
+  } else if(cmd == "map_Kd") {
+    string filename= *tok_iter;
+    Material *mtl = impl->GetLastMtl();
+    mtl->diffuse_map = filename;
+
   } else {
     SR_ASSERT(!"not valid cmd");
   }

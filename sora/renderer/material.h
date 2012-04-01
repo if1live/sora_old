@@ -24,12 +24,14 @@
 #if SR_USE_PCH == 0
 #include <cstring>
 #endif
+#include "core/vector.h"
 
 namespace sora {;
-//재질데이터는 MTL을 기반으로 일단 구현한다. 나중에 다른 포맷에 맞춰서 확장하자
+//재질데이터는 MTL을 기반으로 적절히 수정되었다. 필요한 부분만 고쳣기 때문에 완벽하지는 않다
+//원본 MTL데이터 포멧
+//http://people.sc.fsu.edu/~jburkardt/data/mtl/mtl.html
 struct Material {
   Material() {
-    //http://people.sc.fsu.edu/~jburkardt/data/mtl/mtl.html
     //mtl format default value
     for(int i = 0 ; i < 3 ; i++) {
       ambient[i] = 0.2f;
@@ -37,25 +39,23 @@ struct Material {
       specular[i] = 1.0f;
     }
     alpha = 1.0f;  //not transparent
-    shininess = 0.0f;
+    shininess = 10.0f;
 
     uber_flag = 0;
   };
   std::string name;
 
-  float ambient[3];
-  float diffuse[3];
-  float specular[3];
-  
+  Vec3f ambient;
+  Vec3f diffuse;
+  Vec3f specular;  
   float alpha;   //tr or d
-  float shininess;
+  float shininess;  //diffuse
   
   uint uber_flag;
 
-  //단색으로 쓸떄의 텍스쳐
-  std::string tex_map;   
-
   //빛과 섞어쓸 텍스쳐
+  //단색 텍스쳐의 경우는 ambient = 1, 텍스쳐 1개로 흉내내기가 가능하니까 통합시켰다
+  std::string ambient_map;
   std::string diffuse_map;
   std::string specular_map;
   std::string normal_map;

@@ -58,8 +58,9 @@ public:
   TouchEventQueue &touch_evt_queue();
   const TouchEventQueue &touch_evt_queue() const;
   
-  //uber shader
+  //uber shader + predefined shader
   ShaderProgram &uber_shader(uint flag);
+  ShaderProgram &simple_shader(); //단순 2d용
 
   static Device *GetAnyDevice();
 
@@ -74,13 +75,6 @@ private:
   //싱글턴스럽게 시스템상에서 생성되는 경우를 위해서
   //보관한다. jni같이 골치아픈 경우, 어차피 device는 1개일테니까 적절히 챙겨갈수 있을것이다
   static std::vector<Device*> device_list_;
-
-private:
-  //종류별 uber shader
-  UberShader &simple_uber_shader();
-  const UberShader &simple_uber_shader() const;
-  UberShader &light_uber_shader();
-  const UberShader &light_uber_shader() const;
 };
 }
 

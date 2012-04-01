@@ -108,6 +108,5 @@ private:
   std::vector<ShaderVariable> attrib_var_list_;
   const ShaderVariable *FindShaderVar(const std::string &name, const std::vector<ShaderVariable> &var_list) const;
 };
-
 }
 #endif  // SORA_SHADER_H_

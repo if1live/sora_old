@@ -25,6 +25,15 @@
 
 namespace sora {;
 
+//쉐이더에서의 변수 이름과 해당거싱 가질 의미를 미리 설정해놓을수 잇도록하자
+//쉐이더 코드가 여러개가 되더라고 항상쓰는 변수명은 뻔할테니까 이런짓을 해도 큰 문제는 없을 것이다
+struct ShaderNameBind{
+  ShaderNameBind(const char *name, int semantic)
+    : name(name), semantic(semantic) {}
+  std::string name;
+  int semantic;
+};
+
 class ShaderBindPolicy {
 public:
   enum {
@@ -49,7 +58,6 @@ public:
     kTexcoord,
     kTangent,
     kBinormal,
-    kAlbedo,  //그냥 텍스쳐
 
     //디버깅에 쓰일수 잇는 특수 속성
     kConstColor,
@@ -60,6 +68,7 @@ public:
     kSpecularColor,
     kSpecularShininess,
     kLightPosition,
+    kAmbientMap,
     kDiffuseMap,
     kSpecularMap,
 
@@ -77,6 +86,11 @@ public:
     */
     kSemanticCount,
   };
+public:
+  static std::vector<ShaderNameBind> &GetPredefinedAttribList();
+  static std::vector<ShaderNameBind> &GetPredefinedUniformList();
+  static ShaderNameBind *GetPredefinedAttrib(int semantic);
+  static ShaderNameBind *GetPredefinedUniform(int semantic);
 
 public:
   ShaderBindPolicy();

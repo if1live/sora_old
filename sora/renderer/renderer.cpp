@@ -73,6 +73,7 @@ Renderer::~Renderer() {
 
 void Renderer::SetTexture(const Texture &tex) {
   if(last_tex_id_ != tex.handle()) {
+    glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, tex.handle());
     last_tex_id_ = tex.handle();
   }
@@ -111,6 +112,7 @@ void Renderer::ApplyMaterialLight() {
   const ShaderVariable &diffuse_var = bind_policy.var(ShaderBindPolicy::kDiffuseColor);
   const ShaderVariable &specular_var = bind_policy.var(ShaderBindPolicy::kSpecularColor);
   const ShaderVariable &shininess_var = bind_policy.var(ShaderBindPolicy::kSpecularShininess);
+  const ShaderVariable &ambient_map_var = bind_policy.var(ShaderBindPolicy::kAmbientMap);
   const ShaderVariable &diffuse_map_var = bind_policy.var(ShaderBindPolicy::kDiffuseMap);
   const ShaderVariable &specular_map_var = bind_policy.var(ShaderBindPolicy::kSpecularMap);
 
@@ -125,11 +127,12 @@ void Renderer::ApplyMaterialLight() {
   //memset(diffuse_color, 0, sizeof(diffuse_color));
   //memset(specular_color, 0, sizeof(specular_color));
 
+  //색 정보 얻기
   if(ambient_var.location != -1) {
     use_ambient = true;
 
     //material의 색속성
-    memcpy(ambient_color, material.ambient, sizeof(material.ambient));
+    memcpy(ambient_color, &material.ambient, sizeof(material.ambient));
     ambient_color[3] = 1.0f;
     //빛속성과 조합
     for(int i = 0 ; i < 4 ; ++i) {
@@ -139,7 +142,7 @@ void Renderer::ApplyMaterialLight() {
   if(diffuse_var.location != -1) {
     use_diffuse = true;
 
-    memcpy(diffuse_color, material.diffuse, sizeof(material.diffuse));
+    memcpy(diffuse_color, &material.diffuse, sizeof(material.diffuse));
     diffuse_color[3] = 1.0f;
     for(int i = 0 ; i < 4 ; ++i) {
       diffuse_color[i] *= light.diffuse[i];
@@ -148,7 +151,7 @@ void Renderer::ApplyMaterialLight() {
   if(specular_var.location != -1) {
     use_specular = true;
 
-    memcpy(specular_color, material.specular, sizeof(material.specular));
+    memcpy(specular_color, &material.specular, sizeof(material.specular));
     specular_color[3] = 1.0f;
     for(int i = 0 ; i < 4 ; ++i) {
       specular_color[i] *= light.specular[i];
@@ -159,6 +162,15 @@ void Renderer::ApplyMaterialLight() {
   if(use_ambient) {
     glUniform4fv(ambient_var.location, 1, ambient_color);
     GLHelper::CheckError("Uniform AmbientColor");
+
+    if(ambient_map_var.location != -1) {
+      Texture *ambient_map = dev_->texture_mgr().Get_ptr(material.ambient_map);
+      if(ambient_map != NULL) {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, ambient_map->handle());
+        glUniform1i(diffuse_map_var.location, 0);
+      }
+    }
   }
 
   
@@ -166,11 +178,13 @@ void Renderer::ApplyMaterialLight() {
     glUniform4fv(diffuse_var.location, 1, diffuse_color);
     GLHelper::CheckError("Uniform DiffuseColor");
 
-    Texture *diffuse_map = dev_->texture_mgr().Get_ptr(material_.diffuse_map);
-    if(diffuse_map != NULL && diffuse_map_var.location != -1) {
-      glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, diffuse_map->handle());
-      glUniform1i(diffuse_map_var.location, 0);
+    if(diffuse_map_var.location != -1) {
+      Texture *diffuse_map = dev_->texture_mgr().Get_ptr(material_.diffuse_map);
+      if(diffuse_map != NULL) {
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, diffuse_map->handle());
+        glUniform1i(diffuse_map_var.location, 1);
+      }
     }
   }
 
@@ -179,11 +193,13 @@ void Renderer::ApplyMaterialLight() {
     glUniform4fv(specular_var.location, 1, specular_color);
     GLHelper::CheckError("Uniform SpecularColor");
 
-    Texture *specular_map = dev_->texture_mgr().Get_ptr(material_.specular_map);
-    if(specular_map != NULL && specular_map_var.location != -1) {
-      glActiveTexture(GL_TEXTURE1);
-      glBindTexture(GL_TEXTURE_2D, specular_map->handle());
-      glUniform1i(specular_map_var.location, 1);
+    if(specular_map_var.location != -1) {
+      Texture *specular_map = dev_->texture_mgr().Get_ptr(material_.specular_map);
+      if(specular_map != NULL) {
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, specular_map->handle());
+        glUniform1i(specular_map_var.location, 2);
+      }
     }
   }
     

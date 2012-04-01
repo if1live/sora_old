@@ -31,72 +31,24 @@ using namespace std;
 
 namespace sora {;
 
-//테이블 구성해서 타자치는거 좀 줄이자
-struct ShaderBindParam {
-  ShaderBindParam(const char *name, int semantic)
-    : name(name), semantic(semantic) {}
-  std::string name;
-  int semantic;
-};
-
 //uber shader의 enum에 정의된 순서대로 맞춰서 쓴다
 const char *enable_define_list[] = {
-  "#define USE_CONST_COLOR \n",
-  "#define USE_TEXTURE \n",
   "#define USE_AMBIENT \n",
   "#define USE_DIFFUSE \n",
   "#define USE_SPECULAR \n",
-  "#define USE_MODEL_COLOR \n",
+  "#define USE_AMBIENT_MAP \n",
   "#define USE_DIFFUSE_MAP \n",
   "#define USE_SPECULAR_MAP \n",
 };
 const char *disable_define_list[] = {
-  "#undef USE_CONST_COLOR \n",
-  "#undef USE_TEXTURE \n",
   "#undef USE_AMBIENT \n",
   "#undef USE_DIFFUSE \n",
   "#undef USE_SPECULAR \n",
-  "#undef USE_MODEL_COLOR \n",
+  "#undef USE_AMBIENT_MAP \n",
   "#undef USE_DIFFUSE_MAP \n",
   "#undef USE_SPECULAR_MAP \n",
 };
 
-std::vector<ShaderBindParam> &GetPredefinedAttribList() {
-  static vector<ShaderBindParam> attr_bind_param;
-  if(attr_bind_param.empty()) {
-    attr_bind_param.push_back(ShaderBindParam("a_position", ShaderBindPolicy::kPosition));
-    attr_bind_param.push_back(ShaderBindParam("a_texcoord", ShaderBindPolicy::kTexcoord));
-    attr_bind_param.push_back(ShaderBindParam("a_normal", ShaderBindPolicy::kNormal));
-    attr_bind_param.push_back(ShaderBindParam("a_color", ShaderBindPolicy::kColor));
-  }
-  return attr_bind_param;
-}
-std::vector<ShaderBindParam> &GetPredefinedUniformList() {
-  static vector<ShaderBindParam> uniform_bind_param;
-  if(uniform_bind_param.empty()) {
-    uniform_bind_param.push_back(ShaderBindParam("u_constColor", ShaderBindPolicy::kConstColor));
-    uniform_bind_param.push_back(ShaderBindParam("u_viewPosition", ShaderBindPolicy::kViewPosition));
-    uniform_bind_param.push_back(ShaderBindParam("u_viewSide", ShaderBindPolicy::kViewSide));
-    uniform_bind_param.push_back(ShaderBindParam("u_viewUp", ShaderBindPolicy::kViewUp));
-    uniform_bind_param.push_back(ShaderBindParam("u_viewDir", ShaderBindPolicy::kViewDirection));
-    uniform_bind_param.push_back(ShaderBindParam("u_worldViewProjection", ShaderBindPolicy::kWorldViewProjection));
-    uniform_bind_param.push_back(ShaderBindParam("u_world", ShaderBindPolicy::kWorld));
-    uniform_bind_param.push_back(ShaderBindParam("u_projection", ShaderBindPolicy::kProjection));
-    uniform_bind_param.push_back(ShaderBindParam("u_view", ShaderBindPolicy::kView));
-
-    uniform_bind_param.push_back(ShaderBindParam("u_ambientColor", ShaderBindPolicy::kAmbientColor));
-    uniform_bind_param.push_back(ShaderBindParam("u_diffuseColor", ShaderBindPolicy::kDiffuseColor));
-    uniform_bind_param.push_back(ShaderBindParam("u_specularColor", ShaderBindPolicy::kSpecularColor));
-    uniform_bind_param.push_back(ShaderBindParam("u_specularShininess", ShaderBindPolicy::kSpecularShininess));
-
-    uniform_bind_param.push_back(ShaderBindParam("s_diffuseMap", ShaderBindPolicy::kDiffuseMap));
-    uniform_bind_param.push_back(ShaderBindParam("s_specularMap", ShaderBindPolicy::kSpecularMap));
-    uniform_bind_param.push_back(ShaderBindParam("s_texture", ShaderBindPolicy::kAlbedo));
-
-    uniform_bind_param.push_back(ShaderBindParam("u_worldLightPosition", ShaderBindPolicy::kLightPosition));
-  }
-  return uniform_bind_param;
-}
 
 UberShader::UberShader() : avail_mask_(0) {
 }
@@ -177,18 +129,18 @@ ShaderProgram &UberShader::Load(uint flag) {
   SR_ASSERT(bind_policy.shader_prog() == shader_prog.prog);
 
   //bind되는 변수는 uber shader의 경우는 코드레벨에서 떄려박을수 있다
-  vector<ShaderBindParam> &attr_bind_param = GetPredefinedAttribList();
+  vector<ShaderNameBind> &attr_bind_param = ShaderBindPolicy::GetPredefinedAttribList();
   for(size_t i = 0 ; i < attr_bind_param.size() ; i++) {
-    const ShaderBindParam &param = attr_bind_param[i];
+    const ShaderNameBind &param = attr_bind_param[i];
     const ShaderVariable *var = shader_prog.attrib_var(param.name);
     if(var != NULL) {
       bind_policy.set_var(param.semantic, *var);
     }
   }
 
-  vector<ShaderBindParam> &uniform_bind_param = GetPredefinedUniformList();
+  vector<ShaderNameBind> &uniform_bind_param = ShaderBindPolicy::GetPredefinedUniformList();
   for(size_t i = 0 ; i < uniform_bind_param.size() ; i++) {
-    const ShaderBindParam &param = uniform_bind_param[i];
+    const ShaderNameBind &param = uniform_bind_param[i];
     const ShaderVariable *var = shader_prog.uniform_var(param.name);
     if(var != NULL) {
       bind_policy.set_var(param.semantic, *var);
