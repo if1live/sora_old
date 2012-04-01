@@ -37,7 +37,11 @@ public:
     kSpecularColor = 1 << 2,
     kAmbientMap = 1 << 3,
     kDiffuseMap = 1 << 4,
-    kSpecularMap = 1 << 5
+    kSpecularMap = 1 << 5,
+    //simple attribute
+    kAlbedo = 1 << 6,
+    kModelColor = 1 << 7,
+    kConstColor = 1 << 8
   };
 public:
   UberShader();

@@ -74,6 +74,18 @@ const char *kAmbientMapKey = "ambient";
 const char *kDiffuseMapKey = "diffuse";
 const char *kSpecularMapKey = "specular";
 
+struct SimpleUberShaderLoadPolicy {
+  static const char *vert_file() { return "shader/v_simple_uber.glsl"; }
+  static const char *frag_file() { return "shader/f_simple_uber.glsl"; }
+  static unsigned int avail_mask() {
+    unsigned int flag = 0;
+    flag |= UberShader::kConstColor;
+    flag |= UberShader::kAlbedo;
+    flag |= UberShader::kModelColor;
+    return flag;
+  }
+};
+
 struct RunaViewPrivate {
   RunaViewPrivate()
     : uber_flag(ShaderFlag::kNone),
@@ -96,6 +108,8 @@ struct RunaViewPrivate {
       mtl.shininess = 50;
 
       model_name = "sphere";
+
+      simple_uber.Init<SimpleUberShaderLoadPolicy>();
   }
   Material mtl;
   Light light;
@@ -105,6 +119,8 @@ struct RunaViewPrivate {
 
   float camDeg;
   string model_name;
+
+  UberShader simple_uber;
 };
 
 
@@ -314,8 +330,7 @@ void RunaView::SetupGraphics(int w, int h) {
     tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
     device().texture_mgr().Add(tex);
   }
-  
-  /*
+
   //0번물체는 wire 평면
   {
     const int idx = 0;
@@ -344,7 +359,7 @@ void RunaView::SetupGraphics(int w, int h) {
     device().mesh_mgr().Add(primitive_model.GetDrawCmdList(), mesh_name.c_str());
     mesh_name_list[idx] = mesh_name;
   }
-  */
+
 
   {
     //그려질 물체
@@ -444,12 +459,13 @@ void RunaView::DrawFrame() {
   cam.set_up(sora::Vec3f(0, 1, 0));
   render3d.set_camera(cam);
 
-  /*
+
   //plane, axis같은 디버깅 관련 요소 그리기
   //선을 겹쳐 그릴수 잇으니까 깊이끈다
   for(size_t i = 0 ; i < world_mat_list.size() ; i++) {
+    UberShader &simple_uber = pimpl().simple_uber;
     unsigned int flag = mtl_list[i].uber_flag;
-    ShaderProgram &shader = device().uber_shader(flag);
+    ShaderProgram &shader = simple_uber.Load(flag);
     render3d.SetShader(shader);
 
     ShaderBindPolicy &bind_policy = shader.bind_policy;
@@ -474,7 +490,6 @@ void RunaView::DrawFrame() {
       render3d.Draw(*mesh);
     } 
   }
-  */
 
   {
     //원하는 이름의 모델 얻기

@@ -58,6 +58,8 @@ public:
     kTexcoord,
     kTangent,
     kBinormal,
+    
+    kAlbedo,  //썡텍스쳐
 
     //디버깅에 쓰일수 잇는 특수 속성
     kConstColor,

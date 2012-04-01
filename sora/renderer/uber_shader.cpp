@@ -39,6 +39,9 @@ const char *enable_define_list[] = {
   "#define USE_AMBIENT_MAP \n",
   "#define USE_DIFFUSE_MAP \n",
   "#define USE_SPECULAR_MAP \n",
+  "#define USE_TEXTURE \n",
+  "#define USE_MODEL_COLOR \n",
+  "#define USE_CONST_COLOR \n",
 };
 const char *disable_define_list[] = {
   "#undef USE_AMBIENT \n",
@@ -47,6 +50,9 @@ const char *disable_define_list[] = {
   "#undef USE_AMBIENT_MAP \n",
   "#undef USE_DIFFUSE_MAP \n",
   "#undef USE_SPECULAR_MAP \n",
+  "#undef USE_TEXTURE \n",
+  "#undef USE_MODEL_COLOR \n",
+  "#undef USE_CONST_COLOR \n",
 };
 
 

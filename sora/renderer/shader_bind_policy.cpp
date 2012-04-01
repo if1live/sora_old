@@ -76,6 +76,7 @@ std::vector<ShaderNameBind> &ShaderBindPolicy::GetPredefinedUniformList() {
     uniform_bind_param.push_back(ShaderNameBind("s_diffuseMap", ShaderBindPolicy::kDiffuseMap));
     uniform_bind_param.push_back(ShaderNameBind("s_specularMap", ShaderBindPolicy::kSpecularMap));
     uniform_bind_param.push_back(ShaderNameBind("s_ambientMap", ShaderBindPolicy::kAmbientMap));
+    uniform_bind_param.push_back(ShaderNameBind("s_texture", ShaderBindPolicy::kAlbedo));
 
     uniform_bind_param.push_back(ShaderNameBind("u_worldLightPosition", ShaderBindPolicy::kLightPosition));
   }
