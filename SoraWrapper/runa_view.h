@@ -31,12 +31,10 @@ struct RunaViewPrivate;
 
 public enum class ShaderFlag : unsigned int {
   kNone = 0,
-  kConstColor = UberShader::kConstColor,
-  kTexture = UberShader::kTexture,
   kAmbientColor = UberShader::kAmbientColor,
   kDiffuseColor = UberShader::kDiffuseColor,
   kSpecularColor = UberShader::kSpecularColor,
-  kModelColor = UberShader::kModelColor,
+  kAmbientMap = UberShader::kAmbientMap,
   kDiffuseMap = UberShader::kDiffuseMap,
   kSpecularMap = UberShader::kSpecularMap
 };
@@ -64,13 +62,11 @@ public:
   void SetAmbientColor(System::Byte r, System::Byte g, System::Byte b);
   void SetDiffuseColor(System::Byte r, System::Byte g, System::Byte b);
   void SetSpecularColor(System::Byte r, System::Byte g, System::Byte b);
-  void SetConstColor(System::Byte r, System::Byte g, System::Byte b);
   void SetSpecularShininess(float shininess);
 
   void GetAmbientColor(array<System::Byte> ^%color);
   void GetDiffuseColor(array<System::Byte> ^%color);
   void GetSpecularColor(array<System::Byte> ^%color);
-  void GetConstColor(array<System::Byte> ^%color);
   float GetSpecularShininess();
 
   //light 속성 관련
@@ -85,7 +81,7 @@ public:
   void GetLightSpecularColor(array<System::Byte> ^%color);
 
   //texture 설정. 경로와 연결되어 있으니까 좀 귀찮게 처리해야될듯
-  void SetTexturePath(System::String ^tex_path, System::String ^ext);
+  void SetAmbientMapPath(System::String ^tex_path, System::String ^ext);
   void SetDiffuseMapPath(System::String ^tex_path, System::String ^ext);
   void SetSpecularMapPath(System::String ^tex_path, System::String ^ext);
 

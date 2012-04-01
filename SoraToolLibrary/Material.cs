@@ -37,68 +37,13 @@ namespace SoraToolLibrary
             };
             this.ModelName = "sphere";
         }
-
-        [Category("Simple|ConstColor")]
-        public bool UseConstColor
-        {
-            get { return glView.IsEnabledShaderFlag(ShaderFlag.kConstColor); }
-            set { glView.SetShaderFlag(value, ShaderFlag.kConstColor); }
-        }
-
-        public Color ConstColor
-        {
-            get
-            {
-                Byte[] colorData = new Byte[3];
-                glView.GetConstColor(ref colorData);
-                Color color = ByteArrayToColor(colorData);
-                return color;
-            }
-            set { glView.SetConstColor(value.R, value.G, value.B); }
-        }
-
-        [Category("Simple|Texture")]
-        public bool UseTexture
-        {
-            get { return glView.IsEnabledShaderFlag(ShaderFlag.kTexture); }
-            set { glView.SetShaderFlag(value, ShaderFlag.kTexture); }
-        }
-
-        [Height(double.NaN, 0, 160)]
-        [VisibleBy("UseTexture")]
-        public BitmapImage TextureImage { get; set; }
-
-        private string texturePath;
-        [VisibleBy("UseTexture")]
-        [FilePath("Images files|*.png;*.jpg", ".png")]
-        public string TexturePath
-        {
-            get
-            {
-                return this.texturePath;
-            }
-            set
-            {
-                this.texturePath = value;
-                Uri uri = new Uri(this.texturePath);
-                BitmapImage bitmap = new BitmapImage(uri);
-                this.TextureImage = bitmap;
-                
-                //get file extension
-                FileInfo info = new FileInfo(value);
-                string ext = info.Extension;
-                ext = ext.ToLower();
-                glView.SetTexturePath(value, ext);
-            }
-        }
-
-
         [Category("Material|Ambient")]
         public bool UseAmbient
         {
             get { return glView.IsEnabledShaderFlag(ShaderFlag.kAmbientColor); }
             set { glView.SetShaderFlag(value, ShaderFlag.kAmbientColor); }
         }
+        [VisibleBy("UseAmbient")]
         public Color AmbientColor
         {
             get
@@ -109,6 +54,40 @@ namespace SoraToolLibrary
                 return color;
             }
             set { glView.SetAmbientColor(value.R, value.G, value.B); }
+        }
+
+        public bool UseAmbientMap
+        {
+            get { return glView.IsEnabledShaderFlag(ShaderFlag.kAmbientMap); }
+            set { glView.SetShaderFlag(value, ShaderFlag.kAmbientMap); }
+        }
+
+        [Height(double.NaN, 0, 160)]
+        [VisibleBy("UseAmbientMap")]
+        public BitmapImage AmbientMapImage { get; set; }
+
+        private string ambientMapPath;
+        [VisibleBy("UseAmbientMap")]
+        [FilePath("Images files|*.png;*.jpg", ".png")]
+        public string AmbientMapPath
+        {
+            get
+            {
+                return this.ambientMapPath;
+            }
+            set
+            {
+                this.ambientMapPath = value;
+                Uri uri = new Uri(this.ambientMapPath);
+                BitmapImage bitmap = new BitmapImage(uri);
+                this.AmbientMapImage = bitmap;
+
+                //get file extension
+                FileInfo info = new FileInfo(value);
+                string ext = info.Extension;
+                ext = ext.ToLower();
+                glView.SetAmbientMapPath(value, ext);
+            }
         }
 
         [Category("Material|Diffuse")]

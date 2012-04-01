@@ -70,7 +70,7 @@ using namespace System;
 
 namespace sora {;
 
-const char *kTextureKey = "texture";
+const char *kAmbientMapKey = "ambient";
 const char *kDiffuseMapKey = "diffuse";
 const char *kSpecularMapKey = "specular";
 
@@ -80,7 +80,7 @@ struct RunaViewPrivate {
     light_move(false),
     light_pos_deg(0),
     camDeg(0) {
-      const_color = Vec4f(1.0f, 1.0f, 1.0f, 1.0f);
+      mtl.ambient_map = kAmbientMapKey;
       mtl.diffuse_map = kDiffuseMapKey;
       mtl.specular_map = kSpecularMapKey;
 
@@ -99,18 +99,12 @@ struct RunaViewPrivate {
   }
   Material mtl;
   Light light;
-  Vec4f const_color;
   ShaderFlag uber_flag;
   bool light_move;
   float light_pos_deg;
 
   float camDeg;
   string model_name;
-
-  //나중에 세이브 로드 위해서 남겨놓자
-  std::string simple_tex_path;
-  std::string diffuse_map_path;
-  std::string specular_map_path;
 };
 
 
@@ -131,16 +125,6 @@ void RunaView::SetSpecularColor(Byte r, Byte g, Byte b) {
   impl.mtl.specular[0] = r / 255.0f;
   impl.mtl.specular[1] = g / 255.0f;
   impl.mtl.specular[2] = b / 255.0f;
-}
-void RunaView::SetConstColor(Byte r, Byte g, Byte b) {
-  RunaViewPrivate &impl = pimpl();
-  impl.const_color = Vec4f(r / 255.0f, g / 255.0f, b / 255.0f, 1.0f);
-}
-void RunaView::GetConstColor(array<Byte> ^%color) {
-  RunaViewPrivate &impl = pimpl();
-  color[0] = (Byte)(impl.const_color.x * 255);
-  color[1] = (Byte)(impl.const_color.y * 255);
-  color[2] = (Byte)(impl.const_color.z * 255);
 }
 
 void RunaView::GetAmbientColor(array<Byte> ^%color) {
@@ -240,13 +224,13 @@ void RunaView::GetLightSpecularColor(array<Byte> ^%color) {
   }
 }
 
-void RunaView::SetTexturePath(String ^tex_path, String ^ext) {
+void RunaView::SetAmbientMapPath(String ^tex_path, String ^ext) {
   //.ext로 확장자는 넘어온다
   String ^png_ext = gcnew String(".png");
   String ^jpg_ext = gcnew String(".jpg"); 
   string path_str = msclr::interop::marshal_as<std::string>(tex_path);
   string ext_str = msclr::interop::marshal_as<std::string>(ext);
-  ReloadTexture(path_str, ext_str, kTextureKey);
+  ReloadTexture(path_str, ext_str, kAmbientMapKey);
 }
 void RunaView::SetDiffuseMapPath(System::String ^tex_path, System::String ^ext) {
   String ^png_ext = gcnew String(".png");
@@ -317,7 +301,7 @@ void RunaView::SetupGraphics(int w, int h) {
   //lodepng
   //그냥, diffuse specular용으로 사용할것을 미리 만들어놓자
   const char *texture_table[][2] = {
-    { kTextureKey, "texture/sora2.png" },
+    { kAmbientMapKey, "texture/sora2.png" },
     { kSpecularMapKey, "texture/glazed_brick_S.png" },
     { kDiffuseMapKey, "texture/glazed_brick_D.png" },
   };
@@ -331,6 +315,7 @@ void RunaView::SetupGraphics(int w, int h) {
     device().texture_mgr().Add(tex);
   }
   
+  /*
   //0번물체는 wire 평면
   {
     const int idx = 0;
@@ -359,6 +344,7 @@ void RunaView::SetupGraphics(int w, int h) {
     device().mesh_mgr().Add(primitive_model.GetDrawCmdList(), mesh_name.c_str());
     mesh_name_list[idx] = mesh_name;
   }
+  */
 
   {
     //그려질 물체
@@ -458,6 +444,7 @@ void RunaView::DrawFrame() {
   cam.set_up(sora::Vec3f(0, 1, 0));
   render3d.set_camera(cam);
 
+  /*
   //plane, axis같은 디버깅 관련 요소 그리기
   //선을 겹쳐 그릴수 잇으니까 깊이끈다
   for(size_t i = 0 ; i < world_mat_list.size() ; i++) {
@@ -487,6 +474,7 @@ void RunaView::DrawFrame() {
       render3d.Draw(*mesh);
     } 
   }
+  */
 
   {
     //원하는 이름의 모델 얻기
@@ -507,21 +495,9 @@ void RunaView::DrawFrame() {
       render3d.SetShader(shader);
       ShaderBindPolicy &bind_policy = shader.bind_policy;
 
-      const ShaderVariable &const_color_var = bind_policy.var(ShaderBindPolicy::kConstColor);
-      if(const_color_var.location != -1) {
-        Vec4f &const_color = pimpl().const_color;
-        glUniform4fv(const_color_var.location, 1, const_color.data);
-      }
-
       //평면하나만 일단 렌더링해서 테스트하자
       render3d.SetLight(pimpl().light);
       render3d.ApplyMatrix(world_mat);
-
-      //텍스쳐 적당히 설정
-      Texture *tex = device().texture_mgr().Get_ptr(string(kTextureKey));
-      if(tex != NULL) {
-        render3d.SetTexture(*tex);
-      }
 
       //재질데이터 적절히 설정하기
       render3d.SetMaterial(pimpl().mtl);
