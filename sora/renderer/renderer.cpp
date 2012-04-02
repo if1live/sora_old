@@ -75,7 +75,7 @@ void Renderer::SetTexture(const Texture &tex) {
   //ambient 같은거용 표준 텍스쳐
   if(last_tex_id_ != tex.handle()) {
     glActiveTexture(GL_TEXTURE0);
-    glUniform1i(0, 1);  //first
+    glUniform1i(0, 0);  //first_texture, GL_TEXTURE0
     glBindTexture(GL_TEXTURE_2D, tex.handle());
     last_tex_id_ = tex.handle();
   }
@@ -190,12 +190,8 @@ void Renderer::ApplyMaterialLight() {
     if(use_ambient && ambient_map_var.location != -1) {
       Texture *ambient_map = dev_->texture_mgr().Get_ptr(mtl_.ambient_map);
       if(ambient_map != NULL) {
-        /*
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, ambient_map->handle());
-        glUniform1i(diffuse_map_var.location, 0);
-        */
         SetTexture(*ambient_map);
+        glUniform1i(ambient_map_var.location, 0);
       }
     }
     if(use_diffuse && diffuse_map_var.location != -1) {
