@@ -120,6 +120,7 @@
     <ClCompile Include="renderer\texture.cpp" />
     <ClCompile Include="renderer\texture_manager.cpp" />
     <ClCompile Include="renderer\uber_shader.cpp" />
+    <ClCompile Include="shadow_map_main.cpp" />
     <ClCompile Include="soil\image_DXT.cpp" />
     <ClCompile Include="soil\image_helper.cpp" />
     <ClCompile Include="soil\SOIL.cpp" />
@@ -196,6 +197,7 @@
     <ClInclude Include="renderer\texture_manager.h" />
     <ClInclude Include="renderer\uber_shader.h" />
     <ClInclude Include="renderer\vertex.h" />
+    <ClInclude Include="shadow_map_main.h" />
     <ClInclude Include="soil\image_DXT.h" />
     <ClInclude Include="soil\image_helper.h" />
     <ClInclude Include="soil\SOIL.h" />

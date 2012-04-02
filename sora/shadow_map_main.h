@@ -18,32 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_LIGHT_H_
-#define SORA_LIGHT_H_
-
-#include "core/vector.h"
+#ifndef SORA_SHADOW_MAP_MAIN_H_
+#define SORA_SHADOW_MAP_MAIN_H_
 
 namespace sora {;
+class Device;
 
-struct Light {
-  Light()
-  : ambient(1.0f, 1.0f, 1.0f, 1.0f),
-    diffuse(1.0f, 1.0f, 1.0f, 1.0f),
-    specular(1.0f, 1.0f, 1.0f, 1.0f),
-    shininess(10) {
-  }
-
-  //shadow map를 구성하기 위해서는 사실상 카메라와 동일한 속성이 필요하다
-  Vec3f pos;
-  Vec3f up;
-  Vec3f dir;
-  
-  Vec4f ambient;
-  Vec4f diffuse;
-  Vec4f specular;
-  float shininess;
-};
+void ShadowMap_setup_graphics(sora::Device *dev, int w, int h);
+void ShadowMap_draw_frame(sora::Device *dev);
+void ShadowMap_update_frame(sora::Device *dev, float dt);
 
 }
 
-#endif  // SORA_LIGHT_H_
+#endif  // SORA_SHADOW_MAP_MAIN_H_

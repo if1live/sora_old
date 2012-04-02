@@ -29,12 +29,18 @@ namespace sora {;
 class Device;
 }
 
-SR_C_DLL void SORA_setup_graphics(sora::Device *device, int w, int h);
+//뭔 main을 갖다쓰더라도 공통되는 부분
 SR_C_DLL void SORA_set_window_size(sora::Device *device, int w, int h);
+SR_C_DLL void SORA_init_gl_env();
+#if SR_ANDROID
+void SORA_set_apk_file_path(const char *abs_path);
+#endif
+
+//구현 의존적인 부분
+SR_C_DLL void SORA_setup_graphics(sora::Device *device, int w, int h);
 SR_C_DLL void SORA_cleanup_graphics(sora::Device *device);
 SR_C_DLL void SORA_draw_frame(sora::Device *device);
 SR_C_DLL void SORA_update_frame(sora::Device *device, float dt);
-SR_C_DLL void SORA_init_gl_env();
 
 SR_C_DLL void SORA_set_cam_pos(float a, float b);
 
@@ -43,7 +49,5 @@ SR_C_DLL void SORA_touch_moved(sora::Device *device, int x, int y, int prev_x, i
 SR_C_DLL void SORA_touch_ended(sora::Device *device, int x, int y, int prev_x, int prev_y, int uid, int tick_count, float timestamp);
 SR_C_DLL void SORA_touch_cancelled(sora::Device *device, int x, int y, int prev_x, int prev_y, int uid, int tick_count, float timestamp);
 
-#if SR_ANDROID
-void SORA_set_apk_file_path(const char *abs_path);
-#endif
+
 #endif  // SORA_SORA_MAIN_H_

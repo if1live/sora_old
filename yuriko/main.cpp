@@ -26,6 +26,7 @@
 #include "sora/sora_main.h"
 #include "sora/sys/device.h"
 #include "sora/core/timer.h"
+#include "sora/shadow_map_main.h"
 
 const int kWinWidth = 480;
 const int kWinHeight = 800;
@@ -58,10 +59,9 @@ int main(int argc, char *argv[]) {
 
   sora::Device device;
 
-
+  /*
 	//logic begin
   SORA_setup_graphics(&device, kWinWidth, kWinHeight);
-  
   float prev_time = Timer_GetSecond();
   while(true) {
     SORA_draw_frame(&device);
@@ -77,6 +77,24 @@ int main(int argc, char *argv[]) {
       exit(0);
     }
   }
+  */
+  ShadowMap_setup_graphics(&device, kWinWidth, kWinHeight);
+  float prev_time = Timer_GetSecond();
+  while(true) {
+    ShadowMap_draw_frame(&device);
+    float curr_time = Timer_GetSecond();
+    float dt = curr_time - prev_time;
+    ShadowMap_update_frame(&device, dt);
+
+    glfwSwapBuffers();
+    prev_time = curr_time;
+    Timer_Tick();
+
+    if (glfwGetKey(GLFW_KEY_ESC) == GLFW_PRESS) {
+      exit(0);
+    }
+  }
+
   //logic end
 
   glfwTerminate();
