@@ -67,8 +67,8 @@ protected:
 //ambient / diffuse / specular 지원
 //쌩텍스쳐는 곧 diffuse map라고 생각해서 연결한다
 struct LightUberShaderLoadPolicy {
-  static const char *vert_file() { return "shader/v_uber.glsl"; }
-  static const char *frag_file() { return "shader/f_uber.glsl"; }
+  static const char *vert_file() { return "shader/uber_vert.glsl"; }
+  static const char *frag_file() { return "shader/uber_frag.glsl"; }
   static uint avail_mask() {
     uint flag = 0;
     flag |= UberShader::kAmbientColor;

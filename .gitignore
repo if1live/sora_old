@@ -35,3 +35,6 @@ NUL
 /yukino/project.properties
 drawable_
 \.snk
+sora_tool/publish/
+pfx
+\.pfx
