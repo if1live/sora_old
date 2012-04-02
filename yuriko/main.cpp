@@ -27,6 +27,7 @@
 #include "sora/sys/device.h"
 #include "sora/core/timer.h"
 #include "sora/shadow_map_main.h"
+//#include "sora/test_function.h"
 
 const int kWinWidth = 480;
 const int kWinHeight = 800;
