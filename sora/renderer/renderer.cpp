@@ -98,7 +98,7 @@ void Renderer::ApplyMaterialLight() {
 
   const ShaderBindPolicy &bind_policy = last_prog_->bind_policy;
   const Light &light = light_;
-  const Material &material = last_material_;
+  const Material &material = mtl_;
 
   //apply light pos
   const ShaderVariable &light_pos_var = bind_policy.var(ShaderBindPolicy::kLightPosition);

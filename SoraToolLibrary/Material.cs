@@ -106,7 +106,7 @@ namespace SoraToolLibrary
                 Color color = ByteArrayToColor(colorData);
                 return color;
             }
-            set { glView.SetDiffuseColor(value.R, value.G, value.R); }
+            set { glView.SetDiffuseColor(value.R, value.G, value.B); }
         }
         //[VisibleBy("UseDiffuse")]
         public bool UseDiffuseMap
@@ -161,7 +161,7 @@ namespace SoraToolLibrary
                 Color color = ByteArrayToColor(colorData);
                 return color;
             }
-            set { glView.SetSpecularColor(value.R, value.G, value.R); }
+            set { glView.SetSpecularColor(value.R, value.G, value.B); }
         }
         [VisibleBy("UseSpecular")]
         [Slidable(1, 200, 45, 1)]
@@ -214,7 +214,7 @@ namespace SoraToolLibrary
                 Color color = ByteArrayToColor(colorData);
                 return color;
             }
-            set { glView.SetLightAmbientColor(value.R, value.G, value.R); }
+            set { glView.SetLightAmbientColor(value.R, value.G, value.B); }
         }
         public Color DiffuseLight
         {
@@ -225,7 +225,7 @@ namespace SoraToolLibrary
                 Color color = ByteArrayToColor(colorData);
                 return color;
             }
-            set { glView.SetLightDiffuseColor(value.R, value.G, value.R); }
+            set { glView.SetLightDiffuseColor(value.R, value.G, value.B); }
         }
         public Color SpecularLight
         {
@@ -236,7 +236,7 @@ namespace SoraToolLibrary
                 Color color = ByteArrayToColor(colorData);
                 return color;
             }
-            set { glView.SetLightSpecularColor(value.R, value.G, value.R); }
+            set { glView.SetLightSpecularColor(value.R, value.G, value.B); }
         }
         public bool MoveLight
         {
