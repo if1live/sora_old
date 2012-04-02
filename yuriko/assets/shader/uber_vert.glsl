@@ -61,7 +61,7 @@ void main() {
 #else
 	bool use_specular = false;
 #endif
-#ifdef USE_SPECULAR
+#ifdef USE_SPECULAR_MAP
 	bool use_specular_map = true;
 #else
 	bool use_specular_map = false;

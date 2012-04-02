@@ -45,8 +45,8 @@
 namespace sora {;
 
 GLuint Renderer::last_tex_id_ = -1;
-GLuint Renderer::last_prog_id_ = -1;
 ShaderProgram *Renderer::last_prog_ = NULL;
+Material Renderer::last_material_ = Material::GetInvalidMtl();
 
 void Renderer::SetPolicy_2D() {
   if(policy_->policy_type != kRenderPolicy2D) {
@@ -72,17 +72,18 @@ Renderer::~Renderer() {
 }
 
 void Renderer::SetTexture(const Texture &tex) {
+  //ambient 같은거용 표준 텍스쳐
   if(last_tex_id_ != tex.handle()) {
     glActiveTexture(GL_TEXTURE0);
+    glUniform1i(0, 1);  //first
     glBindTexture(GL_TEXTURE_2D, tex.handle());
     last_tex_id_ = tex.handle();
   }
 }
 
 void Renderer::SetShader(const ShaderProgram &prog) {
-  if(last_prog_id_ != prog.prog) {
+  if(last_prog_ == NULL || (last_prog_->prog != prog.prog)) {
     glUseProgram(prog.prog);
-    last_prog_id_ = prog.prog;
     last_prog_ = const_cast<ShaderProgram*>(&prog);
   }
 }
@@ -97,7 +98,7 @@ void Renderer::ApplyMaterialLight() {
 
   const ShaderBindPolicy &bind_policy = last_prog_->bind_policy;
   const Light &light = light_;
-  const Material &material = material_;
+  const Material &material = last_material_;
 
   //apply light pos
   const ShaderVariable &light_pos_var = bind_policy.var(ShaderBindPolicy::kLightPosition);
@@ -162,39 +163,51 @@ void Renderer::ApplyMaterialLight() {
   if(use_ambient) {
     glUniform4fv(ambient_var.location, 1, ambient_color);
     GLHelper::CheckError("Uniform AmbientColor");
-
-    if(ambient_map_var.location != -1) {
-      Texture *ambient_map = dev_->texture_mgr().Get_ptr(material.ambient_map);
-      if(ambient_map != NULL) {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, ambient_map->handle());
-        glUniform1i(diffuse_map_var.location, 0);
-      }
-    }
   }
-
-  
   if(use_diffuse) {
     glUniform4fv(diffuse_var.location, 1, diffuse_color);
     GLHelper::CheckError("Uniform DiffuseColor");
+  }
+  //specular
+  if(use_specular) {
+    glUniform4fv(specular_var.location, 1, specular_color);
+    GLHelper::CheckError("Uniform SpecularColor");
+  }
+  if(shininess_var.location != -1) {
+    glUniform1f(shininess_var.location, material.shininess);
+    GLHelper::CheckError("Uniform Shininess");
+  }
 
-    if(diffuse_map_var.location != -1) {
-      Texture *diffuse_map = dev_->texture_mgr().Get_ptr(material_.diffuse_map);
+  if(last_material_ != mtl_) {
+    //가장 마지막에 바인딩한것과 지금꺼가 다르다면, 아마도 내부속성 대부분이 다르다는 소리이다
+    //단순 빛색깔 같은거는 큰 부하가 아니고 빛계산과 중복되서 들어가는걸
+    //처리하기 귀찮으니까 마지막꺼과 비교없이 그냥 대입하자
+    //하지만 texture의 경우는 부하가 좀 크기가 검사를 해서
+    //바뀐 경우에만 변경하자
+    last_material_ = mtl_;
+
+    //ambient봐서 텍스쳐 교체하기
+    if(use_ambient && ambient_map_var.location != -1) {
+      Texture *ambient_map = dev_->texture_mgr().Get_ptr(mtl_.ambient_map);
+      if(ambient_map != NULL) {
+        /*
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, ambient_map->handle());
+        glUniform1i(diffuse_map_var.location, 0);
+        */
+        SetTexture(*ambient_map);
+      }
+    }
+    if(use_diffuse && diffuse_map_var.location != -1) {
+      Texture *diffuse_map = dev_->texture_mgr().Get_ptr(mtl_.diffuse_map);
       if(diffuse_map != NULL) {
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, diffuse_map->handle());
         glUniform1i(diffuse_map_var.location, 1);
       }
     }
-  }
-
-  //specular
-  if(use_specular) {
-    glUniform4fv(specular_var.location, 1, specular_color);
-    GLHelper::CheckError("Uniform SpecularColor");
-
-    if(specular_map_var.location != -1) {
-      Texture *specular_map = dev_->texture_mgr().Get_ptr(material_.specular_map);
+    if(use_specular && specular_map_var.location != -1) {
+      Texture *specular_map = dev_->texture_mgr().Get_ptr(mtl_.specular_map);
       if(specular_map != NULL) {
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, specular_map->handle());
@@ -202,23 +215,20 @@ void Renderer::ApplyMaterialLight() {
       }
     }
   }
-    
-  if(shininess_var.location != -1) {
-    glUniform1f(shininess_var.location, material.shininess);
-    GLHelper::CheckError("Uniform Shininess");
-  }
 
   //최초 상태로 돌려놓기
   glActiveTexture(GL_TEXTURE0);
 }
 void Renderer::SetMaterial(const Material &material) {
-  material_ = material;
+  mtl_ = material;
 }
 
 void Renderer::EndRender() {
   last_tex_id_ = -1;
-  last_prog_id_ = -1;
   last_prog_ = NULL;
+
+  //마테리얼 대충 날리기
+  last_material_.uber_flag = Material::kInvalidShaderFlag; //설마 알파 -1인 정상 재질이 있을리가 없지
 
   GLHelper::CheckError("EndRender");
 }

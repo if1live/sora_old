@@ -112,15 +112,15 @@ public:
 protected:
   //access cache like data
   static GLuint last_tex_id() { return last_tex_id_; }
-  static GLuint last_prog_id() { return last_prog_id_; }
   static ShaderProgram *last_prog() { return last_prog_; }
+  static Material &last_material() { return last_material_; }
 
 private:
   //마지막에 잡은 opengl resource는 캐시를 공유하도록하자. 
   //사실상 상속은 이걸 위해서 등장한것에 더 가깝다
   static GLuint last_tex_id_;
-  static GLuint last_prog_id_;
   static ShaderProgram *last_prog_;
+  static Material last_material_;
 
   //행렬의 경우, 렌더러 각각이 공유하지 않는다. 2d와 3d를 완전히 분리시킨다는 의미
   glm::mat4 projection_;
@@ -131,7 +131,7 @@ private:
 
   Camera cam_;
   Light light_;
-  Material material_;
+  Material mtl_;
 };
 
 template<typename T>
