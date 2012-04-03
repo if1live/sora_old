@@ -37,6 +37,7 @@
 
 #include "event/touch_device.h"
 #include "event/touch_event.h"
+#include "renderer/selection_buffer.h"
 
 using namespace std;
 using namespace glm;
@@ -56,16 +57,7 @@ const char *kCube1 = "cube1";
 const char *kCube2 = "cube2";
 const char *kPlane = "plane";
 
-//물체 선택하기 위한 selection buffer
-struct SelectionBufferObject {
-  GLuint fbo;
-  GLuint color;
-  GLuint depth;
-  //크기는 창과 동일
-  int width;
-  int height;
-};
-SelectionBufferObject selection_buffer;
+SelectionBuffer selection_buffer;
 
 void Selection_setup_graphics(sora::Device *dev, int w, int h) {
   win_width = w;
@@ -116,28 +108,8 @@ void Selection_setup_graphics(sora::Device *dev, int w, int h) {
   }
   
   {
-    //create selection buf
-    selection_buffer.width = w;
-    selection_buffer.height = h;
-
-    glGenFramebuffers(1, &selection_buffer.fbo);
-    glBindFramebuffer(GL_FRAMEBUFFER, selection_buffer.fbo);
-
-    //depth
-    glGenRenderbuffers(1, &selection_buffer.depth);
-    glBindRenderbuffer(GL_RENDERBUFFER, selection_buffer.depth);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, selection_buffer.width, selection_buffer.height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, selection_buffer.depth);
-    GLHelper::CheckFrameBufferStatus("fb");
-
-    //color
-    glGenRenderbuffers(1, &selection_buffer.color);
-    glBindRenderbuffer(GL_RENDERBUFFER, selection_buffer.color);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, selection_buffer.width, selection_buffer.height);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, selection_buffer.color);
-    GLHelper::CheckFrameBufferStatus("fb");
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    //init seleciton buf
+    selection_buffer.Init(w, h);
   }
   {
     std::string tex_path = sora::Filesystem::GetAppPath("texture/sora.png");
@@ -189,13 +161,9 @@ void DrawScene(sora::Device *dev, sora::ShaderProgram &shader) {
     int color_id_loc = shader.GetUniformLocation("u_colorId");
     if(color_id_loc != -1) {
       //color_id를 ivec4로 변환하기 위해서 char배열로 변환후 다시 조합하자
-      char color_id[4];
-      memcpy(color_id, &i, sizeof(color_id));
-      int color_id_data[4];
-      for(int i = 0 ; i < 4 ; i++) {
-        color_id_data[i] = color_id[i];
-      }
-      glUniform4iv(color_id_loc, 1, color_id_data);
+      int color_id[4];
+      SelectionBuffer::IdToArray(i, color_id);
+      glUniform4iv(color_id_loc, 1, color_id);
     }
   
     SR_ASSERT(mesh_buffer->BufferCount());
@@ -269,25 +237,13 @@ void Selection_update_frame(sora::Device *dev, float dt) {
     int gl_y = win_height - evt.y;
 
     //터치햇을때만 selection buffer만들어서 렌더링 부하를 줄이자
-    glBindFramebuffer(GL_FRAMEBUFFER, selection_buffer.fbo);
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //터치한곳 근처만 그려서 부하를 줄이자
-    //scissor test로 일부만 그리기
-    glEnable(GL_SCISSOR_TEST);
-    glScissor(gl_x-1, gl_y-1, 2, 2);
+    SelectionRequest request(&selection_buffer, gl_x, gl_y);
     DrawScene(dev, selection_shader);
-    glDisable(GL_SCISSOR_TEST);
 
-    unsigned char pixel_data[4];
-    glReadPixels(gl_x, gl_y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel_data);
-    //glReadPixels(0, 0, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel_data);
-    int color_id = (*(int*)pixel_data);
+    int color_id = request.GetId();
     if(color_id != -1) {
       LOGI("ColorId : %d", color_id);
     }
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
 }
 

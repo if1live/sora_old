@@ -56,6 +56,7 @@
       <DisableSpecificWarnings>4819;4099;4251;4996;</DisableSpecificWarnings>
       <AdditionalIncludeDirectories>..\sdk\libjpeg;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <MinimalRebuild>true</MinimalRebuild>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -114,6 +115,7 @@
     <ClCompile Include="renderer\primitive_model.cpp" />
     <ClCompile Include="renderer\renderer.cpp" />
     <ClCompile Include="renderer\render_state.cpp" />
+    <ClCompile Include="renderer\selection_buffer.cpp" />
     <ClCompile Include="renderer\shader.cpp" />
     <ClCompile Include="renderer\shader_bind_policy.cpp" />
     <ClCompile Include="renderer\shader_variable.cpp" />
@@ -190,6 +192,7 @@
     <ClInclude Include="renderer\primitive_model.h" />
     <ClInclude Include="renderer\renderer.h" />
     <ClInclude Include="renderer\render_state.h" />
+    <ClInclude Include="renderer\selection_buffer.h" />
     <ClInclude Include="renderer\shader.h" />
     <ClInclude Include="renderer\shader_bind_policy.h" />
     <ClInclude Include="renderer\shader_variable.h" />
