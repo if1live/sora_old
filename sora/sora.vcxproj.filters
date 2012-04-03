@@ -197,6 +197,9 @@
     <ClCompile Include="test_function.cpp">
       <Filter>logic_test</Filter>
     </ClCompile>
+    <ClCompile Include="selection_main.cpp">
+      <Filter>logic_test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -417,6 +420,9 @@
       <Filter>logic_test</Filter>
     </ClInclude>
     <ClInclude Include="test_function.h">
+      <Filter>logic_test</Filter>
+    </ClInclude>
+    <ClInclude Include="selection_main.h">
       <Filter>logic_test</Filter>
     </ClInclude>
   </ItemGroup>

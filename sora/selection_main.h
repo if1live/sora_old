@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2011 by if1live */
+﻿/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,37 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_GL_HELPER_H_
-#define SORA_GL_HELPER_H_
-
-#if SR_USE_PCH == 0
-#include <vector>
-#include <string>
-#endif
+#ifndef SORA_SELECTION_MAIN_H_
+#define SORA_SELECTION_MAIN_H_
 
 namespace sora {;
-class GLHelper {
-public:
-  static bool CheckFrameBufferStatus(const char *name);
-  static bool CheckFrameBufferStatus(const std::string &name) {
-    return CheckFrameBufferStatus(name.c_str());
-  }
-  static bool CheckError(const char *name);
-  static bool CheckError(const std::string &name) {
-    return CheckError(name.c_str());
-  }
-  // gl information
-  static const std::string &GetVersion();
-  static const std::string &GetVender();
-  static const std::string &GetRenderer();
-  static const std::string &GetExtensions();
-  static const std::vector<std::string> &GetExtensionList();
-  static bool IsExtensionSupport(const char *ext) {
-    return IsExtensionSupport(std::string(ext));
-  }
-  static bool IsExtensionSupport(const std::string &ext);
-};
+class Device;
 
+void Selection_setup_graphics(sora::Device *dev, int w, int h);
+void Selection_draw_frame(sora::Device *dev);
+void Selection_update_frame(sora::Device *dev, float dt);
 }
 
-#endif  // SORA_GL_HELPER_H_
+#endif  // SORA_SELECTION_MAIN_H_

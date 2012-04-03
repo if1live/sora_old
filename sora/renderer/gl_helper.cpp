@@ -29,6 +29,35 @@
 #endif
 
 namespace sora {;
+bool GLHelper::CheckFrameBufferStatus(const char *name) {
+  GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+  if(status == GL_FRAMEBUFFER_COMPLETE) {
+    return true;
+  }
+  //else,,
+  const char *error_msg = NULL;
+  switch(status) {
+  case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
+    error_msg = "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
+    break;
+  case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
+    error_msg = "GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS";
+    break;
+  case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
+    error_msg = "GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT";
+    break;
+  case GL_FRAMEBUFFER_UNSUPPORTED:
+    error_msg = "GL_FRAMEBUFFER_UNSUPPORTED";
+    break;
+  default:
+    error_msg = "Unknown Error";
+    break;  
+  }
+  LOGE("FrameBuffer Error [%s] : %s", name, error_msg);
+  //SR_ASSERT(false);
+  return false;
+}
+
 bool GLHelper::CheckError(const char *name) {
   int error = glGetError();
   if (error != GL_NO_ERROR) {

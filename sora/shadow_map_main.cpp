@@ -33,6 +33,7 @@
 #include "sys/device.h"
 #include "renderer/primitive_model.h"
 #include "renderer/gl_buffer_object.h"
+#include "renderer/camera.h"
 
 using namespace std;
 using namespace glm;
@@ -49,6 +50,7 @@ float win_height = 0;
 float rot_deg = 0;
 
 Light light;
+Camera cam;
 
 //테스트용 모델 이름
 const char *kCube1 = "cube1";
@@ -109,6 +111,10 @@ void ShadowMap_setup_graphics(sora::Device *dev, int w, int h) {
     light.pos = Vec3f(2, 3, 5);
     light.up = Vec3f(0, 1, 0);
     light.dir = (-light.pos).Normalize();
+    
+    cam.set_eye(Vec3f(-2, 3, 5));
+    cam.set_up(Vec3f(0, 1, 0));
+    cam.set_dir(light.dir);
   }
   
   {
@@ -140,35 +146,7 @@ void ShadowMap_setup_graphics(sora::Device *dev, int w, int h) {
     glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, shadow_map_fbo.width, shadow_map_fbo.height);
     GLHelper::CheckError("glInitEnd");
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, shadow_map_fbo.depth);
-    GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    //GLHelper::CheckError("glInitEnd");
-
-    if(status != GL_FRAMEBUFFER_COMPLETE) {
-      switch(status) {
-      case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
-      //case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT:
-        LOGI("GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT");
-        SR_ASSERT(false);
-        break;
-      case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
-        LOGI("GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS");
-        SR_ASSERT(false);
-        break;
-      case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT:
-      //case GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT:
-        LOGI("GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT");
-        SR_ASSERT(false);
-        break;
-      case GL_FRAMEBUFFER_UNSUPPORTED:
-      //case GL_FRAMEBUFFER_UNSUPPORTED_EXT:
-        LOGI("GL_FRAMEBUFFER_UNSUPPORTED");
-        SR_ASSERT(false);
-        break;
-      default:
-        break;  
-      }
-    }
-
+    GLHelper::CheckFrameBufferStatus("fb");
 
     glGenTextures(1, &shadow_map_fbo.img);
     glBindTexture(GL_TEXTURE_2D, shadow_map_fbo.img);
@@ -180,12 +158,10 @@ void ShadowMap_setup_graphics(sora::Device *dev, int w, int h) {
 
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, shadow_map_fbo.width, shadow_map_fbo.height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, shadow_map_fbo.img, 0);
-    status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    if(status != GL_FRAMEBUFFER_COMPLETE) {
-      LOGI("frame buffer error");
-      SR_ASSERT(false);
-    }
+    GLHelper::CheckFrameBufferStatus("fb");
+
     GLHelper::CheckError("glInitEnd");
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
   {
     std::string tex_path = sora::Filesystem::GetAppPath("texture/sora.png");
@@ -257,14 +233,16 @@ void ShadowMap_draw_frame(sora::Device *dev) {
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
       glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, pos));
       glDrawElements(draw_mode, index_count, GL_UNSIGNED_SHORT, 0);
+      
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
   }
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
   
+  
+  //쉐이더맵을 텍스쳐로 치고 렌더링 한번더 하기
   {
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     //glClear(GL_DEPTH_BUFFER_BIT);
@@ -308,7 +286,7 @@ void ShadowMap_draw_frame(sora::Device *dev) {
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     GLHelper::CheckError("glDrawArrays");
   }
-
+  
 
   GLHelper::CheckError("glDrawArrays");
 }

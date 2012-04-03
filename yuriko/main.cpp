@@ -28,6 +28,7 @@
 #include "sora/core/timer.h"
 #include "sora/shadow_map_main.h"
 //#include "sora/test_function.h"
+#include "sora/selection_main.h"
 
 const int kWinWidth = 480;
 const int kWinHeight = 800;
@@ -79,6 +80,9 @@ int main(int argc, char *argv[]) {
     }
   }
   */
+  
+  /*
+  //depth map test
   ShadowMap_setup_graphics(&device, kWinWidth, kWinHeight);
   float prev_time = Timer_GetSecond();
   while(true) {
@@ -86,6 +90,25 @@ int main(int argc, char *argv[]) {
     float curr_time = Timer_GetSecond();
     float dt = curr_time - prev_time;
     ShadowMap_update_frame(&device, dt);
+
+    glfwSwapBuffers();
+    prev_time = curr_time;
+    Timer_Tick();
+
+    if (glfwGetKey(GLFW_KEY_ESC) == GLFW_PRESS) {
+      exit(0);
+    }
+  }
+  */
+
+  //selection test
+  Selection_setup_graphics(&device, kWinWidth, kWinHeight);
+  float prev_time = Timer_GetSecond();
+  while(true) {
+    Selection_draw_frame(&device);
+    float curr_time = Timer_GetSecond();
+    float dt = curr_time - prev_time;
+    Selection_update_frame(&device, dt);
 
     glfwSwapBuffers();
     prev_time = curr_time;
