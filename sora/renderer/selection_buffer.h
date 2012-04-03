@@ -25,6 +25,7 @@ namespace sora {;
 
 class SelectionBuffer;
 class SelectionRequest;
+class ShaderProgram;
 
 //물체 선택하기 위한 selection buffer
 //reference
@@ -39,6 +40,9 @@ public:
   void Deinit();
 
   static void IdToArray(int color_id, int arr[4]);
+
+  ShaderProgram *shader() { return selection_shader_; }
+  int GetColorIdLocation() const;
   
 private:
   void BeginDraw(int gl_x, int gl_y);
@@ -55,6 +59,8 @@ private:
   //크기는 창과 동일
   int width_;
   int height_;
+
+  ShaderProgram *selection_shader_;
 };
 
 //RAII의 구현을 위해서 사용

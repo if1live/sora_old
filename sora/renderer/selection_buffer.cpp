@@ -21,6 +21,9 @@
 #include "sora_stdafx.h"
 #include "selection_buffer.h"
 #include "gl_helper.h"
+#include "shader.h"
+#include "sys/memory_file.h"
+#include "sys/filesystem.h"
 
 using namespace sora;
 
@@ -30,6 +33,10 @@ SelectionBuffer::SelectionBuffer() {
   memset(this, 0, sizeof(SelectionBuffer));
 }
 SelectionBuffer::~SelectionBuffer() {
+  if(selection_shader_ != NULL) {
+    delete(selection_shader_);
+    selection_shader_ = NULL;
+  }
 }
 
 void SelectionBuffer::Init(int w, int h) {
@@ -55,6 +62,21 @@ void SelectionBuffer::Init(int w, int h) {
   GLHelper::CheckFrameBufferStatus("fb");
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+  //쉐이더 적절히 생성
+  selection_shader_ = new ShaderProgram();
+  std::string app_vert_path = sora::Filesystem::GetAppPath("shader/selection_vert.glsl");
+  std::string app_frag_path = sora::Filesystem::GetAppPath("shader/selection_frag.glsl");
+  sora::MemoryFile vert_file(app_vert_path);
+  sora::MemoryFile frag_file(app_frag_path);
+  vert_file.Open();
+  frag_file.Open();
+  const char *vert_src = (const char*)(vert_file.start);
+  const char *frag_src = (const char*)(frag_file.start);
+  bool prog_result = selection_shader_->Init(vert_src, frag_src);
+  if(prog_result == false) {
+    LOGE("Could not create program.");
+  }
 }
 void SelectionBuffer::Deinit() {
   if(fbo_ != 0) {
@@ -72,6 +94,9 @@ void SelectionBuffer::Deinit() {
 }
 
 void SelectionBuffer::BeginDraw(int gl_x, int gl_y) {
+  if(fbo_ == 0) {
+    return;
+  }
   glBindFramebuffer(GL_FRAMEBUFFER, fbo_);
   glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -82,11 +107,13 @@ void SelectionBuffer::BeginDraw(int gl_x, int gl_y) {
   //scissor test로 일부만 그리기
   glEnable(GL_SCISSOR_TEST);
   glScissor(gl_x-1, gl_y-1, 2, 2);
-    
 }
-int SelectionBuffer::EndDraw(int gl_x, int gl_y) {
-  glDisable(GL_SCISSOR_TEST);
 
+int SelectionBuffer::EndDraw(int gl_x, int gl_y) {
+  if(fbo_ == 0) {
+    return -1;
+  }
+  glDisable(GL_SCISSOR_TEST);
   unsigned char pixel_data[4];
   glReadPixels(gl_x, gl_y, 1, 1, GL_RGBA, GL_UNSIGNED_BYTE, pixel_data);
   int color_id = (*(int*)pixel_data);
@@ -101,6 +128,13 @@ void SelectionBuffer::IdToArray(int color_id, int arr[4]) {
   for(int i = 0 ; i < 4 ; i++) {
     arr[i] = tmp_color_id[i];
   }
+}
+
+int SelectionBuffer::GetColorIdLocation() const {
+  if(selection_shader_ == NULL) {
+    return -1;
+  }
+  return selection_shader_->GetUniformLocation("u_colorId");
 }
 //////////////////////////////////
 

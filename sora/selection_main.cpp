@@ -43,9 +43,7 @@ using namespace std;
 using namespace glm;
 
 namespace sora {;
-ShaderProgram selection_shader;
 TextureManager tex_mgr;
-
 ShaderProgram simple_shader;
 
 float win_width = 0;
@@ -63,23 +61,7 @@ void Selection_setup_graphics(sora::Device *dev, int w, int h) {
   win_width = w;
   win_height = h;
 
-  
   //create shader
-  {
-    std::string app_vert_path = sora::Filesystem::GetAppPath("shader/selection_vert.glsl");
-    std::string app_frag_path = sora::Filesystem::GetAppPath("shader/selection_frag.glsl");
-    sora::MemoryFile vert_file(app_vert_path);
-    sora::MemoryFile frag_file(app_frag_path);
-    vert_file.Open();
-    frag_file.Open();
-    const char *vert_src = (const char*)(vert_file.start);
-    const char *frag_src = (const char*)(frag_file.start);
-    bool prog_result = selection_shader.Init(vert_src, frag_src);
-    if(prog_result == false) {
-      LOGE("Could not create program.");
-    }
-  }
-  
   {
     std::string app_vert_path = sora::Filesystem::GetAppPath("shader/v_simple.glsl");
     std::string app_frag_path = sora::Filesystem::GetAppPath("shader/f_simple.glsl");
@@ -238,7 +220,7 @@ void Selection_update_frame(sora::Device *dev, float dt) {
 
     //터치햇을때만 selection buffer만들어서 렌더링 부하를 줄이자
     SelectionRequest request(&selection_buffer, gl_x, gl_y);
-    DrawScene(dev, selection_shader);
+    DrawScene(dev, *selection_buffer.shader());
 
     int color_id = request.GetId();
     if(color_id != -1) {
