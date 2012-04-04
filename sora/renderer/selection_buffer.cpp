@@ -51,13 +51,17 @@ void SelectionBuffer::Init(int w, int h) {
   glGenRenderbuffers(1, &depth_);
   glBindRenderbuffer(GL_RENDERBUFFER, depth_);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, w, h);
-  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_);
-  GLHelper::CheckFrameBufferStatus("fb");
-
+  
   //color
   glGenRenderbuffers(1, &color_);
   glBindRenderbuffer(GL_RENDERBUFFER, color_);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, w, h);
+
+  //attach to fb
+  //renderbuffer생성하자마자 달면 GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER 에러 뜬다
+  //이놈은 reference에도 바로 안보이는 더러운 놈이다
+  //http://www.opengl.org/wiki/Framebuffer_Object
+  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_);
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color_);
   GLHelper::CheckFrameBufferStatus("fb");
 

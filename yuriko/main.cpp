@@ -27,12 +27,109 @@
 #include "sora/sys/device.h"
 #include "sora/core/timer.h"
 #include "sora/shadow_map_main.h"
-//#include "sora/test_function.h"
+#include "sora/test_function.h"
 #include "sora/selection_main.h"
 #include "sora/celshading_main.h"
+#include "sora/depth_map_main.h"
 
 const int kWinWidth = 480;
 const int kWinHeight = 800;
+
+void run_selection(sora::Device *dev) {
+  //selection test
+  sora::selection::setup_graphics(dev, kWinWidth, kWinHeight);
+  float prev_time = Timer_GetSecond();
+  while(true) {
+    sora::selection::draw_frame(dev);
+    float curr_time = Timer_GetSecond();
+    float dt = curr_time - prev_time;
+    sora::selection::update_frame(dev, dt);
+
+    glfwSwapBuffers();
+    prev_time = curr_time;
+    Timer_Tick();
+
+    if (glfwGetKey(GLFW_KEY_ESC) == GLFW_PRESS) {
+      break;
+    }
+  }
+}
+
+void run_shadow_map(sora::Device *dev) {
+  //depth map test
+  sora::shadowmap::setup_graphics(dev, kWinWidth, kWinHeight);
+  float prev_time = Timer_GetSecond();
+  while(true) {
+    sora::shadowmap::draw_frame(dev);
+    float curr_time = Timer_GetSecond();
+    float dt = curr_time - prev_time;
+    sora::shadowmap::update_frame(dev, dt);
+
+    glfwSwapBuffers();
+    prev_time = curr_time;
+    Timer_Tick();
+
+    if (glfwGetKey(GLFW_KEY_ESC) == GLFW_PRESS) {
+      exit(0);
+    }
+  }
+}
+
+void run_celshading(sora::Device *dev) {
+  //celshading test
+  sora::celshading::setup_graphics(dev, kWinWidth, kWinHeight);
+  float prev_time = Timer_GetSecond();
+  while(true) {
+    sora::celshading::draw_frame(dev);
+    float curr_time = Timer_GetSecond();
+    float dt = curr_time - prev_time;
+    sora::celshading::update_frame(dev, dt);
+
+    glfwSwapBuffers();
+    prev_time = curr_time;
+    Timer_Tick();
+
+    if (glfwGetKey(GLFW_KEY_ESC) == GLFW_PRESS) {
+      break;
+    }
+  }
+}
+
+void run_depthmap(sora::Device *dev) {
+  //celshading test
+  sora::depthmap::setup_graphics(dev, kWinWidth, kWinHeight);
+  float prev_time = Timer_GetSecond();
+  while(true) {
+    sora::depthmap::draw_frame(dev);
+    float curr_time = Timer_GetSecond();
+    float dt = curr_time - prev_time;
+    sora::depthmap::update_frame(dev, dt);
+
+    glfwSwapBuffers();
+    prev_time = curr_time;
+    Timer_Tick();
+
+    if (glfwGetKey(GLFW_KEY_ESC) == GLFW_PRESS) {
+      break;
+    }
+  }
+}
+
+void run_gles_1_test() {
+  while(true) {
+    SORA_test_draw(kWinWidth, kWinHeight);
+    glfwSwapBuffers();
+  }
+}
+
+void run_gles_2_test() {
+  SORA_init_gl_env(); //glewInit();
+  while(true) {
+    SORA_test_draw2(kWinWidth, kWinHeight);
+    glfwSwapBuffers();
+  }
+}
+
 int main(int argc, char *argv[]) {
   if( !glfwInit() ) {
     exit( EXIT_FAILURE );
@@ -44,17 +141,8 @@ int main(int argc, char *argv[]) {
   }
 
   //gl test
-  //while(true) {
-  //  SORA_test_draw(kWinWidth, kWinHeight);
-  //  glfwSwapBuffers();
-  //}
-
-  //gl2 test
-  //SORA_init_gl_env(); //glewInit();
-  //while(true) {
-  //  SORA_test_draw2(kWinWidth, kWinHeight);
-  //  glfwSwapBuffers();
-  //}
+  //run_gles_1_test();
+  //run_gles_2_test();
 
   // init glew
   SORA_init_gl_env(); //glewInit();
@@ -82,63 +170,9 @@ int main(int argc, char *argv[]) {
   }
   */
   
-  /*
-  //depth map test
-  setup_graphics(&device, kWinWidth, kWinHeight);
-  float prev_time = Timer_GetSecond();
-  while(true) {
-    draw_frame(&device);
-    float curr_time = Timer_GetSecond();
-    float dt = curr_time - prev_time;
-    update_frame(&device, dt);
-
-    glfwSwapBuffers();
-    prev_time = curr_time;
-    Timer_Tick();
-
-    if (glfwGetKey(GLFW_KEY_ESC) == GLFW_PRESS) {
-      exit(0);
-    }
-  }
-  */
-  /*
-  //selection test
-  setup_graphics(&device, kWinWidth, kWinHeight);
-  float prev_time = Timer_GetSecond();
-  while(true) {
-    draw_frame(&device);
-    float curr_time = Timer_GetSecond();
-    float dt = curr_time - prev_time;
-    update_frame(&device, dt);
-
-    glfwSwapBuffers();
-    prev_time = curr_time;
-    Timer_Tick();
-
-    if (glfwGetKey(GLFW_KEY_ESC) == GLFW_PRESS) {
-      exit(0);
-    }
-  }
-  */
-  //celshading test
-  sora::celshading::setup_graphics(&device, kWinWidth, kWinHeight);
-  float prev_time = Timer_GetSecond();
-  while(true) {
-    sora::celshading::draw_frame(&device);
-    float curr_time = Timer_GetSecond();
-    float dt = curr_time - prev_time;
-    sora::celshading::update_frame(&device, dt);
-
-    glfwSwapBuffers();
-    prev_time = curr_time;
-    Timer_Tick();
-
-    if (glfwGetKey(GLFW_KEY_ESC) == GLFW_PRESS) {
-      exit(0);
-    }
-  }
-
   //logic end
+  run_selection(&device);
+  //run_depthmap(&device);
 
   glfwTerminate();
 	return 0;

@@ -203,6 +203,9 @@
     <ClCompile Include="celshading_main.cpp">
       <Filter>logic_test</Filter>
     </ClCompile>
+    <ClCompile Include="depth_map_main.cpp">
+      <Filter>logic_test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -430,6 +433,9 @@
     </ClInclude>
     <ClInclude Include="core\vector.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="depth_map_main.h">
+      <Filter>logic_test</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

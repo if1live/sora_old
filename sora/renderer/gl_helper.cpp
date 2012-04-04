@@ -40,6 +40,7 @@ bool GLHelper::CheckFrameBufferStatus(const char *name) {
   case GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT:
     error_msg = "GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT";
     break;
+  //GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS
   case GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT:
     error_msg = "GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS";
     break;
@@ -49,12 +50,18 @@ bool GLHelper::CheckFrameBufferStatus(const char *name) {
   case GL_FRAMEBUFFER_UNSUPPORTED:
     error_msg = "GL_FRAMEBUFFER_UNSUPPORTED";
     break;
+  case GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER :
+    error_msg = "GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER";
+    break;
+
   default:
+    CheckError(name);
     error_msg = "Unknown Error";
     break;  
   }
   LOGE("FrameBuffer Error [%s] : %s", name, error_msg);
   //SR_ASSERT(false);
+
   return false;
 }
 
