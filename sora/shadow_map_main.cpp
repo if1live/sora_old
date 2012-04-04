@@ -145,23 +145,19 @@ namespace shadowmap {
       glGenRenderbuffers(1, &shadow_map_fbo.depth);
       glBindRenderbuffer(GL_RENDERBUFFER, shadow_map_fbo.depth);
       glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, shadow_map_fbo.width, shadow_map_fbo.height);
-      GLHelper::CheckError("glInitEnd");
-      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, shadow_map_fbo.depth);
-      GLHelper::CheckFrameBufferStatus("fb");
-
+      
       glGenTextures(1, &shadow_map_fbo.img);
       glBindTexture(GL_TEXTURE_2D, shadow_map_fbo.img);
-
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
       glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, shadow_map_fbo.width, shadow_map_fbo.height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+
+      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, shadow_map_fbo.depth);
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, shadow_map_fbo.img, 0);
       GLHelper::CheckFrameBufferStatus("fb");
 
-      GLHelper::CheckError("glInitEnd");
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
     {

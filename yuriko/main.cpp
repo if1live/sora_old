@@ -171,8 +171,9 @@ int main(int argc, char *argv[]) {
   */
   
   //logic end
-  run_selection(&device);
-  //run_depthmap(&device);
+  //run_selection(&device);
+  run_depthmap(&device);
+  //run_shadow_map(&device);
 
   glfwTerminate();
 	return 0;

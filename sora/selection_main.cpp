@@ -113,7 +113,7 @@ namespace selection {
     glUseProgram(shader.prog);
 
     int pos_loc = shader.GetAttribLocation("a_position");
-    int tex_loc = simple_shader.GetAttribLocation("a_texcoord");
+    int tex_loc = shader.GetAttribLocation("a_texcoord");
     glEnableVertexAttribArray(pos_loc);
     if(tex_loc != -1) {
       glEnableVertexAttribArray(tex_loc);
