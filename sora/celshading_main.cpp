@@ -49,246 +49,247 @@ using namespace std;
 using namespace glm;
 
 namespace sora {;
-namespace celshading {;
+namespace celshading {
 
-TextureManager tex_mgr;
-ShaderProgram simple_shader;
-ShaderProgram edge_shader;
+  TextureManager tex_mgr;
+  ShaderProgram simple_shader;
+  ShaderProgram edge_shader;
 
-float win_width = 0;
-float win_height = 0;
-float rot_deg = 0;
-Light light;
+  float win_width = 0;
+  float win_height = 0;
+  float rot_deg = 0;
+  Light light;
 
-//테스트용 모델 이름
-const char *kSolid = "cube1";
-const char *kWire = "cube2";
+  //테스트용 모델 이름
+  const char *kSolid = "cube1";
+  const char *kWire = "cube2";
 
-float cel_aptitude = 10; //위도. -90~90. 세로 위치 표현
-float cel_latitude = 10; //경도
+  float cel_aptitude = 10; //위도. -90~90. 세로 위치 표현
+  float cel_latitude = 10; //경도
 
-void set_cam_pos(float a, float b) {
-  cel_aptitude += a;
-  cel_latitude += b;
-  if(cel_aptitude > 90) {
-    cel_aptitude = 90;
-  } else if(cel_aptitude < -90) {
-    cel_aptitude = -90;
-  }
-}
-
-void CelShading_setup_graphics(sora::Device *dev, int w, int h) {
-  win_width = w;
-  win_height = h;
-
-  //edge 그리기
-  {
-    std::string app_vert_path = sora::Filesystem::GetAppPath("shader/edge.vs");
-    std::string app_frag_path = sora::Filesystem::GetAppPath("shader/edge.fs");
-    sora::MemoryFile vert_file(app_vert_path);
-    sora::MemoryFile frag_file(app_frag_path);
-    vert_file.Open();
-    frag_file.Open();
-    const char *vert_src = (const char*)(vert_file.start);
-    const char *frag_src = (const char*)(frag_file.start);
-    bool prog_result = edge_shader.Init(vert_src, frag_src);
-    if(prog_result == false) {
-      LOGE("Could not create program.");
+  void set_cam_pos(float a, float b) {
+    cel_aptitude += a;
+    cel_latitude += b;
+    if(cel_aptitude > 90) {
+      cel_aptitude = 90;
+    } else if(cel_aptitude < -90) {
+      cel_aptitude = -90;
     }
   }
-  //create shader
-  {
-    std::string app_vert_path = sora::Filesystem::GetAppPath("shader/simple.vs");
-    std::string app_frag_path = sora::Filesystem::GetAppPath("shader/simple.fs");
-    sora::MemoryFile vert_file(app_vert_path);
-    sora::MemoryFile frag_file(app_frag_path);
-    vert_file.Open();
-    frag_file.Open();
-    const char *vert_src = (const char*)(vert_file.start);
-    const char *frag_src = (const char*)(frag_file.start);
-    bool prog_result = simple_shader.Init(vert_src, frag_src);
-    if(prog_result == false) {
-      LOGE("Could not create program.");
+
+  void setup_graphics(sora::Device *dev, int w, int h) {
+    win_width = w;
+    win_height = h;
+
+    //edge 그리기
+    {
+      std::string app_vert_path = sora::Filesystem::GetAppPath("shader/edge.vs");
+      std::string app_frag_path = sora::Filesystem::GetAppPath("shader/edge.fs");
+      sora::MemoryFile vert_file(app_vert_path);
+      sora::MemoryFile frag_file(app_frag_path);
+      vert_file.Open();
+      frag_file.Open();
+      const char *vert_src = (const char*)(vert_file.start);
+      const char *frag_src = (const char*)(frag_file.start);
+      bool prog_result = edge_shader.Init(vert_src, frag_src);
+      if(prog_result == false) {
+        LOGE("Could not create program.");
+      }
     }
-  }
-  {
-    //쉐도우 테스트용 큐브
-    //sora::PrimitiveModel primitive_model;
-    //primitive_model.SolidCube(2, 2, 2, true);
-    //primitive_model.SolidCube(2, 2, 2, true);
-    //dev->mesh_mgr().Add(primitive_model.GetDrawCmdList(), kCube1);
-    Torus surface(0.5f, 0.2f);
-    dev->mesh_mgr().AddSolid(surface, kSolid);
+    //create shader
+    {
+      std::string app_vert_path = sora::Filesystem::GetAppPath("shader/simple.vs");
+      std::string app_frag_path = sora::Filesystem::GetAppPath("shader/simple.fs");
+      sora::MemoryFile vert_file(app_vert_path);
+      sora::MemoryFile frag_file(app_frag_path);
+      vert_file.Open();
+      frag_file.Open();
+      const char *vert_src = (const char*)(vert_file.start);
+      const char *frag_src = (const char*)(frag_file.start);
+      bool prog_result = simple_shader.Init(vert_src, frag_src);
+      if(prog_result == false) {
+        LOGE("Could not create program.");
+      }
+    }
+    {
+      //쉐도우 테스트용 큐브
+      //sora::PrimitiveModel primitive_model;
+      //primitive_model.SolidCube(2, 2, 2, true);
+      //primitive_model.SolidCube(2, 2, 2, true);
+      //dev->mesh_mgr().Add(primitive_model.GetDrawCmdList(), kCube1);
+      //Torus surface(0.5f, 0.2f);
+      TrefoilKnot surface(1.0f);
 
-    dev->mesh_mgr().AddWire(surface, kWire);
-  }
-  
-  {
-    //set light
-    light.pos = vec3(10, 10, 100);
-  }
-  {
-    std::string tex_path = sora::Filesystem::GetAppPath("texture/sora.png");
-    sora::MemoryFile tex_file(tex_path);
-    tex_file.Open();
-    Texture tex("sora");
-    tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
-    tex_mgr.Add(tex);
-  }
-  //gl상태
-  glEnable(GL_DEPTH_TEST);
-  glEnable(GL_CULL_FACE);
+      dev->mesh_mgr().AddSolid(surface, kSolid);
+      dev->mesh_mgr().AddWire(surface, kWire);
+    }
 
-  //GLHelper::CheckError("glInitEnd");
-}
-
-
-void CelShading_draw_frame(sora::Device *dev) {
-  /*
-  //select buffer rendering
-  glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  DrawScene(dev, selection_shader);
-  */
-  //obj rendering
-  glClearColor(0.3f, 0.8f, 0.8f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  glViewport(0, 0, win_width, win_height);
-  
-  //모델 그리기
-  {
+    {
+      //set light
+      light.pos = vec3(10, 10, 100);
+    }
+    {
+      std::string tex_path = sora::Filesystem::GetAppPath("texture/sora.png");
+      sora::MemoryFile tex_file(tex_path);
+      tex_file.Open();
+      Texture tex("sora");
+      tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
+      tex_mgr.Add(tex);
+    }
+    //gl상태
+    glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
 
-    //uber shader
-    Renderer &render3d = dev->render3d();
-    render3d.SetInitState();
-    
-    //set camera + projection
-    glm::mat4 &projection = render3d.projection_mat();
-    projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 100.0f);
-    float radius = 5;
-    float cam_x = radius * cos(SR_DEG_2_RAD(cel_aptitude)) * sin(SR_DEG_2_RAD(cel_latitude));
-    float cam_y = radius * sin(SR_DEG_2_RAD(cel_aptitude));
-    float cam_z = radius * cos(SR_DEG_2_RAD(cel_aptitude)) * cos(SR_DEG_2_RAD(cel_latitude));
-
-    sora::Camera cam;
-    cam.eye = vec3(cam_x, cam_y, cam_z);
-    cam.center = vec3(0, 0, 0);
-    cam.up = vec3(0, 1, 0);
-    render3d.set_camera(cam);
-
-    unsigned int flag = 0;
-    flag |= UberShader::kAmbientColor;
-    //flag |= UberShader::kAmbientMap;
-    flag |= UberShader::kDiffuseColor;
-    //flag |= UberShader::kDiffuseMap;
-    flag |= UberShader::kSpecularColor;
-    //flag |= UberShader::kSpecularMap;
-    ShaderProgram &shader = dev->uber_shader(flag);
-    render3d.SetShader(shader);
-
-    ShaderBindPolicy &bind_policy = shader.bind_policy;
-
-    //평면하나만 일단 렌더링해서 테스트하자
-    render3d.SetLight(light);
-    const mat4 world_mat(1.0f);
-    render3d.ApplyMatrix(world_mat);
-
-    //Texture *tex = device->texture_mgr().Get_ptr(string("sora2"));
-    //render3d.SetTexture(*tex);
-
-    //재질데이터 적절히 설정하기
-    Material mtl;
-    mtl.ambient_map = "sora2";
-    mtl.diffuse_map = "mtl_diffuse";
-    mtl.specular_map = "mtl_specular";
-    mtl.ambient = vec3(0.3, 0.3, 0.3);
-    mtl.diffuse = vec3(0.5, 0.5, 0.5);
-    mtl.specular = vec3(0.5, 0.5, 0.0);
-    mtl.shininess = 50;
-    mtl.uber_flag = flag;
-    render3d.SetMaterial(mtl);
-    render3d.ApplyMaterialLight();
-      
-    MeshBufferObject *mesh = dev->mesh_mgr().Get(kSolid);
-    SR_ASSERT(mesh != NULL);
-    render3d.Draw(*mesh);
+    //GLHelper::CheckError("glInitEnd");
   }
-  
-  //edge부터 그리기
-  {
-    float edge_width = 10.0f;
-    glLineWidth(edge_width);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_FRONT);
-    glUseProgram(edge_shader.prog);
-    int pos_loc = edge_shader.GetAttribLocation("a_position");
-    int normal_loc = edge_shader.GetAttribLocation("a_normal");
-    glEnableVertexAttribArray(pos_loc);
-    glEnableVertexAttribArray(normal_loc);
-    int mvp_loc = edge_shader.GetUniformLocation("u_worldViewProjection");
 
 
-    //set camera + projection
-    float radius = 5;
-    float cam_x = radius * cos(SR_DEG_2_RAD(cel_aptitude)) * sin(SR_DEG_2_RAD(cel_latitude));
-    float cam_y = radius * sin(SR_DEG_2_RAD(cel_aptitude));
-    float cam_z = radius * cos(SR_DEG_2_RAD(cel_aptitude)) * cos(SR_DEG_2_RAD(cel_latitude));
+  void draw_frame(sora::Device *dev) {
+    /*
+    //select buffer rendering
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    DrawScene(dev, selection_shader);
+    */
+    //obj rendering
+    glClearColor(0.3f, 0.8f, 0.8f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glViewport(0, 0, win_width, win_height);
 
-    glm::vec3 eye(cam_x, cam_y, cam_z);
-    glm::vec3 center(0);
-    glm::vec3 up(0, 1, 0);
-    glm::mat4 view = glm::lookAt(eye, center, up);
-    glm::mat4 projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 30.0f);
-    glm::mat4 model(1.0f);
-    glm::mat4 mvp = projection * view * model;
-    glUniformMatrix4fv(mvp_loc, 1, GL_FALSE, glm::value_ptr(mvp));
+    //모델 그리기
+    {
+      glEnable(GL_CULL_FACE);
+      glCullFace(GL_BACK);
 
-    //edge색 적절히 조정
-    int color_loc = edge_shader.GetUniformLocation("u_constColor");
-    float color[4] = { 0.1, 0.1, 0.1, 1.0 };
-    glUniform4fv(color_loc, 1, color);
+      //uber shader
+      Renderer &render3d = dev->render3d();
+      render3d.SetInitState();
 
-    //폴리곤 오프셋으로 외곽선적절히 처리
-    //폴리곤 오프셋 = thickness x dist x fovx / width 
-    //http://www.gamedevforever.com/18
-    float poly_offset = edge_width * radius * 45.0f / win_width;
-    glEnable(GL_POLYGON_OFFSET_FILL);
-    //glPolygonOffset(poly_offset, 1.0);
-    glPolygonOffset(4.0, 1.0);
+      //set camera + projection
+      glm::mat4 &projection = render3d.projection_mat();
+      projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 100.0f);
+      float radius = 5;
+      float cam_x = radius * cos(SR_DEG_2_RAD(cel_aptitude)) * sin(SR_DEG_2_RAD(cel_latitude));
+      float cam_y = radius * sin(SR_DEG_2_RAD(cel_aptitude));
+      float cam_z = radius * cos(SR_DEG_2_RAD(cel_aptitude)) * cos(SR_DEG_2_RAD(cel_latitude));
 
-    vector<string> mesh_list;
-    mesh_list.push_back(kWire);
-    for(size_t i = 0 ; i < mesh_list.size() ; i++) {
-      const char *name = mesh_list[i].c_str();
-      MeshBufferObject *mesh_buffer = dev->mesh_mgr().Get(name);
-      SR_ASSERT(mesh_buffer != NULL);
+      sora::Camera cam;
+      cam.eye = vec3(cam_x, cam_y, cam_z);
+      cam.center = vec3(0, 0, 0);
+      cam.up = vec3(0, 1, 0);
+      render3d.set_camera(cam);
 
-      SR_ASSERT(mesh_buffer->BufferCount());
-      GLuint vbo = mesh_buffer->vbo(0).buffer();
-      GLuint ibo = mesh_buffer->ibo(0).buffer();
-      int index_count = mesh_buffer->index_count(0);
-      GLenum draw_mode = mesh_buffer->draw_mode(0);
-  
-      glBindBuffer(GL_ARRAY_BUFFER, vbo);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-      glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, pos));
-      glVertexAttribPointer(normal_loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
-      glDrawElements(draw_mode, index_count, GL_UNSIGNED_SHORT, 0);
-      
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      unsigned int flag = 0;
+      flag |= UberShader::kAmbientColor;
+      //flag |= UberShader::kAmbientMap;
+      flag |= UberShader::kDiffuseColor;
+      //flag |= UberShader::kDiffuseMap;
+      flag |= UberShader::kSpecularColor;
+      //flag |= UberShader::kSpecularMap;
+      ShaderProgram &shader = dev->uber_shader(flag);
+      render3d.SetShader(shader);
+
+      ShaderBindPolicy &bind_policy = shader.bind_policy;
+
+      //평면하나만 일단 렌더링해서 테스트하자
+      render3d.SetLight(light);
+      const mat4 world_mat(1.0f);
+      render3d.ApplyMatrix(world_mat);
+
+      //Texture *tex = device->texture_mgr().Get_ptr(string("sora2"));
+      //render3d.SetTexture(*tex);
+
+      //재질데이터 적절히 설정하기
+      Material mtl;
+      mtl.ambient_map = "sora2";
+      mtl.diffuse_map = "mtl_diffuse";
+      mtl.specular_map = "mtl_specular";
+      mtl.ambient = vec3(0.3, 0.3, 0.3);
+      mtl.diffuse = vec3(0.5, 0.5, 0.5);
+      mtl.specular = vec3(0.5, 0.5, 0.0);
+      mtl.shininess = 50;
+      mtl.uber_flag = flag;
+      render3d.SetMaterial(mtl);
+      render3d.ApplyMaterialLight();
+
+      MeshBufferObject *mesh = dev->mesh_mgr().Get(kSolid);
+      SR_ASSERT(mesh != NULL);
+      render3d.Draw(*mesh);
     }
-  }
-  
-  /*
-  glUseProgram(simple_shader.prog);
+
+    //edge 그리기
+    {
+      float edge_width = 6.0f;
+      glLineWidth(edge_width);
+      glEnable(GL_CULL_FACE);
+      glCullFace(GL_FRONT);
+      glUseProgram(edge_shader.prog);
+      int pos_loc = edge_shader.GetAttribLocation("a_position");
+      int normal_loc = edge_shader.GetAttribLocation("a_normal");
+      glEnableVertexAttribArray(pos_loc);
+      glEnableVertexAttribArray(normal_loc);
+      int mvp_loc = edge_shader.GetUniformLocation("u_worldViewProjection");
+
+
+      //set camera + projection
+      float radius = 5;
+      float cam_x = radius * cos(SR_DEG_2_RAD(cel_aptitude)) * sin(SR_DEG_2_RAD(cel_latitude));
+      float cam_y = radius * sin(SR_DEG_2_RAD(cel_aptitude));
+      float cam_z = radius * cos(SR_DEG_2_RAD(cel_aptitude)) * cos(SR_DEG_2_RAD(cel_latitude));
+
+      glm::vec3 eye(cam_x, cam_y, cam_z);
+      glm::vec3 center(0);
+      glm::vec3 up(0, 1, 0);
+      glm::mat4 view = glm::lookAt(eye, center, up);
+      glm::mat4 projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 30.0f);
+      glm::mat4 model(1.0f);
+      glm::mat4 mvp = projection * view * model;
+      glUniformMatrix4fv(mvp_loc, 1, GL_FALSE, glm::value_ptr(mvp));
+
+      //edge색 적절히 조정
+      int color_loc = edge_shader.GetUniformLocation("u_constColor");
+      float color[4] = { 0.1, 0.1, 0.1, 1.0 };
+      glUniform4fv(color_loc, 1, color);
+
+      //폴리곤 오프셋으로 외곽선적절히 처리
+      //폴리곤 오프셋 = thickness x dist x fovx / width 
+      //http://www.gamedevforever.com/18
+      float poly_offset = edge_width * radius * 45.0f / win_width;
+      glEnable(GL_POLYGON_OFFSET_FILL);
+      //glPolygonOffset(poly_offset, 1.0);
+      glPolygonOffset(4.0, 2.0);
+
+      vector<string> mesh_list;
+      mesh_list.push_back(kWire);
+      for(size_t i = 0 ; i < mesh_list.size() ; i++) {
+        const char *name = mesh_list[i].c_str();
+        MeshBufferObject *mesh_buffer = dev->mesh_mgr().Get(name);
+        SR_ASSERT(mesh_buffer != NULL);
+
+        SR_ASSERT(mesh_buffer->BufferCount());
+        GLuint vbo = mesh_buffer->vbo(0).buffer();
+        GLuint ibo = mesh_buffer->ibo(0).buffer();
+        int index_count = mesh_buffer->index_count(0);
+        GLenum draw_mode = mesh_buffer->draw_mode(0);
+
+        glBindBuffer(GL_ARRAY_BUFFER, vbo);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+        glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, pos));
+        glVertexAttribPointer(normal_loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, normal));
+        glDrawElements(draw_mode, index_count, GL_UNSIGNED_SHORT, 0);
+
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+      }
+    }
+
+    /*
+    glUseProgram(simple_shader.prog);
     int pos_loc = simple_shader.GetAttribLocation("a_position");
     int tex_loc = simple_shader.GetAttribLocation("a_texcoord");
     glEnableVertexAttribArray(pos_loc);
     if(tex_loc != -1) {
-      glEnableVertexAttribArray(tex_loc);
+    glEnableVertexAttribArray(tex_loc);
     }
     int mvp_loc = simple_shader.GetUniformLocation("u_worldViewProjection");
 
@@ -314,59 +315,59 @@ void CelShading_draw_frame(sora::Device *dev) {
     vector<string> mesh_list;
     mesh_list.push_back(kCube1);  //0 : cube
     for(size_t i = 0 ; i < mesh_list.size() ; i++) {
-      const char *name = mesh_list[i].c_str();
-      MeshBufferObject *mesh_buffer = dev->mesh_mgr().Get(name);
-      SR_ASSERT(mesh_buffer != NULL);
+    const char *name = mesh_list[i].c_str();
+    MeshBufferObject *mesh_buffer = dev->mesh_mgr().Get(name);
+    SR_ASSERT(mesh_buffer != NULL);
 
-      int color_id_loc = simple_shader.GetUniformLocation("u_colorId");
-      if(color_id_loc != -1) {
-        //color_id를 ivec4로 변환하기 위해서 char배열로 변환후 다시 조합하자
-        int color_id[4];
-        SelectionBuffer::IdToArray(i, color_id);
-        glUniform4iv(color_id_loc, 1, color_id);
-      }
-  
-      SR_ASSERT(mesh_buffer->BufferCount());
-      GLuint vbo = mesh_buffer->vbo(0).buffer();
-      GLuint ibo = mesh_buffer->ibo(0).buffer();
-      int index_count = mesh_buffer->index_count(0);
-      GLenum draw_mode = mesh_buffer->draw_mode(0);
-  
-      glBindBuffer(GL_ARRAY_BUFFER, vbo);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-      glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, pos));
-      if(tex_loc != -1) {
-        glVertexAttribPointer(tex_loc, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texcoord));
-      }
-      glDrawElements(draw_mode, index_count, GL_UNSIGNED_SHORT, 0);
-      
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
+    int color_id_loc = simple_shader.GetUniformLocation("u_colorId");
+    if(color_id_loc != -1) {
+    //color_id를 ivec4로 변환하기 위해서 char배열로 변환후 다시 조합하자
+    int color_id[4];
+    SelectionBuffer::IdToArray(i, color_id);
+    glUniform4iv(color_id_loc, 1, color_id);
+    }
+
+    SR_ASSERT(mesh_buffer->BufferCount());
+    GLuint vbo = mesh_buffer->vbo(0).buffer();
+    GLuint ibo = mesh_buffer->ibo(0).buffer();
+    int index_count = mesh_buffer->index_count(0);
+    GLenum draw_mode = mesh_buffer->draw_mode(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+    glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, pos));
+    if(tex_loc != -1) {
+    glVertexAttribPointer(tex_loc, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texcoord));
+    }
+    glDrawElements(draw_mode, index_count, GL_UNSIGNED_SHORT, 0);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
     */
 
-  GLHelper::CheckError("glDrawArrays");
-  Renderer::EndRender();
-}
+    GLHelper::CheckError("glDrawArrays");
+    Renderer::EndRender();
+  }
 
-void CelShading_update_frame(sora::Device *dev, float dt) {
-  #if SR_WIN
-  float x = 0.1f;
-  //check key
-  if(glfwGetKey('W') == GLFW_PRESS || glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS) {
-    set_cam_pos(x, 0);
-  }
-  if(glfwGetKey('S') == GLFW_PRESS || glfwGetKey(GLFW_KEY_DOWN) == GLFW_PRESS) {
-    set_cam_pos(-x, 0);
-  }
-  if(glfwGetKey('A') == GLFW_PRESS || glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS) {
-    set_cam_pos(0, x);
-  }
-  if(glfwGetKey('D') == GLFW_PRESS || glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS) {
-    set_cam_pos(0, -x);
-  }
+  void update_frame(sora::Device *dev, float dt) {
+#if SR_WIN
+    float x = 0.1f;
+    //check key
+    if(glfwGetKey('W') == GLFW_PRESS || glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS) {
+      set_cam_pos(x, 0);
+    }
+    if(glfwGetKey('S') == GLFW_PRESS || glfwGetKey(GLFW_KEY_DOWN) == GLFW_PRESS) {
+      set_cam_pos(-x, 0);
+    }
+    if(glfwGetKey('A') == GLFW_PRESS || glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS) {
+      set_cam_pos(0, x);
+    }
+    if(glfwGetKey('D') == GLFW_PRESS || glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS) {
+      set_cam_pos(0, -x);
+    }
 #endif
 
-}
+  }
 }
 }

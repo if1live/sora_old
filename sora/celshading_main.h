@@ -24,10 +24,10 @@
 namespace sora {;
 class Device;
 
-namespace celshading {;
-void CelShading_setup_graphics(sora::Device *dev, int w, int h);
-void CelShading_draw_frame(sora::Device *dev);
-void CelShading_update_frame(sora::Device *dev, float dt);
+namespace celshading {
+  void setup_graphics(sora::Device *dev, int w, int h);
+  void draw_frame(sora::Device *dev);
+  void update_frame(sora::Device *dev, float dt);
 };
 }
 

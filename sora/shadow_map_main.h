@@ -24,10 +24,11 @@
 namespace sora {;
 class Device;
 
-void ShadowMap_setup_graphics(sora::Device *dev, int w, int h);
-void ShadowMap_draw_frame(sora::Device *dev);
-void ShadowMap_update_frame(sora::Device *dev, float dt);
-
+namespace shadowmap {
+  void setup_graphics(sora::Device *dev, int w, int h);
+  void draw_frame(sora::Device *dev);
+  void update_frame(sora::Device *dev, float dt);
+}
 }
 
 #endif  // SORA_SHADOW_MAP_MAIN_H_

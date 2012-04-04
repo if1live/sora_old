@@ -29,7 +29,7 @@ class ShaderProgram;
 
 //물체 선택하기 위한 selection buffer
 //reference
-//http://content.gpwiki.org/index.php/OpenGL_Selection_Using_Unique_Color_IDs
+//http://content.gpwiki.org/index.php/OpenGL_Using_Unique_Color_IDs
 class SelectionBuffer {
 public:
   friend class SelectionRequest;

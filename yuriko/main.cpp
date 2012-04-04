@@ -84,13 +84,13 @@ int main(int argc, char *argv[]) {
   
   /*
   //depth map test
-  ShadowMap_setup_graphics(&device, kWinWidth, kWinHeight);
+  setup_graphics(&device, kWinWidth, kWinHeight);
   float prev_time = Timer_GetSecond();
   while(true) {
-    ShadowMap_draw_frame(&device);
+    draw_frame(&device);
     float curr_time = Timer_GetSecond();
     float dt = curr_time - prev_time;
-    ShadowMap_update_frame(&device, dt);
+    update_frame(&device, dt);
 
     glfwSwapBuffers();
     prev_time = curr_time;
@@ -103,13 +103,13 @@ int main(int argc, char *argv[]) {
   */
   /*
   //selection test
-  Selection_setup_graphics(&device, kWinWidth, kWinHeight);
+  setup_graphics(&device, kWinWidth, kWinHeight);
   float prev_time = Timer_GetSecond();
   while(true) {
-    Selection_draw_frame(&device);
+    draw_frame(&device);
     float curr_time = Timer_GetSecond();
     float dt = curr_time - prev_time;
-    Selection_update_frame(&device, dt);
+    update_frame(&device, dt);
 
     glfwSwapBuffers();
     prev_time = curr_time;
@@ -121,13 +121,13 @@ int main(int argc, char *argv[]) {
   }
   */
   //celshading test
-  sora::celshading::CelShading_setup_graphics(&device, kWinWidth, kWinHeight);
+  sora::celshading::setup_graphics(&device, kWinWidth, kWinHeight);
   float prev_time = Timer_GetSecond();
   while(true) {
-    sora::celshading::CelShading_draw_frame(&device);
+    sora::celshading::draw_frame(&device);
     float curr_time = Timer_GetSecond();
     float dt = curr_time - prev_time;
-    sora::celshading::CelShading_update_frame(&device, dt);
+    sora::celshading::update_frame(&device, dt);
 
     glfwSwapBuffers();
     prev_time = curr_time;
