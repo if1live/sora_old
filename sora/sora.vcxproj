@@ -85,6 +85,7 @@
     <ClCompile Include="cbes\component_list.cpp" />
     <ClCompile Include="cbes\entity.cpp" />
     <ClCompile Include="cbes\world.cpp" />
+    <ClCompile Include="celshading_main.cpp" />
     <ClCompile Include="core\arch.cpp" />
     <ClCompile Include="core\common_string.cpp" />
     <ClCompile Include="core\free_list_block_pool.cpp" />
@@ -94,7 +95,6 @@
     <ClCompile Include="core\mem.cpp" />
     <ClCompile Include="core\string_hash.cpp" />
     <ClCompile Include="core\timer.cpp" />
-    <ClCompile Include="core\vector.cpp" />
     <ClCompile Include="event\touch_device.cpp" />
     <ClCompile Include="event\touch_event.cpp" />
     <ClCompile Include="lodepng\lodepng.cpp" />
@@ -147,11 +147,11 @@
     <ClInclude Include="cbes\component_list.h" />
     <ClInclude Include="cbes\entity.h" />
     <ClInclude Include="cbes\world.h" />
+    <ClInclude Include="celshading_main.h" />
     <ClInclude Include="core\arch.h" />
     <ClInclude Include="core\array_inc.h" />
     <ClInclude Include="core\assert_inc.h" />
     <ClInclude Include="core\class_type.h" />
-    <ClInclude Include="core\color.h" />
     <ClInclude Include="core\common_string.h" />
     <ClInclude Include="core\free_list_block_pool.h" />
     <ClInclude Include="core\free_list_manager.h" />

@@ -27,6 +27,7 @@
 
 using namespace std;
 using namespace sora;
+using namespace glm;
 
 TEST(ObjLoader, NewLineToNullChar) {
   unsigned char str1[] = "asdf\nqwer\r\n1234";

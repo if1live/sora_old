@@ -24,9 +24,11 @@
 namespace sora {;
 class Device;
 
+namespace selection {;
+
 void Selection_setup_graphics(sora::Device *dev, int w, int h);
 void Selection_draw_frame(sora::Device *dev);
 void Selection_update_frame(sora::Device *dev, float dt);
 }
-
+}
 #endif  // SORA_SELECTION_MAIN_H_

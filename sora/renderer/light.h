@@ -21,7 +21,7 @@
 #ifndef SORA_LIGHT_H_
 #define SORA_LIGHT_H_
 
-#include "core/vector.h"
+
 
 namespace sora {;
 
@@ -34,13 +34,13 @@ struct Light {
   }
 
   //shadow map를 구성하기 위해서는 사실상 카메라와 동일한 속성이 필요하다
-  Vec3f pos;
-  Vec3f up;
-  Vec3f dir;
+  glm::vec3 pos;
+  glm::vec3 center;
+  glm::vec3 up;
   
-  Vec4f ambient;
-  Vec4f diffuse;
-  Vec4f specular;
+  glm::vec4 ambient;
+  glm::vec4 diffuse;
+  glm::vec4 specular;
   float shininess;
 };
 

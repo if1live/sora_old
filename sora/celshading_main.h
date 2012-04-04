@@ -18,16 +18,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_stdafx.h"
-#include "core/vector.h"
-
-#if SR_USE_PCH == 0
-#include <cstring>
-#endif
+#ifndef SORA_CELSHADING_MAIN_H_
+#define SORA_CELSHADING_MAIN_H_
 
 namespace sora {;
-float Vec2f_testFunc(float x, float y) {
-  float result = x + y;
-  return result;
+class Device;
+
+namespace celshading {;
+void CelShading_setup_graphics(sora::Device *dev, int w, int h);
+void CelShading_draw_frame(sora::Device *dev);
+void CelShading_update_frame(sora::Device *dev, float dt);
+};
 }
-}
+
+#endif  // SORA_CELSHADING_MAIN_H_

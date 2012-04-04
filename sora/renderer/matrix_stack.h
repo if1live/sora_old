@@ -22,7 +22,7 @@
 #define SORA_MATRIX_STACK_H_
 
 #include <glm/glm.hpp>
-#include "core/vector.h"
+
 
 namespace sora {;
 struct MatrixStackImpl;
@@ -47,8 +47,6 @@ public:
   
   void Translate(float x, float y, float z);
   void Translate(const glm::vec3 &v);
-  void Translate(const vec3f_t &v);
-  void Translate(const Vec3f &v);
 
   void RotateX(float deg);
   void RotateY(float deg);
@@ -56,8 +54,6 @@ public:
 
   void Rotate(float deg, float x, float y, float z);
   void Rotate(float deg, const glm::vec3 &v);
-  void Rotate(float deg, const vec3f_t &v);
-  void Rotate(float deg, const Vec3f &v);
 
 private:
   MatrixStackImpl *impl;

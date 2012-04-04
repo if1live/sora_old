@@ -21,8 +21,8 @@
 #ifndef SORA_VERTEX_H_
 #define SORA_VERTEX_H_
 
-#include "core/vector.h"
 
+#include "core/vector.h"
 #if SR_USE_PCH == 0
 #include "gl_inc.h"
 #endif
@@ -41,8 +41,8 @@ struct Vertex2D {
   Vertex2D(float x, float y, float s, float t)
     : pos(x, y), texcoord(s, t) {}
 
-  Vec2f pos;
-  Vec2f texcoord;
+  glm::vec2 pos;
+  glm::vec2 texcoord;
 };
 
 struct Vertex {
@@ -55,21 +55,21 @@ struct Vertex {
   Vertex() : pos(0, 0, 0), texcoord(0, 0), normal(1, 0, 0), color(1, 1, 1, 1) {}
   Vertex(float x, float y, float z, float s, float t, float nx, float ny, float nz, uchar r, uchar g, uchar b, uchar a)
     : pos(x, y, z), texcoord(s, t), normal(nx, ny, nz), color(r, g, b, a) {}
-  Vec3f pos;
-  Vec2f texcoord;
-  Vec3f normal;
-  Vec4ub color;
+  glm::vec3 pos;
+  glm::vec2 texcoord;
+  glm::vec3 normal;
+  sora::vec4ub color;
 };
-
+/*
 struct TangentVertex {
-  Vec3f pos;
-  Vec2f texcoord;
-  Vec3f normal;
+  vec3 pos;
+  vec2 texcoord;
+  vec3 normal;
   
-  Vec3f tangent;
-  Vec3f binormal;
+  vec3 tangent;
+  vec3 binormal;
 };
-
+*/
 }
 
 #endif  // SORA_VERTEX_H_

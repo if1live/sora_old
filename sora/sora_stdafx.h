@@ -64,11 +64,6 @@
 #include "renderer/gl_inc.h"
 #include "core/tuple_inc.h"
 
-//vector는 뻔하니까
-#include "core/vector.h"
-//#include "matrix.h"
-//#include "color.h"
-
 //boost
 #include <boost/foreach.hpp>
 //#include <boost/utility.hpp>

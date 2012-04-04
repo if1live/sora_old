@@ -30,6 +30,7 @@
 #include "teapot.h"
 
 using namespace std;
+using namespace glm;
 
 namespace sora {;
 struct PrimitiveModelImpl {
@@ -146,15 +147,15 @@ void PrimitiveModel::WireCube(float width, float height, float depth) {
   //6 7
 
   //0
-  Vec3f v0(-width, height, -depth);
-  Vec3f v1(width, height, -depth);
-  Vec3f v2(-width, height, depth);
-  Vec3f v3(width, height, depth);
+  vec3 v0(-width, height, -depth);
+  vec3 v1(width, height, -depth);
+  vec3 v2(-width, height, depth);
+  vec3 v3(width, height, depth);
 
-  Vec3f v4(-width, -height, -depth);
-  Vec3f v5(width, -height, -depth);
-  Vec3f v6(-width, -height, depth);
-  Vec3f v7(width, -height, depth);
+  vec3 v4(-width, -height, -depth);
+  vec3 v5(width, -height, -depth);
+  vec3 v6(-width, -height, depth);
+  vec3 v7(width, -height, depth);
 
   //선으로 구성되는거니까 texture, normal은 신경안써도 될듯?
   Vertex vertex0; vertex0.pos = v0;
@@ -209,12 +210,12 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
     // Front Face
     int baseIndex = vert_list.size();
 
-    Vec3f normal(0, 0, 1);
+    vec3 normal(0, 0, 1);
 
-    Vec2f texCoord1(0, 0);	Vec3f vertex1(-width, -height, depth);
-    Vec2f texCoord2(1, 0);	Vec3f vertex2( width, -height, depth);
-    Vec2f texCoord3(1, 1);	Vec3f vertex3( width,  height, depth);
-    Vec2f texCoord4(0, 1);	Vec3f vertex4(-width,  height, depth);
+    vec2 texCoord1(0, 0);	vec3 vertex1(-width, -height, depth);
+    vec2 texCoord2(1, 0);	vec3 vertex2( width, -height, depth);
+    vec2 texCoord3(1, 1);	vec3 vertex3( width,  height, depth);
+    vec2 texCoord4(0, 1);	vec3 vertex4(-width,  height, depth);
 
     //add vertex
     Vertex v1;  v1.pos = vertex1; v1.texcoord = texCoord1;
@@ -228,10 +229,10 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
       v3.normal = normal;
       v4.normal = normal;
     } else {
-      v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
-      v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
-      v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
-      v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
+      v1.normal = glm::normalize((vertex1 - vec3(0, 0, 0)));
+      v2.normal = glm::normalize((vertex2 - vec3(0, 0, 0)));
+      v3.normal = glm::normalize((vertex3 - vec3(0, 0, 0)));
+      v4.normal = glm::normalize((vertex4 - vec3(0, 0, 0)));
     }
 
     vert_list.push_back(v1);
@@ -251,12 +252,12 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
   {
     // Back Face
     int baseIndex = vert_list.size();
-    Vec3f normal(0, 0, -1);
+    vec3 normal(0, 0, -1);
 
-    Vec2f texCoord1(1, 0);	Vec3f vertex1(-width, -height, -depth);
-    Vec2f texCoord2(1, 1);	Vec3f vertex2(-width,  height, -depth);
-    Vec2f texCoord3(0, 1);	Vec3f vertex3( width,  height, -depth);
-    Vec2f texCoord4(0, 0);	Vec3f vertex4( width, -height, -depth);
+    vec2 texCoord1(1, 0);	vec3 vertex1(-width, -height, -depth);
+    vec2 texCoord2(1, 1);	vec3 vertex2(-width,  height, -depth);
+    vec2 texCoord3(0, 1);	vec3 vertex3( width,  height, -depth);
+    vec2 texCoord4(0, 0);	vec3 vertex4( width, -height, -depth);
 
     //add vertex
     Vertex v1;  v1.pos = vertex1; v1.texcoord = texCoord1;
@@ -270,10 +271,10 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
       v3.normal = normal;
       v4.normal = normal;
     } else {
-      v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
-      v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
-      v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
-      v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
+      v1.normal = glm::normalize(vertex1 - vec3(0, 0, 0));
+      v2.normal = glm::normalize(vertex2 - vec3(0, 0, 0));
+      v3.normal = glm::normalize(vertex3 - vec3(0, 0, 0));
+      v4.normal = glm::normalize(vertex4 - vec3(0, 0, 0));
     }
 
     vert_list.push_back(v1);
@@ -294,12 +295,12 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
   {
     // Top Face
     int baseIndex = vert_list.size();
-    Vec3f normal(0, 1, 0);
+    vec3 normal(0, 1, 0);
 
-    Vec2f texCoord1(0, 1);	Vec3f vertex1(-width, height, -depth);
-    Vec2f texCoord2(0, 0);	Vec3f vertex2(-width, height,  depth);
-    Vec2f texCoord3(1, 0);	Vec3f vertex3( width, height,  depth);
-    Vec2f texCoord4(1, 1);	Vec3f vertex4( width, height, -depth);
+    vec2 texCoord1(0, 1);	vec3 vertex1(-width, height, -depth);
+    vec2 texCoord2(0, 0);	vec3 vertex2(-width, height,  depth);
+    vec2 texCoord3(1, 0);	vec3 vertex3( width, height,  depth);
+    vec2 texCoord4(1, 1);	vec3 vertex4( width, height, -depth);
 
     //add vertex
     Vertex v1;  v1.pos = vertex1; v1.texcoord = texCoord1;
@@ -313,10 +314,10 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
       v3.normal = normal;
       v4.normal = normal;
     } else {
-      v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
-      v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
-      v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
-      v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
+      v1.normal = glm::normalize(vertex1 - vec3(0, 0, 0));
+      v2.normal = glm::normalize(vertex2 - vec3(0, 0, 0));
+      v3.normal = glm::normalize(vertex3 - vec3(0, 0, 0));
+      v4.normal = glm::normalize(vertex4 - vec3(0, 0, 0));
     }
 
     vert_list.push_back(v1);
@@ -337,12 +338,12 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
   {
     // Bottom Face
     int baseIndex = vert_list.size();
-    Vec3f normal(0, -1, 0);
+    vec3 normal(0, -1, 0);
 
-    Vec2f texCoord1(1, 1);	Vec3f vertex1(-width, -height, -depth);
-    Vec2f texCoord2(0, 1);	Vec3f vertex2( width, -height, -depth);
-    Vec2f texCoord3(0, 0);	Vec3f vertex3( width, -height,  depth);
-    Vec2f texCoord4(1, 0);	Vec3f vertex4(-width, -height,  depth);
+    vec2 texCoord1(1, 1);	vec3 vertex1(-width, -height, -depth);
+    vec2 texCoord2(0, 1);	vec3 vertex2( width, -height, -depth);
+    vec2 texCoord3(0, 0);	vec3 vertex3( width, -height,  depth);
+    vec2 texCoord4(1, 0);	vec3 vertex4(-width, -height,  depth);
 
     //add vertex
     Vertex v1;  v1.pos = vertex1; v1.texcoord = texCoord1;
@@ -356,10 +357,10 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
       v3.normal = normal;
       v4.normal = normal;
     } else {
-      v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
-      v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
-      v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
-      v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
+      v1.normal = glm::normalize(vertex1 - vec3(0, 0, 0));
+      v2.normal = glm::normalize(vertex2 - vec3(0, 0, 0));
+      v3.normal = glm::normalize(vertex3 - vec3(0, 0, 0));
+      v4.normal = glm::normalize(vertex4 - vec3(0, 0, 0));
     }
 
     vert_list.push_back(v1);
@@ -380,12 +381,12 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
   {
     // Right face
     int baseIndex = vert_list.size();
-    Vec3f normal(1, 0, 0);
+    vec3 normal(1, 0, 0);
 
-    Vec2f texCoord1(1, 0);	Vec3f vertex1(width, -height, -depth);
-    Vec2f texCoord2(1, 1);	Vec3f vertex2(width,  height, -depth);
-    Vec2f texCoord3(0, 1);	Vec3f vertex3(width,  height,  depth);
-    Vec2f texCoord4(0, 0);	Vec3f vertex4(width, -height,  depth);
+    vec2 texCoord1(1, 0);	vec3 vertex1(width, -height, -depth);
+    vec2 texCoord2(1, 1);	vec3 vertex2(width,  height, -depth);
+    vec2 texCoord3(0, 1);	vec3 vertex3(width,  height,  depth);
+    vec2 texCoord4(0, 0);	vec3 vertex4(width, -height,  depth);
 
     //add vertex
     Vertex v1;  v1.pos = vertex1; v1.texcoord = texCoord1;
@@ -399,10 +400,10 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
       v3.normal = normal;
       v4.normal = normal;
     } else {
-      v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
-      v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
-      v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
-      v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
+      v1.normal = glm::normalize(vertex1 - vec3(0, 0, 0));
+      v2.normal = glm::normalize(vertex2 - vec3(0, 0, 0));
+      v3.normal = glm::normalize(vertex3 - vec3(0, 0, 0));
+      v4.normal = glm::normalize(vertex4 - vec3(0, 0, 0));
     }
 
     vert_list.push_back(v1);
@@ -423,12 +424,12 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
   {
     // Left Face
     int baseIndex = vert_list.size();
-    Vec3f normal(-1, 0, 0);
+    vec3 normal(-1, 0, 0);
 
-    Vec2f texCoord1(0, 0);	Vec3f vertex1(-width, -height, -depth);
-    Vec2f texCoord2(1, 0);	Vec3f vertex2(-width, -height,  depth);
-    Vec2f texCoord3(1, 1);	Vec3f vertex3(-width,  height,  depth);
-    Vec2f texCoord4(0, 1);	Vec3f vertex4(-width,  height, -depth);
+    vec2 texCoord1(0, 0);	vec3 vertex1(-width, -height, -depth);
+    vec2 texCoord2(1, 0);	vec3 vertex2(-width, -height,  depth);
+    vec2 texCoord3(1, 1);	vec3 vertex3(-width,  height,  depth);
+    vec2 texCoord4(0, 1);	vec3 vertex4(-width,  height, -depth);
 
     //add vertex
     Vertex v1;  v1.pos = vertex1; v1.texcoord = texCoord1;
@@ -442,10 +443,10 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
       v3.normal = normal;
       v4.normal = normal;
     } else {
-      v1.normal = (vertex1 - Vec3f(0, 0, 0)).Normalize();
-      v2.normal = (vertex2 - Vec3f(0, 0, 0)).Normalize();
-      v3.normal = (vertex3 - Vec3f(0, 0, 0)).Normalize();
-      v4.normal = (vertex4 - Vec3f(0, 0, 0)).Normalize();
+      v1.normal = glm::normalize(vertex1 - vec3(0, 0, 0));
+      v2.normal = glm::normalize(vertex2 - vec3(0, 0, 0));
+      v3.normal = glm::normalize(vertex3 - vec3(0, 0, 0));
+      v4.normal = glm::normalize(vertex4 - vec3(0, 0, 0));
     }
 
     vert_list.push_back(v1);
@@ -477,7 +478,7 @@ void PrimitiveModel::WireSphere(float radius, int slices, int stacks) {
   impl->mode_group[0] = GL_LINES;
 
   //사용될 vertex list 생성
-  std::vector<Vec3f> tmp_vertex_list;
+  std::vector<vec3> tmp_vertex_list;
   for(int i = 0 ; i < stacks ; i++) {
     double yAngle = (kPi / stacks * i) - kPiOver2;
     float y = static_cast<float>(sin(yAngle));
@@ -487,20 +488,20 @@ void PrimitiveModel::WireSphere(float radius, int slices, int stacks) {
       float x = static_cast<float>(cos(yAngle) * cos(zxAngle));
       float z = static_cast<float>(cos(yAngle) * sin(zxAngle));
 
-      Vec3f pos(x, y, z);
+      vec3 pos(x, y, z);
       tmp_vertex_list.push_back(pos);
     }
   }
   //북극점(맨위)
-  Vec3f top(0, 1, 0);
+  vec3 top(0, 1, 0);
   tmp_vertex_list.push_back(top);
 
   //선으로 구성되니까 해당항목은 없어도 별로 티가 안난다
 
   //vertex 위치정보+잡탕으로 진짜 vertex list생성
-  vector<Vec3f>::iterator it;
+  vector<vec3>::iterator it;
   for(it = tmp_vertex_list.begin() ; it != tmp_vertex_list.end() ; it++) {
-    const Vec3f &pos = *it;
+    const vec3 &pos = *it;
     Vertex vertex;
     vertex.normal = pos;
     vertex.pos = pos * radius;
@@ -548,8 +549,8 @@ void PrimitiveModel::SolidSphere(float radius, int slices, int stacks) {
   impl->mode_group[0] = GL_TRIANGLES;
 
   //원을 구성하는 포인트 리스트 + 텍스쳐 좌표 동시 계산
-  vector<Vec3f> posList;
-  vector<Vec2f> texCoordList;
+  vector<vec3> posList;
+  vector<vec2> texCoordList;
   for(int i = 0 ; i <= stacks ; i++) {
     double yAngle = (kPi / stacks * i) - kPiOver2;
     float y = static_cast<float>(sin(yAngle));
@@ -558,13 +559,13 @@ void PrimitiveModel::SolidSphere(float radius, int slices, int stacks) {
       float x = static_cast<float>(cos(yAngle) * cos(zxAngle));
       float z = static_cast<float>(cos(yAngle) * sin(zxAngle));
 
-      Vec3f pos(x, y, z);
+      vec3 pos(x, y, z);
       posList.push_back(pos);
 
       //tex 좌표 계산
       float s = 1.0f / (slices) * j;
       float t = 1.0f / (stacks) * i;
-      Vec2f texCoord(s, t);
+      vec2 texCoord(s, t);
       texCoordList.push_back(texCoord);
     }
   }
@@ -573,8 +574,8 @@ void PrimitiveModel::SolidSphere(float radius, int slices, int stacks) {
 
   //vertex 구성
   for(std::size_t i = 0 ; i < posList.size() ; i++) {
-    const Vec3f &pos = posList[i];
-    const Vec2f &texcoord = texCoordList[i];
+    const vec3 &pos = posList[i];
+    const vec2 &texcoord = texCoordList[i];
 
     Vertex vert;
     vert.pos = pos * radius;
@@ -621,7 +622,7 @@ void PrimitiveModel::WireCone(float base, float height, int slices, int stacks) 
   impl->mode_group[1] = GL_LINES;
 
   //밑면
-  vector<Vec3f> posList; 
+  vector<vec3> posList; 
   for(int j = 0 ; j < stacks ; j++) {
     float y = (1.0f / (float)stacks) * j;
     for(int i = 0 ; i < slices ; i++) {
@@ -630,12 +631,12 @@ void PrimitiveModel::WireCone(float base, float height, int slices, int stacks) 
       float x = static_cast<float>(cos(angleDt * i) * radius);
       float z = static_cast<float>(sin(angleDt * i) * radius);
 
-      Vec3f pos(x, y, z);
+      vec3 pos(x, y, z);
       posList.push_back(pos);
     }
   }
   //최상위 꼭지점은 따로 넣는다
-  Vec3f toppos(0, 1, 0);
+  vec3 toppos(0, 1, 0);
   posList.push_back(toppos);
 
 
@@ -643,7 +644,7 @@ void PrimitiveModel::WireCone(float base, float height, int slices, int stacks) 
   //vec2 texCoord(0, 0);
   //vec3 normal(0, 0, 0);
   for(std::size_t i = 0 ; i < posList.size() ; i++) {
-    Vec3f &pos = posList[i];
+    vec3 &pos = posList[i];
     pos.x *= base;
     pos.y *= height;
     pos.z *= base;
@@ -698,13 +699,13 @@ void PrimitiveModel::SolidCone(float base, float height, int slices, int stacks)
       float radius = (1.0f / stacks) * (stacks-j)* base;
       float x = cos(angleDt * i) * radius;
       float z = sin(angleDt * i) * radius;
-      Vec3f pos(x, y, z);
-      Vec3f normal = pos.Normalize();
+      vec3 pos(x, y, z);
+      vec3 normal = normalize(pos);
 
       float texCoordS = (1.0f / slices) * i;
       float texCoordT = (1.0f / stacks) * j;
       assert(texCoordS >= 0 && texCoordS <= 1 && texCoordT >= 0 && texCoordT <= 1);
-      Vec2f texCoord(texCoordS, texCoordT);
+      vec2 texCoord(texCoordS, texCoordT);
 
       Vertex v;
       v.pos = pos;
@@ -715,15 +716,15 @@ void PrimitiveModel::SolidCone(float base, float height, int slices, int stacks)
   }
 
   //밑바닥용 vertex pos는 다시 계산한다. normal+tex가 옆면과 달라야되기 떄문에 추가로 필요하다
-  Vec3f bottomNormal(0, -1, 0);
+  vec3 bottomNormal(0, -1, 0);
   const int bottomVertexStartIndex = vert_list.size();	//bottom vertex 정보가 시작되는 인덱스
   for(int i = 0 ; i < slices ; i++) {
     float angleDt = static_cast<float>(2.0 * kPi / slices);
     float x = cos(angleDt * i) * base;
     float z = sin(angleDt * i) * base;
-    Vec3f pos(x, 0, z);
+    vec3 pos(x, 0, z);
     //texcoord 계산
-    Vec2f texCoord((cos(angleDt * i) + 1) / 2, (sin(angleDt *i) + 1) / 2);
+    vec2 texCoord((cos(angleDt * i) + 1) / 2, (sin(angleDt *i) + 1) / 2);
 
     Vertex v;
     v.pos = pos;
@@ -733,8 +734,8 @@ void PrimitiveModel::SolidCone(float base, float height, int slices, int stacks)
   }
 
   //밑바닥 중심점
-  Vec3f bottompos(0, 0, 0);
-  Vec2f bottomCenterTexCoord(0.5, 0.5);
+  vec3 bottompos(0, 0, 0);
+  vec2 bottomCenterTexCoord(0.5, 0.5);
   Vertex bottomCenterVertex;
   bottomCenterVertex.pos = bottompos;
   bottomCenterVertex.texcoord = bottomCenterTexCoord;
@@ -799,14 +800,14 @@ void PrimitiveModel::WireCylinder(float radius, float height, int slices) {
         y = -height / 2;		//아랫면
       }
 
-      Vec3f pos(x, y, z);
+      vec3 pos(x, y, z);
       Vertex v; v.pos = pos;
       vert_list.push_back(v);
     }
   }
   //밑점, 윗점 따로 vertex list에 넣기
-  Vec3f bottomPos(0, -height/2, 0);
-  Vec3f topPos(0, height/2, 0);
+  vec3 bottomPos(0, -height/2, 0);
+  vec3 topPos(0, height/2, 0);
   Vertex bottom; bottom.pos = bottomPos;
   Vertex top; top.pos = topPos;
   vert_list.push_back(bottom);
@@ -876,21 +877,21 @@ void PrimitiveModel::SolidCylinder(float radius, float height, int slices) {
       float z = static_cast<float>(sin(angleDt * i) * radius);
 
       float y = 0;
-      Vec2f texCoord;
+      vec2 texCoord;
       if(j == 0) {
         y = height / 2;	//윗면
-        texCoord = Vec2f(static_cast<float>(cos(angleDt * i)), 1);
+        texCoord = vec2(static_cast<float>(cos(angleDt * i)), 1);
       }	else {
         y = -height / 2;		//아랫면
-        texCoord = Vec2f(static_cast<float>(cos(angleDt * i)), 0);
+        texCoord = vec2(static_cast<float>(cos(angleDt * i)), 0);
       }
 
-      Vec3f pos(x, y, z);
+      vec3 pos(x, y, z);
 
       //normal 계산
-      static Vec3f zero(0, 0, 0);
-      Vec3f normal = pos - zero;
-      normal.Normalized();
+      static vec3 zero(0, 0, 0);
+      vec3 normal = pos - zero;
+      normal = glm::normalize(normal);
 
       Vertex v;
       v.pos = pos;
@@ -902,9 +903,9 @@ void PrimitiveModel::SolidCylinder(float radius, float height, int slices) {
   //밑점, 윗점 따로 vertex list에 넣기
   //밑점
   {
-    Vec3f bottomPos(0, -height/2, 0);
-    Vec2f texCoord(0, 0);
-    Vec3f normal(0, -1, 0);
+    vec3 bottomPos(0, -height/2, 0);
+    vec2 texCoord(0, 0);
+    vec3 normal(0, -1, 0);
     Vertex bottom;
     bottom.pos = bottomPos;
     bottom.texcoord = texCoord;
@@ -914,9 +915,9 @@ void PrimitiveModel::SolidCylinder(float radius, float height, int slices) {
 
   //윗점
   {
-    Vec3f topPos(0, height/2, 0);
-    Vec2f texCoord(0, 0);
-    Vec3f normal(0, 1, 0);
+    vec3 topPos(0, height/2, 0);
+    vec2 texCoord(0, 0);
+    vec3 normal(0, 1, 0);
     Vertex top;
     top.pos = topPos;
     top.texcoord = texCoord;
@@ -987,14 +988,14 @@ void PrimitiveModel::WireAxis(float size) {
   impl->mode_group[0] = GL_LINES;
 
   //vertex list 생성
-  Vec3f xPos(size, 0, 0);
-  Vec3f yPos(0, size, 0);
-  Vec3f zPos(0, 0, size);
-  Vec3f zero(0, 0, 0);
+  vec3 xPos(size, 0, 0);
+  vec3 yPos(0, size, 0);
+  vec3 zPos(0, 0, size);
+  vec3 zero(0, 0, 0);
 
-  Vec4ub red(255, 0, 0, 255);
-  Vec4ub green(0, 255, 0, 255);
-  Vec4ub blue(0, 0, 255, 255);
+  vec4ub red(255, 0, 0, 255);
+  vec4ub green(0, 255, 0, 255);
+  vec4ub blue(0, 0, 255, 255);
 
   //x axis - r
   Vertex vx0; vx0.pos = zero; vx0.color = red;
@@ -1064,8 +1065,8 @@ void PrimitiveModel::WirePlane(float half_size, float grid_size) {
         int vert_idx = start_index + i;
         Vertex &v = vert_list[vert_idx];
 
-        v.color = Vec4ub(255, 255, 255, 255);
-        v.normal = Vec3f(0, 1, 0);
+        v.color = vec4ub(255, 255, 255, 255);
+        v.normal = vec3(0, 1, 0);
         
         float left_x = xz_axis_mark[axis_idx][0] * half_size;
         float right_x = xz_axis_mark[axis_idx][2] * half_size;
@@ -1086,20 +1087,20 @@ void PrimitiveModel::WirePlane(float half_size, float grid_size) {
         } else {
           z = scale * (front_z - back_z) + back_z;
         }
-        v.pos = Vec3f(x, 0, z);
+        v.pos = vec3(x, 0, z);
 
         switch(axis_idx) {
         case kLeft:
-          v.texcoord = Vec2f(0, scale);
+          v.texcoord = vec2(0, scale);
           break;
         case kRight:
-          v.texcoord = Vec2f(1, scale);
+          v.texcoord = vec2(1, scale);
           break;
         case kFront:
-          v.texcoord = Vec2f(0, scale);
+          v.texcoord = vec2(0, scale);
           break;
         case kBack:
-          v.texcoord = Vec2f(1, scale);
+          v.texcoord = vec2(1, scale);
           break;
         default:
           SR_ASSERT(!"not valid");
@@ -1136,8 +1137,8 @@ void PrimitiveModel::WirePlane(float half_size, float grid_size) {
     //공통 속성 설정
     for(size_t i = 0 ; i < vert_list.size() ; ++i) {
       Vertex &v = vert_list[i];
-      v.normal = Vec3f(0, 1, 0);
-      v.texcoord = Vec2f(0, 0);
+      v.normal = vec3(0, 1, 0);
+      v.texcoord = vec2(0, 0);
     }
 
     Vertex &left = vert_list[0];
@@ -1145,15 +1146,15 @@ void PrimitiveModel::WirePlane(float half_size, float grid_size) {
     Vertex &front = vert_list[2];
     Vertex &back = vert_list[3];
 
-    left.color = Vec4ub(255, 0, 0, 255);
-    left.pos = Vec3f(-half_size, 0, 0);
-    right.color = Vec4ub(255, 0, 0, 255);
-    right.pos = Vec3f(+half_size, 0, 0);
+    left.color = vec4ub(255, 0, 0, 255);
+    left.pos = vec3(-half_size, 0, 0);
+    right.color = vec4ub(255, 0, 0, 255);
+    right.pos = vec3(+half_size, 0, 0);
 
-    front.color = Vec4ub(0, 255, 0, 255);
-    front.pos = Vec3f(0, 0, +half_size);
-    back.color = Vec4ub(0, 255, 0, 255);
-    back.pos = Vec3f(0, 0, -half_size);
+    front.color = vec4ub(0, 255, 0, 255);
+    front.pos = vec3(0, 0, +half_size);
+    back.color = vec4ub(0, 255, 0, 255);
+    back.pos = vec3(0, 0, -half_size);
 
     //build index list
     index_list.reserve(4);
@@ -1176,8 +1177,8 @@ void PrimitiveModel::SolidPlane(float half_size) {
   vert_list.resize(4);
   for(size_t i = 0 ; i < vert_list.size() ; i++) {
     Vertex &v = vert_list[i];
-    v.color = Vec4ub(255, 255, 255, 255);
-    v.normal = Vec3f(0, 1, 0);
+    v.color = vec4ub(255, 255, 255, 255);
+    v.normal = vec3(0, 1, 0);
   }
 
   enum {
@@ -1198,8 +1199,8 @@ void PrimitiveModel::SolidPlane(float half_size) {
     float z_scale = table[i][1];
     float s = table[i][2];
     float t = table[i][3];
-    vert_list[i].pos = Vec3f(x_scale * half_size, 0, z_scale * half_size);
-    vert_list[i].texcoord = Vec2f(s, t);
+    vert_list[i].pos = vec3(x_scale * half_size, 0, z_scale * half_size);
+    vert_list[i].texcoord = vec2(s, t);
   }
 
   index_list.reserve(6);

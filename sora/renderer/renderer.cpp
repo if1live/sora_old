@@ -103,7 +103,7 @@ void Renderer::ApplyMaterialLight() {
   //apply light pos
   const ShaderVariable &light_pos_var = bind_policy.var(ShaderBindPolicy::kLightPosition);
   if(light_pos_var.location != -1) {
-    glUniform3fv(light_pos_var.location, 1, light_.pos.data);
+    glUniform3fv(light_pos_var.location, 1, glm::value_ptr(light_.pos));
     GLHelper::CheckError("Set Light Pos Handle");
   }
 
@@ -236,17 +236,8 @@ void Renderer::set_camera(const Camera &cam) {
   cam_ = cam;
 
   //apply new viw matrix
-  const Vec3f &eye = cam.eye();
-  const Vec3f &dir = cam.dir();
-  const Vec3f center = eye + dir;
-  const Vec3f &up = cam.up();
-
-  glm::vec3 eye_v(eye.x, eye.y, eye.z);
-  glm::vec3 center_v(center.x, center.y, center.z);
-  glm::vec3 up_v(up.x, up.y, up.z);
-
   glm::mat4 &view = view_mat();
-  view = glm::lookAt(eye_v, center_v, up_v);
+  view = glm::lookAt(cam.eye, cam.center, cam.up);
 }
 
 void Renderer::Draw(const DrawCommand &cmd) {
@@ -357,13 +348,9 @@ void Renderer::ApplyMatrix(const glm::mat4 &world_mat) {
   //apply new viw matrix
 
   //camera vector
-  const Vec3f &eye = cam.eye();
-  const Vec3f &dir = cam.dir();
-  const Vec3f center = eye + dir;
-  const Vec3f &up = cam.up();
-  glm::vec3 eye_v(eye.x, eye.y, eye.z);
-  glm::vec3 center_v(center.x, center.y, center.z);
-  glm::vec3 up_v(up.x, up.y, up.z);
+  const glm::vec3 &eye = cam.eye;
+  const glm::vec3 &center = cam.center;
+  const glm::vec3 &up = cam.up;
 
   //world-view-projection
   //world, view, projection 같은것을 등록할수 잇으면 등록하기
@@ -399,8 +386,8 @@ void Renderer::ApplyMatrix(const glm::mat4 &world_mat) {
 
   const ShaderVariable &view_side_var = bind_policy.var(ShaderBindPolicy::kViewSide);
   if(view_side_var.location != -1) {
-    Vec3f view_side;
-    VecCross(dir.data, up.data, view_side.data);
+    glm::vec3 dir = center - eye;
+    glm::vec3 view_side = glm::cross(dir, up);
     glUniform4f(view_side_var.location, view_side.x, view_side.y, view_side.z, 1.0f);
   }
 
@@ -408,11 +395,12 @@ void Renderer::ApplyMatrix(const glm::mat4 &world_mat) {
   if(view_up_var.location != -1) {
     glUniform4f(view_up_var.location, up.x, up.y, up.z, 1.0f);
   }
-
+  /*
   const ShaderVariable &view_dir_var = bind_policy.var(ShaderBindPolicy::kViewDirection);
   if(view_dir_var.location != -1) {
     glUniform4f(view_dir_var.location, dir.x, dir.y, dir.z, 1.0f);
   }
+  */
 }
 
 void Renderer::SetInitState() {
@@ -444,16 +432,7 @@ void RendererPolicy_3D::SetInitState() {
 
 glm::mat4 RendererPolicy_3D::ToViewMatrixFromCamera(const Camera &cam, float win_w, float win_h) {
   //apply new viw matrix
-  const Vec3f &eye = cam.eye();
-  const Vec3f &dir = cam.dir();
-  const Vec3f center = eye + dir;
-  const Vec3f &up = cam.up();
-
-  glm::vec3 eye_v(eye.x, eye.y, eye.z);
-  glm::vec3 center_v(center.x, center.y, center.z);
-  glm::vec3 up_v(up.x, up.y, up.z);
-
-  glm::mat4 view = glm::lookAt(eye_v, center_v, up_v);
+  glm::mat4 view = glm::lookAt(cam.eye, cam.center, cam.up);
   return view;
 }
 

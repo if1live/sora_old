@@ -78,8 +78,8 @@ void ShadowMap_setup_graphics(sora::Device *dev, int w, int h) {
   
   //create shader
   {
-    std::string app_vert_path = sora::Filesystem::GetAppPath("shader/shadow_map_vert.glsl");
-    std::string app_frag_path = sora::Filesystem::GetAppPath("shader/shadow_map_frag.glsl");
+    std::string app_vert_path = sora::Filesystem::GetAppPath("shader/shadow_map.vs");
+    std::string app_frag_path = sora::Filesystem::GetAppPath("shader/shadow_map.fs");
     sora::MemoryFile vert_file(app_vert_path);
     sora::MemoryFile frag_file(app_frag_path);
     vert_file.Open();
@@ -93,8 +93,8 @@ void ShadowMap_setup_graphics(sora::Device *dev, int w, int h) {
   }
   
   {
-    std::string app_vert_path = sora::Filesystem::GetAppPath("shader/v_simple.glsl");
-    std::string app_frag_path = sora::Filesystem::GetAppPath("shader/f_simple.glsl");
+    std::string app_vert_path = sora::Filesystem::GetAppPath("shader/simple.vs");
+    std::string app_frag_path = sora::Filesystem::GetAppPath("shader/simple.fs");
     sora::MemoryFile vert_file(app_vert_path);
     sora::MemoryFile frag_file(app_frag_path);
     vert_file.Open();
@@ -108,13 +108,13 @@ void ShadowMap_setup_graphics(sora::Device *dev, int w, int h) {
   }
   {
     //set light
-    light.pos = Vec3f(2, 3, 5);
-    light.up = Vec3f(0, 1, 0);
-    light.dir = (-light.pos).Normalize();
+    light.pos = vec3(2, 3, 5);
+    light.up = vec3(0, 1, 0);
+    light.center =vec3(0, 0, 0);
     
-    cam.set_eye(Vec3f(-2, 3, 5));
-    cam.set_up(Vec3f(0, 1, 0));
-    cam.set_dir(light.dir);
+    cam.eye = (vec3(-2, 3, 5));
+    cam.up = (vec3(0, 1, 0));
+    cam.center = vec3(0, 0, 0);
   }
   
   {
@@ -195,10 +195,7 @@ void ShadowMap_draw_frame(sora::Device *dev) {
 
     glUseProgram(shader.prog);
 
-    glm::vec3 eye(light.pos.x, light.pos.y, light.pos.z);
-    glm::vec3 dir(light.dir.x, light.dir.y, light.dir.z);
-    glm::vec3 up(light.up.x, light.up.y, light.up.z);
-    glm::mat4 view = glm::lookAt(eye, eye + dir, up);
+    glm::mat4 view = glm::lookAt(light.pos, light.center, light.up);
     float far_val = 30.0f;
     glm::mat4 projection = glm::perspective(45.0f, win_width / win_height, 0.1f, far_val);
     glm::mat4 mvp = projection * view;
@@ -209,7 +206,7 @@ void ShadowMap_draw_frame(sora::Device *dev) {
     glUniformMatrix3fv(world_loc, 1, GL_FALSE, glm::value_ptr(world_mat));
 
     int light_pos_loc = shader.GetUniformLocation("u_lightPosition");
-    glUniform3fv(light_pos_loc, 1, glm::value_ptr(eye));
+    glUniform3fv(light_pos_loc, 1, glm::value_ptr(light.pos));
 
     int far_loc = shader.GetUniformLocation("u_far");
     glUniform1f(far_loc, far_val);

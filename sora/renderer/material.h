@@ -24,7 +24,7 @@
 #if SR_USE_PCH == 0
 #include <cstring>
 #endif
-#include "core/vector.h"
+
 
 namespace sora {;
 //재질데이터는 MTL을 기반으로 적절히 수정되었다. 필요한 부분만 고쳣기 때문에 완벽하지는 않다
@@ -41,9 +41,9 @@ struct Material {
   std::string name;
   uint uber_flag;
 
-  Vec3f ambient;
-  Vec3f diffuse;
-  Vec3f specular;  
+  glm::vec3 ambient;
+  glm::vec3 diffuse;
+  glm::vec3 specular;  
   float alpha;   //tr or d
   float shininess;  //diffuse
 

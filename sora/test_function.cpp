@@ -42,8 +42,8 @@ void SORA_test_draw2(int w, int h) {
     init = true;
     //create shader
     //2d shader
-    std::string app_vert_path = sora::Filesystem::GetAppPath("shader/v_simple.glsl");
-    std::string app_frag_path = sora::Filesystem::GetAppPath("shader/f_simple.glsl");
+    std::string app_vert_path = sora::Filesystem::GetAppPath("shader/simple.vs");
+    std::string app_frag_path = sora::Filesystem::GetAppPath("shader/simple.fs");
     sora::MemoryFile vert_file(app_vert_path);
     sora::MemoryFile frag_file(app_frag_path);
     vert_file.Open();

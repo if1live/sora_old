@@ -21,7 +21,7 @@
 #ifndef SORA_OBJ_LOADER_H_
 #define SORA_OBJ_LOADER_H_
 
-#include "core/vector.h"
+
 #if SR_USE_PCH == 0
 #include <vector>
 #endif

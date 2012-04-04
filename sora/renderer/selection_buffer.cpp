@@ -65,8 +65,8 @@ void SelectionBuffer::Init(int w, int h) {
 
   //쉐이더 적절히 생성
   selection_shader_ = new ShaderProgram();
-  std::string app_vert_path = sora::Filesystem::GetAppPath("shader/selection_vert.glsl");
-  std::string app_frag_path = sora::Filesystem::GetAppPath("shader/selection_frag.glsl");
+  std::string app_vert_path = sora::Filesystem::GetAppPath("shader/selection.vs");
+  std::string app_frag_path = sora::Filesystem::GetAppPath("shader/selection.fs");
   sora::MemoryFile vert_file(app_vert_path);
   sora::MemoryFile frag_file(app_frag_path);
   vert_file.Open();

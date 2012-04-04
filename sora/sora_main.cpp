@@ -37,7 +37,7 @@
 
 #include "sys/device.h"
 #include "renderer/render_state.h"
-#include "core/vector.h"
+
 #include "renderer/gl_helper.h"
 #include "sys/memory_file.h"
 
@@ -137,6 +137,9 @@ bool setupGraphics(Device *device, int w, int h) {
   {
     //load model
     std::string path1 = sora::Filesystem::GetAppPath("obj/cube.obj");
+    //std::string path1 = sora::Filesystem::GetAppPath("obj/Beautiful Girl.obj");
+    //std::string path1 = sora::Filesystem::GetAppPath("obj/beautiful_girl.obj");
+    //std::string path1 = sora::Filesystem::GetAppPath("obj/Saber Fate Stay.obj");
     sora::MemoryFile file1(path1);
     file1.Open();
     ObjModel obj_model;
@@ -146,11 +149,13 @@ bool setupGraphics(Device *device, int w, int h) {
     int obj_model_idx = 0;
     glm::mat4 entity_mat = glm::mat4(1.0f);
     //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
-    //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
-    entity_mat = glm::rotate(glm::mat4(1.0f), 180.0f, vec3(1, 0, 0));
+    entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
+    //entity_mat = glm::rotate(glm::mat4(1.0f), 180.0f, vec3(1, 0, 0));
+    //entity_mat = glm::scale(entity_mat, vec3(0.03, 0.03, 0.03));  //vanilla
+    //entity_mat = glm::scale(entity_mat, vec3(0.1, 0.1, 0.1));  //fate, beautiful_girl
     world_mat_list[obj_model_idx] = entity_mat;
 
-    device->mesh_mgr().Add(obj_model.GetDrawCmdList_wire(), "obj_model");
+    device->mesh_mgr().Add(obj_model.GetDrawCmdList_solid(), "obj_model");
     mesh_name_list[obj_model_idx] = "obj_model";
   }
 
@@ -226,8 +231,8 @@ bool setupGraphics(Device *device, int w, int h) {
 
   {
     //빛에 대한 기본 설정
-    light.pos = Vec3f(10, 10, 100);
-    //light.ambient = Vec4f(3.0f, 0, 0, 1.0f);
+    light.pos = vec3(10, 10, 100);
+    //light.ambient = vec4(3.0f, 0, 0, 1.0f);
   }
   return true;
 }
@@ -246,7 +251,7 @@ void SORA_set_cam_pos(float a, float b) {
 }
 
 void renderFrame(Device *device) {
-  glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
+  glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
   {
@@ -265,18 +270,18 @@ void renderFrame(Device *device) {
     float cam_z = radius * cos(SR_DEG_2_RAD(aptitude)) * cos(SR_DEG_2_RAD(latitude));
 
     sora::Camera cam;
-    cam.set_eye(sora::Vec3f(cam_x, cam_y, cam_z));
-    cam.set_dir(sora::Vec3f(0, 0, 0) - cam.eye());
-    cam.set_up(sora::Vec3f(0, 1, 0));
+    cam.eye = vec3(cam_x, cam_y, cam_z);
+    cam.center = vec3(0);
+    cam.up = vec3(0, 1, 0);
     render3d.set_camera(cam);
 
     unsigned int flag = 0;
-    //flag |= UberShader::kAmbientColor;
+    flag |= UberShader::kAmbientColor;
     //flag |= UberShader::kAmbientMap;
     flag |= UberShader::kDiffuseColor;
-    flag |= UberShader::kDiffuseMap;
+    //flag |= UberShader::kDiffuseMap;
     flag |= UberShader::kSpecularColor;
-    flag |= UberShader::kSpecularMap;
+    //flag |= UberShader::kSpecularMap;
     ShaderProgram &shader = device->uber_shader(flag);
     render3d.SetShader(shader);
 
@@ -296,10 +301,11 @@ void renderFrame(Device *device) {
     mtl.ambient_map = "sora2";
     mtl.diffuse_map = "mtl_diffuse";
     mtl.specular_map = "mtl_specular";
-    mtl.ambient = Vec3f(0.1, 0.1, 0.1);
-    mtl.diffuse = Vec3f(0.5, 0.5, 0.5);
-    mtl.specular = Vec3f(0.5, 0.5, 0.0);
+    mtl.ambient = vec3(0.1, 0.1, 0.1);
+    mtl.diffuse = vec3(0.5, 0.5, 0.5);
+    mtl.specular = vec3(0.5, 0.5, 0.0);
     mtl.shininess = 50;
+    mtl.uber_flag = flag;
     render3d.SetMaterial(mtl);
     render3d.ApplyMaterialLight();
       
@@ -343,6 +349,7 @@ void renderFrame(Device *device) {
 
     GLHelper::CheckError("Render End");
   }
+  /*
   {
     GLHelper::CheckError("Render 2d start");
     Renderer &render2d = device->render2d();
@@ -386,6 +393,7 @@ void renderFrame(Device *device) {
     glDrawElements(GL_TRIANGLES, label.index_count(), GL_UNSIGNED_SHORT, label.index_data());
     GLHelper::CheckError("glDrawArrays");
   }
+  */
   //////////////////////////////
   Renderer::EndRender();
 }

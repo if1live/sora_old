@@ -48,13 +48,7 @@
     <ClCompile Include="core\template_lib_test.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="core\vector_test.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="core\class_type_test.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="core\color_test.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="core\common_string_test.cpp">

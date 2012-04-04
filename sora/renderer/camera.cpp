@@ -24,23 +24,12 @@
 
 namespace sora {;
 Camera::Camera() 
-: eye_(0, 0, 1), 
-dir_(0, 0, -1), 
-up_(0, 1, 0) {
+: eye(0, 0, 1), 
+center(0, 0, -1), 
+up(0, 1, 0) {
 }
 Camera::~Camera() {
 }
 
-void Camera::set_eye(const Vec3f &v) {
-  eye_ = v;
-}
-void Camera::set_dir(const Vec3f &v) {
-  dir_ = v;
-  dir_.Normalized();
-}
-void Camera::set_up(const Vec3f &v) {
-  up_ = v;
-  up_.Normalized();
-}
 }
 

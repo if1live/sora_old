@@ -43,6 +43,7 @@ using namespace std;
 using namespace glm;
 
 namespace sora {;
+namespace selection {;
 TextureManager tex_mgr;
 ShaderProgram simple_shader;
 
@@ -63,8 +64,8 @@ void Selection_setup_graphics(sora::Device *dev, int w, int h) {
 
   //create shader
   {
-    std::string app_vert_path = sora::Filesystem::GetAppPath("shader/v_simple.glsl");
-    std::string app_frag_path = sora::Filesystem::GetAppPath("shader/f_simple.glsl");
+    std::string app_vert_path = sora::Filesystem::GetAppPath("shader/simple.vs");
+    std::string app_frag_path = sora::Filesystem::GetAppPath("shader/simple.fs");
     sora::MemoryFile vert_file(app_vert_path);
     sora::MemoryFile frag_file(app_frag_path);
     vert_file.Open();
@@ -228,5 +229,5 @@ void Selection_update_frame(sora::Device *dev, float dt) {
     }
   }
 }
-
+}
 }

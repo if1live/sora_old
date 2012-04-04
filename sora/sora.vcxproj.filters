@@ -80,9 +80,6 @@
     <ClCompile Include="core\timer.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="core\vector.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="core\arch.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -203,6 +200,9 @@
     <ClCompile Include="renderer\selection_buffer.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
+    <ClCompile Include="celshading_main.cpp">
+      <Filter>logic_test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -228,9 +228,6 @@
       <Filter>cbes</Filter>
     </ClInclude>
     <ClInclude Include="core\class_type.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\color.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="core\common_string.h">
@@ -285,9 +282,6 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="core\unordered_map_inc.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\vector.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="core\arch.h">
@@ -430,6 +424,12 @@
     </ClInclude>
     <ClInclude Include="renderer\selection_buffer.h">
       <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="celshading_main.h">
+      <Filter>logic_test</Filter>
+    </ClInclude>
+    <ClInclude Include="core\vector.h">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

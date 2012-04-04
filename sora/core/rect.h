@@ -21,7 +21,7 @@
 #ifndef SORA_RECT_H_
 #define SORA_RECT_H_
 
-#include "core/vector.h"
+
 #include <cstring>
 
 namespace sora {;

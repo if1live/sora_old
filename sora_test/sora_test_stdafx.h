@@ -27,6 +27,10 @@
 #error "not support"
 #endif
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 //#include "sora/sora_stdafx.h"
 
 #include <GL/glew.h>

@@ -28,6 +28,7 @@
 #include "uber_shader.h"
 
 using namespace std;
+using namespace glm;
 
 namespace sora {;
 
@@ -35,9 +36,9 @@ namespace sora {;
 struct ObjLoaderImpl {
   ObjLoaderImpl() : model(NULL), mtl_list(NULL) {}
 
-  std::vector<Vec3f> pos_list;
-  std::vector<Vec2f> tex_list;
-  std::vector<Vec3f> normal_list;
+  std::vector<vec3> pos_list;
+  std::vector<vec2> tex_list;
+  std::vector<vec3> normal_list;
 
   ObjModel *model;
   std::vector<Material> *mtl_list;
@@ -104,6 +105,9 @@ void ObjLoader::ParseObjLine(uchar *str, int n) {
   SR_ASSERT(n >= 1);
 
   string line((char*)str, n);
+  if(line.empty()) {
+    return;
+  }
   // check is comment
   if(line[0] == '#') {
     return;
@@ -121,7 +125,7 @@ void ObjLoader::ParseObjLine(uchar *str, int n) {
 
   if(*tok_iter == "v") {
     ++tok_iter; //pass command
-    Vec3f pos;
+    vec3 pos;
     for(int i = 0 ; tok_iter != tokens.end() ; ++tok_iter, ++i) {
       string str = *tok_iter;
       pos[i] = (float)atof(str.c_str());
@@ -130,7 +134,7 @@ void ObjLoader::ParseObjLine(uchar *str, int n) {
 
   } else if(*tok_iter == "vn") {
     ++tok_iter; //pass command
-    Vec3f normal;
+    vec3 normal;
     for(int i = 0 ; tok_iter != tokens.end() ; ++tok_iter, ++i) {
       string str = *tok_iter;
       normal[i] = (float)atof(str.c_str());
@@ -139,10 +143,12 @@ void ObjLoader::ParseObjLine(uchar *str, int n) {
 
   } else if(*tok_iter == "vt") {
     ++tok_iter; //pass command
-    Vec2f texcoord;
+    vec2 texcoord;
     for(int i = 0 ; tok_iter != tokens.end() ; ++tok_iter, ++i) {
       string str = *tok_iter;
-      texcoord[i] = (float)atof(str.c_str());
+      if(i < 2) {
+        texcoord[i] = (float)atof(str.c_str());
+      }
     }
     impl->tex_list.push_back(texcoord);
 
@@ -263,9 +269,9 @@ ObjLoader::ObjLoader()
   impl->tex_list.reserve(128);
   impl->normal_list.reserve(128);
   //add index 0
-  impl->pos_list.push_back(Vec3f(FLT_MAX, FLT_MAX, FLT_MAX));
-  impl->tex_list.push_back(Vec2f(FLT_MAX, FLT_MAX));
-  impl->normal_list.push_back(Vec3f(FLT_MAX, FLT_MAX, FLT_MAX));
+  impl->pos_list.push_back(vec3(FLT_MAX, FLT_MAX, FLT_MAX));
+  impl->tex_list.push_back(vec2(FLT_MAX, FLT_MAX));
+  impl->normal_list.push_back(vec3(FLT_MAX, FLT_MAX, FLT_MAX));
 }
 
 ObjLoader::~ObjLoader() {

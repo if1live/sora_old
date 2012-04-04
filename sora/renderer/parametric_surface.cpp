@@ -2,6 +2,7 @@
 #include "parametric_surface.h"
 
 using namespace std;
+using namespace glm;
 
 namespace sora {;
 
@@ -14,7 +15,7 @@ void ParametricSurface::SetInterval(const ParametricInterval& interval) {
   m_divisions = interval.divisions;
   m_upperBound = interval.upper_bound;
   m_textureCount = interval.texture_count;
-  m_slices = m_divisions - Vec2i(1, 1);
+  m_slices = m_divisions - ivec2(1, 1);
 }
 
 int ParametricSurface::GetVertexCount() const {
@@ -29,8 +30,8 @@ int ParametricSurface::GetTriangleIndexCount() const {
   return 6 * m_slices.x * m_slices.y;
 }
 
-Vec2f ParametricSurface::ComputeDomain(float x, float y) const {
-  return Vec2f(x * m_upperBound.x / m_slices.x, y * m_upperBound.y / m_slices.y);
+vec2 ParametricSurface::ComputeDomain(float x, float y) const {
+  return vec2(x * m_upperBound.x / m_slices.x, y * m_upperBound.y / m_slices.y);
 }
 
 void ParametricSurface::GenerateVertices(vector<float>& vertices, unsigned char flags) const {
@@ -47,9 +48,11 @@ void ParametricSurface::GenerateVertices(vector<float>& vertices, unsigned char 
     for (int i = 0; i < m_divisions.x; i++) {
 
       // Compute Position
-      Vec2f domain = ComputeDomain((float)i, (float)j);
-      Vec3f range = Evaluate(domain);
-      attribute = range.Write(attribute);
+      vec2 domain = ComputeDomain((float)i, (float)j);
+      vec3 range = Evaluate(domain);
+      memcpy(attribute, &range, sizeof(range));
+      attribute = (float*)(((unsigned char*)attribute) + sizeof(range));
+      //attribute = range.Write(attribute);
 
       // Compute Normal
       if (flags & kVertexFlagsNormals) {
@@ -62,20 +65,26 @@ void ParametricSurface::GenerateVertices(vector<float>& vertices, unsigned char 
         if (j == m_divisions.y - 1) t -= 0.01f;
 
         // Compute the tangents and their cross product.
-        Vec3f p = Evaluate(ComputeDomain(s, t));
-        Vec3f u = Evaluate(ComputeDomain(s + 0.01f, t)) - p;
-        Vec3f v = Evaluate(ComputeDomain(s, t + 0.01f)) - p;
-        Vec3f normal = u.Cross(v).Normalize();
-        if (InvertNormal(domain))
+        vec3 p = Evaluate(ComputeDomain(s, t));
+        vec3 u = Evaluate(ComputeDomain(s + 0.01f, t)) - p;
+        vec3 v = Evaluate(ComputeDomain(s, t + 0.01f)) - p;
+        vec3 normal = glm::normalize(glm::cross(u, v));
+        if (InvertNormal(domain)) {
           normal = -normal;
-        attribute = normal.Write(attribute);
+        }
+        //attribute = normal.Write(attribute);
+        memcpy(attribute, &normal, sizeof(normal));
+        attribute = (float*)(((unsigned char*)attribute) + sizeof(normal));
       }
 
       // Compute Texture Coordinates
       if (flags & kVertexFlagsTexCoords) {
         float s = m_textureCount.x * i / m_slices.x;
         float t = m_textureCount.y * j / m_slices.y;
-        attribute = Vec2f(s, t).Write(attribute);
+        vec2 texcoord(s, t);
+        //attribute = vec2(s, t).Write(attribute);
+        memcpy(attribute, &texcoord, sizeof(texcoord));
+        attribute = (float*)(((unsigned char*)attribute) + sizeof(texcoord));
       }
     }
   }

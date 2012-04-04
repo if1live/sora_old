@@ -24,7 +24,7 @@
 
 #include "sys/device.h"
 #include "renderer/render_state.h"
-#include "core/vector.h"
+
 #include "renderer/gl_helper.h"
 #include "sys/memory_file.h"
 
@@ -75,8 +75,8 @@ const char *kDiffuseMapKey = "diffuse";
 const char *kSpecularMapKey = "specular";
 
 struct SimpleUberShaderLoadPolicy {
-  static const char *vert_file() { return "shader/v_simple_uber.glsl"; }
-  static const char *frag_file() { return "shader/f_simple_uber.glsl"; }
+  static const char *vert_file() { return "shader/simple_uber.vs"; }
+  static const char *frag_file() { return "shader/simple_uber.fs"; }
   static unsigned int avail_mask() {
     unsigned int flag = 0;
     flag |= UberShader::kConstColor;
@@ -450,9 +450,9 @@ void RunaView::DrawFrame() {
   float cam_z = radius * cos(SR_DEG_2_RAD(aptitude)) * cos(SR_DEG_2_RAD(latitude));
 
   sora::Camera cam;
-  cam.set_eye(sora::Vec3f(cam_x, cam_y, cam_z));
-  cam.set_dir(sora::Vec3f(0, 0, 0) - cam.eye());
-  cam.set_up(sora::Vec3f(0, 1, 0));
+  cam.eye = vec3(cam_x, cam_y, cam_z);
+  cam.center = vec3(0, 0, 0);
+  cam.up = vec3(0, 1, 0);
   render3d.set_camera(cam);
 
 
@@ -467,8 +467,8 @@ void RunaView::DrawFrame() {
     ShaderBindPolicy &bind_policy = shader.bind_policy;
     const ShaderVariable &const_color_var = bind_policy.var(ShaderBindPolicy::kConstColor);
     if(const_color_var.location != -1) {
-      Vec4f const_color(1.0f, 1.0f, 1.0f, 1.0f);
-      glUniform4fv(const_color_var.location, 1, const_color.data);
+      vec4 const_color(1.0f, 1.0f, 1.0f, 1.0f);
+      glUniform4fv(const_color_var.location, 1, glm::value_ptr(const_color));
     }
 
     //색만 잇는걸로 디버깅할테니 다른 속성은 빼자
@@ -542,7 +542,7 @@ void RunaView::UpdateFrame(float dt) {
   float light_pos_radius = 100;
   float light_pos_x = sin(DegToRad(prev_light_deg)) * light_pos_radius;
   float light_pos_z = cos(DegToRad(prev_light_deg)) * light_pos_radius;
-  pimpl().light.pos = Vec3f(light_pos_x, 10, light_pos_z);
+  pimpl().light.pos = vec3(light_pos_x, 10, light_pos_z);
 
   //apply
   pimpl().light_pos_deg = prev_light_deg;

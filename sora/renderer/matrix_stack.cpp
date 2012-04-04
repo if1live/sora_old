@@ -97,14 +97,6 @@ void MatrixStack::Translate(const glm::vec3 &v) {
   glm::mat4 m = glm::translate(top, v);
   top = m;
 }
-void MatrixStack::Translate(const vec3f_t &v) {
-  glm::vec3 vec(v[0], v[1], v[2]);
-  Translate(vec);
-}
-void MatrixStack::Translate(const Vec3f &v) {
-  glm::vec3 vec(v.x, v.y, v.z);
-  Translate(vec);
-}
 
 void MatrixStack::RotateX(float deg) {
   Rotate(deg, glm::vec3(1.0f, 0.0f, 0.0f));
@@ -124,13 +116,5 @@ void MatrixStack::Rotate(float deg, const glm::vec3 &v) {
   glm::mat4 &top = impl->matrix_stack.back();
   glm::mat4 m = glm::rotate(top, deg, v);
   top = m;
-}
-void MatrixStack::Rotate(float deg, const vec3f_t &v) {
-  glm::vec3 vec(v[0], v[1], v[2]);
-  Rotate(deg, vec);
-}
-void MatrixStack::Rotate(float deg, const Vec3f &v) {
-  glm::vec3 vec(v.x, v.y, v.z);
-  Rotate(deg, vec);
 }
 }

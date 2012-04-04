@@ -61,8 +61,8 @@ struct DevicePrivate {
     light_uber_shader.Init<LightUberShaderLoadPolicy>();
 
     //init simple shader
-    std::string app_vert_path = Filesystem::GetAppPath("shader/v_simple.glsl");
-    std::string app_frag_path = Filesystem::GetAppPath("shader/f_simple.glsl");
+    std::string app_vert_path = Filesystem::GetAppPath("shader/simple.vs");
+    std::string app_frag_path = Filesystem::GetAppPath("shader/simple.fs");
     MemoryFile vert_file(app_vert_path);
     MemoryFile frag_file(app_frag_path);
     vert_file.Open();
