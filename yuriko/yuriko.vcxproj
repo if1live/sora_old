@@ -50,12 +50,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>SR_NDEBUG=0;SR_DEBUG=1;%(PreprocessorDefinitions);BUILD_OGLES2</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
-      <AdditionalIncludeDirectories>..\sdk\PVRShell\API\KEGL;..\sdk\PVRShell\;..\sdk\PVRShell\OS\Windows;$(SolutionDir)\sdk\OGLES2Tools\OGLES2;$(SolutionDir)\sdk\OGLES2Tools;$(SolutionDir)\sdk\OGLES2\Include;$(SolutionDir)\sdk\glm-0.9.3.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\sdk\esUtil\Include;..\sdk\PVRShell\API\KEGL;..\sdk\PVRShell\;..\sdk\PVRShell\OS\Windows;$(SolutionDir)\sdk\OGLES2Tools\OGLES2;$(SolutionDir)\sdk\OGLES2Tools;$(SolutionDir)\sdk\OGLES2\Include;$(SolutionDir)\sdk\glm-0.9.3.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\sdk\OGLES2Tools\OGLES2\Build\WindowsVC2008\$(Configuration);..\sdk\OGLES2\WindowsX86\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;libEGL.lib;libGLESv2.lib;OGLES2Tools.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\sdk\esUtil\Lib;..\sdk\OGLES2Tools\OGLES2\Build\WindowsVC2008\$(Configuration);..\sdk\OGLES2\WindowsX86\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;libEGL.lib;libGLESv2.lib;OGLES2Tools.lib;esUtil_d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -65,20 +65,17 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>SR_NDEBUG=1;SR_DEBUG=0;%(PreprocessorDefinitions);BUILD_OGLES2</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\sdk\PVRShell\API\KEGL;..\sdk\PVRShell\;..\sdk\PVRShell\OS\Windows;$(SolutionDir)\sdk\OGLES2Tools\OGLES2;$(SolutionDir)\sdk\OGLES2Tools;$(SolutionDir)\sdk\OGLES2\Include;$(SolutionDir)\sdk\glm-0.9.3.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\sdk\esUtil\Include;..\sdk\PVRShell\API\KEGL;..\sdk\PVRShell\;..\sdk\PVRShell\OS\Windows;$(SolutionDir)\sdk\OGLES2Tools\OGLES2;$(SolutionDir)\sdk\OGLES2Tools;$(SolutionDir)\sdk\OGLES2\Include;$(SolutionDir)\sdk\glm-0.9.3.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalLibraryDirectories>..\sdk\OGLES2Tools\OGLES2\Build\WindowsVC2008\$(Configuration);..\sdk\OGLES2\WindowsX86\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\sdk\esUtil\Lib;..\sdk\OGLES2Tools\OGLES2\Build\WindowsVC2008\$(Configuration);..\sdk\OGLES2\WindowsX86\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;libEGL.lib;libGLESv2.lib;OGLES2Tools.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\sdk\PVRShell\API\KEGL\PVRShellAPI.cpp" />
-    <ClCompile Include="..\sdk\PVRShell\OS\Windows\PVRShellOS.cpp" />
-    <ClCompile Include="..\sdk\PVRShell\PVRShell.cpp" />
     <ClCompile Include="gles_main.cpp" />
     <ClCompile Include="gl_main.cpp" />
   </ItemGroup>
@@ -86,12 +83,6 @@
     <ProjectReference Include="..\sora\sora.vcxproj">
       <Project>{9eb895ab-d40f-4b99-b063-432571e6d799}</Project>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\sdk\PVRShell\API\KEGL\PVRShellAPI.h" />
-    <ClInclude Include="..\sdk\PVRShell\OS\Windows\PVRShellOS.h" />
-    <ClInclude Include="..\sdk\PVRShell\PVRShell.h" />
-    <ClInclude Include="..\sdk\PVRShell\PVRShellImpl.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

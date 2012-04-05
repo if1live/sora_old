@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="PVRShell">
-      <UniqueIdentifier>{734557e2-658c-4e25-9b50-6060a9d9c90b}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gl_main.cpp">
@@ -24,28 +21,5 @@
     <ClCompile Include="gles_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\sdk\PVRShell\PVRShell.cpp">
-      <Filter>PVRShell</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sdk\PVRShell\OS\Windows\PVRShellOS.cpp">
-      <Filter>PVRShell</Filter>
-    </ClCompile>
-    <ClCompile Include="..\sdk\PVRShell\API\KEGL\PVRShellAPI.cpp">
-      <Filter>PVRShell</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\sdk\PVRShell\PVRShell.h">
-      <Filter>PVRShell</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\PVRShell\PVRShellImpl.h">
-      <Filter>PVRShell</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\PVRShell\OS\Windows\PVRShellOS.h">
-      <Filter>PVRShell</Filter>
-    </ClInclude>
-    <ClInclude Include="..\sdk\PVRShell\API\KEGL\PVRShellAPI.h">
-      <Filter>PVRShell</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>
