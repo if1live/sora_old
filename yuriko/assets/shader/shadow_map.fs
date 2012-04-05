@@ -15,6 +15,6 @@ void main() {
 		gl_FragColor = vec4(0, dist, dist, dist);
 	}
 	*/
-	dist = 1 - (dist / v_far);
+	dist = 1.0 - (dist / v_far);
 	gl_FragColor = vec4(dist);
 }

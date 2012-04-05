@@ -55,7 +55,7 @@ void SelectionBuffer::Init(int w, int h) {
   //color
   glGenRenderbuffers(1, &color_);
   glBindRenderbuffer(GL_RENDERBUFFER, color_);
-  glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, w, h);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, w, h);
 
   //attach to fb
   //renderbuffer생성하자마자 달면 GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER 에러 뜬다

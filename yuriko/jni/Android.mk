@@ -17,7 +17,11 @@ START_PATH := $(call my-dir)
 
 include $(CLEAR_VARS)
 
-LOCAL_C_INCLUDES := sora ../sora ../../sora ../../../sora
+LOCAL_C_INCLUDES := sora	\
+	../sora	\
+	../../sora \
+	../../../sora	\
+	../sdk/glm-0.9.3.1	\
 
 LOCAL_MODULE    := libgl2jni
 LOCAL_CFLAGS    := -Werror

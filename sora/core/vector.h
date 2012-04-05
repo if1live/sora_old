@@ -21,7 +21,9 @@
 #ifndef SORA_VECTOR_H_
 #define SORA_VECTOR_H_
 
-#include <glm/core/type_vec3.hpp>
+#if SR_USE_PCH == 0
+#include <glm/glm.hpp>
+#endif
 
 //glm의 vector에는 unsigned char에 대응되는 것이 없다
 //왜나하면 저건 gl스펙에 맞춘거니까. 하지만 데이터를 최적화 하기 위해서는

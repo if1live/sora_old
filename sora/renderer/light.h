@@ -21,7 +21,9 @@
 #ifndef SORA_LIGHT_H_
 #define SORA_LIGHT_H_
 
-
+#if SR_USE_PCH == 0
+#include <glm/glm.hpp>
+#endif
 
 namespace sora {;
 

@@ -351,7 +351,7 @@ namespace celshading {
   }
 
   void update_frame(sora::Device *dev, float dt) {
-#if SR_WIN
+#if SR_WIN && (SR_GLES == 0)
     float x = 0.1f;
     //check key
     if(glfwGetKey('W') == GLFW_PRESS || glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS) {

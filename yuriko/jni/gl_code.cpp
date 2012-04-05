@@ -23,6 +23,10 @@
 #include "sora/core/logger.h"
 #include "sora/sys/device.h"
 
+#include "sora/depth_map_main.h"
+#include "sora/shadow_map_main.h"
+#include "sora/selection_main.h"
+
 sora::Device dev;
 
 extern "C" {
@@ -40,15 +44,24 @@ extern "C" {
 JNIEXPORT void JNICALL Java_so_libsora_yuriko_GL2JNILib_init(JNIEnv * env, jobject obj,  jint width, jint height)
 {
     //setupGraphics(width, height);
-	SORA_setup_graphics(&dev, width, height);
+	//SORA_setup_graphics(&dev, width, height);
+	//sora::depthmap::setup_graphics(&dev, width, height);
+	//sora::shadowmap::setup_graphics(&dev, width, height);
+	sora::selection::setup_graphics(&dev, width, height);
 }
 
 JNIEXPORT void JNICALL Java_so_libsora_yuriko_GL2JNILib_step(JNIEnv * env, jobject obj)
 {
     //renderFrame();
 	//SORA_set_cam_pos(0, 1.0f);
-	SORA_update_frame(&dev, 1.0f / 60.0f);
-	SORA_draw_frame(&dev);
+	//SORA_update_frame(&dev, 1.0f / 60.0f);
+	//SORA_draw_frame(&dev);
+	//sora::depthmap::update_frame(&dev, 1.0f / 60.0f);
+	//sora::depthmap::draw_frame(&dev);
+	//sora::shadowmap::update_frame(&dev, 1.0f / 60.0f);
+	//sora::shadowmap::draw_frame(&dev);
+	sora::selection::update_frame(&dev, 1.0f / 60.0f);
+	sora::selection::draw_frame(&dev);
 }
 
 JNIEXPORT void JNICALL Java_so_libsora_yuriko_GL2JNILib_setApkPath(JNIEnv * env, jobject obj, jstring apkPath)
@@ -62,17 +75,17 @@ JNIEXPORT void JNICALL Java_so_libsora_yuriko_GL2JNILib_setApkPath(JNIEnv * env,
 
 JNIEXPORT void JNICALL Java_so_libsora_yuriko_GL2JNILib_touchBegan(JNIEnv * env, jobject obj, jint x, jint y, jint uid, jint tick_count, jfloat timestamp)
 {
-	SORA_touch_began(&dev, x, y, uid, tick_count, timestamp);
+	//SORA_touch_began(&dev, x, y, uid, tick_count, timestamp);
 }
 JNIEXPORT void JNICALL Java_so_libsora_yuriko_GL2JNILib_touchMoved(JNIEnv * env, jobject obj, jint curr_x, jint curr_y, jint prev_x, jint prev_y, jint uid, jint tick_count, jfloat timestamp)
 {
-	SORA_touch_moved(&dev, curr_x, curr_y, prev_x, prev_y, uid, tick_count, timestamp);
+	//SORA_touch_moved(&dev, curr_x, curr_y, prev_x, prev_y, uid, tick_count, timestamp);
 }
 JNIEXPORT void JNICALL Java_so_libsora_yuriko_GL2JNILib_touchEnded(JNIEnv * env, jobject obj, jint curr_x, jint curr_y, jint prev_x, jint prev_y, jint uid, jint tick_count, jfloat timestamp)
 {
-	SORA_touch_ended(&dev, curr_x, curr_y, prev_x, prev_y, uid, tick_count, timestamp);
+	//SORA_touch_ended(&dev, curr_x, curr_y, prev_x, prev_y, uid, tick_count, timestamp);
 }
 JNIEXPORT void JNICALL Java_so_libsora_yuriko_GL2JNILib_touchCancelled(JNIEnv * env, jobject obj, jint curr_x, jint curr_y, jint prev_x, jint prev_y, jint uid, jint tick_count, jfloat timestamp)
 {
-	SORA_touch_cancelled(&dev, curr_x, curr_y, prev_x, prev_y, uid, tick_count, timestamp);
+	//SORA_touch_cancelled(&dev, curr_x, curr_y, prev_x, prev_y, uid, tick_count, timestamp);
 }

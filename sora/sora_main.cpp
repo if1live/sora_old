@@ -406,17 +406,18 @@ void SORA_draw_frame(Device *device) {
   renderFrame(device);
 }
 
+/*
 SR_C_DLL void SORA_init_gl_env() {
 #if SR_WIN
   GLenum err = glewInit();
   if (GLEW_OK != err) {
-    /* Problem: glewInit failed, something is seriously wrong. */
+    //Problem: glewInit failed, something is seriously wrong.
     fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
   }
   fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 #endif
 }
-
+*/
 
 void SORA_update_frame(Device *device, float dt) {
   static float elapsed_time = 0;
@@ -427,6 +428,7 @@ void SORA_update_frame(Device *device, float dt) {
   TouchEventQueue &touch_evt_queue = device->touch_evt_queue();
 
 #if SR_WIN
+#if SR_GLES == 0
   // touch event
   TouchDevice &touch_device = TouchDevice::GetInstance();
   //glfw 대응 소스
@@ -446,6 +448,7 @@ void SORA_update_frame(Device *device, float dt) {
   for( ; touch_evt_it != touch_evt_endit ; ++touch_evt_it) {
     touch_evt_queue.Push(*touch_evt_it);
   }
+#endif
 #endif
 
   //터치 메세지 꺼내서 실제로 까보기
@@ -514,6 +517,7 @@ void SORA_update_frame(Device *device, float dt) {
 
 
 #if SR_WIN
+#if SR_GLES == 0
   float x = 0.1f;
   //check key
   if(glfwGetKey('W') == GLFW_PRESS || glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS) {
@@ -528,6 +532,7 @@ void SORA_update_frame(Device *device, float dt) {
   if(glfwGetKey('D') == GLFW_PRESS || glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS) {
     SORA_set_cam_pos(0, -x);
   }
+#endif
 #endif
 }
 

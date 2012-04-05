@@ -1972,11 +1972,13 @@ int query_DXT_capability( void )
 			/*	and find the address of the extension function	*/
 			//P_SOIL_GLCOMPRESSEDTEXIMAGE2DPROC ext_addr = NULL;
 			#ifdef WIN32
+      /*
 				ext_addr = (P_SOIL_GLCOMPRESSEDTEXIMAGE2DPROC)
 						wglGetProcAddress
 						(
 							"glCompressedTexImage2DARB"
 						);
+            */
 			#elif defined(__APPLE__) || defined(__APPLE_CC__)
 				/*	I can't test this Apple stuff!	*/
 				CFBundleRef bundle;

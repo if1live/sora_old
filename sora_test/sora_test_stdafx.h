@@ -32,9 +32,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 //#include "sora/sora_stdafx.h"
-
-#include <GL/glew.h>
-#include <GL/glfw.h>
+#include "sora/renderer/gl_inc.h"
 
 //boost
 

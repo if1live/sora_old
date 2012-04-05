@@ -107,6 +107,8 @@ void SORA_test_draw2(int w, int h) {
   GLHelper::CheckError("glDrawArrays");
 }
 
+#if SR_GLES == 0
+
 void SORA_test_draw(int w, int h) {
   static float a = 0;
   a += 0.1f;
@@ -139,4 +141,5 @@ void SORA_test_draw(int w, int h) {
   glColorPointer(3, GL_UNSIGNED_BYTE, 0, color);
   glDrawArrays(GL_TRIANGLES, 0, 3);
 }
+#endif
 #endif

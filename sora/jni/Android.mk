@@ -46,7 +46,6 @@ LOCAL_SRC_FILES += 	\
 	../core/timer.cpp	\
 	../core/math_helper.cpp	\
 	../core/logger.cpp	\
-	../core/vector.cpp	\
 	../core/string_hash.cpp
 	
 LOCAL_SRC_FILES += 	\
@@ -73,6 +72,7 @@ LOCAL_SRC_FILES += \
 	../renderer/texture.cpp	\
 	../renderer/gl_buffer_object.cpp	\
 	../renderer/material_manager.cpp	\
+	../renderer/material.cpp	\
 	../renderer/texture_manager.cpp	\
 	../renderer/matrix_stack.cpp	\
 	../renderer/font.cpp	\
@@ -83,7 +83,8 @@ LOCAL_SRC_FILES += \
 	../renderer/mesh.cpp	\
 	../renderer/mesh_manager.cpp	\
 	../renderer/parametric_surface.cpp	\
-	../renderer/render_state.cpp
+	../renderer/render_state.cpp	\
+	../renderer/selection_buffer.cpp
 	
 LOCAL_SRC_FILES += \
 	../sys/sys_locale.cpp	\
@@ -94,7 +95,10 @@ LOCAL_SRC_FILES += \
 	../sys/device.cpp
 	
 LOCAL_SRC_FILES += \
-	../sora_main.cpp
+	../sora_main.cpp	\
+	../depth_map_main.cpp	\
+	../shadow_map_main.cpp	\
+	../selection_main.cpp	\
 	
 
 #include $(BUILD_SHARED_LIBRARY)

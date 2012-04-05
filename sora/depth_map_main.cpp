@@ -35,6 +35,12 @@
 #include "renderer/gl_buffer_object.h"
 #include "renderer/camera.h"
 
+#if SR_USE_PCH == 0
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#endif
+
 using namespace std;
 using namespace glm;
 
@@ -50,7 +56,7 @@ namespace depthmap {
 
   ShaderProgram depth_tex_shader;
   ShaderProgram gray_depth_tex_shader;
-  ShaderProgram *curr_depth_shader = &depth_tex_shader;
+  ShaderProgram *curr_depth_shader = &gray_depth_tex_shader;
 
   const char *kCube1 = "cube1";
   const char *kPlane = "plane";
@@ -58,7 +64,7 @@ namespace depthmap {
   //깊이를 텍스쳐에 연결
   GLuint fbo = 0;
   GLuint depth_tex = 0;
-  GLuint color_tex = 0;
+  GLuint color_rb = 0;
 
   void setup_graphics(sora::Device *dev, int w, int h) {
     win_width = w;
@@ -123,27 +129,31 @@ namespace depthmap {
     }
     {
       glGenFramebuffers(1, &fbo);
-
-      glGenTextures (1, &color_tex);
-      glBindTexture (GL_TEXTURE_2D, color_tex);
-      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-      glTexImage2D (GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+      //색은 그냥 버퍼로 쓰자
+      glGenRenderbuffers(1, &color_rb);
+      glBindRenderbuffer(GL_RENDERBUFFER, color_rb);
+      glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA4, w, h);
+      GLHelper::CheckError("1");
 
       //깊이를 텍스쳐에 연결
       glGenTextures(1, &depth_tex);
       glBindTexture(GL_TEXTURE_2D, depth_tex);
-      glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_NONE);
-      glTexParameterf(GL_TEXTURE_2D, GL_DEPTH_TEXTURE_MODE, GL_LUMINANCE);
       glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
       glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+      GLHelper::CheckError("2");
+#if SR_WIN
       glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, w, h, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
+#else
+      //glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, w, h, 0, GL_DEPTH_COMPONENT16, GL_UNSIGNED_BYTE, NULL);
+      glTexImage2D(GL_TEXTURE_2D, 0, GL_LUMINANCE, w, h, 0, GL_LUMINANCE, GL_UNSIGNED_BYTE, NULL);
+#endif
+      GLHelper::CheckError("3");
       //glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, w, h, 0, GL_DEPTH_COMPONENT24, GL_UNSIGNED_BYTE, NULL);
       //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
       glBindFramebuffer(GL_FRAMEBUFFER, fbo);
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_tex, 0);
-      glFramebufferTexture2D( GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_tex, 0 );
+      glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color_rb);
       GLHelper::CheckFrameBufferStatus("fb");
       GLHelper::CheckError("Create FB");
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -265,6 +275,7 @@ namespace depthmap {
     GLHelper::CheckError("Draw DepthMap");
   }
   void update_frame(sora::Device *dev, float dt) {
+#if SR_WIN && (SR_GLES == 0)
     //깊이맵용 쉐이더 교체
     if(glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS) {
       //알아보기 쉽게 확 튀는 색으로 뜨는거. 대신 시각적으로 깊이 알아보기 어려움
@@ -274,6 +285,7 @@ namespace depthmap {
       //그레이 스케일. *100배가 존재함
       curr_depth_shader = &gray_depth_tex_shader;
     }
+#endif
   }
 }
 }

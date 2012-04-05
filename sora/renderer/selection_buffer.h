@@ -21,6 +21,10 @@
 #ifndef SORA_SELECTION_BUFFER_H_
 #define SORA_SELECTION_BUFFER_H_
 
+#if SR_USE_PCH == 0
+#include "gl_inc.h"
+#endif
+
 namespace sora {;
 
 class SelectionBuffer;

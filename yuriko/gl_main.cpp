@@ -18,8 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include <GL/glew.h>
-#include <GL/glfw.h>
+#include "sora/renderer/gl_inc.h"
 #include <cstdlib>
 #include <cstdio>
 
@@ -31,6 +30,8 @@
 #include "sora/selection_main.h"
 #include "sora/celshading_main.h"
 #include "sora/depth_map_main.h"
+
+#if SR_WIN && (SR_GLES == 0)
 
 const int kWinWidth = 480;
 const int kWinHeight = 800;
@@ -171,10 +172,11 @@ int main(int argc, char *argv[]) {
   */
   
   //logic end
-  //run_selection(&device);
-  run_depthmap(&device);
+  run_selection(&device);
+  //run_depthmap(&device);
   //run_shadow_map(&device);
 
   glfwTerminate();
 	return 0;
 }
+#endif

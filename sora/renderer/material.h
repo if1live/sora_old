@@ -23,6 +23,7 @@
 
 #if SR_USE_PCH == 0
 #include <cstring>
+#include <glm/glm.hpp>
 #endif
 
 

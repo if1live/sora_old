@@ -2,6 +2,9 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 11
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sora", "sora\sora.vcxproj", "{9EB895AB-D40F-4B99-B063-432571E6D799}"
+	ProjectSection(ProjectDependencies) = postProject
+		{09ABE661-9BC0-4152-A820-1FB0522CAC01} = {09ABE661-9BC0-4152-A820-1FB0522CAC01}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sora_test", "sora_test\sora_test.vcxproj", "{A8701353-1E8D-46F3-9512-5A3D38D1D7C4}"
 EndProject
@@ -11,6 +14,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sora_tool", "sora_tool\sora
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yuriko", "yuriko\yuriko.vcxproj", "{F2894000-CDDF-4329-94B5-A3D8F671D0AC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{09ABE661-9BC0-4152-A820-1FB0522CAC01} = {09ABE661-9BC0-4152-A820-1FB0522CAC01}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SoraWrapper", "SoraWrapper\SoraWrapper.vcxproj", "{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}"
 EndProject
@@ -18,6 +24,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoraToolLibrary", "SoraTool
 	ProjectSection(ProjectDependencies) = postProject
 		{974A14C4-F0BF-4EE6-BEA8-257F668DABC1} = {974A14C4-F0BF-4EE6-BEA8-257F668DABC1}
 	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OGLES2Tools", "sdk\OGLES2Tools\OGLES2\Build\WindowsVC2008\OGLES2Tools.vcxproj", "{09ABE661-9BC0-4152-A820-1FB0522CAC01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +39,20 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{09ABE661-9BC0-4152-A820-1FB0522CAC01}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{09ABE661-9BC0-4152-A820-1FB0522CAC01}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{09ABE661-9BC0-4152-A820-1FB0522CAC01}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{09ABE661-9BC0-4152-A820-1FB0522CAC01}.Debug|Win32.ActiveCfg = Debug|Win32
+		{09ABE661-9BC0-4152-A820-1FB0522CAC01}.Debug|Win32.Build.0 = Debug|Win32
+		{09ABE661-9BC0-4152-A820-1FB0522CAC01}.Debug|x86.ActiveCfg = Debug|Win32
+		{09ABE661-9BC0-4152-A820-1FB0522CAC01}.Debug|x86.Build.0 = Debug|Win32
+		{09ABE661-9BC0-4152-A820-1FB0522CAC01}.Release|Any CPU.ActiveCfg = Release|Win32
+		{09ABE661-9BC0-4152-A820-1FB0522CAC01}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{09ABE661-9BC0-4152-A820-1FB0522CAC01}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{09ABE661-9BC0-4152-A820-1FB0522CAC01}.Release|Win32.ActiveCfg = Release|Win32
+		{09ABE661-9BC0-4152-A820-1FB0522CAC01}.Release|Win32.Build.0 = Release|Win32
+		{09ABE661-9BC0-4152-A820-1FB0522CAC01}.Release|x86.ActiveCfg = Release|Win32
+		{09ABE661-9BC0-4152-A820-1FB0522CAC01}.Release|x86.Build.0 = Release|Win32
 		{11A8099D-9A44-4E08-A5FE-3FA5C36EDA71}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{11A8099D-9A44-4E08-A5FE-3FA5C36EDA71}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{11A8099D-9A44-4E08-A5FE-3FA5C36EDA71}.Debug|Mixed Platforms.Build.0 = Debug|x86

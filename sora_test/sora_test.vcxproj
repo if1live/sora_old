@@ -35,13 +35,11 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\sdk\boost.props" />
-    <Import Project="..\sdk\gl.props" />
     <Import Project="..\shared.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\sdk\boost.props" />
-    <Import Project="..\sdk\gl.props" />
     <Import Project="..\shared.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -50,7 +48,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>gtest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>gtest\include;..\sdk\PVRShell\API\KEGL;..\sdk\PVRShell\;..\sdk\PVRShell\OS\Windows;$(SolutionDir)\sdk\OGLES2Tools\OGLES2;$(SolutionDir)\sdk\OGLES2Tools;$(SolutionDir)\sdk\OGLES2\Include;$(SolutionDir)\sdk\glm-0.9.3.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>sora_test_stdafx.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>SR_NDEBUG=0;SR_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -59,8 +57,8 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>gtest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gtestd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\sdk\OGLES2\WindowsX86\Lib;..\sdk\OGLES2Tools\OGLES2\Build\WindowsVC2008\$(Configuration);gtest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>gtestd.lib;opengl32.lib;libEGL.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -69,7 +67,7 @@
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
-      <AdditionalIncludeDirectories>gtest\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>gtest\include;..\sdk\PVRShell\API\KEGL;..\sdk\PVRShell\;..\sdk\PVRShell\OS\Windows;$(SolutionDir)\sdk\OGLES2Tools\OGLES2;$(SolutionDir)\sdk\OGLES2Tools;$(SolutionDir)\sdk\OGLES2\Include;$(SolutionDir)\sdk\glm-0.9.3.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>sora_test_stdafx.h</PrecompiledHeaderFile>
       <AdditionalOptions>/MP %(AdditionalOptions)</AdditionalOptions>

@@ -29,6 +29,7 @@
 #pragma comment(lib, "winmm.lib")
 #include <Windows.h>
 #include <tchar.h>
+#include <Mmsystem.h>
 
 //http://alones.kr/tag/gettimeofday
 // epoch time으로 변환할 상수
@@ -46,6 +47,7 @@ struct timezone {
 
 // gettimeofday in windows
 int gettimeofday(struct timeval *tv, struct timezone *tz) {
+  /*
   FILETIME ft;
   unsigned __int64 tmpres = 0;
   static int tzflag;
@@ -76,7 +78,7 @@ int gettimeofday(struct timeval *tv, struct timezone *tz) {
     tz->tz_minuteswest = _timezone / 60;
     tz->tz_dsttime = _daylight;
   }
-
+  */
   return 0;
 }
 #endif
@@ -91,8 +93,9 @@ Timer::Timer()
 
 int Timer::GetSysMilliSecond() {
 #if SR_WIN
-  int currtime = timeGetTime();
-  return currtime;
+  //int currtime = timeGetTime();
+  //return currtime;
+  return 0;
 #else
   //ref wolf3d timer
   struct timeval tp;

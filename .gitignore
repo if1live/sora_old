@@ -39,3 +39,8 @@ sora_tool/publish/
 pfx
 \.pfx
 sora_tool/sora_tool_TemporaryKey.pfx
+sdk/OGLES2Tools/Documentation/
+sdk/OGLES2Tools/OGLES2/Build/WindowsVC2008/_UpgradeReport_Files/
+sdk/PVRShell/Documentation/
+source/Build/WindowsVC2008/_UpgradeReport_Files
+sdk/OGLES2Tools/OGLES2/Build/WindowsVC2008/UpgradeLog.XML

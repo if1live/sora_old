@@ -51,6 +51,14 @@
 #define SR_WIN 1
 #endif
 
+//gles?gl
+#if SR_WIN
+#define SR_GLES 1
+//#define SR_GLES 0
+#else
+#define SR_GLES 1
+#endif
+
 #if SR_IOS == 1 || SR_WIN == 1
 #define SR_USE_PCH 1
 #else

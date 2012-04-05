@@ -39,6 +39,12 @@
 #include "event/touch_event.h"
 #include "renderer/selection_buffer.h"
 
+#if SR_USE_PCH == 0
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#endif
+
 using namespace std;
 using namespace glm;
 
@@ -192,6 +198,7 @@ namespace selection {
     TouchEventQueue &touch_evt_queue = dev->touch_evt_queue();
 
 #if SR_WIN
+#if SR_GLES == 0
     // touch event
     TouchDevice &touch_device = TouchDevice::GetInstance();
     //glfw 대응 소스
@@ -211,6 +218,7 @@ namespace selection {
     for( ; touch_evt_it != touch_evt_endit ; ++touch_evt_it) {
       touch_evt_queue.Push(*touch_evt_it);
     }
+#endif
 #endif
 
     //터치한 좌표의 픽셀 얻기

@@ -35,6 +35,12 @@
 #include "renderer/gl_buffer_object.h"
 #include "renderer/camera.h"
 
+#if SR_USE_PCH == 0
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#endif
+
 using namespace std;
 using namespace glm;
 
