@@ -33,26 +33,26 @@ namespace sora {;
 
 //uber shader의 enum에 정의된 순서대로 맞춰서 쓴다
 const char *enable_define_list[] = {
-  "#define USE_AMBIENT \n",
-  "#define USE_DIFFUSE \n",
-  "#define USE_SPECULAR \n",
-  "#define USE_AMBIENT_MAP \n",
-  "#define USE_DIFFUSE_MAP \n",
-  "#define USE_SPECULAR_MAP \n",
-  "#define USE_TEXTURE \n",
-  "#define USE_MODEL_COLOR \n",
-  "#define USE_CONST_COLOR \n",
+  "#define AMBIENT_MASK 1 \n",
+  "#define DIFFUSE_MASK 1 \n",
+  "#define SPECULAR_MASK 1 \n",
+  "#define AMBIENT_MAP_MASK 1 \n",
+  "#define DIFFUSE_MAP_MASK 1 \n",
+  "#define SPECULAR_MAP_MASK 1 \n",
+  "#define TEXTURE_MASK 1 \n",
+  "#define MODEL_COLOR_MASK 1 \n",
+  "#define CONST_COLOR_MASK 1 \n",
 };
 const char *disable_define_list[] = {
-  "#undef USE_AMBIENT \n",
-  "#undef USE_DIFFUSE \n",
-  "#undef USE_SPECULAR \n",
-  "#undef USE_AMBIENT_MAP \n",
-  "#undef USE_DIFFUSE_MAP \n",
-  "#undef USE_SPECULAR_MAP \n",
-  "#undef USE_TEXTURE \n",
-  "#undef USE_MODEL_COLOR \n",
-  "#undef USE_CONST_COLOR \n",
+  "#define AMBIENT_MASK 0 \n",
+  "#define DIFFUSE_MASK 0 \n",
+  "#define SPECULAR_MASK 0 \n",
+  "#define AMBIENT_MAP_MASK 0 \n",
+  "#define DIFFUSE_MAP_MASK 0 \n",
+  "#define SPECULAR_MAP_MASK 0 \n",
+  "#define TEXTURE_MASK 0 \n",
+  "#define MODEL_COLOR_MASK 0 \n",
+  "#define CONST_COLOR_MASK 0 \n",
 };
 
 

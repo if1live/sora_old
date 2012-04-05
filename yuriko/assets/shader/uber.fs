@@ -22,34 +22,34 @@ varying vec2 v_texcoord;
 void main() {
 	vec4 color = vec4(0.0);
 	
-#ifdef USE_AMBIENT
+#if AMBIENT_MASK == 1
 	bool use_ambient = true;
 #else
 	bool use_ambient = false;
 #endif
-#ifdef USE_AMBIENT_MAP
+#if AMBIENT_MAP_MASK == 1
 	bool use_ambient_map = true;
 #else
 	bool use_ambient_map = false;
 #endif
 
-#ifdef USE_DIFFUSE
+#if DIFFUSE_MASK == 1
 	bool use_diffuse = true;
 #else
 	bool use_diffuse = false;
 #endif
-#ifdef USE_DIFFUSE_MAP
+#if DIFFUSE_MAP_MASK == 1
 	bool use_diffuse_map = true;
 #else
 	bool use_diffuse_map = false;
 #endif
 
-#ifdef USE_SPECULAR
+#if SPECULAR_MASK == 1
 	bool use_specular = true;
 #else
 	bool use_specular = false;
 #endif
-#ifdef USE_SPECULAR_MAP
+#if SPECULAR_MAP_MASK == 1
 	bool use_specular_map = true;
 #else
 	bool use_specular_map = false;

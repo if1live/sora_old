@@ -109,27 +109,13 @@ struct DevicePrivate {
 };
 
 Device::Device() : pimpl_(NULL) {
-  device_list_.push_back(this);
 }
 
 Device::~Device() {
   if(pimpl_ != NULL) {
     SafeDelete(pimpl_);
   }
-
-  auto found = std::find(device_list_.begin(), device_list_.end(), this);
-  SR_ASSERT(found != device_list_.end());
-  device_list_.erase(found);
 }
-
-Device *Device::GetAnyDevice() {
-  if(device_list_.empty()) {
-    return NULL;
-  } else {
-    return device_list_.front();
-  }
-}
-std::vector<Device*> Device::device_list_;
 
 Font &Device::font() {
   return pimpl().font;
