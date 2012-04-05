@@ -26,9 +26,7 @@
 #if SR_WIN
 #if SR_GLES == 1
 #include <GLES2/gl2.h>
-#include <GLES2/gl2ext.h>
 #include <EGL/egl.h>
-#include <EGL/eglext.h>
 #else
 #include <GL/glew.h>
 #include <GL/glfw.h>

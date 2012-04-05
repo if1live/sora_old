@@ -27,6 +27,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoraToolLibrary", "SoraTool
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OGLES2Tools", "sdk\OGLES2Tools\OGLES2\Build\WindowsVC2008\OGLES2Tools.vcxproj", "{09ABE661-9BC0-4152-A820-1FB0522CAC01}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "esUtil", "sdk\esUtil\esUtil.vcxproj", "{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +79,20 @@ Global
 		{3A9FED3D-0EC6-412F-B690-5119A9EE2AD9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{3A9FED3D-0EC6-412F-B690-5119A9EE2AD9}.Release|Win32.ActiveCfg = Release|Any CPU
 		{3A9FED3D-0EC6-412F-B690-5119A9EE2AD9}.Release|x86.ActiveCfg = Release|Any CPU
+		{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
+		{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F}.Debug|Mixed Platforms.Build.0 = Debug|Win32
+		{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F}.Debug|Win32.ActiveCfg = Debug|Win32
+		{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F}.Debug|Win32.Build.0 = Debug|Win32
+		{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F}.Debug|x86.ActiveCfg = Debug|Win32
+		{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F}.Debug|x86.Build.0 = Debug|Win32
+		{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F}.Release|Any CPU.ActiveCfg = Release|Win32
+		{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F}.Release|Mixed Platforms.ActiveCfg = Release|Win32
+		{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F}.Release|Mixed Platforms.Build.0 = Release|Win32
+		{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F}.Release|Win32.ActiveCfg = Release|Win32
+		{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F}.Release|Win32.Build.0 = Release|Win32
+		{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F}.Release|x86.ActiveCfg = Release|Win32
+		{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F}.Release|x86.Build.0 = Release|Win32
 		{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}.Debug|Any CPU.ActiveCfg = Debug|Win32
 		{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}.Debug|Mixed Platforms.Build.0 = Debug|Win32

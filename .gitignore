@@ -44,3 +44,6 @@ sdk/OGLES2Tools/OGLES2/Build/WindowsVC2008/_UpgradeReport_Files/
 sdk/PVRShell/Documentation/
 source/Build/WindowsVC2008/_UpgradeReport_Files
 sdk/OGLES2Tools/OGLES2/Build/WindowsVC2008/UpgradeLog.XML
+sdk/esUtil/Doc/
+sdk/esUtil/Lib/libEGL.lib
+sdk/esUtil/Lib/libGLESv2.lib
