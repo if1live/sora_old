@@ -39,6 +39,11 @@
 #define DELTA_EPOCH_IN_MICROSECS  11644473600000000ULL
 #endif
 
+struct timeval {
+  long tv_sec;       // 초
+  long tv_usec;      // 마이크로초
+};
+
 // for timezone
 struct timezone {
   int  tz_minuteswest; /* minutes W of Greenwich */
@@ -47,7 +52,6 @@ struct timezone {
 
 // gettimeofday in windows
 int gettimeofday(struct timeval *tv, struct timezone *tz) {
-  /*
   FILETIME ft;
   unsigned __int64 tmpres = 0;
   static int tzflag;
@@ -78,7 +82,6 @@ int gettimeofday(struct timeval *tv, struct timezone *tz) {
     tz->tz_minuteswest = _timezone / 60;
     tz->tz_dsttime = _daylight;
   }
-  */
   return 0;
 }
 #endif
@@ -93,24 +96,23 @@ Timer::Timer()
 
 int Timer::GetSysMilliSecond() {
 #if SR_WIN
-  //int currtime = timeGetTime();
-  //return currtime;
-  return 0;
+  int currtime = timeGetTime();
+  return currtime;
 #else
   //ref wolf3d timer
   struct timeval tp;
-	struct timezone tzp;
-	static int		secbase;
+  struct timezone tzp;
+  static int		secbase;
 
-	gettimeofday( &tp, &tzp );
-	
-	if( ! secbase ) {
-		secbase = tp.tv_sec;
-		return tp.tv_usec / 1000;
-	}
+  gettimeofday( &tp, &tzp );
 
-	int currtime = (tp.tv_sec - secbase) * 1000 + tp.tv_usec / 1000;
-	return currtime;
+  if( ! secbase ) {
+    secbase = tp.tv_sec;
+    return tp.tv_usec / 1000;
+  }
+
+  int currtime = (tp.tv_sec - secbase) * 1000 + tp.tv_usec / 1000;
+  return currtime;
 #endif
 }
 void Timer::Tick() {

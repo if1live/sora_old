@@ -47,3 +47,5 @@ sdk/OGLES2Tools/OGLES2/Build/WindowsVC2008/UpgradeLog.XML
 sdk/esUtil/Doc/
 sdk/esUtil/Lib/libEGL.lib
 sdk/esUtil/Lib/libGLESv2.lib
+sdk/esUtil/Lib/esUtil_d.lib
+sdk/esUtil/Lib/esUtil_d.lib
