@@ -48,7 +48,7 @@ JNIEXPORT void JNICALL Java_so_libsora_yuriko_GL2JNILib_init(JNIEnv * env, jobje
 	//SORA_setup_graphics(&dev, width, height);	//work
 	//sora::depthmap::setup_graphics(&dev, width, height);	//compile, not visible
 	//sora::shadowmap::setup_graphics(&dev, width, height);
-	sora::selection::setup_graphics(&dev, width, height);
+	sora::selection::setup_graphics(&dev, width, height);	//work
 	//sora::celshading::setup_graphics(&dev, width, height);	//work
 }
 

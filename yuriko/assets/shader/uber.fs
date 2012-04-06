@@ -1,5 +1,9 @@
 precision mediump float;
 
+//vertex data
+varying vec2 v_texcoord;
+varying vec4 v_color;
+
 //ambient
 varying vec4 v_ambientColor;
 
@@ -17,7 +21,6 @@ varying vec3 v_viewDir;
 uniform sampler2D s_ambientMap;
 uniform sampler2D s_diffuseMap;
 uniform sampler2D s_specularMap;
-varying vec2 v_texcoord;
 
 void main() {
 	vec4 color = vec4(0.0);
@@ -90,5 +93,5 @@ void main() {
 		color = color + specular_color;
 	}
 	
-	gl_FragColor =  color;
+	gl_FragColor =  color * v_color;
 }

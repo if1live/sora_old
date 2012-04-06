@@ -103,4 +103,12 @@ ShaderNameBind *ShaderBindPolicy::GetPredefinedUniform(int semantic) {
   }
   return NULL;
 }
+void ShaderBindPolicy::Clear() {
+  ShaderVariable empty_var;
+  auto it = var_list_.begin();
+  auto endit = var_list_.end();
+  for( ; it != endit ; ++it) {
+    *it = empty_var;
+  }
+}
 }

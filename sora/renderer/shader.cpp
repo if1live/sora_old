@@ -23,6 +23,8 @@
 #include "core/template_lib.h"
 #include "shader_variable.h"
 
+#include "sys/memory_file.h"
+
 #if SR_ANDROID
 #include "gl_inc.h"
 #include <boost/foreach.hpp>
@@ -376,4 +378,41 @@ const ShaderVariable *ShaderProgram::FindShaderVar(const std::string &name, cons
   return NULL;
 }
 
+void ShaderProgram::BuildBindPolicy() {
+  bind_policy.Clear();
+
+  //bind되는 변수는 uber shader의 경우는 코드레벨에서 떄려박을수 있다
+  vector<ShaderNameBind> &attr_bind_param = ShaderBindPolicy::GetPredefinedAttribList();
+  for(size_t i = 0 ; i < attr_bind_param.size() ; i++) {
+    const ShaderNameBind &param = attr_bind_param[i];
+    const ShaderVariable *var = attrib_var(param.name);
+    if(var != NULL) {
+      bind_policy.set_var(param.semantic, *var);
+    }
+  }
+
+  vector<ShaderNameBind> &uniform_bind_param = ShaderBindPolicy::GetPredefinedUniformList();
+  for(size_t i = 0 ; i < uniform_bind_param.size() ; i++) {
+    const ShaderNameBind &param = uniform_bind_param[i];
+    const ShaderVariable *var = uniform_var(param.name);
+    if(var != NULL) {
+      bind_policy.set_var(param.semantic, *var);
+    }
+  }
+}
+
+bool ShaderProgram::LoadFromFile(const std::string &vert_path, const std::string &frag_path) {
+  sora::MemoryFile vert_file(vert_path);
+  sora::MemoryFile frag_file(frag_path);
+  vert_file.Open();
+  frag_file.Open();
+  const char *vert_src = (const char*)(vert_file.start);
+  const char *frag_src = (const char*)(frag_file.start);
+  bool prog_result = Init(vert_src, frag_src);
+  if(prog_result == false) {
+    LOGE("Could not create program.");
+  }
+  BuildBindPolicy();  //사실상 모든 쉐이더에서 쓰니까 그냥 내장해놓자
+  return prog_result;
+}
 } //namespace sora

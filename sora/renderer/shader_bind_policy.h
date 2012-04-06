@@ -22,6 +22,7 @@
 #define SORA_SHADER_BIND_POLICY_H_
 
 #include "shader_variable.h"
+#include "core/array_inc.h"
 
 namespace sora {;
 
@@ -98,6 +99,8 @@ public:
   ShaderBindPolicy();
   ShaderBindPolicy(GLuint shader_prog);
   ~ShaderBindPolicy();
+  
+  void Clear();
 
   void set_var(int code, const ShaderVariable &v);
   const ShaderVariable &var(int code) const;
@@ -106,7 +109,7 @@ public:
 
 private:
   GLuint shader_prog_; //어떤 쉐이더를 위한 bind변수모음인가
-  ShaderVariable var_list_[kSemanticCount];
+  std::array<ShaderVariable, kSemanticCount> var_list_;
 };
 }
 

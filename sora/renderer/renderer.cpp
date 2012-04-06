@@ -75,7 +75,7 @@ void Renderer::SetTexture(const Texture &tex) {
   //ambient 같은거용 표준 텍스쳐
   if(last_tex_id_ != tex.handle()) {
     glActiveTexture(GL_TEXTURE0);
-    glUniform1i(0, 0);  //first_texture, GL_TEXTURE0
+    //glUniform1i(0, 0);  //first_texture, GL_TEXTURE0
     glBindTexture(GL_TEXTURE_2D, tex.handle());
     last_tex_id_ = tex.handle();
   }

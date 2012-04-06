@@ -21,7 +21,7 @@
 #ifndef SORA_ARRAY_INC_H_
 #define SORA_ARRAY_INC_H_
 
-#include "sora/arch.h"
+#include "core/arch.h"
 
 #if SR_WIN
 #include <array>

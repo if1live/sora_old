@@ -101,6 +101,7 @@ void SelectionBuffer::Init(int w, int h) {
   if(prog_result == false) {
     LOGE("Could not create program.");
   }
+  selection_shader_->BuildBindPolicy();
 }
 void SelectionBuffer::Deinit() {
   if(fbo_ != 0) {

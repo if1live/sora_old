@@ -35,6 +35,9 @@
 #include "renderer/gl_buffer_object.h"
 #include "renderer/camera.h"
 
+#include "renderer/renderer.h"
+#include "renderer/uber_shader.h"
+
 #include "event/touch_device.h"
 #include "event/touch_event.h"
 #include "renderer/selection_buffer.h"
@@ -50,7 +53,6 @@ using namespace glm;
 
 namespace sora {;
 namespace selection {
-  TextureManager tex_mgr;
   ShaderProgram simple_shader;
 
   float win_width = 0;
@@ -68,25 +70,23 @@ namespace selection {
     win_width = w;
     win_height = h;
 
+    
     //create shader
     {
       std::string app_vert_path = sora::Filesystem::GetAppPath("shader/simple.vs");
       std::string app_frag_path = sora::Filesystem::GetAppPath("shader/simple.fs");
-      sora::MemoryFile vert_file(app_vert_path);
-      sora::MemoryFile frag_file(app_frag_path);
-      vert_file.Open();
-      frag_file.Open();
-      const char *vert_src = (const char*)(vert_file.start);
-      const char *frag_src = (const char*)(frag_file.start);
-      bool prog_result = simple_shader.Init(vert_src, frag_src);
-      if(prog_result == false) {
-        LOGE("Could not create program.");
-      }
+      simple_shader.LoadFromFile(app_vert_path, app_frag_path);
     }
+    
     {
       //쉐도우 테스트용 평면
       sora::PrimitiveModel primitive_model;
-      primitive_model.SolidPlane(5);
+      //primitive_model.WirePlane(3, 0.2);
+      primitive_model.SolidPlane(4);
+      //primitive_model.WireAxis(4);
+      //primitive_model.SolidCylinder(3, 4, 4);
+      //primitive_model.SolidTeapot(3);
+      //primitive_model.SolidSphere(2, 16, 16);
       dev->mesh_mgr().Add(primitive_model.GetDrawCmdList(), kPlane);
     }
     {
@@ -107,41 +107,36 @@ namespace selection {
       tex_file.Open();
       Texture tex("sora");
       tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
-      tex_mgr.Add(tex);
+      dev->texture_mgr().Add(tex);
     }
     //gl상태
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-
-    //GLHelper::CheckError("glInitEnd");
+    GLHelper::CheckError("glInitEnd");
   }
 
   void DrawScene(sora::Device *dev, sora::ShaderProgram &shader) {
-    GLHelper::CheckError("glDrawArrays");
-    glUseProgram(shader.prog);
+    Renderer &render3d = dev->render3d();
+    render3d.SetShader(shader);
+    
+    render3d.SetMaterial(Material::GetInvalidMtl());
+    render3d.ApplyMaterialLight();
 
-    int pos_loc = shader.GetAttribLocation("a_position");
-    int tex_loc = shader.GetAttribLocation("a_texcoord");
-    glEnableVertexAttribArray(pos_loc);
-    if(tex_loc != -1) {
-      glEnableVertexAttribArray(tex_loc);
-    }
-    int mvp_loc = shader.GetUniformLocation("u_worldViewProjection");
-
-    //set cam
+    //set camera
     glm::vec3 eye(-2, 3, 5);
     glm::vec3 center(0);
     glm::vec3 up(0, 1, 0);
-    glm::mat4 view = glm::lookAt(eye, center, up);
-    glm::mat4 projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 30.0f);
+    Camera cam;
+    cam.eye = eye;
+    cam.up = up;
+    cam.center = center;
+    render3d.set_camera(cam);
+
+    glm::mat4 &projection = render3d.projection_mat();
+    projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 30.0f);
+
     glm::mat4 model(1.0f);
-    glm::mat4 mvp = projection * view * model;
-    glUniformMatrix4fv(mvp_loc, 1, GL_FALSE, glm::value_ptr(mvp));
-
-    Texture *tex = tex_mgr.Get_ptr(string("sora"));
-    glBindTexture(GL_TEXTURE_2D, tex->handle());
-
-    GLHelper::CheckError("glDrawArrays");
+    render3d.ApplyMatrix(model);
 
     vector<string> mesh_list;
     mesh_list.push_back(kCube1);  //0 : cube
@@ -149,8 +144,8 @@ namespace selection {
     for(size_t i = 0 ; i < mesh_list.size() ; i++) {
       const char *name = mesh_list[i].c_str();
       MeshBufferObject *mesh_buffer = dev->mesh_mgr().Get(name);
-      SR_ASSERT(mesh_buffer != NULL);
-
+      
+      //selection buffer. selection일떄만 대입시키기
       int color_id_loc = shader.GetUniformLocation("u_colorId");
       if(color_id_loc != -1) {
         //color_id를 ivec4로 변환하기 위해서 char배열로 변환후 다시 조합하자
@@ -158,52 +153,37 @@ namespace selection {
         SelectionBuffer::IdToArray(i, color_id);
         glUniform4iv(color_id_loc, 1, color_id);
       }
-
-      SR_ASSERT(mesh_buffer->BufferCount());
-      GLuint vbo = mesh_buffer->vbo(0).buffer();
-      GLuint ibo = mesh_buffer->ibo(0).buffer();
-      int index_count = mesh_buffer->index_count(0);
-      GLenum draw_mode = mesh_buffer->draw_mode(0);
-
-      glBindBuffer(GL_ARRAY_BUFFER, vbo);
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-      glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, pos));
-      if(tex_loc != -1) {
-        glVertexAttribPointer(tex_loc, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texcoord));
-      }
-      glDrawElements(draw_mode, index_count, GL_UNSIGNED_SHORT, 0);
-
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
+      render3d.Draw(*mesh_buffer);
     }
     GLHelper::CheckError("glDrawArrays");
   }
 
   void draw_frame(sora::Device *dev) {
-    /*
-    //select buffer rendering
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    DrawScene(dev, selection_shader);
-    */
     //obj rendering
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glViewport(0, 0, win_width, win_height);
-    DrawScene(dev, simple_shader);
 
+    //unsigned int flag = 0;
+    //flag |= UberShader::kAmbientColor;
+    //flag |= UberShader::kAmbientMap;
+    //DrawScene(dev, dev->uber_shader(flag));
+    DrawScene(dev, simple_shader);
+    
+    //DrawScene(dev, *selection_buffer.shader());
+
+    Renderer::EndRender();
     GLHelper::CheckError("glDrawArrays");
   }
 
   void update_frame(sora::Device *dev, float dt) {
+    TouchEventQueue &touch_evt_queue = dev->touch_evt_queue();
+
+#if SR_WIN && (SR_GLES == 0)
     static float elapsed_time = 0;
     static int elapsed_tick_count = 0;
     elapsed_tick_count++;
     elapsed_time += dt;
-    TouchEventQueue &touch_evt_queue = dev->touch_evt_queue();
-
-#if SR_WIN
-#if SR_GLES == 0
     // touch event
     TouchDevice &touch_device = TouchDevice::GetInstance();
     //glfw 대응 소스
@@ -223,7 +203,6 @@ namespace selection {
     for( ; touch_evt_it != touch_evt_endit ; ++touch_evt_it) {
       touch_evt_queue.Push(*touch_evt_it);
     }
-#endif
 #endif
 
     //터치한 좌표의 픽셀 얻기

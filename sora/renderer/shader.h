@@ -76,6 +76,7 @@ public:
     return Init(v_src.c_str(), f_src.c_str());
   }
   bool Init(const std::vector<const char*> &v_src_list, const std::vector<const char*> &f_src_list);
+  bool LoadFromFile(const std::string &vert_path, const std::string &frag_path);
 
   void Deinit();
   bool IsInit() const { return (prog != 0); }
@@ -99,6 +100,7 @@ public:
 public:
   GLuint prog;
   ShaderBindPolicy bind_policy;
+  void BuildBindPolicy();
 
 private:
   Shader vert_shader_;

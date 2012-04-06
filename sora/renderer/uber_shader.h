@@ -40,8 +40,6 @@ public:
     kSpecularMap = 1 << 5,
     //simple attribute
     kAlbedo = 1 << 6,
-    kModelColor = 1 << 7,
-    kConstColor = 1 << 8
   };
 public:
   UberShader();

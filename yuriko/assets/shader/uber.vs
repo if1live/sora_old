@@ -1,5 +1,14 @@
-attribute vec4 a_position;
 uniform mat4 u_worldViewProjection;
+
+//model data
+attribute vec4 a_position;
+attribute vec3 a_normal;
+
+attribute vec4 a_color;
+varying vec4 v_color;
+//for texture
+attribute vec2 a_texcoord;
+varying vec2 v_texcoord;
 
 // TEXTURE_MAP : ambient/diffuse/specular map이 설정될 경우
 // 각각은 텍스쳐 좌표를 아마도 공유할테니까 그떄 쓰자
@@ -26,12 +35,7 @@ varying vec3 v_viewDir;
 //light calc
 uniform vec3 u_worldLightPosition;
 uniform mat4 u_world;
-attribute vec3 a_normal;
 uniform vec4 u_viewPosition;
-
-//for texture
-attribute vec2 a_texcoord;
-varying vec2 v_texcoord;
 
 void main() {
 #if AMBIENT_MASK == 1
@@ -67,11 +71,11 @@ void main() {
 	bool use_specular_map = false;
 #endif
 
+	v_color = a_color;
+	
 	if(use_ambient) {
 		v_ambientColor = u_ambientColor;
 	}
-
-	
 	if(use_diffuse || use_specular) {
 		vec3 light_dir = a_position.xyz - u_worldLightPosition.xyz;
 		light_dir = normalize(light_dir);	
@@ -93,7 +97,6 @@ void main() {
 			v_reflection = reflect(light_dir, world_normal);
 		}
 	}
-		
 	if(use_ambient_map || use_diffuse_map || use_specular_map) {
 		v_texcoord = a_texcoord;
 	}

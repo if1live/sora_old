@@ -130,29 +130,8 @@ ShaderProgram &UberShader::Load(uint flag) {
   //쉐이더 프로그램 적절히 생성
   ShaderProgram shader_prog;
   shader_prog.Init(vert_src_list, frag_src_list);
+  shader_prog.BuildBindPolicy();
 
-  ShaderBindPolicy &bind_policy = shader_prog.bind_policy;
-  SR_ASSERT(bind_policy.shader_prog() == shader_prog.prog);
-
-  //bind되는 변수는 uber shader의 경우는 코드레벨에서 떄려박을수 있다
-  vector<ShaderNameBind> &attr_bind_param = ShaderBindPolicy::GetPredefinedAttribList();
-  for(size_t i = 0 ; i < attr_bind_param.size() ; i++) {
-    const ShaderNameBind &param = attr_bind_param[i];
-    const ShaderVariable *var = shader_prog.attrib_var(param.name);
-    if(var != NULL) {
-      bind_policy.set_var(param.semantic, *var);
-    }
-  }
-
-  vector<ShaderNameBind> &uniform_bind_param = ShaderBindPolicy::GetPredefinedUniformList();
-  for(size_t i = 0 ; i < uniform_bind_param.size() ; i++) {
-    const ShaderNameBind &param = uniform_bind_param[i];
-    const ShaderVariable *var = shader_prog.uniform_var(param.name);
-    if(var != NULL) {
-      bind_policy.set_var(param.semantic, *var);
-    }
-  }
-  
   prog_dict_[flag] = shader_prog;
   return prog_dict_[flag];
 }

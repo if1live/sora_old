@@ -89,6 +89,22 @@ void selection_draw(ESContext *esContext) {
   elapsed_time += dt;
 }
 
+void main_draw(ESContext *esContext) {
+  static float prev_time = Timer_GetSecond();
+  SORA_draw_frame(&dev);
+
+  float curr_time = Timer_GetSecond();
+  float dt = curr_time - prev_time;
+  SORA_update_frame(&dev, dt);
+
+  eglSwapBuffers ( esContext->eglDisplay, esContext->eglSurface );
+  Timer_Tick();
+  prev_time = curr_time;
+
+  elapsed_tick_count++;
+  elapsed_time += dt;
+}
+
 
 int main ( int argc, char *argv[] ) {
   ESContext esContext;
@@ -105,12 +121,14 @@ int main ( int argc, char *argv[] ) {
   //init env
   Timer_Init();
 
+  //SORA_setup_graphics(&dev, kWinWidth, kWinHeight);
+  //esRegisterDrawFunc ( &esContext, main_draw );
   //sora::celshading::setup_graphics(&dev, kWinWidth, kWinHeight);
   //esRegisterDrawFunc ( &esContext, celshading_draw );
-  sora::depthmap::setup_graphics(&dev, kWinWidth, kWinHeight);
-  esRegisterDrawFunc ( &esContext, depthmap_draw);
-  //sora::selection::setup_graphics(&dev, kWinWidth, kWinHeight);
-  //esRegisterDrawFunc ( &esContext, selection_draw);
+  //sora::depthmap::setup_graphics(&dev, kWinWidth, kWinHeight);
+  //esRegisterDrawFunc ( &esContext, depthmap_draw);
+  sora::selection::setup_graphics(&dev, kWinWidth, kWinHeight);
+  esRegisterDrawFunc ( &esContext, selection_draw);
   
   esMainLoop ( &esContext );
 }
