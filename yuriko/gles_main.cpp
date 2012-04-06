@@ -123,10 +123,10 @@ int main ( int argc, char *argv[] ) {
 
   //SORA_setup_graphics(&dev, kWinWidth, kWinHeight);
   //esRegisterDrawFunc ( &esContext, main_draw );
-  sora::celshading::setup_graphics(&dev, kWinWidth, kWinHeight);
-  esRegisterDrawFunc ( &esContext, celshading_draw );
-  //sora::depthmap::setup_graphics(&dev, kWinWidth, kWinHeight);
-  //esRegisterDrawFunc ( &esContext, depthmap_draw);
+  //sora::celshading::setup_graphics(&dev, kWinWidth, kWinHeight);
+  //esRegisterDrawFunc ( &esContext, celshading_draw );
+  sora::depthmap::setup_graphics(&dev, kWinWidth, kWinHeight);
+  esRegisterDrawFunc ( &esContext, depthmap_draw);
   //sora::selection::setup_graphics(&dev, kWinWidth, kWinHeight);
   //esRegisterDrawFunc ( &esContext, selection_draw);
   

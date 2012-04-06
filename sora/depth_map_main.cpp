@@ -34,6 +34,7 @@
 #include "renderer/primitive_model.h"
 #include "renderer/gl_buffer_object.h"
 #include "renderer/camera.h"
+#include "renderer/renderer.h"
 
 #if SR_USE_PCH == 0
 #include <glm/glm.hpp>
@@ -51,7 +52,6 @@ namespace depthmap {
 
   float win_width = 0;
   float win_height = 0;
-  TextureManager tex_mgr;
   ShaderProgram simple_shader;
 
   ShaderProgram depth_tex_shader;
@@ -75,46 +75,17 @@ namespace depthmap {
     {
       std::string app_vert_path = sora::Filesystem::GetAppPath("shader/simple.vs");
       std::string app_frag_path = sora::Filesystem::GetAppPath("shader/simple.fs");
-      sora::MemoryFile vert_file(app_vert_path);
-      sora::MemoryFile frag_file(app_frag_path);
-      vert_file.Open();
-      frag_file.Open();
-      const char *vert_src = (const char*)(vert_file.start);
-      const char *frag_src = (const char*)(frag_file.start);
-      bool prog_result = simple_shader.Init(vert_src, frag_src);
-      if(prog_result == false) {
-        LOGE("Could not create program.");
-      }
+      simple_shader.LoadFromFile(app_vert_path, app_frag_path);
     }
     {
       std::string app_vert_path = sora::Filesystem::GetAppPath("shader/depth_tex.vs");
       std::string app_frag_path = sora::Filesystem::GetAppPath("shader/depth_tex.fs");
-      sora::MemoryFile vert_file(app_vert_path);
-      sora::MemoryFile frag_file(app_frag_path);
-      vert_file.Open();
-      frag_file.Open();
-      const char *vert_src = (const char*)(vert_file.start);
-      const char *frag_src = (const char*)(frag_file.start);
-      bool prog_result = depth_tex_shader.Init(vert_src, frag_src);
-      if(prog_result == false) {
-        LOGE("Could not create program.");
-      }
+      depth_tex_shader.LoadFromFile(app_vert_path, app_frag_path);
     }
     {
-      //std::string app_vert_path = sora::Filesystem::GetAppPath("shader/depth_tex.vs");
-      //std::string app_frag_path = sora::Filesystem::GetAppPath("shader/depth_tex.fs");
       std::string app_vert_path = sora::Filesystem::GetAppPath("shader/gray_depth_tex.vs");
       std::string app_frag_path = sora::Filesystem::GetAppPath("shader/gray_depth_tex.fs");
-      sora::MemoryFile vert_file(app_vert_path);
-      sora::MemoryFile frag_file(app_frag_path);
-      vert_file.Open();
-      frag_file.Open();
-      const char *vert_src = (const char*)(vert_file.start);
-      const char *frag_src = (const char*)(frag_file.start);
-      bool prog_result = gray_depth_tex_shader.Init(vert_src, frag_src);
-      if(prog_result == false) {
-        LOGE("Could not create program.");
-      }
+      gray_depth_tex_shader.LoadFromFile(app_vert_path, app_frag_path);
     }
     {
       //테스트용 평면
@@ -158,7 +129,7 @@ namespace depthmap {
       tex_file.Open();
       Texture tex("sora");
       tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
-      tex_mgr.Add(tex);
+      dev->texture_mgr().Add(tex);
     }
     {
       //기본 설정
@@ -176,28 +147,25 @@ namespace depthmap {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       glViewport(0, 0, win_width, win_height);
 
-      glUseProgram(simple_shader.prog);
+      Renderer &render3d = dev->render3d();
+      render3d.SetShader(simple_shader);
 
-      int pos_loc = simple_shader.GetAttribLocation("a_position");
-      int tex_loc = simple_shader.GetAttribLocation("a_texcoord");
-      glEnableVertexAttribArray(pos_loc);
-      glEnableVertexAttribArray(tex_loc);
-      int mvp_loc = simple_shader.GetUniformLocation("u_worldViewProjection");
+      Camera cam;
+      cam.eye = vec3(-4, 6, 10);
+      cam.center = vec3(0);
+      cam.up = vec3(0, 1, 0);
+      render3d.set_camera(cam);
 
-      //set cam
-      glm::vec3 eye(-4, 6, 10);
-      glm::vec3 center(0);
-      glm::vec3 up(0, 1, 0);
-      glm::mat4 view = glm::lookAt(eye, center, up);
       float projection_near = 0.1f;
       float projection_far = 30.0f;
       glm::mat4 projection = glm::perspective(45.0f, win_width / win_height, projection_near, projection_far);
-      glm::mat4 model(1.0f);
-      glm::mat4 mvp = projection * view * model;
-      glUniformMatrix4fv(mvp_loc, 1, GL_FALSE, glm::value_ptr(mvp));
+      render3d.set_projection_mat(projection);
 
-      Texture *tex = tex_mgr.Get_ptr(string("sora"));
-      glBindTexture(GL_TEXTURE_2D, tex->handle());
+      glm::mat4 model(1.0f);
+      render3d.ApplyMatrix(model);
+
+      Texture *tex = dev->texture_mgr().Get_ptr(string("sora"));
+      render3d.SetTexture(*tex);
 
       vector<string> mesh_list;
       mesh_list.push_back(kCube1);  //0 : cube
@@ -205,26 +173,12 @@ namespace depthmap {
       for(size_t i = 0 ; i < mesh_list.size() ; i++) {
         const char *name = mesh_list[i].c_str();
         MeshBufferObject *mesh_buffer = dev->mesh_mgr().Get(name);
-        SR_ASSERT(mesh_buffer != NULL);
-
-        SR_ASSERT(mesh_buffer->BufferCount());
-        GLuint vbo = mesh_buffer->vbo(0).buffer();
-        GLuint ibo = mesh_buffer->ibo(0).buffer();
-        int index_count = mesh_buffer->index_count(0);
-        GLenum draw_mode = mesh_buffer->draw_mode(0);
-
-        glBindBuffer(GL_ARRAY_BUFFER, vbo);
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-        glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, pos));
-        glVertexAttribPointer(tex_loc, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, texcoord));
-        glDrawElements(draw_mode, index_count, GL_UNSIGNED_SHORT, 0);
-
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        render3d.Draw(*mesh_buffer);
       }
+
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
-
+    
     GLHelper::CheckError("FBO draw");
     {
       glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -266,7 +220,9 @@ namespace depthmap {
 
     }
     GLHelper::CheckError("Draw DepthMap");
+    Renderer::EndRender();
   }
+
   void update_frame(sora::Device *dev, float dt) {
 #if SR_WIN && (SR_GLES == 0)
     //깊이맵용 쉐이더 교체
