@@ -29,7 +29,7 @@
 #include <EGL/egl.h>
 #else
 #include <GL/glew.h>
-#include <GL/glfw.h>
+//#include <GL/glfw.h>
 #endif
 
 #elif SR_ANDROID
