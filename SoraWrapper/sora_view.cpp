@@ -39,9 +39,6 @@ namespace sora {;
     Device *dev = &device();
     SORA_draw_frame(dev);
   }
-  void SoraView::InitGLEnv() {
-    SORA_init_gl_env();
-  }
   void SoraView::UpdateFrame(float dt) {
     Device *dev = &device();
     SORA_update_frame(dev, dt);
@@ -55,6 +52,6 @@ namespace sora {;
     SORA_set_window_size(dev, w, h);
   }
   void SoraView::TestDraw(int w, int h) {
-    SORA_test_draw(w, h);
+    //SORA_test_draw(w, h);
   }
 }

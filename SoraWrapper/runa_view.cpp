@@ -74,18 +74,6 @@ const char *kAmbientMapKey = "ambient";
 const char *kDiffuseMapKey = "diffuse";
 const char *kSpecularMapKey = "specular";
 
-struct SimpleUberShaderLoadPolicy {
-  static const char *vert_file() { return "shader/simple_uber.vs"; }
-  static const char *frag_file() { return "shader/simple_uber.fs"; }
-  static unsigned int avail_mask() {
-    unsigned int flag = 0;
-    flag |= UberShader::kConstColor;
-    flag |= UberShader::kAlbedo;
-    flag |= UberShader::kModelColor;
-    return flag;
-  }
-};
-
 struct RunaViewPrivate {
   RunaViewPrivate()
     : light_move(false),
@@ -105,8 +93,6 @@ struct RunaViewPrivate {
       mtl.shininess = 50;
 
       model_name = "sphere";
-
-      simple_uber.Init<SimpleUberShaderLoadPolicy>();
   }
   Material mtl;
   Light light;
@@ -115,8 +101,6 @@ struct RunaViewPrivate {
 
   float camDeg;
   string model_name;
-
-  UberShader simple_uber;
 };
 
 
@@ -333,7 +317,7 @@ void RunaView::SetupGraphics(int w, int h) {
     world_mat_list[idx] = glm::mat4(1.0f);
 
     Material &mtl = mtl_list[idx];
-    mtl.uber_flag = UberShader::kConstColor;
+    mtl.uber_flag = UberShader::kAmbientColor;
 
     sora::PrimitiveModel primitive_model;
     primitive_model.WirePlane(5, 0.2);
@@ -347,7 +331,7 @@ void RunaView::SetupGraphics(int w, int h) {
     world_mat_list[idx] = glm::mat4(1.0f);
 
     Material &mtl = mtl_list[idx];
-    mtl.uber_flag = UberShader::kModelColor;
+    mtl.uber_flag = UberShader::kAmbientColor;
 
     sora::PrimitiveModel primitive_model;
     primitive_model.WireAxis(5);
@@ -459,9 +443,8 @@ void RunaView::DrawFrame() {
   //plane, axis같은 디버깅 관련 요소 그리기
   //선을 겹쳐 그릴수 잇으니까 깊이끈다
   for(size_t i = 0 ; i < world_mat_list.size() ; i++) {
-    UberShader &simple_uber = pimpl().simple_uber;
     unsigned int flag = mtl_list[i].uber_flag;
-    ShaderProgram &shader = simple_uber.Load(flag);
+    ShaderProgram &shader = device().uber_shader(flag);
     render3d.SetShader(shader);
 
     ShaderBindPolicy &bind_policy = shader.bind_policy;
@@ -520,14 +503,6 @@ void RunaView::DrawFrame() {
     }
   }
   GLHelper::CheckError("Render End");
-}
-void RunaView::InitGLEnv() {
-  GLenum err = glewInit();
-  if (GLEW_OK != err) {
-    /* Problem: glewInit failed, something is seriously wrong. */
-    fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-  }
-  fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 }
 
 void RunaView::UpdateFrame(float dt) {

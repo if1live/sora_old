@@ -406,18 +406,10 @@ void SORA_draw_frame(Device *device) {
   renderFrame(device);
 }
 
-/*
-SR_C_DLL void SORA_init_gl_env() {
+void SORA_init_gl_env() {
 #if SR_WIN
-  GLenum err = glewInit();
-  if (GLEW_OK != err) {
-    //Problem: glewInit failed, something is seriously wrong.
-    fprintf(stderr, "Error: %s\n", glewGetErrorString(err));
-  }
-  fprintf(stdout, "Status: Using GLEW %s\n", glewGetString(GLEW_VERSION));
 #endif
 }
-*/
 
 void SORA_update_frame(Device *device, float dt) {
   static float elapsed_time = 0;

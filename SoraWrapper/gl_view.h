@@ -34,7 +34,7 @@ public:
   virtual void SetupGraphics(int w, int h) = 0;
   virtual void SetWindowSize(int w, int h) = 0;
   virtual void DrawFrame() = 0;
-  virtual void InitGLEnv() = 0;
+  void InitGLEnv();
   virtual void UpdateFrame(float dt) = 0;
   virtual void Cleanup() = 0;
 

@@ -47,7 +47,6 @@ public:
   virtual void SetupGraphics(int w, int h) override;
   virtual void SetWindowSize(int w, int h) override;
   virtual void DrawFrame() override;
-  virtual void InitGLEnv() override;
   virtual void UpdateFrame(float dt) override;
   virtual void Cleanup() override;
   

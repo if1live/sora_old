@@ -105,10 +105,8 @@ ShaderNameBind *ShaderBindPolicy::GetPredefinedUniform(int semantic) {
 }
 void ShaderBindPolicy::Clear() {
   ShaderVariable empty_var;
-  auto it = var_list_.begin();
-  auto endit = var_list_.end();
-  for( ; it != endit ; ++it) {
-    *it = empty_var;
+  for(size_t i = 0 ; i < GetArraySize(var_list_) ; ++i) {
+    var_list_[i] = empty_var;
   }
 }
 }
