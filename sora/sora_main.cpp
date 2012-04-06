@@ -183,7 +183,8 @@ bool setupGraphics(Device *device, int w, int h) {
 
     //primitive_model.SolidSphere(0.5, 16, 16);
     //primitive_model.WirePlane(10.0f, 0.5f);
-    primitive_model.SolidPlane(2.0f);
+    //primitive_model.SolidPlane(2.0f);
+    primitive_model.WireAxis(3);
     device->mesh_mgr().Add(primitive_model.GetDrawCmdList(), "model1");
     mesh_name_list[obj_model_idx] = "model1";
   }
@@ -278,9 +279,9 @@ void renderFrame(Device *device) {
     unsigned int flag = 0;
     flag |= UberShader::kAmbientColor;
     //flag |= UberShader::kAmbientMap;
-    flag |= UberShader::kDiffuseColor;
+    //flag |= UberShader::kDiffuseColor;
     //flag |= UberShader::kDiffuseMap;
-    flag |= UberShader::kSpecularColor;
+    //flag |= UberShader::kSpecularColor;
     //flag |= UberShader::kSpecularMap;
     ShaderProgram &shader = device->uber_shader(flag);
     render3d.SetShader(shader);
@@ -289,7 +290,8 @@ void renderFrame(Device *device) {
 
     //평면하나만 일단 렌더링해서 테스트하자
     render3d.SetLight(light);
-    int obj_idx = 2;
+    //int obj_idx = 2;
+    int obj_idx = 1;
     const mat4 &world_mat = world_mat_list[obj_idx];
     render3d.ApplyMatrix(world_mat);
 
@@ -301,7 +303,8 @@ void renderFrame(Device *device) {
     mtl.ambient_map = "sora2";
     mtl.diffuse_map = "mtl_diffuse";
     mtl.specular_map = "mtl_specular";
-    mtl.ambient = vec3(0.1, 0.1, 0.1);
+    //mtl.ambient = vec3(0.1, 0.1, 0.1);
+    mtl.ambient = vec3(1, 1, 1);
     mtl.diffuse = vec3(0.5, 0.5, 0.5);
     mtl.specular = vec3(0.5, 0.5, 0.0);
     mtl.shininess = 50;

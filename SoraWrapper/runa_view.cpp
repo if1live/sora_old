@@ -206,17 +206,17 @@ bool RunaView::IsLightMove() {
 }
 void RunaView::GetLightAmbientColor(array<Byte> ^%color) {
   for(int i = 0 ; i < 3 ; i++) {
-    color[i] = (Byte)(pimpl().light.ambient[0] * 255);
+    color[i] = (Byte)(pimpl().light.ambient[i] * 255);
   }
 }
 void RunaView::GetLightDiffuseColor(array<Byte> ^%color) {
   for(int i = 0 ; i < 3 ; i++) {
-    color[i] = (Byte)(pimpl().light.diffuse[0] * 255);
+    color[i] = (Byte)(pimpl().light.diffuse[i] * 255);
   }
 }
 void RunaView::GetLightSpecularColor(array<Byte> ^%color) {
   for(int i = 0 ; i < 3 ; i++) {
-    color[i] = (Byte)(pimpl().light.specular[0] * 255);
+    color[i] = (Byte)(pimpl().light.specular[i] * 255);
   }
 }
 
@@ -318,6 +318,7 @@ void RunaView::SetupGraphics(int w, int h) {
 
     Material &mtl = mtl_list[idx];
     mtl.uber_flag = UberShader::kAmbientColor;
+    mtl.ambient = vec3(1.0f);
 
     sora::PrimitiveModel primitive_model;
     primitive_model.WirePlane(5, 0.2);
@@ -332,6 +333,7 @@ void RunaView::SetupGraphics(int w, int h) {
 
     Material &mtl = mtl_list[idx];
     mtl.uber_flag = UberShader::kAmbientColor;
+    mtl.ambient = vec3(1.0f);
 
     sora::PrimitiveModel primitive_model;
     primitive_model.WireAxis(5);
@@ -457,6 +459,11 @@ void RunaView::DrawFrame() {
     //색만 잇는걸로 디버깅할테니 다른 속성은 빼자
     const glm::mat4 &world_mat = world_mat_list[i];
     render3d.ApplyMatrix(world_mat);
+
+    render3d.SetMaterial(mtl_list[i]);
+    Light empty_light;
+    render3d.SetLight(empty_light);
+    render3d.ApplyMaterialLight();
   
     MeshBufferObject *mesh = device().mesh_mgr().Get(mesh_name_list[i]);
     //SR_ASSERT(mesh != NULL);
@@ -503,6 +510,7 @@ void RunaView::DrawFrame() {
     }
   }
   GLHelper::CheckError("Render End");
+  Renderer::EndRender();
 }
 
 void RunaView::UpdateFrame(float dt) {

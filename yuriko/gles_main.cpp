@@ -121,12 +121,12 @@ int main ( int argc, char *argv[] ) {
   //init env
   Timer_Init();
 
-  //SORA_setup_graphics(&dev, kWinWidth, kWinHeight);
-  //esRegisterDrawFunc ( &esContext, main_draw );
+  SORA_setup_graphics(&dev, kWinWidth, kWinHeight);
+  esRegisterDrawFunc ( &esContext, main_draw );
   //sora::celshading::setup_graphics(&dev, kWinWidth, kWinHeight);
   //esRegisterDrawFunc ( &esContext, celshading_draw );
-  sora::depthmap::setup_graphics(&dev, kWinWidth, kWinHeight);
-  esRegisterDrawFunc ( &esContext, depthmap_draw);
+  //sora::depthmap::setup_graphics(&dev, kWinWidth, kWinHeight);
+  //esRegisterDrawFunc ( &esContext, depthmap_draw);
   //sora::selection::setup_graphics(&dev, kWinWidth, kWinHeight);
   //esRegisterDrawFunc ( &esContext, selection_draw);
   
