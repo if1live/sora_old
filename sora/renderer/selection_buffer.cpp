@@ -60,10 +60,19 @@ void SelectionBuffer::Init(int w, int h) {
   //컬러버퍼는 작아도 상관없으니까 대충 하나 쓰자
   //라고 할라고 햇는데 문제는 int형으로 저장햇기 떄문에 RGBA8이 아니면 데이터가 날라간다
   //그래서 render to texture를 쓰도록할것!
+  /*
   glGenRenderbuffers(1, &color_);
   glBindRenderbuffer(GL_RENDERBUFFER, color_);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, w, h);
-  //glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA4, w, h);
+  */
+  glGenTextures(1, &color_);
+  glBindTexture(GL_TEXTURE_2D, color_);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+
   GLHelper::CheckError("Create Color Buffer");
 
   //attach to fb
@@ -71,7 +80,8 @@ void SelectionBuffer::Init(int w, int h) {
   //이놈은 reference에도 바로 안보이는 더러운 놈이다
   //http://www.opengl.org/wiki/Framebuffer_Object
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_);
-  glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color_);
+  //glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color_);
+  glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_, 0);
   GLHelper::CheckFrameBufferStatus("fb");
   GLHelper::CheckError("Create Selection Buffer");
 
@@ -98,7 +108,8 @@ void SelectionBuffer::Deinit() {
     fbo_ = 0;
   }
   if(color_ != 0) {
-    glDeleteRenderbuffers(1, &color_);
+    glDeleteTextures(1, &color_);
+    //glDeleteRenderbuffers(1, &color_);
     color_ = 0;
   }
   if(depth_ != 0) {
