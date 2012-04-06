@@ -123,13 +123,10 @@ namespace selection {
     render3d.ApplyMaterialLight();
 
     //set camera
-    glm::vec3 eye(-2, 3, 5);
-    glm::vec3 center(0);
-    glm::vec3 up(0, 1, 0);
     Camera cam;
-    cam.eye = eye;
-    cam.up = up;
-    cam.center = center;
+    cam.eye = vec3(-2, 3, 5);
+    cam.up = vec3(0, 1, 0);
+    cam.center = vec3(0);
     render3d.set_camera(cam);
 
     glm::mat4 &projection = render3d.projection_mat();
