@@ -56,7 +56,8 @@ namespace depthmap {
 
   ShaderProgram depth_tex_shader;
   ShaderProgram gray_depth_tex_shader;
-  ShaderProgram *curr_depth_shader = &gray_depth_tex_shader;
+  //ShaderProgram *curr_depth_shader = &gray_depth_tex_shader;
+  ShaderProgram *curr_depth_shader = &depth_tex_shader;
 
   const char *kCube1 = "cube1";
   const char *kPlane = "plane";

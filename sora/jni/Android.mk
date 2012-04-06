@@ -99,6 +99,7 @@ LOCAL_SRC_FILES += \
 	../depth_map_main.cpp	\
 	../shadow_map_main.cpp	\
 	../selection_main.cpp	\
+	../celshading_main.cpp	\
 	
 
 #include $(BUILD_SHARED_LIBRARY)

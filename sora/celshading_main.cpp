@@ -45,6 +45,12 @@
 #include "renderer/uber_shader.h"
 #include "renderer/light.h"
 
+#if SR_USE_PCH == 0
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#endif
+
 using namespace std;
 using namespace glm;
 
