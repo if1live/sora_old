@@ -21,9 +21,9 @@
 #ifndef SORA_TOUCH_EVENT_H_
 #define SORA_TOUCH_EVENT_H_
 
+#include <queue>
 #if SR_USE_PCH == 0
 #include <vector>
-#include <queue>
 #endif
 
 namespace sora {;

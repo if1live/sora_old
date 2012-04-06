@@ -51,11 +51,20 @@ void SelectionBuffer::Init(int w, int h) {
   glGenRenderbuffers(1, &depth_);
   glBindRenderbuffer(GL_RENDERBUFFER, depth_);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, w, h);
-  
+  GLHelper::CheckError("Create Depth Buffer");
   //color
+  //텍스쳐가 아니라 버퍼로 생성할 경우 타입에 제약이 걸린다
+  //http://www.khronos.org/opengles/sdk/docs/man/xhtml/glRenderbufferStorage.xml
+  //에 따르면 색깔버퍼용 타입은 사실상
+  //GL_RGBA4, GL_RGB565, GL_RGB5_A1 뿐이다. 뭐 어차피 선택버퍼는
+  //컬러버퍼는 작아도 상관없으니까 대충 하나 쓰자
+  //라고 할라고 햇는데 문제는 int형으로 저장햇기 떄문에 RGBA8이 아니면 데이터가 날라간다
+  //그래서 render to texture를 쓰도록할것!
   glGenRenderbuffers(1, &color_);
   glBindRenderbuffer(GL_RENDERBUFFER, color_);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, w, h);
+  //glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA4, w, h);
+  GLHelper::CheckError("Create Color Buffer");
 
   //attach to fb
   //renderbuffer생성하자마자 달면 GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER 에러 뜬다
@@ -64,6 +73,7 @@ void SelectionBuffer::Init(int w, int h) {
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_);
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color_);
   GLHelper::CheckFrameBufferStatus("fb");
+  GLHelper::CheckError("Create Selection Buffer");
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

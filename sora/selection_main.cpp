@@ -99,6 +99,7 @@ namespace selection {
     {
       //init seleciton buf
       selection_buffer.Init(w, h);
+      GLHelper::CheckError("glDrawArrays");
     }
     {
       std::string tex_path = sora::Filesystem::GetAppPath("texture/sora.png");
@@ -116,6 +117,7 @@ namespace selection {
   }
 
   void DrawScene(sora::Device *dev, sora::ShaderProgram &shader) {
+    GLHelper::CheckError("glDrawArrays");
     glUseProgram(shader.prog);
 
     int pos_loc = shader.GetAttribLocation("a_position");
@@ -138,6 +140,8 @@ namespace selection {
 
     Texture *tex = tex_mgr.Get_ptr(string("sora"));
     glBindTexture(GL_TEXTURE_2D, tex->handle());
+
+    GLHelper::CheckError("glDrawArrays");
 
     vector<string> mesh_list;
     mesh_list.push_back(kCube1);  //0 : cube
@@ -172,6 +176,7 @@ namespace selection {
       glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
       glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
+    GLHelper::CheckError("glDrawArrays");
   }
 
   void draw_frame(sora::Device *dev) {

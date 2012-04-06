@@ -47,6 +47,9 @@ extern "C" {
 /// esCreateWindow flat - multi-sample buffer
 #define ES_WINDOW_MULTISAMPLE   8
 
+#define ES_MOUSE_DOWN 0
+#define ES_MOUSE_MOVE 1
+#define ES_MOUSE_UP 2
 
 ///
 // Types
@@ -83,6 +86,7 @@ typedef struct
    /// Callbacks
    void (ESCALLBACK *drawFunc) ( void* );
    void (ESCALLBACK *keyFunc) ( void*, unsigned char, int, int );
+   void (ESCALLBACK *mouseFunc) (int, int, int);
    void (ESCALLBACK *updateFunc) ( void*, float deltaTime );
 } ESContext;
 
@@ -140,6 +144,8 @@ void ESUTIL_API esRegisterUpdateFunc ( ESContext *esContext, void (ESCALLBACK *u
 //
 void ESUTIL_API esRegisterKeyFunc ( ESContext *esContext, 
                                     void (ESCALLBACK *drawFunc) ( ESContext*, unsigned char, int, int ) );
+
+void ESUTIL_API esRegisterMouseFunc(ESContext *esContext, void (ESCALLBACK *mouseFunc)(int, int, int));
 //
 /// \brief Log a message to the debug output for the platform
 /// \param formatStr Format string for error log.  
