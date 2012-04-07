@@ -79,8 +79,8 @@ namespace shadowmap {
   FrameBufferObject shadow_map_fbo;
 
   void setup_graphics(sora::Device *dev, int w, int h) {
-    win_width = w;
-    win_height = h;
+    win_width = (float)w;
+    win_height = (float)h;
 
 
     //create shader
@@ -140,8 +140,8 @@ namespace shadowmap {
     {
       //create shadow map fbo
       //깊이정보는 색정보에 섞어넣으니까 굳이 따로 만들 필요 없다
-      shadow_map_fbo.width = w * kShadowMapSacle;
-      shadow_map_fbo.height = h * kShadowMapSacle;
+      shadow_map_fbo.width = (int)(w * kShadowMapSacle);
+      shadow_map_fbo.height = (int)(h * kShadowMapSacle);
       FrameBufferObject &shadow_fbo = shadow_map_fbo;
 
       glGenFramebuffers(1, &shadow_map_fbo.fbo);
@@ -185,12 +185,11 @@ namespace shadowmap {
 
     //fbo로 렌더링 하기
     glBindFramebuffer(GL_FRAMEBUFFER, shadow_map_fbo.fbo);
-    glViewport(0, 0, win_width, win_height);
     {
       glEnable(GL_DEPTH_TEST);
       glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-      glViewport(0, 0, win_width, win_height);
+      glViewport(0, 0, (int)win_width, (int)win_height);
 
       int pos_loc = shader.GetAttribLocation("a_position");
       glEnableVertexAttribArray(pos_loc);
@@ -246,7 +245,7 @@ namespace shadowmap {
       glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       //glClear(GL_DEPTH_BUFFER_BIT);
-      glViewport(0, 0, win_width, win_height);
+      glViewport(0, 0, (int)win_width, (int)win_height);
       glDisable(GL_DEPTH_TEST);
 
       GLHelper::CheckError("Render 2d start");

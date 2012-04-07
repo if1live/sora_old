@@ -29,12 +29,18 @@ struct DevicePrivate;
 
 class TextureManager;
 class MaterialManager;
-class TouchEventQueue;
 class MeshManager;
 class UberShader;
 class Renderer;
 class Font;
 class ShaderProgram;
+
+//for event
+struct TouchEvent;
+struct KeyboardEvent;
+template<typename T>  class EventQueue;
+typedef EventQueue<TouchEvent> TouchEventQueue;
+typedef EventQueue<KeyboardEvent> KeyboardEventQueue;
 
 struct RenderState;
 

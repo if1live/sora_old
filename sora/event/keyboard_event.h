@@ -18,53 +18,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_stdafx.h"
-#include "touch_event.h"
+#ifndef SORA_KEYBOARD_EVENT_H_
+#define SORA_KEYBOARD_EVENT_H_
+
+#include "event_queue.h"
 
 namespace sora {;
+enum {
+  kKeyboardPress,
+  kKeyboardRelease,
+};
 
-TouchEventQueue::TouchEventQueue(bool save_history)
-  : save_history_(save_history) {
-}
-TouchEventQueue::~TouchEventQueue() {
+struct KeyboardEvent {
+  enum {
+    kKeyUpArrow,
+    kKeyDownArrow,
+    kKeyLeftArrow,
+    kKeyRIghtArrow
+  };
+  KeyboardEvent() : state(-1), is_special_key(false), ch(0) { }
+  int state;  //press/release
+  bool is_special_key;  //화살표, esc, enter같은거용
+  char ch;    //어느 키에 대해서?. 대문자로 강제 보정하자
+};
+
+typedef EventQueue<KeyboardEvent> KeyboardEventQueue;
 }
 
-const TouchEvent &TouchEventQueue::Front() const {
-  if(IsEmpty()) {
-    //return fake event
-    static TouchEvent fake_evt;
-    static bool create = false;
-    if(create == false) {
-      create = true;
-
-      fake_evt.evt_type = -1;
-      fake_evt.x = 0;
-      fake_evt.y = 0;
-      fake_evt.prev_x = 0;
-      fake_evt.prev_y = 0;
-      fake_evt.tick_count = -1;
-      fake_evt.timestamp = 0;
-      fake_evt.uid = 0;
-    }
-    return fake_evt;
-  } else {
-    return evt_queue_.front();
-  }
-}
-TouchEvent TouchEventQueue::Get() {
-  TouchEvent evt = Front();
-  if(evt_queue_.empty() == false) {
-    evt_queue_.pop();
-  }
-  return evt;
-}
-void TouchEventQueue::Push(const TouchEvent &evt) {
-  evt_queue_.push(evt);
-  if(save_history_) {
-    evt_history_.push_back(evt);
-  }
-}
-bool TouchEventQueue::IsEmpty() const {
-  return evt_queue_.empty();
-}
-}
+#endif  // SORA_KEYBOARD_EVENT_H_

@@ -67,8 +67,8 @@ namespace selection {
   SelectionBuffer selection_buffer;
 
   void setup_graphics(sora::Device *dev, int w, int h) {
-    win_width = w;
-    win_height = h;
+    win_width = (float)w;
+    win_height = (float)h;
 
     
     //create shader
@@ -159,7 +159,7 @@ namespace selection {
     //obj rendering
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glViewport(0, 0, win_width, win_height);
+    glViewport(0, 0, (int)win_width, (int)win_height);
 
     //unsigned int flag = 0;
     //flag |= UberShader::kAmbientColor;
