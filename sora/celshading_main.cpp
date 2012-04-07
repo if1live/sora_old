@@ -101,7 +101,7 @@ namespace celshading {
       //Torus surface(0.5f, 0.2f);
       TrefoilKnot surface(1.0f);
 
-      dev->mesh_mgr().AddSolid(surface, kSolid);
+      dev->mesh_mgr().AddSolid<TangentVertex>(surface, kSolid);
       dev->mesh_mgr().AddWire(surface, kWire);
     }
 

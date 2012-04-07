@@ -30,22 +30,6 @@ MeshBufferObject::MeshBufferObject() {
 MeshBufferObject::~MeshBufferObject() {
 }
 
-void MeshBufferObject::Add(const DrawCommand &cmd) {
-  VertexBufferObject vbo;
-  //vbo.Init(cmd.vert_count * sizeof(Vertex), (void*)cmd.vert_ptr, GL_STATIC_DRAW);
-  vbo.Init(cmd.vert_count * sizeof(TangentVertex), (void*)cmd.vert_ptr, GL_STATIC_DRAW);
-
-  IndexBufferObject ibo;
-  ibo.Init(cmd.index_count * sizeof(unsigned short), (void*)cmd.index_ptr, GL_STATIC_DRAW);
-
-  vbo_list_.push_back(vbo);
-  ibo_list_.push_back(ibo);
-  index_count_list_.push_back(cmd.index_count);
-  draw_mode_list_.push_back(cmd.draw_mode);
-
-  GLHelper::CheckError("MeshBufferObject Add");
-}
-
 void MeshBufferObject::Deinit() {
   for(size_t i = 0 ; i < vbo_list_.size() ; ++i) {
     VertexBufferObject &vbo = vbo_list_[i];

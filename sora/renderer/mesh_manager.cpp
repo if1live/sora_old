@@ -32,35 +32,13 @@ MeshManager::MeshManager() {
 MeshManager::~MeshManager() {
 }
 
-bool MeshManager::AddSolid(const ISurface &surface, const char *name) {
-  //TODO 탄젠트인지 아닌지 구별 해야되는데...
-  //vector<Vertex> vert_list;
-  vector<TangentVertex> vert_list;
-  surface.GenerateVertices(vert_list);
-
-  vector<unsigned short> index_list;
-  surface.GenerateTriangleIndices(index_list);
-
-  DrawCommand draw_cmd;
-  draw_cmd.draw_mode = GL_TRIANGLES;
-  draw_cmd.index_count = index_list.size();
-  draw_cmd.vert_count = vert_list.size();
-  draw_cmd.index_type = GL_UNSIGNED_SHORT;
-  draw_cmd.vert_ptr = &vert_list[0];
-  draw_cmd.index_ptr = &index_list[0];
-
-  vector<DrawCommand> draw_cmd_list;
-  draw_cmd_list.push_back(draw_cmd);
-  return Add(draw_cmd_list, name);
-}
-
 bool MeshManager::AddWire(const ISurface &surface, const char *name) {
   vector<Vertex> vert_list;
   vector<unsigned short> index_list;
   surface.GenerateVertices(vert_list);
   surface.GenerateLineIndices(index_list);
 
-  DrawCommand draw_cmd;
+  DrawCommand<Vertex> draw_cmd;
   draw_cmd.draw_mode = GL_LINES;
   draw_cmd.index_count = index_list.size();
   draw_cmd.vert_count = vert_list.size();
@@ -68,24 +46,9 @@ bool MeshManager::AddWire(const ISurface &surface, const char *name) {
   draw_cmd.vert_ptr = &vert_list[0];
   draw_cmd.index_ptr = &index_list[0];
 
-  vector<DrawCommand> draw_cmd_list;
+  vector< DrawCommand<Vertex> > draw_cmd_list;
   draw_cmd_list.push_back(draw_cmd);
   return Add(draw_cmd_list, name);
-}
-
-bool MeshManager::Add(const std::vector<DrawCommand> &cmd_list, const char *name) {
-  if(IsExist(name) == true) {
-    return false;
-  }
-
-  MeshBufferObject buffer_obj;
-  auto it = cmd_list.begin();
-  auto endit = cmd_list.end();
-  for( ; it != endit ; ++it) {
-    buffer_obj.Add(*it);
-  }
-  mesh_dict_[string(name)] = buffer_obj;
-  return true;
 }
 
 MeshBufferObject *MeshManager::Get(const std::string &name) {

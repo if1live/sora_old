@@ -209,6 +209,9 @@
     <ClCompile Include="mesh\mesh_helper.cpp">
       <Filter>mesh</Filter>
     </ClCompile>
+    <ClCompile Include="mesh\primitive_model_builder.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -444,6 +447,9 @@
       <Filter>mesh</Filter>
     </ClInclude>
     <ClInclude Include="mesh\mesh_helper.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\primitive_model_builder.h">
       <Filter>mesh</Filter>
     </ClInclude>
   </ItemGroup>

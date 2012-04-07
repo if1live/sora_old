@@ -83,15 +83,19 @@ namespace depthmap {
     }
     {
       //테스트용 평면
+      /*
       sora::PrimitiveModel primitive_model;
       primitive_model.SolidPlane(5);
       dev->mesh_mgr().Add(primitive_model.GetDrawCmdList(), kPlane);
+      */
     }
     {
+      /*
       //테스트용 큐브
       sora::PrimitiveModel primitive_model;
       primitive_model.SolidCube(2, 2, 4);
       dev->mesh_mgr().Add(primitive_model.GetDrawCmdList(), kCube1);
+      */
     }
     {
       glGenFramebuffers(1, &fbo);

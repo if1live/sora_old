@@ -23,16 +23,19 @@
 
 #include "mesh/vertex.h"
 #include "gl_buffer_object.h"
+#include "gl_helper.h"
 #if SR_USE_PCH == 0
 #include "gl_inc.h"
 #endif
 
 namespace sora {;
 
-struct DrawCommand;
+template<typename VertexType> struct DrawCommand;
 
 //메시를 그리는데 필요한 정보. 렌더러는 이 정보를 얻어서 돌아가도록했다
+template<typename VertexType>
 struct DrawCommand {
+  typedef VertexType VertType;
   DrawCommand() 
     : draw_mode(GL_TRIANGLES), 
     vert_ptr(NULL),
@@ -41,7 +44,7 @@ struct DrawCommand {
     index_type(GL_UNSIGNED_SHORT) { }
 
   GLenum draw_mode;
-  const Vertex *vert_ptr;
+  const VertexType *vert_ptr;
   const void *index_ptr;
   int index_count;
   int vert_count;
@@ -53,7 +56,8 @@ public:
   MeshBufferObject();
   ~MeshBufferObject();
 
-  void Add(const DrawCommand &cmd);
+  template<typename T>
+  void Add(const DrawCommand<T> &cmd);
   void Deinit();
 
   int BufferCount() const;
@@ -70,6 +74,22 @@ private:
   std::vector<int> index_count_list_;
   std::vector<GLenum> draw_mode_list_;
 };
+
+template<typename T>
+void MeshBufferObject::Add(const DrawCommand<T> &cmd) {
+  VertexBufferObject vbo;
+  vbo.Init(cmd.vert_count * sizeof(T), (void*)cmd.vert_ptr, GL_STATIC_DRAW);
+
+  IndexBufferObject ibo;
+  ibo.Init(cmd.index_count * sizeof(unsigned short), (void*)cmd.index_ptr, GL_STATIC_DRAW);
+
+  vbo_list_.push_back(vbo);
+  ibo_list_.push_back(ibo);
+  index_count_list_.push_back(cmd.index_count);
+  draw_mode_list_.push_back(cmd.draw_mode);
+
+  GLHelper::CheckError("MeshBufferObject Add");
+}
 
 }
 

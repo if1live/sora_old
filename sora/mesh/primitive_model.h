@@ -18,6 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
+#if 0
 #ifndef SORA_PRIMITIVE_MODEL_H_
 #define SORA_PRIMITIVE_MODEL_H_
 
@@ -34,14 +35,15 @@ struct PrimitiveModelImpl;
 typedef std::vector<Vertex> VertexListType;
 typedef std::vector<ushort> IndexListType;
 
+
 class PrimitiveModel {
 public:
+
   PrimitiveModel();
   ~PrimitiveModel();
   PrimitiveModel(const PrimitiveModel &o);
   PrimitiveModel& operator=(const PrimitiveModel &o);
   
-  void WireCube(float width, float height, float depth);
   void SolidCube(float width, float height, float depth);
 
   void WireSphere(float radius, int slices, int stacks);
@@ -62,9 +64,8 @@ public:
   void WirePlane(float half_size, float grid_size);
   void SolidPlane(float half_size);
 
-  std::vector<DrawCommand> GetDrawCmdList_wire() const;
-  std::vector<DrawCommand> GetDrawCmdList_solid() const;
-  std::vector<DrawCommand> GetDrawCmdList() const;
+  template<typename VertexType>
+  std::vector< DrawCommand<VertexType> > GetDrawCmdList() const;
 
 private:
   // 몇개의 submodel로 구성되는가
@@ -88,6 +89,24 @@ private:
   static bool teapot_created_;
 };
 
+template<typename VertexType>
+std::vector< DrawCommand<VertexType> > PrimitiveModel::GetDrawCmdList() const {
+  std::vector< DrawCommand<VertexType> > cmd_list;
+  //draw primitive model
+  for(int i = 0 ; i < Count() ; i++) {
+    DrawCommand draw_cmd;
+    draw_cmd.vert_ptr = vertex_list(i);
+    draw_cmd.index_ptr = index_list(i);
+    draw_cmd.index_count = index_count(i);
+    draw_cmd.vert_count = vertex_count(i);
+    draw_cmd.draw_mode = draw_mode(i);
+    draw_cmd.index_type = GL_UNSIGNED_SHORT;
+
+    cmd_list.push_back(draw_cmd);
+  }
+  return cmd_list;
+}
 }
 
 #endif  // SORA_PRIMITIVE_MODEL_H_
+#endif

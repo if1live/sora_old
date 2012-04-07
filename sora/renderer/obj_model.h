@@ -42,8 +42,10 @@ struct SR_DLL ObjModel {
   int vertex_count() const;
   int index_count() const;
 
-  std::vector<DrawCommand> GetDrawCmdList_wire() const;
-  std::vector<DrawCommand> GetDrawCmdList_solid() const;
+  std::vector<DrawCommand<Vertex>> GetDrawCmdList_wire() const;
+
+  template<typename VertexType>
+  std::vector< DrawCommand<VertexType> > GetDrawCmdList_solid() const;
 
   void AddVertex(const Vertex &v);
   void AddIndex(ushort idx);
@@ -55,6 +57,20 @@ private:
   // GL_LINES로 그릴수 잇도록 정렬된거. 거의 테스트용으로 쓰일테니까 최적화는 안함
   mutable std::vector<ushort> line_index_list_;
 };
+
+template<typename VertexType>
+std::vector< DrawCommand<VertexType> > ObjModel::GetDrawCmdList_solid() const {
+  std::vector< DrawCommand<VertexType> > cmd_list;
+  DrawCommand draw_cmd;
+  draw_cmd.vert_ptr = vertex_ptr();
+  draw_cmd.draw_mode = GL_TRIANGLES;
+  draw_cmd.index_ptr = index_ptr();
+  draw_cmd.index_type = GL_UNSIGNED_SHORT;
+  draw_cmd.index_count = index_count();
+  draw_cmd.vert_count = vertex_count();
+  cmd_list.push_back(draw_cmd);
+  return cmd_list;
+}
 }
 
 #endif  // SORA_OBJ_MODEL_H_

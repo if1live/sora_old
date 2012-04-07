@@ -33,7 +33,21 @@
 using namespace std;
 using namespace glm;
 
+#if 0
 namespace sora {;
+
+/*
+IndexListType PrimitiveModelHelper::SolidCubeIndexList(uint flag) {
+}
+std::vector<float> PrimitiveModelHelper::SolidCubeVertexList(float width, float height, float depth, unsigned int flag) {
+}
+*/
+
+
+
+
+//////////////////////////////////////
+
 struct PrimitiveModelImpl {
   PrimitiveModelImpl(int size, bool is_solid) : is_solid(is_solid) {
     vert_list_group.resize(size);
@@ -66,33 +80,6 @@ PrimitiveModel& PrimitiveModel::operator=(const PrimitiveModel &o) {
 
 PrimitiveModel::~PrimitiveModel() {
   SafeDelete(impl);
-}
-
-std::vector<DrawCommand> PrimitiveModel::GetDrawCmdList_wire() const {
-  SR_ASSERT(impl->is_solid == false);
-  return GetDrawCmdList();
-}
-
-std::vector<DrawCommand> PrimitiveModel::GetDrawCmdList_solid() const {
-  SR_ASSERT(impl->is_solid == true);
-  return GetDrawCmdList();
-}
-
-std::vector<DrawCommand> PrimitiveModel::GetDrawCmdList() const {
-  vector<DrawCommand> cmd_list;
-  //draw primitive model
-  for(int i = 0 ; i < Count() ; i++) {
-    DrawCommand draw_cmd;
-    draw_cmd.vert_ptr = vertex_list(i);
-    draw_cmd.index_ptr = index_list(i);
-    draw_cmd.index_count = index_count(i);
-    draw_cmd.vert_count = vertex_count(i);
-    draw_cmd.draw_mode = draw_mode(i);
-    draw_cmd.index_type = GL_UNSIGNED_SHORT;
-
-    cmd_list.push_back(draw_cmd);
-  }
-  return cmd_list;
 }
 
 int PrimitiveModel::Count() const {
@@ -133,71 +120,6 @@ int PrimitiveModel::index_count(int idx) const {
 GLenum PrimitiveModel::draw_mode(int idx) const {
   SR_ASSERT(idx >= 0 && idx < Count());
   return impl->mode_group[idx];
-}
-
-void PrimitiveModel::WireCube(float width, float height, float depth) {
-  SR_ASSERT(width > 0 && height > 0 && depth > 0);
-  width /= 2;
-  height /= 2;
-  depth /= 2;
-
-  //wirecube는 1개의 메시로 표현 가능
-  SafeDelete(impl);
-  impl = new PrimitiveModelImpl(1, false);
-
-  VertexListType &vert_list = impl->vert_list_group[0];
-  IndexListType &index_list = impl->index_list_group[0];
-  impl->mode_group[0] = GL_LINES;
-
-  //top
-  //0 1
-  //2 3
-  //bottom
-  //4 5
-  //6 7
-
-  //0
-  vec3 v0(-width, height, -depth);
-  vec3 v1(width, height, -depth);
-  vec3 v2(-width, height, depth);
-  vec3 v3(width, height, depth);
-
-  vec3 v4(-width, -height, -depth);
-  vec3 v5(width, -height, -depth);
-  vec3 v6(-width, -height, depth);
-  vec3 v7(width, -height, depth);
-
-  //선으로 구성되는거니까 texture, normal은 신경안써도 될듯?
-  Vertex vertex0; vertex0.pos = v0;
-  Vertex vertex1; vertex1.pos = v1;
-  Vertex vertex2; vertex2.pos = v2;
-  Vertex vertex3; vertex3.pos = v3;
-  Vertex vertex4; vertex4.pos = v4;
-  Vertex vertex5; vertex5.pos = v5;
-  Vertex vertex6; vertex6.pos = v6;
-  Vertex vertex7; vertex7.pos = v7;
-
-  vert_list.push_back(vertex0);
-  vert_list.push_back(vertex1);
-  vert_list.push_back(vertex2);
-  vert_list.push_back(vertex3);
-  vert_list.push_back(vertex4);
-  vert_list.push_back(vertex5);
-  vert_list.push_back(vertex6);
-  vert_list.push_back(vertex7);
-
-  //GL_LINES용 index list
-  const GLushort indexList[] = {
-    0,1,	1,3,	2,3,	0,2,
-    4,5,	5,7,	6,7,	4,6,
-    0,4,	1,5,	2,6,	3,7
-  };
-  for(size_t i = 0 ; i < sizeof(indexList) / sizeof(GLushort) ; i++) {
-    index_list.push_back(indexList[i]);
-  }
-
-  //auto gen normal
-  MeshHelper<Vertex>::BuildNormal(vert_list, index_list);
 }
 
 void PrimitiveModel::SolidCube(float width, float height, float depth) {
@@ -400,77 +322,6 @@ void PrimitiveModel::SolidCube(float width, float height, float depth) {
 
   //auto build normal
   MeshHelper<Vertex>::BuildNormal(vert_list, index_list);
-}
-void PrimitiveModel::WireSphere(float radius, int slices, int stacks) {
-  SR_ASSERT(radius > 0);
-  SR_ASSERT(slices > 0);
-  SR_ASSERT(stacks > 0);
-
-  //use one mesh
-  SafeDelete(impl);
-  impl = new PrimitiveModelImpl(1, false);
-
-  VertexListType &vert_list = impl->vert_list_group[0];
-  IndexListType &index_list = impl->index_list_group[0];
-  impl->mode_group[0] = GL_LINES;
-
-  //사용될 vertex list 생성
-  std::vector<vec3> tmp_vertex_list;
-  for(int i = 0 ; i < stacks ; i++) {
-    double yAngle = (kPi / stacks * i) - kPiOver2;
-    float y = static_cast<float>(sin(yAngle));
-
-    for(int j = 0 ; j < slices ; j++) {
-      double zxAngle = (2.0 * kPi / slices) * j;
-      float x = static_cast<float>(cos(yAngle) * cos(zxAngle));
-      float z = static_cast<float>(cos(yAngle) * sin(zxAngle));
-
-      vec3 pos(x, y, z);
-      tmp_vertex_list.push_back(pos);
-    }
-  }
-  //북극점(맨위)
-  vec3 top(0, 1, 0);
-  tmp_vertex_list.push_back(top);
-
-  //선으로 구성되니까 해당항목은 없어도 별로 티가 안난다
-
-  //vertex 위치정보+잡탕으로 진짜 vertex list생성
-  vector<vec3>::iterator it;
-  for(it = tmp_vertex_list.begin() ; it != tmp_vertex_list.end() ; it++) {
-    const vec3 &pos = *it;
-    Vertex vertex;
-    vertex.pos = pos * radius;
-    vert_list.push_back(vertex);
-  }
-
-  //index list
-  for(int i = 0 ; i < stacks ; i++) {
-    //stack 라인 구성
-    int start = i * slices;
-    for(int j = 0 ; j < slices ; j++) {
-      GLushort a = start + j;
-      GLushort b = a + 1;
-      if(j == slices-1) {
-        b = start;
-      }
-      index_list.push_back(a);
-      index_list.push_back(b);
-    }
-  }
-  for(int i = 0 ; i < slices ; i++) {
-    //slice 라인 구성
-    const GLushort topIndex = vert_list.size()-1;
-    for(int j = 0 ; j < stacks ; j++) {
-      GLushort a = i + (j*slices);
-      GLushort b = (a + slices);
-      if(b >= slices*stacks) {
-        b = topIndex;
-      }
-      index_list.push_back(a);
-      index_list.push_back(b);
-    }
-  }
 }
 void PrimitiveModel::SolidSphere(float radius, int slices, int stacks) {
   SR_ASSERT(radius > 0);
@@ -1275,3 +1126,4 @@ void PrimitiveModel::SolidTeapot(float size) {
 }
 }
 
+#endif

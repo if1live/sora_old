@@ -71,20 +71,20 @@ namespace selection {
    
     {
       //쉐도우 테스트용 평면
-      sora::PrimitiveModel primitive_model;
+      //sora::PrimitiveModel primitive_model;
       //primitive_model.WirePlane(3, 0.2);
-      primitive_model.SolidPlane(4);
+      //primitive_model.SolidPlane(4);
       //primitive_model.WireAxis(4);
       //primitive_model.SolidCylinder(3, 4, 4);
       //primitive_model.SolidTeapot(3);
       //primitive_model.SolidSphere(2, 16, 16);
-      dev->mesh_mgr().Add(primitive_model.GetDrawCmdList(), kPlane);
+      //dev->mesh_mgr().Add(primitive_model.GetDrawCmdList(), kPlane);
     }
     {
       //쉐도우 테스트용 큐브
-      sora::PrimitiveModel primitive_model;
-      primitive_model.SolidCube(2, 2, 2);
-      dev->mesh_mgr().Add(primitive_model.GetDrawCmdList(), kCube1);
+      //sora::PrimitiveModel primitive_model;
+      //primitive_model.SolidCube(2, 2, 2);
+      //dev->mesh_mgr().Add(primitive_model.GetDrawCmdList(), kCube1);
     }
 
     {

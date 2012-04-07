@@ -47,7 +47,7 @@
 
 #include "renderer/obj_model.h"
 #include "renderer/obj_loader.h"
-#include "mesh/primitive_model.h"
+#include "mesh/primitive_model_builder.h"
 #include "renderer/material_manager.h"
 
 #include "renderer/texture.h"
@@ -69,6 +69,7 @@
 #include "mesh/parametric_surface.h"
 #include "renderer/mesh_manager.h"
 #include "renderer/light.h"
+
 
 
 using namespace std;
@@ -158,13 +159,13 @@ bool setupGraphics(Device *device, int w, int h) {
     //entity_mat = glm::scale(entity_mat, vec3(0.1, 0.1, 0.1));  //fate, beautiful_girl
     world_mat_list[obj_model_idx] = entity_mat;
 
-    device->mesh_mgr().Add(obj_model.GetDrawCmdList_solid(), "obj_model");
+    //device->mesh_mgr().Add(obj_model.GetDrawCmdList_solid(), "obj_model");
     mesh_name_list[obj_model_idx] = "obj_model";
   }
 
   {
     //primitive model test
-    sora::PrimitiveModel primitive_model;
+    //sora::PrimitiveModel primitive_model;
     //primitive_model.SolidCube(1, 2, 1, false);
     //primitive_model.WireCube(1, 1, 1);
     //primitive_model.WireAxis(2);
@@ -184,13 +185,13 @@ bool setupGraphics(Device *device, int w, int h) {
     //entity_mat = glm::rotate(glm::mat4(1.0f), 180.0f, vec3(1, 0, 0));
     world_mat_list[obj_model_idx] = entity_mat;
 
-    primitive_model.SolidSphere(0.5, 16, 16);
+    //primitive_model.SolidSphere(0.5, 16, 16);
     //primitive_model.WirePlane(10.0f, 0.5f);
     //primitive_model.SolidPlane(2.0f);
     //primitive_model.WireAxis(3);
     //primitive_model.SolidCylinder(0.5, 2, 16);
     //primitive_model.SolidCone(1, 2, 8, 8);
-    device->mesh_mgr().Add(primitive_model.GetDrawCmdList(), "model1");
+    //device->mesh_mgr().Add(primitive_model.GetDrawCmdList(), "model1");
     mesh_name_list[obj_model_idx] = "model1";
   }
 
@@ -204,10 +205,35 @@ bool setupGraphics(Device *device, int w, int h) {
     //entity_mat = glm::rotate(entity_mat, 180.0f, vec3(1, 0, 0));
     world_mat_list[obj_model_idx] = entity_mat;
     
-    sora::PrimitiveModel primitive_model;
+    //sora::PrimitiveModel primitive_model;
     //primitive_model.SolidCube(0.5, 0.5, 0.5, true);
-    primitive_model.SolidSphere(0.5, 16, 16);
-    device->mesh_mgr().Add(primitive_model.GetDrawCmdList(), "model2");
+    //primitive_model.SolidSphere(0.5, 16, 16);
+    //device->mesh_mgr().Add(primitive_model.GetDrawCmdList(), "model2");
+    sora::PrimitiveModelBuilder builder(0);
+    vector<float> vert_data;
+    vector<TangentVertex> vertex_list;
+    IndexListType index_list;
+    
+    //builder.SetCube(1, 1, 1);
+    //vert_data = builder.WireCubeVertexData();
+    //index_list = builder.WireCubeIndexList();
+    builder.SetSphere(0.5, 16, 16);
+    vert_data = builder.WireSphereVertexData();
+    index_list = builder.WireSphereIndexList();
+    builder.DataToVertexList(vert_data, builder.flag(), vertex_list);
+
+    DrawCommand<TangentVertex> draw_cmd;
+    draw_cmd.draw_mode = GL_LINES;
+    draw_cmd.index_count = index_list.size();
+    draw_cmd.index_ptr = &index_list[0];
+    draw_cmd.index_type = GL_UNSIGNED_SHORT;
+    draw_cmd.vert_count = vertex_list.size();
+    draw_cmd.vert_ptr = &vertex_list[0];
+    
+    vector< DrawCommand<TangentVertex> > draw_cmd_list;
+    draw_cmd_list.push_back(draw_cmd);
+
+    device->mesh_mgr().Add(draw_cmd_list, "model2");
     mesh_name_list[obj_model_idx] = "model2";
 
   }
@@ -232,7 +258,7 @@ bool setupGraphics(Device *device, int w, int h) {
     TrefoilKnot surface(1.5f);
     //Sphere surface(1.0);
     //KleinBottle surface(0.2f);
-    device->mesh_mgr().AddSolid(surface, "knot");
+    device->mesh_mgr().AddSolid<TangentVertex>(surface, "knot");
     //MeshManager::GetInstance().AddWire(surface, "knot");
     mesh_name_list[obj_model_idx] = "knot";
   }
@@ -286,11 +312,11 @@ void renderFrame(Device *device) {
     unsigned int flag = 0;
     flag |= UberShader::kAmbientColor;
     //flag |= UberShader::kAmbientMap;
-    flag |= UberShader::kDiffuseColor;
+    //flag |= UberShader::kDiffuseColor;
     //flag |= UberShader::kDiffuseMap;
-    flag |= UberShader::kSpecularColor;
+    //flag |= UberShader::kSpecularColor;
     //flag |= UberShader::kSpecularMap;
-    flag |= UberShader::kNormalMap;
+    //flag |= UberShader::kNormalMap;
     ShaderProgram &shader = device->uber_shader(flag);
     render3d.SetShader(shader);
 
@@ -298,9 +324,9 @@ void renderFrame(Device *device) {
 
     //평면하나만 일단 렌더링해서 테스트하자
     render3d.SetLight(light);
-    //int obj_idx = 2;
+    int obj_idx = 2;
     //int obj_idx = 1;
-    int obj_idx = 3;
+    //int obj_idx = 3;
     const mat4 &world_mat = world_mat_list[obj_idx];
     render3d.ApplyMatrix(world_mat);
 
@@ -313,8 +339,8 @@ void renderFrame(Device *device) {
     mtl.diffuse_map = "mtl_diffuse";
     mtl.specular_map = "mtl_specular";
     mtl.normal_map = "mtl_normal";
-    mtl.ambient = vec3(0.1, 0.1, 0.1);
-    //mtl.ambient = vec3(1, 1, 1);
+    //mtl.ambient = vec3(0.1, 0.1, 0.1);
+    mtl.ambient = vec3(1, 1, 1);
     mtl.diffuse = vec3(0.5, 0.5, 0.5);
     mtl.specular = vec3(0.5, 0.5, 0.5);
     mtl.shininess = 20;

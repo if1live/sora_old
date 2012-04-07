@@ -39,10 +39,11 @@ class ShaderProgram;
 class ObjModel;
 class PrimitiveModel;
 class Camera;
-struct DrawCommand;
 class MeshBufferObject;
 class Light;
 class Device;
+
+template<typename VertexType> struct DrawCommand;
 
 //2d / 3d는 미묘한 정책만 수정해도 충분할듯하다
 enum {
@@ -101,7 +102,10 @@ public:
   void DrawSolid(const T &mesh);
   template<typename T>
   void DrawWire(const T &mesh);
-  void Draw(const DrawCommand &cmd);
+
+  template<typename VertexType>
+  void Draw(const DrawCommand<VertexType> &cmd);
+
   void Draw(const MeshBufferObject &mesh);
 
   //light / material
@@ -152,6 +156,46 @@ void Renderer::DrawWire(const T &mesh) {
   for( ; it != endit ; ++it) {
     Draw(*it);
   }
+}
+
+template<typename VertexType>
+void Renderer::Draw(const DrawCommand<VertexType> &cmd) {
+  if(cmd.vert_ptr == NULL) { return; }
+  if(cmd.index_ptr == NULL) { return; }
+  if(cmd.index_count == 0) { return; }
+
+  const ShaderBindPolicy &bind_policy = last_prog_->bind_policy;
+
+  const ShaderVariable &pos_var = bind_policy.var(ShaderBindPolicy::kPosition);
+  const ShaderVariable &texcoord_var = bind_policy.var(ShaderBindPolicy::kTexcoord);
+  const ShaderVariable &normal_var = bind_policy.var(ShaderBindPolicy::kNormal);
+  const ShaderVariable &color_var = bind_policy.var(ShaderBindPolicy::kColor);
+
+  const VertexType *vert_ptr = cmd.vert_ptr;
+
+  //draw cube
+  if(pos_var.location != -1) {
+    glEnableVertexAttribArray(pos_var.location);
+    glVertexAttribPointer(pos_var.location, 3, VertexType::kPosType, GL_FALSE, sizeof(VertexType), &vert_ptr->pos);
+  }
+  if(texcoord_var.location != 1) {
+    glEnableVertexAttribArray(texcoord_var.location);
+    glVertexAttribPointer(texcoord_var.location, 2, VertexType::kTexcoordType, GL_FALSE, sizeof(VertexType), &vert_ptr->texcoord);
+  }
+  if(normal_var.location != -1) {
+    glEnableVertexAttribArray(normal_var.location);
+    glVertexAttribPointer(normal_var.location, 3, VertexType::kNormalType, GL_FALSE, sizeof(VertexType), &vert_ptr->normal);
+  }
+  if(color_var.location != -1) {
+    glEnableVertexAttribArray(color_var.location);
+    glVertexAttribPointer(color_var.location, 4, VertexType::kNormalType, GL_TRUE, sizeof(VertexType), &vert_ptr->color);
+  }
+
+  int index_count = cmd.index_count;
+  GLenum draw_mode = cmd.draw_mode;
+  GLenum index_type = cmd.index_type;
+  const void *index_ptr = cmd.index_ptr;
+  glDrawElements(draw_mode, index_count, index_type, index_ptr);
 }
 }
 

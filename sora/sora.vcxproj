@@ -100,6 +100,7 @@
     <ClCompile Include="mesh\mesh_helper.cpp" />
     <ClCompile Include="mesh\parametric_surface.cpp" />
     <ClCompile Include="mesh\primitive_model.cpp" />
+    <ClCompile Include="mesh\primitive_model_builder.cpp" />
     <ClCompile Include="renderer\camera.cpp" />
     <ClCompile Include="renderer\font.cpp" />
     <ClCompile Include="renderer\gl_buffer_object.cpp" />
@@ -181,6 +182,7 @@
     <ClInclude Include="mesh\parametric_equations.h" />
     <ClInclude Include="mesh\parametric_surface.h" />
     <ClInclude Include="mesh\primitive_model.h" />
+    <ClInclude Include="mesh\primitive_model_builder.h" />
     <ClInclude Include="mesh\vertex.h" />
     <ClInclude Include="renderer\camera.h" />
     <ClInclude Include="renderer\font.h" />

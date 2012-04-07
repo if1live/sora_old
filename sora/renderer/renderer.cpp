@@ -250,37 +250,6 @@ void Renderer::set_camera(const Camera &cam) {
   view = glm::lookAt(cam.eye, cam.center, cam.up);
 }
 
-void Renderer::Draw(const DrawCommand &cmd) {
-  if(cmd.vert_ptr == NULL) { return; }
-  if(cmd.index_ptr == NULL) { return; }
-  if(cmd.index_count == 0) { return; }
-
-  const ShaderBindPolicy &bind_policy = last_prog_->bind_policy;
-
-  const ShaderVariable &pos_var = bind_policy.var(ShaderBindPolicy::kPosition);
-  const ShaderVariable &texcoord_var = bind_policy.var(ShaderBindPolicy::kTexcoord);
-  const ShaderVariable &normal_var = bind_policy.var(ShaderBindPolicy::kNormal);
-
-  const Vertex *vert_ptr = cmd.vert_ptr;
-
-  //draw cube
-  if(pos_var.location != -1) {
-    glVertexAttribPointer(pos_var.location, 3, Vertex::kPosType, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->pos);
-  }
-  if(texcoord_var.location != 1) {
-    glVertexAttribPointer(texcoord_var.location, 2, Vertex::kTexcoordType, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->texcoord);
-  }
-  if(normal_var.location != -1) {
-    glVertexAttribPointer(normal_var.location, 3, Vertex::kNormalType, GL_FALSE, sizeof(sora::Vertex), &vert_ptr->normal);
-  }
-
-  int index_count = cmd.index_count;
-  GLenum draw_mode = cmd.draw_mode;
-  GLenum index_type = cmd.index_type;
-  const void *index_ptr = cmd.index_ptr;
-  glDrawElements(draw_mode, index_count, index_type, index_ptr);
-}
-
 void Renderer::Draw(const MeshBufferObject &mesh) {
   const ShaderBindPolicy &bind_policy = last_prog_->bind_policy;
 

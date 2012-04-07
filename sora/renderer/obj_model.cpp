@@ -31,20 +31,7 @@ ObjModel::ObjModel() {
 ObjModel::~ObjModel() {
 }
 
-std::vector<DrawCommand> ObjModel::GetDrawCmdList_solid() const {
-  vector<DrawCommand> cmd_list;
-  DrawCommand draw_cmd;
-  draw_cmd.vert_ptr = vertex_ptr();
-  draw_cmd.draw_mode = GL_TRIANGLES;
-  draw_cmd.index_ptr = index_ptr();
-  draw_cmd.index_type = GL_UNSIGNED_SHORT;
-  draw_cmd.index_count = index_count();
-  draw_cmd.vert_count = vertex_count();
-  cmd_list.push_back(draw_cmd);
-  return cmd_list;
-}
-
-std::vector<DrawCommand> ObjModel::GetDrawCmdList_wire() const {
+std::vector< DrawCommand<Vertex> > ObjModel::GetDrawCmdList_wire() const {
   //lines 인덱스 구성하기
   if(line_index_list_.empty()) {
     for(size_t i = 0 ; i < index_list_.size() / 3 ; i++) {
@@ -63,8 +50,8 @@ std::vector<DrawCommand> ObjModel::GetDrawCmdList_wire() const {
     }
   }
 
-  vector<DrawCommand> cmd_list;
-  DrawCommand draw_cmd;
+  vector< DrawCommand<Vertex> > cmd_list;
+  DrawCommand<Vertex> draw_cmd;
   draw_cmd.vert_ptr = vertex_ptr();
   draw_cmd.draw_mode = GL_LINES;
   draw_cmd.index_ptr = &line_index_list_[0];

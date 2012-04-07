@@ -110,15 +110,15 @@ namespace shadowmap {
 
     {
       //쉐도우 테스트용 평면
-      sora::PrimitiveModel primitive_model;
-      primitive_model.SolidPlane(5);
-      dev->mesh_mgr().Add(primitive_model.GetDrawCmdList(), kPlane);
+      //sora::PrimitiveModel primitive_model;
+      //primitive_model.SolidPlane(5);
+      //dev->mesh_mgr().Add(primitive_model.GetDrawCmdList(), kPlane);
     }
     {
       //쉐도우 테스트용 큐브
-      sora::PrimitiveModel primitive_model;
-      primitive_model.SolidCube(2, 2, 2);
-      dev->mesh_mgr().Add(primitive_model.GetDrawCmdList(), kCube1);
+      //sora::PrimitiveModel primitive_model;
+      //primitive_model.SolidCube(2, 2, 2);
+      //dev->mesh_mgr().Add(primitive_model.GetDrawCmdList(), kCube1);
     }
 
     {
