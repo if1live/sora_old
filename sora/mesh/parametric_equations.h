@@ -25,7 +25,8 @@ private:
 class Sphere : public ParametricSurface {
 public:
   Sphere(float radius) : m_radius(radius) {
-    ParametricInterval interval = { glm::ivec2(20, 20), glm::vec2(kPi, kTwoPi), glm::vec2(20, 35) };
+    //ParametricInterval interval = { glm::ivec2(20, 20), glm::vec2(kPi, kTwoPi), glm::vec2(20, 35) };
+    ParametricInterval interval = { glm::ivec2(20, 20), glm::vec2(kPi, kTwoPi), glm::vec2(10, 10) };
     SetInterval(interval);
   }
   glm::vec3 Evaluate(const glm::vec2& domain) const {
@@ -64,13 +65,14 @@ private:
 class TrefoilKnot : public ParametricSurface {
 public:
   TrefoilKnot(float scale) : m_scale(scale) {
-    ParametricInterval interval = { glm::ivec2(60, 15), glm::vec2(kTwoPi, kTwoPi), glm::vec2(100, 8) };
+    //ParametricInterval interval = { glm::ivec2(60, 15), glm::vec2(kTwoPi, kTwoPi), glm::vec2(100, 8) };
+    ParametricInterval interval = { glm::ivec2(60, 15), glm::vec2(kTwoPi, kTwoPi), glm::vec2(20, 2) };
     SetInterval(interval);
   }
   glm::vec3 Evaluate(const glm::vec2& domain) const {
     const float a = 0.5f;
     const float b = 0.3f;
-    const float c = 0.5f;
+    const float c = 0.5f; 
     const float d = 0.1f;
     float u = (kTwoPi - domain.x) * 2;
     float v = domain.y;
@@ -134,7 +136,8 @@ private:
 class KleinBottle : public ParametricSurface {
 public:
   KleinBottle(float scale) : m_scale(scale) {
-    ParametricInterval interval = { glm::ivec2(20, 20), glm::vec2(kTwoPi, kTwoPi), glm::vec2(15, 50) };
+    //ParametricInterval interval = { glm::ivec2(20, 20), glm::vec2(kTwoPi, kTwoPi), glm::vec2(15, 50) };
+    ParametricInterval interval = { glm::ivec2(20, 20), glm::vec2(kTwoPi, kTwoPi), glm::vec2(10, 20) };
     SetInterval(interval);
   }
   glm::vec3 Evaluate(const glm::vec2& domain) const {

@@ -32,7 +32,8 @@ MeshBufferObject::~MeshBufferObject() {
 
 void MeshBufferObject::Add(const DrawCommand &cmd) {
   VertexBufferObject vbo;
-  vbo.Init(cmd.vert_count * sizeof(Vertex), (void*)cmd.vert_ptr, GL_STATIC_DRAW);
+  //vbo.Init(cmd.vert_count * sizeof(Vertex), (void*)cmd.vert_ptr, GL_STATIC_DRAW);
+  vbo.Init(cmd.vert_count * sizeof(TangentVertex), (void*)cmd.vert_ptr, GL_STATIC_DRAW);
 
   IndexBufferObject ibo;
   ibo.Init(cmd.index_count * sizeof(unsigned short), (void*)cmd.index_ptr, GL_STATIC_DRAW);

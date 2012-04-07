@@ -409,8 +409,10 @@ bool Texture::Load_PNG(GLuint tex_id) {
     format = GL_RGBA;
   } else if(loader.color_channels() == 3) {
     format = GL_RGB;
-  } else {
-    SR_ASSERT(!"unknown color channel");
+  } else if(loader.color_channels() == 2) {
+    //format = GL_LUMINANCE_ALPHA;
+  } else if(loader.color_channels() == 1) {
+    //format = GL_LUMINANCE;
   }
 
   /*

@@ -361,7 +361,7 @@ void RunaView::SetupGraphics(int w, int h) {
       //1 : cube
       obj_world_mat_list.push_back(reverse_mat);
       PrimitiveModel primitive_model;
-      primitive_model.SolidCube(1, 1, 1, true);
+      primitive_model.SolidCube(1, 1, 1);
       const char *name = "cube";
       device().mesh_mgr().Add(primitive_model.GetDrawCmdList(), name);
       obj_mesh_name_list.push_back(string(name));

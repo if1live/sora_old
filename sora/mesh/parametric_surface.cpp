@@ -9,6 +9,7 @@ namespace sora {;
 enum VertexFlags {
     kVertexFlagsNormals = 1 << 0,
     kVertexFlagsTexCoords = 1 << 1,
+    kVertexFlagsTangents = 1 << 2,
 };
 
 void ParametricSurface::SetInterval(const ParametricInterval& interval) {
@@ -36,10 +37,16 @@ vec2 ParametricSurface::ComputeDomain(float x, float y) const {
 
 void ParametricSurface::GenerateVertices(vector<float>& vertices, unsigned char flags) const {
   int floatsPerVertex = 3;
-  if (flags & kVertexFlagsNormals)
+  if (flags & kVertexFlagsNormals) {
     floatsPerVertex += 3;
-  if (flags & kVertexFlagsTexCoords)
+  }
+  if (flags & kVertexFlagsTexCoords) {
     floatsPerVertex += 2;
+  }
+  if(flags & kVertexFlagsTangents) {
+    floatsPerVertex += 3;
+  }
+
 
   vertices.resize(GetVertexCount() * floatsPerVertex);
   float* attribute = &vertices[0];
@@ -85,6 +92,17 @@ void ParametricSurface::GenerateVertices(vector<float>& vertices, unsigned char 
         //attribute = vec2(s, t).Write(attribute);
         memcpy(attribute, &texcoord, sizeof(texcoord));
         attribute = (float*)(((unsigned char*)attribute) + sizeof(texcoord));
+      }
+
+      if(flags & kVertexFlagsTangents) {
+        float s = i, t = j;
+        vec3 p = Evaluate(ComputeDomain(s, t));
+        vec3 u = Evaluate(ComputeDomain(s + 0.01f, t)) - p;
+        if(InvertNormal(domain)) {
+          u = -u;
+        }
+        memcpy(attribute, &u, sizeof(u));
+        attribute = (float*)(((unsigned char*)attribute) + sizeof(u));
       }
     }
   }
@@ -141,6 +159,37 @@ void ParametricSurface::GenerateVertices(std::vector<Vertex> &vertices) const {
 
     v.texcoord.x = raw_vert_list[i*8 + 6];
     v.texcoord.y = raw_vert_list[i*8 + 7];
+  }
+}
+
+void ParametricSurface::GenerateVertices(std::vector<TangentVertex> &vertices) const {
+  vector<float> raw_vert_list;
+  unsigned int flag = 0;
+  flag |= kVertexFlagsNormals;
+  flag |= kVertexFlagsTexCoords;
+  flag |= kVertexFlagsTangents;
+  GenerateVertices(raw_vert_list, flag);
+
+  int scanline = 11;
+  vertices.clear();
+  vertices.resize(raw_vert_list.size() / scanline);
+
+  for(size_t i = 0 ; i < raw_vert_list.size() / scanline ; i++) {
+    TangentVertex &v = vertices[i];
+    v.pos.x = raw_vert_list[i*scanline + 0];
+    v.pos.y = raw_vert_list[i*scanline + 1];
+    v.pos.z = raw_vert_list[i*scanline + 2];
+
+    v.normal.x = raw_vert_list[i*scanline + 3];
+    v.normal.y = raw_vert_list[i*scanline + 4];
+    v.normal.z = raw_vert_list[i*scanline + 5];
+
+    v.texcoord.x = raw_vert_list[i*scanline + 6];
+    v.texcoord.y = raw_vert_list[i*scanline + 7];
+
+    v.tangent.x = raw_vert_list[i*scanline + 8];
+    v.tangent.y = raw_vert_list[i*scanline + 9];
+    v.tangent.z = raw_vert_list[i*scanline + 10];
   }
 }
 }

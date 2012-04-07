@@ -33,9 +33,12 @@ MeshManager::~MeshManager() {
 }
 
 bool MeshManager::AddSolid(const ISurface &surface, const char *name) {
-  vector<Vertex> vert_list;
-  vector<unsigned short> index_list;
+  //TODO 탄젠트인지 아닌지 구별 해야되는데...
+  //vector<Vertex> vert_list;
+  vector<TangentVertex> vert_list;
   surface.GenerateVertices(vert_list);
+
+  vector<unsigned short> index_list;
   surface.GenerateTriangleIndices(index_list);
 
   DrawCommand draw_cmd;

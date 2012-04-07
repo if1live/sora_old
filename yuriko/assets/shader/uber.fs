@@ -5,15 +5,15 @@ varying vec2 v_texcoord;
 varying vec4 v_color;
 
 //ambient
-varying vec4 v_ambientColor;
+uniform vec4 u_ambientColor;
 
 //diffuse
-varying vec4 v_diffuseColor;
+uniform vec4 u_diffuseColor;
 varying float v_diffuse;
 
 //specular
-varying vec4 v_specularColor;
-varying float v_shininess;
+uniform vec4 u_specularColor;
+uniform float u_specularShininess;
 varying vec3 v_reflection;
 varying vec3 v_viewDir;
 
@@ -59,7 +59,7 @@ void main() {
 #endif
 
 	if(use_ambient) {
-		vec4 ambient_color = v_ambientColor;
+		vec4 ambient_color = u_ambientColor;
 		if(use_ambient_map) {
 			vec4 ambient_tex = texture2D(s_ambientMap, v_texcoord);
 			ambient_color = ambient_color * ambient_tex;
@@ -69,7 +69,7 @@ void main() {
 
 	if(use_diffuse) {
 		float diffuse = clamp(v_diffuse, 0.0, 1.0);
-		vec4 diffuse_color = v_diffuseColor * diffuse;
+		vec4 diffuse_color = u_diffuseColor * diffuse;
 		if(use_diffuse_map) {
 			vec4 diffuse_tex = texture2D(s_diffuseMap, v_texcoord);
 			diffuse_color = diffuse_color * diffuse_tex;
@@ -83,8 +83,8 @@ void main() {
 		vec3 viewDir = normalize(v_viewDir);
 
 		float dot_result = clamp(dot(reflection, -viewDir), 0.0, 1.0);
-		float pow_result = pow(dot_result, v_shininess);
-		vec4 specular_color = v_specularColor * pow_result;
+		float pow_result = pow(dot_result, u_specularShininess);
+		vec4 specular_color = u_specularColor * pow_result;
 		
 		if(use_specular_map) {
 			vec4 specular_tex = texture2D(s_specularMap, v_texcoord);

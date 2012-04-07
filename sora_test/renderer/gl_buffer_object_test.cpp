@@ -21,7 +21,7 @@
 #include "sora_test_stdafx.h"
 #include "renderer/gl_buffer_object.h"
 
-#include "renderer/vertex.h"
+#include "mesh/vertex.h"
 
 TEST(GLBufferData, test) {
   using namespace sora;

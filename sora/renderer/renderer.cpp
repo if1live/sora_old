@@ -116,6 +116,7 @@ void Renderer::ApplyMaterialLight() {
   const ShaderVariable &ambient_map_var = bind_policy.var(ShaderBindPolicy::kAmbientMap);
   const ShaderVariable &diffuse_map_var = bind_policy.var(ShaderBindPolicy::kDiffuseMap);
   const ShaderVariable &specular_map_var = bind_policy.var(ShaderBindPolicy::kSpecularMap);
+  const ShaderVariable &normal_map_var = bind_policy.var(ShaderBindPolicy::kNormalMap);
 
   bool use_ambient = false;
   bool use_diffuse = false;
@@ -210,6 +211,15 @@ void Renderer::ApplyMaterialLight() {
         glUniform1i(specular_map_var.location, 2);
       }
     }
+    //normal잇으면 적절히 등록
+    if((mtl_.uber_flag & UberShader::kNormalMap) && normal_map_var.location != -1) {
+      Texture *normal_map = dev_->texture_mgr().Get_ptr(mtl_.normal_map);
+      if(normal_map != NULL) {
+        glActiveTexture(GL_TEXTURE3);
+        glBindTexture(GL_TEXTURE_2D, normal_map->handle());
+        glUniform1i(normal_map_var.location, 3);
+      }
+    }
   }
 
   //최초 상태로 돌려놓기
@@ -278,6 +288,9 @@ void Renderer::Draw(const MeshBufferObject &mesh) {
   const ShaderVariable &texcoord_var = bind_policy.var(ShaderBindPolicy::kTexcoord);
   const ShaderVariable &normal_var = bind_policy.var(ShaderBindPolicy::kNormal);
   const ShaderVariable &color_var = bind_policy.var(ShaderBindPolicy::kColor);
+  
+  //tangent가 잇으면 쓰자
+  const ShaderVariable &tangent_var = bind_policy.var(ShaderBindPolicy::kTangent);
 
   for(int i = 0 ; i < mesh.BufferCount() ; i++) {
     const VertexBufferObject &vbo = mesh.vbo(i);
@@ -289,43 +302,54 @@ void Renderer::Draw(const MeshBufferObject &mesh) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo.buffer());
 
     if(pos_var.location != -1) {
-      Vertex tmp_v;
+      TangentVertex tmp_v;
       const void *ptr = &tmp_v.pos;
       const void *base = &tmp_v;
       int offset = (long)ptr - (long)base;
 
       glEnableVertexAttribArray(pos_var.location);
-      glVertexAttribPointer(pos_var.location, 3, Vertex::kPosType, GL_FALSE, sizeof(sora::Vertex), (void*)offset);
+      glVertexAttribPointer(pos_var.location, 3, Vertex::kPosType, GL_FALSE, sizeof(TangentVertex), (void*)offset);
       GLHelper::CheckError("glVertexAttribPointer");
     }
     if(texcoord_var.location != -1) {
-      Vertex tmp_v;
+      TangentVertex tmp_v;
       const void *ptr = &tmp_v.texcoord;
       const void *base = &tmp_v;
       int offset = (long)ptr - (long)base;
       
       glEnableVertexAttribArray(texcoord_var.location);
-      glVertexAttribPointer(texcoord_var.location, 2, Vertex::kTexcoordType, GL_FALSE, sizeof(sora::Vertex), (void*)offset);
+      glVertexAttribPointer(texcoord_var.location, 2, Vertex::kTexcoordType, GL_FALSE, sizeof(TangentVertex), (void*)offset);
       GLHelper::CheckError("glVertexAttribPointer");
     }
     if(normal_var.location != -1) {
-      Vertex tmp_v;
+      TangentVertex tmp_v;
       const void *ptr = &tmp_v.normal;
       const void *base = &tmp_v;
       int offset = (long)ptr - (long)base;
 
       glEnableVertexAttribArray(normal_var.location);
-      glVertexAttribPointer(normal_var.location, 3, Vertex::kNormalType, GL_FALSE, sizeof(sora::Vertex), (void*)offset);
+      glVertexAttribPointer(normal_var.location, 3, Vertex::kNormalType, GL_FALSE, sizeof(TangentVertex), (void*)offset);
       GLHelper::CheckError("glVertexAttribPointer");
     }
     if(color_var.location != -1) {
-      Vertex tmp_v;
+      TangentVertex tmp_v;
       const void *ptr = &tmp_v.color;
       const void *base = &tmp_v;
       int offset = (long)ptr - (long)base;
 
+      //색속성은 ubyte니까 normalize해야됨
       glEnableVertexAttribArray(color_var.location);
-      glVertexAttribPointer(color_var.location, 4, Vertex::kColorType, GL_FALSE, sizeof(sora::Vertex), (void*)offset);
+      glVertexAttribPointer(color_var.location, 4, Vertex::kColorType, GL_TRUE, sizeof(TangentVertex), (void*)offset);
+      GLHelper::CheckError("glVertexAttribPointer");
+    }
+    if(tangent_var.location != -1) {
+      TangentVertex tmp_v;
+      const void *ptr = &tmp_v.tangent;
+      const void *base = &tmp_v;
+      int offset = (long)ptr - (long)base;
+
+      glEnableVertexAttribArray(tangent_var.location);
+      glVertexAttribPointer(tangent_var.location, 4, TangentVertex::kTangentType, GL_FALSE, sizeof(TangentVertex), (void*)offset);
       GLHelper::CheckError("glVertexAttribPointer");
     }
 

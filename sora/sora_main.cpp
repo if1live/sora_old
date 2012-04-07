@@ -101,7 +101,9 @@ bool setupGraphics(Device *device, int w, int h) {
     { "sora2", "texture/sora2.png" },
     { "mtl_diffuse", "texture/glazed_brick_D.png" },
     { "mtl_specular", "texture/glazed_brick_S.png" },
-    //{ "mtl_normal", "texture/glazed_brick_N.png" },
+    { "mtl_normal", "texture/glazed_brick_N.png" },
+    //{ "mtl_normal", "texture/normal_map.png" },
+    
   };
   int tex_count = sizeof(texture_table) / sizeof(texture_table[0]);
   for(int i = 0 ; i < tex_count ; i++) {
@@ -227,7 +229,9 @@ bool setupGraphics(Device *device, int w, int h) {
     entity_mat = glm::translate(entity_mat, vec3(0, 1, 0));
     world_mat_list[obj_model_idx] = entity_mat;
 
-    TrefoilKnot surface(1.0f);
+    TrefoilKnot surface(1.5f);
+    //Sphere surface(1.0);
+    //KleinBottle surface(0.2f);
     device->mesh_mgr().AddSolid(surface, "knot");
     //MeshManager::GetInstance().AddWire(surface, "knot");
     mesh_name_list[obj_model_idx] = "knot";
@@ -286,6 +290,7 @@ void renderFrame(Device *device) {
     //flag |= UberShader::kDiffuseMap;
     flag |= UberShader::kSpecularColor;
     //flag |= UberShader::kSpecularMap;
+    flag |= UberShader::kNormalMap;
     ShaderProgram &shader = device->uber_shader(flag);
     render3d.SetShader(shader);
 
@@ -294,7 +299,8 @@ void renderFrame(Device *device) {
     //평면하나만 일단 렌더링해서 테스트하자
     render3d.SetLight(light);
     //int obj_idx = 2;
-    int obj_idx = 1;
+    //int obj_idx = 1;
+    int obj_idx = 3;
     const mat4 &world_mat = world_mat_list[obj_idx];
     render3d.ApplyMatrix(world_mat);
 
@@ -303,14 +309,15 @@ void renderFrame(Device *device) {
 
     //재질데이터 적절히 설정하기
     Material mtl;
-    mtl.ambient_map = "sora2";
+    mtl.ambient_map = "sora";
     mtl.diffuse_map = "mtl_diffuse";
     mtl.specular_map = "mtl_specular";
+    mtl.normal_map = "mtl_normal";
     mtl.ambient = vec3(0.1, 0.1, 0.1);
     //mtl.ambient = vec3(1, 1, 1);
     mtl.diffuse = vec3(0.5, 0.5, 0.5);
-    mtl.specular = vec3(0.5, 0.5, 0.0);
-    mtl.shininess = 50;
+    mtl.specular = vec3(0.5, 0.5, 0.5);
+    mtl.shininess = 20;
     mtl.uber_flag = flag;
     render3d.SetMaterial(mtl);
     render3d.ApplyMaterialLight();

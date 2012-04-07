@@ -73,6 +73,7 @@ public:
     kAmbientMap,
     kDiffuseMap,
     kSpecularMap,
+    kNormalMap,
 
     /*
     kLightAmbient,

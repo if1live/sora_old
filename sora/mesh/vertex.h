@@ -52,22 +52,19 @@ struct Vertex {
     kNormalType = GL_FLOAT,
     kColorType = GL_UNSIGNED_BYTE,
   };
-  Vertex() : pos(0, 0, 0), texcoord(0, 0), normal(1, 0, 0), color(1, 1, 1, 1) {}
+  Vertex() : pos(0, 0, 0), texcoord(0, 0), normal(1, 0, 0), color(255, 255, 255, 255) {}
   glm::vec3 pos;
   glm::vec2 texcoord;
   glm::vec3 normal;
   sora::vec4ub color;
 };
-/*
-struct TangentVertex {
-  vec3 pos;
-  vec2 texcoord;
-  vec3 normal;
-  
-  vec3 tangent;
-  vec3 binormal;
+
+struct TangentVertex : public Vertex {
+  enum {
+    kTangentType = GL_FLOAT,
+  };
+  glm::vec3 tangent;
 };
-*/
 }
 
 #endif  // SORA_VERTEX_H_

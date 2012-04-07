@@ -52,6 +52,7 @@ std::vector<ShaderNameBind> &ShaderBindPolicy::GetPredefinedAttribList() {
     attr_bind_param.push_back(ShaderNameBind("a_texcoord", ShaderBindPolicy::kTexcoord));
     attr_bind_param.push_back(ShaderNameBind("a_normal", ShaderBindPolicy::kNormal));
     attr_bind_param.push_back(ShaderNameBind("a_color", ShaderBindPolicy::kColor));
+    attr_bind_param.push_back(ShaderNameBind("a_tangent", ShaderBindPolicy::kTangent));
   }
   return attr_bind_param;
 }
@@ -77,6 +78,7 @@ std::vector<ShaderNameBind> &ShaderBindPolicy::GetPredefinedUniformList() {
     uniform_bind_param.push_back(ShaderNameBind("s_specularMap", ShaderBindPolicy::kSpecularMap));
     uniform_bind_param.push_back(ShaderNameBind("s_ambientMap", ShaderBindPolicy::kAmbientMap));
     uniform_bind_param.push_back(ShaderNameBind("s_texture", ShaderBindPolicy::kAlbedo));
+    uniform_bind_param.push_back(ShaderNameBind("s_normalMap", ShaderBindPolicy::kNormalMap));
 
     uniform_bind_param.push_back(ShaderNameBind("u_worldLightPosition", ShaderBindPolicy::kLightPosition));
   }
@@ -105,7 +107,7 @@ ShaderNameBind *ShaderBindPolicy::GetPredefinedUniform(int semantic) {
 }
 void ShaderBindPolicy::Clear() {
   ShaderVariable empty_var;
-  for(size_t i = 0 ; i < GetArraySize(var_list_) ; ++i) {
+  for(int i = 0 ; i < GetArraySize(var_list_) ; ++i) {
     var_list_[i] = empty_var;
   }
 }

@@ -12,6 +12,7 @@ struct ISurface {
   virtual int GetLineIndexCount() const = 0;
   virtual int GetTriangleIndexCount() const = 0;
   virtual void GenerateVertices(std::vector<Vertex> &vertices) const = 0;
+  virtual void GenerateVertices(std::vector<TangentVertex> &vertices) const = 0;
   virtual void GenerateLineIndices(std::vector<unsigned short>& indices) const = 0;
   virtual void GenerateTriangleIndices(std::vector<unsigned short>& indices) const = 0;
   virtual ~ISurface() {}
@@ -31,6 +32,7 @@ public:
   int GetTriangleIndexCount() const;
   //position, normal, texcoord 전부 함유
   void GenerateVertices(std::vector<Vertex> &vertices) const;
+  void GenerateVertices(std::vector<TangentVertex> &vertices) const;
   void GenerateLineIndices(std::vector<unsigned short>& indices) const;
   void GenerateTriangleIndices(std::vector<unsigned short>& indices) const;
 

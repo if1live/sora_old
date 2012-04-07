@@ -66,8 +66,10 @@ protected:
 //ambient / diffuse / specular 지원
 //쌩텍스쳐는 곧 diffuse map라고 생각해서 연결한다
 struct LightUberShaderLoadPolicy {
-  static const char *vert_file() { return "shader/uber.vs"; }
-  static const char *frag_file() { return "shader/uber.fs"; }
+  //static const char *vert_file() { return "shader/uber.vs"; }
+  //static const char *frag_file() { return "shader/uber.fs"; }
+  static const char *vert_file() { return "shader/per_pixel_uber.vs"; }
+  static const char *frag_file() { return "shader/per_pixel_uber.fs"; }
   static uint avail_mask() {
     uint flag = 0;
     flag |= UberShader::kAmbientColor;
@@ -76,6 +78,8 @@ struct LightUberShaderLoadPolicy {
     flag |= UberShader::kAmbientMap;
     flag |= UberShader::kDiffuseMap;
     flag |= UberShader::kSpecularMap;
+    //normal map
+    flag |= UberShader::kNormalMap;
     return flag;
   }
 };
