@@ -21,6 +21,8 @@
 #ifndef SORA_EVENT_QUEUE_H_
 #define SORA_EVENT_QUEUE_H_
 
+#include <queue>
+
 namespace sora {;
 template<typename T>
 class EventQueue {
@@ -33,6 +35,7 @@ public:
   void Push(const T &evt);
   bool IsEmpty() const;
   void Clear();
+  void ClearHistory();
 
 private:
   std::queue<T> evt_queue_;
@@ -86,6 +89,10 @@ bool EventQueue<T>::IsEmpty() const {
 template<typename T>
 void EventQueue<T>::Clear() {
   evt_queue_ = std::queue<T>();
+}
+
+template<typename T>
+void EventQueue<T>::ClearHistory() {
   evt_history_.clear();
 }
 

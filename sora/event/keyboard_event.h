@@ -31,10 +31,10 @@ enum {
 
 struct KeyboardEvent {
   enum {
-    kKeyUpArrow,
-    kKeyDownArrow,
-    kKeyLeftArrow,
-    kKeyRIghtArrow
+    kUp,
+    kDown,
+    kLeft,
+    kRight
   };
   KeyboardEvent() : state(-1), is_special_key(false), ch(0) { }
   int state;  //press/release

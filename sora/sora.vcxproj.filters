@@ -203,9 +203,6 @@
     <ClCompile Include="depth_map_main.cpp">
       <Filter>logic_test</Filter>
     </ClCompile>
-    <ClCompile Include="event\keyboard_event.cpp">
-      <Filter>event</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">

@@ -28,6 +28,7 @@
 
 BOOL left_pressed = 0;
 
+
 ///
 //  ESWindowProc()
 //
@@ -57,6 +58,7 @@ LRESULT WINAPI ESWindowProc ( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
     PostQuitMessage(0);             
     break; 
 
+    /*
   case WM_CHAR:
     {
       POINT      point;
@@ -67,6 +69,25 @@ LRESULT WINAPI ESWindowProc ( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam
       if ( esContext && esContext->keyFunc )
         esContext->keyFunc ( esContext, (unsigned char) wParam, 
         (int) point.x, (int) point.y );
+    }
+    break;
+    */
+  case WM_KEYDOWN:
+    {
+      ESContext *esContext = (ESContext*)(LONG_PTR) GetWindowLongPtr ( hWnd, GWL_USERDATA );
+      if(esContext && esContext->keyFunc) {
+        int state = ES_KEY_DOWN;
+        esContext->keyFunc(esContext, state, wParam);
+      }
+    }
+    break;
+  case WM_KEYUP:
+    {
+      ESContext *esContext = (ESContext*)(LONG_PTR) GetWindowLongPtr ( hWnd, GWL_USERDATA );
+      if(esContext && esContext->keyFunc) {
+        int state = ES_KEY_UP;
+        esContext->keyFunc(esContext, state, wParam);
+      }
     }
     break;
   case WM_LBUTTONDOWN:

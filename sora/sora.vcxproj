@@ -95,7 +95,6 @@
     <ClCompile Include="core\string_hash.cpp" />
     <ClCompile Include="core\timer.cpp" />
     <ClCompile Include="depth_map_main.cpp" />
-    <ClCompile Include="event\keyboard_event.cpp" />
     <ClCompile Include="event\touch_device.cpp" />
     <ClCompile Include="lodepng\lodepng.cpp" />
     <ClCompile Include="renderer\camera.cpp" />

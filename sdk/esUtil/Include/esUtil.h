@@ -51,6 +51,10 @@ extern "C" {
 #define ES_MOUSE_MOVE 1
 #define ES_MOUSE_UP 2
 
+//for keyboard event
+#define ES_KEY_DOWN 0
+#define ES_KEY_UP 1
+
 ///
 // Types
 //
@@ -85,7 +89,8 @@ typedef struct
 
    /// Callbacks
    void (ESCALLBACK *drawFunc) ( void* );
-   void (ESCALLBACK *keyFunc) ( void*, unsigned char, int, int );
+   //void (ESCALLBACK *keyFunc) ( void*, unsigned char, int, int );
+   void (ESCALLBACK *keyFunc) ( void*, int, int);
    void (ESCALLBACK *mouseFunc) (int, int, int);
    void (ESCALLBACK *updateFunc) ( void*, float deltaTime );
 } ESContext;
@@ -143,7 +148,7 @@ void ESUTIL_API esRegisterUpdateFunc ( ESContext *esContext, void (ESCALLBACK *u
 /// \param keyFunc Key callback function for application processing of keyboard input
 //
 void ESUTIL_API esRegisterKeyFunc ( ESContext *esContext, 
-                                    void (ESCALLBACK *drawFunc) ( ESContext*, unsigned char, int, int ) );
+                                    void (ESCALLBACK *drawFunc) ( ESContext*, int, int) );
 
 void ESUTIL_API esRegisterMouseFunc(ESContext *esContext, void (ESCALLBACK *mouseFunc)(int, int, int));
 //

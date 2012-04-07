@@ -27,6 +27,7 @@
 #include "renderer/texture_manager.h"
 #include "core/template_lib.h"
 #include "event/touch_event.h"
+#include "event/keyboard_event.h"
 #include "renderer/mesh_manager.h"
 #include "renderer/uber_shader.h"
 #include "renderer/render_state.h"
@@ -37,6 +38,7 @@
 #include "sys/memory_file.h"
 #include "renderer/shader_bind_policy.h"
 
+
 namespace sora {;
 
 struct DevicePrivate {
@@ -46,12 +48,7 @@ struct DevicePrivate {
   render3d(dev) {
     Init();
   }
-  DevicePrivate(const Device *dev)
-  : render_state(const_cast<Device*>(dev)),
-  render2d(const_cast<Device*>(dev)), 
-  render3d(const_cast<Device*>(dev)) {
-    Init();
-  }
+
   ~DevicePrivate() {
     simple_shader.Deinit();
   }
@@ -99,6 +96,7 @@ struct DevicePrivate {
   MaterialManager material_mgr;
   TextureManager texture_mgr;
   TouchEventQueue touch_evt_queue;
+  KeyboardEventQueue keyboard_evt_queue;
   MeshManager mesh_mgr;
   UberShader light_uber_shader;
   RenderState render_state;
@@ -130,28 +128,17 @@ Renderer &Device::render2d() {
 TextureManager &Device::texture_mgr() {
   return pimpl().texture_mgr;
 }
-const TextureManager &Device::texture_mgr() const {
-  return pimpl().texture_mgr;
-}
-
 MaterialManager &Device::material_mgr() {
   return pimpl().material_mgr;
 }
-const MaterialManager &Device::material_mgr() const {
-  return pimpl().material_mgr;
-}
-
 TouchEventQueue &Device::touch_evt_queue() {
   return pimpl().touch_evt_queue;
 }
-const TouchEventQueue &Device::touch_evt_queue() const {
-  return pimpl().touch_evt_queue;
+KeyboardEventQueue &Device::keyboard_evt_queue() {
+  return pimpl().keyboard_evt_queue;
 }
 
 MeshManager &Device::mesh_mgr() {
-  return pimpl().mesh_mgr;
-}
-const MeshManager &Device::mesh_mgr() const {
   return pimpl().mesh_mgr;
 }
 
@@ -162,9 +149,7 @@ ShaderProgram &Device::uber_shader(uint flag) {
 RenderState &Device::render_state() {
   return pimpl().render_state;
 }
-const RenderState &Device::render_state() const {
-  return pimpl().render_state;
-}
+
 ShaderProgram &Device::simple_shader() {
   return pimpl().simple_shader;
 }
@@ -174,10 +159,11 @@ DevicePrivate &Device::pimpl() {
   }
   return *pimpl_;
 }
-const DevicePrivate &Device::pimpl() const {
-  if(pimpl_ == NULL) {
-    pimpl_ = new DevicePrivate(this);
-  }
-  return *pimpl_;
+
+void Device::EndTick() {
+  pimpl().keyboard_evt_queue.Clear();
+  pimpl().touch_evt_queue.Clear();
+  Renderer::EndRender();
 }
+
 }

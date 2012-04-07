@@ -52,17 +52,12 @@ public:
   Font &font();
 
   RenderState &render_state();
-  const RenderState &render_state() const;
-
   TextureManager &texture_mgr();
-  const TextureManager &texture_mgr() const;
   MaterialManager &material_mgr();
-  const MaterialManager &material_mgr() const;
   MeshManager &mesh_mgr();
-  const MeshManager &mesh_mgr() const;
 
   TouchEventQueue &touch_evt_queue();
-  const TouchEventQueue &touch_evt_queue() const;
+  KeyboardEventQueue &keyboard_evt_queue();
   
   //uber shader + predefined shader
   ShaderProgram &uber_shader(uint flag);
@@ -73,9 +68,11 @@ public:
   Renderer &render3d();
   Renderer &render2d();
 
+  //한 프레임이 완료된후에 리셋할 정보를 적절히 리셋하기
+  void EndTick();
+
 private:
   DevicePrivate &pimpl();
-  const DevicePrivate &pimpl() const;
   mutable DevicePrivate *pimpl_;
 };
 }

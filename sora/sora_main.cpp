@@ -63,6 +63,7 @@
 
 #include "event/touch_device.h"
 #include "event/touch_event.h"
+#include "event/keyboard_event.h"
 
 #include "renderer/parametric_equations.h"
 #include "renderer/parametric_surface.h"
@@ -510,25 +511,28 @@ void SORA_update_frame(Device *device, float dt) {
     }
   }
 
-
-#if SR_WIN
-#if SR_GLES == 0
-  float x = 0.1f;
   //check key
-  if(glfwGetKey('W') == GLFW_PRESS || glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS) {
-    SORA_set_cam_pos(x, 0);
+  float x = 0.3f;
+  KeyboardEventQueue &keyboard_evt_queue = device->keyboard_evt_queue();
+  while(keyboard_evt_queue.IsEmpty() == false) {
+    KeyboardEvent evt = keyboard_evt_queue.Get();
+    if(evt.is_special_key) {
+      switch(evt.ch) {
+      case KeyboardEvent::kUp:
+        SORA_set_cam_pos(x, 0);
+        break;
+      case KeyboardEvent::kDown:
+        SORA_set_cam_pos(-x, 0);
+        break;
+      case KeyboardEvent::kLeft:
+        SORA_set_cam_pos(0, x);
+        break;
+      case KeyboardEvent::kRight:
+        SORA_set_cam_pos(0, -x);
+        break;
+      }
+    }
   }
-  if(glfwGetKey('S') == GLFW_PRESS || glfwGetKey(GLFW_KEY_DOWN) == GLFW_PRESS) {
-    SORA_set_cam_pos(-x, 0);
-  }
-  if(glfwGetKey('A') == GLFW_PRESS || glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS) {
-    SORA_set_cam_pos(0, x);
-  }
-  if(glfwGetKey('D') == GLFW_PRESS || glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS) {
-    SORA_set_cam_pos(0, -x);
-  }
-#endif
-#endif
 }
 
 void SORA_cleanup_graphics(Device *device) {

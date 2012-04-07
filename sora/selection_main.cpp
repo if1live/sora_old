@@ -206,7 +206,7 @@ namespace selection {
     while(touch_evt_queue.IsEmpty() == false) {
       TouchEvent evt = touch_evt_queue.Get();
       int gl_x = evt.x;
-      int gl_y = win_height - evt.y;
+      int gl_y = (int)win_height - evt.y;
 
       //터치햇을때만 selection buffer만들어서 렌더링 부하를 줄이자
       SelectionRequest request(&selection_buffer, gl_x, gl_y);

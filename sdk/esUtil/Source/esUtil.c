@@ -203,7 +203,7 @@ void ESUTIL_API esRegisterUpdateFunc ( ESContext *esContext, void (ESCALLBACK *u
 //  esRegisterKeyFunc()
 //
 void ESUTIL_API esRegisterKeyFunc ( ESContext *esContext,
-                                   void (ESCALLBACK *keyFunc) (ESContext*, unsigned char, int, int ) )
+                                   void (ESCALLBACK *keyFunc) (ESContext*, int, int) )
 {
   esContext->keyFunc = keyFunc;
 }

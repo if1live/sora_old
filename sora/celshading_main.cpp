@@ -167,7 +167,7 @@ namespace celshading {
 
       //edge색 적절히 조정
       int color_loc = edge_shader.GetUniformLocation("u_constColor");
-      float color[4] = { 0.1, 0.1, 0.1, 1.0 };
+      float color[4] = { 0.1f, 0.1f, 0.1f, 1.0f };
       glUniform4fv(color_loc, 1, color);
 
       //폴리곤 오프셋으로 외곽선적절히 처리
