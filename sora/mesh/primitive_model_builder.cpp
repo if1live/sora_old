@@ -38,7 +38,7 @@ PrimitiveModelBuilder::PrimitiveModelBuilder(unsigned int flag)
 void PrimitiveModelBuilder::SetCube(float width, float height, float depth) {
   SR_ASSERT(width > 0 && height > 0 && depth > 0);
   //선그리는건 위치정보만 뱉으면 충분하다
-  SR_ASSERT(flag_ == 0);
+  //SR_ASSERT(flag_ == 0);
   cube.width = width;
   cube.height = height;
   cube.depth = depth;
@@ -48,7 +48,7 @@ void PrimitiveModelBuilder::SetSphere(float radius, int slices, int stacks) {
   SR_ASSERT(slices > 0);
   SR_ASSERT(stacks > 0);
   //선그리는건 위치정보만 뱉으면 충분하다
-  SR_ASSERT(flag_ == 0);
+  //SR_ASSERT(flag_ == 0);
   sphere.radius = radius;
   sphere.slices = slices;
   sphere.stacks = stacks;
@@ -56,21 +56,19 @@ void PrimitiveModelBuilder::SetSphere(float radius, int slices, int stacks) {
 
 void PrimitiveModelBuilder::SetAxis(float size) {
   SR_ASSERT(size > 0);
-  SR_ASSERT(flag_ == 0 || flag_ == kFlagColor);
+  //SR_ASSERT(flag_ == 0 || flag_ == kFlagColor);
   axis.size = size;
 }
 
 void PrimitiveModelBuilder::SetPlane(float half_size, float grid_size) {
   SR_ASSERT(half_size > 0);
   SR_ASSERT(grid_size > 0);
-  SR_ASSERT(flag_ == 0); 
   plane.half_size = half_size;
   plane.grid_size = grid_size;
 }
 
 void PrimitiveModelBuilder::SetTeapot(float size) {
   SR_ASSERT(size > 0);
-  SR_ASSERT(flag_ == 0); 
   teapot.size = size;
 }
 void PrimitiveModelBuilder::SetCone(float base, float height, int slices, int stacks) {
@@ -78,11 +76,19 @@ void PrimitiveModelBuilder::SetCone(float base, float height, int slices, int st
   SR_ASSERT(height > 0);
   SR_ASSERT(slices > 0);
   SR_ASSERT(stacks > 0);
-  SR_ASSERT(flag_ == 0); 
   cone.base = base;
   cone.height = height;
   cone.slices = slices;
   cone.stacks = stacks;
+}
+
+void PrimitiveModelBuilder::SetCylinder(float radius, float height, int slices) {
+  SR_ASSERT(radius > 0);
+  SR_ASSERT(height > 0);
+  SR_ASSERT(slices >= 4);
+  cylinder.radius = radius;
+  cylinder.height = height;
+  cylinder.slices = slices;
 }
 
 //teapot
@@ -589,7 +595,87 @@ IndexListType PrimitiveModelBuilder::WireConeIndexList() {
   copy(sliceindex_list.begin(), sliceindex_list.end(), it);
   return index_list;
 }
-}
 
-
+std::vector<float> PrimitiveModelBuilder::WireCylinderVertexData() {
+  float radius = cylinder.radius;
+  float height = cylinder.height;
+  int slices = cylinder.slices;
   
+  vector<float> vert_data;
+  
+
+  //원기둥의 높이(z)는 -height/2~height/2로 height를 구성함
+  const float angleDt = static_cast<float>(2.0 * kPi / slices);
+  for(int j = 0 ; j < 2 ; j++) {
+    for(int i = 0 ; i < slices ; i++) {	
+      float x = static_cast<float>(cos(angleDt * i) * radius);
+      float z = static_cast<float>(sin(angleDt * i) * radius);
+
+      float y = 0;
+      if(j == 0) {
+        y = height / 2;	//윗면
+      } else {
+        y = -height / 2;		//아랫면
+      }
+
+      vec3 pos(x, y, z);
+      Append(vert_data, pos);
+    }
+  }
+  //밑점, 윗점 따로 vertex list에 넣기
+  vec3 bottomPos(0, -height/2, 0);
+  vec3 topPos(0, height/2, 0);
+  Append(vert_data, bottomPos);
+  Append(vert_data, topPos);
+
+  return vert_data;
+}
+IndexListType PrimitiveModelBuilder::WireCylinderIndexList() {
+  IndexListType index_list;
+  float radius = cylinder.radius;
+  float height = cylinder.height;
+  int slices = cylinder.slices;
+
+  int total_vert_count = 2 * slices + 2;
+
+  const int topIndex = total_vert_count - 1;
+  const int bottomIndex = total_vert_count - 2;
+
+  for(int i = 0 ; i < slices ; i++) {
+    //옆에서 봤을떄의 얻어낸 정보
+    //a b
+    //c d
+    GLushort a = i;
+    GLushort c = i + slices;
+    GLushort b = (i + 1) % slices;
+    GLushort d = (c + 1) % slices + slices;
+
+    //윗면과 아랫면 선으로 연결하기 + 대각선도 넣기
+    index_list.push_back(a);
+    index_list.push_back(c);
+
+    index_list.push_back(b);
+    index_list.push_back(d);
+
+    index_list.push_back(a);
+    index_list.push_back(d);
+
+    //윗면의 테두리 그리기	
+    index_list.push_back(a);
+    index_list.push_back(b);
+
+    //아랫면의 테두리 그리기
+    index_list.push_back(c);
+    index_list.push_back(d);
+
+    //아랫면 덮기
+    index_list.push_back(c);
+    index_list.push_back(bottomIndex);
+
+    //윗면 덮기
+    index_list.push_back(a);
+    index_list.push_back(topIndex);
+  }
+  return index_list;
+}
+}

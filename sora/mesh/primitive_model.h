@@ -48,10 +48,8 @@ public:
 
   void SolidSphere(float radius, int slices, int stacks);
 
-  void WireCone(float base, float height, int slices, int stacks);
   void SolidCone(float base, float height, int slices, int stacks);
 
-  void WireCylinder(float radius, float height, int slices);
   void SolidCylinder(float radius, float height, int slices);
 
   void SolidTeapot(float size);

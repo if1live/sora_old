@@ -210,7 +210,6 @@ bool setupGraphics(Device *device, int w, int h) {
     //primitive_model.SolidSphere(0.5, 16, 16);
     //device->mesh_mgr().Add(primitive_model.GetDrawCmdList(), "model2");
     vector<float> vert_data;
-    vector<TangentVertex> vertex_list;
     IndexListType index_list;
     
     //sora::PrimitiveModelBuilder builder(0);
@@ -238,11 +237,17 @@ bool setupGraphics(Device *device, int w, int h) {
     //vert_data = builder.WireTeapotVertexData();
     //index_list = builder.WireTeapotIndexList();
 
-    sora::PrimitiveModelBuilder builder(0);
-    builder.SetCone(1, 2, 8, 8);
-    vert_data = builder.WireConeVertexData();
-    index_list = builder.WireConeIndexList();
+    //sora::PrimitiveModelBuilder builder(0);
+    //builder.SetCone(1, 2, 8, 8);
+    //vert_data = builder.WireConeVertexData();
+    //index_list = builder.WireConeIndexList();
 
+    sora::PrimitiveModelBuilder builder(0);
+    builder.SetCylinder(1, 2, 8);
+    vert_data = builder.WireCylinderVertexData();
+    index_list = builder.WireCylinderIndexList();
+
+    vector<TangentVertex> vertex_list;
     builder.DataToVertexList(vert_data, builder.flag(), vertex_list);
 
     DrawCommand<TangentVertex> draw_cmd;
