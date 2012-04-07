@@ -98,7 +98,7 @@ bool setupGraphics(Device *device, int w, int h) {
   
   //lodepng
   const char *texture_table[][2] = {
-    //{ "sora", "texture/sora.png" },
+    { "sora", "texture/sora.png" },
     { "sora2", "texture/sora2.png" },
     { "mtl_diffuse", "texture/glazed_brick_D.png" },
     { "mtl_specular", "texture/glazed_brick_S.png" },
@@ -211,6 +211,11 @@ bool setupGraphics(Device *device, int w, int h) {
     //device->mesh_mgr().Add(primitive_model.GetDrawCmdList(), "model2");
     vector<float> vert_data;
     IndexListType index_list;
+
+    unsigned int total_flag = 0;
+    total_flag |= PrimitiveModelBuilder::kFlagColor;
+    total_flag |= PrimitiveModelBuilder::kFlagTexcoord;
+    total_flag |= PrimitiveModelBuilder::kFlagNormal;
     
     //sora::PrimitiveModelBuilder builder(0);
     //builder.SetCube(1, 1, 1);
@@ -218,22 +223,24 @@ bool setupGraphics(Device *device, int w, int h) {
     //index_list = builder.WireCubeIndexList();
 
     //sora::PrimitiveModelBuilder builder(0);
-    sora::PrimitiveModelBuilder builder(PrimitiveModelBuilder::kFlagColor);
-    builder.SetSphere(0.5, 16, 16);
+    //sora::PrimitiveModelBuilder builder(total_flag);
+    //builder.SetSphere(0.5, 16, 16);
     //vert_data = builder.WireSphereVertexData();
     //index_list = builder.WireSphereIndexList();
-    vert_data = builder.SolidSphereVertexData();
-    index_list = builder.SolidSphereIndexList();
+    //vert_data = builder.SolidSphereVertexData();
+    //index_list = builder.SolidSphereIndexList();
 
     //sora::PrimitiveModelBuilder builder(PrimitiveModelBuilder::kFlagColor);
     //builder.SetAxis(1);
     //vert_data = builder.WireAxisVertexData();
     //index_list = builder.WireAxisIndexList();
 
-    //sora::PrimitiveModelBuilder builder(0);
-    //builder.SetPlane(4, 0.5);
+    sora::PrimitiveModelBuilder builder(PrimitiveModelBuilder::kFlagTexcoord);
+    builder.SetPlane(4, 0.5);
     //vert_data = builder.WirePlaneVertexData();
     //index_list = builder.WirePlaneIndexList();
+    vert_data = builder.SolidPlaneVertexData();
+    index_list = builder.SolidPlaneIndexList();
 
     //sora::PrimitiveModelBuilder builder(0);
     //builder.SetTeapot(2);
@@ -344,7 +351,7 @@ void renderFrame(Device *device) {
 
     unsigned int flag = 0;
     flag |= UberShader::kAmbientColor;
-    //flag |= UberShader::kAmbientMap;
+    flag |= UberShader::kAmbientMap;
     //flag |= UberShader::kDiffuseColor;
     //flag |= UberShader::kDiffuseMap;
     //flag |= UberShader::kSpecularColor;

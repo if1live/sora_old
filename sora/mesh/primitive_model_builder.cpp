@@ -829,4 +829,77 @@ IndexListType PrimitiveModelBuilder::SolidSphereIndexList() {
   }
   return index_list;
 }
+std::vector<float> PrimitiveModelBuilder::SolidPlaneVertexData() {
+  vector<float> vert_data;
+  float half_size = plane.half_size;
+
+  int pos_offset = 0;
+  int color_offset = -1;
+  int normal_offset = -1;
+  int texcoord_offset = -1;
+  int tangent_offset = -1;
+  int rowsize = CalcOffset(flag_, &pos_offset, &color_offset, &normal_offset, &texcoord_offset, &tangent_offset);
+
+  vert_data.resize(rowsize * 4);
+
+  // x scale, z scale, s, t
+  float table[][4] = {
+    { -1, -1, 0, 0 },
+    { -1, +1, 0, 1 },
+    { +1, -1, 1, 0 },
+    { +1, +1, 1, 1 }
+  };
+  for(int i = 0 ; i < 4 ; ++i) {
+    float x_scale = table[i][0];
+    float z_scale = table[i][1];
+    float s = table[i][2];
+    float t = table[i][3];
+
+    vec3 pos(x_scale * half_size, 0, z_scale * half_size);
+    vec2 texcoord(s, t);
+    vec3 normal(0, 1, 0);
+
+    int base_index = rowsize * i;
+    vert_data[base_index + pos_offset + 0] = pos.x;
+    vert_data[base_index + pos_offset + 1] = pos.y;
+    vert_data[base_index + pos_offset + 2] = pos.z;
+
+    if(color_offset != -1) {
+      for(int j = 0 ; j < 4 ; j++) {
+        vert_data[base_index + color_offset + j] = 255;
+      }
+    }
+    if(normal_offset != -1) {
+      vert_data[base_index + normal_offset + 0] = normal.x;
+      vert_data[base_index + normal_offset + 1] = normal.y;
+      vert_data[base_index + normal_offset + 2] = normal.z;
+    }
+    if(texcoord_offset != -1) {
+      vert_data[base_index + texcoord_offset + 0] = texcoord.x;
+      vert_data[base_index + texcoord_offset + 1] = texcoord.y;
+    }
+  }
+
+  return vert_data;
+}
+IndexListType PrimitiveModelBuilder::SolidPlaneIndexList() {
+  enum {
+    kLeftBack,
+    kLeftFront,
+    kRightBack,
+    kRightFront,
+  };
+
+  IndexListType index_list;
+  index_list.reserve(6);
+  index_list.push_back(kLeftBack); 
+  index_list.push_back(kLeftFront);  
+  index_list.push_back(kRightBack);  
+  
+  index_list.push_back(kRightBack);
+  index_list.push_back(kLeftFront);
+  index_list.push_back(kRightFront);
+  return index_list;
+}
+
 }
