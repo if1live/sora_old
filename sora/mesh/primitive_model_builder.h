@@ -84,6 +84,12 @@ public:
   IndexListType WireCylinderIndexList();
 
   uint flag() const { return flag_; }
+
+public:
+  template<typename VertexType>
+  static MeshBufferObject CreateWireCube(uint flag, float width, float height, float depth);
+
+
 private:
   unsigned int flag_;
   union {
@@ -181,6 +187,28 @@ void PrimitiveModelBuilder::DataToCommonVertexList(const std::vector<float> &dat
   }
 }
 
+template<typename VertexType>
+MeshBufferObject PrimitiveModelBuilder::CreateWireCube(uint flag, float width, float height, float depth) {
+  PrimitiveModelBuilder builder(flag);
+  builder.SetCube(width, height, depth);
+  vector<float> vert_data = builder.WireCubeVertexData();
+  IndexListType index_list = builder.WireCubeIndexList();
+
+  vector<TangentVertex> vertex_list;
+  builder.DataToVertexList(vert_data, builder.flag(), vertex_list);
+
+  DrawCommand<VertexType> draw_cmd;
+  draw_cmd.draw_mode = GL_LINES;
+  draw_cmd.index_count = index_list.size();
+  draw_cmd.index_ptr = &index_list[0];
+  draw_cmd.index_type = GL_UNSIGNED_SHORT;
+  draw_cmd.vert_count = vertex_list.size();
+  draw_cmd.vert_ptr = &vertex_list[0];
+
+  MeshBufferObject mbo;
+  mbo.Add(draw_cmd);
+  return mbo;
+}
 }
 
 #endif  // SORA_PRIMITIVE_MODEL_BUILDER_H_

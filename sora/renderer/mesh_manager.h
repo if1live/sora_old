@@ -44,6 +44,7 @@ public:
 
   template<typename VertexType>
   bool Add(const std::vector< DrawCommand<VertexType> > &cmd_list, const char *name);
+  bool Add(const MeshBufferObject &obj, const char *name);
 
   MeshBufferObject *Get(const char *name) { return Get(std::string(name)); }
   MeshBufferObject *Get(const std::string &name);

@@ -235,12 +235,12 @@ bool setupGraphics(Device *device, int w, int h) {
     //vert_data = builder.WireAxisVertexData();
     //index_list = builder.WireAxisIndexList();
 
-    sora::PrimitiveModelBuilder builder(PrimitiveModelBuilder::kFlagTexcoord);
-    builder.SetPlane(4, 0.5);
+    //sora::PrimitiveModelBuilder builder(PrimitiveModelBuilder::kFlagTexcoord);
+    //builder.SetPlane(4, 0.5);
     //vert_data = builder.WirePlaneVertexData();
     //index_list = builder.WirePlaneIndexList();
-    vert_data = builder.SolidPlaneVertexData();
-    index_list = builder.SolidPlaneIndexList();
+    //vert_data = builder.SolidPlaneVertexData();
+    //index_list = builder.SolidPlaneIndexList();
 
     //sora::PrimitiveModelBuilder builder(0);
     //builder.SetTeapot(2);
@@ -257,7 +257,7 @@ bool setupGraphics(Device *device, int w, int h) {
     //builder.SetCylinder(1, 2, 8);
     //vert_data = builder.WireCylinderVertexData();
     //index_list = builder.WireCylinderIndexList();
-
+    /*
     vector<TangentVertex> vertex_list;
     builder.DataToVertexList(vert_data, builder.flag(), vertex_list);
 
@@ -272,8 +272,9 @@ bool setupGraphics(Device *device, int w, int h) {
 
     vector< DrawCommand<TangentVertex> > draw_cmd_list;
     draw_cmd_list.push_back(draw_cmd);
-    
-    device->mesh_mgr().Add(draw_cmd_list, "model2");
+    */
+    MeshBufferObject mesh_obj = PrimitiveModelBuilder::CreateWireCube<TangentVertex>(0, 1, 1, 1);
+    device->mesh_mgr().Add(mesh_obj, "model2");
     mesh_name_list[obj_model_idx] = "model2";
 
   }

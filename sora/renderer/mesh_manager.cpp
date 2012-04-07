@@ -68,4 +68,11 @@ bool MeshManager::IsExist(const char *name) const {
     return true;
   }
 }
+bool MeshManager::Add(const MeshBufferObject &obj, const char *name) {
+  if(IsExist(name) == true) {
+    return false;
+  }
+  mesh_dict_[string(name)] = obj;
+  return true;
+}
 }
