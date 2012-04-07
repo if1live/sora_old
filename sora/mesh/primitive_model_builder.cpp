@@ -278,11 +278,34 @@ std::vector<float> PrimitiveModelBuilder::WireSphereVertexData() {
   vec3 top(0, 1, 0);
   tmp_vertex_list.push_back(top);
 
+
+  int pos_offset = 0;
+  int color_offset = -1;
+  int normal_offset = -1;
+  int texcoord_offset = -1;
+  int tangent_offset = -1;
+
+  unsigned int flag_mask = kFlagColor;
+  unsigned int valid_flag = flag_ & flag_mask;
+  int rowsize = CalcOffset(valid_flag, &pos_offset, &color_offset, &normal_offset, &texcoord_offset, &tangent_offset);
+
   //vertex 위치정보+잡탕으로 진짜 vertex list생성
   vector<vec3>::iterator it;
-  for(it = tmp_vertex_list.begin() ; it != tmp_vertex_list.end() ; it++) {
+  vertex_data.resize(rowsize * tmp_vertex_list.size());
+  int i = 0;
+  for(it = tmp_vertex_list.begin() ; it != tmp_vertex_list.end() ; it++, ++i) {
     const vec3 &pos = *it;
-    Append(vertex_data, pos);
+    int base_idx = i * rowsize;
+
+    vertex_data[base_idx + pos_offset + 0] = pos.x;
+    vertex_data[base_idx + pos_offset + 1] = pos.y;
+    vertex_data[base_idx + pos_offset + 2] = pos.z;
+
+    if(color_offset != -1) {
+      for(int j = 0 ; j < 4 ; j++) {
+        vertex_data[base_idx + color_offset + j] = 255;
+      }
+    }
   }
   return vertex_data;
 }
@@ -707,6 +730,102 @@ IndexListType PrimitiveModelBuilder::WireCylinderIndexList() {
     //윗면 덮기
     index_list.push_back(a);
     index_list.push_back(topIndex);
+  }
+  return index_list;
+}
+
+std::vector<float> PrimitiveModelBuilder::SolidSphereVertexData() {
+  float radius = sphere.radius;
+  int slices = sphere.slices;
+  int stacks = sphere.stacks;
+  
+  vector<float> vert_data;
+
+  //원을 구성하는 포인트 리스트 + 텍스쳐 좌표 동시 계산
+  vector<vec3> posList;
+  vector<vec2> texCoordList;
+  for(int i = 0 ; i <= stacks ; i++) {
+    double yAngle = (kPi / stacks * i) - kPiOver2;
+    float y = static_cast<float>(sin(yAngle));
+    for(int j = 0 ; j <= slices ; j++) {
+      float zxAngle = static_cast<float>((2.0 * kPi / slices) * j);
+      float x = static_cast<float>(cos(yAngle) * cos(zxAngle));
+      float z = static_cast<float>(cos(yAngle) * sin(zxAngle));
+
+      vec3 pos(x, y, z);
+      posList.push_back(pos);
+
+      //tex 좌표 계산
+      float s = 1.0f / (slices) * j;
+      float t = 1.0f / (stacks) * i;
+      vec2 texCoord(s, t);
+      texCoordList.push_back(texCoord);
+    }
+  }
+
+  int pos_offset = 0;
+  int color_offset = -1;
+  int normal_offset = -1;
+  int texcoord_offset = -1;
+  int tangent_offset = -1;
+  int rowsize = CalcOffset(flag_, &pos_offset, &color_offset, &normal_offset, &texcoord_offset, &tangent_offset);
+
+  //vertex 구성
+  vert_data.resize(rowsize * posList.size());
+  for(std::size_t i = 0 ; i < posList.size() ; i++) {
+    const vec3 &pos = posList[i];
+    const vec2 &texcoord = texCoordList[i];
+
+    int base_idx = i * rowsize;
+    if(pos_offset != -1) {
+      vert_data[base_idx + pos_offset + 0] = pos.x * radius;
+      vert_data[base_idx + pos_offset + 1] = pos.y * radius;
+      vert_data[base_idx + pos_offset + 2] = pos.z * radius;
+    }
+    
+    if(color_offset != -1) {
+      for(int j = 0 ; j < 4 ; ++j) {
+        vert_data[base_idx + color_offset + j] = 255;
+      }
+    }
+    if(texcoord_offset != -1) {
+      vert_data[base_idx + texcoord_offset + 0] = texcoord.x;
+      vert_data[base_idx + texcoord_offset + 1] = texcoord.y;
+    }
+    if(normal_offset != -1) {
+      vert_data[base_idx + normal_offset + 0] = pos.x;
+      vert_data[base_idx + normal_offset + 1] = pos.y;
+      vert_data[base_idx + normal_offset + 2] = pos.z;
+    }
+  }
+
+  return vert_data;
+}
+IndexListType PrimitiveModelBuilder::SolidSphereIndexList() {
+  float radius = sphere.radius;
+  int slices = sphere.slices;
+  int stacks = sphere.stacks;
+
+  IndexListType index_list;
+  for(int i = 0 ; i < stacks ; i++) {
+    GLushort start = i * (slices+1);
+    for(int j = 0 ; j < slices ; j++) {
+      //d c
+      //b a
+      GLushort a = j + start;
+      GLushort b = a + 1;
+      GLushort c = a + slices + 1;
+      GLushort d = c + 1;
+
+
+      index_list.push_back(a);
+      index_list.push_back(c);
+      index_list.push_back(b);
+
+      index_list.push_back(c);
+      index_list.push_back(d);
+      index_list.push_back(b);
+    }
   }
   return index_list;
 }

@@ -62,16 +62,18 @@ public:
   std::vector<float> WireSphereVertexData();
   IndexListType WireSphereIndexList();
 
+  std::vector<float> SolidSphereVertexData();
+  IndexListType SolidSphereIndexList();
+
   std::vector<float> WireAxisVertexData();
   IndexListType WireAxisIndexList();
 
   std::vector<float> WirePlaneVertexData();
   IndexListType WirePlaneIndexList();
-  IndexListType SolidTeapotIndexList();
-  
 
   std::vector<float> TeapotVertexData();
   IndexListType WireTeapotIndexList();
+  IndexListType SolidTeapotIndexList();
 
   std::vector<float> WireConeVertexData();
   IndexListType WireConeIndexList();

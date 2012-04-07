@@ -218,9 +218,12 @@ bool setupGraphics(Device *device, int w, int h) {
     //index_list = builder.WireCubeIndexList();
 
     //sora::PrimitiveModelBuilder builder(0);
-    //builder.SetSphere(0.5, 16, 16);
+    sora::PrimitiveModelBuilder builder(PrimitiveModelBuilder::kFlagColor);
+    builder.SetSphere(0.5, 16, 16);
     //vert_data = builder.WireSphereVertexData();
     //index_list = builder.WireSphereIndexList();
+    vert_data = builder.SolidSphereVertexData();
+    index_list = builder.SolidSphereIndexList();
 
     //sora::PrimitiveModelBuilder builder(PrimitiveModelBuilder::kFlagColor);
     //builder.SetAxis(1);
@@ -232,11 +235,11 @@ bool setupGraphics(Device *device, int w, int h) {
     //vert_data = builder.WirePlaneVertexData();
     //index_list = builder.WirePlaneIndexList();
 
-    sora::PrimitiveModelBuilder builder(0);
-    builder.SetTeapot(2);
-    vert_data = builder.TeapotVertexData();
+    //sora::PrimitiveModelBuilder builder(0);
+    //builder.SetTeapot(2);
+    //vert_data = builder.TeapotVertexData();
     //index_list = builder.WireTeapotIndexList();
-    index_list = builder.SolidTeapotIndexList();
+    //index_list = builder.SolidTeapotIndexList();
 
     //sora::PrimitiveModelBuilder builder(0);
     //builder.SetCone(1, 2, 8, 8);
