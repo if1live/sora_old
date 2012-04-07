@@ -761,51 +761,6 @@ void PrimitiveModel::SolidCylinder(float radius, float height, int slices) {
   }
 
 }
-void PrimitiveModel::WireAxis(float size) {
-  SR_ASSERT(size > 0);
-
-  //asiz는 1개의 메시로 표현 가능
-  SafeDelete(impl);
-  impl = new PrimitiveModelImpl(1, false);
-
-  VertexListType &vert_list = impl->vert_list_group[0];
-  IndexListType &index_list = impl->index_list_group[0];
-  impl->mode_group[0] = GL_LINES;
-
-  //vertex list 생성
-  vec3 xPos(size, 0, 0);
-  vec3 yPos(0, size, 0);
-  vec3 zPos(0, 0, size);
-  vec3 zero(0, 0, 0);
-
-  vec4ub red(255, 0, 0, 255);
-  vec4ub green(0, 255, 0, 255);
-  vec4ub blue(0, 0, 255, 255);
-
-  //x axis - r
-  Vertex vx0; vx0.pos = zero; vx0.color = red;
-  Vertex vx1; vx1.pos = xPos; vx1.color = red;
-  vert_list.push_back(vx0);
-  vert_list.push_back(vx1);
-
-  //y axis - g
-  Vertex vy0; vy0.pos = zero; vy0.color = green;
-  Vertex vy1; vy1.pos = yPos; vy1.color = green;
-  vert_list.push_back(vy0);
-  vert_list.push_back(vy1);
-
-  //z axis - b
-  Vertex vz0; vz0.pos = zero; vz0.color = blue;
-  Vertex vz1; vz1.pos = zPos; vz1.color = blue;
-  vert_list.push_back(vz0);
-  vert_list.push_back(vz1);
-
-  //create index list
-  for(GLushort i = 0 ; i < 6 ; i++) {
-    index_list.push_back(i);
-  }
-}
-
 void PrimitiveModel::WirePlane(float half_size, float grid_size) {
   SR_ASSERT(half_size > 0);
   SR_ASSERT(grid_size > 0);

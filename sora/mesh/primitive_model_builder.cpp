@@ -29,7 +29,9 @@ namespace sora {;
 
 PrimitiveModelBuilder::PrimitiveModelBuilder(unsigned int flag)
 : flag_(flag) {
-  SetCube(1, 1, 1);
+  cube.width = 1;
+  cube.height = 1;
+  cube.depth = 1;
 }
 
 void PrimitiveModelBuilder::SetCube(float width, float height, float depth) {
@@ -49,6 +51,28 @@ void PrimitiveModelBuilder::SetSphere(float radius, int slices, int stacks) {
   sphere.radius = radius;
   sphere.slices = slices;
   sphere.stacks = stacks;
+}
+
+void PrimitiveModelBuilder::SetAxis(float size) {
+  SR_ASSERT(size > 0);
+  SR_ASSERT(flag_ == 0 || flag_ == kFlagColor);
+  axis.size = size;
+}
+
+void PrimitiveModelBuilder::Append(std::vector<float> &vert_data, const glm::vec2 &v) {
+  vert_data.push_back(v.x);
+  vert_data.push_back(v.y);
+}
+void PrimitiveModelBuilder::Append(std::vector<float> &vert_data, const glm::vec3 &v) {
+  vert_data.push_back(v.x);
+  vert_data.push_back(v.y);
+  vert_data.push_back(v.z);
+}
+void PrimitiveModelBuilder::Append(std::vector<float> &vert_data, const glm::vec4 &v) {
+  vert_data.push_back(v.x);
+  vert_data.push_back(v.y);
+  vert_data.push_back(v.z);
+  vert_data.push_back(v.w);
 }
 
 int PrimitiveModelBuilder::CalcOffset(unsigned int flag, int *pos, int *color, int *normal, int *texcoord, int *tangent) {
@@ -138,9 +162,7 @@ std::vector<float> PrimitiveModelBuilder::WireCubeVertexData() {
   vector<float> vert_data;
   for(size_t i = 0 ; i < pos_list.size() ; i++) {
     const vec3 &pos = pos_list[i];
-    vert_data.push_back(pos[0]);
-    vert_data.push_back(pos[1]);
-    vert_data.push_back(pos[2]);
+    Append(vert_data, pos);
   }
   return vert_data;
 }
@@ -190,9 +212,7 @@ std::vector<float> PrimitiveModelBuilder::WireSphereVertexData() {
   vector<vec3>::iterator it;
   for(it = tmp_vertex_list.begin() ; it != tmp_vertex_list.end() ; it++) {
     const vec3 &pos = *it;
-    vertex_data.push_back(pos[0]);
-    vertex_data.push_back(pos[1]);
-    vertex_data.push_back(pos[2]);
+    Append(vertex_data, pos);
   }
   return vertex_data;
 }
@@ -233,5 +253,61 @@ IndexListType PrimitiveModelBuilder::WireSphereIndexList() {
   }
   return index_list;
 }
+std::vector<float> PrimitiveModelBuilder::WireAxisVertexData() {
+  float size = axis.size;
+  vector<float> vert_data;
 
+  //vertex list 생성
+  vec3 xPos(size, 0, 0);
+  vec3 yPos(0, size, 0);
+  vec3 zPos(0, 0, size);
+  vec3 zero(0, 0, 0);
+
+  vec4 red(255, 0, 0, 255);
+  vec4 green(0, 255, 0, 255);
+  vec4 blue(0, 0, 255, 255);
+
+  bool use_color = false;
+  if(flag_ & kFlagColor) {
+    use_color = true;
+  }
+  //x axis - r
+  Append(vert_data, zero);
+  if(use_color) {
+    Append(vert_data, red);
+  }
+  Append(vert_data, xPos);
+  if(use_color) {
+    Append(vert_data, red);
+  }
+
+  //y axis - g
+  Append(vert_data, zero);
+  if(use_color) {
+    Append(vert_data, green);
+  }
+  Append(vert_data, yPos);
+  if(use_color) {
+    Append(vert_data, green);
+  }
+
+  //z axis - b
+  Append(vert_data, zero);
+  if(use_color) {
+    Append(vert_data, blue);
+  }
+  Append(vert_data, zPos);
+  if(use_color) {
+    Append(vert_data, blue);
+  }
+  return vert_data;
+}
+IndexListType PrimitiveModelBuilder::WireAxisIndexList() {
+  IndexListType index_list;
+  //create index list
+  for(GLushort i = 0 ; i < 6 ; i++) {
+    index_list.push_back(i);
+  }
+  return index_list;
+}
 }

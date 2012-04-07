@@ -55,8 +55,6 @@ public:
   void WireCylinder(float radius, float height, int slices);
   void SolidCylinder(float radius, float height, int slices);
 
-  void WireAxis(float size);
-
   void WireTeapot(float size);
   void SolidTeapot(float size);
 

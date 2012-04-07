@@ -22,6 +22,7 @@
 #define SORA_PRIMITIVE_MODEL_BUILDER_H_
 
 #include "mesh/vertex.h"
+#include "renderer/mesh.h"
 #include <vector>
 
 namespace sora {;
@@ -41,6 +42,7 @@ public:
 
   void SetCube(float width, float height, float depth);
   void SetSphere(float radius, int slices, int stacks);
+  void SetAxis(float size);
 
   //공통부분 복사
   template<typename VertexType>
@@ -48,12 +50,16 @@ public:
   static void DataToVertexList(const std::vector<float> &data, uint flag, std::vector<Vertex> &vert_list);
   static void DataToVertexList(const std::vector<float> &data, uint flag, std::vector<TangentVertex> &vert_list);
   static int CalcOffset(uint flag, int *pos, int *color, int *normal, int *texcoord, int *tangent);
+  
 
   std::vector<float> WireCubeVertexData();
   IndexListType WireCubeIndexList();
 
   std::vector<float> WireSphereVertexData();
   IndexListType WireSphereIndexList();
+
+  std::vector<float> WireAxisVertexData();
+  IndexListType WireAxisIndexList();
 
   uint flag() const { return flag_; }
 private:
@@ -67,7 +73,14 @@ private:
       int slices;
       int stacks;
     } sphere;
+    struct {
+      float size;
+    } axis;
   };
+
+  void Append(std::vector<float> &vert_data, const glm::vec2 &v);
+  void Append(std::vector<float> &vert_data, const glm::vec3 &v);
+  void Append(std::vector<float> &vert_data, const glm::vec4 &v);
 };
 
 template<typename VertexType>
@@ -116,6 +129,7 @@ void PrimitiveModelBuilder::DataToCommonVertexList(const std::vector<float> &dat
     vert_list.push_back(vert);
   }
 }
+
 }
 
 #endif  // SORA_PRIMITIVE_MODEL_BUILDER_H_

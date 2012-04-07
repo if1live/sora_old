@@ -209,17 +209,24 @@ bool setupGraphics(Device *device, int w, int h) {
     //primitive_model.SolidCube(0.5, 0.5, 0.5, true);
     //primitive_model.SolidSphere(0.5, 16, 16);
     //device->mesh_mgr().Add(primitive_model.GetDrawCmdList(), "model2");
-    sora::PrimitiveModelBuilder builder(0);
     vector<float> vert_data;
     vector<TangentVertex> vertex_list;
     IndexListType index_list;
     
+    //sora::PrimitiveModelBuilder builder(0);
     //builder.SetCube(1, 1, 1);
     //vert_data = builder.WireCubeVertexData();
     //index_list = builder.WireCubeIndexList();
-    builder.SetSphere(0.5, 16, 16);
-    vert_data = builder.WireSphereVertexData();
-    index_list = builder.WireSphereIndexList();
+
+    //sora::PrimitiveModelBuilder builder(0);
+    //builder.SetSphere(0.5, 16, 16);
+    //vert_data = builder.WireSphereVertexData();
+    //index_list = builder.WireSphereIndexList();
+
+    sora::PrimitiveModelBuilder builder(PrimitiveModelBuilder::kFlagColor);
+    builder.SetAxis(1);
+    vert_data = builder.WireAxisVertexData();
+    index_list = builder.WireAxisIndexList();
     builder.DataToVertexList(vert_data, builder.flag(), vertex_list);
 
     DrawCommand<TangentVertex> draw_cmd;
@@ -232,7 +239,7 @@ bool setupGraphics(Device *device, int w, int h) {
     
     vector< DrawCommand<TangentVertex> > draw_cmd_list;
     draw_cmd_list.push_back(draw_cmd);
-
+    
     device->mesh_mgr().Add(draw_cmd_list, "model2");
     mesh_name_list[obj_model_idx] = "model2";
 
