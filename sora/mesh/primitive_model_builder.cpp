@@ -474,7 +474,7 @@ IndexListType PrimitiveModelBuilder::WirePlaneIndexList() {
   return index_list;
 }
 
-std::vector<float> PrimitiveModelBuilder::WireTeapotVertexData() {
+std::vector<float> PrimitiveModelBuilder::TeapotVertexData() {
   CalcTeapotSize();
   float size = teapot.size;
   vector<float> vert_data;
@@ -489,11 +489,33 @@ std::vector<float> PrimitiveModelBuilder::WireTeapotVertexData() {
   }
   float scale = size / max_size;
 
-  vert_data.resize(NUM_TEAPOT_OBJECT_VERTEX * 3);
+  int pos_offset = 0;
+  int color_offset = -1;
+  int normal_offset = -1;
+  int texcoord_offset = -1;
+  int tangent_offset = -1;
+  int rowsize = CalcOffset(flag_, &pos_offset, &color_offset, &normal_offset, &texcoord_offset, &tangent_offset);
+
+  vert_data.resize(NUM_TEAPOT_OBJECT_VERTEX * rowsize);
   for(int i = 0 ; i < NUM_TEAPOT_OBJECT_VERTEX ; i++) {
-    vert_data[i*3+0] = teapotVertices[i * 3 + 0] * scale;
-    vert_data[i*3+1] = teapotVertices[i * 3 + 1] * scale;
-    vert_data[i*3+2] = teapotVertices[i * 3 + 2] * scale;
+    vert_data[i*3+pos_offset+0] = teapotVertices[i * 3 + 0] * scale;
+    vert_data[i*3+pos_offset+1] = teapotVertices[i * 3 + 1] * scale;
+    vert_data[i*3+pos_offset+2] = teapotVertices[i * 3 + 2] * scale;
+
+    if(color_offset != -1) {
+      for(int j = 0 ; j < 4 ; ++j) {
+        vert_data[i*3+color_offset+j] = 255;
+      }
+    }
+    if(normal_offset != -1) {
+      vert_data[i*3+normal_offset+0] = teapotNormals[i * 3 + 0];
+      vert_data[i*3+normal_offset+1] = teapotNormals[i * 3 + 1];
+      vert_data[i*3+normal_offset+2] = teapotNormals[i * 3 + 2];
+    }
+    if(texcoord_offset != -1) {
+      vert_data[i*3+texcoord_offset+0] = teapotTexCoords[i * 3 + 0];
+      vert_data[i*3+texcoord_offset+1] = teapotTexCoords[i * 3 + 1];
+    }
   }
   return vert_data;
 }
@@ -512,6 +534,16 @@ IndexListType PrimitiveModelBuilder::WireTeapotIndexList() {
     index_list.push_back(idx3);
 
     index_list.push_back(idx3);
+    index_list.push_back(idx1);
+  }
+  return index_list;
+}
+
+IndexListType PrimitiveModelBuilder::SolidTeapotIndexList() {
+  IndexListType index_list;
+  index_list.reserve(NUM_TEAPOT_OBJECT_INDEX);
+  for(int i = 0 ; i < NUM_TEAPOT_OBJECT_INDEX ; i++) {
+    int idx1 = teapotIndices[i];
     index_list.push_back(idx1);
   }
   return index_list;

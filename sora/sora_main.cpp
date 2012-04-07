@@ -232,32 +232,34 @@ bool setupGraphics(Device *device, int w, int h) {
     //vert_data = builder.WirePlaneVertexData();
     //index_list = builder.WirePlaneIndexList();
 
-    //sora::PrimitiveModelBuilder builder(0);
-    //builder.SetTeapot(2);
-    //vert_data = builder.WireTeapotVertexData();
+    sora::PrimitiveModelBuilder builder(0);
+    builder.SetTeapot(2);
+    vert_data = builder.TeapotVertexData();
     //index_list = builder.WireTeapotIndexList();
+    index_list = builder.SolidTeapotIndexList();
 
     //sora::PrimitiveModelBuilder builder(0);
     //builder.SetCone(1, 2, 8, 8);
     //vert_data = builder.WireConeVertexData();
     //index_list = builder.WireConeIndexList();
 
-    sora::PrimitiveModelBuilder builder(0);
-    builder.SetCylinder(1, 2, 8);
-    vert_data = builder.WireCylinderVertexData();
-    index_list = builder.WireCylinderIndexList();
+    //sora::PrimitiveModelBuilder builder(0);
+    //builder.SetCylinder(1, 2, 8);
+    //vert_data = builder.WireCylinderVertexData();
+    //index_list = builder.WireCylinderIndexList();
 
     vector<TangentVertex> vertex_list;
     builder.DataToVertexList(vert_data, builder.flag(), vertex_list);
 
     DrawCommand<TangentVertex> draw_cmd;
-    draw_cmd.draw_mode = GL_LINES;
+    //draw_cmd.draw_mode = GL_LINES;
+    draw_cmd.draw_mode = GL_TRIANGLES;
     draw_cmd.index_count = index_list.size();
     draw_cmd.index_ptr = &index_list[0];
     draw_cmd.index_type = GL_UNSIGNED_SHORT;
     draw_cmd.vert_count = vertex_list.size();
     draw_cmd.vert_ptr = &vertex_list[0];
-    
+
     vector< DrawCommand<TangentVertex> > draw_cmd_list;
     draw_cmd_list.push_back(draw_cmd);
     
