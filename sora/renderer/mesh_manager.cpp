@@ -30,25 +30,13 @@ namespace sora {;
 MeshManager::MeshManager() {
 }
 MeshManager::~MeshManager() {
-}
-
-bool MeshManager::AddWire(const ISurface &surface, const char *name) {
-  vector<Vertex> vert_list;
-  vector<unsigned short> index_list;
-  surface.GenerateVertices(vert_list);
-  surface.GenerateLineIndices(index_list);
-
-  DrawCommand<Vertex> draw_cmd;
-  draw_cmd.draw_mode = GL_LINES;
-  draw_cmd.index_count = index_list.size();
-  draw_cmd.vert_count = vert_list.size();
-  draw_cmd.index_type = GL_UNSIGNED_SHORT;
-  draw_cmd.vert_ptr = &vert_list[0];
-  draw_cmd.index_ptr = &index_list[0];
-
-  vector< DrawCommand<Vertex> > draw_cmd_list;
-  draw_cmd_list.push_back(draw_cmd);
-  return Add(draw_cmd_list, name);
+  auto it = mesh_dict_.begin();
+  auto endit = mesh_dict_.end();
+  for( ; it != endit ; ++it) {
+    MeshBufferObject &mesh_obj = it->second;
+    mesh_obj.Deinit();
+  }
+  mesh_dict_.clear();
 }
 
 MeshBufferObject *MeshManager::Get(const std::string &name) {
@@ -59,16 +47,15 @@ MeshBufferObject *MeshManager::Get(const std::string &name) {
     return &found->second;
   }
 }
-bool MeshManager::IsExist(const char *name) const {
-  std::string name_str(name);
-  auto found = mesh_dict_.find(name_str);
+bool MeshManager::IsExist(const std::string &name) const {
+  auto found = mesh_dict_.find(name);
   if(found == mesh_dict_.end()) {
     return false;
   } else {
     return true;
   }
 }
-bool MeshManager::Add(const MeshBufferObject &obj, const char *name) {
+bool MeshManager::Add(const MeshBufferObject &obj, const std::string &name) {
   if(IsExist(name) == true) {
     return false;
   }

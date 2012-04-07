@@ -36,61 +36,17 @@ public:
   MeshManager();
   ~MeshManager();
 
-  //단순선은 신경 안쓰고 그냥 vertex로 생성하면 된다
-  bool AddWire(const ISurface &surface, const char *name);
-
-  template<typename VertexType>
-  bool AddSolid(const ISurface &surface, const char *name);
-
-  template<typename VertexType>
-  bool Add(const std::vector< DrawCommand<VertexType> > &cmd_list, const char *name);
-  bool Add(const MeshBufferObject &obj, const char *name);
+  bool Add(const MeshBufferObject &obj, const std::string &name);
 
   MeshBufferObject *Get(const char *name) { return Get(std::string(name)); }
   MeshBufferObject *Get(const std::string &name);
-  bool IsExist(const char *name) const;
+  bool IsExist(const char *name) const { return IsExist(std::string(name)); }
+  bool IsExist(const std::string &name) const;
 
 private:
   typedef std::tr1::unordered_map<std::string, MeshBufferObject> MeshDictType;
   MeshDictType mesh_dict_;
 };
-
-template<typename VertexType>
-bool MeshManager::AddSolid(const ISurface &surface, const char *name) {
-  std::vector<VertexType> vert_list;
-  surface.GenerateVertices(vert_list);
-
-  std::vector<unsigned short> index_list;
-  surface.GenerateTriangleIndices(index_list);
-
-  DrawCommand<VertexType> draw_cmd;
-  draw_cmd.draw_mode = GL_TRIANGLES;
-  draw_cmd.index_count = index_list.size();
-  draw_cmd.vert_count = vert_list.size();
-  draw_cmd.index_type = GL_UNSIGNED_SHORT;
-  draw_cmd.vert_ptr = &vert_list[0];
-  draw_cmd.index_ptr = &index_list[0];
-
-  std::vector< DrawCommand<VertexType> > draw_cmd_list;
-  draw_cmd_list.push_back(draw_cmd);
-  return Add(draw_cmd_list, name);
-}
-
-template<typename VertexType>
-bool MeshManager::Add(const std::vector< DrawCommand<VertexType> > &cmd_list, const char *name) {
-  if(IsExist(name) == true) {
-    return false;
-  }
-
-  MeshBufferObject buffer_obj;
-  auto it = cmd_list.begin();
-  auto endit = cmd_list.end();
-  for( ; it != endit ; ++it) {
-    buffer_obj.Add(*it);
-  }
-  mesh_dict_[string(name)] = buffer_obj;
-  return true;
-}
 
 }
 

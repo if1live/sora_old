@@ -254,7 +254,9 @@ bool setupGraphics(Device *device, int w, int h) {
     TrefoilKnot surface(1.5f);
     //Sphere surface(1.0);
     //KleinBottle surface(0.2f);
-    device->mesh_mgr().AddSolid<TangentVertex>(surface, "knot");
+
+    MeshBufferObject mesh_obj = surface.CreateSolidMeshObject<TangentVertex>();
+    device->mesh_mgr().Add(mesh_obj, "knot");
     //MeshManager::GetInstance().AddWire(surface, "knot");
     mesh_name_list[obj_model_idx] = "knot";
   }
@@ -308,10 +310,10 @@ void renderFrame(Device *device) {
     unsigned int flag = 0;
     flag |= UberShader::kAmbientColor;
     flag |= UberShader::kAmbientMap;
-    //flag |= UberShader::kDiffuseColor;
-    //flag |= UberShader::kDiffuseMap;
-    //flag |= UberShader::kSpecularColor;
-    //flag |= UberShader::kSpecularMap;
+    flag |= UberShader::kDiffuseColor;
+    flag |= UberShader::kDiffuseMap;
+    flag |= UberShader::kSpecularColor;
+    flag |= UberShader::kSpecularMap;
     //flag |= UberShader::kNormalMap;
     ShaderProgram &shader = device->uber_shader(flag);
     render3d.SetShader(shader);
@@ -320,9 +322,9 @@ void renderFrame(Device *device) {
 
     //평면하나만 일단 렌더링해서 테스트하자
     render3d.SetLight(light);
-    int obj_idx = 2;
+    //int obj_idx = 2;
     //int obj_idx = 1;
-    //int obj_idx = 3;
+    int obj_idx = 3;
     const mat4 &world_mat = world_mat_list[obj_idx];
     render3d.ApplyMatrix(world_mat);
 
@@ -335,8 +337,8 @@ void renderFrame(Device *device) {
     mtl.diffuse_map = "mtl_diffuse";
     mtl.specular_map = "mtl_specular";
     mtl.normal_map = "mtl_normal";
-    //mtl.ambient = vec3(0.1, 0.1, 0.1);
-    mtl.ambient = vec3(1, 1, 1);
+    mtl.ambient = vec3(0.1, 0.1, 0.1);
+    //mtl.ambient = vec3(1, 1, 1);
     mtl.diffuse = vec3(0.5, 0.5, 0.5);
     mtl.specular = vec3(0.5, 0.5, 0.5);
     mtl.shininess = 20;
@@ -347,40 +349,6 @@ void renderFrame(Device *device) {
     MeshBufferObject *mesh = device->mesh_mgr().Get(mesh_name_list[obj_idx]);
     SR_ASSERT(mesh != NULL);
     render3d.Draw(*mesh);
-    /*
-    for(int i = 0 ; i < kMaxObject ; i++) {
-      const string &mesh_name = mesh_name_list[i];
-      if(mesh_name.empty()) {
-        break;
-      }
-      
-      const mat4 &world_mat = world_mat_list[i];
-      render3d.ApplyMatrix(world_mat);
-
-      if(i % 2 == 0) {
-        Texture *tex = device->texture_mgr().Get_ptr(string("sora2"));
-        Renderer::SetTexture(*tex);
-      } else {
-        Texture *tex = device->texture_mgr().Get_ptr(string("sora"));
-        Renderer::SetTexture(*tex);
-      }
-
-      if(i % 2 == 0) {
-        const sora::Material &mtl = device->material_mgr().Get("shinyred");
-        render3d.SetMaterial(mtl);
-      } else {
-        const sora::Material &mtl = device->material_mgr().Get("clearblue");
-        render3d.SetMaterial(mtl);
-      }
-      render3d.ApplyMaterialLight();
-      
-      MeshBufferObject *mesh = device->mesh_mgr().Get(mesh_name);
-      SR_ASSERT(mesh != NULL);
-      render3d.Draw(*mesh);
-
-      GLHelper::CheckError("Render End");
-    }
-    */
 
     GLHelper::CheckError("Render End");
   }

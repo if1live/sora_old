@@ -4,6 +4,7 @@
 
 
 #include "mesh/vertex.h"
+#include "renderer/mesh.h"
 
 namespace sora {;
 
@@ -16,6 +17,48 @@ struct ISurface {
   virtual void GenerateLineIndices(std::vector<unsigned short>& indices) const = 0;
   virtual void GenerateTriangleIndices(std::vector<unsigned short>& indices) const = 0;
   virtual ~ISurface() {}
+
+  template<typename VertexType>
+  MeshBufferObject CreateSolidMeshObject() {
+    std::vector<VertexType> vert_list;
+    GenerateVertices(vert_list);
+
+    std::vector<unsigned short> index_list;
+    GenerateTriangleIndices(index_list);
+
+    DrawCommand<VertexType> draw_cmd;
+    draw_cmd.draw_mode = GL_TRIANGLES;
+    draw_cmd.index_count = index_list.size();
+    draw_cmd.vert_count = vert_list.size();
+    draw_cmd.index_type = GL_UNSIGNED_SHORT;
+    draw_cmd.vert_ptr = &vert_list[0];
+    draw_cmd.index_ptr = &index_list[0];
+
+    MeshBufferObject mbo;
+    mbo.Add(draw_cmd);
+    return mbo;
+  }
+
+  template<typename VertexType>
+  MeshBufferObject CreateWireMeshObject() {
+    std::vector<VertexType> vert_list;
+    GenerateVertices(vert_list);
+
+    std::vector<unsigned short> index_list;
+    GenerateLineIndices(index_list);
+
+    DrawCommand<VertexType> draw_cmd;
+    draw_cmd.draw_mode = GL_LINES;
+    draw_cmd.index_count = index_list.size();
+    draw_cmd.vert_count = vert_list.size();
+    draw_cmd.index_type = GL_UNSIGNED_SHORT;
+    draw_cmd.vert_ptr = &vert_list[0];
+    draw_cmd.index_ptr = &index_list[0];
+
+    MeshBufferObject mbo;
+    mbo.Add(draw_cmd);
+    return mbo;
+  }
 };
 
 

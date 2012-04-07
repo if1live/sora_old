@@ -100,9 +100,11 @@ namespace celshading {
       //dev->mesh_mgr().Add(primitive_model.GetDrawCmdList(), kCube1);
       //Torus surface(0.5f, 0.2f);
       TrefoilKnot surface(1.0f);
+      MeshBufferObject solid_mesh_obj = surface.CreateSolidMeshObject<TangentVertex>();
+      MeshBufferObject wire_mesh_obj = surface.CreateWireMeshObject<TangentVertex>();
 
-      dev->mesh_mgr().AddSolid<TangentVertex>(surface, kSolid);
-      dev->mesh_mgr().AddWire(surface, kWire);
+      dev->mesh_mgr().Add(solid_mesh_obj, kSolid);
+      dev->mesh_mgr().Add(wire_mesh_obj, kWire);
     }
 
     {
