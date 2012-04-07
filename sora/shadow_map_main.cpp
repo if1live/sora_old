@@ -31,9 +31,10 @@
 #include "renderer/light.h"
 #include "renderer/mesh_manager.h"
 #include "sys/device.h"
-#include "renderer/primitive_model.h"
+#include "mesh/primitive_model.h"
 #include "renderer/gl_buffer_object.h"
 #include "renderer/camera.h"
+#include "renderer/renderer.h"
 
 #if SR_USE_PCH == 0
 #include <glm/glm.hpp>
@@ -49,8 +50,6 @@ namespace shadowmap {
 
   ShaderProgram shader;
   TextureManager tex_mgr;
-
-  ShaderProgram simple_shader;
 
   float win_width = 0;
   float win_height = 0;
@@ -98,21 +97,6 @@ namespace shadowmap {
         LOGE("Could not create program.");
       }
     }
-
-    {
-      std::string app_vert_path = sora::Filesystem::GetAppPath("shader/simple.vs");
-      std::string app_frag_path = sora::Filesystem::GetAppPath("shader/simple.fs");
-      sora::MemoryFile vert_file(app_vert_path);
-      sora::MemoryFile frag_file(app_frag_path);
-      vert_file.Open();
-      frag_file.Open();
-      const char *vert_src = (const char*)(vert_file.start);
-      const char *frag_src = (const char*)(frag_file.start);
-      bool prog_result = simple_shader.Init(vert_src, frag_src);
-      if(prog_result == false) {
-        LOGE("Could not create program.");
-      }
-    }
     {
       //set light
       light.pos = vec3(2, 3, 5);
@@ -133,7 +117,7 @@ namespace shadowmap {
     {
       //쉐도우 테스트용 큐브
       sora::PrimitiveModel primitive_model;
-      primitive_model.SolidCube(2, 2, 2, true);
+      primitive_model.SolidCube(2, 2, 2);
       dev->mesh_mgr().Add(primitive_model.GetDrawCmdList(), kCube1);
     }
 
@@ -252,12 +236,12 @@ namespace shadowmap {
       //draw 2d something
       glm::mat4 world_mat(1.0f);
 
-      int pos_loc = simple_shader.GetAttribLocation("a_position");
-      int tex_loc = simple_shader.GetAttribLocation("a_texcoord");
+      int pos_loc = dev->simple_shader().GetAttribLocation("a_position");
+      int tex_loc = dev->simple_shader().GetAttribLocation("a_texcoord");
       glEnableVertexAttribArray(pos_loc);
       glEnableVertexAttribArray(tex_loc);
 
-      int mvp_loc = simple_shader.GetUniformLocation("u_worldViewProjection");
+      int mvp_loc = dev->simple_shader().GetUniformLocation("u_worldViewProjection");
 
       float vertex[] = {
         -0.5, -0.5, 0,
@@ -273,7 +257,7 @@ namespace shadowmap {
       };
 
 
-      glUseProgram(simple_shader.prog);
+      glUseProgram(dev->simple_shader().prog);
 
       //Texture *tex = tex_mgr.Get_ptr(string("sora"));
       //glBindTexture(GL_TEXTURE_2D, tex->handle());
@@ -288,6 +272,7 @@ namespace shadowmap {
 
 
     GLHelper::CheckError("glDrawArrays");
+    Renderer::EndRender();
   }
   void update_frame(sora::Device *dev, float dt) {
     rot_deg += 0.1f;

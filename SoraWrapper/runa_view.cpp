@@ -34,7 +34,7 @@
 
 #include "renderer/obj_model.h"
 #include "renderer/obj_loader.h"
-#include "renderer/primitive_model.h"
+#include "mesh/primitive_model.h"
 #include "renderer/material_manager.h"
 
 #include "renderer/texture.h"
@@ -51,8 +51,8 @@
 #include "event/touch_device.h"
 #include "event/touch_event.h"
 
-#include "renderer/parametric_equations.h"
-#include "renderer/parametric_surface.h"
+#include "mesh/parametric_equations.h"
+#include "mesh/parametric_surface.h"
 #include "renderer/mesh_manager.h"
 #include "renderer/light.h"
 

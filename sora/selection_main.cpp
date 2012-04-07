@@ -31,7 +31,7 @@
 #include "renderer/light.h"
 #include "renderer/mesh_manager.h"
 #include "sys/device.h"
-#include "renderer/primitive_model.h"
+#include "mesh/primitive_model.h"
 #include "renderer/gl_buffer_object.h"
 #include "renderer/camera.h"
 
@@ -53,8 +53,6 @@ using namespace glm;
 
 namespace sora {;
 namespace selection {
-  ShaderProgram simple_shader;
-
   float win_width = 0;
   float win_height = 0;
   float rot_deg = 0;
@@ -70,14 +68,7 @@ namespace selection {
     win_width = (float)w;
     win_height = (float)h;
 
-    
-    //create shader
-    {
-      std::string app_vert_path = sora::Filesystem::GetAppPath("shader/simple.vs");
-      std::string app_frag_path = sora::Filesystem::GetAppPath("shader/simple.fs");
-      simple_shader.LoadFromFile(app_vert_path, app_frag_path);
-    }
-    
+   
     {
       //쉐도우 테스트용 평면
       sora::PrimitiveModel primitive_model;
@@ -92,7 +83,7 @@ namespace selection {
     {
       //쉐도우 테스트용 큐브
       sora::PrimitiveModel primitive_model;
-      primitive_model.SolidCube(2, 2, 2, true);
+      primitive_model.SolidCube(2, 2, 2);
       dev->mesh_mgr().Add(primitive_model.GetDrawCmdList(), kCube1);
     }
 
@@ -165,7 +156,7 @@ namespace selection {
     //flag |= UberShader::kAmbientColor;
     //flag |= UberShader::kAmbientMap;
     //DrawScene(dev, dev->uber_shader(flag));
-    DrawScene(dev, simple_shader);
+    DrawScene(dev, dev->simple_shader());
     
     //DrawScene(dev, *selection_buffer.shader());
 

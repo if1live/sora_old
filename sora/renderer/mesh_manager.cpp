@@ -21,8 +21,8 @@
 #include "sora_stdafx.h"
 #include "mesh_manager.h"
 
-#include "parametric_equations.h"
-#include "parametric_surface.h"
+#include "mesh/parametric_equations.h"
+#include "mesh/parametric_surface.h"
 
 using namespace std;
 

@@ -31,7 +31,7 @@
 #include "renderer/light.h"
 #include "renderer/mesh_manager.h"
 #include "sys/device.h"
-#include "renderer/primitive_model.h"
+#include "mesh/primitive_model.h"
 #include "renderer/gl_buffer_object.h"
 #include "renderer/camera.h"
 #include "renderer/renderer.h"
@@ -52,7 +52,6 @@ namespace depthmap {
 
   float win_width = 0;
   float win_height = 0;
-  ShaderProgram simple_shader;
 
   ShaderProgram depth_tex_shader;
   ShaderProgram gray_depth_tex_shader;
@@ -73,11 +72,6 @@ namespace depthmap {
 
     //create shader
     {
-      std::string app_vert_path = sora::Filesystem::GetAppPath("shader/simple.vs");
-      std::string app_frag_path = sora::Filesystem::GetAppPath("shader/simple.fs");
-      simple_shader.LoadFromFile(app_vert_path, app_frag_path);
-    }
-    {
       std::string app_vert_path = sora::Filesystem::GetAppPath("shader/depth_tex.vs");
       std::string app_frag_path = sora::Filesystem::GetAppPath("shader/depth_tex.fs");
       depth_tex_shader.LoadFromFile(app_vert_path, app_frag_path);
@@ -96,7 +90,7 @@ namespace depthmap {
     {
       //테스트용 큐브
       sora::PrimitiveModel primitive_model;
-      primitive_model.SolidCube(2, 2, 4, true);
+      primitive_model.SolidCube(2, 2, 4);
       dev->mesh_mgr().Add(primitive_model.GetDrawCmdList(), kCube1);
     }
     {
@@ -148,7 +142,7 @@ namespace depthmap {
       glViewport(0, 0, (int)win_width, (int)win_height);
 
       Renderer &render3d = dev->render3d();
-      render3d.SetShader(simple_shader);
+      render3d.SetShader(dev->simple_shader());
 
       Camera cam;
       cam.eye = vec3(-4, 6, 10);

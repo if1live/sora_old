@@ -39,9 +39,7 @@ const char *enable_define_list[] = {
   "#define AMBIENT_MAP_MASK 1 \n",
   "#define DIFFUSE_MAP_MASK 1 \n",
   "#define SPECULAR_MAP_MASK 1 \n",
-  "#define TEXTURE_MASK 1 \n",
-  "#define MODEL_COLOR_MASK 1 \n",
-  "#define CONST_COLOR_MASK 1 \n",
+  "#define NORMAL_MAP_MASK 1 \n",
 };
 const char *disable_define_list[] = {
   "#define AMBIENT_MASK 0 \n",
@@ -50,9 +48,7 @@ const char *disable_define_list[] = {
   "#define AMBIENT_MAP_MASK 0 \n",
   "#define DIFFUSE_MAP_MASK 0 \n",
   "#define SPECULAR_MAP_MASK 0 \n",
-  "#define TEXTURE_MASK 0 \n",
-  "#define MODEL_COLOR_MASK 0 \n",
-  "#define CONST_COLOR_MASK 0 \n",
+  "#define NORMAL_MAP_MASK 0 \n",
 };
 
 

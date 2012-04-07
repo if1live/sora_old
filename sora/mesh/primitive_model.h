@@ -21,8 +21,8 @@
 #ifndef SORA_PRIMITIVE_MODEL_H_
 #define SORA_PRIMITIVE_MODEL_H_
 
-#include "vertex.h"
-#include "mesh.h"
+#include "mesh/vertex.h"
+#include "renderer/mesh.h"
 #if SR_USE_PCH == 0
 #include <vector>
 #include "gl_inc.h"
@@ -34,24 +34,27 @@ struct PrimitiveModelImpl;
 typedef std::vector<Vertex> VertexListType;
 typedef std::vector<ushort> IndexListType;
 
-class SR_DLL PrimitiveModel {
+class PrimitiveModel {
 public:
   PrimitiveModel();
   ~PrimitiveModel();
   PrimitiveModel(const PrimitiveModel &o);
   PrimitiveModel& operator=(const PrimitiveModel &o);
-  //use GL_TRIANGLES
+  
   void WireCube(float width, float height, float depth);
+  void SolidCube(float width, float height, float depth);
 
-  //discreate normal : true=>면단위로 noraml확정, false=>구같은 느낌의 노멀벡터 사용
-  void SolidCube(float width, float height, float depth, bool discreate_normal);
   void WireSphere(float radius, int slices, int stacks);
   void SolidSphere(float radius, int slices, int stacks);
+
   void WireCone(float base, float height, int slices, int stacks);
   void SolidCone(float base, float height, int slices, int stacks);
+
   void WireCylinder(float radius, float height, int slices);
   void SolidCylinder(float radius, float height, int slices);
+
   void WireAxis(float size);
+
   void WireTeapot(float size);
   void SolidTeapot(float size);
 

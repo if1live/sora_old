@@ -31,7 +31,7 @@
 #include "renderer/light.h"
 #include "renderer/mesh_manager.h"
 #include "sys/device.h"
-#include "renderer/primitive_model.h"
+#include "mesh/primitive_model.h"
 #include "renderer/gl_buffer_object.h"
 #include "renderer/camera.h"
 
@@ -39,8 +39,8 @@
 #include "event/touch_event.h"
 #include "core/math_helper.h"
 
-#include "renderer/parametric_surface.h"
-#include "renderer/parametric_equations.h"
+#include "mesh/parametric_surface.h"
+#include "mesh/parametric_equations.h"
 #include "renderer/renderer.h"
 #include "renderer/uber_shader.h"
 #include "renderer/light.h"

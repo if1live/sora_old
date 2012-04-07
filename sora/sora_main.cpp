@@ -47,7 +47,7 @@
 
 #include "renderer/obj_model.h"
 #include "renderer/obj_loader.h"
-#include "renderer/primitive_model.h"
+#include "mesh/primitive_model.h"
 #include "renderer/material_manager.h"
 
 #include "renderer/texture.h"
@@ -65,8 +65,8 @@
 #include "event/touch_event.h"
 #include "event/keyboard_event.h"
 
-#include "renderer/parametric_equations.h"
-#include "renderer/parametric_surface.h"
+#include "mesh/parametric_equations.h"
+#include "mesh/parametric_surface.h"
 #include "renderer/mesh_manager.h"
 #include "renderer/light.h"
 
@@ -182,10 +182,12 @@ bool setupGraphics(Device *device, int w, int h) {
     //entity_mat = glm::rotate(glm::mat4(1.0f), 180.0f, vec3(1, 0, 0));
     world_mat_list[obj_model_idx] = entity_mat;
 
-    //primitive_model.SolidSphere(0.5, 16, 16);
+    primitive_model.SolidSphere(0.5, 16, 16);
     //primitive_model.WirePlane(10.0f, 0.5f);
     //primitive_model.SolidPlane(2.0f);
-    primitive_model.WireAxis(3);
+    //primitive_model.WireAxis(3);
+    //primitive_model.SolidCylinder(0.5, 2, 16);
+    //primitive_model.SolidCone(1, 2, 8, 8);
     device->mesh_mgr().Add(primitive_model.GetDrawCmdList(), "model1");
     mesh_name_list[obj_model_idx] = "model1";
   }
@@ -280,9 +282,9 @@ void renderFrame(Device *device) {
     unsigned int flag = 0;
     flag |= UberShader::kAmbientColor;
     //flag |= UberShader::kAmbientMap;
-    //flag |= UberShader::kDiffuseColor;
+    flag |= UberShader::kDiffuseColor;
     //flag |= UberShader::kDiffuseMap;
-    //flag |= UberShader::kSpecularColor;
+    flag |= UberShader::kSpecularColor;
     //flag |= UberShader::kSpecularMap;
     ShaderProgram &shader = device->uber_shader(flag);
     render3d.SetShader(shader);
@@ -304,8 +306,8 @@ void renderFrame(Device *device) {
     mtl.ambient_map = "sora2";
     mtl.diffuse_map = "mtl_diffuse";
     mtl.specular_map = "mtl_specular";
-    //mtl.ambient = vec3(0.1, 0.1, 0.1);
-    mtl.ambient = vec3(1, 1, 1);
+    mtl.ambient = vec3(0.1, 0.1, 0.1);
+    //mtl.ambient = vec3(1, 1, 1);
     mtl.diffuse = vec3(0.5, 0.5, 0.5);
     mtl.specular = vec3(0.5, 0.5, 0.0);
     mtl.shininess = 50;
@@ -353,7 +355,7 @@ void renderFrame(Device *device) {
 
     GLHelper::CheckError("Render End");
   }
-  /*
+  
   {
     GLHelper::CheckError("Render 2d start");
     Renderer &render2d = device->render2d();
@@ -397,7 +399,7 @@ void renderFrame(Device *device) {
     glDrawElements(GL_TRIANGLES, label.index_count(), GL_UNSIGNED_SHORT, label.index_data());
     GLHelper::CheckError("glDrawArrays");
   }
-  */
+  
   //////////////////////////////
   Renderer::EndRender();
 }
@@ -512,7 +514,7 @@ void SORA_update_frame(Device *device, float dt) {
   }
 
   //check key
-  float x = 0.3f;
+  float x = 3.0f;
   KeyboardEventQueue &keyboard_evt_queue = device->keyboard_evt_queue();
   while(keyboard_evt_queue.IsEmpty() == false) {
     KeyboardEvent evt = keyboard_evt_queue.Get();

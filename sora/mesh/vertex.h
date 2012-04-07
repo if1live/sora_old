@@ -53,8 +53,6 @@ struct Vertex {
     kColorType = GL_UNSIGNED_BYTE,
   };
   Vertex() : pos(0, 0, 0), texcoord(0, 0), normal(1, 0, 0), color(1, 1, 1, 1) {}
-  Vertex(float x, float y, float z, float s, float t, float nx, float ny, float nz, uchar r, uchar g, uchar b, uchar a)
-    : pos(x, y, z), texcoord(s, t), normal(nx, ny, nz), color(r, g, b, a) {}
   glm::vec3 pos;
   glm::vec2 texcoord;
   glm::vec3 normal;

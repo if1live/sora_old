@@ -38,8 +38,9 @@ public:
     kAmbientMap = 1 << 3,
     kDiffuseMap = 1 << 4,
     kSpecularMap = 1 << 5,
+    kNormalMap = 1 << 6,
     //simple attribute
-    kAlbedo = 1 << 6,
+    //kAlbedo = 1 << 7,
   };
 public:
   UberShader();

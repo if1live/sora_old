@@ -19,9 +19,10 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_stdafx.h"
-#include "primitive_model.h"
+#include "mesh/primitive_model.h"
 #include "core/template_lib.h"
 #include "core/math_helper.h"
+#include "mesh_helper.h"
 
 #if SR_USE_PCH == 0
 #include "gl_inc.h"
@@ -113,8 +114,17 @@ const void *PrimitiveModel::index_list(int idx) const {
   return &impl->index_list_group[idx].at(0);
 }
 int PrimitiveModel::vertex_count(int idx) const {
+  //SR_ASSERT(idx >= 0 && idx < Count());
+  //return impl->vert_list_group[idx].size();
   SR_ASSERT(idx >= 0 && idx < Count());
-  return impl->vert_list_group[idx].size();
+  const VertexListType &vert_list = impl->vert_list_group[idx];
+  if(vert_list.empty() == false) {
+    return vert_list.size();
+  } else {
+    //0번인덱스를 대표값으로 쓰자
+    const VertexListType &vert_list = impl->vert_list_group[0];  
+    return vert_list.size();
+  }
 }
 int PrimitiveModel::index_count(int idx) const {
   SR_ASSERT(idx >= 0 && idx < Count());
@@ -185,9 +195,12 @@ void PrimitiveModel::WireCube(float width, float height, float depth) {
   for(size_t i = 0 ; i < sizeof(indexList) / sizeof(GLushort) ; i++) {
     index_list.push_back(indexList[i]);
   }
+
+  //auto gen normal
+  MeshHelper<Vertex>::BuildNormal(vert_list, index_list);
 }
 
-void PrimitiveModel::SolidCube(float width, float height, float depth, bool discreate_normal) {
+void PrimitiveModel::SolidCube(float width, float height, float depth) {
   SR_ASSERT(width > 0 && height > 0 && depth > 0);
   width = width/2;
   height = height/2;
@@ -210,8 +223,6 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
     // Front Face
     int baseIndex = vert_list.size();
 
-    vec3 normal(0, 0, 1);
-
     vec2 texCoord1(0, 0);	vec3 vertex1(-width, -height, depth);
     vec2 texCoord2(1, 0);	vec3 vertex2( width, -height, depth);
     vec2 texCoord3(1, 1);	vec3 vertex3( width,  height, depth);
@@ -222,18 +233,6 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
     Vertex v2;  v2.pos = vertex2; v2.texcoord = texCoord2;
     Vertex v3;  v3.pos = vertex3; v3.texcoord = texCoord3;
     Vertex v4;  v4.pos = vertex4; v4.texcoord = texCoord4;
-    //set normal
-    if(discreate_normal) {
-      v1.normal = normal;
-      v2.normal = normal;
-      v3.normal = normal;
-      v4.normal = normal;
-    } else {
-      v1.normal = glm::normalize((vertex1 - vec3(0, 0, 0)));
-      v2.normal = glm::normalize((vertex2 - vec3(0, 0, 0)));
-      v3.normal = glm::normalize((vertex3 - vec3(0, 0, 0)));
-      v4.normal = glm::normalize((vertex4 - vec3(0, 0, 0)));
-    }
 
     vert_list.push_back(v1);
     vert_list.push_back(v2);
@@ -252,7 +251,6 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
   {
     // Back Face
     int baseIndex = vert_list.size();
-    vec3 normal(0, 0, -1);
 
     vec2 texCoord1(1, 0);	vec3 vertex1(-width, -height, -depth);
     vec2 texCoord2(1, 1);	vec3 vertex2(-width,  height, -depth);
@@ -264,18 +262,6 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
     Vertex v2;  v2.pos = vertex2; v2.texcoord = texCoord2;
     Vertex v3;  v3.pos = vertex3; v3.texcoord = texCoord3;
     Vertex v4;  v4.pos = vertex4; v4.texcoord = texCoord4;
-    //set normal
-    if(discreate_normal) {
-      v1.normal = normal;
-      v2.normal = normal;
-      v3.normal = normal;
-      v4.normal = normal;
-    } else {
-      v1.normal = glm::normalize(vertex1 - vec3(0, 0, 0));
-      v2.normal = glm::normalize(vertex2 - vec3(0, 0, 0));
-      v3.normal = glm::normalize(vertex3 - vec3(0, 0, 0));
-      v4.normal = glm::normalize(vertex4 - vec3(0, 0, 0));
-    }
 
     vert_list.push_back(v1);
     vert_list.push_back(v2);
@@ -295,7 +281,6 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
   {
     // Top Face
     int baseIndex = vert_list.size();
-    vec3 normal(0, 1, 0);
 
     vec2 texCoord1(0, 1);	vec3 vertex1(-width, height, -depth);
     vec2 texCoord2(0, 0);	vec3 vertex2(-width, height,  depth);
@@ -307,18 +292,6 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
     Vertex v2;  v2.pos = vertex2; v2.texcoord = texCoord2;
     Vertex v3;  v3.pos = vertex3; v3.texcoord = texCoord3;
     Vertex v4;  v4.pos = vertex4; v4.texcoord = texCoord4;
-    //set normal
-    if(discreate_normal) {
-      v1.normal = normal;
-      v2.normal = normal;
-      v3.normal = normal;
-      v4.normal = normal;
-    } else {
-      v1.normal = glm::normalize(vertex1 - vec3(0, 0, 0));
-      v2.normal = glm::normalize(vertex2 - vec3(0, 0, 0));
-      v3.normal = glm::normalize(vertex3 - vec3(0, 0, 0));
-      v4.normal = glm::normalize(vertex4 - vec3(0, 0, 0));
-    }
 
     vert_list.push_back(v1);
     vert_list.push_back(v2);
@@ -338,7 +311,6 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
   {
     // Bottom Face
     int baseIndex = vert_list.size();
-    vec3 normal(0, -1, 0);
 
     vec2 texCoord1(1, 1);	vec3 vertex1(-width, -height, -depth);
     vec2 texCoord2(0, 1);	vec3 vertex2( width, -height, -depth);
@@ -350,18 +322,6 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
     Vertex v2;  v2.pos = vertex2; v2.texcoord = texCoord2;
     Vertex v3;  v3.pos = vertex3; v3.texcoord = texCoord3;
     Vertex v4;  v4.pos = vertex4; v4.texcoord = texCoord4;
-    //set normal
-    if(discreate_normal) {
-      v1.normal = normal;
-      v2.normal = normal;
-      v3.normal = normal;
-      v4.normal = normal;
-    } else {
-      v1.normal = glm::normalize(vertex1 - vec3(0, 0, 0));
-      v2.normal = glm::normalize(vertex2 - vec3(0, 0, 0));
-      v3.normal = glm::normalize(vertex3 - vec3(0, 0, 0));
-      v4.normal = glm::normalize(vertex4 - vec3(0, 0, 0));
-    }
 
     vert_list.push_back(v1);
     vert_list.push_back(v2);
@@ -381,7 +341,6 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
   {
     // Right face
     int baseIndex = vert_list.size();
-    vec3 normal(1, 0, 0);
 
     vec2 texCoord1(1, 0);	vec3 vertex1(width, -height, -depth);
     vec2 texCoord2(1, 1);	vec3 vertex2(width,  height, -depth);
@@ -393,18 +352,6 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
     Vertex v2;  v2.pos = vertex2; v2.texcoord = texCoord2;
     Vertex v3;  v3.pos = vertex3; v3.texcoord = texCoord3;
     Vertex v4;  v4.pos = vertex4; v4.texcoord = texCoord4;
-    //set normal
-    if(discreate_normal) {
-      v1.normal = normal;
-      v2.normal = normal;
-      v3.normal = normal;
-      v4.normal = normal;
-    } else {
-      v1.normal = glm::normalize(vertex1 - vec3(0, 0, 0));
-      v2.normal = glm::normalize(vertex2 - vec3(0, 0, 0));
-      v3.normal = glm::normalize(vertex3 - vec3(0, 0, 0));
-      v4.normal = glm::normalize(vertex4 - vec3(0, 0, 0));
-    }
 
     vert_list.push_back(v1);
     vert_list.push_back(v2);
@@ -424,7 +371,6 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
   {
     // Left Face
     int baseIndex = vert_list.size();
-    vec3 normal(-1, 0, 0);
 
     vec2 texCoord1(0, 0);	vec3 vertex1(-width, -height, -depth);
     vec2 texCoord2(1, 0);	vec3 vertex2(-width, -height,  depth);
@@ -436,18 +382,6 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
     Vertex v2;  v2.pos = vertex2; v2.texcoord = texCoord2;
     Vertex v3;  v3.pos = vertex3; v3.texcoord = texCoord3;
     Vertex v4;  v4.pos = vertex4; v4.texcoord = texCoord4;
-    //set normal
-    if(discreate_normal) {
-      v1.normal = normal;
-      v2.normal = normal;
-      v3.normal = normal;
-      v4.normal = normal;
-    } else {
-      v1.normal = glm::normalize(vertex1 - vec3(0, 0, 0));
-      v2.normal = glm::normalize(vertex2 - vec3(0, 0, 0));
-      v3.normal = glm::normalize(vertex3 - vec3(0, 0, 0));
-      v4.normal = glm::normalize(vertex4 - vec3(0, 0, 0));
-    }
 
     vert_list.push_back(v1);
     vert_list.push_back(v2);
@@ -463,6 +397,9 @@ void PrimitiveModel::SolidCube(float width, float height, float depth, bool disc
     index_list.push_back(baseIndex + 2);
     index_list.push_back(baseIndex + 3);
   }
+
+  //auto build normal
+  MeshHelper<Vertex>::BuildNormal(vert_list, index_list);
 }
 void PrimitiveModel::WireSphere(float radius, int slices, int stacks) {
   SR_ASSERT(radius > 0);
@@ -503,7 +440,6 @@ void PrimitiveModel::WireSphere(float radius, int slices, int stacks) {
   for(it = tmp_vertex_list.begin() ; it != tmp_vertex_list.end() ; it++) {
     const vec3 &pos = *it;
     Vertex vertex;
-    vertex.normal = pos;
     vertex.pos = pos * radius;
     vert_list.push_back(vertex);
   }
@@ -569,8 +505,6 @@ void PrimitiveModel::SolidSphere(float radius, int slices, int stacks) {
       texCoordList.push_back(texCoord);
     }
   }
-
-  //normal vector = 반지름1인 pso
 
   //vertex 구성
   for(std::size_t i = 0 ; i < posList.size() ; i++) {

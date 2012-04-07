@@ -21,7 +21,7 @@
 #ifndef SORA_FONT_H_
 #define SORA_FONT_H_
 
-#include "vertex.h"
+#include "mesh/vertex.h"
 #if SR_USE_PCH == 0
 #include <vector>
 #include <string>

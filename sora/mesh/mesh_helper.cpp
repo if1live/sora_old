@@ -18,43 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_OBJ_MODEL_H_
-#define SORA_OBJ_MODEL_H_
+#include "sora_stdafx.h"
+#include "mesh_helper.h"
 
-#include "mesh/vertex.h"
-#include "mesh.h"
-#if SR_USE_PCH == 0
-#include <vector>
-#endif
+using namespace std;
+using namespace glm;
 
 namespace sora {;
-
-struct ObjModel;
-
-struct SR_DLL ObjModel {
-  ObjModel();
-  ~ObjModel();
-  ObjModel(const ObjModel &o);
-  ObjModel& operator=(const ObjModel &o);
-
-  const Vertex *vertex_ptr() const;
-  const void *index_ptr() const;
-  int vertex_count() const;
-  int index_count() const;
-
-  std::vector<DrawCommand> GetDrawCmdList_wire() const;
-  std::vector<DrawCommand> GetDrawCmdList_solid() const;
-
-  void AddVertex(const Vertex &v);
-  void AddIndex(ushort idx);
-
-private:
-  std::vector<Vertex> vert_list_;
-  // GL_TRIANGLES로 그릴수 잇도록 정렬된 인덱스 리스트
-  std::vector<ushort> index_list_;
-  // GL_LINES로 그릴수 잇도록 정렬된거. 거의 테스트용으로 쓰일테니까 최적화는 안함
-  mutable std::vector<ushort> line_index_list_;
-};
 }
-
-#endif  // SORA_OBJ_MODEL_H_

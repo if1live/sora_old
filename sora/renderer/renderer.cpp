@@ -26,7 +26,7 @@
 #include "shader.h"
 #include "material.h"
 #include "obj_model.h"
-#include "primitive_model.h"
+#include "mesh/primitive_model.h"
 #include "core/template_lib.h"
 #include "uber_shader.h"
 #include "texture_manager.h"
