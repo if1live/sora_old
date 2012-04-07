@@ -216,64 +216,19 @@ bool setupGraphics(Device *device, int w, int h) {
     total_flag |= PrimitiveModelBuilder::kFlagColor;
     total_flag |= PrimitiveModelBuilder::kFlagTexcoord;
     total_flag |= PrimitiveModelBuilder::kFlagNormal;
-    
-    //sora::PrimitiveModelBuilder builder(0);
-    //builder.SetCube(1, 1, 1);
-    //vert_data = builder.WireCubeVertexData();
-    //index_list = builder.WireCubeIndexList();
 
-    //sora::PrimitiveModelBuilder builder(0);
-    //sora::PrimitiveModelBuilder builder(total_flag);
-    //builder.SetSphere(0.5, 16, 16);
-    //vert_data = builder.WireSphereVertexData();
-    //index_list = builder.WireSphereIndexList();
-    //vert_data = builder.SolidSphereVertexData();
-    //index_list = builder.SolidSphereIndexList();
+    MeshBufferObject mesh_obj;
+    //mesh_obj = PrimitiveModelBuilder::WireCube<TangentVertex>(0, 1, 1, 1);
+    //mesh_obj = PrimitiveModelBuilder::WireSphere<TangentVertex>(0, 0.5, 16, 16);
+    //mesh_obj = PrimitiveModelBuilder::SolidSphere<TangentVertex>(total_flag, 0.5, 16, 16);
+    //mesh_obj = PrimitiveModelBuilder::WireAxis<TangentVertex>(PrimitiveModelBuilder::kFlagColor, 1);
+    //mesh_obj = PrimitiveModelBuilder::WirePlane<TangentVertex>(0, 5, 0.2);
+    //mesh_obj = PrimitiveModelBuilder::SolidPlane<TangentVertex>(PrimitiveModelBuilder::kFlagTexcoord, 5);
+    //mesh_obj = PrimitiveModelBuilder::WireTeapot<TangentVertex>(0, 2);
+    //mesh_obj = PrimitiveModelBuilder::SolidTeapot<TangentVertex>(0, 2);
+    //mesh_obj = PrimitiveModelBuilder::WireCone<TangentVertex>(0, 1, 2, 8, 8);
+    mesh_obj = PrimitiveModelBuilder::WireCylinder<TangentVertex>(0, 1, 2, 8);
 
-    //sora::PrimitiveModelBuilder builder(PrimitiveModelBuilder::kFlagColor);
-    //builder.SetAxis(1);
-    //vert_data = builder.WireAxisVertexData();
-    //index_list = builder.WireAxisIndexList();
-
-    //sora::PrimitiveModelBuilder builder(PrimitiveModelBuilder::kFlagTexcoord);
-    //builder.SetPlane(4, 0.5);
-    //vert_data = builder.WirePlaneVertexData();
-    //index_list = builder.WirePlaneIndexList();
-    //vert_data = builder.SolidPlaneVertexData();
-    //index_list = builder.SolidPlaneIndexList();
-
-    //sora::PrimitiveModelBuilder builder(0);
-    //builder.SetTeapot(2);
-    //vert_data = builder.TeapotVertexData();
-    //index_list = builder.WireTeapotIndexList();
-    //index_list = builder.SolidTeapotIndexList();
-
-    //sora::PrimitiveModelBuilder builder(0);
-    //builder.SetCone(1, 2, 8, 8);
-    //vert_data = builder.WireConeVertexData();
-    //index_list = builder.WireConeIndexList();
-
-    //sora::PrimitiveModelBuilder builder(0);
-    //builder.SetCylinder(1, 2, 8);
-    //vert_data = builder.WireCylinderVertexData();
-    //index_list = builder.WireCylinderIndexList();
-    /*
-    vector<TangentVertex> vertex_list;
-    builder.DataToVertexList(vert_data, builder.flag(), vertex_list);
-
-    DrawCommand<TangentVertex> draw_cmd;
-    //draw_cmd.draw_mode = GL_LINES;
-    draw_cmd.draw_mode = GL_TRIANGLES;
-    draw_cmd.index_count = index_list.size();
-    draw_cmd.index_ptr = &index_list[0];
-    draw_cmd.index_type = GL_UNSIGNED_SHORT;
-    draw_cmd.vert_count = vertex_list.size();
-    draw_cmd.vert_ptr = &vertex_list[0];
-
-    vector< DrawCommand<TangentVertex> > draw_cmd_list;
-    draw_cmd_list.push_back(draw_cmd);
-    */
-    MeshBufferObject mesh_obj = PrimitiveModelBuilder::CreateWireCube<TangentVertex>(0, 1, 1, 1);
     device->mesh_mgr().Add(mesh_obj, "model2");
     mesh_name_list[obj_model_idx] = "model2";
 
@@ -499,8 +454,7 @@ void SORA_update_frame(Device *device, float dt) {
 
   TouchEventQueue &touch_evt_queue = device->touch_evt_queue();
 
-#if SR_WIN
-#if SR_GLES == 0
+#if SR_WIN && (SR_GLES == 0)
   // touch event
   TouchDevice &touch_device = TouchDevice::GetInstance();
   //glfw 대응 소스
@@ -520,7 +474,6 @@ void SORA_update_frame(Device *device, float dt) {
   for( ; touch_evt_it != touch_evt_endit ; ++touch_evt_it) {
     touch_evt_queue.Push(*touch_evt_it);
   }
-#endif
 #endif
 
   //터치 메세지 꺼내서 실제로 까보기

@@ -91,10 +91,35 @@ public:
 public:
   template<typename VertexType>
   static MeshBufferObject CreateWireMesh(PrimitiveModelBuilder &builder, VertexDataFunc vert_func, IndexFunc index_func);
+  template<typename VertexType>
+  static MeshBufferObject CreateSolidMesh(PrimitiveModelBuilder &builder, VertexDataFunc vert_func, IndexFunc index_func);
 
   template<typename VertexType>
-  static MeshBufferObject CreateWireCube(uint flag, float width, float height, float depth);
+  static MeshBufferObject WireCube(uint flag, float width, float height, float depth);
+  
+  template<typename VertexType>
+  static MeshBufferObject WireSphere(uint flag, float radius, int slices, int stacks);
+  template<typename VertexType>
+  static MeshBufferObject SolidSphere(uint flag, float radius, int slices, int stacks);
 
+  template<typename VertexType>
+  static MeshBufferObject WireAxis(uint flag, float size);
+
+  template<typename VertexType>
+  static MeshBufferObject WirePlane(uint flag, float half_size, float grid_size);
+  template<typename VertexType>
+  static MeshBufferObject SolidPlane(uint flag, float half_size);
+
+  template<typename VertexType>
+  static MeshBufferObject WireTeapot(uint flag, float size);
+  template<typename VertexType>
+  static MeshBufferObject SolidTeapot(uint flag, float size);
+
+  template<typename VertexType>
+  static MeshBufferObject WireCone(uint flag, float base, float height, int slices, int stacks);
+
+  template<typename VertexType>
+  static MeshBufferObject WireCylinder(uint flag, float radius, float height, int slices);
 
 private:
   unsigned int flag_;
@@ -215,13 +240,113 @@ MeshBufferObject PrimitiveModelBuilder::CreateWireMesh(PrimitiveModelBuilder &bu
 }
 
 template<typename VertexType>
-MeshBufferObject PrimitiveModelBuilder::CreateWireCube(uint flag, float width, float height, float depth) {
+MeshBufferObject PrimitiveModelBuilder::CreateSolidMesh(PrimitiveModelBuilder &builder, VertexDataFunc vert_func, IndexFunc index_func) {
+  vector<float> vert_data = vert_func(builder);
+  IndexListType index_list = index_func(builder);
+
+  vector<TangentVertex> vertex_list;
+  builder.DataToVertexList(vert_data, builder.flag(), vertex_list);
+
+  DrawCommand<VertexType> draw_cmd;
+  draw_cmd.draw_mode = GL_TRIANGLES;
+  draw_cmd.index_count = index_list.size();
+  draw_cmd.index_ptr = &index_list[0];
+  draw_cmd.index_type = GL_UNSIGNED_SHORT;
+  draw_cmd.vert_count = vertex_list.size();
+  draw_cmd.vert_ptr = &vertex_list[0];
+
+  MeshBufferObject mbo;
+  mbo.Add(draw_cmd);
+  return mbo;
+}
+
+template<typename VertexType>
+MeshBufferObject PrimitiveModelBuilder::WireCube(uint flag, float width, float height, float depth) {
   PrimitiveModelBuilder builder(flag);
   builder.SetCube(width, height, depth);
 
   auto vert_data_func = mem_fun_ref(&PrimitiveModelBuilder::WireCubeVertexData);
   auto index_func = mem_fun_ref(&PrimitiveModelBuilder::WireCubeIndexList);
   return CreateWireMesh<VertexType>(builder, vert_data_func, index_func);
+}
+
+template<typename VertexType>
+MeshBufferObject PrimitiveModelBuilder::WireSphere(uint flag, float radius, int slices, int stacks) {
+  PrimitiveModelBuilder builder(flag);
+  builder.SetSphere(radius, slices, stacks);
+  auto vert_func = mem_fun_ref(&PrimitiveModelBuilder::WireSphereVertexData);
+  auto index_func = mem_fun_ref(&PrimitiveModelBuilder::WireSphereIndexList);
+  return CreateWireMesh<VertexType>(builder, vert_func, index_func);
+}
+
+template<typename VertexType>
+MeshBufferObject PrimitiveModelBuilder::SolidSphere(uint flag, float radius, int slices, int stacks) {
+  PrimitiveModelBuilder builder(flag);
+  builder.SetSphere(radius, slices, stacks);
+  auto vert_func = mem_fun_ref(&PrimitiveModelBuilder::SolidSphereVertexData);
+  auto index_func = mem_fun_ref(&PrimitiveModelBuilder::SolidSphereIndexList);
+  return CreateSolidMesh<VertexType>(builder, vert_func, index_func);
+}
+
+template<typename VertexType>
+MeshBufferObject PrimitiveModelBuilder::WireAxis(uint flag, float size) {
+  PrimitiveModelBuilder builder(flag);
+  builder.SetAxis(size);
+  auto vert_func = mem_fun_ref(&PrimitiveModelBuilder::WireAxisVertexData);
+  auto index_func = mem_fun_ref(&PrimitiveModelBuilder::WireAxisIndexList);
+  return CreateWireMesh<VertexType>(builder, vert_func, index_func);
+}
+
+template<typename VertexType>
+MeshBufferObject PrimitiveModelBuilder::WirePlane(uint flag, float half_size, float grid_size) {
+  PrimitiveModelBuilder builder(flag);
+  builder.SetPlane(half_size, grid_size);
+  auto vert_func = mem_fun_ref(&PrimitiveModelBuilder::WirePlaneVertexData);
+  auto index_func = mem_fun_ref(&PrimitiveModelBuilder::WirePlaneIndexList);
+  return CreateWireMesh<VertexType>(builder, vert_func, index_func);
+}
+template<typename VertexType>
+MeshBufferObject PrimitiveModelBuilder::SolidPlane(uint flag, float half_size) {
+  PrimitiveModelBuilder builder(flag);
+  builder.SetPlane(half_size, 0.1);
+  auto vert_func = mem_fun_ref(&PrimitiveModelBuilder::SolidPlaneVertexData);
+  auto index_func = mem_fun_ref(&PrimitiveModelBuilder::SolidPlaneIndexList);
+  return CreateSolidMesh<VertexType>(builder, vert_func, index_func);
+}
+
+template<typename VertexType>
+MeshBufferObject PrimitiveModelBuilder::WireTeapot(uint flag, float size) {
+  PrimitiveModelBuilder builder(flag);
+  builder.SetTeapot(size);
+  auto vert_func = mem_fun_ref(&PrimitiveModelBuilder::TeapotVertexData);
+  auto index_func = mem_fun_ref(&PrimitiveModelBuilder::WireTeapotIndexList);
+  return CreateWireMesh<VertexType>(builder, vert_func, index_func);
+}
+template<typename VertexType>
+MeshBufferObject PrimitiveModelBuilder::SolidTeapot(uint flag, float size) {
+  PrimitiveModelBuilder builder(flag);
+  builder.SetTeapot(size);
+  auto vert_func = mem_fun_ref(&PrimitiveModelBuilder::TeapotVertexData);
+  auto index_func = mem_fun_ref(&PrimitiveModelBuilder::SolidTeapotIndexList);
+  return CreateSolidMesh<VertexType>(builder, vert_func, index_func);
+}
+
+template<typename VertexType>
+MeshBufferObject PrimitiveModelBuilder::WireCone(uint flag, float base, float height, int slices, int stacks) {
+  PrimitiveModelBuilder builder(flag);
+  builder.SetCone(base, height, slices, stacks);
+  auto vert_func = mem_fun_ref(&PrimitiveModelBuilder::WireConeVertexData);
+  auto index_func = mem_fun_ref(&PrimitiveModelBuilder::WireConeIndexList);
+  return CreateWireMesh<VertexType>(builder, vert_func, index_func);
+}
+
+template<typename VertexType>
+MeshBufferObject PrimitiveModelBuilder::WireCylinder(uint flag, float radius, float height, int slices) {
+  PrimitiveModelBuilder builder(flag);
+  builder.SetCylinder(radius, height, slices);
+  auto vert_func = mem_fun_ref(&PrimitiveModelBuilder::WireCylinderVertexData);
+  auto index_func = mem_fun_ref(&PrimitiveModelBuilder::WireCylinderIndexList);
+  return CreateWireMesh<VertexType>(builder, vert_func, index_func);
 }
 }
 
