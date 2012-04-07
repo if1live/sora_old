@@ -44,6 +44,7 @@ public:
   void SetSphere(float radius, int slices, int stacks);
   void SetAxis(float size);
   void SetPlane(float half_size, float grid_size);
+  void SetTeapot(float size);
 
   //공통부분 복사
   template<typename VertexType>
@@ -65,6 +66,9 @@ public:
   std::vector<float> WirePlaneVertexData();
   IndexListType WirePlaneIndexList();
 
+  std::vector<float> WireTeapotVertexData();
+  IndexListType WireTeapotIndexList();
+
   uint flag() const { return flag_; }
 private:
   unsigned int flag_;
@@ -84,11 +88,25 @@ private:
       float half_size;
       float grid_size;
     } plane;
+    struct {
+      float size;
+    } teapot;
   };
 
   void Append(std::vector<float> &vert_data, const glm::vec2 &v);
   void Append(std::vector<float> &vert_data, const glm::vec3 &v);
   void Append(std::vector<float> &vert_data, const glm::vec4 &v);
+
+private:
+  static void CalcTeapotSize();
+  //teapot
+  static float teapot_min_x_;
+  static float teapot_max_x_;
+  static float teapot_min_y_;
+  static float teapot_max_y_;
+  static float teapot_min_z_;
+  static float teapot_max_z_;
+  static bool teapot_created_;
 };
 
 template<typename VertexType>

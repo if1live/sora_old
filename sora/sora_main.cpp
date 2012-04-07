@@ -228,11 +228,15 @@ bool setupGraphics(Device *device, int w, int h) {
     //vert_data = builder.WireAxisVertexData();
     //index_list = builder.WireAxisIndexList();
 
-    sora::PrimitiveModelBuilder builder(0);
-    builder.SetPlane(4, 0.5);
-    vert_data = builder.WirePlaneVertexData();
-    index_list = builder.WirePlaneIndexList();
+    //sora::PrimitiveModelBuilder builder(0);
+    //builder.SetPlane(4, 0.5);
+    //vert_data = builder.WirePlaneVertexData();
+    //index_list = builder.WirePlaneIndexList();
 
+    sora::PrimitiveModelBuilder builder(0);
+    builder.SetTeapot(2);
+    vert_data = builder.WireTeapotVertexData();
+    index_list = builder.WireTeapotIndexList();
 
     builder.DataToVertexList(vert_data, builder.flag(), vertex_list);
 

@@ -21,6 +21,7 @@
 #include "sora_stdafx.h"
 #include "primitive_model_builder.h"
 #include "core/math_helper.h"
+#include "teapot.h"
 
 using namespace std;
 using namespace glm;
@@ -65,6 +66,49 @@ void PrimitiveModelBuilder::SetPlane(float half_size, float grid_size) {
   SR_ASSERT(flag_ == 0); 
   plane.half_size = half_size;
   plane.grid_size = grid_size;
+}
+
+void PrimitiveModelBuilder::SetTeapot(float size) {
+  SR_ASSERT(size > 0);
+  teapot.size = size;
+}
+
+//teapot
+float PrimitiveModelBuilder::teapot_min_x_ = 1000000;
+float PrimitiveModelBuilder::teapot_max_x_ = -1000000;
+float PrimitiveModelBuilder::teapot_min_y_ = 1000000;
+float PrimitiveModelBuilder::teapot_max_y_ = -1000000;
+float PrimitiveModelBuilder::teapot_min_z_ = 1000000;
+float PrimitiveModelBuilder::teapot_max_z_ = -1000000;
+bool PrimitiveModelBuilder::teapot_created_ = false;
+
+
+void PrimitiveModelBuilder::CalcTeapotSize() {
+  if(teapot_created_ == true) {
+    return;
+  }
+
+  for(int i = 0 ; i < NUM_TEAPOT_OBJECT_VERTEX ; i++) {
+    float x = teapotVertices[i*3 + 0];
+    float y = teapotVertices[i*3 + 1];
+    float z = teapotVertices[i*3 + 2];
+
+    if(x < teapot_min_x_) {
+      teapot_min_x_ = x;
+    } else if(x > teapot_max_x_) {
+      teapot_max_x_ = x;
+    }
+    if(y < teapot_min_y_) {
+      teapot_min_y_ = y;
+    } else if(y > teapot_max_y_) {
+      teapot_max_y_ = y;
+    }
+    if(z < teapot_min_z_) {
+      teapot_min_z_ = z;
+    } else if(z > teapot_max_z_) {
+      teapot_max_z_ = z;
+    }
+  }
 }
 
 void PrimitiveModelBuilder::Append(std::vector<float> &vert_data, const glm::vec2 &v) {
@@ -412,4 +456,49 @@ IndexListType PrimitiveModelBuilder::WirePlaneIndexList() {
   return index_list;
 }
 
+std::vector<float> PrimitiveModelBuilder::WireTeapotVertexData() {
+  CalcTeapotSize();
+  float size = teapot.size;
+  vector<float> vert_data;
+
+  //get bounding box to resize
+  float orig_width = teapot_max_x_ - teapot_min_x_;
+  float orig_height = teapot_max_y_ - teapot_min_y_;
+  float orig_depth = teapot_max_z_ - teapot_min_z_;
+  float max_size = orig_width > orig_height ? orig_width : orig_height;
+  if(max_size < orig_depth) {
+    max_size = orig_depth;
+  }
+  float scale = size / max_size;
+
+  vert_data.resize(NUM_TEAPOT_OBJECT_VERTEX * 3);
+  for(int i = 0 ; i < NUM_TEAPOT_OBJECT_VERTEX ; i++) {
+    vert_data[i*3+0] = teapotVertices[i * 3 + 0] * scale;
+    vert_data[i*3+1] = teapotVertices[i * 3 + 1] * scale;
+    vert_data[i*3+2] = teapotVertices[i * 3 + 2] * scale;
+  }
+  return vert_data;
 }
+IndexListType PrimitiveModelBuilder::WireTeapotIndexList() {
+  IndexListType index_list;
+  index_list.reserve(NUM_TEAPOT_OBJECT_INDEX * 2);
+  for(int i = 0 ; i < NUM_TEAPOT_OBJECT_INDEX / 3 ; i++) {
+    int idx1 = teapotIndices[i*3 + 0];
+    int idx2 = teapotIndices[i*3 + 1];
+    int idx3 = teapotIndices[i*3 + 2];
+
+    index_list.push_back(idx1);
+    index_list.push_back(idx2);
+
+    index_list.push_back(idx2);
+    index_list.push_back(idx3);
+
+    index_list.push_back(idx3);
+    index_list.push_back(idx1);
+  }
+  return index_list;
+}
+}
+
+
+  
