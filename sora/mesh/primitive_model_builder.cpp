@@ -59,6 +59,14 @@ void PrimitiveModelBuilder::SetAxis(float size) {
   axis.size = size;
 }
 
+void PrimitiveModelBuilder::SetPlane(float half_size, float grid_size) {
+  SR_ASSERT(half_size > 0);
+  SR_ASSERT(grid_size > 0);
+  SR_ASSERT(flag_ == 0); 
+  plane.half_size = half_size;
+  plane.grid_size = grid_size;
+}
+
 void PrimitiveModelBuilder::Append(std::vector<float> &vert_data, const glm::vec2 &v) {
   vert_data.push_back(v.x);
   vert_data.push_back(v.y);
@@ -310,4 +318,98 @@ IndexListType PrimitiveModelBuilder::WireAxisIndexList() {
   }
   return index_list;
 }
+
+std::vector<float> PrimitiveModelBuilder::WirePlaneVertexData() {
+  float half_size = plane.half_size;
+  float grid_size = plane.grid_size;
+  vector<float> vert_list;
+
+  int grid_range = (int)(half_size / grid_size);
+  vert_list.resize((grid_range * 2 + 1) * 4 * 3);
+
+  //left line(-half_size, 0, half_size) ~ (-half_size, 0, -half_size)
+  //right line(+half_size, 0, half_size) ~ (+half_size, 0, -half_size)
+  //front line(-half_size, 0, +half_size) ~ (+half_size, 0, +half_size)
+  //back line(-half_size, 0, -half_size) ~ (+half_size, 0, -half_size)
+
+  enum {
+    kLeft = 0,
+    kRight,
+    kFront,
+    kBack
+  };
+
+  //([0], 0, [1]) ~ ([2], 0, [3])
+  float xz_axis_mark[][4] = {
+    { -1, -1, -1, +1 },
+    { +1, -1, +1, +1 },
+    { -1, +1, +1, +1 },
+    { -1, -1, +1, -1 },
+  };
+  for(int axis_idx = 0 ; axis_idx < 4 ; ++axis_idx) {
+    int line_vert_size = grid_range * 2 + 1;
+    for(int i = 0 ; i < line_vert_size ; ++i) {
+      int start_index = line_vert_size * axis_idx;
+      int vert_idx = start_index + i;
+        
+      float left_x = xz_axis_mark[axis_idx][0] * half_size;
+      float right_x = xz_axis_mark[axis_idx][2] * half_size;
+      float front_z = xz_axis_mark[axis_idx][3] * half_size;
+      float back_z = xz_axis_mark[axis_idx][1] * half_size;
+      SR_ASSERT(left_x <= right_x);
+      SR_ASSERT(back_z <= front_z);
+
+      float x, z;
+      float scale = ((float)i / (line_vert_size-1.0f));
+      if(left_x == right_x) {
+        x = left_x;
+      } else {
+        x = scale * (right_x - left_x) + left_x;
+      }
+      if(front_z == back_z) {
+        z = front_z;
+      } else {
+        z = scale * (front_z - back_z) + back_z;
+      }
+
+      vert_list[vert_idx*3 + 0] = x;
+      vert_list[vert_idx*3 + 1] = 0;
+      vert_list[vert_idx*3 + 2] = z;
+    }
+  }
+  return vert_list;
+}
+IndexListType PrimitiveModelBuilder::WirePlaneIndexList() {
+  float half_size = plane.half_size;
+  float grid_size = plane.grid_size;
+  IndexListType index_list;
+  int grid_range = (int)(half_size / grid_size);
+  enum {
+    kLeft = 0,
+    kRight,
+    kFront,
+    kBack
+  };
+
+  //build index list
+  int line_vert_size = grid_range * 2 + 1;
+  index_list.reserve(line_vert_size * 2 * 4);
+  //left .... right를 잇는 선
+  int left_start_index = line_vert_size * kLeft;
+  int right_start_index = line_vert_size * kRight;
+  for(int i = 0 ; i < line_vert_size ; i++) {
+    index_list.push_back(left_start_index + i);
+    index_list.push_back(right_start_index + i);
+  }
+
+  //front...back를 잇는 선
+  int front_start_index = line_vert_size * kFront;
+  int back_start_index = line_vert_size * kBack;
+  for(int i = 0 ; i < line_vert_size ; i++) {
+    index_list.push_back(front_start_index + i);
+    index_list.push_back(back_start_index + i);
+  }
+  return index_list;
+}
+
 }

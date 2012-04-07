@@ -43,6 +43,7 @@ public:
   void SetCube(float width, float height, float depth);
   void SetSphere(float radius, int slices, int stacks);
   void SetAxis(float size);
+  void SetPlane(float half_size, float grid_size);
 
   //공통부분 복사
   template<typename VertexType>
@@ -61,6 +62,9 @@ public:
   std::vector<float> WireAxisVertexData();
   IndexListType WireAxisIndexList();
 
+  std::vector<float> WirePlaneVertexData();
+  IndexListType WirePlaneIndexList();
+
   uint flag() const { return flag_; }
 private:
   unsigned int flag_;
@@ -76,6 +80,10 @@ private:
     struct {
       float size;
     } axis;
+    struct {
+      float half_size;
+      float grid_size;
+    } plane;
   };
 
   void Append(std::vector<float> &vert_data, const glm::vec2 &v);

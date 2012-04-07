@@ -59,7 +59,6 @@ public:
   void SolidTeapot(float size);
 
 public:
-  void WirePlane(float half_size, float grid_size);
   void SolidPlane(float half_size);
 
   template<typename VertexType>

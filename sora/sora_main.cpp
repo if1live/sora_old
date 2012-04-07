@@ -223,10 +223,17 @@ bool setupGraphics(Device *device, int w, int h) {
     //vert_data = builder.WireSphereVertexData();
     //index_list = builder.WireSphereIndexList();
 
-    sora::PrimitiveModelBuilder builder(PrimitiveModelBuilder::kFlagColor);
-    builder.SetAxis(1);
-    vert_data = builder.WireAxisVertexData();
-    index_list = builder.WireAxisIndexList();
+    //sora::PrimitiveModelBuilder builder(PrimitiveModelBuilder::kFlagColor);
+    //builder.SetAxis(1);
+    //vert_data = builder.WireAxisVertexData();
+    //index_list = builder.WireAxisIndexList();
+
+    sora::PrimitiveModelBuilder builder(0);
+    builder.SetPlane(4, 0.5);
+    vert_data = builder.WirePlaneVertexData();
+    index_list = builder.WirePlaneIndexList();
+
+
     builder.DataToVertexList(vert_data, builder.flag(), vertex_list);
 
     DrawCommand<TangentVertex> draw_cmd;
