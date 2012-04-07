@@ -45,6 +45,7 @@ public:
   void SetAxis(float size);
   void SetPlane(float half_size, float grid_size);
   void SetTeapot(float size);
+  void SetCone(float base, float height, int slices, int stacks);
 
   //공통부분 복사
   template<typename VertexType>
@@ -69,6 +70,9 @@ public:
   std::vector<float> WireTeapotVertexData();
   IndexListType WireTeapotIndexList();
 
+  std::vector<float> WireConeVertexData();
+  IndexListType WireConeIndexList();
+
   uint flag() const { return flag_; }
 private:
   unsigned int flag_;
@@ -91,6 +95,12 @@ private:
     struct {
       float size;
     } teapot;
+    struct {
+      float base;
+      float height;
+      int slices;
+      int stacks;
+    } cone;
   };
 
   void Append(std::vector<float> &vert_data, const glm::vec2 &v);

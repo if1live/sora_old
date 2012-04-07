@@ -70,7 +70,19 @@ void PrimitiveModelBuilder::SetPlane(float half_size, float grid_size) {
 
 void PrimitiveModelBuilder::SetTeapot(float size) {
   SR_ASSERT(size > 0);
+  SR_ASSERT(flag_ == 0); 
   teapot.size = size;
+}
+void PrimitiveModelBuilder::SetCone(float base, float height, int slices, int stacks) {
+  SR_ASSERT(base > 0);
+  SR_ASSERT(height > 0);
+  SR_ASSERT(slices > 0);
+  SR_ASSERT(stacks > 0);
+  SR_ASSERT(flag_ == 0); 
+  cone.base = base;
+  cone.height = height;
+  cone.slices = slices;
+  cone.stacks = stacks;
 }
 
 //teapot
@@ -496,6 +508,85 @@ IndexListType PrimitiveModelBuilder::WireTeapotIndexList() {
     index_list.push_back(idx3);
     index_list.push_back(idx1);
   }
+  return index_list;
+}
+
+std::vector<float> PrimitiveModelBuilder::WireConeVertexData() {
+  float base = cone.base;
+  int stacks = cone.stacks;
+  float height = cone.height;
+  int slices = cone.slices;
+
+  //밑면/옆면을 다른 메시로 처리하자
+  //vertex List는 공유하고 index만 다르게 하자
+  vector<float> vert_data;
+
+  //밑면
+  vector<vec3> posList; 
+  for(int j = 0 ; j < stacks ; j++) {
+    float y = (1.0f / (float)stacks) * j;
+    for(int i = 0 ; i < slices ; i++) {
+      double angleDt = 2.0 * kPi / slices;
+      float radius = (1.0f / stacks) * (stacks-j);
+      float x = static_cast<float>(cos(angleDt * i) * radius);
+      float z = static_cast<float>(sin(angleDt * i) * radius);
+
+      vec3 pos(x, y, z);
+      posList.push_back(pos);
+    }
+  }
+  //최상위 꼭지점은 따로 넣는다
+  vec3 toppos(0, 1, 0);
+  posList.push_back(toppos);
+
+
+  //vertex 구성
+  //vec2 texCoord(0, 0);
+  //vec3 normal(0, 0, 0);
+  for(std::size_t i = 0 ; i < posList.size() ; i++) {
+    vec3 &pos = posList[i];
+    pos.x *= base;
+    pos.y *= height;
+    pos.z *= base;
+    
+    Append(vert_data, pos);
+  }
+  return vert_data;
+}
+
+IndexListType PrimitiveModelBuilder::WireConeIndexList() {
+  float base = cone.base;
+  int stacks = cone.stacks;
+  float height = cone.height;
+  int slices = cone.slices;
+
+  IndexListType stackindex_list;
+  IndexListType sliceindex_list;
+  
+  //index for bottom;
+  for(int j = 0 ; j < stacks ; j++) {
+    int startIndex = -1;
+    for(int i = 0 ; i < slices ; i++) {
+      if(i == 0) {
+        startIndex = j*slices;
+      }
+      GLushort a = startIndex + i;
+      GLushort b = ((a + 1) % slices) + startIndex;
+      stackindex_list.push_back(a);
+      stackindex_list.push_back(b);
+    }
+  }
+
+  //꼭지점에서 base로 내려오는 직선 긋기
+  GLushort topVertexIndex = slices * stacks;
+  for(int i = 0 ; i < slices ; i++) {
+    sliceindex_list.push_back(i);
+    sliceindex_list.push_back(topVertexIndex);
+  }
+
+  IndexListType index_list(stackindex_list.size() + sliceindex_list.size());
+  auto it = copy(stackindex_list.begin(), stackindex_list.end(), index_list.begin());
+  copy(sliceindex_list.begin(), sliceindex_list.end(), it);
   return index_list;
 }
 }

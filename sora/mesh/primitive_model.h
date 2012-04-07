@@ -46,7 +46,6 @@ public:
   
   void SolidCube(float width, float height, float depth);
 
-  void WireSphere(float radius, int slices, int stacks);
   void SolidSphere(float radius, int slices, int stacks);
 
   void WireCone(float base, float height, int slices, int stacks);
@@ -55,7 +54,6 @@ public:
   void WireCylinder(float radius, float height, int slices);
   void SolidCylinder(float radius, float height, int slices);
 
-  void WireTeapot(float size);
   void SolidTeapot(float size);
 
 public:
@@ -72,18 +70,6 @@ private:
   int vertex_count(int idx) const;
   int index_count(int idx) const;
   GLenum draw_mode(int idx) const;
-
-  PrimitiveModelImpl *impl;
-
-  static void CalcTeapotSize();
-  //teapot
-  static float teapot_min_x_;
-  static float teapot_max_x_;
-  static float teapot_min_y_;
-  static float teapot_max_y_;
-  static float teapot_min_z_;
-  static float teapot_max_z_;
-  static bool teapot_created_;
 };
 
 template<typename VertexType>
