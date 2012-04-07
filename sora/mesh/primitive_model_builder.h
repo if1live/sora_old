@@ -32,6 +32,9 @@ typedef std::vector<ushort> IndexListType;
 //반환형은 float list로 고정해서 필요한 vertex 타입에 따라서 후처리해서 쓸수 있도록하자
 class PrimitiveModelBuilder {
 public:
+  typedef std::mem_fun_ref_t<std::vector<float>, PrimitiveModelBuilder> VertexDataFunc;
+  typedef std::mem_fun_ref_t<IndexListType, PrimitiveModelBuilder> IndexFunc;
+
   enum {
     kFlagColor = 1 << 0,
     kFlagNormal = 1 << 1,
@@ -86,6 +89,9 @@ public:
   uint flag() const { return flag_; }
 
 public:
+  template<typename VertexType>
+  static MeshBufferObject CreateWireMesh(PrimitiveModelBuilder &builder, VertexDataFunc vert_func, IndexFunc index_func);
+
   template<typename VertexType>
   static MeshBufferObject CreateWireCube(uint flag, float width, float height, float depth);
 
@@ -188,11 +194,9 @@ void PrimitiveModelBuilder::DataToCommonVertexList(const std::vector<float> &dat
 }
 
 template<typename VertexType>
-MeshBufferObject PrimitiveModelBuilder::CreateWireCube(uint flag, float width, float height, float depth) {
-  PrimitiveModelBuilder builder(flag);
-  builder.SetCube(width, height, depth);
-  vector<float> vert_data = builder.WireCubeVertexData();
-  IndexListType index_list = builder.WireCubeIndexList();
+MeshBufferObject PrimitiveModelBuilder::CreateWireMesh(PrimitiveModelBuilder &builder, VertexDataFunc vert_func, IndexFunc index_func) {
+  vector<float> vert_data = vert_func(builder);
+  IndexListType index_list = index_func(builder);
 
   vector<TangentVertex> vertex_list;
   builder.DataToVertexList(vert_data, builder.flag(), vertex_list);
@@ -208,6 +212,16 @@ MeshBufferObject PrimitiveModelBuilder::CreateWireCube(uint flag, float width, f
   MeshBufferObject mbo;
   mbo.Add(draw_cmd);
   return mbo;
+}
+
+template<typename VertexType>
+MeshBufferObject PrimitiveModelBuilder::CreateWireCube(uint flag, float width, float height, float depth) {
+  PrimitiveModelBuilder builder(flag);
+  builder.SetCube(width, height, depth);
+
+  auto vert_data_func = mem_fun_ref(&PrimitiveModelBuilder::WireCubeVertexData);
+  auto index_func = mem_fun_ref(&PrimitiveModelBuilder::WireCubeIndexList);
+  return CreateWireMesh<VertexType>(builder, vert_data_func, index_func);
 }
 }
 

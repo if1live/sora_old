@@ -52,6 +52,7 @@
 #include <map>
 #include <stack>
 #include <queue>
+#include <functional>
 
 //#if SR_WIN
 //#include <Windows.h>
