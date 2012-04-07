@@ -255,7 +255,8 @@ bool setupGraphics(Device *device, int w, int h) {
     //Sphere surface(1.0);
     //KleinBottle surface(0.2f);
 
-    MeshBufferObject mesh_obj = surface.CreateSolidMeshObject<TangentVertex>();
+    //MeshBufferObject mesh_obj = surface.CreateSolidMeshObject<TangentVertex>();
+    MeshBufferObject mesh_obj = surface.CreateSolidMeshObject<Vertex>();
     device->mesh_mgr().Add(mesh_obj, "knot");
     //MeshManager::GetInstance().AddWire(surface, "knot");
     mesh_name_list[obj_model_idx] = "knot";

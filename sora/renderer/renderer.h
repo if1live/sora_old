@@ -98,13 +98,14 @@ public:
   void set_camera(const Camera &cam);
 
   //draw method
+  /*
   template<typename T>
   void DrawSolid(const T &mesh);
   template<typename T>
   void DrawWire(const T &mesh);
-
   template<typename VertexType>
   void Draw(const DrawCommand<VertexType> &cmd);
+  */
 
   void Draw(const MeshBufferObject &mesh);
 
@@ -138,6 +139,7 @@ private:
   Material mtl_;
 };
 
+/*
 template<typename T>
 void Renderer::DrawSolid(const T &mesh) {
   std::vector<DrawCommand> cmd_list = mesh.GetDrawCmdList_solid();
@@ -197,6 +199,7 @@ void Renderer::Draw(const DrawCommand<VertexType> &cmd) {
   const void *index_ptr = cmd.index_ptr;
   glDrawElements(draw_mode, index_count, index_type, index_ptr);
 }
+*/
 }
 
 #endif  // SORA_RENDERER_H_

@@ -51,6 +51,7 @@ struct Vertex {
     kTexcoordType = GL_FLOAT,
     kNormalType = GL_FLOAT,
     kColorType = GL_UNSIGNED_BYTE,
+    kTangentType = GL_FLOAT,
   };
   Vertex() : pos(0, 0, 0), texcoord(0, 0), normal(1, 0, 0), color(255, 255, 255, 255) {}
   glm::vec3 pos;
@@ -60,9 +61,6 @@ struct Vertex {
 };
 
 struct TangentVertex : public Vertex {
-  enum {
-    kTangentType = GL_FLOAT,
-  };
   glm::vec3 tangent;
 };
 }
