@@ -78,6 +78,9 @@
     <ClCompile Include="sys\filesystem_test.cpp">
       <Filter>sys</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\gl_helper_test.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h">

@@ -47,6 +47,20 @@ public:
     return IsExtensionSupport(std::string(ext));
   }
   static bool IsExtensionSupport(const std::string &ext);
+
+  template<typename T>  static GLenum TypeToGLEnum() { return GL_FLOAT; }
+  template<> static GLenum TypeToGLEnum<float>() { return GL_FLOAT; }
+  template<> static GLenum TypeToGLEnum<int>() { return GL_INT; }
+  template<> static GLenum TypeToGLEnum<unsigned int>() { return GL_UNSIGNED_INT; }
+  template<> static GLenum TypeToGLEnum<char>() { return GL_BYTE; }
+  template<> static GLenum TypeToGLEnum<unsigned char>() { return GL_UNSIGNED_BYTE; }
+  template<> static GLenum TypeToGLEnum<short>() { return GL_SHORT; }
+  template<> static GLenum TypeToGLEnum<unsigned short>() { return GL_UNSIGNED_SHORT; }
+
+  template<typename T>
+  static GLenum VecToGLEnum(const T &value) {
+    return TypeToGLEnum<typename T::value_type>();
+  }
 };
 
 }

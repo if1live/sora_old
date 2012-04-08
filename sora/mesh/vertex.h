@@ -26,6 +26,7 @@
 #if SR_USE_PCH == 0
 #include "gl_inc.h"
 #endif
+#include "renderer/gl_helper.h"
 
 namespace sora {;
 struct Vertex;
@@ -71,14 +72,16 @@ struct Vertex2D {
     static VertexInfo info;
     static bool init = false;
     if(init == false) {
+      Vertex2D vert;
+
       init = true;
       info.size = sizeof(Vertex2D);
 
       info.pos_offset = offsetof(Vertex2D, pos);
-      info.pos_type = GL_FLOAT;
+      info.pos_type = GLHelper::VecToGLEnum(vert.pos);
 
       info.texcoord_offset = offsetof(Vertex2D, texcoord);
-      info.texcoord_type = GL_FLOAT;
+      info.texcoord_type = GLHelper::VecToGLEnum(vert.texcoord);
 
       info.color_offset = -1;
       info.normal_offset = -1;
@@ -102,19 +105,20 @@ struct Vertex {
     static bool init = false;
     if(init == false) {
       init = true;
+      Vertex vert;
       info.size = sizeof(Vertex);
 
       info.pos_offset = offsetof(Vertex, pos);
-      info.pos_type = GL_FLOAT;
+      info.pos_type = GLHelper::VecToGLEnum(vert.pos);
 
       info.texcoord_offset = offsetof(Vertex, texcoord);
-      info.texcoord_type = GL_FLOAT;
+      info.texcoord_type = GLHelper::VecToGLEnum(vert.texcoord);
 
       info.color_offset = offsetof(Vertex, color);
-      info.color_type = GL_UNSIGNED_BYTE;
+      info.color_type = GLHelper::VecToGLEnum(vert.color);
 
       info.normal_offset = offsetof(Vertex, normal);
-      info.normal_type = GL_FLOAT;
+      info.normal_type = GLHelper::VecToGLEnum(vert.normal);
 
       info.tangent_offset = -1;
     }
@@ -131,22 +135,23 @@ struct TangentVertex : public Vertex {
     static bool init = false;
     if(init == false) {
       init = true;
+      TangentVertex vert;
       info.size = sizeof(TangentVertex);
 
       info.pos_offset = offsetof(TangentVertex, pos);
-      info.pos_type = GL_FLOAT;
+      info.pos_type = GLHelper::VecToGLEnum(vert.pos);
 
       info.texcoord_offset = offsetof(TangentVertex, texcoord);
-      info.texcoord_type = GL_FLOAT;
+      info.texcoord_type = GLHelper::VecToGLEnum(vert.texcoord);
 
       info.color_offset = offsetof(TangentVertex, color);
-      info.color_type = GL_UNSIGNED_BYTE;
+      info.color_type = GLHelper::VecToGLEnum(vert.color);
 
       info.normal_offset = offsetof(TangentVertex, normal);
-      info.normal_type = GL_FLOAT;
+      info.normal_type = GLHelper::VecToGLEnum(vert.normal);
 
       info.tangent_offset = offsetof(TangentVertex, tangent);
-      info.tangent_type = GL_FLOAT;
+      info.tangent_type = GLHelper::VecToGLEnum(vert.tangent);
     }
     return info;
   }

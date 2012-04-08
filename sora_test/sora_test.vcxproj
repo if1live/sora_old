@@ -95,6 +95,7 @@
     <ClCompile Include="core\mem_test.cpp" />
     <ClCompile Include="core\template_lib_test.cpp" />
     <ClCompile Include="renderer\gl_buffer_object_test.cpp" />
+    <ClCompile Include="renderer\gl_helper_test.cpp" />
     <ClCompile Include="renderer\matrix_stack_test.cpp" />
     <ClCompile Include="renderer\obj_loader_test.cpp" />
     <ClCompile Include="renderer\shader_test.cpp" />
