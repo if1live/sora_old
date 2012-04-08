@@ -256,7 +256,7 @@ bool setupGraphics(Device *device, int w, int h) {
     //KleinBottle surface(0.2f);
 
     //MeshBufferObject mesh_obj = surface.CreateSolidMeshObject<TangentVertex>();
-    MeshBufferObject mesh_obj = surface.CreateSolidMeshObject<Vertex>();
+    MeshBufferObject mesh_obj = surface.CreateSolidMeshObject<TangentVertex>();
     device->mesh_mgr().Add(mesh_obj, "knot");
     //MeshManager::GetInstance().AddWire(surface, "knot");
     mesh_name_list[obj_model_idx] = "knot";
@@ -315,7 +315,7 @@ void renderFrame(Device *device) {
     flag |= UberShader::kDiffuseMap;
     flag |= UberShader::kSpecularColor;
     flag |= UberShader::kSpecularMap;
-    //flag |= UberShader::kNormalMap;
+    flag |= UberShader::kNormalMap;
     ShaderProgram &shader = device->uber_shader(flag);
     render3d.SetShader(shader);
 
@@ -492,16 +492,16 @@ void SORA_update_frame(Device *device, float dt) {
     
     switch(evt.evt_type) {
     case kTouchBegan:
-      LOGD("began [%d] %d,%d", evt.uid, evt.x, evt.y);
+      //LOGD("began [%d] %d,%d", evt.uid, evt.x, evt.y);
       break;
     case kTouchMoved:
-      LOGD("moved [%d] %d,%d <- %d,%d", evt.uid, evt.x, evt.y, evt.prev_x, evt.prev_y);
+      //LOGD("moved [%d] %d,%d <- %d,%d", evt.uid, evt.x, evt.y, evt.prev_x, evt.prev_y);
       break;
     case kTouchEnded:
-      LOGD("ended [%d] %d,%d", evt.uid, evt.x, evt.y);
+      //LOGD("ended [%d] %d,%d", evt.uid, evt.x, evt.y);
       break;
     case kTouchCancelled:
-      LOGD("canxx [%d] %d,%d", evt.uid, evt.x, evt.y);
+      //LOGD("canxx [%d] %d,%d", evt.uid, evt.x, evt.y);
       break;
     default:
       SR_ASSERT(!"do not reach");

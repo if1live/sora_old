@@ -32,36 +32,124 @@ struct Vertex;
 struct TangentVertex;
 struct Vertex2D;
 
+enum {
+  kNoVertex = -1,
+  kVertex2D,
+  kVertex,
+  kTangentVertex
+};
+
+struct VertexInfo {
+  int size;
+
+  int pos_offset;
+  GLenum pos_type;
+
+  int color_offset;
+  GLenum color_type;
+
+  int texcoord_offset;
+  GLenum texcoord_type;
+
+  int normal_offset;
+  GLenum normal_type;
+
+  int tangent_offset;
+  GLenum tangent_type;
+};
+
 struct Vertex2D {
-  enum {
-    kPosType = GL_FLOAT,
-    kTexcoordType = GL_FLOAT,
-  };
   Vertex2D() : pos(0, 0), texcoord(0, 0) {}
   Vertex2D(float x, float y, float s, float t)
     : pos(x, y), texcoord(s, t) {}
 
   glm::vec2 pos;
   glm::vec2 texcoord;
+
+  static int Type() { return kVertex2D; }
+  static VertexInfo &Info() {
+    static VertexInfo info;
+    static bool init = false;
+    if(init == false) {
+      init = true;
+      info.size = sizeof(Vertex2D);
+
+      info.pos_offset = offsetof(Vertex2D, pos);
+      info.pos_type = GL_FLOAT;
+
+      info.texcoord_offset = offsetof(Vertex2D, texcoord);
+      info.texcoord_type = GL_FLOAT;
+
+      info.color_offset = -1;
+      info.normal_offset = -1;
+      info.tangent_offset = -1;
+    }
+    return info;
+  }
 };
 
 struct Vertex {
-  enum {
-    kPosType = GL_FLOAT,
-    kTexcoordType = GL_FLOAT,
-    kNormalType = GL_FLOAT,
-    kColorType = GL_UNSIGNED_BYTE,
-    kTangentType = GL_FLOAT,
-  };
   Vertex() : pos(0, 0, 0), texcoord(0, 0), normal(1, 0, 0), color(255, 255, 255, 255) {}
+
   glm::vec3 pos;
   glm::vec2 texcoord;
   glm::vec3 normal;
   sora::vec4ub color;
+
+  static int Type() { return kVertex; }
+  static VertexInfo &Info() {
+    static VertexInfo info;
+    static bool init = false;
+    if(init == false) {
+      init = true;
+      info.size = sizeof(Vertex);
+
+      info.pos_offset = offsetof(Vertex, pos);
+      info.pos_type = GL_FLOAT;
+
+      info.texcoord_offset = offsetof(Vertex, texcoord);
+      info.texcoord_type = GL_FLOAT;
+
+      info.color_offset = offsetof(Vertex, color);
+      info.color_type = GL_UNSIGNED_BYTE;
+
+      info.normal_offset = offsetof(Vertex, normal);
+      info.normal_type = GL_FLOAT;
+
+      info.tangent_offset = -1;
+    }
+    return info;
+  }
 };
 
 struct TangentVertex : public Vertex {
   glm::vec3 tangent;
+
+  static int Type() { return kTangentVertex; }
+  static VertexInfo &Info() {
+    static VertexInfo info;
+    static bool init = false;
+    if(init == false) {
+      init = true;
+      info.size = sizeof(TangentVertex);
+
+      info.pos_offset = offsetof(TangentVertex, pos);
+      info.pos_type = GL_FLOAT;
+
+      info.texcoord_offset = offsetof(TangentVertex, texcoord);
+      info.texcoord_type = GL_FLOAT;
+
+      info.color_offset = offsetof(TangentVertex, color);
+      info.color_type = GL_UNSIGNED_BYTE;
+
+      info.normal_offset = offsetof(TangentVertex, normal);
+      info.normal_type = GL_FLOAT;
+
+      info.tangent_offset = offsetof(TangentVertex, tangent);
+      info.tangent_type = GL_FLOAT;
+    }
+    return info;
+  }
 };
 }
 

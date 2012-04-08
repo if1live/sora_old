@@ -67,14 +67,14 @@ public:
   const IndexBufferObject &ibo(int idx) const;
   int index_count(int idx) const;
   GLenum draw_mode(int idx) const;
-  int vertex_size() const { return vertex_size_; }
+  int vertex_type() const { return vertex_type_; }
 
 private:
   std::vector<VertexBufferObject> vbo_list_;
   std::vector<IndexBufferObject> ibo_list_;
   std::vector<int> index_count_list_;
   std::vector<GLenum> draw_mode_list_;
-  int vertex_size_;
+  int vertex_type_;
 };
 
 template<typename T>
@@ -90,10 +90,10 @@ void MeshBufferObject::Add(const DrawCommand<T> &cmd) {
   index_count_list_.push_back(cmd.index_count);
   draw_mode_list_.push_back(cmd.draw_mode);
 
-  if(vertex_size_ == 0) {
-    vertex_size_ = sizeof(T);
+  if(vertex_type_ == kNoVertex) {
+    vertex_type_ = T::Type();
   } else {
-    if(vertex_size_ != sizeof(T)) {
+    if(vertex_type_ != T::Type()) {
       SR_ASSERT(!"mesh vbo안에서 vertex type섞어쓰는것은 지원안함");
     }
   }

@@ -25,7 +25,7 @@
 using namespace std;
 
 namespace sora {;
-MeshBufferObject::MeshBufferObject() : vertex_size_(0) {
+MeshBufferObject::MeshBufferObject() : vertex_type_(kNoVertex) {
 }
 MeshBufferObject::~MeshBufferObject() {
 }

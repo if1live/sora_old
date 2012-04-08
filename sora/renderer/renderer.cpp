@@ -251,52 +251,33 @@ void Renderer::set_camera(const Camera &cam) {
 }
 
 void Renderer::Draw(const MeshBufferObject &mesh) {
-  SR_ASSERT(mesh.vertex_size() > 0);
+  SR_ASSERT(mesh.vertex_type() != -1);
   const ShaderBindPolicy &bind_policy = last_prog_->bind_policy;
 
   const ShaderVariable &pos_var = bind_policy.var(ShaderBindPolicy::kPosition);
   const ShaderVariable &texcoord_var = bind_policy.var(ShaderBindPolicy::kTexcoord);
   const ShaderVariable &normal_var = bind_policy.var(ShaderBindPolicy::kNormal);
   const ShaderVariable &color_var = bind_policy.var(ShaderBindPolicy::kColor);
-  
   //tangent가 잇으면 쓰자
   const ShaderVariable &tangent_var = bind_policy.var(ShaderBindPolicy::kTangent);
 
-  enum {
-    kTablePos,
-    kTableTexcoord,
-    kTableNormal,
-    kTableColor,
-    kTableTangent,
-  };
+  VertexInfo info;
+  switch(mesh.vertex_type()) {
+  case kVertex2D:
+    info = Vertex2D::Info();
+    break;
+  case kVertex:
+    info = Vertex::Info();
+    break;
+  case kTangentVertex:
+    info = TangentVertex::Info();
+    break;
+  default:
+    SR_ASSERT(!"not valid format");
+    break;
+  } 
 
-  const Vertex tmp_vert;
-  int standard_offset_table[] = {
-    (long)(&tmp_vert.pos) - (long)(&tmp_vert),
-    (long)(&tmp_vert.texcoord) - (long)(&tmp_vert),
-    (long)(&tmp_vert.normal) - (long)(&tmp_vert),
-    (long)(&tmp_vert.color) - (long)(&tmp_vert),
-    -1,
-  };
-
-  const TangentVertex tmp_tangent_vert;
-  int tangent_offset_table[] = {
-    (long)(&tmp_tangent_vert.pos) - (long)(&tmp_tangent_vert),
-    (long)(&tmp_tangent_vert.texcoord) - (long)(&tmp_tangent_vert),
-    (long)(&tmp_tangent_vert.normal) - (long)(&tmp_tangent_vert),
-    (long)(&tmp_tangent_vert.color) - (long)(&tmp_tangent_vert),
-    (long)(&tmp_tangent_vert.tangent) - (long)(&tmp_tangent_vert),
-  };
-
-  int vertex_size = mesh.vertex_size();
-  int *offset_table = NULL;
-  if(vertex_size == sizeof(Vertex)) {
-    offset_table = standard_offset_table;
-  } else if(vertex_size == sizeof(TangentVertex)) {
-    offset_table = tangent_offset_table;
-  } else {
-    SR_ASSERT(!"not valid vertex format");
-  }
+  int vertex_size = info.size;
 
   for(int i = 0 ; i < mesh.BufferCount() ; i++) {
     const VertexBufferObject &vbo = mesh.vbo(i);
@@ -308,35 +289,48 @@ void Renderer::Draw(const MeshBufferObject &mesh) {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo.buffer());
 
     if(pos_var.location != -1) {
-      void* pos_offset = (void*)*(offset_table + kTablePos);
-      glEnableVertexAttribArray(pos_var.location);
-      glVertexAttribPointer(pos_var.location, 3, Vertex::kPosType, GL_FALSE, vertex_size, pos_offset);
-      GLHelper::CheckError("glVertexAttribPointer");
+      int offset = info.pos_offset;
+      GLenum type = info.pos_type;
+      if(offset != -1) {
+        glEnableVertexAttribArray(pos_var.location);
+        glVertexAttribPointer(pos_var.location, 3, type, GL_FALSE, vertex_size, (void*)offset);
+        GLHelper::CheckError("glVertexAttribPointer");
+      }
     }
     if(texcoord_var.location != -1) {
-      void* texcoord_offset = (void*)*(offset_table + kTableTexcoord);
-      glEnableVertexAttribArray(texcoord_var.location);
-      glVertexAttribPointer(texcoord_var.location, 2, Vertex::kTexcoordType, GL_FALSE, vertex_size, texcoord_offset);
-      GLHelper::CheckError("glVertexAttribPointer");
+      int offset = info.texcoord_offset;
+      GLenum type = info.texcoord_type;
+      if(offset != -1) {
+        glEnableVertexAttribArray(texcoord_var.location);
+        glVertexAttribPointer(texcoord_var.location, 2, type, GL_FALSE, vertex_size, (void*)offset);
+        GLHelper::CheckError("glVertexAttribPointer");
+      }
     }
     if(normal_var.location != -1) {
-      void* normal_offset = (void*)*(offset_table + kTableNormal);
-      glEnableVertexAttribArray(normal_var.location);
-      glVertexAttribPointer(normal_var.location, 3, Vertex::kNormalType, GL_FALSE, vertex_size, normal_offset);
-      GLHelper::CheckError("glVertexAttribPointer");
+      int offset = info.normal_offset;
+      GLenum type = info.normal_type;
+      if(offset != -1) {
+        glEnableVertexAttribArray(normal_var.location);
+        glVertexAttribPointer(normal_var.location, 3, type, GL_FALSE, vertex_size, (void*)offset);
+        GLHelper::CheckError("glVertexAttribPointer");
+      }
     }
     if(color_var.location != -1) {
-      void* color_offset = (void*)*(offset_table + kTableColor);
-      //색속성은 ubyte니까 normalize해야됨
-      glEnableVertexAttribArray(color_var.location);
-      glVertexAttribPointer(color_var.location, 4, Vertex::kColorType, GL_TRUE, vertex_size, color_offset);
-      GLHelper::CheckError("glVertexAttribPointer");
+      int offset = info.color_offset;
+      GLenum type = info.color_type;
+      if(offset != -1) {
+        //색속성은 ubyte니까 normalize해야됨
+        glEnableVertexAttribArray(color_var.location);
+        glVertexAttribPointer(color_var.location, 4, type, GL_TRUE, vertex_size, (void*)offset);
+        GLHelper::CheckError("glVertexAttribPointer");
+      }
     }
     if(tangent_var.location != -1) {
-      if(*(offset_table + kTableTangent) != -1) {
-        void* tangent_offset = (void*)*(offset_table + kTableTangent);
+      int offset = info.tangent_offset;
+      GLenum type = info.tangent_type;
+      if(offset != -1) {
         glEnableVertexAttribArray(tangent_var.location);
-        glVertexAttribPointer(tangent_var.location, 4, Vertex::kTangentType, GL_FALSE, vertex_size, tangent_offset);
+        glVertexAttribPointer(tangent_var.location, 4, type, GL_FALSE, vertex_size, (void*)offset);
         GLHelper::CheckError("glVertexAttribPointer");
       }
     }
