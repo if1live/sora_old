@@ -36,19 +36,25 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\sdk\boost.props" />
     <Import Project="..\shared.props" />
+    <Import Project="..\sdk\gl.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\sdk\boost.props" />
     <Import Project="..\shared.props" />
+    <Import Project="..\sdk\gl.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <IncludePath>gtest\include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LibraryPath>gtest\lib;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\sdk\esUtil\Include;gtest\include;..\sdk\PVRShell\API\KEGL;..\sdk\PVRShell\;..\sdk\PVRShell\OS\Windows;$(SolutionDir)\sdk\OGLES2Tools\OGLES2;$(SolutionDir)\sdk\OGLES2Tools;$(SolutionDir)\sdk\OGLES2\Include;$(SolutionDir)\sdk\glm-0.9.3.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>sora_test_stdafx.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>SR_NDEBUG=0;SR_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -57,8 +63,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\sdk\esUtil\Lib;..\sdk\OGLES2\WindowsX86\Lib;..\sdk\OGLES2Tools\OGLES2\Build\WindowsVC2008\$(Configuration);gtest\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>gtestd.lib;opengl32.lib;esUtil_d.lib;libEGL.lib;libGLESv2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>gtestd.lib;sora.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -111,16 +116,6 @@
   <ItemGroup>
     <ClInclude Include="cbes\sample_component.h" />
     <ClInclude Include="sora_test_stdafx.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\sora\sora.vcxproj">
-      <Project>{9eb895ab-d40f-4b99-b063-432571e6d799}</Project>
-      <Private>true</Private>
-      <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-      <CopyLocalSatelliteAssemblies>false</CopyLocalSatelliteAssemblies>
-      <LinkLibraryDependencies>true</LinkLibraryDependencies>
-      <UseLibraryDependencyInputs>false</UseLibraryDependencyInputs>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

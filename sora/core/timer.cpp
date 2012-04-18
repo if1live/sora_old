@@ -38,12 +38,12 @@
 #else
 #define DELTA_EPOCH_IN_MICROSECS  11644473600000000ULL
 #endif
-
+/*
 struct timeval {
   long tv_sec;       // 초
   long tv_usec;      // 마이크로초
 };
-
+*/
 // for timezone
 struct timezone {
   int  tz_minuteswest; /* minutes W of Greenwich */

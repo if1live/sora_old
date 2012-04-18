@@ -8,6 +8,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sora", "sora\sora.vcxproj",
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sora_test", "sora_test\sora_test.vcxproj", "{A8701353-1E8D-46F3-9512-5A3D38D1D7C4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{9EB895AB-D40F-4B99-B063-432571E6D799} = {9EB895AB-D40F-4B99-B063-432571E6D799}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sora_tool", "sora_tool\sora_tool.csproj", "{11A8099D-9A44-4E08-A5FE-3FA5C36EDA71}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -17,6 +20,7 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "yuriko", "yuriko\yuriko.vcxproj", "{F2894000-CDDF-4329-94B5-A3D8F671D0AC}"
 	ProjectSection(ProjectDependencies) = postProject
 		{09ABE661-9BC0-4152-A820-1FB0522CAC01} = {09ABE661-9BC0-4152-A820-1FB0522CAC01}
+		{9EB895AB-D40F-4B99-B063-432571E6D799} = {9EB895AB-D40F-4B99-B063-432571E6D799}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SoraWrapper", "SoraWrapper\SoraWrapper.vcxproj", "{974A14C4-F0BF-4EE6-BEA8-257F668DABC1}"
@@ -29,6 +33,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OGLES2Tools", "sdk\OGLES2Tools\OGLES2\Build\WindowsVC2008\OGLES2Tools.vcxproj", "{09ABE661-9BC0-4152-A820-1FB0522CAC01}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "esUtil", "sdk\esUtil\esUtil.vcxproj", "{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gles", "gles", "{04481C5B-4073-4D28-B60D-291689F0CDA7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tool", "tool", "{3851B5E4-8868-4461-9A3D-8B6363E25D4E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -145,5 +153,12 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{09ABE661-9BC0-4152-A820-1FB0522CAC01} = {04481C5B-4073-4D28-B60D-291689F0CDA7}
+		{11A8099D-9A44-4E08-A5FE-3FA5C36EDA71} = {3851B5E4-8868-4461-9A3D-8B6363E25D4E}
+		{3A9FED3D-0EC6-412F-B690-5119A9EE2AD9} = {3851B5E4-8868-4461-9A3D-8B6363E25D4E}
+		{47C93F52-AB4E-4FF9-8D4F-B38CD60A183F} = {04481C5B-4073-4D28-B60D-291689F0CDA7}
+		{974A14C4-F0BF-4EE6-BEA8-257F668DABC1} = {3851B5E4-8868-4461-9A3D-8B6363E25D4E}
 	EndGlobalSection
 EndGlobal

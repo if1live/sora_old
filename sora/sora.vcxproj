@@ -36,11 +36,13 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\sdk\boost.props" />
     <Import Project="..\shared.props" />
+    <Import Project="..\sdk\gl.props" />
   </ImportGroup>
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="..\sdk\boost.props" />
     <Import Project="..\shared.props" />
+    <Import Project="..\sdk\gl.props" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup />
@@ -51,10 +53,8 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>sora_stdafx.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>SR_NDEBUG=0;SR_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DisableSpecificWarnings>4819;4099;4251;4996;</DisableSpecificWarnings>
       <MinimalRebuild>true</MinimalRebuild>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
-      <AdditionalIncludeDirectories>$(SolutionDir)\sdk\OGLES2\Include;$(SolutionDir)\sdk\glm-0.9.3.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -69,9 +69,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>sora_stdafx.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>SR_NDEBUG=1;SR_DEBUG=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <DisableSpecificWarnings>4099;4996</DisableSpecificWarnings>
       <MinimalRebuild>true</MinimalRebuild>
-      <AdditionalIncludeDirectories>$(SolutionDir)\sdk\OGLES2\Include;$(SolutionDir)\sdk\glm-0.9.3.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

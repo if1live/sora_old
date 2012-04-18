@@ -1,3 +1,4 @@
+#if 0
 #include "sora/renderer/gl_inc.h"
 #include <stdlib.h>
 #include "esUtil.h"
@@ -171,3 +172,4 @@ int main ( int argc, char *argv[] ) {
   
   esMainLoop ( &esContext );
 }
+#endif

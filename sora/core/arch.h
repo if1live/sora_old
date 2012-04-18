@@ -53,11 +53,7 @@
 
 //gles?gl
 #if SR_WIN
-#ifdef _WINDLL
 #define SR_GLES 0
-#else
-#define SR_GLES 1
-#endif
 #else
 #define SR_GLES 1
 #endif

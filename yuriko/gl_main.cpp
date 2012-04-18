@@ -146,7 +146,7 @@ int main(int argc, char *argv[]) {
   //run_gles_2_test();
 
   // init glew
-  SORA_init_gl_env(); //glewInit();
+  glewInit();
   Timer_Init();
 
   sora::Device device;
@@ -172,8 +172,8 @@ int main(int argc, char *argv[]) {
   */
   
   //logic end
-  run_selection(&device);
-  //run_depthmap(&device);
+  //run_selection(&device);
+  run_depthmap(&device);
   //run_shadow_map(&device);
 
   glfwTerminate();
