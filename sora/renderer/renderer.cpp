@@ -21,8 +21,10 @@
 #include "sora_stdafx.h"
 #include "renderer.h"
 
+#include "renderer/renderer_env.h"
+
 #include "texture.h"
-#include "gl_helper.h"
+
 #include "shader.h"
 #include "material.h"
 #include "obj_model.h"
@@ -104,7 +106,7 @@ void Renderer::ApplyMaterialLight() {
   const ShaderVariable &light_pos_var = bind_policy.var(ShaderBindPolicy::kLightPosition);
   if(light_pos_var.location != -1) {
     glUniform3fv(light_pos_var.location, 1, glm::value_ptr(light_.pos));
-    GLHelper::CheckError("Set Light Pos Handle");
+    SR_CHECK_ERROR("Set Light Pos Handle");
   }
 
   //ambient, diffuse, specular 계산하기
@@ -163,20 +165,20 @@ void Renderer::ApplyMaterialLight() {
 
   if(use_ambient) {
     glUniform4fv(ambient_var.location, 1, ambient_color);
-    GLHelper::CheckError("Uniform AmbientColor");
+    SR_CHECK_ERROR("Uniform AmbientColor");
   }
   if(use_diffuse) {
     glUniform4fv(diffuse_var.location, 1, diffuse_color);
-    GLHelper::CheckError("Uniform DiffuseColor");
+    SR_CHECK_ERROR("Uniform DiffuseColor");
   }
   //specular
   if(use_specular) {
     glUniform4fv(specular_var.location, 1, specular_color);
-    GLHelper::CheckError("Uniform SpecularColor");
+    SR_CHECK_ERROR("Uniform SpecularColor");
   }
   if(shininess_var.location != -1) {
     glUniform1f(shininess_var.location, material.shininess);
-    GLHelper::CheckError("Uniform Shininess");
+    SR_CHECK_ERROR("Uniform Shininess");
   }
 
   if(last_material_ != mtl_) {
@@ -236,7 +238,7 @@ void Renderer::EndRender() {
   //마테리얼 대충 날리기
   last_material_.uber_flag = Material::kInvalidShaderFlag; //설마 알파 -1인 정상 재질이 있을리가 없지
 
-  GLHelper::CheckError("EndRender");
+  SR_CHECK_ERROR("EndRender");
 }
 
 Camera &Renderer::camera() {
@@ -294,7 +296,7 @@ void Renderer::Draw(const MeshBufferObject &mesh) {
       if(offset != -1) {
         glEnableVertexAttribArray(pos_var.location);
         glVertexAttribPointer(pos_var.location, 3, type, GL_FALSE, vertex_size, (void*)offset);
-        GLHelper::CheckError("glVertexAttribPointer");
+        SR_CHECK_ERROR("glVertexAttribPointer");
       }
     }
     if(texcoord_var.location != -1) {
@@ -303,7 +305,7 @@ void Renderer::Draw(const MeshBufferObject &mesh) {
       if(offset != -1) {
         glEnableVertexAttribArray(texcoord_var.location);
         glVertexAttribPointer(texcoord_var.location, 2, type, GL_FALSE, vertex_size, (void*)offset);
-        GLHelper::CheckError("glVertexAttribPointer");
+        SR_CHECK_ERROR("glVertexAttribPointer");
       }
     }
     if(normal_var.location != -1) {
@@ -312,7 +314,7 @@ void Renderer::Draw(const MeshBufferObject &mesh) {
       if(offset != -1) {
         glEnableVertexAttribArray(normal_var.location);
         glVertexAttribPointer(normal_var.location, 3, type, GL_FALSE, vertex_size, (void*)offset);
-        GLHelper::CheckError("glVertexAttribPointer");
+        SR_CHECK_ERROR("glVertexAttribPointer");
       }
     }
     if(color_var.location != -1) {
@@ -322,7 +324,7 @@ void Renderer::Draw(const MeshBufferObject &mesh) {
         //색속성은 ubyte니까 normalize해야됨
         glEnableVertexAttribArray(color_var.location);
         glVertexAttribPointer(color_var.location, 4, type, GL_TRUE, vertex_size, (void*)offset);
-        GLHelper::CheckError("glVertexAttribPointer");
+        SR_CHECK_ERROR("glVertexAttribPointer");
       }
     }
     if(tangent_var.location != -1) {
@@ -331,12 +333,12 @@ void Renderer::Draw(const MeshBufferObject &mesh) {
       if(offset != -1) {
         glEnableVertexAttribArray(tangent_var.location);
         glVertexAttribPointer(tangent_var.location, 4, type, GL_FALSE, vertex_size, (void*)offset);
-        GLHelper::CheckError("glVertexAttribPointer");
+        SR_CHECK_ERROR("glVertexAttribPointer");
       }
     }
 
     glDrawElements(draw_mode, index_count, GL_UNSIGNED_SHORT, 0);
-    GLHelper::CheckError("DrawElement");
+    SR_CHECK_ERROR("DrawElement");
   }
 
   glBindBuffer(GL_ARRAY_BUFFER, 0);

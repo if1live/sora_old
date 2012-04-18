@@ -21,18 +21,20 @@
 #include "sora_stdafx.h"
 #include "depth_map_main.h"
 
+#include "renderer/renderer_env.h"
+
 #include "sys/filesystem.h"
 #include "renderer/shader.h"
 #include "sys/memory_file.h"
 #include "renderer/texture.h"
 #include "renderer/texture_manager.h"
-#include "renderer/gl_helper.h"
+
 
 #include "renderer/light.h"
 #include "renderer/mesh_manager.h"
 #include "sys/device.h"
 #include "mesh/primitive_model.h"
-#include "renderer/gl_buffer_object.h"
+#include "renderer/gl/gl_buffer_object.h"
 #include "renderer/camera.h"
 #include "renderer/renderer.h"
 
@@ -103,7 +105,7 @@ namespace depthmap {
       glGenRenderbuffers(1, &color_rb);
       glBindRenderbuffer(GL_RENDERBUFFER, color_rb);
       glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA4, w, h);
-      GLHelper::CheckError("1");
+      SR_CHECK_ERROR("1");
 
       //깊이를 텍스쳐에 연결
       glGenTextures(1, &depth_tex);
@@ -111,13 +113,13 @@ namespace depthmap {
       glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
       glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
       glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, w, h, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL);
-      GLHelper::CheckError("DepthTexture");
+      SR_CHECK_ERROR("DepthTexture");
 
       glBindFramebuffer(GL_FRAMEBUFFER, fbo);
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_tex, 0);
       glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color_rb);
-      GLHelper::CheckFrameBufferStatus("fb");
-      GLHelper::CheckError("Create FB");
+      SR_CHECK_FRAMEBUFFER("fb");
+      SR_CHECK_ERROR("Create FB");
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
 
@@ -134,7 +136,7 @@ namespace depthmap {
       glEnable(GL_DEPTH_TEST);  //depthmap이 목적이니 깊이 테스트 해야지
     }
 
-    GLHelper::CheckError("DepthMap Init");
+    SR_CHECK_ERROR("DepthMap Init");
   }
   void draw_frame(sora::Device *dev) {
     {
@@ -177,7 +179,7 @@ namespace depthmap {
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
     
-    GLHelper::CheckError("FBO draw");
+    SR_CHECK_ERROR("FBO draw");
     {
       glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -217,7 +219,7 @@ namespace depthmap {
       glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 
     }
-    GLHelper::CheckError("Draw DepthMap");
+    SR_CHECK_ERROR("Draw DepthMap");
     Renderer::EndRender();
   }
 

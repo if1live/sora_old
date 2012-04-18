@@ -20,7 +20,9 @@
 // Ŭnicode please
 #include "sora_stdafx.h"
 #include "selection_buffer.h"
-#include "gl_helper.h"
+
+#include "renderer/renderer_env.h"
+
 #include "shader.h"
 #include "sys/memory_file.h"
 #include "sys/filesystem.h"
@@ -51,7 +53,7 @@ void SelectionBuffer::Init(int w, int h) {
   glGenRenderbuffers(1, &depth_);
   glBindRenderbuffer(GL_RENDERBUFFER, depth_);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT16, w, h);
-  GLHelper::CheckError("Create Depth Buffer");
+  SR_CHECK_ERROR("Create Depth Buffer");
   //color
   //텍스쳐가 아니라 버퍼로 생성할 경우 타입에 제약이 걸린다
   //http://www.khronos.org/opengles/sdk/docs/man/xhtml/glRenderbufferStorage.xml
@@ -73,7 +75,7 @@ void SelectionBuffer::Init(int w, int h) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
 
-  GLHelper::CheckError("Create Color Buffer");
+  SR_CHECK_ERROR("Create Color Buffer");
 
   //attach to fb
   //renderbuffer생성하자마자 달면 GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER 에러 뜬다
@@ -82,8 +84,8 @@ void SelectionBuffer::Init(int w, int h) {
   glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depth_);
   //glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color_);
   glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_, 0);
-  GLHelper::CheckFrameBufferStatus("fb");
-  GLHelper::CheckError("Create Selection Buffer");
+  GLEnv::CheckFrameBufferStatus("fb");
+  SR_CHECK_ERROR("Create Selection Buffer");
 
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
 

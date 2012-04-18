@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 #include "sora_test_stdafx.h"
 
-#include "sora/renderer/gl_inc.h"
+#include "sora/renderer/gl/gl_inc.h"
 
 //#include "sora/common/logger.h"
 //#include "sora/common/assert_inc.h"

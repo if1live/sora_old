@@ -21,18 +21,20 @@
 #include "sora_stdafx.h"
 #include "shadow_map_main.h"
 
+#include "renderer/renderer_env.h"
+
 #include "sys/filesystem.h"
 #include "renderer/shader.h"
 #include "sys/memory_file.h"
 #include "renderer/texture.h"
 #include "renderer/texture_manager.h"
-#include "renderer/gl_helper.h"
+
 
 #include "renderer/light.h"
 #include "renderer/mesh_manager.h"
 #include "sys/device.h"
 #include "mesh/primitive_model.h"
-#include "renderer/gl_buffer_object.h"
+#include "renderer/gl/gl_buffer_object.h"
 #include "renderer/camera.h"
 #include "renderer/renderer.h"
 
@@ -146,7 +148,8 @@ namespace shadowmap {
 
       glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, shadow_map_fbo.depth);
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, shadow_map_fbo.img, 0);
-      GLHelper::CheckFrameBufferStatus("fb");
+
+      SR_CHECK_FRAMEBUFFER("fb");
 
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
     }
@@ -232,7 +235,7 @@ namespace shadowmap {
       glViewport(0, 0, (int)win_width, (int)win_height);
       glDisable(GL_DEPTH_TEST);
 
-      GLHelper::CheckError("Render 2d start");
+      SR_CHECK_ERROR("Render 2d start");
       //draw 2d something
       glm::mat4 world_mat(1.0f);
 
@@ -267,11 +270,11 @@ namespace shadowmap {
       glVertexAttribPointer(pos_loc, 3, GL_FLOAT, GL_FALSE, 0, vertex);
       glVertexAttribPointer(tex_loc, 2, GL_FLOAT, GL_FALSE, 0, texcoord);
       glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-      GLHelper::CheckError("glDrawArrays");
+      SR_CHECK_ERROR("glDrawArrays");
     }
 
 
-    GLHelper::CheckError("glDrawArrays");
+    SR_CHECK_ERROR("glDrawArrays");
     Renderer::EndRender();
   }
   void update_frame(sora::Device *dev, float dt) {

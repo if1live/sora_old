@@ -22,8 +22,8 @@
 #define SORA_MESH_H_
 
 #include "mesh/vertex.h"
-#include "gl_buffer_object.h"
-#include "gl_helper.h"
+#include "renderer/gl/gl_buffer_object.h"
+
 #if SR_USE_PCH == 0
 #include "gl_inc.h"
 #endif
@@ -98,7 +98,7 @@ void MeshBufferObject::Add(const DrawCommand<T> &cmd) {
     }
   }
 
-  GLHelper::CheckError("MeshBufferObject Add");
+  SR_CHECK_ERROR("MeshBufferObject Add");
 }
 
 }

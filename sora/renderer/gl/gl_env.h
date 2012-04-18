@@ -21,13 +21,11 @@
 #ifndef SORA_GL_HELPER_H_
 #define SORA_GL_HELPER_H_
 
-#if SR_USE_PCH == 0
 #include <vector>
 #include <string>
-#endif
 
 namespace sora {;
-class GLHelper {
+class GLEnv {
 public:
   static bool CheckFrameBufferStatus(const char *name);
   static bool CheckFrameBufferStatus(const std::string &name) {
@@ -37,17 +35,17 @@ public:
   static bool CheckError(const std::string &name) {
     return CheckError(name.c_str());
   }
-  // gl information
-  static const std::string &GetVersion();
-  static const std::string &GetVender();
-  static const std::string &GetRenderer();
-  static const std::string &GetExtensions();
-  static const std::vector<std::string> &GetExtensionList();
-  static bool IsExtensionSupport(const char *ext) {
-    return IsExtensionSupport(std::string(ext));
-  }
-  static bool IsExtensionSupport(const std::string &ext);
 
+  //템플릿에서 사용되는 인터페이스측
+public:  
+  // gl information
+  const std::string &GetVersion() const;
+  const std::string &GetVender() const;
+  const std::string &GetRenderer() const;
+  const std::vector<std::string> &GetExtensionList() const;
+
+  //gl에서만 쓰이는 부분
+public:
   template<typename T>  static GLenum TypeToGLEnum() { return GL_FLOAT; }
   template<> static GLenum TypeToGLEnum<float>() { return GL_FLOAT; }
   template<> static GLenum TypeToGLEnum<int>() { return GL_INT; }

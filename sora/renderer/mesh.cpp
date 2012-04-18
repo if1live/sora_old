@@ -20,7 +20,7 @@
 // Ŭnicode please
 #include "sora_stdafx.h"
 #include "mesh.h"
-#include "gl_helper.h"
+
 
 using namespace std;
 

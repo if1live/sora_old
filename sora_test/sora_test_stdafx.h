@@ -27,11 +27,16 @@
 #error "not support"
 #endif
 
+#include <memory>
+#include <vector>
+#include "sora/core/shared_ptr_inc.h"
+
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "sora/renderer/gl_inc.h"
+#include "sora/renderer/gl/gl_inc.h"
 
 //boost
 

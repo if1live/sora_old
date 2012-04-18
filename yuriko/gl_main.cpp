@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "sora/renderer/gl_inc.h"
+#include "sora/renderer/gl/gl_inc.h"
 #include <cstdlib>
 #include <cstdio>
 

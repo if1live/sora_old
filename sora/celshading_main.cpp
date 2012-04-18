@@ -21,18 +21,20 @@
 #include "sora_stdafx.h"
 #include "celshading_main.h"
 
+#include "renderer/renderer_env.h"
+
 #include "sys/filesystem.h"
 #include "renderer/shader.h"
 #include "sys/memory_file.h"
 #include "renderer/texture.h"
 #include "renderer/texture_manager.h"
-#include "renderer/gl_helper.h"
+
 
 #include "renderer/light.h"
 #include "renderer/mesh_manager.h"
 #include "sys/device.h"
 #include "mesh/primitive_model.h"
-#include "renderer/gl_buffer_object.h"
+#include "renderer/gl/gl_buffer_object.h"
 #include "renderer/camera.h"
 
 #include "event/touch_device.h"
@@ -254,7 +256,7 @@ namespace celshading {
       render3d.Draw(*mesh);
     }
 
-    GLHelper::CheckError("glDrawArrays");
+    SR_CHECK_ERROR("glDrawArrays");
     Renderer::EndRender();
   }
 

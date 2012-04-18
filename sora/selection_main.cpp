@@ -21,18 +21,20 @@
 #include "sora_stdafx.h"
 #include "selection_main.h"
 
+#include "renderer/renderer_env.h"
+
 #include "sys/filesystem.h"
 #include "renderer/shader.h"
 #include "sys/memory_file.h"
 #include "renderer/texture.h"
 #include "renderer/texture_manager.h"
-#include "renderer/gl_helper.h"
+
 
 #include "renderer/light.h"
 #include "renderer/mesh_manager.h"
 #include "sys/device.h"
 #include "mesh/primitive_model.h"
-#include "renderer/gl_buffer_object.h"
+#include "renderer/gl/gl_buffer_object.h"
 #include "renderer/camera.h"
 
 #include "renderer/renderer.h"
@@ -90,7 +92,7 @@ namespace selection {
     {
       //init seleciton buf
       selection_buffer.Init(w, h);
-      GLHelper::CheckError("glDrawArrays");
+      SR_CHECK_ERROR("glDrawArrays");
     }
     {
       std::string tex_path = sora::Filesystem::GetAppPath("texture/sora.png");
@@ -103,7 +105,7 @@ namespace selection {
     //gl상태
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_CULL_FACE);
-    GLHelper::CheckError("glInitEnd");
+    SR_CHECK_ERROR("glInitEnd");
   }
 
   void DrawScene(sora::Device *dev, sora::ShaderProgram &shader) {
@@ -143,7 +145,7 @@ namespace selection {
       }
       render3d.Draw(*mesh_buffer);
     }
-    GLHelper::CheckError("glDrawArrays");
+    SR_CHECK_ERROR("glDrawArrays");
   }
 
   void draw_frame(sora::Device *dev) {
@@ -161,7 +163,7 @@ namespace selection {
     //DrawScene(dev, *selection_buffer.shader());
 
     Renderer::EndRender();
-    GLHelper::CheckError("glDrawArrays");
+    SR_CHECK_ERROR("glDrawArrays");
   }
 
   void update_frame(sora::Device *dev, float dt) {

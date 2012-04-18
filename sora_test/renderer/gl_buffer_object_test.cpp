@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_test_stdafx.h"
-#include "renderer/gl_buffer_object.h"
+#include "renderer/gl/gl_buffer_object.h"
 
 #include "mesh/vertex.h"
 

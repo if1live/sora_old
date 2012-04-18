@@ -22,11 +22,11 @@
 #include "render_state.h"
 
 #include "sys/device.h"
-#include "renderer/gl_helper.h"
 
 #if SR_ANDROID
 #include "gl_inc.h"
 #endif
+#include "renderer/renderer_env.h"
 
 namespace sora {;
 RenderState::RenderState(Device *dev) {
@@ -42,7 +42,7 @@ void RenderState::SetWinSize(int w, int h) {
     win_height_ = h;
 
     glViewport(0, 0, (int)w, (int)h);
-    GLHelper::CheckError("glViewport");
+    SR_CHECK_ERROR("glViewport");
   }
 }
 }

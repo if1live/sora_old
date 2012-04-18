@@ -19,9 +19,9 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_stdafx.h"
-#include "gl_helper.h"
-#include "core/common_string.h"
 
+#include "core/common_string.h"
+#include "gl_env.h"
 
 #if SR_ANDROID
 #include <GLES2/gl2.h>
@@ -29,7 +29,7 @@
 #endif
 
 namespace sora {;
-bool GLHelper::CheckFrameBufferStatus(const char *name) {
+bool GLEnv::CheckFrameBufferStatus(const char *name) {
   GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
   if(status == GL_FRAMEBUFFER_COMPLETE) {
     return true;
@@ -69,7 +69,7 @@ bool GLHelper::CheckFrameBufferStatus(const char *name) {
   return false;
 }
 
-bool GLHelper::CheckError(const char *name) {
+bool SR_CHECK_ERROR(const char *name) {
   int error = glGetError();
   if (error != GL_NO_ERROR) {
     const char *error_msg;
@@ -102,7 +102,7 @@ bool GLHelper::CheckError(const char *name) {
   }
   return true;
 }
-const std::vector<std::string> &GLHelper::GetExtensionList() {
+const std::vector<std::string> &GLEnv::GetExtensionList() const {
   using std::vector;
   using std::string;
 
@@ -118,7 +118,7 @@ const std::vector<std::string> &GLHelper::GetExtensionList() {
   return ext_list;
 }
 
-const std::string &GLHelper::GetVersion() {
+const std::string &GLEnv::GetVersion() const {
   static bool run = false;
   static std::string version;
   if (run == false) {
@@ -128,7 +128,7 @@ const std::string &GLHelper::GetVersion() {
   }
   return version;
 }
-const std::string &GLHelper::GetVender() {
+const std::string &GLEnv::GetVender() const {
   static bool run = false;
   static std::string version;
   if (run == false) {
@@ -138,7 +138,7 @@ const std::string &GLHelper::GetVender() {
   }
   return version;
 }
-const std::string &GLHelper::GetRenderer() {
+const std::string &GLEnv::GetRenderer() const {
   static bool run = false;
   static std::string version;
   if (run == false) {
@@ -148,28 +148,5 @@ const std::string &GLHelper::GetRenderer() {
   }
   return version;
 }
-bool GLHelper::IsExtensionSupport(const std::string &ext) {
-  using std::vector;
-  using std::string;
-  const vector<string> &ext_list = GetExtensionList();
-  for (size_t i = 0 ; i < ext_list.size() ; i++) {
-    if (ext == ext_list[i]) {
-      return true;
-    }
-  }
-  return false;
-}
 
-const std::string &GLHelper::GetExtensions() {
-  using std::string;
-
-  static string ext;
-  static bool run = false;
-  if (run == false) {
-    run = true;
-    const char *str = (const char*)glGetString(GL_EXTENSIONS);
-    ext = str;
-  }
-  return ext;
-}
 }

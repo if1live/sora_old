@@ -19,23 +19,24 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_test_stdafx.h"
-#include "renderer/gl_helper.h"
+
+#include "renderer/renderer_env.h"
 
 using namespace std;
 using namespace sora;
 using namespace glm;
 
-TEST(GLHelper, TypeToGLEnum) {
-  EXPECT_EQ(GL_FLOAT, GLHelper::TypeToGLEnum<float>());
-  EXPECT_EQ(GL_UNSIGNED_BYTE, GLHelper::TypeToGLEnum<unsigned char>());
-  EXPECT_EQ(GL_BYTE, GLHelper::TypeToGLEnum<char>());
-  EXPECT_EQ(GL_SHORT, GLHelper::TypeToGLEnum<short>());
-  EXPECT_EQ(GL_UNSIGNED_SHORT, GLHelper::TypeToGLEnum<unsigned short>());
-  EXPECT_EQ(GL_INT, GLHelper::TypeToGLEnum<int>());
-  EXPECT_EQ(GL_UNSIGNED_INT, GLHelper::TypeToGLEnum<unsigned int>());
+TEST(GLEnv, TypeToGLEnum) {
+  EXPECT_EQ(GL_FLOAT, GLEnv::TypeToGLEnum<float>());
+  EXPECT_EQ(GL_UNSIGNED_BYTE, GLEnv::TypeToGLEnum<unsigned char>());
+  EXPECT_EQ(GL_BYTE, GLEnv::TypeToGLEnum<char>());
+  EXPECT_EQ(GL_SHORT, GLEnv::TypeToGLEnum<short>());
+  EXPECT_EQ(GL_UNSIGNED_SHORT, GLEnv::TypeToGLEnum<unsigned short>());
+  EXPECT_EQ(GL_INT, GLEnv::TypeToGLEnum<int>());
+  EXPECT_EQ(GL_UNSIGNED_INT, GLEnv::TypeToGLEnum<unsigned int>());
 }
 
-TEST(GLHelper, VecToGLEnum) {
-  EXPECT_EQ(GL_FLOAT, GLHelper::VecToGLEnum(vec3(0.0)));
-  EXPECT_EQ(GL_INT, GLHelper::VecToGLEnum(ivec2(0.0)));
+TEST(GLEnv, VecToGLEnum) {
+  EXPECT_EQ(GL_FLOAT, GLEnv::VecToGLEnum(vec3(0.0)));
+  EXPECT_EQ(GL_INT, GLEnv::VecToGLEnum(ivec2(0.0)));
 }

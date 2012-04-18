@@ -101,9 +101,7 @@
     <ClCompile Include="mesh\primitive_model_builder.cpp" />
     <ClCompile Include="renderer\camera.cpp" />
     <ClCompile Include="renderer\font.cpp" />
-    <ClCompile Include="renderer\gl_buffer_object.cpp" />
-    <ClCompile Include="renderer\gl_helper.cpp" />
-    <ClCompile Include="renderer\gl_inc.cpp" />
+    <ClCompile Include="renderer\gl\gl_env.cpp" />
     <ClCompile Include="renderer\light.cpp" />
     <ClCompile Include="renderer\material.cpp" />
     <ClCompile Include="renderer\material_manager.cpp" />
@@ -184,9 +182,9 @@
     <ClInclude Include="mesh\vertex.h" />
     <ClInclude Include="renderer\camera.h" />
     <ClInclude Include="renderer\font.h" />
-    <ClInclude Include="renderer\gl_buffer_object.h" />
-    <ClInclude Include="renderer\gl_helper.h" />
-    <ClInclude Include="renderer\gl_inc.h" />
+    <ClInclude Include="renderer\gl\gl_buffer_object.h" />
+    <ClInclude Include="renderer\gl\gl_env.h" />
+    <ClInclude Include="renderer\gl\gl_inc.h" />
     <ClInclude Include="renderer\light.h" />
     <ClInclude Include="renderer\material.h" />
     <ClInclude Include="renderer\material_manager.h" />
@@ -196,6 +194,7 @@
     <ClInclude Include="renderer\obj_loader.h" />
     <ClInclude Include="renderer\obj_model.h" />
     <ClInclude Include="renderer\renderer.h" />
+    <ClInclude Include="renderer\renderer_env.h" />
     <ClInclude Include="renderer\render_state.h" />
     <ClInclude Include="renderer\selection_buffer.h" />
     <ClInclude Include="renderer\shader.h" />

@@ -23,7 +23,7 @@
 #include "core/template_lib.h"
 #include "sys/filesystem.h"
 #include "sys/memory_file.h"
-#include "gl_helper.h"
+
 #include "shader_bind_policy.h"
 #include "shader_variable.h"
 

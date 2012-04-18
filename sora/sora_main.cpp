@@ -38,7 +38,7 @@
 #include "sys/device.h"
 #include "renderer/render_state.h"
 
-#include "renderer/gl_helper.h"
+#include "renderer/renderer_env.h"
 #include "sys/memory_file.h"
 
 #include "renderer/shader.h"
@@ -91,10 +91,17 @@ void SORA_set_window_size(Device *device, int w, int h) {
 bool setupGraphics(Device *device, int w, int h) {
   device->render_state().SetWinSize(w, h);
 
-  LOGI("Version : %s", GLHelper::GetVersion().c_str());
-  LOGI("Vendor : %s", GLHelper::GetVender().c_str());
-  LOGI("Renderer : %s", GLHelper::GetRenderer().c_str());
-  LOGI("Extensions : %s", GLHelper::GetExtensions().c_str());
+  LOGI("Version : %s", RendererEnv::Version().c_str());
+  LOGI("Vendor : %s", RendererEnv::Vender().c_str());
+  LOGI("Renderer : %s", RendererEnv::Renderer().c_str());
+  LOGI("Extensions List");
+  auto ext_list = RendererEnv::ExtensionList();
+  auto ext_it = ext_list.begin();
+  auto ext_endit = ext_list.end();
+  for( ; ext_it != ext_endit ; ++ext_it) {
+    LOGI("%s", ext_it->c_str());
+  }
+  
   
   //lodepng
   const char *texture_table[][2] = {
@@ -351,11 +358,11 @@ void renderFrame(Device *device) {
     SR_ASSERT(mesh != NULL);
     render3d.Draw(*mesh);
 
-    GLHelper::CheckError("Render End");
+    SR_CHECK_ERROR("Render End");
   }
   
   {
-    GLHelper::CheckError("Render 2d start");
+    SR_CHECK_ERROR("Render 2d start");
     Renderer &render2d = device->render2d();
 
     //draw 2d something
@@ -386,7 +393,7 @@ void renderFrame(Device *device) {
     glVertexAttribPointer(pos_var.location, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &vert_list[0].pos);
     glVertexAttribPointer(texcoord_var.location, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &vert_list[0].texcoord);
     glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-    GLHelper::CheckError("glDrawArrays");
+    SR_CHECK_ERROR("glDrawArrays");
 
     world_mat = glm::translate(world_mat, glm::vec3(0, 800, 0));
     world_mat = glm::scale(world_mat, glm::vec3(2, 2, 1));
@@ -395,7 +402,7 @@ void renderFrame(Device *device) {
     glVertexAttribPointer(pos_var.location, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->pos);
     glVertexAttribPointer(texcoord_var.location, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->texcoord);
     glDrawElements(GL_TRIANGLES, label.index_count(), GL_UNSIGNED_SHORT, label.index_data());
-    GLHelper::CheckError("glDrawArrays");
+    SR_CHECK_ERROR("glDrawArrays");
   }
   
   //////////////////////////////

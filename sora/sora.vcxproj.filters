@@ -38,6 +38,9 @@
     <Filter Include="mesh">
       <UniqueIdentifier>{38882dde-c366-4631-85e6-6e77d98f7702}</UniqueIdentifier>
     </Filter>
+    <Filter Include="renderer\gl">
+      <UniqueIdentifier>{c091d859-626f-4c59-84b5-76a5e43efa5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora_stdafx.cpp">
@@ -86,12 +89,6 @@
     <ClCompile Include="core\arch.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\gl_helper.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\gl_inc.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\material_manager.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
@@ -126,9 +123,6 @@
       <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="renderer\font.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\gl_buffer_object.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="sys\memory_file.cpp">
@@ -211,6 +205,9 @@
     </ClCompile>
     <ClCompile Include="mesh\primitive_model_builder.cpp">
       <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\gl\gl_env.cpp">
+      <Filter>renderer\gl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -301,15 +298,6 @@
     </ClInclude>
     <ClInclude Include="core\assert_inc.h">
       <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\gl_buffer_object.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\gl_helper.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\gl_inc.h">
-      <Filter>renderer</Filter>
     </ClInclude>
     <ClInclude Include="renderer\material.h">
       <Filter>renderer</Filter>
@@ -451,6 +439,18 @@
     </ClInclude>
     <ClInclude Include="mesh\primitive_model_builder.h">
       <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\renderer_env.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\gl\gl_inc.h">
+      <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\gl\gl_env.h">
+      <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\gl\gl_buffer_object.h">
+      <Filter>renderer\gl</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
