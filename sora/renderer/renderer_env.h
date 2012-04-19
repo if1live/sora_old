@@ -33,7 +33,7 @@ enum {
 };
 
 template<typename T, int RendererType> class RendererEnvT;
-typedef RendererEnvT<GLEnv, kRendererGL> GLRendererEnv;
+typedef RendererEnvT<sora::gl::GLEnv, kRendererGL> GLRendererEnv;
 typedef GLRendererEnv RendererEnv;
 
 //어차피 런타임중에 gl/dx를 분기할 일은 사실상 없고

@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2011-2012 by if1live */
+﻿/*  Copyright (C) 2011 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -19,26 +19,25 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_test_stdafx.h"
-#include "renderer/gl/gl_buffer_object.h"
 
-#include "core/vertex.h"
+#include "renderer/renderer_env.h"
 
-TEST(GLBufferData, test) {
-  using namespace sora::gl;
-  using namespace sora;
-  using namespace std;
+using namespace std;
+using namespace sora;
+using namespace sora::gl;
+using namespace glm;
 
-  vector<Vertex2D> vert_list;
-  vert_list.push_back(Vertex2D(0, 0, 0, 0));
-  vert_list.push_back(Vertex2D(1, 0, 0, 1));
-  vert_list.push_back(Vertex2D(1, 1, 1, 0));
+TEST(GLEnv, TypeToGLEnum) {
+  EXPECT_EQ(GL_FLOAT, GLEnv::TypeToGLEnum<float>());
+  EXPECT_EQ(GL_UNSIGNED_BYTE, GLEnv::TypeToGLEnum<unsigned char>());
+  EXPECT_EQ(GL_BYTE, GLEnv::TypeToGLEnum<char>());
+  EXPECT_EQ(GL_SHORT, GLEnv::TypeToGLEnum<short>());
+  EXPECT_EQ(GL_UNSIGNED_SHORT, GLEnv::TypeToGLEnum<unsigned short>());
+  EXPECT_EQ(GL_INT, GLEnv::TypeToGLEnum<int>());
+  EXPECT_EQ(GL_UNSIGNED_INT, GLEnv::TypeToGLEnum<unsigned int>());
+}
 
-  VertexBufferObject vbo;
-  EXPECT_EQ(false, vbo.Loaded());
-
-  vbo.Init(sizeof(Vertex2D) * vert_list.size(), &vert_list[0], GL_STATIC_DRAW);
-  EXPECT_EQ(true, vbo.Loaded());
-
-  vbo.Deinit();
-  EXPECT_EQ(false, vbo.Loaded());
+TEST(GLEnv, VecToGLEnum) {
+  EXPECT_EQ(GL_FLOAT, GLEnv::VecToGLEnum(vec3(0.0)));
+  EXPECT_EQ(GL_INT, GLEnv::VecToGLEnum(ivec2(0.0)));
 }

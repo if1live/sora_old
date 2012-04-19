@@ -21,7 +21,7 @@
 #ifndef SORA_MESH_H_
 #define SORA_MESH_H_
 
-#include "mesh/vertex.h"
+#include "renderer/vertex.h"
 #include "renderer/gl/gl_buffer_object.h"
 
 #if SR_USE_PCH == 0

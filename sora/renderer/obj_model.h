@@ -21,7 +21,7 @@
 #ifndef SORA_OBJ_MODEL_H_
 #define SORA_OBJ_MODEL_H_
 
-#include "mesh/vertex.h"
+#include "renderer/vertex.h"
 #include "mesh.h"
 #if SR_USE_PCH == 0
 #include <vector>

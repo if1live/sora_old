@@ -22,7 +22,7 @@
 #ifndef SORA_PRIMITIVE_MODEL_H_
 #define SORA_PRIMITIVE_MODEL_H_
 
-#include "mesh/vertex.h"
+#include "renderer/vertex.h"
 #include "renderer/mesh.h"
 #if SR_USE_PCH == 0
 #include <vector>

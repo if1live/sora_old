@@ -18,53 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_stdafx.h"
-#include "shader_variable.h"
-
-#if SR_USE_PCH == 0
-#include <sstream>
-#endif
-
-using namespace std;
+#ifndef SORA_GLOBALS_H_
+#define SORA_GLOBALS_H_
 
 namespace sora {;
-ShaderVariable::ShaderVariable()
-  : var_type(0),
-  location_type(0),
-  size(0),
-  name(""),
-  location(-1) {
+
+typedef enum {
+  kHandleNone = 0,
+  kHandleAttrib,
+  kHandleUniform,
+} HandleType;
 }
 
-void ShaderVariable::Set(int var_type, int loc_type, const char *attr_name, int size) {
-  this->var_type = var_type;
-  this->location_type = loc_type;
-  this->size = size;
-  this->name = attr_name;
-  this->location = -1;
-}
-
-std::string ShaderVariable::str() const {
-  std::ostringstream oss;
-
-  if(location_type == ShaderVariable::kTypeAttrib) {
-    oss << "[Attrib ] " << location << " / " << name;
-  } else if(location_type == ShaderVariable::kTypeUniform) {
-    oss << "[Uniform] " << location << " / " << name;
-  }
-  
-  return oss.str();
-}
-
-bool ShaderVariable::operator==(const ShaderVariable &o) const {
-  return (name == o.name 
-    && location == o.location
-    && size == o.size 
-    && var_type == o.var_type
-    && location_type == o.location_type
-    && location == o.location);
-}
-bool ShaderVariable::operator!=(const ShaderVariable &o) const {
-  return !(*this == o);
-}
-}
+#endif  // SORA_GLOBALS_H_

@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2011 by if1live */
+﻿/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,25 +18,49 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_test_stdafx.h"
+#ifndef SORA_VERTEX_H_
+#define SORA_VERTEX_H_
 
-#include "renderer/renderer_env.h"
+#include "core/vector.h"
 
-using namespace std;
-using namespace sora;
-using namespace glm;
+namespace sora {;
 
-TEST(GLEnv, TypeToGLEnum) {
-  EXPECT_EQ(GL_FLOAT, GLEnv::TypeToGLEnum<float>());
-  EXPECT_EQ(GL_UNSIGNED_BYTE, GLEnv::TypeToGLEnum<unsigned char>());
-  EXPECT_EQ(GL_BYTE, GLEnv::TypeToGLEnum<char>());
-  EXPECT_EQ(GL_SHORT, GLEnv::TypeToGLEnum<short>());
-  EXPECT_EQ(GL_UNSIGNED_SHORT, GLEnv::TypeToGLEnum<unsigned short>());
-  EXPECT_EQ(GL_INT, GLEnv::TypeToGLEnum<int>());
-  EXPECT_EQ(GL_UNSIGNED_INT, GLEnv::TypeToGLEnum<unsigned int>());
+enum {
+  kNoVertex = -1,
+  kVertex2D,
+  kVertex,
+  kTangentVertex
+};
+
+struct Vertex;
+struct TangentVertex;
+struct Vertex2D;
+
+struct Vertex2D {
+  Vertex2D() : pos(0, 0), texcoord(0, 0) {}
+  Vertex2D(float x, float y, float s, float t)
+    : pos(x, y), texcoord(s, t) {}
+  glm::vec2 pos;
+  glm::vec2 texcoord;
+  static int Type() { return kVertex2D; }
+};
+
+struct Vertex {
+  Vertex() : pos(0, 0, 0), texcoord(0, 0), normal(1, 0, 0), color(255, 255, 255, 255) {}
+
+  glm::vec3 pos;
+  glm::vec2 texcoord;
+  glm::vec3 normal;
+  sora::vec4ub color;
+
+  static int Type() { return kVertex; }
+};
+
+struct TangentVertex : public Vertex {
+  glm::vec3 tangent;
+  static int Type() { return kTangentVertex; }
+};
+
 }
 
-TEST(GLEnv, VecToGLEnum) {
-  EXPECT_EQ(GL_FLOAT, GLEnv::VecToGLEnum(vec3(0.0)));
-  EXPECT_EQ(GL_INT, GLEnv::VecToGLEnum(ivec2(0.0)));
-}
+#endif  // SORA_VERTEX_H_

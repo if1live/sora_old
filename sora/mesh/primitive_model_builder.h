@@ -21,7 +21,7 @@
 #ifndef SORA_PRIMITIVE_MODEL_BUILDER_H_
 #define SORA_PRIMITIVE_MODEL_BUILDER_H_
 
-#include "mesh/vertex.h"
+#include "renderer/vertex.h"
 #include "renderer/mesh.h"
 #include <vector>
 

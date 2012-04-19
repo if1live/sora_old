@@ -100,10 +100,10 @@
     <ClCompile Include="core\mem_test.cpp" />
     <ClCompile Include="core\template_lib_test.cpp" />
     <ClCompile Include="renderer\gl_buffer_object_test.cpp" />
-    <ClCompile Include="renderer\gl_helper_test.cpp" />
+    <ClCompile Include="renderer\gl_env_test.cpp" />
+    <ClCompile Include="renderer\gl_vertex_test.cpp" />
     <ClCompile Include="renderer\matrix_stack_test.cpp" />
-    <ClCompile Include="renderer\obj_loader_test.cpp" />
-    <ClCompile Include="renderer\shader_test.cpp" />
+    <ClCompile Include="renderer\gl_shader_test.cpp" />
     <ClCompile Include="sora_test_stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

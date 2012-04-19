@@ -19,26 +19,36 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_test_stdafx.h"
-#include "sora/renderer/shader.h"
+#include "sora/renderer/gl/gl_shader.h"
 
-TEST(Shader, InitVertexShader) {
-  using sora::Shader;
+const char *vert_src = ""
+  "uniform mat4 u_mvpMatrix;  "
+  "attribute vec4 a_position;  "
+  "attribute vec4 a_color;  "
+  "varying vec4 v_color;  "
+  "void main()  "
+  "{  "
+  "v_color = a_color; "
+  "gl_Position = u_mvpMatrix * a_position;"
+  "}";
+
+const char *frag_src = ""
+  "precision mediump float;  "
+  "varying vec4 v_color;  "
+  "void main()  "
+  "{  "
+  "gl_FragColor = v_color;  "
+  "}  ";
+
+TEST(GLShader, InitVertexShader) {
+  using sora::gl::GLShader;
   using std::string;
-  Shader vsh;
+  GLShader vsh;
   EXPECT_EQ(0, vsh.handle);  // not yet created
 
   // load sample shader
-  string src = ""
-    "uniform mat4 u_mvpMatrix;  "
-    "attribute vec4 a_position;  "
-    "attribute vec4 a_color;  "
-    "varying vec4 v_color;  "
-    "void main()  "
-    "{  "
-    "v_color = a_color; "
-    "gl_Position = u_mvpMatrix * a_position;"
-    "}";
-  vsh.InitVertexShader(src);
+
+  vsh.InitVertexShader(vert_src);
   EXPECT_EQ(true, vsh.handle > 0);
   EXPECT_EQ(GL_VERTEX_SHADER, vsh.type);
 
@@ -46,21 +56,15 @@ TEST(Shader, InitVertexShader) {
   //쉐이더를 복사해도 문제가 생기지 않도록햇다.
   vsh.Deinit();
 }
-TEST(Shader, InitFragmentShader) {
-  using sora::Shader;
+TEST(GLShader, InitFragmentGLShader) {
+  using sora::gl::GLShader;
   using std::string;
 
-  Shader fsh;
+  GLShader fsh;
   EXPECT_EQ(0, fsh.handle);  // not yet created  
   EXPECT_EQ(false, fsh.IsInit());
-  string src = ""
-    "precision mediump float;  "
-    "varying vec4 v_color;  "
-    "void main()  "
-    "{  "
-    "gl_FragColor = v_color;  "
-    "}  ";
-  fsh.InitFragmentShader(src);
+
+  fsh.InitFragmentShader(frag_src);
   EXPECT_EQ(true, fsh.handle > 0);
   EXPECT_EQ(GL_FRAGMENT_SHADER, fsh.type);
   EXPECT_EQ(true, fsh.IsInit());
@@ -70,32 +74,31 @@ TEST(Shader, InitFragmentShader) {
   fsh.Deinit();
 }
 
-TEST(ShaderProgram, ShaderProgram) {
-  using sora::ShaderProgram;
+TEST(GLProgram, GLProgram) {
+  using sora::gl::GLProgram;
   using std::string;
-  ShaderProgram prog;
+  GLProgram prog;
 
   EXPECT_EQ(false, prog.IsInit());
-  string v_src = ""
-    "uniform mat4 u_mvpMatrix;  "
-    "attribute vec4 a_position;  "
-    "attribute vec4 a_color;  "
-    "varying vec4 v_color;  "
-    "void main()  "
-    "{  "
-    "v_color = a_color; "
-    "gl_Position = u_mvpMatrix * a_position;"
-    "}";
-  string f_src = ""
-    "precision mediump float;  "
-    "varying vec4 v_color;  "
-    "void main()  "
-    "{  "
-    "gl_FragColor = v_color;  "
-    "}  ";
-  prog.Init(v_src, f_src);
+  prog.Init(vert_src, frag_src);
   EXPECT_EQ(true, prog.IsInit());
   EXPECT_EQ(true, prog.Validate(prog.prog));
+
+  //쉐이더 해제는 소멸자로 하지 않도록 고쳐서
+  //쉐이더를 복사해도 문제가 생기지 않도록햇다.
+  prog.Deinit();
+}
+
+TEST(GLProgram, SetValueEtc) {
+  using sora::gl::GLProgram;
+  using std::string;
+  GLProgram prog;
+  prog.Init(vert_src, frag_src);
+
+  float a;
+
+  glm::mat4 m1;
+  glm::vec3 m2;
 
   //쉐이더 해제는 소멸자로 하지 않도록 고쳐서
   //쉐이더를 복사해도 문제가 생기지 않도록햇다.

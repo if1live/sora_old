@@ -24,61 +24,63 @@
 #include "gl_inc.h"
 
 namespace sora {;
-template<GLenum Target> class GLBufferObject;
-typedef GLBufferObject<GL_ARRAY_BUFFER> VertexBufferObject;
-typedef GLBufferObject<GL_ELEMENT_ARRAY_BUFFER> IndexBufferObject;
+namespace gl {
+  template<GLenum Target> class GLBufferObject;
+  typedef GLBufferObject<GL_ARRAY_BUFFER> VertexBufferObject;
+  typedef GLBufferObject<GL_ELEMENT_ARRAY_BUFFER> IndexBufferObject;
 
-template<GLenum Target>
-class GLBufferObject {
-public:
-  enum {
-    kStatic = GL_STATIC_DRAW,
-    kDynamic = GL_DYNAMIC_DRAW,
-    kStream = GL_STREAM_DRAW,
+  template<GLenum Target>
+  class GLBufferObject {
+  public:
+    enum {
+      kStatic = GL_STATIC_DRAW,
+      kDynamic = GL_DYNAMIC_DRAW,
+      kStream = GL_STREAM_DRAW,
+    };
+
+  public:
+    GLBufferObject();
+    ~GLBufferObject();
+
+    void Init(int size, void *data, GLenum usage);
+    void Deinit();
+    bool Loaded() const { return (buffer_ != 0); }
+
+    GLuint buffer() const { return buffer_; }
+  private:
+    GLuint buffer_;
   };
 
-public:
-  GLBufferObject();
-  ~GLBufferObject();
-
-  void Init(int size, void *data, GLenum usage);
-  void Deinit();
-  bool Loaded() const { return (buffer_ != 0); }
-
-  GLuint buffer() const { return buffer_; }
-private:
-  GLuint buffer_;
-};
-
-template<GLenum Target>
-GLBufferObject<Target>::GLBufferObject() 
-: buffer_(0) {
-}
-
-template<GLenum Target>
-GLBufferObject<Target>::~GLBufferObject() {
-}
-
-template<GLenum Target>
-void GLBufferObject<Target>::Init(int size, void *data, GLenum usage) {
-  if(buffer_ == 0) {
-    glGenBuffers(1, &buffer_);
+  template<GLenum Target>
+  GLBufferObject<Target>::GLBufferObject() 
+    : buffer_(0) {
   }
-  glBindBuffer(Target, buffer_);
-  glBufferData(Target, size, data, usage);
 
-  //unbind
-  glBindBuffer(Target, 0);
-}
-
-template<GLenum Target>
-void GLBufferObject<Target>::Deinit() {
-  if(buffer_ != 0) {
-    glDeleteBuffers(1, &buffer_);
-    buffer_ = 0;
+  template<GLenum Target>
+  GLBufferObject<Target>::~GLBufferObject() {
   }
-}
 
-}
+  template<GLenum Target>
+  void GLBufferObject<Target>::Init(int size, void *data, GLenum usage) {
+    if(buffer_ == 0) {
+      glGenBuffers(1, &buffer_);
+    }
+    glBindBuffer(Target, buffer_);
+    glBufferData(Target, size, data, usage);
+
+    //unbind
+    glBindBuffer(Target, 0);
+  }
+
+  template<GLenum Target>
+  void GLBufferObject<Target>::Deinit() {
+    if(buffer_ != 0) {
+      glDeleteBuffers(1, &buffer_);
+      buffer_ = 0;
+    }
+  }
+
+} //namespace gl
+} //namespace sora
 
 #endif  // SORA_GL_BUFFER_OBJECT_H_

@@ -18,64 +18,51 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_VERTEX_H_
-#define SORA_VERTEX_H_
-
+#ifndef SORA_GL_VERTEX_H_
+#define SORA_GL_VERTEX_H_
 
 #include "core/vector.h"
-#if SR_USE_PCH == 0
-#include "gl_inc.h"
-#endif
-
+#include "core/vertex.h"
+#include "gl_env.h"
 
 namespace sora {;
-struct Vertex;
-struct TangentVertex;
-struct Vertex2D;
+namespace gl {
+  struct VertexInfo {
+    int size;
 
-enum {
-  kNoVertex = -1,
-  kVertex2D,
-  kVertex,
-  kTangentVertex
-};
+    int pos_offset;
+    GLenum pos_type;
 
-struct VertexInfo {
-  int size;
+    int color_offset;
+    GLenum color_type;
 
-  int pos_offset;
-  GLenum pos_type;
+    int texcoord_offset;
+    GLenum texcoord_type;
 
-  int color_offset;
-  GLenum color_type;
+    int normal_offset;
+    GLenum normal_type;
 
-  int texcoord_offset;
-  GLenum texcoord_type;
+    int tangent_offset;
+    GLenum tangent_type;
 
-  int normal_offset;
-  GLenum normal_type;
+    template<typename T>
+    static VertexInfo &Info() {
+      static_assert(false, "not defined");
+      static VertexInfo info;
+      return info;
+    }
+  };
 
-  int tangent_offset;
-  GLenum tangent_type;
-};
 
-struct Vertex2D {
-  Vertex2D() : pos(0, 0), texcoord(0, 0) {}
-  Vertex2D(float x, float y, float s, float t)
-    : pos(x, y), texcoord(s, t) {}
-
-  glm::vec2 pos;
-  glm::vec2 texcoord;
-
-  static int Type() { return kVertex2D; }
-  static VertexInfo &Info() {
+  template<>
+  VertexInfo &VertexInfo::Info<sora::Vertex2D>() {
     static VertexInfo info;
     static bool init = false;
     if(init == false) {
       Vertex2D vert;
 
       init = true;
-      info.size = sizeof(Vertex2D);
+      info.size = sizeof(vert);
 
       info.pos_offset = offsetof(Vertex2D, pos);
       info.pos_type = GLEnv::VecToGLEnum(vert.pos);
@@ -89,24 +76,15 @@ struct Vertex2D {
     }
     return info;
   }
-};
 
-struct Vertex {
-  Vertex() : pos(0, 0, 0), texcoord(0, 0), normal(1, 0, 0), color(255, 255, 255, 255) {}
-
-  glm::vec3 pos;
-  glm::vec2 texcoord;
-  glm::vec3 normal;
-  sora::vec4ub color;
-
-  static int Type() { return kVertex; }
-  static VertexInfo &Info() {
+  template<>
+  VertexInfo &VertexInfo::Info<sora::Vertex>() {
     static VertexInfo info;
     static bool init = false;
     if(init == false) {
       init = true;
       Vertex vert;
-      info.size = sizeof(Vertex);
+      info.size = sizeof(vert);
 
       info.pos_offset = offsetof(Vertex, pos);
       info.pos_type = GLEnv::VecToGLEnum(vert.pos);
@@ -124,19 +102,15 @@ struct Vertex {
     }
     return info;
   }
-};
 
-struct TangentVertex : public Vertex {
-  glm::vec3 tangent;
-
-  static int Type() { return kTangentVertex; }
-  static VertexInfo &Info() {
+  template<>
+  VertexInfo &VertexInfo::Info<sora::TangentVertex>() {
     static VertexInfo info;
     static bool init = false;
     if(init == false) {
       init = true;
       TangentVertex vert;
-      info.size = sizeof(TangentVertex);
+      info.size = sizeof(vert);
 
       info.pos_offset = offsetof(TangentVertex, pos);
       info.pos_type = GLEnv::VecToGLEnum(vert.pos);
@@ -155,7 +129,7 @@ struct TangentVertex : public Vertex {
     }
     return info;
   }
-};
+}
 }
 
-#endif  // SORA_VERTEX_H_
+#endif  // SORA_GL_VERTEX_H_

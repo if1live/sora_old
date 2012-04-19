@@ -19,26 +19,29 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_test_stdafx.h"
-#include "renderer/gl/gl_buffer_object.h"
+#include "sora/renderer/gl/gl_vertex.h"
 
-#include "core/vertex.h"
+using namespace std;
+using namespace sora;
+using namespace sora::gl;
 
-TEST(GLBufferData, test) {
-  using namespace sora::gl;
-  using namespace sora;
-  using namespace std;
+TEST(VertexInfo, Vertex2D) {
+  VertexInfo &info = VertexInfo::Info<Vertex2D>();
+  EXPECT_EQ(sizeof(Vertex2D), info.size);
+  EXPECT_EQ(0, info.pos_offset);
+  EXPECT_EQ(GL_FLOAT, info.pos_type);
+}
 
-  vector<Vertex2D> vert_list;
-  vert_list.push_back(Vertex2D(0, 0, 0, 0));
-  vert_list.push_back(Vertex2D(1, 0, 0, 1));
-  vert_list.push_back(Vertex2D(1, 1, 1, 0));
+TEST(VertexInfo, Vertex) {
+  VertexInfo &info = VertexInfo::Info<Vertex>();
+  EXPECT_EQ(sizeof(Vertex), info.size);
+  EXPECT_EQ(0, info.pos_offset);
+  EXPECT_EQ(GL_FLOAT, info.pos_type);
+}
 
-  VertexBufferObject vbo;
-  EXPECT_EQ(false, vbo.Loaded());
-
-  vbo.Init(sizeof(Vertex2D) * vert_list.size(), &vert_list[0], GL_STATIC_DRAW);
-  EXPECT_EQ(true, vbo.Loaded());
-
-  vbo.Deinit();
-  EXPECT_EQ(false, vbo.Loaded());
+TEST(VertexInfo, TangentVertex) {
+  VertexInfo &info = VertexInfo::Info<TangentVertex>();
+  EXPECT_EQ(sizeof(TangentVertex), info.size);
+  EXPECT_EQ(0, info.pos_offset);
+  EXPECT_EQ(GL_FLOAT, info.pos_type);
 }

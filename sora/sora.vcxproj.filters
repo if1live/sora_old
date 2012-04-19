@@ -49,7 +49,6 @@
     <ClCompile Include="lodepng\lodepng.cpp">
       <Filter>sdk\lodepng</Filter>
     </ClCompile>
-    <ClCompile Include="sora_main.cpp" />
     <ClCompile Include="cbes\world.cpp">
       <Filter>cbes</Filter>
     </ClCompile>
@@ -89,40 +88,7 @@
     <ClCompile Include="core\arch.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\material_manager.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\matrix_stack.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\obj_loader.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\obj_model.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\renderer.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\shader.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\shader_variable.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\texture.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\texture_manager.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\uber_shader.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\camera.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\font.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="sys\memory_file.cpp">
@@ -140,26 +106,8 @@
     <ClCompile Include="sys\low_level_c_file.cpp">
       <Filter>sys</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\shader_bind_policy.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
     <ClCompile Include="event\touch_device.cpp">
       <Filter>event</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\mesh.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\mesh_manager.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\light.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="sys\device.cpp">
-      <Filter>sys</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\render_state.cpp">
-      <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="soil\image_DXT.cpp">
       <Filter>sdk\soil</Filter>
@@ -173,40 +121,10 @@
     <ClCompile Include="soil\stb_image_aug.cpp">
       <Filter>sdk\soil</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\material.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="shadow_map_main.cpp">
-      <Filter>logic_test</Filter>
-    </ClCompile>
-    <ClCompile Include="test_function.cpp">
-      <Filter>logic_test</Filter>
-    </ClCompile>
-    <ClCompile Include="selection_main.cpp">
-      <Filter>logic_test</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\selection_buffer.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="celshading_main.cpp">
-      <Filter>logic_test</Filter>
-    </ClCompile>
-    <ClCompile Include="depth_map_main.cpp">
-      <Filter>logic_test</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh\parametric_surface.cpp">
-      <Filter>mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh\primitive_model.cpp">
-      <Filter>mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh\mesh_helper.cpp">
-      <Filter>mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh\primitive_model_builder.cpp">
-      <Filter>mesh</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\gl\gl_env.cpp">
+      <Filter>renderer\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\gl\gl_shader.cpp">
       <Filter>renderer\gl</Filter>
     </ClCompile>
   </ItemGroup>
@@ -220,7 +138,6 @@
     <ClInclude Include="..\sdk\vincent\vincent.h">
       <Filter>sdk\vincent</Filter>
     </ClInclude>
-    <ClInclude Include="sora_main.h" />
     <ClInclude Include="cbes\entity.h">
       <Filter>cbes</Filter>
     </ClInclude>
@@ -299,46 +216,7 @@
     <ClInclude Include="core\assert_inc.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\material.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\material_manager.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\matrix_stack.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\mesh.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\obj_loader.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\obj_model.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\renderer.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\shader.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\shader_variable.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\texture.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\texture_manager.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\uber_shader.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\camera.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\font.h">
       <Filter>renderer</Filter>
     </ClInclude>
     <ClInclude Include="sys\low_level_c_file.h">
@@ -356,26 +234,11 @@
     <ClInclude Include="sys\filesystem.h">
       <Filter>sys</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\shader_bind_policy.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
     <ClInclude Include="event\touch_event.h">
       <Filter>event</Filter>
     </ClInclude>
     <ClInclude Include="event\touch_device.h">
       <Filter>event</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\mesh_manager.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\light.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="sys\device.h">
-      <Filter>sys</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\render_state.h">
-      <Filter>renderer</Filter>
     </ClInclude>
     <ClInclude Include="soil\image_helper.h">
       <Filter>sdk\soil</Filter>
@@ -395,50 +258,14 @@
     <ClInclude Include="soil\image_DXT.h">
       <Filter>sdk\soil</Filter>
     </ClInclude>
-    <ClInclude Include="shadow_map_main.h">
-      <Filter>logic_test</Filter>
-    </ClInclude>
-    <ClInclude Include="test_function.h">
-      <Filter>logic_test</Filter>
-    </ClInclude>
-    <ClInclude Include="selection_main.h">
-      <Filter>logic_test</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\selection_buffer.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="celshading_main.h">
-      <Filter>logic_test</Filter>
-    </ClInclude>
     <ClInclude Include="core\vector.h">
       <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="depth_map_main.h">
-      <Filter>logic_test</Filter>
     </ClInclude>
     <ClInclude Include="event\keyboard_event.h">
       <Filter>event</Filter>
     </ClInclude>
     <ClInclude Include="event\event_queue.h">
       <Filter>event</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh\parametric_equations.h">
-      <Filter>mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh\parametric_surface.h">
-      <Filter>mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh\primitive_model.h">
-      <Filter>mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh\vertex.h">
-      <Filter>mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh\mesh_helper.h">
-      <Filter>mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh\primitive_model_builder.h">
-      <Filter>mesh</Filter>
     </ClInclude>
     <ClInclude Include="renderer\renderer_env.h">
       <Filter>renderer</Filter>
@@ -451,6 +278,18 @@
     </ClInclude>
     <ClInclude Include="renderer\gl\gl_buffer_object.h">
       <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\gl\gl_vertex.h">
+      <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\globals.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\gl\gl_shader.h">
+      <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="core\vertex.h">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

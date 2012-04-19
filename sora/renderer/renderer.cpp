@@ -40,7 +40,7 @@
 #endif
 
 #include "camera.h"
-#include "mesh.h"
+//#include "mesh.h"
 #include "sys/device.h"
 #include "render_state.h"
 

@@ -3,7 +3,7 @@
 #include <vector>
 
 
-#include "mesh/vertex.h"
+#include "renderer/vertex.h"
 #include "renderer/mesh.h"
 
 namespace sora {;

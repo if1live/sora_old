@@ -16,6 +16,9 @@
     <Filter Include="renderer">
       <UniqueIdentifier>{a1549323-4d54-466b-962f-03973928a211}</UniqueIdentifier>
     </Filter>
+    <Filter Include="renderer\gl">
+      <UniqueIdentifier>{35f1603c-c2bd-4095-bdb6-04b772291b35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora_test_stdafx.cpp">
@@ -57,15 +60,6 @@
     <ClCompile Include="core\free_list_block_pool_test.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\obj_loader_test.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\shader_test.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\gl_buffer_object_test.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
     <ClCompile Include="renderer\matrix_stack_test.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
@@ -78,8 +72,17 @@
     <ClCompile Include="sys\filesystem_test.cpp">
       <Filter>sys</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\gl_helper_test.cpp">
-      <Filter>renderer</Filter>
+    <ClCompile Include="renderer\gl_env_test.cpp">
+      <Filter>renderer\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\gl_buffer_object_test.cpp">
+      <Filter>renderer\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\gl_shader_test.cpp">
+      <Filter>renderer\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\gl_vertex_test.cpp">
+      <Filter>renderer\gl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
