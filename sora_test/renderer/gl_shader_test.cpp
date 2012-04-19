@@ -92,13 +92,12 @@ TEST(GLProgram, GLProgram) {
 TEST(GLProgram, SetValueEtc) {
   using sora::gl::GLProgram;
   using std::string;
+  using namespace sora;
   GLProgram prog;
   prog.Init(vert_src, frag_src);
 
-  float a;
-
   glm::mat4 m1;
-  glm::vec3 m2;
+  EXPECT_EQ(kHandleUniform, prog.SetMatrix("u_mvpMatrix", m1));
 
   //쉐이더 해제는 소멸자로 하지 않도록 고쳐서
   //쉐이더를 복사해도 문제가 생기지 않도록햇다.

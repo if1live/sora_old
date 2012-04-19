@@ -18,27 +18,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_GLOBALS_H_
-#define SORA_GLOBALS_H_
+#include "sora_test_stdafx.h"
+#include "renderer/shader.h"
 
-namespace sora {;
+using namespace sora;
 
-typedef enum {
-  kHandleNone = 0,
-  kHandleAttrib,
-  kHandleUniform,
-} HandleType;
+const char *sample_vert_src = ""
+  "uniform mat4 u_mvpMatrix;  "
+  "attribute vec4 a_position;  "
+  "attribute vec4 a_color;  "
+  "varying vec4 v_color;  "
+  "void main()  "
+  "{  "
+  "v_color = a_color; "
+  "gl_Position = u_mvpMatrix * a_position;"
+  "}";
 
-//텍스쳐 관련
-typedef enum {
-  kTexFileUnknown = -1,  //soil로 일단 시도해보자
-  kTexFilePNG,
-  kTexFileJPEG,
-} TexFileType;
+const char *sample_frag_src = ""
+  "precision mediump float;  "
+  "varying vec4 v_color;  "
+  "uniform vec3 sample_color;"
+  "void main()  "
+  "{  "
+  "gl_FragColor = vec4(sample_color, 0.5);  "
+  "}  ";
 
-enum {
-  kTexPolicyForcePOT = 0x01, //2의 승수로 강제 보정할것인가
-};
+TEST(Shader, basic) {
+  Shader shader;
+  EXPECT_EQ(true, shader.Init(sample_vert_src, sample_frag_src));
+
+  glm::mat4 m1;
+  EXPECT_EQ(kHandleUniform, shader.SetMatrix("u_mvpMatrix", m1));
+  glm::vec3 v1;
+  EXPECT_EQ(kHandleUniform, shader.SetVector("sample_color", v1));
+  shader.Deinit();
+  
 }
-
-#endif  // SORA_GLOBALS_H_

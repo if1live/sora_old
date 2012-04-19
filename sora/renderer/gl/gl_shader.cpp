@@ -346,20 +346,5 @@ namespace gl {
     }
     return NULL;
   }
-
-  bool GLProgram::LoadFromFile(const std::string &vert_path, const std::string &frag_path) {
-    sora::MemoryFile vert_file(vert_path);
-    sora::MemoryFile frag_file(frag_path);
-    vert_file.Open();
-    frag_file.Open();
-    const char *vert_src = (const char*)(vert_file.start);
-    const char *frag_src = (const char*)(frag_file.start);
-    bool prog_result = Init(vert_src, frag_src);
-    if(prog_result == false) {
-      LOGE("Could not create program.");
-    }
-    return prog_result;
-  }
-
 } //namespace gl
 } //namespace sora

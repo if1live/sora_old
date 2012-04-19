@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2011 by if1live */
+﻿/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,6 +32,7 @@
 #include <vector>
 #endif
 
+#include "core/assert_inc.h"
 #include "renderer/globals.h"
 
 namespace sora {;
@@ -101,7 +102,7 @@ namespace gl {
       return Init(v_src.c_str(), f_src.c_str());
     }
     bool Init(const std::vector<const char*> &v_src_list, const std::vector<const char*> &f_src_list);
-    bool LoadFromFile(const std::string &vert_path, const std::string &frag_path);
+    
 
     void Deinit();
     bool IsInit() const { return (prog != 0); }
@@ -140,6 +141,17 @@ namespace gl {
     template<typename T>
     HandleType SetValue(const std::string &name, T value);
 
+    template<typename T>
+    HandleType SetMatrix(const GLHandle &handle, const glm::detail::tmat4x4<T> &mat);
+    template<typename T>
+    HandleType SetMatrix(const GLHandle &handle, const glm::detail::tmat3x3<T> &mat);
+    template<typename T>
+    HandleType SetVector(const GLHandle &handle, const glm::detail::tvec4<T> &vec);
+    template<typename T>
+    HandleType SetVector(const GLHandle &handle, const glm::detail::tvec3<T>&vec);
+    template<typename T>
+    HandleType SetValue(const GLHandle &handle, T value);
+
   public:
     GLuint prog;
 
@@ -159,56 +171,25 @@ namespace gl {
     if(handle == NULL) {
       return kHandleNone;
     }
-    SR_ASSERT(handle->location_type == kHandleUniform);
-    SR_ASSERT(handle->size == 1);
-    if(std::tr1::is_same<T, float>::value) {
-      SR_ASSERT(handle->var_type == GL_FLOAT_MAT4);
-      glUniformMatrix4fv(handle->location, 1, GL_FALSE, glm::value_ptr(mat));
-      return kHandleUniform;
-
-    } else {
-      static_assert(false, "only uniform matrix support float");
-      return kHandleNone;
-    }
+    return SetMatrix(*handle, mat);
   }
+
   template<typename T>
   HandleType GLProgram::SetMatrix(const std::string &name, const glm::detail::tmat3x3<T> &mat) {
     const GLHandle *handle = uniform_var(name);
     if(handle == NULL) {
       return kHandleNone;
     }
-    SR_ASSERT(handle->location_type == kHandleUniform);
-    SR_ASSERT(handle->size == 1);
-    if(std::tr1::is_same<T, float>::value) {
-      SR_ASSERT(handle->var_type == GL_FLOAT_MAT3);
-      glUniformMatrix3fv(handle->location, 1, GL_FALSE, glm::value_ptr(mat));
-      return kHandleUniform;
-    } else {
-      static_assert(false, "only uniform matrix support float");
-      return kHandleNone;
-    }
-    
+    return SetMatrix(*handle, mat);
   }
+
   template<typename T>
   HandleType GLProgram::SetVector(const std::string &name, const glm::detail::tvec4<T> &vec) {
     const GLHandle *handle = uniform_var(name);
     if(handle == NULL) {
       return kHandleNone;
     }
-    SR_ASSERT(handle->location_type == kHandleUniform);
-    SR_ASSERT(handle->size == 1);
-    if(std::tr1::is_same<T, float>::value) {
-      SR_ASSERT(handle->var_type == GL_FLOAT_VEC4);
-      glUniform4fv(handle->location, 1, glm::value_ptr(vec));
-      return kHandleUniform;
-    } else if(std::tr1::is_same<T, int>::value) {
-      SR_ASSERT(handle->var_type == GL_INT_VEC4);
-      glUniform4iv(handle->location, 1, glm::value_ptr(vec));
-      return kHandleUniform;
-    } else {
-      static_assert(false, "vec4 support int, float");
-      return kHandleNone;
-    }
+    return SetVector(*handle, vec);
   }
   template<typename T>
   HandleType GLProgram::SetVector(const std::string &name, const glm::detail::tvec3<T>&vec) {
@@ -216,20 +197,7 @@ namespace gl {
     if(handle == NULL) {
       return kHandleNone;
     }
-    SR_ASSERT(handle->location_type == kHandleUniform);
-    SR_ASSERT(handle->size == 1);
-    if(std::tr1::is_same<T, float>::value) {
-      SR_ASSERT(handle->var_type == GL_FLOAT_VEC3);
-      glUniform3fv(handle->location, 1, glm::value_ptr(vec));
-      return kHandleUniform;
-    } else if(std::tr1::is_same<T, int>::value) {
-      SR_ASSERT(handle->var_type == GL_INT_VEC3);
-      glUniform3iv(handle->location, 1, glm::value_ptr(vec));
-      return kHandleUniform;
-    } else {
-      static_assert(false, "vec4 support int, float");
-      return kHandleNone;
-    }
+    return SetVector(*handle, vec);
   }
 
   template<typename T>
@@ -238,22 +206,112 @@ namespace gl {
     if(handle == NULL) {
       return kHandleNone;
     }
+    return SetVector(*handle, value);
+  }
 
-    SR_ASSERT(handle->location_type == kHandleUniform);
-    SR_ASSERT(handle->size == 1);
-    if(std::tr1::is_same<T, float>::value) {
-      SR_ASSERT(handle->var_type == GL_FLOAT);
-      glUniform1f(handle->location, value);
+  template<typename T>
+  HandleType GLProgram::SetMatrix(const GLHandle &handle, const glm::detail::tmat4x4<T> &mat) {
+    SR_ASSERT(handle.location_type == kHandleUniform);
+    SR_ASSERT(handle.size == 1);
+
+    const bool is_float_type = std::is_same<T, float>::value;
+    static_assert(is_float_type, "only uniform matrix support float");
+
+    if(is_float_type) {
+      SR_ASSERT(handle.var_type == GL_FLOAT_MAT4);
+      glUniformMatrix4fv(handle.location, 1, GL_FALSE, glm::value_ptr(mat));
       return kHandleUniform;
-    } else if(std::tr1::is_same<T, int>::value) {
-      SR_ASSERT(handle->var_type == GL_INT);
-      glUniform1i(handle->location, value);
+    }
+    SR_ASSERT(!"do not reach");
+    return kHandleNone;
+  }
+  template<typename T>
+  HandleType GLProgram::SetMatrix(const GLHandle &handle, const glm::detail::tmat3x3<T> &mat) {
+    SR_ASSERT(handle.location_type == kHandleUniform);
+    SR_ASSERT(handle.size == 1);
+
+    const bool is_float_type = std::is_same<T, float>::value;
+    static_assert(is_float_type, "only uniform matrix support float");
+
+    if(is_float_type) {
+      SR_ASSERT(handle.var_type == GL_FLOAT_MAT3);
+      glUniformMatrix3fv(handle.location, 1, GL_FALSE, glm::value_ptr(mat));
+      return kHandleUniform;
+    }
+
+    SR_ASSERT(!"do not reach");
+    return kHandleNone;
+  }
+
+  template<typename T>
+  HandleType GLProgram::SetVector(const GLHandle &handle, const glm::detail::tvec4<T> &vec) {
+    SR_ASSERT(handle.location_type == kHandleUniform);
+    SR_ASSERT(handle.size == 1);
+
+    const bool is_float_type = std::is_same<T, float>::value;
+    const bool is_int_type = std::is_same<T, int>::value;
+    static_assert(is_float_type || is_int_type, "vec4 support int, float");
+
+    void *ptr = (void*)glm::value_ptr(vec);
+    if(is_float_type) {
+      SR_ASSERT(handle.var_type == GL_FLOAT_VEC4);
+      glUniform4fv(handle.location, 1, (float*)ptr);
+      return kHandleUniform;
+    } else if(is_int_type) {
+      SR_ASSERT(handle.var_type == GL_INT_VEC4);
+      glUniform4iv(handle.location, 1, (int*)ptr);
       return kHandleUniform;
     } else {
-      static_assert(false, "support int, float");
+      SR_ASSERT(!"do not reach");
       return kHandleNone;
     }
-    
+  }
+  template<typename T>
+  HandleType GLProgram::SetVector(const GLHandle &handle, const glm::detail::tvec3<T>&vec) {
+    SR_ASSERT(handle.location_type == kHandleUniform);
+    SR_ASSERT(handle.size == 1);
+
+    const bool is_float_type = std::is_same<T, float>::value;
+    const bool is_int_type = std::is_same<T, int>::value;
+    static_assert(is_float_type || is_int_type, "vec3 support int, float");
+
+    void *ptr = (void*)glm::value_ptr(vec);
+    if(is_float_type) {
+      SR_ASSERT(handle.var_type == GL_FLOAT_VEC3);
+      glUniform3fv(handle.location, 1, (float*)ptr);
+      return kHandleUniform;
+    } else if(is_int_type) {
+      SR_ASSERT(handle.var_type == GL_INT_VEC3);
+      glUniform3iv(handle.location, 1, (int*)ptr);
+      return kHandleUniform;
+    } else {
+      SR_ASSERT(!"do not reach");
+      return kHandleNone;
+    }
+  }
+
+  template<typename T>
+  HandleType GLProgram::SetValue(const GLHandle &handle, T value) {
+    SR_ASSERT(handle.location_type == kHandleUniform);
+    SR_ASSERT(handle.size == 1);
+
+    const bool is_float_type = std::is_same<T, float>::value;
+    const bool is_int_type = std::is_same<T, int>::value;
+    static_assert(is_float_type || is_int_type, "support int, float");
+
+    if(std::tr1::is_same<T, float>::value) {
+      SR_ASSERT(handle.var_type == GL_FLOAT);
+      glUniform1f(handle.location, value);
+      return kHandleUniform;
+    } else if(std::tr1::is_same<T, int>::value) {
+      SR_ASSERT(handle.var_type == GL_INT);
+      glUniform1i(handle.location, value);
+      return kHandleUniform;
+    } else {
+      SR_ASSERT(!"do not reach")
+        return kHandleNone;
+    }
+
   }
 
 } //namespace gl

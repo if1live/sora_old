@@ -127,6 +127,9 @@
     <ClCompile Include="renderer\gl\gl_shader.cpp">
       <Filter>renderer\gl</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\gl\gl_texture.cpp">
+      <Filter>renderer\gl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -290,6 +293,12 @@
     </ClInclude>
     <ClInclude Include="core\vertex.h">
       <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\gl\gl_texture.h">
+      <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\shader.h">
+      <Filter>renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

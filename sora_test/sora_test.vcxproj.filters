@@ -84,6 +84,9 @@
     <ClCompile Include="renderer\gl_vertex_test.cpp">
       <Filter>renderer\gl</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\shader_test.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h">

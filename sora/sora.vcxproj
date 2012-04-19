@@ -95,6 +95,7 @@
     <ClCompile Include="lodepng\lodepng.cpp" />
     <ClCompile Include="renderer\gl\gl_env.cpp" />
     <ClCompile Include="renderer\gl\gl_shader.cpp" />
+    <ClCompile Include="renderer\gl\gl_texture.cpp" />
     <ClCompile Include="renderer\matrix_stack.cpp" />
     <ClCompile Include="soil\image_DXT.cpp" />
     <ClCompile Include="soil\image_helper.cpp" />
@@ -150,9 +151,11 @@
     <ClInclude Include="renderer\gl\gl_env.h" />
     <ClInclude Include="renderer\gl\gl_inc.h" />
     <ClInclude Include="renderer\gl\gl_shader.h" />
+    <ClInclude Include="renderer\gl\gl_texture.h" />
     <ClInclude Include="renderer\gl\gl_vertex.h" />
     <ClInclude Include="renderer\matrix_stack.h" />
     <ClInclude Include="renderer\renderer_env.h" />
+    <ClInclude Include="renderer\shader.h" />
     <ClInclude Include="soil\image_DXT.h" />
     <ClInclude Include="soil\image_helper.h" />
     <ClInclude Include="soil\SOIL.h" />
