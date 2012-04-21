@@ -22,6 +22,8 @@
 #include <cstdlib>
 #include <cstdio>
 
+#include "sora/event/keyboard_event.h"
+
 #include "sora/sora_main.h"
 #include "sora/sys/device.h"
 #include "sora/core/timer.h"
@@ -156,6 +158,32 @@ int main(int argc, char *argv[]) {
   SORA_setup_graphics(&device, kWinWidth, kWinHeight);
   float prev_time = Timer_GetSecond();
   while(true) {
+    //glfw 키보드 이벤트 처기
+    if(glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS) {
+      sora::KeyboardEvent evt;
+      evt.is_special_key = true;
+      evt.ch = sora::KeyboardEvent::kUp;
+      device.keyboard_evt_queue().Push(evt);
+    }
+    if(glfwGetKey(GLFW_KEY_DOWN) == GLFW_PRESS) {
+      sora::KeyboardEvent evt;
+      evt.is_special_key = true;
+      evt.ch = sora::KeyboardEvent::kDown;
+      device.keyboard_evt_queue().Push(evt);
+    }
+    if(glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS) {
+      sora::KeyboardEvent evt;
+      evt.is_special_key = true;
+      evt.ch = sora::KeyboardEvent::kLeft;
+      device.keyboard_evt_queue().Push(evt);
+    }
+    if(glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS) {
+      sora::KeyboardEvent evt;
+      evt.is_special_key = true;
+      evt.ch = sora::KeyboardEvent::kRight;
+      device.keyboard_evt_queue().Push(evt);
+    }
+
     SORA_draw_frame(&device);
     float curr_time = Timer_GetSecond();
     float dt = curr_time - prev_time;

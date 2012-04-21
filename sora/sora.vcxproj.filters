@@ -148,6 +148,9 @@
     <ClCompile Include="renderer\sys_font.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
+    <ClCompile Include="mesh\geometric_object.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -341,6 +344,12 @@
     </ClInclude>
     <ClInclude Include="renderer\buffer_object.h">
       <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\geometric_object.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\teapot.h">
+      <Filter>mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -46,6 +46,8 @@
 #include "renderer/texture.h"
 #include "renderer/buffer_object.h"
 
+#include "mesh/geometric_object.h"
+
 //#include "renderer/uber_shader.h"
 //#include "renderer/matrix_stack.h"
 
@@ -369,9 +371,44 @@ void renderFrame(Device *device) {
     mvp = glm::rotate(mvp, 10.0f, vec3(0, 0, 1));
     simple_shader.SetMatrix(kMVPHandleName, mvp);
     SR_CHECK_ERROR("SetMatrix");
-
     simple_shader.SetVertexList(vert_list);
     simple_shader.DrawArrays(kDrawTriangles, vert_list.size());
+  }
+
+  //일반 3d객체 그리기+카메라 회전 장착
+  {
+    //set camera + projection
+    float win_width = (float)device->render_device().win_width();
+    float win_height = (float)device->render_device().win_height();
+    glm::mat4 projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 100.0f);
+    float radius = 4;
+    float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
+    float cam_y = radius * sin(SR_DEG_2_RAD(aptitude));
+    float cam_z = radius * cos(SR_DEG_2_RAD(aptitude)) * cos(SR_DEG_2_RAD(latitude));
+    vec3 eye(cam_x, cam_y, cam_z);
+    vec3 center(0);
+    vec3 up(0, 1, 0);
+    glm::mat4 view = glm::lookAt(eye, center, up);
+
+    glm::mat4 mvp(1.0f);
+    mvp = projection * view;
+    simple_shader.SetMatrix(kMVPHandleName, mvp);
+    SR_CHECK_ERROR("SetMatrix");
+
+    GeometricObject mesh;
+    mesh.WireTeapot(0.05f);
+    //mesh.SolidTeapot(0.05f);
+    auto it = mesh.Begin();
+    auto endit = mesh.End();
+    for( ; it != endit ; ++it) {
+      const DrawCmdData &cmd = *it;
+      simple_shader.SetVertexList(cmd.vertex_list);
+      if(cmd.index_list.empty()) {
+        simple_shader.DrawArrays(cmd.draw_mode, cmd.vertex_list.size());
+      } else {
+        simple_shader.DrawElements(cmd.draw_mode, cmd.index_list);
+      }
+    }
   }
 
   //draw 2d
