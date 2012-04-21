@@ -36,6 +36,7 @@
 #include "renderer/globals.h"
 #include "gl_vertex.h"
 #include "renderer/renderer_env.h"
+#include "renderer/buffer_object.h"
 
 namespace sora {;
 namespace gl {
@@ -153,14 +154,27 @@ namespace gl {
     HandleType SetVector(const GLHandle &handle, const glm::detail::tvec3<T>&vec);
     template<typename T>
     HandleType SetValue(const GLHandle &handle, T value);
-
-    //connect attrib
+    
+    //connect vertex attrib
     template<typename VertexType>
-    void DrawArrays(DrawType mode, const std::vector<VertexType> &vert_list);
-    template<typename VertexType>
-    void DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexList &index_list);
+    void SetVertexList(char *base_ptr);
     template<typename VertexType>
     void SetVertexList(const std::vector<VertexType> &vert_list);
+    template<typename VertexType, typename BaseBufferType>
+    void SetVertexList(const VertexBufferObjectT<BaseBufferType, VertexType> &vbo);
+
+    //진짜로 그리기
+    void DrawArrays(DrawType mode, int vertex_count) {
+      glDrawArrays(GLEnv::TypeToGLEnum(mode), 0, vertex_count);
+      SR_CHECK_ERROR("glDrawArrays");
+    }
+    void DrawElements(DrawType mode, const IndexList &index_list) {
+      glDrawElements(GLEnv::TypeToGLEnum(mode), index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
+      SR_CHECK_ERROR("glDrawElements");
+    }
+    template<typename BaseBufferType>
+    void DrawElements(DrawType mode, const IndexBufferObjectT<BaseBufferType> &ibo);
+
   public:
     GLuint prog;
 
@@ -323,20 +337,28 @@ namespace gl {
     }
   }
 
-  template<typename VertexType>
-  void GLProgram::DrawArrays(DrawType mode, const std::vector<VertexType> &vert_list) {
-    SetVertexList(vert_list);
-    glDrawArrays(GLEnv::TypeToGLEnum(mode), 0, vert_list.size());
-    SR_CHECK_ERROR("glDrawArrays");
+  template<typename BaseBufferType>
+  void GLProgram::DrawElements(DrawType mode, const IndexBufferObjectT<BaseBufferType> &ibo) {
+    GLenum draw_mode = GLEnv::TypeToGLEnum(mode);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo.ibo().buffer());
+    glDrawElements(draw_mode, ibo.count(), GL_UNSIGNED_SHORT, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   }
-  template<typename VertexType>
-  void GLProgram::DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexList &index_list) {
-    SetVertexList(vert_list);
-    glDrawElements(GLEnv::TypeToGLEnum(mode), index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
-    SR_CHECK_ERROR("glDrawElements");
-  }
+
   template<typename VertexType>
   void GLProgram::SetVertexList(const std::vector<VertexType> &vert_list) {
+    char *ptr = (char*)&vert_list[0];
+    SetVertexList<VertexType>(ptr);
+  }
+  template<typename VertexType, typename BaseBufferType>
+  void GLProgram::SetVertexList(const VertexBufferObjectT<BaseBufferType, VertexType> &vbo) {
+    glBindBuffer(GL_ARRAY_BUFFER, vbo.vbo().buffer());
+    SetVertexList<VertexType>((char*)NULL);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+  }
+
+  template<typename VertexType>
+  void GLProgram::SetVertexList(char *base_ptr) {
     const GLHandle *pos_handle = attrib_var(kPositionHandleName);
     const GLHandle *texcoord_handle = this->attrib_var(kTexcoordHandleName);
     const GLHandle *normal_handle = this->attrib_var(kNormalHandleName);
@@ -351,7 +373,7 @@ namespace gl {
       int loc = pos_handle->location;
       if(offset != -1) {
         //glEnableVertexAttribArray(pos_var.location);
-        char *ptr = (char*)&vert_list[0] + offset;
+        char *ptr = base_ptr + offset;
         glVertexAttribPointer(loc, 3, type, GL_FALSE, vertex_size, ptr);
         SR_CHECK_ERROR("glVertexAttribPointer");
       }
@@ -363,7 +385,7 @@ namespace gl {
       int loc = texcoord_handle->location;
       if(offset != -1) {
         //glEnableVertexAttribArray(texcoord_var.location);
-        char *ptr = (char*)&vert_list[0] + offset;
+        char *ptr = base_ptr + offset;
         glVertexAttribPointer(loc, 2, type, GL_FALSE, vertex_size, ptr);
         SR_CHECK_ERROR("glVertexAttribPointer");
       }
@@ -374,7 +396,7 @@ namespace gl {
       GLenum type = info.normal_type;
       int loc = normal_handle->location;
       if(offset != -1) {
-        char *ptr = (char*)&vert_list[0] + offset;
+        char *ptr = base_ptr + offset;
         glEnableVertexAttribArray(loc);
         glVertexAttribPointer(loc, 3, type, GL_FALSE, vertex_size, ptr);
         SR_CHECK_ERROR("glVertexAttribPointer");
@@ -387,7 +409,7 @@ namespace gl {
       int loc = color_handle->location;
       if(offset != -1) {
         //색속성은 ubyte니까 normalize해야됨
-        char *ptr = (char*)&vert_list[0] + offset;
+        char *ptr = base_ptr + offset;
         glEnableVertexAttribArray(loc);
         glVertexAttribPointer(loc, 4, type, GL_TRUE, vertex_size, ptr);
         SR_CHECK_ERROR("glVertexAttribPointer");
@@ -399,13 +421,12 @@ namespace gl {
       GLenum type = info.tangent_type;
       int loc = tangent_handle->location;
       if(offset != -1) {
-        char *ptr = (char*)&vert_list[0] + offset;
+        char *ptr = base_ptr + offset;
         glEnableVertexAttribArray(loc);
         glVertexAttribPointer(loc, 4, type, GL_FALSE, vertex_size, ptr);
         SR_CHECK_ERROR("glVertexAttribPointer");
       }
     }
-
   }
 
 } //namespace gl

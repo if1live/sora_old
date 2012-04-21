@@ -47,7 +47,7 @@ TEST(BufferObject, ibo) {
 
   IndexBufferObject ibo;
   EXPECT_EQ(false, ibo.Loaded());
-  ibo.Init(index_list, kBufferUsageStatic);
+  ibo.Init(index_list);
   EXPECT_EQ(true, ibo.Loaded());
   ibo.Deinit();
   EXPECT_EQ(false, ibo.Loaded());

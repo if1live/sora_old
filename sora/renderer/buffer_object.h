@@ -40,7 +40,7 @@ class VertexBufferObjectT {
 public:
   typedef VertexT VertexType;
 public:
-  VertexBufferObjectT() {}
+  VertexBufferObjectT() : count_(0) {}
   ~VertexBufferObjectT() {}
   bool Loaded() const { return vbo_.Loaded(); }
 
@@ -51,13 +51,17 @@ public:
     } else {}
       int size = vert_list.size() * sizeof(VertexType);
       vbo_.Init(size, (void*)&vert_list[0], usage);
+      count_ = vert_list.size();
       return true;
   }
   void Deinit() { vbo_.Deinit(); }
   T &vbo() { return vbo_; }
+  const T &vbo() const { return vbo_; }
   VertexType vert_type() const { return VertexType::Type(); }
+  int count() const { return count_; }
 private:
   T vbo_;
+  int count_;
 };
 
 template<typename VertexT>
@@ -81,7 +85,7 @@ struct VBOSelector<sora::TangentVertex> {
 template<typename T> 
 class IndexBufferObjectT {
 public:
-  IndexBufferObjectT() {}
+  IndexBufferObjectT() : count_(0) {}
   ~IndexBufferObjectT() {}
   bool Loaded() const { return ibo_.Loaded(); }
   void Deinit() { ibo_.Deinit(); }
@@ -92,12 +96,16 @@ public:
     } else {
       int size = index_list.size() * sizeof(index_list[0]);
       ibo_.Init(size, (void*)&index_list[0], usage);
+      count_ = index_list.size();
       return true;
     }
   }
+  int count() const { return count_; }
   T &ibo() { return ibo_; }
+  const T &ibo() const { return ibo_; }
 private:
   T ibo_;
+  int count_;
 };
 }
 #endif  // SORA_BUFFER_OBJECT_H_

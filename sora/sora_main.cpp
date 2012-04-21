@@ -44,6 +44,7 @@
 #include "renderer/renderer_env.h"
 #include "renderer/shader.h"
 #include "renderer/texture.h"
+#include "renderer/buffer_object.h"
 
 //#include "renderer/uber_shader.h"
 //#include "renderer/matrix_stack.h"
@@ -88,6 +89,9 @@ using namespace glm;
 
 Shader simple_shader;
 Shader color_shader;
+
+VertexBufferObject vbo;
+IndexBufferObject wire_ibo;
 
 void SORA_set_window_size(Device *device, int w, int h) {
   device->render_device().SetWinSize(w, h);
@@ -321,6 +325,21 @@ void renderFrame(Device *device) {
   vert_list.push_back(Vertex(vec3(-0.5, -0.5, 0), vec2(0, 0)));
   vert_list.push_back(Vertex(vec3(0.5, -0.5, 0), vec2(1, 0)));
   vert_list.push_back(Vertex(vec3(0, 0.5, 0), vec2(0.5, 1)));
+  
+  //vbo, ibo 적절히 만들기
+  if(vbo.Loaded() == false) {
+    vbo.Init(vert_list);
+  }
+  if(wire_ibo.Loaded() == false) {
+    IndexList index_list;
+    index_list.push_back(0);
+    index_list.push_back(1);
+    index_list.push_back(1);
+    index_list.push_back(2);
+    index_list.push_back(2);
+    index_list.push_back(0);
+    wire_ibo.Init(index_list);
+  }
 
   {
     //shader사용 선언이 가장 먼저
@@ -333,7 +352,11 @@ void renderFrame(Device *device) {
     vec4 color(1.0f);
     color_shader.SetVector(kConstColorHandleName, color);
     SR_CHECK_ERROR("SetVector");
-    color_shader.DrawArrays(kDrawTriangles, vert_list);
+
+    //color_shader.SetVertexList(vert_list);
+    //color_shader.DrawArrays(kDrawTriangles, vert_list.size());
+    //color_shader.DrawArrays(kDrawTriangles, vbo);
+    color_shader.DrawElements(kDrawLines, vbo, wire_ibo);
   }
   
   {
@@ -346,7 +369,9 @@ void renderFrame(Device *device) {
     mvp = glm::rotate(mvp, 10.0f, vec3(0, 0, 1));
     simple_shader.SetMatrix(kMVPHandleName, mvp);
     SR_CHECK_ERROR("SetMatrix");
-    simple_shader.DrawArrays(kDrawTriangles, vert_list);
+
+    simple_shader.SetVertexList(vert_list);
+    simple_shader.DrawArrays(kDrawTriangles, vert_list.size());
   }
 
   //draw 2d
@@ -369,7 +394,8 @@ void renderFrame(Device *device) {
     vert_list.push_back(sora::Vertex2D(100+128*2, 100, 1, 1));
     vert_list.push_back(sora::Vertex2D(100+128*2, 100+128*2, 1, 0));
     vert_list.push_back(sora::Vertex2D(100, 100+128*2, 0, 0));
-    simple_shader.DrawArrays(kDrawTriangleFan, vert_list);
+    simple_shader.SetVertexList(vert_list);
+    simple_shader.DrawArrays(kDrawTriangleFan, vert_list.size());
 
     mat4 world_mat(1.0f);
     world_mat = glm::translate(world_mat, glm::vec3(0, 800, 0));
@@ -377,7 +403,8 @@ void renderFrame(Device *device) {
     mat4 mvp = projection * world_mat;
     simple_shader.SetMatrix(kMVPHandleName, mvp);
     sora::Label label(&font, "PQRS_1234_asdf");
-    simple_shader.DrawElements(kDrawTriangles, label.vertex_list(), label.index_list());
+    simple_shader.SetVertexList(label.vertex_list());
+    simple_shader.DrawElements(kDrawTriangles, label.index_list());
   }
 
   /*
