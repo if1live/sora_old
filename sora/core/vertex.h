@@ -25,12 +25,12 @@
 
 namespace sora {;
 
-enum {
+typedef enum {
   kNoVertex = -1,
   kVertex2D,
   kVertex,
   kTangentVertex
-};
+} VertexType;
 
 struct Vertex;
 struct TangentVertex;
@@ -46,7 +46,7 @@ struct Vertex2D {
     : pos(x, y), texcoord(s, t) {}
   glm::vec2 pos;
   glm::vec2 texcoord;
-  static int Type() { return kVertex2D; }
+  static VertexType Type() { return kVertex2D; }
 };
 
 struct Vertex {
@@ -61,12 +61,12 @@ struct Vertex {
   glm::vec3 normal;
   sora::vec4ub color;
 
-  static int Type() { return kVertex; }
+  static VertexType Type() { return kVertex; }
 };
 
 struct TangentVertex : public Vertex {
   glm::vec3 tangent;
-  static int Type() { return kTangentVertex; }
+  static VertexType Type() { return kTangentVertex; }
 };
 
 }

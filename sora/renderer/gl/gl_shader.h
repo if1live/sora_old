@@ -326,13 +326,13 @@ namespace gl {
   template<typename VertexType>
   void GLProgram::DrawArrays(DrawType mode, const std::vector<VertexType> &vert_list) {
     SetVertexList(vert_list);
-    glDrawArrays(GLEnv::DrawTypeToGLEnum(mode), 0, vert_list.size());
+    glDrawArrays(GLEnv::TypeToGLEnum(mode), 0, vert_list.size());
     SR_CHECK_ERROR("glDrawArrays");
   }
   template<typename VertexType>
   void GLProgram::DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexList &index_list) {
     SetVertexList(vert_list);
-    glDrawElements(GLEnv::DrawTypeToGLEnum(mode), index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
+    glDrawElements(GLEnv::TypeToGLEnum(mode), index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
     SR_CHECK_ERROR("glDrawElements");
   }
   template<typename VertexType>

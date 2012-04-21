@@ -35,14 +35,11 @@ TEST(GLEnv, TypeToGLEnum) {
   EXPECT_EQ(GL_UNSIGNED_SHORT, GLEnv::TypeToGLEnum<unsigned short>());
   EXPECT_EQ(GL_INT, GLEnv::TypeToGLEnum<int>());
   EXPECT_EQ(GL_UNSIGNED_INT, GLEnv::TypeToGLEnum<unsigned int>());
-}
 
-TEST(GLEnv, VecToGLEnum) {
   EXPECT_EQ(GL_FLOAT, GLEnv::VecToGLEnum(vec3(0.0)));
   EXPECT_EQ(GL_INT, GLEnv::VecToGLEnum(ivec2(0.0)));
-}
 
-TEST(GLEnv, DrawTypeToGLEnum) {
-  EXPECT_EQ(GL_TRIANGLES, GLEnv::DrawTypeToGLEnum(kDrawTriangles));
-  EXPECT_EQ(GL_LINES, GLEnv::DrawTypeToGLEnum(kDrawLines));
+  //draw mode
+  EXPECT_EQ(GL_TRIANGLES, GLEnv::TypeToGLEnum(kDrawTriangles));
+  EXPECT_EQ(GL_LINES, GLEnv::TypeToGLEnum(kDrawLines));
 }

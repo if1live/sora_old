@@ -149,7 +149,7 @@ namespace gl {
     }
     return version;
   }
-  GLenum GLEnv::DrawTypeToGLEnum(DrawType type) {
+  GLenum GLEnv::TypeToGLEnum(DrawType type) {
     static bool run = false;
     static std::array<GLenum, 10> enum_list;
     if(run == false) {
@@ -164,7 +164,7 @@ namespace gl {
     }
     return enum_list[(int)type];
   }
-  GLenum GLEnv::TexFormatToGLEnum(TexFormatType type) {
+  GLenum GLEnv::TypeToGLEnum(TexFormatType type) {
     static bool run = false;
     static std::array<GLenum, 10> enum_list;
     if(run == false) {
@@ -177,7 +177,7 @@ namespace gl {
     }
     return enum_list[(int)type];
   }
-  GLenum GLEnv::TexMagFilterToGLEnum(TexMagFilter type) {
+  GLenum GLEnv::TypeToGLEnum(TexMagFilter type) {
     static bool run = false;
     static std::array<GLenum, 10> enum_list;
     if(run == false) {
@@ -187,7 +187,7 @@ namespace gl {
     }
     return enum_list[(int)type];
   }
-  GLenum GLEnv::TexMinFilterToGLEnum(TexMinFilter type) {
+  GLenum GLEnv::TypeToGLEnum(TexMinFilter type) {
     static bool run = false;
     static std::array<GLenum, 10> enum_list;
     if(run == false) {
@@ -201,7 +201,7 @@ namespace gl {
     }
     return enum_list[(int)type];
   }
-  GLenum GLEnv::TexWrapModeToGLEnum(TexWrapMode type) {
+  GLenum GLEnv::TypeToGLEnum(TexWrapMode type) {
     static bool run = false;
     static std::array<GLenum, 10> enum_list;
     if(run == false) {
@@ -212,5 +212,17 @@ namespace gl {
     }
     return enum_list[(int)type];
   }
+  GLenum GLEnv::TypeToGLEnum(BufferUsageType type) {
+    static bool run = false;
+    static std::array<GLenum, 10> enum_list;
+    if(run == false) {
+      run = true;
+      enum_list[kBufferUsageStatic] = GL_STATIC_DRAW;
+      enum_list[kBufferUsageDyanmic] = GL_DYNAMIC_DRAW;
+      enum_list[kBufferUsageStream] = GL_STREAM_DRAW;
+    }
+    return enum_list[(int)type];
+  }
+
 } //namespace gl
 } //namespace sora

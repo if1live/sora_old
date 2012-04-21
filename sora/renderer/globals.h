@@ -90,6 +90,12 @@ struct TextureParam {
   TexWrapMode wrap_t;
 };
 
+typedef enum {
+  kBufferUsageStatic,
+  kBufferUsageDyanmic,
+  kBufferUsageStream,
+} BufferUsageType;
+
 //predefined semantic
 #define kPositionHandleName "a_position"
 #define kTexcoordHandleName "a_texcoord"

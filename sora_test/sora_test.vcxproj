@@ -99,6 +99,7 @@
     <ClCompile Include="core\math_helper_test.cpp" />
     <ClCompile Include="core\mem_test.cpp" />
     <ClCompile Include="core\template_lib_test.cpp" />
+    <ClCompile Include="renderer\buffer_object_test.cpp" />
     <ClCompile Include="renderer\gl_buffer_object_test.cpp" />
     <ClCompile Include="renderer\gl_env_test.cpp" />
     <ClCompile Include="renderer\gl_vertex_test.cpp" />

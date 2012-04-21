@@ -152,6 +152,7 @@
     <ClInclude Include="event\touch_device.h" />
     <ClInclude Include="event\touch_event.h" />
     <ClInclude Include="lodepng\lodepng.h" />
+    <ClInclude Include="renderer\buffer_object.h" />
     <ClInclude Include="renderer\sys_font.h" />
     <ClInclude Include="renderer\globals.h" />
     <ClInclude Include="renderer\gl\gl_buffer_object.h" />

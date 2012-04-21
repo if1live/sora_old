@@ -339,5 +339,8 @@
     <ClInclude Include="renderer\sys_font.h">
       <Filter>renderer</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\buffer_object.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

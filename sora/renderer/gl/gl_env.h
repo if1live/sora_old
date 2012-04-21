@@ -65,11 +65,12 @@ namespace gl {
       return TypeToGLEnum<typename T::value_type>();
     }
 
-    static GLenum DrawTypeToGLEnum(DrawType type);
-    static GLenum TexFormatToGLEnum(TexFormatType type);
-    static GLenum TexMagFilterToGLEnum(TexMagFilter type);
-    static GLenum TexMinFilterToGLEnum(TexMinFilter type);
-    static GLenum TexWrapModeToGLEnum(TexWrapMode type);
+    static GLenum TypeToGLEnum(DrawType type);
+    static GLenum TypeToGLEnum(TexFormatType type);
+    static GLenum TypeToGLEnum(TexMagFilter type);
+    static GLenum TypeToGLEnum(TexMinFilter type);
+    static GLenum TypeToGLEnum(TexWrapMode type);
+    static GLenum TypeToGLEnum(BufferUsageType type);
   };
 } //namespace gl
 } //namespace sora

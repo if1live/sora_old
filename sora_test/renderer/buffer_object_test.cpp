@@ -19,26 +19,35 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_test_stdafx.h"
-#include "renderer/gl/gl_buffer_object.h"
+#include "renderer/buffer_object.h"
 
-#include "core/vertex.h"
+using namespace std;
+using namespace sora;
 
-TEST(GLBufferData, test) {
-  using namespace sora::gl;
-  using namespace sora;
-  using namespace std;
-
-  vector<Vertex2D> vert_list;
+TEST(BufferObject, vbo) {
+  std::vector<Vertex2D> vert_list;
   vert_list.push_back(Vertex2D(0, 0, 0, 0));
   vert_list.push_back(Vertex2D(1, 0, 0, 1));
   vert_list.push_back(Vertex2D(1, 1, 1, 0));
 
-  GLVertexBufferObject vbo;
+  VBOTypeSelector<Vertex2D>::Result vbo;
   EXPECT_EQ(false, vbo.Loaded());
-
-  vbo.Init(sizeof(Vertex2D) * vert_list.size(), &vert_list[0], GL_STATIC_DRAW);
+  vbo.Init(vert_list, kBufferUsageStatic);
   EXPECT_EQ(true, vbo.Loaded());
-
   vbo.Deinit();
   EXPECT_EQ(false, vbo.Loaded());
+}
+
+TEST(BufferObject, ibo) {
+  IndexList index_list;
+  index_list.push_back(1);
+  index_list.push_back(4);
+  index_list.push_back(5);
+
+  IndexBufferObject ibo;
+  EXPECT_EQ(false, ibo.Loaded());
+  ibo.Init(index_list, kBufferUsageStatic);
+  EXPECT_EQ(true, ibo.Loaded());
+  ibo.Deinit();
+  EXPECT_EQ(false, ibo.Loaded());
 }

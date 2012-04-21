@@ -22,26 +22,21 @@
 #define SORA_GL_BUFFER_OBJECT_H_
 
 #include "gl_inc.h"
+#include "gl_env.h"
 
 namespace sora {;
 namespace gl {
   template<GLenum Target> class GLBufferObject;
-  typedef GLBufferObject<GL_ARRAY_BUFFER> VertexBufferObject;
-  typedef GLBufferObject<GL_ELEMENT_ARRAY_BUFFER> IndexBufferObject;
+  typedef GLBufferObject<GL_ARRAY_BUFFER> GLVertexBufferObject;
+  typedef GLBufferObject<GL_ELEMENT_ARRAY_BUFFER> GLIndexBufferObject;
 
   template<GLenum Target>
   class GLBufferObject {
   public:
-    enum {
-      kStatic = GL_STATIC_DRAW,
-      kDynamic = GL_DYNAMIC_DRAW,
-      kStream = GL_STREAM_DRAW,
-    };
-
-  public:
     GLBufferObject();
     ~GLBufferObject();
 
+    void Init(int size, void *data, BufferUsageType usage);
     void Init(int size, void *data, GLenum usage);
     void Deinit();
     bool Loaded() const { return (buffer_ != 0); }
@@ -60,6 +55,11 @@ namespace gl {
   GLBufferObject<Target>::~GLBufferObject() {
   }
 
+  template<GLenum Target>
+  void GLBufferObject<Target>::Init(int size, void *data, BufferUsageType usage) {
+    GLenum gl_usage = GLEnv::TypeToGLEnum(usage);
+    Init(size, data, gl_usage);
+  }
   template<GLenum Target>
   void GLBufferObject<Target>::Init(int size, void *data, GLenum usage) {
     if(buffer_ == 0) {
