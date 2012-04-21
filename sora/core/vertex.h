@@ -40,6 +40,22 @@ typedef std::vector<TangentVertex> TangentVertexList;
 typedef std::vector<Vertex2D> Vertex2DList;
 typedef std::vector<unsigned short> IndexList;
 
+template<typename VertexType>
+struct VertexListSelector {
+};
+template<>
+struct VertexListSelector<Vertex> {
+  typedef VertexList Result;
+};
+template<>
+struct VertexListSelector<Vertex2D> {
+  typedef Vertex2DList Result;
+};
+template<>
+struct VertexListSelector<TangentVertex> {
+  typedef TangentVertexList Result;
+};
+
 struct Vertex2D {
   Vertex2D() : pos(0, 0), texcoord(0, 0) {}
   Vertex2D(float x, float y, float s, float t)

@@ -61,19 +61,18 @@ private:
 };
 
 template<typename VertexT>
-struct VBOTypeSelector {
+struct VBOSelector {
+};
+template<>
+struct VBOSelector<sora::Vertex> {
   typedef VertexBufferObject Result;
 };
 template<>
-struct VBOTypeSelector<sora::Vertex> {
-  typedef VertexBufferObject Result;
-};
-template<>
-struct VBOTypeSelector<sora::Vertex2D> {
+struct VBOSelector<sora::Vertex2D> {
   typedef Vertex2DBufferObject Result;
 };
 template<>
-struct VBOTypeSelector<sora::TangentVertex> {
+struct VBOSelector<sora::TangentVertex> {
   typedef TangentVertexBufferObject Result;
 };
 
