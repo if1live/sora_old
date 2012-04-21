@@ -58,8 +58,12 @@ SysFont::SysFont()
     }
   }
   //create texture
-  font_tex_.LoadTexture(data, kTextureWidth, kTextureHeight, kTexFormatAlpha);
-  //TODO : Nearest로 써야된다. 그래야 텍스쳐 번지는게 없다
+  //Nearest로 써야된다. 그래야 텍스쳐 번지는게 없다
+  TextureParam param;
+  param.mag_filter = kTexMagNearest;
+  param.min_filter = kTexMinNearest;
+  font_tex_.LoadTexture(data, kTextureWidth, kTextureHeight, kTexFormatAlpha, param);
+  
 
   SR_FREE(data);
 }
@@ -96,9 +100,11 @@ void SysFont::GetCharacterTextureQuad(unsigned char ch, float *left, float *righ
 ///////////////////////////////////
 Label::Label(SysFont *font) 
   : font_(font) {
+    Init("");
 }
 Label::Label(SysFont *font, const std::string &msg) 
   : font_(font), text_(msg) {
+    Init(text_);
 }
 Label::~Label() {
 }

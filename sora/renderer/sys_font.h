@@ -77,6 +77,8 @@ public:
 
   const Vertex2D *vertex_data() const;
   const void *index_data() const;
+  const Vertex2DList &vertex_list() const { return vert_list_; }
+  const IndexList &index_list() const { return index_list_; }
   int vertex_count() const;
   int index_count() const;
 
@@ -85,8 +87,8 @@ private:
 
 private:
   std::string text_;
-  std::vector<Vertex2D> vert_list_;
-  std::vector<ushort> index_list_;
+  Vertex2DList vert_list_;
+  IndexList index_list_;
   SysFont *font_;
 };
 

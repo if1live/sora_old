@@ -307,12 +307,18 @@ namespace gl {
     }
   }
 
-  bool GLTexture::LoadTexture(unsigned char *image, int w, int h, TexFormatType format) {
+  bool GLTexture::LoadTexture(unsigned char *image, int w, int h, TexFormatType format, const TextureParam &param) {
     GLenum gl_format = GLEnv::TexFormatToGLEnum(format);
     if(handle_ == 0) {
       glGenTextures(1, &handle_);
     }
-    return LoadTexture(handle_, image, w, h, gl_format);
+    bool result = LoadTexture(handle_, image, w, h, gl_format);
+    //change tex filter
+    GLenum mag_filter = GLEnv::TexMagFilterToGLEnum(param.mag_filter);
+    GLenum min_filter = GLEnv::TexMinFilterToGLEnum(param.min_filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
+    return result;
   }
 
   bool GLTexture::LoadTexture(GLuint tex_id, unsigned char *image, int width, int height, GLenum format) {
@@ -434,6 +440,5 @@ namespace gl {
     bool result = LoadTexture(tex_id, data, width, height, format);
     return result;
   }
-
 } //namespace gl
 } //namespace sora

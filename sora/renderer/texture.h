@@ -52,11 +52,11 @@ public:
   bool has_alpha() const { return obj_.has_alpha(); }
   bool is_render_to_texture() const { return obj_.is_render_to_texture(); }
 
-  bool LoadTexture(unsigned char *image, int w, int h, TexFormatType format) {
-    return obj_.LoadTexture(image, w, h, format);
+  bool LoadTexture(unsigned char *image, int w, int h, TexFormatType format, const TextureParam &param) {
+    return obj_.LoadTexture(image, w, h, format, param);
   }
-
   T &obj() { return obj_; }
+
 private:
   T obj_;
 };

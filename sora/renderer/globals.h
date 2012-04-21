@@ -58,6 +58,26 @@ typedef enum {
   kTexFormatRGB,
 } TexFormatType;
 
+typedef enum {
+  kTexMinLinear,
+  kTexMinNearest,
+  kTexMinNearestMipmapNearest,
+  kTexMinNearestMipmapLinear,
+  kTexMinLinearMipmapNearest,
+  kTexMinLinearMipmapLinear,
+} TexMinFilter;
+
+typedef enum {
+  kTexMagLinear,
+  kTexMagNearest,
+} TexMagFilter;
+
+struct TextureParam {
+  TextureParam() : mag_filter(kTexMagLinear), min_filter(kTexMinLinear) {}
+  TexMagFilter mag_filter;
+  TexMinFilter min_filter;
+};
+
 //predefined semantic
 #define kPositionHandleName "a_position"
 #define kTexcoordHandleName "a_texcoord"

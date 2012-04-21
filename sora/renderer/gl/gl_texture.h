@@ -52,7 +52,7 @@ namespace gl {
     bool is_render_to_texture() const { return is_render_to_texture_; }
 
     //raw image에서 텍스쳐 생성하기
-    bool LoadTexture(unsigned char *image, int w, int h, TexFormatType format);
+    bool LoadTexture(unsigned char *image, int w, int h, TexFormatType format, const TextureParam &param);
 
   private:
     uint handle_;

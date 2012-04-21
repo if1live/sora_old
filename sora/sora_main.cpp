@@ -371,16 +371,13 @@ void renderFrame(Device *device) {
     vert_list.push_back(sora::Vertex2D(100, 100+128*2, 0, 0));
     simple_shader.DrawArrays(kDrawTriangleFan, vert_list);
 
-    /*
+    mat4 world_mat(1.0f);
     world_mat = glm::translate(world_mat, glm::vec3(0, 800, 0));
     world_mat = glm::scale(world_mat, glm::vec3(2, 2, 1));
-    render2d.ApplyMatrix(world_mat);
+    mat4 mvp = projection * world_mat;
+    simple_shader.SetMatrix(kMVPHandleName, mvp);
     sora::Label label(&font, "PQRS_1234_asdf");
-    glVertexAttribPointer(pos_var.location, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->pos);
-    glVertexAttribPointer(texcoord_var.location, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->texcoord);
-    glDrawElements(GL_TRIANGLES, label.index_count(), GL_UNSIGNED_SHORT, label.index_data());
-    SR_CHECK_ERROR("glDrawArrays");
-    */
+    simple_shader.DrawElements(kDrawTriangles, label.vertex_list(), label.index_list());
   }
 
   /*

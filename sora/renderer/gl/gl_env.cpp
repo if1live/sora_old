@@ -176,7 +176,31 @@ namespace gl {
       enum_list[kTexFormatRGBA] = GL_RGBA;
     }
     return enum_list[(int)type];
-
   }
+  GLenum GLEnv::TexMagFilterToGLEnum(TexMagFilter type) {
+    static bool run = false;
+    static std::array<GLenum, 10> enum_list;
+    if(run == false) {
+      run = true;
+      enum_list[kTexMagLinear] = GL_LINEAR;
+      enum_list[kTexMagNearest] = GL_NEAREST;
+    }
+    return enum_list[(int)type];
+  }
+  GLenum GLEnv::TexMinFilterToGLEnum(TexMinFilter type) {
+    static bool run = false;
+    static std::array<GLenum, 10> enum_list;
+    if(run == false) {
+      run = true;
+      enum_list[kTexMinLinear] = GL_LINEAR;
+      enum_list[kTexMinNearest] = GL_NEAREST;
+      enum_list[kTexMinNearestMipmapNearest] = GL_NEAREST_MIPMAP_NEAREST;
+      enum_list[kTexMinNearestMipmapLinear] = GL_NEAREST_MIPMAP_LINEAR;
+      enum_list[kTexMinLinearMipmapNearest] = GL_LINEAR_MIPMAP_NEAREST;
+      enum_list[kTexMinLinearMipmapLinear] = GL_LINEAR_MIPMAP_LINEAR;
+    }
+    return enum_list[(int)type];
+  }
+
 } //namespace gl
 } //namespace sora

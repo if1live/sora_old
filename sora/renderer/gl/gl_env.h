@@ -67,6 +67,8 @@ namespace gl {
 
     static GLenum DrawTypeToGLEnum(DrawType type);
     static GLenum TexFormatToGLEnum(TexFormatType type);
+    static GLenum TexMagFilterToGLEnum(TexMagFilter type);
+    static GLenum TexMinFilterToGLEnum(TexMinFilter type);
   };
 } //namespace gl
 } //namespace sora
