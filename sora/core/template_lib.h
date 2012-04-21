@@ -160,6 +160,12 @@ template<typename T>
 T *SharedObject<T>::ctx_ = NULL;
 template<typename T>
 bool SharedObject<T>::inner_allcated_ = false;
+
+//mpl 같은거 할떄 필요한것들
+template<typename T>
+struct Type2Type {
+  typedef T Type;
+};
 }
 
 #endif  // SORA_TEMPLATE_LIBRARY_H_

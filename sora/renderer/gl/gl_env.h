@@ -48,29 +48,29 @@ namespace gl {
 
     //gl에서만 쓰이는 부분
   public:
-    template<typename T>  static GLenum TypeToGLEnum() { 
-      static_assert(false, "no type");
-      return GL_FLOAT; 
-    }
-    template<> static GLenum TypeToGLEnum<float>() { return GL_FLOAT; }
-    template<> static GLenum TypeToGLEnum<int>() { return GL_INT; }
-    template<> static GLenum TypeToGLEnum<unsigned int>() { return GL_UNSIGNED_INT; }
-    template<> static GLenum TypeToGLEnum<char>() { return GL_BYTE; }
-    template<> static GLenum TypeToGLEnum<unsigned char>() { return GL_UNSIGNED_BYTE; }
-    template<> static GLenum TypeToGLEnum<short>() { return GL_SHORT; }
-    template<> static GLenum TypeToGLEnum<unsigned short>() { return GL_UNSIGNED_SHORT; }
-
-    template<typename T>
-    static GLenum VecToGLEnum(const T &value) {
-      return TypeToGLEnum<typename T::value_type>();
-    }
-
     static GLenum TypeToGLEnum(DrawType type);
     static GLenum TypeToGLEnum(TexFormatType type);
     static GLenum TypeToGLEnum(TexMagFilter type);
     static GLenum TypeToGLEnum(TexMinFilter type);
     static GLenum TypeToGLEnum(TexWrapMode type);
     static GLenum TypeToGLEnum(BufferUsageType type);
+  };
+
+  template<typename T>
+  struct TypeToEnum { };
+  template<>  struct TypeToEnum<float> { enum { value = GL_FLOAT }; };
+  template<>  struct TypeToEnum<int> { enum { value = GL_INT }; };
+  template<>  struct TypeToEnum<unsigned int> { enum { value = GL_UNSIGNED_INT }; };
+  template<>  struct TypeToEnum<char> { enum { value = GL_BYTE }; };
+  template<>  struct TypeToEnum<unsigned char> { enum { value = GL_UNSIGNED_BYTE }; };
+  template<>  struct TypeToEnum<short> { enum { value = GL_SHORT }; };
+  template<>  struct TypeToEnum<unsigned short> { enum { value = GL_UNSIGNED_SHORT }; };
+
+  template<typename T>
+  struct VecToGLEnum {
+    enum {
+      value = TypeToEnum<typename T::value_type>::value
+    };
   };
 } //namespace gl
 } //namespace sora

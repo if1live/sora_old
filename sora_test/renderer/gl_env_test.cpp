@@ -28,16 +28,16 @@ using namespace sora::gl;
 using namespace glm;
 
 TEST(GLEnv, TypeToGLEnum) {
-  EXPECT_EQ(GL_FLOAT, GLEnv::TypeToGLEnum<float>());
-  EXPECT_EQ(GL_UNSIGNED_BYTE, GLEnv::TypeToGLEnum<unsigned char>());
-  EXPECT_EQ(GL_BYTE, GLEnv::TypeToGLEnum<char>());
-  EXPECT_EQ(GL_SHORT, GLEnv::TypeToGLEnum<short>());
-  EXPECT_EQ(GL_UNSIGNED_SHORT, GLEnv::TypeToGLEnum<unsigned short>());
-  EXPECT_EQ(GL_INT, GLEnv::TypeToGLEnum<int>());
-  EXPECT_EQ(GL_UNSIGNED_INT, GLEnv::TypeToGLEnum<unsigned int>());
+  EXPECT_EQ(GL_FLOAT, TypeToEnum<float>::value);
+  EXPECT_EQ(GL_UNSIGNED_BYTE, TypeToEnum<unsigned char>::value);
+  EXPECT_EQ(GL_BYTE, TypeToEnum<char>::value);
+  EXPECT_EQ(GL_SHORT, TypeToEnum<short>::value);
+  EXPECT_EQ(GL_UNSIGNED_SHORT, TypeToEnum<unsigned short>::value);
+  EXPECT_EQ(GL_INT, TypeToEnum<int>::value);
+  EXPECT_EQ(GL_UNSIGNED_INT, TypeToEnum<unsigned int>::value);
 
-  EXPECT_EQ(GL_FLOAT, GLEnv::VecToGLEnum(vec3(0.0)));
-  EXPECT_EQ(GL_INT, GLEnv::VecToGLEnum(ivec2(0.0)));
+  EXPECT_EQ(GL_FLOAT, VecToGLEnum<vec3>::value);
+  EXPECT_EQ(GL_INT, VecToGLEnum<ivec2>::value);
 
   //draw mode
   EXPECT_EQ(GL_TRIANGLES, GLEnv::TypeToGLEnum(kDrawTriangles));

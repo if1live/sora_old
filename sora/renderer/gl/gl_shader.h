@@ -157,7 +157,7 @@ namespace gl {
     
     //connect vertex attrib
     template<typename VertexType>
-    void SetVertexList(char *base_ptr);
+    inline void SetVertexList(char *base_ptr, Type2Type<VertexType>);
     template<typename VertexType>
     void SetVertexList(const std::vector<VertexType> &vert_list);
     template<typename VertexType, typename BaseBufferType>
@@ -175,6 +175,11 @@ namespace gl {
     template<typename BaseBufferType>
     void DrawElements(DrawType mode, const IndexBufferObjectT<BaseBufferType> &ibo);
 
+    template<typename VertexType> void SetPositionAttrib(char *base_ptr);
+    template<typename VertexType> void SetTexcoordAttrib(char *base_ptr);
+    template<typename VertexType> void SetNormalAttrib(char *base_ptr);
+    template<typename VertexType> void SetColorAttrib(char *base_ptr);
+    template<typename VertexType> void SetTangentAttrib(char *base_ptr);
   public:
     GLuint prog;
 
@@ -348,25 +353,20 @@ namespace gl {
   template<typename VertexType>
   void GLProgram::SetVertexList(const std::vector<VertexType> &vert_list) {
     char *ptr = (char*)&vert_list[0];
-    SetVertexList<VertexType>(ptr);
+    SetVertexList(ptr, Type2Type<VertexType>());
   }
   template<typename VertexType, typename BaseBufferType>
   void GLProgram::SetVertexList(const VertexBufferObjectT<BaseBufferType, VertexType> &vbo) {
     glBindBuffer(GL_ARRAY_BUFFER, vbo.vbo().buffer());
-    SetVertexList<VertexType>((char*)NULL);
+    SetVertexList((char*)NULL, Type2Type<VertexType>());
     glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
 
   template<typename VertexType>
-  void GLProgram::SetVertexList(char *base_ptr) {
+  void GLProgram::SetPositionAttrib(char *base_ptr) {
     const GLHandle *pos_handle = attrib_var(kPositionHandleName);
-    const GLHandle *texcoord_handle = this->attrib_var(kTexcoordHandleName);
-    const GLHandle *normal_handle = this->attrib_var(kNormalHandleName);
-    const GLHandle *color_handle = this->attrib_var(kColorHandleName);
-    const GLHandle *tangent_handle = this->attrib_var(kTangentHandleName);
-    const VertexInfo &info = GetVertexInfo<VertexType>();
+    const VertexInfo &info = GetVertexInfo(Type2Type<VertexType>());
     const int vertex_size = sizeof(VertexType);
-    //pos
     if(pos_handle != NULL) {
       int offset = info.pos_offset;
       GLenum type = info.pos_type;
@@ -378,7 +378,13 @@ namespace gl {
         SR_CHECK_ERROR("glVertexAttribPointer");
       }
     }
-    //texcoord
+  }
+  template<typename VertexType>
+  void GLProgram::SetTexcoordAttrib(char *base_ptr) {
+    const GLHandle *pos_handle = attrib_var(kPositionHandleName);
+    const VertexInfo &info = GetVertexInfo(Type2Type<VertexType>());
+    const int vertex_size = sizeof(VertexType);
+    const GLHandle *texcoord_handle = this->attrib_var(kTexcoordHandleName);
     if(texcoord_handle != NULL) {
       int offset = info.texcoord_offset;
       GLenum type = info.texcoord_type;
@@ -390,7 +396,13 @@ namespace gl {
         SR_CHECK_ERROR("glVertexAttribPointer");
       }
     }
-    //normal
+  }
+  template<typename VertexType>
+  void GLProgram::SetNormalAttrib(char *base_ptr) {
+    const GLHandle *pos_handle = attrib_var(kPositionHandleName);
+    const VertexInfo &info = GetVertexInfo(Type2Type<VertexType>());
+    const int vertex_size = sizeof(VertexType);
+    const GLHandle *normal_handle = this->attrib_var(kNormalHandleName);
     if(normal_handle != NULL) {
       int offset = info.normal_offset;
       GLenum type = info.normal_type;
@@ -402,7 +414,13 @@ namespace gl {
         SR_CHECK_ERROR("glVertexAttribPointer");
       }
     }
-    //color
+  }
+  template<typename VertexType>
+  void GLProgram::SetColorAttrib(char *base_ptr) {
+    const GLHandle *pos_handle = attrib_var(kPositionHandleName);
+    const VertexInfo &info = GetVertexInfo(Type2Type<VertexType>());
+    const int vertex_size = sizeof(VertexType);
+    const GLHandle *color_handle = this->attrib_var(kColorHandleName);
     if(color_handle != NULL) {
       int offset = info.color_offset;
       GLenum type = info.color_type;
@@ -415,7 +433,13 @@ namespace gl {
         SR_CHECK_ERROR("glVertexAttribPointer");
       }
     }
-    //tangent
+  }
+  template<typename VertexType> 
+  void GLProgram::SetTangentAttrib(char *base_ptr) {
+    const GLHandle *pos_handle = attrib_var(kPositionHandleName);
+    const VertexInfo &info = GetVertexInfo(Type2Type<VertexType>());
+    const int vertex_size = sizeof(VertexType);
+    const GLHandle *tangent_handle = this->attrib_var(kTangentHandleName);
     if(tangent_handle != NULL) {
       int offset = info.tangent_offset;
       GLenum type = info.tangent_type;
@@ -427,6 +451,37 @@ namespace gl {
         SR_CHECK_ERROR("glVertexAttribPointer");
       }
     }
+  }
+
+  template<typename VertexType>
+  inline void GLProgram::SetVertexList(char *base_ptr, Type2Type<VertexType>) {
+    static_assert(false, "do not use this func"); 
+  }  
+
+  template<>
+  inline void GLProgram::SetVertexList(char *base_ptr, Type2Type<TangentVertex>) {
+    typedef TangentVertex T;
+    SetPositionAttrib<T>(base_ptr);
+    SetTexcoordAttrib<T>(base_ptr);
+    SetNormalAttrib<T>(base_ptr);
+    SetColorAttrib<T>(base_ptr);
+    SetTangentAttrib<T>(base_ptr);
+  }
+
+  template<>
+  inline void GLProgram::SetVertexList(char *base_ptr, Type2Type<Vertex>) {
+    typedef Vertex T;
+    SetPositionAttrib<T>(base_ptr);
+    SetTexcoordAttrib<T>(base_ptr);
+    SetNormalAttrib<T>(base_ptr);
+    SetColorAttrib<T>(base_ptr);
+  }
+
+  template<>
+  inline void GLProgram::SetVertexList(char *base_ptr, Type2Type<Vertex2D>) {
+    typedef Vertex2D T;
+    SetPositionAttrib<T>(base_ptr);
+    SetTexcoordAttrib<T>(base_ptr);
   }
 
 } //namespace gl

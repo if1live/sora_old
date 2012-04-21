@@ -23,6 +23,7 @@
 
 #include "core/vector.h"
 #include "core/vertex.h"
+#include "core/template_lib.h"
 #include "gl_env.h"
 
 namespace sora {;
@@ -47,7 +48,7 @@ namespace gl {
   };
 
   template<typename T>
-  inline VertexInfo &GetVertexInfo() {
+  inline VertexInfo &GetVertexInfo(Type2Type<T> t) {
     static_assert(false, "not defined");
     static VertexInfo info;
     return info;
@@ -55,20 +56,21 @@ namespace gl {
 
 
   template<>
-  inline VertexInfo &GetVertexInfo<sora::Vertex2D>() {
+  inline VertexInfo &GetVertexInfo(Type2Type<sora::Vertex2D> t) {
     static VertexInfo info;
     static bool init = false;
     if(init == false) {
+      //typedef t::Type VertexType;
       Vertex2D vert;
 
       init = true;
       info.size = sizeof(vert);
 
       info.pos_offset = offsetof(Vertex2D, pos);
-      info.pos_type = GLEnv::VecToGLEnum(vert.pos);
+      info.pos_type = VecToGLEnum<decltype(vert.pos)>::value;
 
       info.texcoord_offset = offsetof(Vertex2D, texcoord);
-      info.texcoord_type = GLEnv::VecToGLEnum(vert.texcoord);
+      info.texcoord_type = VecToGLEnum<decltype(vert.texcoord)>::value;
 
       info.color_offset = -1;
       info.normal_offset = -1;
@@ -78,7 +80,7 @@ namespace gl {
   }
 
   template<>
-  inline VertexInfo &GetVertexInfo<sora::Vertex>() {
+  inline VertexInfo &GetVertexInfo(Type2Type<Vertex> t) {
     static VertexInfo info;
     static bool init = false;
     if(init == false) {
@@ -87,16 +89,16 @@ namespace gl {
       info.size = sizeof(vert);
 
       info.pos_offset = offsetof(Vertex, pos);
-      info.pos_type = GLEnv::VecToGLEnum(vert.pos);
+      info.pos_type = VecToGLEnum<decltype(vert.pos)>::value;
 
       info.texcoord_offset = offsetof(Vertex, texcoord);
-      info.texcoord_type = GLEnv::VecToGLEnum(vert.texcoord);
+      info.texcoord_type = VecToGLEnum<decltype(vert.texcoord)>::value;
 
       info.color_offset = offsetof(Vertex, color);
-      info.color_type = GLEnv::VecToGLEnum(vert.color);
+      info.color_type = VecToGLEnum<decltype(vert.color)>::value;
 
       info.normal_offset = offsetof(Vertex, normal);
-      info.normal_type = GLEnv::VecToGLEnum(vert.normal);
+      info.normal_type = VecToGLEnum<decltype(vert.normal)>::value;
 
       info.tangent_offset = -1;
     }
@@ -104,7 +106,7 @@ namespace gl {
   }
 
   template<>
-  inline VertexInfo &GetVertexInfo<sora::TangentVertex>() {
+  inline VertexInfo &GetVertexInfo(Type2Type<TangentVertex> t) {
     static VertexInfo info;
     static bool init = false;
     if(init == false) {
@@ -113,19 +115,19 @@ namespace gl {
       info.size = sizeof(vert);
 
       info.pos_offset = offsetof(TangentVertex, pos);
-      info.pos_type = GLEnv::VecToGLEnum(vert.pos);
+      info.pos_type = VecToGLEnum<decltype(vert.pos)>::value;
 
       info.texcoord_offset = offsetof(TangentVertex, texcoord);
-      info.texcoord_type = GLEnv::VecToGLEnum(vert.texcoord);
+      info.texcoord_type = VecToGLEnum<decltype(vert.texcoord)>::value;
 
       info.color_offset = offsetof(TangentVertex, color);
-      info.color_type = GLEnv::VecToGLEnum(vert.color);
+      info.color_type = VecToGLEnum<decltype(vert.color)>::value;
 
       info.normal_offset = offsetof(TangentVertex, normal);
-      info.normal_type = GLEnv::VecToGLEnum(vert.normal);
+      info.normal_type = VecToGLEnum<decltype(vert.normal)>::value;
 
       info.tangent_offset = offsetof(TangentVertex, tangent);
-      info.tangent_type = GLEnv::VecToGLEnum(vert.tangent);
+      info.tangent_type = VecToGLEnum<decltype(vert.tangent)>::value;
     }
     return info;
   }

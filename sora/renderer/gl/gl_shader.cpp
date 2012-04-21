@@ -348,5 +348,8 @@ namespace gl {
     }
     return NULL;
   }
+
+  ///////////////////////////////////
+
 } //namespace gl
 } //namespace sora
