@@ -316,8 +316,12 @@ namespace gl {
     //change tex filter
     GLenum mag_filter = GLEnv::TexMagFilterToGLEnum(param.mag_filter);
     GLenum min_filter = GLEnv::TexMinFilterToGLEnum(param.min_filter);
+    GLenum wrap_s = GLEnv::TexWrapModeToGLEnum(param.wrap_s);
+    GLenum wrap_t = GLEnv::TexWrapModeToGLEnum(param.wrap_t);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, min_filter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t);
     return result;
   }
 

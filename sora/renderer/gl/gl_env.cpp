@@ -201,6 +201,16 @@ namespace gl {
     }
     return enum_list[(int)type];
   }
-
+  GLenum GLEnv::TexWrapModeToGLEnum(TexWrapMode type) {
+    static bool run = false;
+    static std::array<GLenum, 10> enum_list;
+    if(run == false) {
+      run = true;
+      enum_list[kTexWrapRepeat] = GL_REPEAT;
+      enum_list[kTexWrapMirroredRepeat] = GL_MIRRORED_REPEAT;
+      enum_list[kTexWrapClampToEdge] = GL_CLAMP_TO_EDGE;
+    }
+    return enum_list[(int)type];
+  }
 } //namespace gl
 } //namespace sora

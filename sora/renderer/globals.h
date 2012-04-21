@@ -72,10 +72,22 @@ typedef enum {
   kTexMagNearest,
 } TexMagFilter;
 
+typedef enum {
+  kTexWrapRepeat,
+  kTexWrapClampToEdge,
+  kTexWrapMirroredRepeat
+} TexWrapMode;
+
 struct TextureParam {
-  TextureParam() : mag_filter(kTexMagLinear), min_filter(kTexMinLinear) {}
+  TextureParam() 
+    : mag_filter(kTexMagLinear),
+    min_filter(kTexMinLinear),
+    wrap_s(kTexWrapRepeat),
+    wrap_t(kTexWrapRepeat) {}
   TexMagFilter mag_filter;
   TexMinFilter min_filter;
+  TexWrapMode wrap_s;
+  TexWrapMode wrap_t;
 };
 
 //predefined semantic

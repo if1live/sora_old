@@ -69,6 +69,7 @@ namespace gl {
     static GLenum TexFormatToGLEnum(TexFormatType type);
     static GLenum TexMagFilterToGLEnum(TexMagFilter type);
     static GLenum TexMinFilterToGLEnum(TexMinFilter type);
+    static GLenum TexWrapModeToGLEnum(TexWrapMode type);
   };
 } //namespace gl
 } //namespace sora
