@@ -23,6 +23,8 @@
 
 #include "renderer/gl/gl_render_device.h"
 #include "renderer/shader.h"
+#include "renderer/texture.h"
+#include "renderer/sys_font.h"
 
 namespace sora {;
 class Device;
@@ -36,13 +38,21 @@ public:
   ~RenderDeviceT() {}
 
   void UseShader(Shader &shader) { policy_.UseShader(shader.policy()); }
+  void UseTexture(Texture &tex) { policy_.UseTexture(tex.obj()); }
+
+  void Set2D() { policy_.Set2D(); }
+  void Set3D() { policy_.Set3D(); }
+
   void EndRender() { policy_.EndRender(); }
   void SetWinSize(int width, int height) { policy_.SetWinSize(width, height); }
   int win_width() const { return policy_.win_width(); }
   int win_height() const { return policy_.win_height(); }
-
+  TextureManager &tex_mgr() { return tex_mgr_; }
+  SysFont &sys_font() { return sys_font_; }
 private:
   PolicyType policy_;
+  TextureManager tex_mgr_;
+  SysFont sys_font_;
 };
 
 }

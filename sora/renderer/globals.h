@@ -50,6 +50,14 @@ typedef enum {
   kDrawTriangleFan,
 } DrawType;
 
+typedef enum {
+  kTexFormatLumiance,
+  kTexFormatAlpha,
+  kTexFormatLumianceAlpha,
+  kTexFormatRGBA,
+  kTexFormatRGB,
+} TexFormatType;
+
 //predefined semantic
 #define kPositionHandleName "a_position"
 #define kTexcoordHandleName "a_texcoord"

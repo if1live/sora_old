@@ -164,5 +164,19 @@ namespace gl {
     }
     return enum_list[(int)type];
   }
+  GLenum GLEnv::TexFormatToGLEnum(TexFormatType type) {
+    static bool run = false;
+    static std::array<GLenum, 10> enum_list;
+    if(run == false) {
+      run = true;
+      enum_list[kTexFormatAlpha] = GL_ALPHA;
+      enum_list[kTexFormatLumianceAlpha] = GL_LUMINANCE_ALPHA;
+      enum_list[kTexFormatLumiance] = GL_LUMINANCE;
+      enum_list[kTexFormatRGB] = GL_RGB;
+      enum_list[kTexFormatRGBA] = GL_RGBA;
+    }
+    return enum_list[(int)type];
+
+  }
 } //namespace gl
 } //namespace sora

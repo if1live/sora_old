@@ -31,6 +31,7 @@
 #include "core/math_helper.h"
 
 #include "soil/SOIL.h"
+#include "gl_env.h"
 
 namespace sora {;
 namespace gl {
@@ -117,7 +118,7 @@ namespace gl {
 
   ////////////////////////////////////////////
 
-  Texture::Texture(const char *name, uint policy)
+  GLTexture::GLTexture(const char *name, uint policy)
     : start_(NULL), 
     end_(NULL), 
     handle_(0),
@@ -132,7 +133,7 @@ namespace gl {
     is_render_to_texture_(false) {
   }
 
-  Texture::Texture(const std::string &name, uint policy)
+  GLTexture::GLTexture(const std::string &name, uint policy)
     : start_(NULL), 
     end_(NULL), 
     handle_(0),
@@ -147,16 +148,16 @@ namespace gl {
     is_render_to_texture_(false) {
   }
 
-  Texture::~Texture() {
+  GLTexture::~GLTexture() {
   }
 
-  void Texture::Deinit() {
+  void GLTexture::Deinit() {
     if(handle_ != 0) {
       glDeleteTextures(1, &handle_);
       handle_ = 0;
     }
   }
-  void Texture::SetData(TexFileType file, uchar *start, uchar *end) {
+  void GLTexture::SetData(TexFileType file, uchar *start, uchar *end) {
     file_fmt_ = file;
     start_ = start;
     end_ = end;
@@ -172,14 +173,14 @@ namespace gl {
   };
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   GLuint tex_id = -1;
-  glGenTextures(1, &tex_id);
-  glBindTexture(GL_TEXTURE_2D, tex_id);
+  glGenGLTextures(1, &tex_id);
+  glBindGLTexture(GL_TEXTURE_2D, tex_id);
   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 2, 2, 0, GL_RGB, GL_UNSIGNED_BYTE, pixel_data);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   tex.Init(tex_id, 2, 2);
   */
-  bool Texture::Init(GLuint tex_id, int width, int height, bool has_alpha, bool is_rtt) {
+  bool GLTexture::Init(GLuint tex_id, int width, int height, bool has_alpha, bool is_rtt) {
     if(Loaded() == true) {
       return false;
     }
@@ -197,14 +198,14 @@ namespace gl {
     return true;
   }
 
-  bool Texture::Loaded() const {
+  bool GLTexture::Loaded() const {
     if(handle_ == 0) {
       return false;
     } else {
       return true;
     }
   }
-  bool Texture::Init() {
+  bool GLTexture::Init() {
     if(Loaded() == true) {
       return false;
     }
@@ -235,7 +236,7 @@ namespace gl {
     return result;
   }
 
-  bool Texture::Reload(Texture &data) {
+  bool GLTexture::Reload(GLTexture &data) {
     if(Loaded() == false) {
       SetData(data.file_fmt_, data.start_, data.end_);
       bool result = Init();
@@ -267,7 +268,7 @@ namespace gl {
     return result;
   }
 
-  bool Texture::Load_ImageBySOIL(GLuint tex_id) {
+  bool GLTexture::Load_ImageBySOIL(GLuint tex_id) {
     //귀찮은 관계로 soil에 떠넘기자
     unsigned char *data = start_;
     int size = end_ - start_;
@@ -305,22 +306,32 @@ namespace gl {
       return false;
     }
   }
-  bool Texture::LoadTexture(GLuint tex_id, unsigned char *image, int width, int height, GLenum format) {
+
+  bool GLTexture::LoadTexture(unsigned char *image, int w, int h, TexFormatType format) {
+    GLenum gl_format = GLEnv::TexFormatToGLEnum(format);
+    if(handle_ == 0) {
+      glGenTextures(1, &handle_);
+    }
+    return LoadTexture(handle_, image, w, h, gl_format);
+  }
+
+  bool GLTexture::LoadTexture(GLuint tex_id, unsigned char *image, int width, int height, GLenum format) {
     //알파 있는거/없는거 분류
-    if(format == GL_RGBA || format == GL_LUMINANCE_ALPHA) {
+    if(format == GL_RGBA || format == GL_LUMINANCE_ALPHA || format == GL_ALPHA) {
       has_alpha_ = true;
     } else {
       has_alpha_ = false;
     }
-
+  
     int color_channel_table[][2] = {
+      { GL_ALPHA, 1}, 
       { GL_LUMINANCE, 1 },
       { GL_LUMINANCE_ALPHA, 2 },
       { GL_RGB, 3 },
       { GL_RGBA, 4 },
     };
     int color_channel = 0;
-    for(int i = 0 ; i < 4 ; ++i) {
+    for(size_t i = 0 ; i < sizeof(color_channel_table) / sizeof(color_channel_table[0]) ; ++i) {
       if(format == color_channel_table[i][0]) {
         color_channel = color_channel_table[i][1];
         break;
@@ -389,7 +400,7 @@ namespace gl {
     return true;
   }
 
-  bool Texture::Load_PNG(GLuint tex_id) {
+  bool GLTexture::Load_PNG(GLuint tex_id) {
     int size = end_ - start_;
     PNGLoader loader;
     bool decode_result = loader.Decode(start_, size);

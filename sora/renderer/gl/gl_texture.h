@@ -31,13 +31,11 @@
 namespace sora {;
 
 namespace gl {
-  class Texture;
-  typedef std::tr1::shared_ptr<Texture> TexturePtr;
-  class Texture {
+  class GLTexture {
   public:
-    Texture(const char *name, uint policy = 0);
-    Texture(const std::string &name, uint policy = 0);
-    ~Texture();
+    GLTexture(const char *name, uint policy = 0);
+    GLTexture(const std::string &name, uint policy = 0);
+    ~GLTexture();
 
     void Deinit();
     void SetData(TexFileType file_fmt, uchar *start, uchar *end);
@@ -46,12 +44,15 @@ namespace gl {
     bool Init(uint tex_id, int width, int height, bool has_alpha, bool is_rtt);
     bool Loaded() const;
 
-    bool Reload(Texture &data);
+    bool Reload(GLTexture &data);
 
     uint handle() const { return handle_; }
     const std::string &name() const { return name_; }
     bool has_alpha() const { return has_alpha_; }
     bool is_render_to_texture() const { return is_render_to_texture_; }
+
+    //raw image에서 텍스쳐 생성하기
+    bool LoadTexture(unsigned char *image, int w, int h, TexFormatType format);
 
   private:
     uint handle_;

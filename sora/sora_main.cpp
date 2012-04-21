@@ -43,6 +43,7 @@
 
 #include "renderer/renderer_env.h"
 #include "renderer/shader.h"
+#include "renderer/texture.h"
 
 //#include "renderer/uber_shader.h"
 //#include "renderer/matrix_stack.h"
@@ -126,15 +127,15 @@ bool setupGraphics(Device *device, int w, int h) {
     //{ "mtl_normal", "texture/normal_map.png" },
     
   };
-  /*
+  
   int tex_count = sizeof(texture_table) / sizeof(texture_table[0]);
   for(int i = 0 ; i < tex_count ; i++) {
     std::string tex_path = sora::Filesystem::GetAppPath(texture_table[i][1]);
     sora::MemoryFile tex_file(tex_path);
     tex_file.Open();
     Texture tex(texture_table[i][0]);
-    tex.SetData(sora::Texture::kFilePNG, tex_file.start, tex_file.end);
-    device->texture_mgr().Add(tex);
+    tex.SetData(sora::kTexFilePNG, tex_file.start, tex_file.end);
+    device->render_device().tex_mgr().Add(tex);
   }
   {
     //load jpeg
@@ -142,10 +143,10 @@ bool setupGraphics(Device *device, int w, int h) {
     sora::MemoryFile tex_file(tex_path);
     tex_file.Open();
     Texture tex("jellyfish");
-    tex.SetData(sora::Texture::kFileJPEG, tex_file.start, tex_file.end);
-    device->texture_mgr().Add(tex);
+    tex.SetData(sora::kTexFileJPEG, tex_file.start, tex_file.end);
+    device->render_device().tex_mgr().Add(tex);
   }
-  */
+  
   /*
   sora::ObjLoader loader;
   //load material
@@ -309,26 +310,78 @@ void SORA_set_cam_pos(float a, float b) {
 }
 
 void renderFrame(Device *device) {
-  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+  glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   SR_CHECK_ERROR("Begin RenderFrame");
+
+  //3d
+  device->render_device().Set3D();
 
   VertexList vert_list;
   vert_list.push_back(Vertex(vec3(-0.5, -0.5, 0), vec2(0, 0)));
   vert_list.push_back(Vertex(vec3(0.5, -0.5, 0), vec2(1, 0)));
   vert_list.push_back(Vertex(vec3(0, 0.5, 0), vec2(0.5, 1)));
 
-  //shader사용 선언이 가장 먼저
-  device->render_device().UseShader(color_shader);
-  SR_CHECK_ERROR("UseShader");
+  {
+    //shader사용 선언이 가장 먼저
+    device->render_device().UseShader(color_shader);
+    SR_CHECK_ERROR("UseShader");
 
-  mat4 mvp(1.0f);
-  color_shader.SetMatrix(kMVPHandleName, mvp);
-  SR_CHECK_ERROR("SetMatrix");
-  vec4 color(1.0f);
-  color_shader.SetVector(kConstColorHandleName, color);
-  SR_CHECK_ERROR("SetVector");
-  color_shader.DrawArrays(kDrawTriangles, vert_list);
+    mat4 mvp(1.0f);
+    color_shader.SetMatrix(kMVPHandleName, mvp);
+    SR_CHECK_ERROR("SetMatrix");
+    vec4 color(1.0f);
+    color_shader.SetVector(kConstColorHandleName, color);
+    SR_CHECK_ERROR("SetVector");
+    color_shader.DrawArrays(kDrawTriangles, vert_list);
+  }
+  
+  {
+    //shader사용 선언이 가장 먼저
+    device->render_device().UseShader(simple_shader);
+    TexturePtr tex = device->render_device().tex_mgr().Get("sora");
+    device->render_device().UseTexture(*tex);
+    SR_CHECK_ERROR("UseShader");
+    mat4 mvp(1.0f);
+    mvp = glm::rotate(mvp, 10.0f, vec3(0, 0, 1));
+    simple_shader.SetMatrix(kMVPHandleName, mvp);
+    SR_CHECK_ERROR("SetMatrix");
+    simple_shader.DrawArrays(kDrawTriangles, vert_list);
+  }
+
+  //draw 2d
+  {
+    SR_CHECK_ERROR("Render 2d start");
+    device->render_device().Set2D();
+
+    device->render_device().UseShader(simple_shader);
+    sora::SysFont &font = device->render_device().sys_font();
+    device->render_device().UseTexture(font.font_texture());
+
+    //해상도에 맞춰서 적절히 설정
+    float win_width = (float)device->render_device().win_width();
+    float win_height = (float)device->render_device().win_height();
+    glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
+    simple_shader.SetMatrix(kMVPHandleName, projection);
+
+    Vertex2DList vert_list;
+    vert_list.push_back(sora::Vertex2D(100, 100, 0, 1));
+    vert_list.push_back(sora::Vertex2D(100+128*2, 100, 1, 1));
+    vert_list.push_back(sora::Vertex2D(100+128*2, 100+128*2, 1, 0));
+    vert_list.push_back(sora::Vertex2D(100, 100+128*2, 0, 0));
+    simple_shader.DrawArrays(kDrawTriangleFan, vert_list);
+
+    /*
+    world_mat = glm::translate(world_mat, glm::vec3(0, 800, 0));
+    world_mat = glm::scale(world_mat, glm::vec3(2, 2, 1));
+    render2d.ApplyMatrix(world_mat);
+    sora::Label label(&font, "PQRS_1234_asdf");
+    glVertexAttribPointer(pos_var.location, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->pos);
+    glVertexAttribPointer(texcoord_var.location, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->texcoord);
+    glDrawElements(GL_TRIANGLES, label.index_count(), GL_UNSIGNED_SHORT, label.index_data());
+    SR_CHECK_ERROR("glDrawArrays");
+    */
+  }
 
   /*
   {
@@ -397,51 +450,8 @@ void renderFrame(Device *device) {
 
     SR_CHECK_ERROR("Render End");
   }
-  
-  {
-    SR_CHECK_ERROR("Render 2d start");
-    Renderer &render2d = device->render2d();
-
-    //draw 2d something
-    glm::mat4 world_mat(1.0f);
-
-    ShaderProgram &shader = device->simple_shader();
-    render2d.SetShader(shader);
-
-    ShaderBindPolicy &bind_policy = shader.bind_policy;
-    const ShaderVariable &pos_var = bind_policy.var(ShaderBindPolicy::kPosition);
-    const ShaderVariable &texcoord_var = bind_policy.var(ShaderBindPolicy::kTexcoord);
-    const ShaderVariable &mvp_var = bind_policy.var(ShaderBindPolicy::kWorldViewProjection);
-    
-    glEnableVertexAttribArray(pos_var.location);
-    glEnableVertexAttribArray(texcoord_var.location);
-    
-    render2d.SetInitState();
-    render2d.SetShader(shader);
-    render2d.ApplyMatrix(world_mat);
-    sora::Font &font = device->font();
-    render2d.SetTexture(font.font_texture());
-    
-    vector<sora::Vertex2D> vert_list;
-    vert_list.push_back(sora::Vertex2D(100, 100, 0, 1));
-    vert_list.push_back(sora::Vertex2D(100+128*2, 100, 1, 1));
-    vert_list.push_back(sora::Vertex2D(100+128*2, 100+128*2, 1, 0));
-    vert_list.push_back(sora::Vertex2D(100, 100+128*2, 0, 0));
-    glVertexAttribPointer(pos_var.location, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &vert_list[0].pos);
-    glVertexAttribPointer(texcoord_var.location, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &vert_list[0].texcoord);
-    glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-    SR_CHECK_ERROR("glDrawArrays");
-
-    world_mat = glm::translate(world_mat, glm::vec3(0, 800, 0));
-    world_mat = glm::scale(world_mat, glm::vec3(2, 2, 1));
-    render2d.ApplyMatrix(world_mat);
-    sora::Label label(&font, "PQRS_1234_asdf");
-    glVertexAttribPointer(pos_var.location, 3, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->pos);
-    glVertexAttribPointer(texcoord_var.location, 2, GL_FLOAT, GL_FALSE, sizeof(sora::Vertex2D), &label.vertex_data()->texcoord);
-    glDrawElements(GL_TRIANGLES, label.index_count(), GL_UNSIGNED_SHORT, label.index_data());
-    SR_CHECK_ERROR("glDrawArrays");
-  }
   */
+
   //////////////////////////////
   
 }

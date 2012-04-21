@@ -24,13 +24,15 @@
 #include "gl_env.h"
 #include "renderer/renderer_env.h"
 #include "gl_shader.h"
+#include "gl_texture.h"
 
 namespace sora {;
 namespace gl {
   GLRenderDevice::GLRenderDevice(Device *dev)
   : win_width_(640),
   win_height_(480),
-  last_prog_id_(-1) {
+  last_prog_id_(-1),
+  last_tex_id_(-1) {
 
   }
   GLRenderDevice::~GLRenderDevice() {
@@ -48,6 +50,7 @@ namespace gl {
   }
   void GLRenderDevice::EndRender() {
     last_prog_id_ = -1;
+    last_tex_id_ = -1;
   }
   void GLRenderDevice::UseShader(GLProgram &prog) {
     if(last_prog_id_ != prog.prog) {
@@ -55,7 +58,24 @@ namespace gl {
       last_prog_id_ = prog.prog;
     }
   }
-
+  void GLRenderDevice::UseTexture(GLTexture &tex) {
+    if(last_tex_id_ != tex.handle()) {
+      glActiveTexture(GL_TEXTURE0);
+      glBindTexture(GL_TEXTURE_2D, tex.handle());
+      last_tex_id_ = tex.handle();
+    }
+  }
+  void GLRenderDevice::Set2D() {
+    glDisable(GL_DEPTH_TEST);
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  }
+  void GLRenderDevice::Set3D() {
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(GL_LEQUAL);
+    glDisable(GL_BLEND);
+  }
 } //namespace gl
 } //namespace sora
 

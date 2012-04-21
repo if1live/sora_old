@@ -18,58 +18,50 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_GL_RENDER_DEVIDE_H_
-#define SORA_GL_RENDER_DEVIDE_H_
+#include "sora_stdafx.h"
+#include "texture.h"
+#include "core/template_lib.h"
+
+using namespace std;
 
 namespace sora {;
-class Device;
-namespace gl {
-  class GLProgram;
-  class GLTexture;
-  class GLRenderDevice {
-  public:
-    GLRenderDevice(Device *dev);
-    ~GLRenderDevice();
 
-    void EndRender();
-    
-    //font
-    //renderer
-    //RenderState &render_state();
-    //MaterialManager &material_mgr();
-    //MeshManager &mesh_mgr();
-    /*
-    //uber shader + predefined shader
-    ShaderProgram &uber_shader(uint flag);
-    ShaderProgram &simple_shader(); //단순 2d용
-    Renderer &render3d();
-    Renderer &render2d();
-    */
-  public:
-    void Set2D();
-    void Set3D();
+TextureManager::TextureManager() {
+}
+TextureManager::~TextureManager() {
+}
 
-    //texture
-  public:
-    void UseTexture(GLTexture &tex);
-  private:
-    GLuint last_tex_id_;
+bool TextureManager::Add(const Texture &tex) {
+  const string &name = tex.name();
+  if(IsExist(name) == true) {
+    //already exist
+    return false;
+  }
 
-    //shader
-  public:
-    void UseShader(GLProgram &prog);
-  private:
-    GLuint last_prog_id_;
+  TexturePtr cpy_tex(new Texture(tex));
+  cpy_tex->Init();
+  tex_dict_[name] = cpy_tex;
 
-  public:
-    //win size
-    void SetWinSize(int width, int height);
-    int win_width() const { return win_width_; }
-    int win_height() const { return win_height_; }
-  private:
-    int win_width_;
-    int win_height_;
-  };
-} //namespace gl
-} //namespace sora
-#endif  // SORA_GL_RENDER_DEVIDE_H_
+  return true;
+}
+
+bool TextureManager::IsExist(const std::string &name) const {
+  auto found = tex_dict_.find(name);
+  if(found == tex_dict_.end()) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+TexturePtr TextureManager::Get(const std::string &name) {
+  auto found = tex_dict_.find(name);
+  if(found == tex_dict_.end()) {
+    static TexturePtr empty;
+    return empty;
+  } else {
+    return found->second;
+  }
+}
+
+}

@@ -93,12 +93,14 @@
     <ClCompile Include="core\timer.cpp" />
     <ClCompile Include="event\touch_device.cpp" />
     <ClCompile Include="lodepng\lodepng.cpp" />
+    <ClCompile Include="renderer\sys_font.cpp" />
     <ClCompile Include="renderer\gl\gl_renderer.cpp" />
     <ClCompile Include="renderer\gl\gl_env.cpp" />
     <ClCompile Include="renderer\gl\gl_render_device.cpp" />
     <ClCompile Include="renderer\gl\gl_shader.cpp" />
     <ClCompile Include="renderer\gl\gl_texture.cpp" />
     <ClCompile Include="renderer\matrix_stack.cpp" />
+    <ClCompile Include="renderer\texture.cpp" />
     <ClCompile Include="soil\image_DXT.cpp" />
     <ClCompile Include="soil\image_helper.cpp" />
     <ClCompile Include="soil\SOIL.cpp" />
@@ -150,6 +152,7 @@
     <ClInclude Include="event\touch_device.h" />
     <ClInclude Include="event\touch_event.h" />
     <ClInclude Include="lodepng\lodepng.h" />
+    <ClInclude Include="renderer\sys_font.h" />
     <ClInclude Include="renderer\globals.h" />
     <ClInclude Include="renderer\gl\gl_buffer_object.h" />
     <ClInclude Include="renderer\gl\gl_renderer.h" />
@@ -163,6 +166,7 @@
     <ClInclude Include="renderer\renderer_env.h" />
     <ClInclude Include="renderer\render_device.h" />
     <ClInclude Include="renderer\shader.h" />
+    <ClInclude Include="renderer\texture.h" />
     <ClInclude Include="soil\image_DXT.h" />
     <ClInclude Include="soil\image_helper.h" />
     <ClInclude Include="soil\SOIL.h" />
