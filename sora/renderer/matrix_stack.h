@@ -25,8 +25,7 @@
 
 
 namespace sora {;
-struct MatrixStackImpl;
-class SR_DLL MatrixStack {
+class MatrixStack {
 public:
   MatrixStack();
   ~MatrixStack();
@@ -56,7 +55,7 @@ public:
   void Rotate(float deg, const glm::vec3 &v);
 
 private:
-  MatrixStackImpl *impl;
+  std::vector<glm::mat4> matrix_stack_;
 };
 }
 

@@ -70,7 +70,7 @@ namespace gl {
     return false;
   }
 
-  bool SR_CHECK_ERROR(const char *name) {
+  bool GLEnv::CheckError(const char *name) {
     int error = glGetError();
     if (error != GL_NO_ERROR) {
       const char *error_msg;
@@ -148,7 +148,21 @@ namespace gl {
       version = str;
     }
     return version;
-  } //namespace gl
+  }
+  GLenum GLEnv::DrawTypeToGLEnum(DrawType type) {
+    static bool run = false;
+    static std::array<GLenum, 10> enum_list;
+    if(run == false) {
+      run = true;
+      enum_list[kDrawPoints] = GL_POINTS;
+      enum_list[kDrawLines]  = GL_LINES;
+      enum_list[kDrawLineStrip] = GL_LINE_STRIP;
+      enum_list[kDrawLineLoop] = GL_LINE_LOOP;
+      enum_list[kDrawTriangles] = GL_TRIANGLES;
+      enum_list[kDrawTriangleStrip] = GL_TRIANGLE_STRIP;
+      enum_list[kDrawTriangleFan] = GL_TRIANGLE_FAN;
+    }
+    return enum_list[(int)type];
+  }
+} //namespace gl
 } //namespace sora
-
-}

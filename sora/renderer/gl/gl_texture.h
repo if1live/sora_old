@@ -43,7 +43,7 @@ namespace gl {
     void SetData(TexFileType file_fmt, uchar *start, uchar *end);
     bool Init();
     //외부에서 생성된 GL텍스쳐를 sora텍스쳐로 사용하기
-    bool Init(uint tex_id, int width, int height, bool has_alpha);
+    bool Init(uint tex_id, int width, int height, bool has_alpha, bool is_rtt);
     bool Loaded() const;
 
     bool Reload(Texture &data);
@@ -51,6 +51,7 @@ namespace gl {
     uint handle() const { return handle_; }
     const std::string &name() const { return name_; }
     bool has_alpha() const { return has_alpha_; }
+    bool is_render_to_texture() const { return is_render_to_texture_; }
 
   private:
     uint handle_;
@@ -70,6 +71,9 @@ namespace gl {
     bool has_alpha_;
 
     uint policy_;
+
+    //render to texture?
+    bool is_render_to_texture_;
 
   private:
     bool Load_PNG(GLuint tex_id);  //파일 포맷별 로딩을 다르게 할수잇도록. 함수깊이를 얕게 하기 위해서

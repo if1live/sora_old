@@ -26,21 +26,21 @@ using namespace sora;
 using namespace sora::gl;
 
 TEST(VertexInfo, Vertex2D) {
-  VertexInfo &info = VertexInfo::Info<Vertex2D>();
+  VertexInfo &info = GetVertexInfo<Vertex2D>();
   EXPECT_EQ(sizeof(Vertex2D), info.size);
   EXPECT_EQ(0, info.pos_offset);
   EXPECT_EQ(GL_FLOAT, info.pos_type);
 }
 
 TEST(VertexInfo, Vertex) {
-  VertexInfo &info = VertexInfo::Info<Vertex>();
+  VertexInfo &info = GetVertexInfo<Vertex>();
   EXPECT_EQ(sizeof(Vertex), info.size);
   EXPECT_EQ(0, info.pos_offset);
   EXPECT_EQ(GL_FLOAT, info.pos_type);
 }
 
 TEST(VertexInfo, TangentVertex) {
-  VertexInfo &info = VertexInfo::Info<TangentVertex>();
+  VertexInfo &info = GetVertexInfo<TangentVertex>();
   EXPECT_EQ(sizeof(TangentVertex), info.size);
   EXPECT_EQ(0, info.pos_offset);
   EXPECT_EQ(GL_FLOAT, info.pos_type);

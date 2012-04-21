@@ -128,7 +128,8 @@ namespace gl {
     src_height_(0),
     policy_(policy),
     name_(name),
-    has_alpha_(false) {
+    has_alpha_(false),
+    is_render_to_texture_(false) {
   }
 
   Texture::Texture(const std::string &name, uint policy)
@@ -142,7 +143,8 @@ namespace gl {
     src_height_(0),
     policy_(policy),
     name_(name),
-    has_alpha_(false) {
+    has_alpha_(false),
+    is_render_to_texture_(false) {
   }
 
   Texture::~Texture() {
@@ -177,11 +179,12 @@ namespace gl {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   tex.Init(tex_id, 2, 2);
   */
-  bool Texture::Init(GLuint tex_id, int width, int height, bool has_alpha) {
+  bool Texture::Init(GLuint tex_id, int width, int height, bool has_alpha, bool is_rtt) {
     if(Loaded() == true) {
       return false;
     }
 
+    is_render_to_texture_ = is_rtt;
     handle_ = tex_id;
     file_fmt_ = kTexFileUnknown;
     start_ = NULL;
@@ -228,6 +231,7 @@ namespace gl {
     file_fmt_ = kTexFileUnknown;
     start_ = NULL;
     end_ = NULL;
+    
     return result;
   }
 
@@ -259,14 +263,15 @@ namespace gl {
     file_fmt_ = kTexFileUnknown;
     start_ = NULL;
     end_ = NULL;
+    
     return result;
-
   }
 
   bool Texture::Load_ImageBySOIL(GLuint tex_id) {
     //귀찮은 관계로 soil에 떠넘기자
     unsigned char *data = start_;
     int size = end_ - start_;
+    is_render_to_texture_ = false;
 
     //압축된거같은 데이터에서 쌩 데이터로 떠내기
     int width, height, channels;
@@ -411,7 +416,7 @@ namespace gl {
     SR_ASSERT(!"unknowkn bit depth");
     }
     */
-
+    is_render_to_texture_ = false;
     int width = loader.width();
     int height = loader.height();
     unsigned char *data = (unsigned char*)loader.data();

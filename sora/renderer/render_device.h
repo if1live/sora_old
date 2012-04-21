@@ -18,38 +18,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_TEXTURE_MANAGER_H_
-#define SORA_TEXTURE_MANAGER_H_
+#ifndef SORA_RENDER_DEVICE_H_
+#define SORA_RENDER_DEVICE_H_
 
-#if SR_USE_PCH == 0
-#include <string>
-#include "core/unordered_map_inc.h"
-#include "core/shared_ptr_inc.h"
-#endif
+#include "renderer/gl/gl_render_device.h"
+#include "renderer/shader.h"
 
 namespace sora {;
-class Texture;
-typedef std::tr1::shared_ptr<Texture> TexturePtr;
+class Device;
+template<typename PolicyType> class RenderDeviceT;
+typedef RenderDeviceT<sora::gl::GLRenderDevice> RenderDevice;
 
-class TextureManager {
+template<typename PolicyType>
+class RenderDeviceT {
 public:
-  TextureManager();
-  ~TextureManager();
-  
-  //텍스쳐 파일정보와 메모리를 설정한 다음에 텍스쳐를 넣으면
-  //복사해서 적절히 생성함
-  bool Add(const Texture &tex);
+  RenderDeviceT(Device *dev) : policy_(dev) {}
+  ~RenderDeviceT() {}
 
-  bool IsExist(const std::string &name) const;
-  TexturePtr Get(const std::string &name);
-  Texture *Get_ptr(const std::string &name) { return Get(name).get(); }
+  void UseShader(Shader &shader) { policy_.UseShader(shader.policy()); }
+  void EndRender() { policy_.EndRender(); }
+  void SetWinSize(int width, int height) { policy_.SetWinSize(width, height); }
+  int win_width() const { return policy_.win_width(); }
+  int win_height() const { return policy_.win_height(); }
 
 private:
-  typedef std::tr1::unordered_map<std::string, TexturePtr> TexDictType;
-  
-  TexDictType tex_dict_;
+  PolicyType policy_;
 };
 
 }
-
-#endif  // SORA_TEXTURE_MANAGER_H_
+#endif  // SORA_RENDER_DEVICE_H_

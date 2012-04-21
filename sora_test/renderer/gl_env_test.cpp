@@ -41,3 +41,8 @@ TEST(GLEnv, VecToGLEnum) {
   EXPECT_EQ(GL_FLOAT, GLEnv::VecToGLEnum(vec3(0.0)));
   EXPECT_EQ(GL_INT, GLEnv::VecToGLEnum(ivec2(0.0)));
 }
+
+TEST(GLEnv, DrawTypeToGLEnum) {
+  EXPECT_EQ(GL_TRIANGLES, GLEnv::DrawTypeToGLEnum(kDrawTriangles));
+  EXPECT_EQ(GL_LINES, GLEnv::DrawTypeToGLEnum(kDrawLines));
+}

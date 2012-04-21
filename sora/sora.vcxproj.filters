@@ -130,6 +130,18 @@
     <ClCompile Include="renderer\gl\gl_texture.cpp">
       <Filter>renderer\gl</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\gl\gl_renderer.cpp">
+      <Filter>renderer\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="sora_main.cpp">
+      <Filter>logic_test</Filter>
+    </ClCompile>
+    <ClCompile Include="sys\device.cpp">
+      <Filter>sys</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\gl\gl_render_device.cpp">
+      <Filter>renderer\gl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -298,6 +310,21 @@
       <Filter>renderer\gl</Filter>
     </ClInclude>
     <ClInclude Include="renderer\shader.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\gl\gl_renderer.h">
+      <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="sora_main.h">
+      <Filter>logic_test</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\gl\gl_render_device.h">
+      <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="sys\device.h">
+      <Filter>sys</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\render_device.h">
       <Filter>renderer</Filter>
     </ClInclude>
   </ItemGroup>

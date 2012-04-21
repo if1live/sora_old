@@ -66,7 +66,7 @@
 #include "core/unordered_map_inc.h"
 #include "renderer/gl/gl_inc.h"
 #include "core/tuple_inc.h"
-//#include "core/array_inc.h"
+#include "core/array_inc.h"
 
 //boost
 #include <boost/foreach.hpp>

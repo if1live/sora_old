@@ -34,6 +34,8 @@
 
 #include "core/assert_inc.h"
 #include "renderer/globals.h"
+#include "gl_vertex.h"
+#include "renderer/renderer_env.h"
 
 namespace sora {;
 namespace gl {
@@ -152,6 +154,13 @@ namespace gl {
     template<typename T>
     HandleType SetValue(const GLHandle &handle, T value);
 
+    //connect attrib
+    template<typename VertexType>
+    void DrawArrays(DrawType mode, const std::vector<VertexType> &vert_list);
+    template<typename VertexType>
+    void DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexList &index_list);
+    template<typename VertexType>
+    void SetVertexList(const std::vector<VertexType> &vert_list);
   public:
     GLuint prog;
 
@@ -220,6 +229,7 @@ namespace gl {
     if(is_float_type) {
       SR_ASSERT(handle.var_type == GL_FLOAT_MAT4);
       glUniformMatrix4fv(handle.location, 1, GL_FALSE, glm::value_ptr(mat));
+      SR_CHECK_ERROR("glUniformMatrix4fv");
       return kHandleUniform;
     }
     SR_ASSERT(!"do not reach");
@@ -310,6 +320,90 @@ namespace gl {
     } else {
       SR_ASSERT(!"do not reach")
         return kHandleNone;
+    }
+  }
+
+  template<typename VertexType>
+  void GLProgram::DrawArrays(DrawType mode, const std::vector<VertexType> &vert_list) {
+    SetVertexList(vert_list);
+    glDrawArrays(GLEnv::DrawTypeToGLEnum(mode), 0, vert_list.size());
+    SR_CHECK_ERROR("glDrawArrays");
+  }
+  template<typename VertexType>
+  void GLProgram::DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexList &index_list) {
+    SetVertexList(vert_list);
+    glDrawElements(GLEnv::DrawTypeToGLEnum(mode), index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
+    SR_CHECK_ERROR("glDrawElements");
+  }
+  template<typename VertexType>
+  void GLProgram::SetVertexList(const std::vector<VertexType> &vert_list) {
+    const GLHandle *pos_handle = attrib_var(kPositionHandleName);
+    const GLHandle *texcoord_handle = this->attrib_var(kTexcoordHandleName);
+    const GLHandle *normal_handle = this->attrib_var(kNormalHandleName);
+    const GLHandle *color_handle = this->attrib_var(kColorHandleName);
+    const GLHandle *tangent_handle = this->attrib_var(kTangentHandleName);
+    const VertexInfo &info = GetVertexInfo<VertexType>();
+    const int vertex_size = sizeof(VertexType);
+    //pos
+    if(pos_handle != NULL) {
+      int offset = info.pos_offset;
+      GLenum type = info.pos_type;
+      int loc = pos_handle->location;
+      if(offset != -1) {
+        //glEnableVertexAttribArray(pos_var.location);
+        char *ptr = (char*)&vert_list[0] + offset;
+        glVertexAttribPointer(loc, 3, type, GL_FALSE, vertex_size, ptr);
+        SR_CHECK_ERROR("glVertexAttribPointer");
+      }
+    }
+    //texcoord
+    if(texcoord_handle != NULL) {
+      int offset = info.texcoord_offset;
+      GLenum type = info.texcoord_type;
+      int loc = texcoord_handle->location;
+      if(offset != -1) {
+        //glEnableVertexAttribArray(texcoord_var.location);
+        char *ptr = (char*)&vert_list[0] + offset;
+        glVertexAttribPointer(loc, 2, type, GL_FALSE, vertex_size, ptr);
+        SR_CHECK_ERROR("glVertexAttribPointer");
+      }
+    }
+    //normal
+    if(normal_handle != NULL) {
+      int offset = info.normal_offset;
+      GLenum type = info.normal_type;
+      int loc = normal_handle->location;
+      if(offset != -1) {
+        char *ptr = (char*)&vert_list[0] + offset;
+        glEnableVertexAttribArray(loc);
+        glVertexAttribPointer(loc, 3, type, GL_FALSE, vertex_size, ptr);
+        SR_CHECK_ERROR("glVertexAttribPointer");
+      }
+    }
+    //color
+    if(color_handle != NULL) {
+      int offset = info.color_offset;
+      GLenum type = info.color_type;
+      int loc = color_handle->location;
+      if(offset != -1) {
+        //색속성은 ubyte니까 normalize해야됨
+        char *ptr = (char*)&vert_list[0] + offset;
+        glEnableVertexAttribArray(loc);
+        glVertexAttribPointer(loc, 4, type, GL_TRUE, vertex_size, ptr);
+        SR_CHECK_ERROR("glVertexAttribPointer");
+      }
+    }
+    //tangent
+    if(tangent_handle != NULL) {
+      int offset = info.tangent_offset;
+      GLenum type = info.tangent_type;
+      int loc = tangent_handle->location;
+      if(offset != -1) {
+        char *ptr = (char*)&vert_list[0] + offset;
+        glEnableVertexAttribArray(loc);
+        glVertexAttribPointer(loc, 4, type, GL_FALSE, vertex_size, ptr);
+        SR_CHECK_ERROR("glVertexAttribPointer");
+      }
     }
 
   }

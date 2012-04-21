@@ -18,51 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_stdafx.h"
-#include "texture_manager.h"
-#include "core/template_lib.h"
-#include "texture.h"
+#ifndef SORA_GL_DEFERRED_RENDERER_H_
+#define SORA_GL_DEFERRED_RENDERER_H_
 
-using namespace std;
+#include "renderer/globals.h"
+#include "core/vertex.h"
 
 namespace sora {;
+namespace gl {
+  class GLRenderer {
+  public:
+    GLRenderer();
+    ~GLRenderer();
 
-TextureManager::TextureManager() {
-}
-TextureManager::~TextureManager() {
-}
+    template<typename VertexType>
+    void DrawArrays(DrawType mode, const std::vector<VertexType> &vert_list);
+    template<typename VertexType>
+    void DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexList &index_list);
+  private:
+  };
 
-bool TextureManager::Add(const Texture &tex) {
-  const string &name = tex.name();
-  if(IsExist(name) == true) {
-    //already exist
-    return false;
+  //impl
+  template<typename VertexType>
+  void GLRenderer::DrawArrays(DrawType mode, const std::vector<VertexType> &vert_list) {
+  }
+  template<typename VertexType>
+  void GLRenderer::DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexList &index_list) {
+
   }
 
-  TexturePtr cpy_tex(new Texture(tex));
-  cpy_tex->Init();
-  tex_dict_[name] = cpy_tex;
-  
-  return true;
-}
+} // namespace gl
+} // namespace sora
 
-bool TextureManager::IsExist(const std::string &name) const {
-  auto found = tex_dict_.find(name);
-  if(found == tex_dict_.end()) {
-    return false;
-  } else {
-    return true;
-  }
-}
-
-TexturePtr TextureManager::Get(const std::string &name) {
-  auto found = tex_dict_.find(name);
-  if(found == tex_dict_.end()) {
-    static TexturePtr empty;
-    return empty;
-  } else {
-    return found->second;
-  }
-}
-
-}
+#endif  // SORA_GL_DEFERRED_RENDERER_H_

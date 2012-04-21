@@ -39,6 +39,45 @@ typedef enum {
 enum {
   kTexPolicyForcePOT = 0x01, //2의 승수로 강제 보정할것인가
 };
+
+typedef enum {
+  kDrawPoints,
+  kDrawLines,
+  kDrawLineStrip,
+  kDrawLineLoop,
+  kDrawTriangles,
+  kDrawTriangleStrip,
+  kDrawTriangleFan,
+} DrawType;
+
+//predefined semantic
+#define kPositionHandleName "a_position"
+#define kTexcoordHandleName "a_texcoord"
+#define kNormalHandleName "a_normal"
+#define kColorHandleName "a_color"
+#define kTangentHandleName "a_tangent"
+
+#define kConstColorHandleName "u_constColor"
+#define kViewPositionHandleName "u_viewPosition"
+#define kViewSideHandleName "u_viewSide"
+#define kViewUpHandleName "u_viewUp"
+#define kViewDirHandleName "u_viewDir"
+#define kMVPHandleName "u_modelViewProjection"
+#define kWorldHandleName "u_world"
+#define kProjectionHandleName "u_projection"
+#define kViewHandleName "u_view"
+
+#define kAmbientColorHandleName "u_ambientColor"
+#define kDiffuseColorHandleName "u_diffuseColor"
+#define kSpecularColorHandleName "u_specularColor"
+#define kSpecularShininessHandleName "u_specularShininess"
+
+#define kDiffuseMapHandleName "s_diffuseMap"
+#define kSpecularMapHandleName "s_specularMap"
+#define kAmbientMapHandleName "s_ambientMap"
+#define kAlbedoHandleName "s_texture"
+#define kNormalMapHandleName "s_normalMap"
+
 }
 
 #endif  // SORA_GLOBALS_H_

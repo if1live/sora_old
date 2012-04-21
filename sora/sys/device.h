@@ -22,18 +22,11 @@
 #define SORA_DEVICE_H_
 
 #include <vector>
+#include "renderer/render_device.h"
 
 namespace sora {;
 
 struct DevicePrivate;
-
-class TextureManager;
-class MaterialManager;
-class MeshManager;
-class UberShader;
-class Renderer;
-class Font;
-class ShaderProgram;
 
 //for event
 struct TouchEvent;
@@ -42,31 +35,18 @@ template<typename T>  class EventQueue;
 typedef EventQueue<TouchEvent> TouchEventQueue;
 typedef EventQueue<KeyboardEvent> KeyboardEventQueue;
 
-struct RenderState;
 
 class Device {
 public:
   Device();
   ~Device();
 
-  Font &font();
-
-  RenderState &render_state();
-  TextureManager &texture_mgr();
-  MaterialManager &material_mgr();
-  MeshManager &mesh_mgr();
+  RenderDevice &render_device();
 
   TouchEventQueue &touch_evt_queue();
   KeyboardEventQueue &keyboard_evt_queue();
   
-  //uber shader + predefined shader
-  ShaderProgram &uber_shader(uint flag);
-  ShaderProgram &simple_shader(); //단순 2d용
-
-  static Device *GetAnyDevice();
-
-  Renderer &render3d();
-  Renderer &render2d();
+  
 
   //한 프레임이 완료된후에 리셋할 정보를 적절히 리셋하기
   void EndTick();

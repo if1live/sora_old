@@ -19,47 +19,4 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_stdafx.h"
-#include "mesh_manager.h"
-
-#include "mesh/parametric_equations.h"
-#include "mesh/parametric_surface.h"
-
-using namespace std;
-
-namespace sora {;
-MeshManager::MeshManager() {
-}
-MeshManager::~MeshManager() {
-  auto it = mesh_dict_.begin();
-  auto endit = mesh_dict_.end();
-  for( ; it != endit ; ++it) {
-    MeshBufferObject &mesh_obj = it->second;
-    mesh_obj.Deinit();
-  }
-  mesh_dict_.clear();
-}
-
-MeshBufferObject *MeshManager::Get(const std::string &name) {
-  auto found = mesh_dict_.find(name);
-  if(found == mesh_dict_.end()) {
-    return NULL;
-  } else {
-    return &found->second;
-  }
-}
-bool MeshManager::IsExist(const std::string &name) const {
-  auto found = mesh_dict_.find(name);
-  if(found == mesh_dict_.end()) {
-    return false;
-  } else {
-    return true;
-  }
-}
-bool MeshManager::Add(const MeshBufferObject &obj, const std::string &name) {
-  if(IsExist(name) == true) {
-    return false;
-  }
-  mesh_dict_[string(name)] = obj;
-  return true;
-}
-}
+#include "gl_renderer.h"

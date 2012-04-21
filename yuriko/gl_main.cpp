@@ -36,6 +36,7 @@
 const int kWinWidth = 480;
 const int kWinHeight = 800;
 
+/*
 void run_selection(sora::Device *dev) {
   //selection test
   sora::selection::setup_graphics(dev, kWinWidth, kWinHeight);
@@ -130,7 +131,7 @@ void run_gles_2_test() {
     glfwSwapBuffers();
   }
 }
-
+*/
 int main(int argc, char *argv[]) {
   if( !glfwInit() ) {
     exit( EXIT_FAILURE );
@@ -151,7 +152,6 @@ int main(int argc, char *argv[]) {
 
   sora::Device device;
 
-  /*
 	//logic begin
   SORA_setup_graphics(&device, kWinWidth, kWinHeight);
   float prev_time = Timer_GetSecond();
@@ -160,6 +160,7 @@ int main(int argc, char *argv[]) {
     float curr_time = Timer_GetSecond();
     float dt = curr_time - prev_time;
     SORA_update_frame(&device, dt);
+    device.EndTick();
 
     glfwSwapBuffers();
     prev_time = curr_time;
@@ -169,11 +170,10 @@ int main(int argc, char *argv[]) {
       exit(0);
     }
   }
-  */
   
   //logic end
   //run_selection(&device);
-  run_depthmap(&device);
+  //run_depthmap(&device);
   //run_shadow_map(&device);
 
   glfwTerminate();

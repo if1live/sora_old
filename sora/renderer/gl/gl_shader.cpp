@@ -214,6 +214,8 @@ namespace gl {
     attrib_var_list_ = GetActiveAttributeVarList();
     BOOST_FOREACH(const GLHandle &loc, attrib_var_list_) {
       LOGI("%s", loc.str().c_str());
+      //모든 attribute를 일단 활성화. 설마disable해놓고 쓰는 일은 없을테니까
+      glEnableVertexAttribArray(loc.location);
     }
 
     return true;

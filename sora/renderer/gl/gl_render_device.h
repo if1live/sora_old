@@ -18,25 +18,58 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_RENDER_STATE_H_
-#define SORA_RENDER_STATE_H_
+#ifndef SORA_GL_RENDER_DEVIDE_H_
+#define SORA_GL_RENDER_DEVIDE_H_
 
 namespace sora {;
 class Device;
-struct RenderState {
-public:
-  RenderState(Device *dev);
-  ~RenderState();
+namespace gl {
+  /*
+  class TextureManager;
+  class MaterialManager;
+  class MeshManager;
+  class UberShader;
+  class Renderer;
+  class Font;
+  class ShaderProgram;
+  */
+  class GLProgram;
 
-  void SetWinSize(int width, int height);
-  int win_width() const { return win_width_; }
-  int win_height() const { return win_height_; }
+  class GLRenderDevice {
+  public:
+    GLRenderDevice(Device *dev);
+    ~GLRenderDevice();
 
-private:
-  int win_width_;
-  int win_height_;
-  Device *dev_;
-};
-}
+    void EndRender();
+    
+    //font
+    //renderer
+    //RenderState &render_state();
+    //TextureManager &texture_mgr();
+    //MaterialManager &material_mgr();
+    //MeshManager &mesh_mgr();
+    /*
+    //uber shader + predefined shader
+    ShaderProgram &uber_shader(uint flag);
+    ShaderProgram &simple_shader(); //단순 2d용
+    Renderer &render3d();
+    Renderer &render2d();
+    */
+    //shader
+  public:
+    void UseShader(GLProgram &prog);
+  private:
+    GLuint last_prog_id_;
 
-#endif  // SORA_RENDER_STATE_H_
+  public:
+    //win size
+    void SetWinSize(int width, int height);
+    int win_width() const { return win_width_; }
+    int win_height() const { return win_height_; }
+  private:
+    int win_width_;
+    int win_height_;
+  };
+} //namespace gl
+} //namespace sora
+#endif  // SORA_GL_RENDER_DEVIDE_H_

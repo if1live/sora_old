@@ -36,39 +36,40 @@
 #endif
 
 #include "sys/device.h"
-#include "renderer/render_state.h"
-
-#include "renderer/renderer_env.h"
 #include "sys/memory_file.h"
 
-#include "renderer/shader.h"
-#include "renderer/uber_shader.h"
-#include "renderer/matrix_stack.h"
-
-#include "renderer/obj_model.h"
-#include "renderer/obj_loader.h"
-#include "mesh/primitive_model_builder.h"
-#include "renderer/material_manager.h"
-
-#include "renderer/texture.h"
-#include "renderer/renderer.h"
-
-#include "renderer/material.h"
+#include "core/vertex.h"
 #include "core/math_helper.h"
-#include "renderer/camera.h"
-#include "renderer/font.h"
-#include "renderer/texture_manager.h"
 
-#include "renderer/shader_bind_policy.h"
+#include "renderer/renderer_env.h"
+#include "renderer/shader.h"
+
+//#include "renderer/uber_shader.h"
+//#include "renderer/matrix_stack.h"
+
+//#include "renderer/obj_model.h"
+//#include "renderer/obj_loader.h"
+//#include "mesh/primitive_model_builder.h"
+//#include "renderer/material_manager.h"
+
+//#include "renderer/texture.h"
+//#include "renderer/renderer.h"
+
+//#include "renderer/material.h"
+//#include "renderer/camera.h"
+//#include "renderer/font.h"
+//#include "renderer/texture_manager.h"
+
+//#include "renderer/shader_bind_policy.h"
 
 #include "event/touch_device.h"
 #include "event/touch_event.h"
 #include "event/keyboard_event.h"
 
-#include "mesh/parametric_equations.h"
-#include "mesh/parametric_surface.h"
-#include "renderer/mesh_manager.h"
-#include "renderer/light.h"
+//#include "mesh/parametric_equations.h"
+//#include "mesh/parametric_surface.h"
+//#include "renderer/mesh_manager.h"
+//#include "renderer/light.h"
 
 
 
@@ -77,19 +78,22 @@ using namespace sora;
 using namespace glm;
 
 //테스트용 물체를 그릴수있도록 필요한 변수를 하드코딩으로 떄려박자
-const int kMaxObject = 10;
-vector<glm::mat4> world_mat_list(kMaxObject);
-vector<string> mesh_name_list(kMaxObject);
+//const int kMaxObject = 10;
+//vector<glm::mat4> world_mat_list(kMaxObject);
+//vector<string> mesh_name_list(kMaxObject);
 
 //빛1개를 전역변수처럼 쓰자
-Light light;
+//Light light;
+
+Shader simple_shader;
+Shader color_shader;
 
 void SORA_set_window_size(Device *device, int w, int h) {
-  device->render_state().SetWinSize(w, h);
+  device->render_device().SetWinSize(w, h);
 }
 
 bool setupGraphics(Device *device, int w, int h) {
-  device->render_state().SetWinSize(w, h);
+  device->render_device().SetWinSize(w, h);
 
   LOGI("Version : %s", RendererEnv::Version().c_str());
   LOGI("Vendor : %s", RendererEnv::Vender().c_str());
@@ -101,8 +105,17 @@ bool setupGraphics(Device *device, int w, int h) {
   for( ; ext_it != ext_endit ; ++ext_it) {
     LOGI("%s", ext_it->c_str());
   }
-  
-  
+    
+  {
+    //create shader
+    string simple_vs_path = Filesystem::GetAppPath("shader/simple.vs");
+    string simple_fs_path = Filesystem::GetAppPath("shader/simple.fs");
+    simple_shader.LoadFromFile(simple_vs_path, simple_fs_path);
+
+    string color_vs_path = Filesystem::GetAppPath("shader/const_color.vs");
+    string color_fs_path = Filesystem::GetAppPath("shader/const_color.fs");
+    color_shader.LoadFromFile(color_vs_path, color_fs_path);
+  }
   //lodepng
   const char *texture_table[][2] = {
     { "sora", "texture/sora.png" },
@@ -113,6 +126,7 @@ bool setupGraphics(Device *device, int w, int h) {
     //{ "mtl_normal", "texture/normal_map.png" },
     
   };
+  /*
   int tex_count = sizeof(texture_table) / sizeof(texture_table[0]);
   for(int i = 0 ; i < tex_count ; i++) {
     std::string tex_path = sora::Filesystem::GetAppPath(texture_table[i][1]);
@@ -131,7 +145,8 @@ bool setupGraphics(Device *device, int w, int h) {
     tex.SetData(sora::Texture::kFileJPEG, tex_file.start, tex_file.end);
     device->texture_mgr().Add(tex);
   }
-
+  */
+  /*
   sora::ObjLoader loader;
   //load material
   {
@@ -144,7 +159,8 @@ bool setupGraphics(Device *device, int w, int h) {
     
     device->material_mgr().Add(material_list);
   }
-
+  */
+  /*
   {
     //load model
     std::string path1 = sora::Filesystem::GetAppPath("obj/cube.obj");
@@ -169,7 +185,8 @@ bool setupGraphics(Device *device, int w, int h) {
     //device->mesh_mgr().Add(obj_model.GetDrawCmdList_solid(), "obj_model");
     mesh_name_list[obj_model_idx] = "obj_model";
   }
-
+  */
+  /*
   {
     //primitive model test
     //sora::PrimitiveModel primitive_model;
@@ -274,6 +291,7 @@ bool setupGraphics(Device *device, int w, int h) {
     light.pos = vec3(10, 10, 100);
     //light.ambient = vec4(3.0f, 0, 0, 1.0f);
   }
+  */
   return true;
 }
 
@@ -291,9 +309,28 @@ void SORA_set_cam_pos(float a, float b) {
 }
 
 void renderFrame(Device *device) {
-  glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+  glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  SR_CHECK_ERROR("Begin RenderFrame");
 
+  VertexList vert_list;
+  vert_list.push_back(Vertex(vec3(-0.5, -0.5, 0), vec2(0, 0)));
+  vert_list.push_back(Vertex(vec3(0.5, -0.5, 0), vec2(1, 0)));
+  vert_list.push_back(Vertex(vec3(0, 0.5, 0), vec2(0.5, 1)));
+
+  //shader사용 선언이 가장 먼저
+  device->render_device().UseShader(color_shader);
+  SR_CHECK_ERROR("UseShader");
+
+  mat4 mvp(1.0f);
+  color_shader.SetMatrix(kMVPHandleName, mvp);
+  SR_CHECK_ERROR("SetMatrix");
+  vec4 color(1.0f);
+  color_shader.SetVector(kConstColorHandleName, color);
+  SR_CHECK_ERROR("SetVector");
+  color_shader.DrawArrays(kDrawTriangles, vert_list);
+
+  /*
   {
     //uber shader
     Renderer &render3d = device->render3d();
@@ -404,9 +441,9 @@ void renderFrame(Device *device) {
     glDrawElements(GL_TRIANGLES, label.index_count(), GL_UNSIGNED_SHORT, label.index_data());
     SR_CHECK_ERROR("glDrawArrays");
   }
-  
+  */
   //////////////////////////////
-  Renderer::EndRender();
+  
 }
 
 void SORA_setup_graphics(Device *device, int w, int h) {
@@ -465,8 +502,8 @@ void SORA_update_frame(Device *device, float dt) {
     bool is_right = false;
     bool is_bottom = false;
     bool is_top = false;
-    float scr_width = (float)device->render_state().win_width();
-    float scr_height = (float)device->render_state().win_height();
+    float scr_width = (float)device->render_device().win_width();
+    float scr_height = (float)device->render_device().win_height();
     if(x < scr_width / 3) {
       is_left = true;
     }

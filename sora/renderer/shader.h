@@ -49,6 +49,14 @@ public:
   template<typename T>
   HandleType SetValue(const std::string &name, T value);
 
+  //attrib bind function
+  template<typename VertexType>
+  void DrawArrays(DrawType mode, const std::vector<VertexType> &vert_list);
+  template<typename VertexType>
+  void DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexList &index_list);
+
+  PolicyType &policy() { return policy_; }
+
 private:
   PolicyType policy_;
 };
@@ -114,5 +122,15 @@ HandleType ShaderT<PolicyType>::SetValue(const std::string &name, T value) {
   return policy_.SetValue(name, value);
 }
 
+template<typename PolicyType>
+template<typename VertexType>
+void ShaderT<PolicyType>::DrawArrays(DrawType mode, const std::vector<VertexType> &vert_list) {
+  return policy_.DrawArrays(mode, vert_list);
+}
+template<typename PolicyType>
+template<typename VertexType>
+void ShaderT<PolicyType>::DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexList &index_list) {
+  return policy_.DrawElements(mode, vert_list, index_list);
+}
 } //namespace sora
 #endif  // SORA_SHADER_H_

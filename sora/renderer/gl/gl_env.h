@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2011 by if1live */
+﻿/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,7 @@
 
 #include <vector>
 #include <string>
+#include "renderer/globals.h"
 
 namespace sora {;
 namespace gl {
@@ -63,6 +64,8 @@ namespace gl {
     static GLenum VecToGLEnum(const T &value) {
       return TypeToGLEnum<typename T::value_type>();
     }
+
+    static GLenum DrawTypeToGLEnum(DrawType type);
   };
 } //namespace gl
 } //namespace sora

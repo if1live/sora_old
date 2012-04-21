@@ -44,18 +44,18 @@ namespace gl {
 
     int tangent_offset;
     GLenum tangent_type;
-
-    template<typename T>
-    static VertexInfo &Info() {
-      static_assert(false, "not defined");
-      static VertexInfo info;
-      return info;
-    }
   };
+
+  template<typename T>
+  inline VertexInfo &GetVertexInfo() {
+    static_assert(false, "not defined");
+    static VertexInfo info;
+    return info;
+  }
 
 
   template<>
-  VertexInfo &VertexInfo::Info<sora::Vertex2D>() {
+  inline VertexInfo &GetVertexInfo<sora::Vertex2D>() {
     static VertexInfo info;
     static bool init = false;
     if(init == false) {
@@ -78,7 +78,7 @@ namespace gl {
   }
 
   template<>
-  VertexInfo &VertexInfo::Info<sora::Vertex>() {
+  inline VertexInfo &GetVertexInfo<sora::Vertex>() {
     static VertexInfo info;
     static bool init = false;
     if(init == false) {
@@ -104,7 +104,7 @@ namespace gl {
   }
 
   template<>
-  VertexInfo &VertexInfo::Info<sora::TangentVertex>() {
+  inline VertexInfo &GetVertexInfo<sora::TangentVertex>() {
     static VertexInfo info;
     static bool init = false;
     if(init == false) {

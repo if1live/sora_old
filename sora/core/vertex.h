@@ -35,6 +35,10 @@ enum {
 struct Vertex;
 struct TangentVertex;
 struct Vertex2D;
+typedef std::vector<Vertex> VertexList;
+typedef std::vector<TangentVertex> TangentVertexList;
+typedef std::vector<Vertex2D> Vertex2DList;
+typedef std::vector<unsigned short> IndexList;
 
 struct Vertex2D {
   Vertex2D() : pos(0, 0), texcoord(0, 0) {}
@@ -47,6 +51,10 @@ struct Vertex2D {
 
 struct Vertex {
   Vertex() : pos(0, 0, 0), texcoord(0, 0), normal(1, 0, 0), color(255, 255, 255, 255) {}
+  Vertex(const glm::vec3 &pos, const glm::vec2 &texcoord)
+    : pos(pos), texcoord(texcoord), normal(1, 0, 0), color(255, 255, 255, 255) {}
+  Vertex(const glm::vec3 &pos)
+    : pos(pos), texcoord(0, 0), normal(1, 0, 0), color(255, 255, 255, 255) {}
 
   glm::vec3 pos;
   glm::vec2 texcoord;
