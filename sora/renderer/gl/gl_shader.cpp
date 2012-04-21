@@ -350,6 +350,28 @@ namespace gl {
   }
 
   ///////////////////////////////////
+  void GLProgram::SetVertexList(char *base_ptr, Type2Type<TangentVertex>) {
+    typedef TangentVertex T;
+    SetPositionAttrib<T>(base_ptr);
+    SetTexcoordAttrib<T>(base_ptr);
+    SetNormalAttrib<T>(base_ptr);
+    SetColorAttrib<T>(base_ptr);
+    SetTangentAttrib<T>(base_ptr);
+  }
+
+  void GLProgram::SetVertexList(char *base_ptr, Type2Type<Vertex>) {
+    typedef Vertex T;
+    SetPositionAttrib<T>(base_ptr);
+    SetTexcoordAttrib<T>(base_ptr);
+    SetNormalAttrib<T>(base_ptr);
+    SetColorAttrib<T>(base_ptr);
+  }
+
+  void GLProgram::SetVertexList(char *base_ptr, Type2Type<Vertex2D>) {
+    typedef Vertex2D T;
+    SetPositionAttrib<T>(base_ptr);
+    SetTexcoordAttrib<T>(base_ptr);
+  }
 
 } //namespace gl
 } //namespace sora

@@ -156,8 +156,11 @@ namespace gl {
     HandleType SetValue(const GLHandle &handle, T value);
     
     //connect vertex attrib
-    template<typename VertexType>
-    void SetVertexList(char *base_ptr, Type2Type<VertexType>);
+    
+    void SetVertexList(char *base_ptr, Type2Type<TangentVertex>);
+    void SetVertexList(char *base_ptr, Type2Type<Vertex>);
+    void SetVertexList(char *base_ptr, Type2Type<Vertex2D>);
+
     template<typename VertexType>
     void SetVertexList(const std::vector<VertexType> &vert_list);
     template<typename VertexType, typename BaseBufferType>
@@ -453,37 +456,7 @@ namespace gl {
     }
   }
 
-  template<typename VertexType>
-  void GLProgram::SetVertexList(char *base_ptr, Type2Type<VertexType>) {
-    static_assert(false, "do not use this func"); 
-  }  
-
-  template<>
-  inline void GLProgram::SetVertexList(char *base_ptr, Type2Type<TangentVertex>) {
-    typedef TangentVertex T;
-    SetPositionAttrib<T>(base_ptr);
-    SetTexcoordAttrib<T>(base_ptr);
-    SetNormalAttrib<T>(base_ptr);
-    SetColorAttrib<T>(base_ptr);
-    SetTangentAttrib<T>(base_ptr);
-  }
-
-  template<>
-  inline void GLProgram::SetVertexList(char *base_ptr, Type2Type<Vertex>) {
-    typedef Vertex T;
-    SetPositionAttrib<T>(base_ptr);
-    SetTexcoordAttrib<T>(base_ptr);
-    SetNormalAttrib<T>(base_ptr);
-    SetColorAttrib<T>(base_ptr);
-  }
-
-  template<>
-  inline void GLProgram::SetVertexList(char *base_ptr, Type2Type<Vertex2D>) {
-    typedef Vertex2D T;
-    SetPositionAttrib<T>(base_ptr);
-    SetTexcoordAttrib<T>(base_ptr);
-  }
-
+  
 } //namespace gl
 } //namespace sora
 #endif  // SORA_SHADER_H_
