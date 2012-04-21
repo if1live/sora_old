@@ -48,89 +48,99 @@ namespace gl {
   };
 
   template<typename T>
-  inline VertexInfo &GetVertexInfo(Type2Type<T> t) {
-    static_assert(false, "not defined");
-    static VertexInfo info;
-    return info;
-  }
-
+  struct VertexInfoHolder {
+    typedef T VertexType;
+    static VertexInfo &Get(Type2Type<T> t) {
+      static_assert(false, "not defined");
+      static VertexInfo info;
+      return info;
+    }
+  };
 
   template<>
-  inline VertexInfo &GetVertexInfo(Type2Type<sora::Vertex2D> t) {
-    static VertexInfo info;
-    static bool init = false;
-    if(init == false) {
-      //typedef t::Type VertexType;
-      Vertex2D vert;
+  struct VertexInfoHolder<Vertex2D> {
+    typedef Vertex2D VertexType;
+    static VertexInfo &Get() {
+      static VertexInfo info;
+      static bool init = false;
+      if(init == false) {
+        VertexType vert;
 
-      init = true;
-      info.size = sizeof(vert);
+        init = true;
+        info.size = sizeof(vert);
 
-      info.pos_offset = offsetof(Vertex2D, pos);
-      info.pos_type = VecToGLEnum<decltype(vert.pos)>::value;
+        info.pos_offset = offsetof(VertexType, pos);
+        info.pos_type = VecToGLEnum<decltype(vert.pos)>::value;
 
-      info.texcoord_offset = offsetof(Vertex2D, texcoord);
-      info.texcoord_type = VecToGLEnum<decltype(vert.texcoord)>::value;
+        info.texcoord_offset = offsetof(VertexType, texcoord);
+        info.texcoord_type = VecToGLEnum<decltype(vert.texcoord)>::value;
 
-      info.color_offset = -1;
-      info.normal_offset = -1;
-      info.tangent_offset = -1;
+        info.color_offset = -1;
+        info.normal_offset = -1;
+        info.tangent_offset = -1;
+      }
+      return info;
     }
-    return info;
-  }
+  };
 
   template<>
-  inline VertexInfo &GetVertexInfo(Type2Type<Vertex> t) {
-    static VertexInfo info;
-    static bool init = false;
-    if(init == false) {
-      init = true;
-      Vertex vert;
-      info.size = sizeof(vert);
+  struct VertexInfoHolder<Vertex> {
+    typedef Vertex VertexType;
+    static VertexInfo &Get() {
+      static VertexInfo info;
+      static bool init = false;
+      if(init == false) {
+        init = true;
+        VertexType vert;
+        info.size = sizeof(vert);
 
-      info.pos_offset = offsetof(Vertex, pos);
-      info.pos_type = VecToGLEnum<decltype(vert.pos)>::value;
+        info.pos_offset = offsetof(VertexType, pos);
+        info.pos_type = VecToGLEnum<decltype(vert.pos)>::value;
 
-      info.texcoord_offset = offsetof(Vertex, texcoord);
-      info.texcoord_type = VecToGLEnum<decltype(vert.texcoord)>::value;
+        info.texcoord_offset = offsetof(VertexType, texcoord);
+        info.texcoord_type = VecToGLEnum<decltype(vert.texcoord)>::value;
 
-      info.color_offset = offsetof(Vertex, color);
-      info.color_type = VecToGLEnum<decltype(vert.color)>::value;
+        info.color_offset = offsetof(VertexType, color);
+        info.color_type = VecToGLEnum<decltype(vert.color)>::value;
 
-      info.normal_offset = offsetof(Vertex, normal);
-      info.normal_type = VecToGLEnum<decltype(vert.normal)>::value;
+        info.normal_offset = offsetof(VertexType, normal);
+        info.normal_type = VecToGLEnum<decltype(vert.normal)>::value;
 
-      info.tangent_offset = -1;
+        info.tangent_offset = -1;
+      }
+      return info;
     }
-    return info;
-  }
+  };
 
   template<>
-  inline VertexInfo &GetVertexInfo(Type2Type<TangentVertex> t) {
-    static VertexInfo info;
-    static bool init = false;
-    if(init == false) {
-      init = true;
-      TangentVertex vert;
-      info.size = sizeof(vert);
+  struct VertexInfoHolder<TangentVertex> {
+    typedef TangentVertex VertexType;
+    static VertexInfo &Get() {
+      static VertexInfo info;
+      static bool init = false;
+      if(init == false) {
+        init = true;
+        VertexType vert;
+        info.size = sizeof(vert);
 
-      info.pos_offset = offsetof(TangentVertex, pos);
-      info.pos_type = VecToGLEnum<decltype(vert.pos)>::value;
+        info.pos_offset = offsetof(VertexType, pos);
+        info.pos_type = VecToGLEnum<decltype(vert.pos)>::value;
 
-      info.texcoord_offset = offsetof(TangentVertex, texcoord);
-      info.texcoord_type = VecToGLEnum<decltype(vert.texcoord)>::value;
+        info.texcoord_offset = offsetof(VertexType, texcoord);
+        info.texcoord_type = VecToGLEnum<decltype(vert.texcoord)>::value;
 
-      info.color_offset = offsetof(TangentVertex, color);
-      info.color_type = VecToGLEnum<decltype(vert.color)>::value;
+        info.color_offset = offsetof(VertexType, color);
+        info.color_type = VecToGLEnum<decltype(vert.color)>::value;
 
-      info.normal_offset = offsetof(TangentVertex, normal);
-      info.normal_type = VecToGLEnum<decltype(vert.normal)>::value;
+        info.normal_offset = offsetof(VertexType, normal);
+        info.normal_type = VecToGLEnum<decltype(vert.normal)>::value;
 
-      info.tangent_offset = offsetof(TangentVertex, tangent);
-      info.tangent_type = VecToGLEnum<decltype(vert.tangent)>::value;
+        info.tangent_offset = offsetof(VertexType, tangent);
+        info.tangent_type = VecToGLEnum<decltype(vert.tangent)>::value;
+      }
+      return info;
     }
-    return info;
-  }
+  };
 }
 }
 

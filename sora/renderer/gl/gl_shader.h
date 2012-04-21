@@ -157,7 +157,7 @@ namespace gl {
     
     //connect vertex attrib
     template<typename VertexType>
-    inline void SetVertexList(char *base_ptr, Type2Type<VertexType>);
+    void SetVertexList(char *base_ptr, Type2Type<VertexType>);
     template<typename VertexType>
     void SetVertexList(const std::vector<VertexType> &vert_list);
     template<typename VertexType, typename BaseBufferType>
@@ -365,7 +365,7 @@ namespace gl {
   template<typename VertexType>
   void GLProgram::SetPositionAttrib(char *base_ptr) {
     const GLHandle *pos_handle = attrib_var(kPositionHandleName);
-    const VertexInfo &info = GetVertexInfo(Type2Type<VertexType>());
+    const VertexInfo &info = VertexInfoHolder<VertexType>::Get();
     const int vertex_size = sizeof(VertexType);
     if(pos_handle != NULL) {
       int offset = info.pos_offset;
@@ -382,7 +382,7 @@ namespace gl {
   template<typename VertexType>
   void GLProgram::SetTexcoordAttrib(char *base_ptr) {
     const GLHandle *pos_handle = attrib_var(kPositionHandleName);
-    const VertexInfo &info = GetVertexInfo(Type2Type<VertexType>());
+    const VertexInfo &info = VertexInfoHolder<VertexType>::Get();
     const int vertex_size = sizeof(VertexType);
     const GLHandle *texcoord_handle = this->attrib_var(kTexcoordHandleName);
     if(texcoord_handle != NULL) {
@@ -400,7 +400,7 @@ namespace gl {
   template<typename VertexType>
   void GLProgram::SetNormalAttrib(char *base_ptr) {
     const GLHandle *pos_handle = attrib_var(kPositionHandleName);
-    const VertexInfo &info = GetVertexInfo(Type2Type<VertexType>());
+    const VertexInfo &info = VertexInfoHolder<VertexType>::Get();
     const int vertex_size = sizeof(VertexType);
     const GLHandle *normal_handle = this->attrib_var(kNormalHandleName);
     if(normal_handle != NULL) {
@@ -418,7 +418,7 @@ namespace gl {
   template<typename VertexType>
   void GLProgram::SetColorAttrib(char *base_ptr) {
     const GLHandle *pos_handle = attrib_var(kPositionHandleName);
-    const VertexInfo &info = GetVertexInfo(Type2Type<VertexType>());
+    const VertexInfo &info = VertexInfoHolder<VertexType>::Get();
     const int vertex_size = sizeof(VertexType);
     const GLHandle *color_handle = this->attrib_var(kColorHandleName);
     if(color_handle != NULL) {
@@ -437,7 +437,7 @@ namespace gl {
   template<typename VertexType> 
   void GLProgram::SetTangentAttrib(char *base_ptr) {
     const GLHandle *pos_handle = attrib_var(kPositionHandleName);
-    const VertexInfo &info = GetVertexInfo(Type2Type<VertexType>());
+    const VertexInfo &info = VertexInfoHolder<VertexType>::Get();
     const int vertex_size = sizeof(VertexType);
     const GLHandle *tangent_handle = this->attrib_var(kTangentHandleName);
     if(tangent_handle != NULL) {
@@ -454,7 +454,7 @@ namespace gl {
   }
 
   template<typename VertexType>
-  inline void GLProgram::SetVertexList(char *base_ptr, Type2Type<VertexType>) {
+  void GLProgram::SetVertexList(char *base_ptr, Type2Type<VertexType>) {
     static_assert(false, "do not use this func"); 
   }  
 
