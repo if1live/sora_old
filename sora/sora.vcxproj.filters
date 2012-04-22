@@ -157,9 +157,6 @@
     <ClCompile Include="mesh\freeglut_font.cpp">
       <Filter>mesh</Filter>
     </ClCompile>
-    <ClCompile Include="mesh\freeglut_font_data.cpp">
-      <Filter>mesh</Filter>
-    </ClCompile>
     <ClCompile Include="mesh\freeglut_stroke_roman.cpp">
       <Filter>mesh</Filter>
     </ClCompile>

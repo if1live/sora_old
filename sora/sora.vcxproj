@@ -94,7 +94,6 @@
     <ClCompile Include="event\touch_device.cpp" />
     <ClCompile Include="lodepng\lodepng.cpp" />
     <ClCompile Include="mesh\freeglut_font.cpp" />
-    <ClCompile Include="mesh\freeglut_font_data.cpp" />
     <ClCompile Include="mesh\freeglut_stroke_mono_roman.cpp" />
     <ClCompile Include="mesh\freeglut_stroke_roman.cpp" />
     <ClCompile Include="mesh\geometric_object.cpp" />
