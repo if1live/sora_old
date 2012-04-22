@@ -68,21 +68,36 @@ public:
   //connect vertex attrib
   template<typename VertexType>
   void SetVertexList(const std::vector<VertexType> &vert_list) {
+    if(vert_list.empty()) {
+      return;
+    }
     policy_.SetVertexList(vert_list);
   }
   template<typename VertexType, typename BaseBufferType>
   void SetVertexList(const VertexBufferObjectT<BaseBufferType, VertexType> &vbo) {
+    if(vbo.count() == 0) {
+      return;
+    }
     policy_.SetVertexList(vbo);
   }
 
   void DrawArrays(DrawType mode, int vertex_count) {
+    if(vertex_count == 0) {
+      return;
+    }
     return policy_.DrawArrays(mode, vertex_count);
   }
   void DrawElements(DrawType mode, const IndexList &index_list) {
+    if(index_list.empty()) {
+      return;
+    }
     return policy_.DrawElements(mode, index_list);
   }
   template<typename BaseBufferType>
   void DrawElements(DrawType mode, const IndexBufferObjectT<BaseBufferType> &ibo) {
+    if(ibo.count() == 0) {
+      return;
+    }
     policy_.DrawElements(mode, ibo);
   }
 

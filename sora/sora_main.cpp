@@ -487,15 +487,14 @@ void renderFrame(Device *device) {
       mat4 mvp = projection * world_mat;
       shader.SetMatrix(kMVPHandleName, mvp);
 
-      auto font_vert_data = glutStrokeString(GLUT_STROKE_MONO_ROMAN, "ABCD");
+      //auto font_vert_data = glutStrokeString(GLUT_STROKE_MONO_ROMAN, "ABCD");
+      auto font_vert_data = glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, '@');
       auto it = font_vert_data.begin();
       auto endit = font_vert_data.end();
 
       glLineWidth(3.0f);
       for( ; it != endit ; ++it) {
         const DrawCmdData<Vertex> &cmd = *it;
-        //앞면 뒷면 그리기를 허용/불가능 정보까지 내장해야
-        //뚜껑없는 원통 그리기가 편하다
         if(cmd.disable_cull_face == true) {
           glDisable(GL_CULL_FACE);
         }

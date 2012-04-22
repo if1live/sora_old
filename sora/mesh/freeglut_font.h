@@ -103,10 +103,10 @@ struct tagSFG_StrokeFont
 //int     glutBitmapLength( void* font, const unsigned char* string );
 //int     glutBitmapHeight( void* font );
 
-void    glutStrokeCharacter( void* font, int character );
 int     glutStrokeWidth( void* font, int character );
 int     glutStrokeLength( void* font, const unsigned char* string );
 GLfloat glutStrokeHeight( void* font );
+std::vector< DrawCmdData<Vertex> > glutStrokeCharacter( void* font, int character );
 std::vector< DrawCmdData<Vertex> > glutStrokeString( void* font, const char *string );
 
 /*

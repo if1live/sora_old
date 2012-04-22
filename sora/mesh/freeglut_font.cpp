@@ -233,33 +233,52 @@ int  glutBitmapHeight( void* fontID )
 /*
 * Draw a stroke character
 */
-void  glutStrokeCharacter( void* fontID, int character )
-{
+std::vector< DrawCmdData<Vertex> > glutStrokeCharacter( void* fontID, int character ) {
+  std::vector< DrawCmdData<Vertex> > result;
+
   const SFG_StrokeChar *schar;
   const SFG_StrokeStrip *strip;
   int i, j;
   SFG_StrokeFont* font;
   font = fghStrokeByID( fontID );
-  freeglut_return_if_fail( character >= 0 );
-  freeglut_return_if_fail( character < font->Quantity );
-  freeglut_return_if_fail( font );
+  if(!( character >= 0 )) {
+    return result;
+  }
+  if(!(character < font->Quantity )) {
+    return result;
+  }
+  if( !(font )) {
+    return result;
+  }
 
   schar = font->Characters[ character ];
-  freeglut_return_if_fail( schar );
+  if( !(schar )) {
+    return result;
+  }
   strip = schar->Strips;
 
-  for( i = 0; i < schar->Number; i++, strip++ )
-  {
-    glBegin( GL_LINE_STRIP );
-    for( j = 0; j < strip->Number; j++ )
-      glVertex2f( strip->Vertices[ j ].X, strip->Vertices[ j ].Y );
-    glEnd( );
-    glBegin( GL_POINTS );
-    for( j = 0; j < strip->Number; j++ )
-      glVertex2f( strip->Vertices[ j ].X, strip->Vertices[ j ].Y );
-    glEnd( );
+  for( i = 0; i < schar->Number; i++, strip++ ) {
+    DrawCmdData<Vertex> line_cmd;
+    line_cmd.draw_mode = kDrawLineStrip;
+    for( j = 0; j < strip->Number; j++ ) {
+      //glVertex2f( strip->Vertices[ j ].X, strip->Vertices[ j ].Y );
+      Vertex vert;
+      vert.pos = vec3( strip->Vertices[ j ].X, strip->Vertices[ j ].Y , 0);
+      line_cmd.vertex_list.push_back(vert);
+    }
+    result.push_back(line_cmd);
+
+    DrawCmdData<Vertex> point_cmd;
+    point_cmd.draw_mode = kDrawPoints;
+    for( j = 0; j < strip->Number; j++ ) {
+      Vertex vert;
+      vert.pos = vec3( strip->Vertices[ j ].X, strip->Vertices[ j ].Y, 0 );
+      line_cmd.vertex_list.push_back(vert);
+    }
+    result.push_back(point_cmd);
   }
-  glTranslatef( schar->Right, 0.0, 0.0 );
+  //glTranslatef( schar->Right, 0.0, 0.0 );
+  return result;
 }
 
 std::vector< DrawCmdData<Vertex> > glutStrokeString( void* fontID, const char *string ) {
