@@ -728,4 +728,139 @@ void GeometricObject::WireAxis(float size) {
   }
   this->cmd_list_.push_back(cmd);
 }
+
+void GeometricObject::WirePlane(float half_size, float grid_size) {
+  DrawCmdData cmd;
+  cmd.draw_mode = kDrawLines;
+  VertexList &vert_list = cmd.vertex_list;
+
+  int grid_range = (int)(half_size / grid_size);
+
+  //left line(-half_size, 0, half_size) ~ (-half_size, 0, -half_size)
+  //right line(+half_size, 0, half_size) ~ (+half_size, 0, -half_size)
+  //front line(-half_size, 0, +half_size) ~ (+half_size, 0, +half_size)
+  //back line(-half_size, 0, -half_size) ~ (+half_size, 0, -half_size)
+
+  enum {
+    kLeft = 0,
+    kRight,
+    kFront,
+    kBack
+  };
+
+  //([0], 0, [1]) ~ ([2], 0, [3])
+  float xz_axis_mark[][4] = {
+    { -1, -1, -1, +1 },
+    { +1, -1, +1, +1 },
+    { -1, +1, +1, +1 },
+    { -1, -1, +1, -1 },
+  };
+  for(int axis_idx = 0 ; axis_idx < 4 ; ++axis_idx) {
+    int line_vert_size = grid_range * 2 + 1;
+    for(int i = 0 ; i < line_vert_size ; ++i) {
+      int start_index = line_vert_size * axis_idx;
+      int vert_idx = start_index + i;
+
+      float left_x = xz_axis_mark[axis_idx][0] * half_size;
+      float right_x = xz_axis_mark[axis_idx][2] * half_size;
+      float front_z = xz_axis_mark[axis_idx][3] * half_size;
+      float back_z = xz_axis_mark[axis_idx][1] * half_size;
+      SR_ASSERT(left_x <= right_x);
+      SR_ASSERT(back_z <= front_z);
+
+      float x, z;
+      float scale = ((float)i / (line_vert_size-1.0f));
+      if(left_x == right_x) {
+        x = left_x;
+      } else {
+        x = scale * (right_x - left_x) + left_x;
+      }
+      if(front_z == back_z) {
+        z = front_z;
+      } else {
+        z = scale * (front_z - back_z) + back_z;
+      }
+
+      Vertex vert;
+      vert.pos = vec3(x, 0, z);
+      vert_list.push_back(vert);
+    }
+  }
+
+  //////////////////////////
+  IndexList &index_list = cmd.index_list;
+
+  //build index list
+  int line_vert_size = grid_range * 2 + 1;
+  index_list.reserve(line_vert_size * 2 * 4);
+  //left .... right¸¦ ÀÕ´Â ¼±
+  int left_start_index = line_vert_size * kLeft;
+  int right_start_index = line_vert_size * kRight;
+  for(int i = 0 ; i < line_vert_size ; i++) {
+    index_list.push_back(left_start_index + i);
+    index_list.push_back(right_start_index + i);
+  }
+
+  //front...back¸¦ ÀÕ´Â ¼±
+  int front_start_index = line_vert_size * kFront;
+  int back_start_index = line_vert_size * kBack;
+  for(int i = 0 ; i < line_vert_size ; i++) {
+    index_list.push_back(front_start_index + i);
+    index_list.push_back(back_start_index + i);
+  }
+  this->cmd_list_.push_back(cmd);
+}
+
+void GeometricObject::SolidPlane(float half_size) {
+
+  DrawCmdData cmd;
+  cmd.draw_mode = kDrawTriangles;
+  VertexList &vert_list = cmd.vertex_list;
+
+  // x scale, z scale, s, t
+  float table[][4] = {
+    { -1, -1, 0, 0 },
+    { -1, +1, 0, 1 },
+    { +1, -1, 1, 0 },
+    { +1, +1, 1, 1 }
+  };
+  for(int i = 0 ; i < 4 ; ++i) {
+    float x_scale = table[i][0];
+    float z_scale = table[i][1];
+    float s = table[i][2];
+    float t = table[i][3];
+
+    vec3 pos(x_scale * half_size, 0, z_scale * half_size);
+    vec2 texcoord(s, t);
+    vec3 normal(0, 1, 0);
+
+    Vertex vert;
+    vert.normal = normal;
+    vert.pos = pos;
+    vert.texcoord = texcoord;
+    cmd.vertex_list.push_back(vert);
+  }
+
+  ///////////////////////
+  enum {
+    kLeftBack,
+    kLeftFront,
+    kRightBack,
+    kRightFront,
+  };
+
+  IndexList &index_list = cmd.index_list;
+  index_list.reserve(6);
+  index_list.push_back(kLeftBack); 
+  index_list.push_back(kLeftFront);  
+  index_list.push_back(kRightBack);  
+
+  index_list.push_back(kRightBack);
+  index_list.push_back(kLeftFront);
+  index_list.push_back(kRightFront);
+
+  ///////////
+  this->cmd_list_.push_back(cmd);
+}
+
 } //namespace sora

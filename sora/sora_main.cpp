@@ -410,7 +410,9 @@ void renderFrame(Device *device) {
     //원통은 뚫려잇어서cull꺼야 됨
     //glDisable(GL_CULL_FACE);  //TODO cull은 model에 넣어야하나?
     //mesh.SolidCylinder(1, 1, 2, 8, 8);
-    mesh.WireAxis(5);
+    //mesh.WireAxis(5);
+    //mesh.SolidPlane(3);
+    mesh.WirePlane(3, 0.1f);
     auto it = mesh.Begin();
     auto endit = mesh.End();
     for( ; it != endit ; ++it) {

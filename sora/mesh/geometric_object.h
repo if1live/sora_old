@@ -66,6 +66,9 @@ public:
 
   void WireAxis(float size);
 
+  void WirePlane(float half_size, float grid_size);
+  void SolidPlane(float half_size);
+
   void Clear() { cmd_list_.clear(); }
 
   std::vector<DrawCmdData>::iterator Begin() { return cmd_list_.begin(); }
