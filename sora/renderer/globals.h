@@ -96,6 +96,18 @@ typedef enum {
   kBufferUsageStream,
 } BufferUsageType;
 
+//기본도형은 normal까지만 지원하낟. 그 이상의 정보가 필요하면
+//버텍스 목록에 추가 가공을 다른방식으로 집어넣자
+template<typename VertexType>
+struct DrawCmdData {
+  DrawCmdData() : disable_cull_face(false) { }
+  bool disable_cull_face;
+  DrawType draw_mode;
+  std::vector<VertexType> vertex_list;
+  std::vector<unsigned short> index_list;
+};
+
+
 //predefined semantic
 #define kPositionHandleName "a_position"
 #define kTexcoordHandleName "a_texcoord"

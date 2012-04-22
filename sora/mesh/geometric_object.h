@@ -42,17 +42,6 @@ namespace sora {;
 
 class PrimitiveMeshHelper;
 
-//기본도형은 normal까지만 지원하낟. 그 이상의 정보가 필요하면
-//버텍스 목록에 추가 가공을 다른방식으로 집어넣자
-template<typename VertexType>
-struct DrawCmdData {
-  DrawCmdData() : disable_cull_face(false) { }
-  bool disable_cull_face;
-  DrawType draw_mode;
-  std::vector<VertexType> vertex_list;
-  std::vector<unsigned short> index_list;
-};
-
 //내장 도형을 그리는 최상위 인터페이스
 //tangent vertex / vertex를 동시에 지원하기 위해서 적절히 템플릿으로 처리함
 template<typename T>

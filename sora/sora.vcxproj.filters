@@ -154,6 +154,18 @@
     <ClCompile Include="mesh\parametric_surface.cpp">
       <Filter>mesh</Filter>
     </ClCompile>
+    <ClCompile Include="mesh\freeglut_font.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh\freeglut_font_data.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh\freeglut_stroke_roman.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh\freeglut_stroke_mono_roman.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -358,6 +370,9 @@
       <Filter>mesh</Filter>
     </ClInclude>
     <ClInclude Include="mesh\parametric_equations.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\freeglut_font.h">
       <Filter>mesh</Filter>
     </ClInclude>
   </ItemGroup>

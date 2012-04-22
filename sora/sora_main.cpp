@@ -47,6 +47,7 @@
 #include "renderer/buffer_object.h"
 
 #include "mesh/geometric_object.h"
+#include "mesh/freeglut_font.h"
 
 //#include "renderer/uber_shader.h"
 //#include "renderer/matrix_stack.h"
@@ -440,6 +441,7 @@ void renderFrame(Device *device) {
     device->render_device().Set2D();
 
     device->render_device().UseShader(simple_shader);
+    /*
     sora::SysFont &font = device->render_device().sys_font();
     device->render_device().UseTexture(font.font_texture());
 
@@ -458,13 +460,57 @@ void renderFrame(Device *device) {
     simple_shader.DrawArrays(kDrawTriangleFan, vert_list.size());
 
     mat4 world_mat(1.0f);
-    world_mat = glm::translate(world_mat, glm::vec3(0, 800, 0));
+    world_mat = glm::translate(world_mat, glm::vec3(0, 480, 0));
     world_mat = glm::scale(world_mat, glm::vec3(2, 2, 1));
     mat4 mvp = projection * world_mat;
     simple_shader.SetMatrix(kMVPHandleName, mvp);
     sora::Label label(&font, "PQRS_1234_asdf");
     simple_shader.SetVertexList(label.vertex_list());
     simple_shader.DrawElements(kDrawTriangles, label.index_list());
+    */
+
+    {
+      //단색으로 glut용 그리기
+      device->render_device().UseShader(color_shader);
+      sora::Shader &shader = color_shader;
+
+      vec4 color(1.0f, 0, 0, 1.0f);
+      shader.SetVector(kConstColorHandleName, color);
+      SR_CHECK_ERROR("SetVector");
+
+      float win_width = (float)device->render_device().win_width();
+      float win_height = (float)device->render_device().win_height();
+      glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
+
+      mat4 world_mat(1.0f);
+      world_mat = glm::translate(world_mat, glm::vec3(200, 200, 0));
+      mat4 mvp = projection * world_mat;
+      shader.SetMatrix(kMVPHandleName, mvp);
+
+      auto font_vert_data = glutStrokeString(GLUT_STROKE_MONO_ROMAN, "ABCD");
+      auto it = font_vert_data.begin();
+      auto endit = font_vert_data.end();
+
+      glLineWidth(3.0f);
+      for( ; it != endit ; ++it) {
+        const DrawCmdData<Vertex> &cmd = *it;
+        //앞면 뒷면 그리기를 허용/불가능 정보까지 내장해야
+        //뚜껑없는 원통 그리기가 편하다
+        if(cmd.disable_cull_face == true) {
+          glDisable(GL_CULL_FACE);
+        }
+        shader.SetVertexList(cmd.vertex_list);
+        if(cmd.index_list.empty()) {
+          shader.DrawArrays(cmd.draw_mode, cmd.vertex_list.size());
+        } else {
+          shader.DrawElements(cmd.draw_mode, cmd.index_list);
+        }
+        if(cmd.disable_cull_face == true) {
+          glEnable(GL_CULL_FACE);
+        }
+      }
+      glLineWidth(1.0f);
+    }
   }
 
   /*
