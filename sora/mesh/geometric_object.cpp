@@ -39,6 +39,7 @@ using namespace std;
 
 namespace sora {;
 void GeometricObject::PointCube(float width, float height, float depth) {
+  Clear();
   SR_ASSERT(width > 0 && height > 0 && depth > 0);
   width = width/2;
   height = height/2;
@@ -73,7 +74,9 @@ void GeometricObject::PointCube(float width, float height, float depth) {
   }
   this->cmd_list_.push_back(cmd);
 }
+
 void GeometricObject::WireCube(float width, float height, float depth) {
+  Clear();
   SR_ASSERT(width > 0 && height > 0 && depth > 0);
   width = width/2;
   height = height/2;
@@ -119,6 +122,7 @@ void GeometricObject::WireCube(float width, float height, float depth) {
 }
 
 void GeometricObject::SolidCube(float width, float height, float depth) {
+  Clear();
   SR_ASSERT(width > 0 && height > 0 && depth > 0);
   width = width/2;
   height = height/2;
@@ -318,6 +322,8 @@ void GeometricObject::SolidCube(float width, float height, float depth) {
 }
 
 void GeometricObject::PointTeapot( float size ) {
+  Clear();
+
   DrawCmdData cmd;
   cmd.draw_mode = kDrawPoints;
   cmd.vertex_list.resize(NUM_TEAPOT_OBJECT_VERTEX);
@@ -338,6 +344,8 @@ void GeometricObject::PointTeapot( float size ) {
 }
 
 void GeometricObject::WireTeapot( float size ) {
+  Clear();
+
   DrawCmdData cmd;
   cmd.draw_mode = kDrawLines;
   cmd.vertex_list.resize(NUM_TEAPOT_OBJECT_VERTEX);
@@ -370,6 +378,7 @@ void GeometricObject::WireTeapot( float size ) {
 }
 
 void GeometricObject::SolidTeapot( float size ) {
+  Clear();
   DrawCmdData cmd;
   cmd.draw_mode = kDrawTriangles;
   cmd.vertex_list.resize(NUM_TEAPOT_OBJECT_VERTEX);
@@ -394,6 +403,7 @@ void GeometricObject::SolidTeapot( float size ) {
 
 //http://massapi.com/source/lwjgl-source-2.7.1/src/java/org/lwjgl/util/glu/Sphere.java.html
 void GeometricObject::PointShpere(float radius, int slices, int stacks) {
+  Clear();
   float nsign = 1.0f;
   float drho = kPi / stacks;
   float dtheta = 2.0f * kPi / slices;
@@ -430,6 +440,7 @@ void GeometricObject::PointShpere(float radius, int slices, int stacks) {
   this->cmd_list_.push_back(cmd);
 }
 void GeometricObject::WireShpere(float radius, int slices, int stacks) {
+  Clear();
   float nsign = 1.0f;
   float drho = sora::kPi / stacks;
   float dtheta = 2.0f * sora::kPi / slices;
@@ -485,6 +496,7 @@ void GeometricObject::WireShpere(float radius, int slices, int stacks) {
 }
 
 void GeometricObject::SolidSphere(float radius, int slices, int stacks) {
+  Clear();
   bool normals = true;
   float nsign = 1.0f;
   float drho = kPi / stacks;
@@ -540,6 +552,7 @@ void GeometricObject::SolidSphere(float radius, int slices, int stacks) {
 
 //http://massapi.com/source/lwjgl-source-2.7.1/src/java/org/lwjgl/util/glu/Cylinder.java.html
 void GeometricObject::PointCylinder(float baseRadius, float topRadius, float height, int slices, int stacks) {
+  Clear();
   float nsign = 1.0f;
   float da = 2.0f * kPi / slices;
   float dr = (topRadius - baseRadius) / stacks;
@@ -571,6 +584,7 @@ void GeometricObject::PointCylinder(float baseRadius, float topRadius, float hei
   this->cmd_list_.push_back(cmd);
 }
 void GeometricObject::WireCylinder(float baseRadius, float topRadius, float height, int slices, int stacks) {
+  Clear();
   float nsign = 1.0f;
   float da = 2.0f * kPi / slices;
   float dr = (topRadius - baseRadius) / stacks;
@@ -617,6 +631,7 @@ void GeometricObject::WireCylinder(float baseRadius, float topRadius, float heig
   }
 }
 void GeometricObject::SolidCylinder(float baseRadius, float topRadius, float height, int slices, int stacks) {
+  Clear();
   float nsign = 1.0f;
   float da = 2.0f * kPi / slices;
   float dr = (topRadius - baseRadius) / stacks;
@@ -676,6 +691,7 @@ void GeometricObject::SolidCylinder(float baseRadius, float topRadius, float hei
 }
 
 void GeometricObject::WireAxis(float size) {
+  Clear();
   DrawCmdData cmd;
   cmd.draw_mode = kDrawLines;
   VertexList &vert_list = cmd.vertex_list;
@@ -730,6 +746,7 @@ void GeometricObject::WireAxis(float size) {
 }
 
 void GeometricObject::WirePlane(float half_size, float grid_size) {
+  Clear();
   DrawCmdData cmd;
   cmd.draw_mode = kDrawLines;
   VertexList &vert_list = cmd.vertex_list;
@@ -812,7 +829,7 @@ void GeometricObject::WirePlane(float half_size, float grid_size) {
 }
 
 void GeometricObject::SolidPlane(float half_size) {
-
+  Clear();
   DrawCmdData cmd;
   cmd.draw_mode = kDrawTriangles;
   VertexList &vert_list = cmd.vertex_list;

@@ -151,6 +151,9 @@
     <ClCompile Include="mesh\geometric_object.cpp">
       <Filter>mesh</Filter>
     </ClCompile>
+    <ClCompile Include="mesh\parametric_surface.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -349,6 +352,12 @@
       <Filter>mesh</Filter>
     </ClInclude>
     <ClInclude Include="mesh\teapot.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\parametric_surface.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh\parametric_equations.h">
       <Filter>mesh</Filter>
     </ClInclude>
   </ItemGroup>

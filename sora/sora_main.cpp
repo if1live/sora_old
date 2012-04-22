@@ -395,6 +395,7 @@ void renderFrame(Device *device) {
     simple_shader.SetMatrix(kMVPHandleName, mvp);
     SR_CHECK_ERROR("SetMatrix");
 
+    /*
     GeometricObject mesh;
     //mesh.PointTeapot(0.05f);
     //mesh.WireTeapot(0.05f);
@@ -423,6 +424,15 @@ void renderFrame(Device *device) {
       } else {
         simple_shader.DrawElements(cmd.draw_mode, cmd.index_list);
       }
+    }
+    */
+    ParametricObject<Vertex> mesh;
+    mesh.SolidTorus(1, 0.1);
+    simple_shader.SetVertexList(mesh.vertex_list());
+    if(mesh.index_list().empty()) {
+      simple_shader.DrawArrays(mesh.draw_mode(), mesh.vertex_list().size());
+    } else {
+      simple_shader.DrawElements(mesh.draw_mode(), mesh.index_list());
     }
   }
 
@@ -640,7 +650,7 @@ void SORA_update_frame(Device *device, float dt) {
   }
 
   //check key
-  float x = 0.1f;
+  float x = 1.0f;
   KeyboardEventQueue &keyboard_evt_queue = device->keyboard_evt_queue();
   while(keyboard_evt_queue.IsEmpty() == false) {
     KeyboardEvent evt = keyboard_evt_queue.Get();

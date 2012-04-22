@@ -35,6 +35,8 @@
 
 #include "core/vertex.h"
 #include "renderer/globals.h"
+#include "mesh/parametric_surface.h"
+#include "mesh/parametric_equations.h"
 
 namespace sora {;
 
@@ -76,6 +78,91 @@ public:
 
 private:
   std::vector<DrawCmdData> cmd_list_;  
+};
+
+// ParametricSurface 를 기반으로 구성. tangent까지 지원하기 위해서 일단 분리함
+template<typename VertexType>
+class ParametricObject {
+public:
+  ParametricObject() : draw_mode_(kDrawPoints) {}
+  void Clear() { vert_list_.clear(); index_list_.clear(); draw_mode_ = kDrawPoints; }
+  const std::vector<VertexType> &vertex_list() { return vert_list_; }
+  const std::vector<unsigned short> &index_list() const { return index_list_; }
+  DrawType draw_mode() const { return draw_mode_; }
+
+  void WireCone(float height, float radius) {
+    Cone mesh(height, radius);
+    BuildWireMesh(mesh);
+  }
+  void SolidCone(float height, float radius) {
+    Cone mesh(height, radius);
+    BuildSolidMesh(mesh);
+  }
+
+  void WireSphere(float radius) {
+    Sphere mesh(radius);
+    BuildWireMesh(mesh);
+  }
+  void SolidSphere(float radius) {
+    Sphere mesh(radius);
+    BuildSolidMesh(mesh);
+  }
+
+  void WireTorus(float majorRadius, float minorRadius) {
+    Torus mesh(majorRadius, minorRadius);
+    BuildWireMesh(mesh);
+  }
+  void SolidTorus(float majorRadius, float minorRadius) {
+    Torus mesh(majorRadius, minorRadius);
+    BuildSolidMesh(mesh);
+  }
+
+  void WireTrefoilKnot(float scale) {
+    TrefoilKnot mesh(scale);
+    BuildWireMesh(mesh);
+  }
+  void SolidTrefoilKnot(float scale) {
+    TrefoilKnot mesh(scale);
+    BuildSolidMesh(mesh);
+  }
+
+  void WireMobiusStrip(float scale) {
+    MobiusStrip mesh(scale);
+    BuildWireMesh(mesh);
+  }
+  void SolidMobiusStrip(float scale) {
+    MobiusStrip mesh(scale);
+    BuildSolidMesh(mesh);
+  }
+
+  void WireKleinBottle(float scale) {
+    KleinBottle mesh(scale);
+    BuildWireMesh(mesh);
+  }
+  void SolidKleinBottle(float scale) {
+    KleinBottle mesh(scale);
+    BuildSolidMesh(mesh);
+  }
+
+private:
+  template<typename T>
+  void BuildWireMesh(const T &mesh) {
+    Clear();
+    mesh.GenerateVertices(vert_list_);
+    mesh.GenerateLineIndices(index_list_);
+    draw_mode_ = kDrawLines;
+  }
+  template<typename T>
+  void BuildSolidMesh(const T &mesh) {
+    Clear();
+    mesh.GenerateVertices(vert_list_);
+    mesh.GenerateTriangleIndices(index_list_);
+    draw_mode_ = kDrawTriangles;
+  }
+private:
+  DrawType draw_mode_;
+  std::vector<VertexType> vert_list_;
+  std::vector<unsigned short> index_list_;
 };
 }
 

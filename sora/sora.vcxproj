@@ -94,6 +94,7 @@
     <ClCompile Include="event\touch_device.cpp" />
     <ClCompile Include="lodepng\lodepng.cpp" />
     <ClCompile Include="mesh\geometric_object.cpp" />
+    <ClCompile Include="mesh\parametric_surface.cpp" />
     <ClCompile Include="renderer\sys_font.cpp" />
     <ClCompile Include="renderer\gl\gl_renderer.cpp" />
     <ClCompile Include="renderer\gl\gl_env.cpp" />
@@ -154,6 +155,8 @@
     <ClInclude Include="event\touch_event.h" />
     <ClInclude Include="lodepng\lodepng.h" />
     <ClInclude Include="mesh\geometric_object.h" />
+    <ClInclude Include="mesh\parametric_equations.h" />
+    <ClInclude Include="mesh\parametric_surface.h" />
     <ClInclude Include="mesh\teapot.h" />
     <ClInclude Include="renderer\buffer_object.h" />
     <ClInclude Include="renderer\sys_font.h" />
