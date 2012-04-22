@@ -342,7 +342,7 @@ void renderFrame(Device *device) {
     index_list.push_back(0);
     wire_ibo.Init(index_list);
   }
-
+  
   {
     //shader사용 선언이 가장 먼저
     device->render_device().UseShader(color_shader);
@@ -374,7 +374,7 @@ void renderFrame(Device *device) {
     simple_shader.SetVertexList(vert_list);
     simple_shader.DrawArrays(kDrawTriangles, vert_list.size());
   }
-
+  
   //일반 3d객체 그리기+카메라 회전 장착
   {
     //set camera + projection
@@ -406,10 +406,11 @@ void renderFrame(Device *device) {
     //mesh.WireCube(1, 1, 1);
     //mesh.PointCube(1, 1, 1);
     //mesh.PointCylinder(1, 1, 2, 8, 8);
-    mesh.WireCylinder(1, 1, 2, 8, 8);
+    //mesh.WireCylinder(1, 1, 2, 8, 8);
     //원통은 뚫려잇어서cull꺼야 됨
     //glDisable(GL_CULL_FACE);  //TODO cull은 model에 넣어야하나?
     //mesh.SolidCylinder(1, 1, 2, 8, 8);
+    mesh.WireAxis(5);
     auto it = mesh.Begin();
     auto endit = mesh.End();
     for( ; it != endit ; ++it) {

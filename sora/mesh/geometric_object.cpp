@@ -675,4 +675,57 @@ void GeometricObject::SolidCylinder(float baseRadius, float topRadius, float hei
   } // for stacks
 }
 
+void GeometricObject::WireAxis(float size) {
+  DrawCmdData cmd;
+  cmd.draw_mode = kDrawLines;
+  VertexList &vert_list = cmd.vertex_list;
+
+  //vertex list »ý¼º
+  vec3 xPos(size, 0, 0);
+  vec3 yPos(0, size, 0);
+  vec3 zPos(0, 0, size);
+  vec3 zero(0, 0, 0);
+
+  sora::vec4ub red(255, 0, 0, 255);
+  sora::vec4ub green(0, 255, 0, 255);
+  sora::vec4ub blue(0, 0, 255, 255);
+  
+  {
+    // x axis - r
+    Vertex x_zero_vert;
+    x_zero_vert.color = red;
+    x_zero_vert.pos = zero;
+    vert_list.push_back(x_zero_vert);
+
+    Vertex x_one_vert;
+    x_one_vert.color = red;
+    x_one_vert.pos = xPos;
+    vert_list.push_back(x_one_vert);
+  }
+  {
+    //y axis - g
+    Vertex zero_vert;
+    zero_vert.color = green;
+    zero_vert.pos = zero;
+    vert_list.push_back(zero_vert);
+
+    Vertex y_vert;
+    y_vert.color = green;
+    y_vert.pos = yPos;
+    vert_list.push_back(y_vert);
+  }
+  {
+    //z axis - b
+    Vertex zero_vert;
+    zero_vert.color = blue;
+    zero_vert.pos = zero;
+    vert_list.push_back(zero_vert);
+
+    Vertex z_vert;
+    z_vert.color = blue;
+    z_vert.pos = zPos;
+    vert_list.push_back(z_vert);
+  }
+  this->cmd_list_.push_back(cmd);
 }
+} //namespace sora

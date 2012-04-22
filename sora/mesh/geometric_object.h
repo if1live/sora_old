@@ -64,6 +64,8 @@ public:
   void WireCylinder(float baseRadius, float topRadius, float height, int slices, int stacks);
   void SolidCylinder(float baseRadius, float topRadius, float height, int slices, int stacks);
 
+  void WireAxis(float size);
+
   void Clear() { cmd_list_.clear(); }
 
   std::vector<DrawCmdData>::iterator Begin() { return cmd_list_.begin(); }
