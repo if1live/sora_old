@@ -38,8 +38,7 @@ using namespace glm;
 using namespace std;
 
 namespace sora {;
-void GeometricObject::PointCube(float width, float height, float depth) {
-  Clear();
+void PrimitiveMeshHelper::PointCube(float width, float height, float depth) {
   SR_ASSERT(width > 0 && height > 0 && depth > 0);
   width = width/2;
   height = height/2;
@@ -65,18 +64,17 @@ void GeometricObject::PointCube(float width, float height, float depth) {
   pos_list[6] = v6;
   pos_list[7] = v7;
 
-  DrawCmdData cmd;
+  DrawCmdData<Vertex> cmd;
   cmd.draw_mode = kDrawPoints;
   for(size_t i = 0 ; i < pos_list.size() ; ++i) {
     Vertex vert;
     vert.pos = pos_list[i];
     cmd.vertex_list.push_back(vert);
   }
-  this->cmd_list_.push_back(cmd);
+  this->cmd_list_->push_back(cmd);
 }
 
-void GeometricObject::WireCube(float width, float height, float depth) {
-  Clear();
+void PrimitiveMeshHelper::WireCube(float width, float height, float depth) {
   SR_ASSERT(width > 0 && height > 0 && depth > 0);
   width = width/2;
   height = height/2;
@@ -102,7 +100,7 @@ void GeometricObject::WireCube(float width, float height, float depth) {
   pos_list[6] = v6;
   pos_list[7] = v7;
 
-  DrawCmdData cmd;
+  DrawCmdData<Vertex> cmd;
   cmd.draw_mode = kDrawLines;
   for(size_t i = 0 ; i < pos_list.size() ; ++i) {
     Vertex vert;
@@ -118,17 +116,16 @@ void GeometricObject::WireCube(float width, float height, float depth) {
   };
   cmd.index_list.resize(index_list.size());
   copy(index_list.begin(), index_list.end(), cmd.index_list.begin());
-  this->cmd_list_.push_back(cmd);
+  this->cmd_list_->push_back(cmd);
 }
 
-void GeometricObject::SolidCube(float width, float height, float depth) {
-  Clear();
+void PrimitiveMeshHelper::SolidCube(float width, float height, float depth) {
   SR_ASSERT(width > 0 && height > 0 && depth > 0);
   width = width/2;
   height = height/2;
   depth = depth/2;
 
-  DrawCmdData cmd;
+  DrawCmdData<Vertex> cmd;
   cmd.draw_mode = kDrawTriangles;
   VertexList &vert_list = cmd.vertex_list;
   IndexList &index_list = cmd.index_list;
@@ -318,13 +315,11 @@ void GeometricObject::SolidCube(float width, float height, float depth) {
     index_list.push_back(baseIndex + 2);
     index_list.push_back(baseIndex + 3);
   }
-  this->cmd_list_.push_back(cmd);
+  this->cmd_list_->push_back(cmd);
 }
 
-void GeometricObject::PointTeapot( float size ) {
-  Clear();
-
-  DrawCmdData cmd;
+void PrimitiveMeshHelper::PointTeapot( float size ) {
+  DrawCmdData<Vertex> cmd;
   cmd.draw_mode = kDrawPoints;
   cmd.vertex_list.resize(NUM_TEAPOT_OBJECT_VERTEX);
   for(int i = 0 ; i < NUM_TEAPOT_OBJECT_VERTEX ; i++) {
@@ -340,13 +335,11 @@ void GeometricObject::PointTeapot( float size ) {
     vert.normal.y = teapotNormals[i*3+1];
     vert.normal.z = teapotNormals[i*3+2];
   }
-  this->cmd_list_.push_back(cmd);
+  this->cmd_list_->push_back(cmd);
 }
 
-void GeometricObject::WireTeapot( float size ) {
-  Clear();
-
-  DrawCmdData cmd;
+void PrimitiveMeshHelper::WireTeapot( float size ) {
+  DrawCmdData<Vertex> cmd;
   cmd.draw_mode = kDrawLines;
   cmd.vertex_list.resize(NUM_TEAPOT_OBJECT_VERTEX);
   for(int i = 0 ; i < NUM_TEAPOT_OBJECT_VERTEX ; i++) {
@@ -374,12 +367,11 @@ void GeometricObject::WireTeapot( float size ) {
     cmd.index_list.push_back(idx_3);
     cmd.index_list.push_back(idx_1);
   }
-  this->cmd_list_.push_back(cmd);
+  this->cmd_list_->push_back(cmd);
 }
 
-void GeometricObject::SolidTeapot( float size ) {
-  Clear();
-  DrawCmdData cmd;
+void PrimitiveMeshHelper::SolidTeapot( float size ) {
+  DrawCmdData<Vertex> cmd;
   cmd.draw_mode = kDrawTriangles;
   cmd.vertex_list.resize(NUM_TEAPOT_OBJECT_VERTEX);
   for(int i = 0 ; i < NUM_TEAPOT_OBJECT_VERTEX ; i++) {
@@ -398,17 +390,16 @@ void GeometricObject::SolidTeapot( float size ) {
 
   cmd.index_list.resize(NUM_TEAPOT_OBJECT_INDEX);
   memcpy(&cmd.index_list[0], teapotIndices, sizeof(teapotIndices));
-  this->cmd_list_.push_back(cmd);
+  this->cmd_list_->push_back(cmd);
 }
 
 //http://massapi.com/source/lwjgl-source-2.7.1/src/java/org/lwjgl/util/glu/Sphere.java.html
-void GeometricObject::PointShpere(float radius, int slices, int stacks) {
-  Clear();
+void PrimitiveMeshHelper::PointShpere(float radius, int slices, int stacks) {
   float nsign = 1.0f;
   float drho = kPi / stacks;
   float dtheta = 2.0f * kPi / slices;
 
-  DrawCmdData cmd;
+  DrawCmdData<Vertex> cmd;
   cmd.draw_mode = kDrawPoints;
 
   // top and bottom-most points
@@ -437,10 +428,9 @@ void GeometricObject::PointShpere(float radius, int slices, int stacks) {
       cmd.vertex_list.push_back(vert);
     }
   }
-  this->cmd_list_.push_back(cmd);
+  this->cmd_list_->push_back(cmd);
 }
-void GeometricObject::WireShpere(float radius, int slices, int stacks) {
-  Clear();
+void PrimitiveMeshHelper::WireShpere(float radius, int slices, int stacks) {
   float nsign = 1.0f;
   float drho = sora::kPi / stacks;
   float dtheta = 2.0f * sora::kPi / slices;
@@ -449,7 +439,7 @@ void GeometricObject::WireShpere(float radius, int slices, int stacks) {
   for (int i = 1 ; i < stacks ; i++) { // stack line at i==stacks-1 was missing here
     float rho = i * drho;
 
-    DrawCmdData cmd;
+    DrawCmdData<Vertex> cmd;
     cmd.draw_mode = kDrawLineLoop;
     for (int j = 0; j < slices; j++) {
       float theta = j * dtheta;
@@ -467,13 +457,13 @@ void GeometricObject::WireShpere(float radius, int slices, int stacks) {
       vert.pos.z = z * radius;
       cmd.vertex_list.push_back(vert);
     }
-    this->cmd_list_.push_back(cmd);
+    this->cmd_list_->push_back(cmd);
   }
   // draw slice lines
   for (int j = 0; j < slices; j++) {
     float theta = j * dtheta;
 
-    DrawCmdData cmd;
+    DrawCmdData<Vertex> cmd;
     cmd.draw_mode = kDrawLineStrip;
     for (int i = 0; i <= stacks; i++) {
       float rho = i * drho;
@@ -491,12 +481,11 @@ void GeometricObject::WireShpere(float radius, int slices, int stacks) {
       vert.pos.z = z * radius;
       cmd.vertex_list.push_back(vert);
     }
-    this->cmd_list_.push_back(cmd);
+    this->cmd_list_->push_back(cmd);
   }
 }
 
-void GeometricObject::SolidSphere(float radius, int slices, int stacks) {
-  Clear();
+void PrimitiveMeshHelper::SolidSphere(float radius, int slices, int stacks) {
   bool normals = true;
   float nsign = 1.0f;
   float drho = kPi / stacks;
@@ -539,11 +528,11 @@ void GeometricObject::SolidSphere(float radius, int slices, int stacks) {
       vert_list.push_back(vert2);
     }
 
-    DrawCmdData cmd;
+    DrawCmdData<Vertex> cmd;
     cmd.draw_mode = kDrawTriangleStrip;
     //quad strip -> triangle strip
     cmd.vertex_list = vert_list;
-    this->cmd_list_.push_back(cmd);
+    this->cmd_list_->push_back(cmd);
 
     t -= dt;
   }
@@ -551,8 +540,7 @@ void GeometricObject::SolidSphere(float radius, int slices, int stacks) {
 
 
 //http://massapi.com/source/lwjgl-source-2.7.1/src/java/org/lwjgl/util/glu/Cylinder.java.html
-void GeometricObject::PointCylinder(float baseRadius, float topRadius, float height, int slices, int stacks) {
-  Clear();
+void PrimitiveMeshHelper::PointCylinder(float baseRadius, float topRadius, float height, int slices, int stacks) {
   float nsign = 1.0f;
   float da = 2.0f * kPi / slices;
   float dr = (topRadius - baseRadius) / stacks;
@@ -560,7 +548,7 @@ void GeometricObject::PointCylinder(float baseRadius, float topRadius, float hei
   float nz = (baseRadius - topRadius) / height;
   // Z component of normal vectors
 
-  DrawCmdData cmd;
+  DrawCmdData<Vertex> cmd;
   cmd.draw_mode = kDrawPoints;
 
   for (int i = 0; i < slices; i++) {
@@ -581,10 +569,9 @@ void GeometricObject::PointCylinder(float baseRadius, float topRadius, float hei
     }
   }
   
-  this->cmd_list_.push_back(cmd);
+  this->cmd_list_->push_back(cmd);
 }
-void GeometricObject::WireCylinder(float baseRadius, float topRadius, float height, int slices, int stacks) {
-  Clear();
+void PrimitiveMeshHelper::WireCylinder(float baseRadius, float topRadius, float height, int slices, int stacks) {
   float nsign = 1.0f;
   float da = 2.0f * kPi / slices;
   float dr = (topRadius - baseRadius) / stacks;
@@ -596,7 +583,7 @@ void GeometricObject::WireCylinder(float baseRadius, float topRadius, float heig
   float z = 0.0f;
   float r = baseRadius;
   for (int j = 0; j <= stacks; j++) {
-    DrawCmdData cmd;
+    DrawCmdData<Vertex> cmd;
     cmd.draw_mode = kDrawLineLoop;
     for (int i = 0; i < slices; i++) {
       float x = cos((i * da));
@@ -607,13 +594,13 @@ void GeometricObject::WireCylinder(float baseRadius, float topRadius, float heig
       vert.pos = vec3((x * r), (y * r), z); 
       cmd.vertex_list.push_back(vert);
     }
-    this->cmd_list_.push_back(cmd);
+    this->cmd_list_->push_back(cmd);
     z += dz;
     r += dr;
   }
   {
     // draw length lines
-    DrawCmdData cmd;
+    DrawCmdData<Vertex> cmd;
     cmd.draw_mode = kDrawLines;
     for (int i = 0; i < slices; i++) {
       float x = cos((i * da));
@@ -627,11 +614,10 @@ void GeometricObject::WireCylinder(float baseRadius, float topRadius, float heig
       vert.pos = vec3((x * topRadius), (y * topRadius), (height));
       cmd.vertex_list.push_back(vert);
     }
-    this->cmd_list_.push_back(cmd);
+    this->cmd_list_->push_back(cmd);
   }
 }
-void GeometricObject::SolidCylinder(float baseRadius, float topRadius, float height, int slices, int stacks) {
-  Clear();
+void PrimitiveMeshHelper::SolidCylinder(float baseRadius, float topRadius, float height, int slices, int stacks) {
   float nsign = 1.0f;
   float da = 2.0f * kPi / slices;
   float dr = (topRadius - baseRadius) / stacks;
@@ -647,7 +633,7 @@ void GeometricObject::SolidCylinder(float baseRadius, float topRadius, float hei
   for (int j = 0; j < stacks; j++) {
     float s = 0.0f;
 
-    DrawCmdData cmd;
+    DrawCmdData<Vertex> cmd;
     cmd.draw_mode = kDrawTriangleStrip;  //»ç½ÇÀº GL_QUAD_STRIP
     for (int i = 0; i <= slices; i++) {
       float x, y;
@@ -683,16 +669,15 @@ void GeometricObject::SolidCylinder(float baseRadius, float topRadius, float hei
       }
       s += ds;
     } // for slices
-    this->cmd_list_.push_back(cmd);
+    this->cmd_list_->push_back(cmd);
     r += dr;
     t += dt;
     z += dz;
   } // for stacks
 }
 
-void GeometricObject::WireAxis(float size) {
-  Clear();
-  DrawCmdData cmd;
+void PrimitiveMeshHelper::WireAxis(float size) {
+  DrawCmdData<Vertex> cmd;
   cmd.draw_mode = kDrawLines;
   VertexList &vert_list = cmd.vertex_list;
 
@@ -742,12 +727,11 @@ void GeometricObject::WireAxis(float size) {
     z_vert.pos = zPos;
     vert_list.push_back(z_vert);
   }
-  this->cmd_list_.push_back(cmd);
+  this->cmd_list_->push_back(cmd);
 }
 
-void GeometricObject::WirePlane(float half_size, float grid_size) {
-  Clear();
-  DrawCmdData cmd;
+void PrimitiveMeshHelper::WirePlane(float half_size, float grid_size) {
+  DrawCmdData<Vertex> cmd;
   cmd.draw_mode = kDrawLines;
   VertexList &vert_list = cmd.vertex_list;
 
@@ -825,12 +809,11 @@ void GeometricObject::WirePlane(float half_size, float grid_size) {
     index_list.push_back(front_start_index + i);
     index_list.push_back(back_start_index + i);
   }
-  this->cmd_list_.push_back(cmd);
+  this->cmd_list_->push_back(cmd);
 }
 
-void GeometricObject::SolidPlane(float half_size) {
-  Clear();
-  DrawCmdData cmd;
+void PrimitiveMeshHelper::SolidPlane(float half_size) {
+  DrawCmdData<Vertex> cmd;
   cmd.draw_mode = kDrawTriangles;
   VertexList &vert_list = cmd.vertex_list;
 
@@ -877,7 +860,7 @@ void GeometricObject::SolidPlane(float half_size) {
   index_list.push_back(kRightFront);
 
   ///////////
-  this->cmd_list_.push_back(cmd);
+  this->cmd_list_->push_back(cmd);
 }
 
 } //namespace sora

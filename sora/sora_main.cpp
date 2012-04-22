@@ -395,8 +395,7 @@ void renderFrame(Device *device) {
     simple_shader.SetMatrix(kMVPHandleName, mvp);
     SR_CHECK_ERROR("SetMatrix");
 
-    /*
-    GeometricObject mesh;
+    GeometricObject<Vertex> mesh;
     //mesh.PointTeapot(0.05f);
     //mesh.WireTeapot(0.05f);
     //mesh.SolidTeapot(0.05f);
@@ -413,26 +412,19 @@ void renderFrame(Device *device) {
     //mesh.SolidCylinder(1, 1, 2, 8, 8);
     //mesh.WireAxis(5);
     //mesh.SolidPlane(3);
-    mesh.WirePlane(3, 0.1f);
-    auto it = mesh.Begin();
-    auto endit = mesh.End();
+    //mesh.WirePlane(3, 0.1f);
+    //mesh.SolidTorus(1, 0.1);
+    mesh.SolidCone(2, 2);
+    auto it = mesh.cmd_list().begin();
+    auto endit = mesh.cmd_list().end();
     for( ; it != endit ; ++it) {
-      const DrawCmdData &cmd = *it;
+      const DrawCmdData<Vertex> &cmd = *it;
       simple_shader.SetVertexList(cmd.vertex_list);
       if(cmd.index_list.empty()) {
         simple_shader.DrawArrays(cmd.draw_mode, cmd.vertex_list.size());
       } else {
         simple_shader.DrawElements(cmd.draw_mode, cmd.index_list);
       }
-    }
-    */
-    ParametricObject<Vertex> mesh;
-    mesh.SolidTorus(1, 0.1);
-    simple_shader.SetVertexList(mesh.vertex_list());
-    if(mesh.index_list().empty()) {
-      simple_shader.DrawArrays(mesh.draw_mode(), mesh.vertex_list().size());
-    } else {
-      simple_shader.DrawElements(mesh.draw_mode(), mesh.index_list());
     }
   }
 
