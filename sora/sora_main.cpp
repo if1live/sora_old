@@ -404,7 +404,12 @@ void renderFrame(Device *device) {
     //mesh.SolidSphere(1, 16, 16);
     //mesh.SolidCube(1, 1, 1);
     //mesh.WireCube(1, 1, 1);
-    mesh.PointCube(1, 1, 1);
+    //mesh.PointCube(1, 1, 1);
+    //mesh.PointCylinder(1, 1, 2, 8, 8);
+    mesh.WireCylinder(1, 1, 2, 8, 8);
+    //원통은 뚫려잇어서cull꺼야 됨
+    //glDisable(GL_CULL_FACE);  //TODO cull은 model에 넣어야하나?
+    //mesh.SolidCylinder(1, 1, 2, 8, 8);
     auto it = mesh.Begin();
     auto endit = mesh.End();
     for( ; it != endit ; ++it) {
