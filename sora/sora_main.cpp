@@ -414,8 +414,8 @@ void renderFrame(Device *device) {
     //mesh.WirePlane(3, 0.1f);
     //mesh.SolidTorus(1, 0.1);
     //mesh.SolidCone(2, 2);
-    auto it = mesh.cmd_list().begin();
-    auto endit = mesh.cmd_list().end();
+    auto it = mesh.Begin();
+    auto endit = mesh.End();
     for( ; it != endit ; ++it) {
       const DrawCmdData<Vertex> &cmd = *it;
       //앞면 뒷면 그리기를 허용/불가능 정보까지 내장해야
