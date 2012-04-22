@@ -404,26 +404,32 @@ void renderFrame(Device *device) {
     //mesh.SolidSphere(1, 16, 16);
     //mesh.SolidCube(1, 1, 1);
     //mesh.WireCube(1, 1, 1);
-    //mesh.PointCube(1, 1, 1);
+    mesh.PointCube(1, 1, 1);
     //mesh.PointCylinder(1, 1, 2, 8, 8);
     //mesh.WireCylinder(1, 1, 2, 8, 8);
-    //원통은 뚫려잇어서cull꺼야 됨
-    //glDisable(GL_CULL_FACE);  //TODO cull은 model에 넣어야하나?
-    //mesh.SolidCylinder(1, 1, 2, 8, 8);
+    mesh.SolidCylinder(1, 1, 2, 8, 8);
     //mesh.WireAxis(5);
     //mesh.SolidPlane(3);
     //mesh.WirePlane(3, 0.1f);
     //mesh.SolidTorus(1, 0.1);
-    mesh.SolidCone(2, 2);
+    //mesh.SolidCone(2, 2);
     auto it = mesh.cmd_list().begin();
     auto endit = mesh.cmd_list().end();
     for( ; it != endit ; ++it) {
       const DrawCmdData<Vertex> &cmd = *it;
+      //앞면 뒷면 그리기를 허용/불가능 정보까지 내장해야
+      //뚜껑없는 원통 그리기가 편하다
+      if(cmd.disable_cull_face == true) {
+        glDisable(GL_CULL_FACE);
+      }
       simple_shader.SetVertexList(cmd.vertex_list);
       if(cmd.index_list.empty()) {
         simple_shader.DrawArrays(cmd.draw_mode, cmd.vertex_list.size());
       } else {
         simple_shader.DrawElements(cmd.draw_mode, cmd.index_list);
+      }
+      if(cmd.disable_cull_face == true) {
+        glEnable(GL_CULL_FACE);
       }
     }
   }

@@ -46,6 +46,8 @@ class PrimitiveMeshHelper;
 //버텍스 목록에 추가 가공을 다른방식으로 집어넣자
 template<typename VertexType>
 struct DrawCmdData {
+  DrawCmdData() : disable_cull_face(false) { }
+  bool disable_cull_face;
   DrawType draw_mode;
   std::vector<VertexType> vertex_list;
   std::vector<unsigned short> index_list;
@@ -61,67 +63,82 @@ public:
   const std::vector< DrawCmdData<T> > &cmd_list() const { return cmd_list_; }
 
   void PointCube(float width, float height, float depth) {
-    PrimitiveMeshHelper helper(&cmd_list_)
+    Clear();
+    PrimitiveMeshHelper helper(&cmd_list_);
     helper.PointCube(width, height, depth);
   }
   void WireCube(float width, float height, float depth) {
-    PrimitiveMeshHelper helper(&cmd_list_)
+    Clear();
+    PrimitiveMeshHelper helper(&cmd_list_);
     helper.WireCube(width, height, depth);
   }
   void SolidCube(float width, float height, float depth) {
+    Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
     helper.SolidCube(width, height, depth);
   }
 
   void PointTeapot( float size ) {
+    Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
     helper.PointTeapot(size);
   }
   void WireTeapot( float size ) {
+    Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
     helper.WireTeapot(size);
   }
   void SolidTeapot( float size ) {
+    Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
     helper.SolidTeapot(size);
   }
 
   void PointShpere(float radius, int slices, int stacks) {
+    Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
     helper.PointShpere(radius, slices, stacks);
   }
   void WireShpere(float radius, int slices, int stacks) {
+    Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
     helper.WireShpere(radius, slices, stacks);
   }
   void SolidSphere(float radius, int slices, int stacks) {
+    Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
     helper.SolidSphere(radius, slices, stacks);
   }
 
   void PointCylinder(float baseRadius, float topRadius, float height, int slices, int stacks) {
+    Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
     helper.PointCylinder(baseRadius, topRadius, height, slices, stacks);
   }
   void WireCylinder(float baseRadius, float topRadius, float height, int slices, int stacks) {
+    Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
     helper.WireCylinder(baseRadius, topRadius, height, slices, stacks);
   }
   void SolidCylinder(float baseRadius, float topRadius, float height, int slices, int stacks) {
+    Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
     helper.SolidCylinder(baseRadius, topRadius, height, slices, stacks);
   }
 
   void WireAxis(float size) {
+    Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
     helper.WireAxis(size);
   }
 
   void WirePlane(float half_size, float grid_size) {
+    Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
     helper.WirePlane(half_size, grid_size);
   }
   void SolidPlane(float half_size) {
+    Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
     helper.SolidPlane(half_size);
   }

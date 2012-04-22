@@ -635,6 +635,7 @@ void PrimitiveMeshHelper::SolidCylinder(float baseRadius, float topRadius, float
 
     DrawCmdData<Vertex> cmd;
     cmd.draw_mode = kDrawTriangleStrip;  //»ç½ÇÀº GL_QUAD_STRIP
+    cmd.disable_cull_face = true;
     for (int i = 0; i <= slices; i++) {
       float x, y;
       if (i == slices) {
