@@ -35,13 +35,14 @@ namespace sora {;
 /*
  * Font stuff, see freeglut_font.c
  */
+/*
 void glutStrokeCharacter( void* font, int character );
 int glutStrokeWidth( void* font, int character );
 int glutBitmapLength( void* font, const unsigned char* string );
 int glutStrokeLength( void* font, const unsigned char* string );
 float glutStrokeHeight( void* font );
 void glutStrokeString( void* font, const unsigned char *string );
-
+*/
 //기본도형은 normal까지만 지원하낟. 그 이상의 정보가 필요하면
 //버텍스 목록에 추가 가공을 다른방식으로 집어넣자
 struct DrawCmdData {
@@ -53,8 +54,12 @@ struct DrawCmdData {
 class GeometricObject {
 public:
   //void WireCube( float size );
+  void PointTeapot( float size );
   void WireTeapot( float size );
   void SolidTeapot( float size );
+  void PointShpere(float radius, int slices, int stacks);
+  void WireShpere(float radius, int slices, int stacks);
+  void SolidSphere(float radius, int slices, int stacks);
   void Clear() { cmd_list_.clear(); }
 
   std::vector<DrawCmdData>::iterator Begin() { return cmd_list_.begin(); }
@@ -92,11 +97,6 @@ void glutSolidSierpinskiSponge ( int num_levels, float offset[3], float scale );
 void glutWireCylinder( float radius, float height, int slices, int stacks);
 void glutSolidCylinder( float radius, float height, int slices, int stacks);
 */
-/*
- * Teapot rendering functions, found in freeglut_teapot.c
- */
-void glutWireTeapot( float size );
-void glutSolidTeapot( float size );
 }
 
 #endif // SORA_GEOMETRIC_OBJECT_H_

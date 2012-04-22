@@ -396,8 +396,12 @@ void renderFrame(Device *device) {
     SR_CHECK_ERROR("SetMatrix");
 
     GeometricObject mesh;
-    mesh.WireTeapot(0.05f);
+    //mesh.PointTeapot(0.05f);
+    //mesh.WireTeapot(0.05f);
     //mesh.SolidTeapot(0.05f);
+    //mesh.WireShpere(1, 16, 16);
+    //mesh.PointShpere(1, 16, 16);
+    mesh.SolidSphere(1, 16, 16);
     auto it = mesh.Begin();
     auto endit = mesh.End();
     for( ; it != endit ; ++it) {

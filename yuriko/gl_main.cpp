@@ -35,8 +35,10 @@
 
 #if SR_WIN && (SR_GLES == 0)
 
-const int kWinWidth = 480;
-const int kWinHeight = 800;
+//const int kWinWidth = 480;
+//const int kWinHeight = 800;
+const int kWinWidth = 640;
+const int kWinHeight = 480;
 
 /*
 void run_selection(sora::Device *dev) {

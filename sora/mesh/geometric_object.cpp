@@ -24,14 +24,67 @@
 * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+
+/*
+* Copyright (c) 2002-2008 LWJGL Project
+* All rights reserved.
+*
+* Redistribution and use in source and binary forms, with or without
+* modification, are permitted provided that the following conditions are
+* met:
+*
+* * Redistributions of source code must retain the above copyright
+*   notice, this list of conditions and the following disclaimer.
+*
+* * Redistributions in binary form must reproduce the above copyright
+*   notice, this list of conditions and the following disclaimer in the
+*   documentation and/or other materials provided with the distribution.
+*
+* * Neither the name of 'LWJGL' nor the names of
+*   its contributors may be used to endorse or promote products derived
+*   from this software without specific prior written permission.
+*
+* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+* "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+* TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+* PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+* CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+* EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+* PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+* PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+* SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
 #include "sora_stdafx.h"
 #include "geometric_object.h"
 #include "teapot.h"
+#include "core/math_helper.h"
+
+using namespace glm;
+using namespace std;
 
 namespace sora {;
-/*
-* Draws a wireframed cube. Code contributed by Andreas Umbach <marvin@dataway.ch>
-*/
+
+void GeometricObject::PointTeapot( float size ) {
+  DrawCmdData cmd;
+  cmd.draw_mode = kDrawPoints;
+  cmd.vertex_list.resize(NUM_TEAPOT_OBJECT_VERTEX);
+  for(int i = 0 ; i < NUM_TEAPOT_OBJECT_VERTEX ; i++) {
+    Vertex &vert = cmd.vertex_list[i];
+    vert.pos.x = teapotVertices[i*3+0] * size;
+    vert.pos.y = teapotVertices[i*3+1] * size;
+    vert.pos.z = teapotVertices[i*3+2] * size;
+
+    vert.texcoord.x = teapotTexCoords[i*2+0];
+    vert.texcoord.y = teapotTexCoords[i*2+1];
+
+    vert.normal.x = teapotNormals[i*3+0];
+    vert.normal.y = teapotNormals[i*3+1];
+    vert.normal.z = teapotNormals[i*3+2];
+  }
+  this->cmd_list_.push_back(cmd);
+}
 
 void GeometricObject::WireTeapot( float size ) {
   DrawCmdData cmd;
@@ -87,7 +140,159 @@ void GeometricObject::SolidTeapot( float size ) {
   memcpy(&cmd.index_list[0], teapotIndices, sizeof(teapotIndices));
   this->cmd_list_.push_back(cmd);
 }
+
+//http://massapi.com/source/lwjgl-source-2.7.1/src/java/org/lwjgl/util/glu/Sphere.java.html
+void GeometricObject::PointShpere(float radius, int slices, int stacks) {
+  float nsign = 1.0f;
+  float drho = kPi / stacks;
+  float dtheta = 2.0f * kPi / slices;
+
+  DrawCmdData cmd;
+  cmd.draw_mode = kDrawPoints;
+
+  // top and bottom-most points
+  Vertex vert_top;
+  vert_top.pos = vec3(0.0f, 0.0f, radius);
+  vert_top.normal = vec3(0.0f, 0.0f, nsign);;
+  cmd.vertex_list.push_back(vert_top);
+
+  Vertex vert_bottom;
+  vert_bottom.normal = vec3(0.0f, 0.0f, -nsign);
+  vert_bottom.pos = vec3(0.0f, 0.0f, -radius);
+  cmd.vertex_list.push_back(vert_bottom);
+
+  // loop over stacks
+  for (int i = 1; i < stacks - 1; i++) {
+    float rho = i * drho;
+    for (int j = 0; j < slices; j++) {
+      float theta = j * dtheta;
+      float x = cos(theta) * sin(rho);
+      float y = sin(theta) * sin(rho);
+      float z = cos(rho);
+
+      Vertex vert;
+      vert.normal = vec3(x * nsign, y * nsign, z * nsign);
+      vert.pos = vec3(x * radius, y * radius, z * radius);
+      cmd.vertex_list.push_back(vert);
+    }
+  }
+  this->cmd_list_.push_back(cmd);
+}
+void GeometricObject::WireShpere(float radius, int slices, int stacks) {
+  float nsign = 1.0f;
+  float drho = sora::kPi / stacks;
+  float dtheta = 2.0f * sora::kPi / slices;
+
+  // draw stack lines
+  for (int i = 1 ; i < stacks ; i++) { // stack line at i==stacks-1 was missing here
+    float rho = i * drho;
+
+    DrawCmdData cmd;
+    cmd.draw_mode = kDrawLineLoop;
+    for (int j = 0; j < slices; j++) {
+      float theta = j * dtheta;
+      float x = cos(theta) * sin(rho);
+      float y = sin(theta) * sin(rho);
+      float z = cos(rho);
+
+      Vertex vert;
+      vert.normal.x = x * nsign;
+      vert.normal.y = y * nsign;
+      vert.normal.z = z * nsign;
+
+      vert.pos.x = x * radius;
+      vert.pos.y = y * radius;
+      vert.pos.z = z * radius;
+      cmd.vertex_list.push_back(vert);
+    }
+    this->cmd_list_.push_back(cmd);
+  }
+  // draw slice lines
+  for (int j = 0; j < slices; j++) {
+    float theta = j * dtheta;
+
+    DrawCmdData cmd;
+    cmd.draw_mode = kDrawLineStrip;
+    for (int i = 0; i <= stacks; i++) {
+      float rho = i * drho;
+      float x = cos(theta) * sin(rho);
+      float y = sin(theta) * sin(rho);
+      float z = cos(rho);
+
+      Vertex vert;
+      vert.normal.x = x * nsign;
+      vert.normal.y = y * nsign;
+      vert.normal.z = z * nsign;
+
+      vert.pos.x = x * radius;
+      vert.pos.y = y * radius;
+      vert.pos.z = z * radius;
+      cmd.vertex_list.push_back(vert);
+    }
+    this->cmd_list_.push_back(cmd);
+  }
+}
+
+void GeometricObject::SolidSphere(float radius, int slices, int stacks) {
+  bool normals = true;
+  float nsign = 1.0f;
+  float drho = kPi / stacks;
+  float dtheta = 2.0f * kPi / slices;
+
+  float ds = 1.0f / slices;
+  float dt = 1.0f / stacks;
+  float t = 1.0f; // because loop now runs from 0
+  int imin = 0;
+  int imax = stacks;
+
+  // draw intermediate stacks as quad strips
+  for (int i = imin; i < imax; i++) {
+    float rho = i * drho;
+
+    //quad strip肺 备己等 vertex 格废 备己窍扁
+    VertexList vert_list;
+    float s = 0.0f;
+    for (int j = 0; j <= slices; j++) {
+      float theta = (j == slices) ? 0.0f : j * dtheta;
+      float x = -sin(theta) * sin(rho);
+      float y = cos(theta) * sin(rho);
+      float z = nsign * cos(rho);
+
+      Vertex vert1;
+      vert1.normal = vec3(x * nsign, y * nsign, z * nsign);
+      vert1.texcoord = vec2(s, t);
+      vert1.pos = vec3(x * radius, y * radius, z * radius);
+      vert_list.push_back(vert1);
+
+      x = -sin(theta) * sin(rho + drho);
+      y = cos(theta) * sin(rho + drho);
+      z = nsign * cos(rho + drho);
+      
+      Vertex vert2;
+      vert2.normal = vec3(x * nsign, y * nsign, z * nsign);
+      vert2.texcoord = vec2(s, t - dt);
+      s += ds;
+      vert2.pos = vec3(x * radius, y * radius, z * radius);
+      vert_list.push_back(vert2);
+    }
+    
+    DrawCmdData cmd;
+    cmd.draw_mode = kDrawTriangleStrip;
+    //quad strip -> triangle strip
+    cmd.vertex_list = vert_list;
+    this->cmd_list_.push_back(cmd);
+
+    t -= dt;
+  }
+}
+
+
+//http://massapi.com/source/lwjgl-source-2.7.1/src/java/org/lwjgl/util/glu/Cylinder.java.html
 #if 0
+/*
+* Draws a wireframed cube. Code contributed by Andreas Umbach <marvin@dataway.ch>
+*/
+
 void glutWireCube( float dSize )
 {
   double size = dSize * 0.5;
