@@ -401,7 +401,10 @@ void renderFrame(Device *device) {
     //mesh.SolidTeapot(0.05f);
     //mesh.WireShpere(1, 16, 16);
     //mesh.PointShpere(1, 16, 16);
-    mesh.SolidSphere(1, 16, 16);
+    //mesh.SolidSphere(1, 16, 16);
+    //mesh.SolidCube(1, 1, 1);
+    //mesh.WireCube(1, 1, 1);
+    mesh.PointCube(1, 1, 1);
     auto it = mesh.Begin();
     auto endit = mesh.End();
     for( ; it != endit ; ++it) {
@@ -629,7 +632,7 @@ void SORA_update_frame(Device *device, float dt) {
   }
 
   //check key
-  float x = 3.0f;
+  float x = 0.1f;
   KeyboardEventQueue &keyboard_evt_queue = device->keyboard_evt_queue();
   while(keyboard_evt_queue.IsEmpty() == false) {
     KeyboardEvent evt = keyboard_evt_queue.Get();

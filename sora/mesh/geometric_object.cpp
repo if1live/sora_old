@@ -65,6 +65,284 @@ using namespace glm;
 using namespace std;
 
 namespace sora {;
+void GeometricObject::PointCube(float width, float height, float depth) {
+  SR_ASSERT(width > 0 && height > 0 && depth > 0);
+  width = width/2;
+  height = height/2;
+  depth = depth/2;
+
+  vec3 v0(-width, height, -depth);
+  vec3 v1(width, height, -depth);
+  vec3 v2(-width, height, depth);
+  vec3 v3(width, height, depth);
+
+  vec3 v4(-width, -height, -depth);
+  vec3 v5(width, -height, -depth);
+  vec3 v6(-width, -height, depth);
+  vec3 v7(width, -height, depth);
+
+  vector<vec3> pos_list(8);
+  pos_list[0] = v0;
+  pos_list[1] = v1;
+  pos_list[2] = v2;
+  pos_list[3] = v3;
+  pos_list[4] = v4;
+  pos_list[5] = v5;
+  pos_list[6] = v6;
+  pos_list[7] = v7;
+
+  DrawCmdData cmd;
+  cmd.draw_mode = kDrawPoints;
+  for(size_t i = 0 ; i < pos_list.size() ; ++i) {
+    Vertex vert;
+    vert.pos = pos_list[i];
+    cmd.vertex_list.push_back(vert);
+  }
+  this->cmd_list_.push_back(cmd);
+}
+void GeometricObject::WireCube(float width, float height, float depth) {
+  SR_ASSERT(width > 0 && height > 0 && depth > 0);
+  width = width/2;
+  height = height/2;
+  depth = depth/2;
+
+  vec3 v0(-width, height, -depth);
+  vec3 v1(width, height, -depth);
+  vec3 v2(-width, height, depth);
+  vec3 v3(width, height, depth);
+
+  vec3 v4(-width, -height, -depth);
+  vec3 v5(width, -height, -depth);
+  vec3 v6(-width, -height, depth);
+  vec3 v7(width, -height, depth);
+
+  vector<vec3> pos_list(8);
+  pos_list[0] = v0;
+  pos_list[1] = v1;
+  pos_list[2] = v2;
+  pos_list[3] = v3;
+  pos_list[4] = v4;
+  pos_list[5] = v5;
+  pos_list[6] = v6;
+  pos_list[7] = v7;
+
+  DrawCmdData cmd;
+  cmd.draw_mode = kDrawLines;
+  for(size_t i = 0 ; i < pos_list.size() ; ++i) {
+    Vertex vert;
+    vert.pos = pos_list[i];
+    cmd.vertex_list.push_back(vert);
+  }
+
+  //GL_LINES¿ë index list
+  std::array<GLushort, 24> index_list = {
+    0,1,	1,3,	2,3,	0,2,
+    4,5,	5,7,	6,7,	4,6,
+    0,4,	1,5,	2,6,	3,7
+  };
+  cmd.index_list.resize(index_list.size());
+  copy(index_list.begin(), index_list.end(), cmd.index_list.begin());
+  this->cmd_list_.push_back(cmd);
+}
+
+void GeometricObject::SolidCube(float width, float height, float depth) {
+  SR_ASSERT(width > 0 && height > 0 && depth > 0);
+  width = width/2;
+  height = height/2;
+  depth = depth/2;
+
+  DrawCmdData cmd;
+  cmd.draw_mode = kDrawTriangles;
+  VertexList &vert_list = cmd.vertex_list;
+  IndexList &index_list = cmd.index_list;
+
+  //normal
+  {
+    // Front Face
+    int baseIndex = vert_list.size();
+    vec3 normal(0, 0, +1);
+
+    vec2 texCoord1(0, 0);	vec3 vertex1(-width, -height, depth);
+    vec2 texCoord2(1, 0);	vec3 vertex2( width, -height, depth);
+    vec2 texCoord3(1, 1);	vec3 vertex3( width,  height, depth);
+    vec2 texCoord4(0, 1);	vec3 vertex4(-width,  height, depth);
+
+    //add vertex
+    Vertex v1;  v1.pos = vertex1; v1.texcoord = texCoord1;  v1.normal = normal;
+    Vertex v2;  v2.pos = vertex2; v2.texcoord = texCoord2;  v2.normal = normal;
+    Vertex v3;  v3.pos = vertex3; v3.texcoord = texCoord3;  v3.normal = normal;
+    Vertex v4;  v4.pos = vertex4; v4.texcoord = texCoord4;  v4.normal = normal;
+
+    vert_list.push_back(v1);
+    vert_list.push_back(v2);
+    vert_list.push_back(v3);
+    vert_list.push_back(v4);
+
+    //add index
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 1);
+    index_list.push_back(baseIndex + 2);
+
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 2);
+    index_list.push_back(baseIndex + 3);
+  }
+  {
+    // Back Face
+    int baseIndex = vert_list.size();
+    vec3 normal(0, 0, -1);
+
+    vec2 texCoord1(1, 0);	vec3 vertex1(-width, -height, -depth);
+    vec2 texCoord2(1, 1);	vec3 vertex2(-width,  height, -depth);
+    vec2 texCoord3(0, 1);	vec3 vertex3( width,  height, -depth);
+    vec2 texCoord4(0, 0);	vec3 vertex4( width, -height, -depth);
+
+    //add vertex
+    Vertex v1;  v1.pos = vertex1; v1.texcoord = texCoord1;  v1.normal = normal;
+    Vertex v2;  v2.pos = vertex2; v2.texcoord = texCoord2;  v2.normal = normal;
+    Vertex v3;  v3.pos = vertex3; v3.texcoord = texCoord3;  v3.normal = normal;
+    Vertex v4;  v4.pos = vertex4; v4.texcoord = texCoord4;  v4.normal = normal;
+
+    vert_list.push_back(v1);
+    vert_list.push_back(v2);
+    vert_list.push_back(v3);
+    vert_list.push_back(v4);
+
+    //add index
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 1);
+    index_list.push_back(baseIndex + 2);
+
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 2);
+    index_list.push_back(baseIndex + 3);
+  }
+
+  {
+    // Top Face
+    int baseIndex = vert_list.size();
+    vec3 normal(0, 1, 0);
+
+    vec2 texCoord1(0, 1);	vec3 vertex1(-width, height, -depth);
+    vec2 texCoord2(0, 0);	vec3 vertex2(-width, height,  depth);
+    vec2 texCoord3(1, 0);	vec3 vertex3( width, height,  depth);
+    vec2 texCoord4(1, 1);	vec3 vertex4( width, height, -depth);
+
+    //add vertex
+    Vertex v1;  v1.pos = vertex1; v1.texcoord = texCoord1;  v1.normal = normal;
+    Vertex v2;  v2.pos = vertex2; v2.texcoord = texCoord2;  v2.normal = normal;
+    Vertex v3;  v3.pos = vertex3; v3.texcoord = texCoord3;  v3.normal = normal;
+    Vertex v4;  v4.pos = vertex4; v4.texcoord = texCoord4;  v4.normal = normal;
+
+    vert_list.push_back(v1);
+    vert_list.push_back(v2);
+    vert_list.push_back(v3);
+    vert_list.push_back(v4);
+
+    //add index
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 1);
+    index_list.push_back(baseIndex + 2);
+
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 2);
+    index_list.push_back(baseIndex + 3);
+  }
+
+  {
+    // Bottom Face
+    int baseIndex = vert_list.size();
+    vec3 normal(0, -1, 0);
+
+    vec2 texCoord1(1, 1);	vec3 vertex1(-width, -height, -depth);
+    vec2 texCoord2(0, 1);	vec3 vertex2( width, -height, -depth);
+    vec2 texCoord3(0, 0);	vec3 vertex3( width, -height,  depth);
+    vec2 texCoord4(1, 0);	vec3 vertex4(-width, -height,  depth);
+
+    //add vertex
+    Vertex v1;  v1.pos = vertex1; v1.texcoord = texCoord1;  v1.normal = normal;
+    Vertex v2;  v2.pos = vertex2; v2.texcoord = texCoord2;  v2.normal = normal;
+    Vertex v3;  v3.pos = vertex3; v3.texcoord = texCoord3;  v3.normal = normal;
+    Vertex v4;  v4.pos = vertex4; v4.texcoord = texCoord4;  v4.normal = normal;
+
+    vert_list.push_back(v1);
+    vert_list.push_back(v2);
+    vert_list.push_back(v3);
+    vert_list.push_back(v4);
+
+    //add index
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 1);
+    index_list.push_back(baseIndex + 2);
+
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 2);
+    index_list.push_back(baseIndex + 3);
+  }
+
+  {
+    // Right face
+    int baseIndex = vert_list.size();
+    vec3 normal(1, 0, 0);
+
+    vec2 texCoord1(1, 0);	vec3 vertex1(width, -height, -depth);
+    vec2 texCoord2(1, 1);	vec3 vertex2(width,  height, -depth);
+    vec2 texCoord3(0, 1);	vec3 vertex3(width,  height,  depth);
+    vec2 texCoord4(0, 0);	vec3 vertex4(width, -height,  depth);
+
+    //add vertex
+    Vertex v1;  v1.pos = vertex1; v1.texcoord = texCoord1;  v1.normal = normal;
+    Vertex v2;  v2.pos = vertex2; v2.texcoord = texCoord2;  v2.normal = normal;
+    Vertex v3;  v3.pos = vertex3; v3.texcoord = texCoord3;  v3.normal = normal;
+    Vertex v4;  v4.pos = vertex4; v4.texcoord = texCoord4;  v4.normal = normal;
+
+    vert_list.push_back(v1);
+    vert_list.push_back(v2);
+    vert_list.push_back(v3);
+    vert_list.push_back(v4);
+
+    //add index
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 1);
+    index_list.push_back(baseIndex + 2);
+
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 2);
+    index_list.push_back(baseIndex + 3);
+  }
+
+  {
+    // Left Face
+    int baseIndex = vert_list.size();
+    vec3 normal(0, -1, 0);
+
+    vec2 texCoord1(0, 0);	vec3 vertex1(-width, -height, -depth);
+    vec2 texCoord2(1, 0);	vec3 vertex2(-width, -height,  depth);
+    vec2 texCoord3(1, 1);	vec3 vertex3(-width,  height,  depth);
+    vec2 texCoord4(0, 1);	vec3 vertex4(-width,  height, -depth);
+
+    //add vertex
+    Vertex v1;  v1.pos = vertex1; v1.texcoord = texCoord1;  v1.normal = normal;
+    Vertex v2;  v2.pos = vertex2; v2.texcoord = texCoord2;  v2.normal = normal;
+    Vertex v3;  v3.pos = vertex3; v3.texcoord = texCoord3;  v3.normal = normal;
+    Vertex v4;  v4.pos = vertex4; v4.texcoord = texCoord4;  v4.normal = normal;
+
+    vert_list.push_back(v1);
+    vert_list.push_back(v2);
+    vert_list.push_back(v3);
+    vert_list.push_back(v4);
+
+    //add index
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 1);
+    index_list.push_back(baseIndex + 2);
+
+    index_list.push_back(baseIndex + 0);
+    index_list.push_back(baseIndex + 2);
+    index_list.push_back(baseIndex + 3);
+  }
+  this->cmd_list_.push_back(cmd);
+}
 
 void GeometricObject::PointTeapot( float size ) {
   DrawCmdData cmd;

@@ -53,7 +53,10 @@ struct DrawCmdData {
 
 class GeometricObject {
 public:
-  //void WireCube( float size );
+  void PointCube(float width, float height, float depth);
+  void WireCube(float width, float height, float depth);
+  void SolidCube(float width, float height, float depth);
+
   void PointTeapot( float size );
   void WireTeapot( float size );
   void SolidTeapot( float size );
