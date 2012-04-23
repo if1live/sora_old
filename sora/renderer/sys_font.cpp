@@ -125,10 +125,10 @@ void Label::Init(const std::string &text) {
 
     // 3 2
     // 0 1
-    Vertex2D v0(left, bottom, tex_left, tex_bottom);
-    Vertex2D v1(right, bottom, tex_right, tex_bottom);
-    Vertex2D v2(right, top, tex_right, tex_top);
-    Vertex2D v3(left, top, tex_left, tex_top);
+    Vertex2D v0 = CreateVertex2D(left, bottom, tex_left, tex_bottom);
+    Vertex2D v1 = CreateVertex2D(right, bottom, tex_right, tex_bottom);
+    Vertex2D v2 = CreateVertex2D(right, top, tex_right, tex_top);
+    Vertex2D v3 = CreateVertex2D(left, top, tex_left, tex_top);
 
     int base_index = vertex_list.size();
 

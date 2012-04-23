@@ -166,6 +166,7 @@ template<typename T>
 struct Type2Type {
   typedef T Type;
 };
+
 }
 
 #endif  // SORA_TEMPLATE_LIBRARY_H_

@@ -91,6 +91,7 @@
     <ClCompile Include="core\mem.cpp" />
     <ClCompile Include="core\string_hash.cpp" />
     <ClCompile Include="core\timer.cpp" />
+    <ClCompile Include="core\vertex.cpp" />
     <ClCompile Include="event\touch_device.cpp" />
     <ClCompile Include="lodepng\lodepng.cpp" />
     <ClCompile Include="mesh\freeglut_font.cpp" />

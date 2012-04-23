@@ -22,19 +22,48 @@
 #define SORA_VERTEX_H_
 
 #include "core/vector.h"
+#include "core/array_inc.h"
+#include "glm/core/type_vec.hpp"
 
 namespace sora {;
 
-typedef enum {
-  kNoVertex = -1,
-  kVertex2D,
-  kVertex,
-  kTangentVertex
-} VertexType;
+template<
+  typename PosT,
+  int PosD,
+  typename TexcoordT,
+  int TexcoordD,
+  typename NormalT,
+  int NormalD,
+  typename ColorT,
+  int ColorD,
+  typename TangentT,
+  int TangentD
+> struct VertexT;
 
-struct Vertex;
-struct TangentVertex;
-struct Vertex2D;
+typedef VertexT<
+  float, 3, 
+  float, 2,
+  float, 3,
+  unsigned char, 4,
+  float, 0
+> Vertex;
+
+typedef VertexT<
+  float, 3, 
+  float, 2,
+  float, 3,
+  unsigned char, 4,
+  float, 3
+> TangentVertex;
+
+typedef VertexT<
+  float, 2,
+  float, 2,
+  float, 0,
+  float, 0,
+  float, 0
+> Vertex2D;
+
 typedef std::vector<Vertex> VertexList;
 typedef std::vector<TangentVertex> TangentVertexList;
 typedef std::vector<Vertex2D> Vertex2DList;
@@ -56,34 +85,120 @@ struct VertexListSelector<TangentVertex> {
   typedef TangentVertexList Result;
 };
 
-struct Vertex2D {
-  Vertex2D() : pos(0, 0), texcoord(0, 0) {}
-  Vertex2D(float x, float y, float s, float t)
-    : pos(x, y), texcoord(s, t) {}
-  glm::vec2 pos;
-  glm::vec2 texcoord;
-  static VertexType Type() { return kVertex2D; }
+
+template<typename T>
+struct VertexMaxValue { enum { value = 1 }; };
+template<>
+struct VertexMaxValue<unsigned char> { enum { value = 255 }; };
+
+//glm::vecX로 초기화 가능한 배열. 이것을 기반으로 vertex를 구성하면 glm도 바로 쓸수잇다
+template<typename T, int D>
+struct ArrayT {
+  typedef T value_type;
+  ArrayT() {
+    for(int i = 0 ; i < D ; ++i) {
+      data[i] = 0;
+    }
+  }
+
+  template< template<typename T> class VecType >
+  ArrayT(const VecType<T> &v) {
+    ArrayT &self = *this;
+    self = v;
+  }
+
+  template< template<typename T> class VecType >
+  ArrayT &operator=(const VecType<T> &v) {
+    //static_assert(D == 4, "dim not same");
+    for(int i = 0 ; i < D ; ++i) {
+      data[i] = v[i];
+    }
+    return *this;
+  }
+
+  T &operator[](int idx) { return data[idx]; }
+
+  template< template<typename T> class VecType >
+  VecType<T> Get() {
+    VecType<T> result;
+    for(int i = 0 ; i < D ; ++i) {
+      result[i] = data[i];
+    }
+    return result;
+  }
+
+  std::array<T, D> data;
 };
 
-struct Vertex {
-  Vertex() : pos(0, 0, 0), texcoord(0, 0), normal(1, 0, 0), color(255, 255, 255, 255) {}
-  Vertex(const glm::vec3 &pos, const glm::vec2 &texcoord)
-    : pos(pos), texcoord(texcoord), normal(1, 0, 0), color(255, 255, 255, 255) {}
-  Vertex(const glm::vec3 &pos)
-    : pos(pos), texcoord(0, 0), normal(1, 0, 0), color(255, 255, 255, 255) {}
+template<
+  typename PosT,
+  int PosD,
+  typename TexcoordT,
+  int TexcoordD,
+  typename NormalT,
+  int NormalD,
+  typename ColorT,
+  int ColorD,
+  typename TangentT,
+  int TangentD
+> struct VertexT {
 
-  glm::vec3 pos;
-  glm::vec2 texcoord;
-  glm::vec3 normal;
-  sora::vec4ub color;
+  typedef PosT PosType;
+  typedef TexcoordT TexcoordType;
+  typedef NormalT NormalType;
+  typedef ColorT ColorType;
+  typedef TangentT TangentType;
 
-  static VertexType Type() { return kVertex; }
+  enum {
+    PosDim = PosD,
+    ColorDim = ColorD,
+    TexcoordDim = TexcoordD,
+    NormalDim = NormalD,
+    TangentDim = TangentD,
+  };
+
+  VertexT() {
+    static_assert(PosD >= 2, "not valid pos dim");
+    static_assert(NormalD == 0 || NormalD == 3, "not valid tangent dim");
+    static_assert(TangentD == 0 || TangentD == 3, "not valid tangent dim");
+    Init();
+  }
+  void Init() {
+    for(int i = 0 ; i < PosD ; ++i) {
+      pos[i] = 0;
+    }
+    for(int i = 0 ; i < TexcoordD ; ++i) {
+      texcoord[i] = 0;
+    }
+    for(int i = 0 ; i < NormalD ; ++i) {
+      if(i == 0) {
+        normal[i] = 1;
+      } else {
+        normal[i] = 0;
+      }
+    }
+    for(int i = 0 ; i < ColorD ; ++i) {
+      color[i] = VertexMaxValue<ColorT>::value;
+    }
+    for(int i = 0 ; i < TangentD ; ++i) {
+      tangent[i] = 0;
+    }
+  }
+  ArrayT<PosT, PosD> pos;
+  ArrayT<TexcoordT, TexcoordD> texcoord;
+  ArrayT<NormalT, NormalD> normal;
+  ArrayT<ColorT, ColorD> color;
+  ArrayT<TangentT, TangentD> tangent;
+
+  void set_pos(const glm::detail::tvec3<PosT> &v) { pos = v; }
+  void set_normal(const glm::detail::tvec3<NormalT> &v) { normal = v; }
+  void set_tangent(const glm::detail::tvec3<TangentT> &v) { tangent = v; }
+  void set_texcoord(const glm::detail::tvec2<TexcoordT> &v) { texcoord = v; }
 };
 
-struct TangentVertex : public Vertex {
-  glm::vec3 tangent;
-  static VertexType Type() { return kTangentVertex; }
-};
+//버텍스 생성을 조금더 쉽게 하기 위한 함수
+Vertex CreateVertex(const glm::vec3 &pos, const glm::vec2 &texcoord);
+Vertex2D CreateVertex2D(float x, float y, float s, float t);
 
 template<typename VertexType>
 struct VertexHelper {

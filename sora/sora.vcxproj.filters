@@ -163,6 +163,9 @@
     <ClCompile Include="mesh\freeglut_stroke_mono_roman.cpp">
       <Filter>mesh</Filter>
     </ClCompile>
+    <ClCompile Include="core\vertex.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">

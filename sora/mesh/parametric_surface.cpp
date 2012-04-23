@@ -149,16 +149,16 @@ void ParametricSurface::GenerateVertices(std::vector<Vertex> &vertices) const {
 
   for(size_t i = 0 ; i < raw_vert_list.size() / 8 ; i++) {
     Vertex &v = vertices[i];
-    v.pos.x = raw_vert_list[i*8 + 0];
-    v.pos.y = raw_vert_list[i*8 + 1];
-    v.pos.z = raw_vert_list[i*8 + 2];
+    v.pos[0] = raw_vert_list[i*8 + 0];
+    v.pos[1] = raw_vert_list[i*8 + 1];
+    v.pos[2] = raw_vert_list[i*8 + 2];
 
-    v.normal.x = raw_vert_list[i*8 + 3];
-    v.normal.y = raw_vert_list[i*8 + 4];
-    v.normal.z = raw_vert_list[i*8 + 5];
+    v.normal[0] = raw_vert_list[i*8 + 3];
+    v.normal[1] = raw_vert_list[i*8 + 4];
+    v.normal[2] = raw_vert_list[i*8 + 5];
 
-    v.texcoord.x = raw_vert_list[i*8 + 6];
-    v.texcoord.y = raw_vert_list[i*8 + 7];
+    v.texcoord[0] = raw_vert_list[i*8 + 6];
+    v.texcoord[1] = raw_vert_list[i*8 + 7];
   }
 }
 
@@ -176,20 +176,20 @@ void ParametricSurface::GenerateVertices(std::vector<TangentVertex> &vertices) c
 
   for(size_t i = 0 ; i < raw_vert_list.size() / scanline ; i++) {
     TangentVertex &v = vertices[i];
-    v.pos.x = raw_vert_list[i*scanline + 0];
-    v.pos.y = raw_vert_list[i*scanline + 1];
-    v.pos.z = raw_vert_list[i*scanline + 2];
+    v.pos[0] = raw_vert_list[i*scanline + 0];
+    v.pos[1] = raw_vert_list[i*scanline + 1];
+    v.pos[2] = raw_vert_list[i*scanline + 2];
 
-    v.normal.x = raw_vert_list[i*scanline + 3];
-    v.normal.y = raw_vert_list[i*scanline + 4];
-    v.normal.z = raw_vert_list[i*scanline + 5];
+    v.normal[0] = raw_vert_list[i*scanline + 3];
+    v.normal[1] = raw_vert_list[i*scanline + 4];
+    v.normal[2] = raw_vert_list[i*scanline + 5];
 
-    v.texcoord.x = raw_vert_list[i*scanline + 6];
-    v.texcoord.y = raw_vert_list[i*scanline + 7];
+    v.texcoord[0] = raw_vert_list[i*scanline + 6];
+    v.texcoord[1] = raw_vert_list[i*scanline + 7];
 
-    v.tangent.x = raw_vert_list[i*scanline + 8];
-    v.tangent.y = raw_vert_list[i*scanline + 9];
-    v.tangent.z = raw_vert_list[i*scanline + 10];
+    v.tangent[0] = raw_vert_list[i*scanline + 8];
+    v.tangent[1] = raw_vert_list[i*scanline + 9];
+    v.tangent[2] = raw_vert_list[i*scanline + 10];
   }
 }
 }

@@ -68,7 +68,7 @@ void PrimitiveMeshHelper::PointCube(float width, float height, float depth) {
   cmd.draw_mode = kDrawPoints;
   for(size_t i = 0 ; i < pos_list.size() ; ++i) {
     Vertex vert;
-    vert.pos = pos_list[i];
+    vert.set_pos(pos_list[i]);
     cmd.vertex_list.push_back(vert);
   }
   this->cmd_list_->push_back(cmd);
@@ -104,7 +104,7 @@ void PrimitiveMeshHelper::WireCube(float width, float height, float depth) {
   cmd.draw_mode = kDrawLines;
   for(size_t i = 0 ; i < pos_list.size() ; ++i) {
     Vertex vert;
-    vert.pos = pos_list[i];
+    vert.set_pos(pos_list[i]);
     cmd.vertex_list.push_back(vert);
   }
 
@@ -324,16 +324,16 @@ void PrimitiveMeshHelper::PointTeapot( float size ) {
   cmd.vertex_list.resize(NUM_TEAPOT_OBJECT_VERTEX);
   for(int i = 0 ; i < NUM_TEAPOT_OBJECT_VERTEX ; i++) {
     Vertex &vert = cmd.vertex_list[i];
-    vert.pos.x = teapotVertices[i*3+0] * size;
-    vert.pos.y = teapotVertices[i*3+1] * size;
-    vert.pos.z = teapotVertices[i*3+2] * size;
+    vert.pos[0] = teapotVertices[i*3+0] * size;
+    vert.pos[1] = teapotVertices[i*3+1] * size;
+    vert.pos[2] = teapotVertices[i*3+2] * size;
 
-    vert.texcoord.x = teapotTexCoords[i*2+0];
-    vert.texcoord.y = teapotTexCoords[i*2+1];
+    vert.texcoord[0] = teapotTexCoords[i*2+0];
+    vert.texcoord[1] = teapotTexCoords[i*2+1];
 
-    vert.normal.x = teapotNormals[i*3+0];
-    vert.normal.y = teapotNormals[i*3+1];
-    vert.normal.z = teapotNormals[i*3+2];
+    vert.normal[0] = teapotNormals[i*3+0];
+    vert.normal[1] = teapotNormals[i*3+1];
+    vert.normal[2] = teapotNormals[i*3+2];
   }
   this->cmd_list_->push_back(cmd);
 }
@@ -344,16 +344,16 @@ void PrimitiveMeshHelper::WireTeapot( float size ) {
   cmd.vertex_list.resize(NUM_TEAPOT_OBJECT_VERTEX);
   for(int i = 0 ; i < NUM_TEAPOT_OBJECT_VERTEX ; i++) {
     Vertex &vert = cmd.vertex_list[i];
-    vert.pos.x = teapotVertices[i*3+0] * size;
-    vert.pos.y = teapotVertices[i*3+1] * size;
-    vert.pos.z = teapotVertices[i*3+2] * size;
+    vert.pos[0] = teapotVertices[i*3+0] * size;
+    vert.pos[1] = teapotVertices[i*3+1] * size;
+    vert.pos[2] = teapotVertices[i*3+2] * size;
 
-    vert.texcoord.x = teapotTexCoords[i*2+0];
-    vert.texcoord.y = teapotTexCoords[i*2+1];
+    vert.texcoord[0] = teapotTexCoords[i*2+0];
+    vert.texcoord[1] = teapotTexCoords[i*2+1];
 
-    vert.normal.x = teapotNormals[i*3+0];
-    vert.normal.y = teapotNormals[i*3+1];
-    vert.normal.z = teapotNormals[i*3+2];
+    vert.normal[0] = teapotNormals[i*3+0];
+    vert.normal[1] = teapotNormals[i*3+1];
+    vert.normal[2] = teapotNormals[i*3+2];
   }
 
   for(int i = 0 ; i < NUM_TEAPOT_OBJECT_INDEX / 3 ; i++) {
@@ -376,16 +376,16 @@ void PrimitiveMeshHelper::SolidTeapot( float size ) {
   cmd.vertex_list.resize(NUM_TEAPOT_OBJECT_VERTEX);
   for(int i = 0 ; i < NUM_TEAPOT_OBJECT_VERTEX ; i++) {
     Vertex &vert = cmd.vertex_list[i];
-    vert.pos.x = teapotVertices[i*3+0] * size;
-    vert.pos.y = teapotVertices[i*3+1] * size;
-    vert.pos.z = teapotVertices[i*3+2] * size;
+    vert.pos[0] = teapotVertices[i*3+0] * size;
+    vert.pos[1] = teapotVertices[i*3+1] * size;
+    vert.pos[2] = teapotVertices[i*3+2] * size;
 
-    vert.texcoord.x = teapotTexCoords[i*2+0];
-    vert.texcoord.y = teapotTexCoords[i*2+1];
+    vert.texcoord[0] = teapotTexCoords[i*2+0];
+    vert.texcoord[1] = teapotTexCoords[i*2+1];
 
-    vert.normal.x = teapotNormals[i*3+0];
-    vert.normal.y = teapotNormals[i*3+1];
-    vert.normal.z = teapotNormals[i*3+2];
+    vert.normal[0] = teapotNormals[i*3+0];
+    vert.normal[1] = teapotNormals[i*3+1];
+    vert.normal[2] = teapotNormals[i*3+2];
   }
 
   cmd.index_list.resize(NUM_TEAPOT_OBJECT_INDEX);
@@ -448,13 +448,13 @@ void PrimitiveMeshHelper::WireShpere(float radius, int slices, int stacks) {
       float z = cos(rho);
 
       Vertex vert;
-      vert.normal.x = x * nsign;
-      vert.normal.y = y * nsign;
-      vert.normal.z = z * nsign;
+      vert.normal[0] = x * nsign;
+      vert.normal[1] = y * nsign;
+      vert.normal[2] = z * nsign;
 
-      vert.pos.x = x * radius;
-      vert.pos.y = y * radius;
-      vert.pos.z = z * radius;
+      vert.pos[0] = x * radius;
+      vert.pos[1] = y * radius;
+      vert.pos[2] = z * radius;
       cmd.vertex_list.push_back(vert);
     }
     this->cmd_list_->push_back(cmd);
@@ -472,13 +472,13 @@ void PrimitiveMeshHelper::WireShpere(float radius, int slices, int stacks) {
       float z = cos(rho);
 
       Vertex vert;
-      vert.normal.x = x * nsign;
-      vert.normal.y = y * nsign;
-      vert.normal.z = z * nsign;
+      vert.normal[0] = x * nsign;
+      vert.normal[1] = y * nsign;
+      vert.normal[2] = z * nsign;
 
-      vert.pos.x = x * radius;
-      vert.pos.y = y * radius;
-      vert.pos.z = z * radius;
+      vert.pos[0] = x * radius;
+      vert.pos[1] = y * radius;
+      vert.pos[2] = z * radius;
       cmd.vertex_list.push_back(vert);
     }
     this->cmd_list_->push_back(cmd);
@@ -511,7 +511,7 @@ void PrimitiveMeshHelper::SolidSphere(float radius, int slices, int stacks) {
       float z = nsign * cos(rho);
 
       Vertex vert1;
-      vert1.normal = vec3(x * nsign, y * nsign, z * nsign);
+      vert1.set_normal(vec3(x * nsign, y * nsign, z * nsign));
       vert1.texcoord = vec2(s, t);
       vert1.pos = vec3(x * radius, y * radius, z * radius);
       vert_list.push_back(vert1);

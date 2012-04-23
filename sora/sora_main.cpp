@@ -325,9 +325,9 @@ void renderFrame(Device *device) {
   device->render_device().Set3D();
 
   VertexList vert_list;
-  vert_list.push_back(Vertex(vec3(-0.5, -0.5, 0), vec2(0, 0)));
-  vert_list.push_back(Vertex(vec3(0.5, -0.5, 0), vec2(1, 0)));
-  vert_list.push_back(Vertex(vec3(0, 0.5, 0), vec2(0.5, 1)));
+  vert_list.push_back(CreateVertex(vec3(-0.5, -0.5, 0), vec2(0, 0)));
+  vert_list.push_back(CreateVertex(vec3(0.5, -0.5, 0), vec2(1, 0)));
+  vert_list.push_back(CreateVertex(vec3(0, 0.5, 0), vec2(0.5, 1)));
   
   //vbo, ibo 적절히 만들기
   if(vbo.Loaded() == false) {

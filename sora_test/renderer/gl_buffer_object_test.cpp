@@ -29,9 +29,9 @@ TEST(GLBufferData, test) {
   using namespace std;
 
   vector<Vertex2D> vert_list;
-  vert_list.push_back(Vertex2D(0, 0, 0, 0));
-  vert_list.push_back(Vertex2D(1, 0, 0, 1));
-  vert_list.push_back(Vertex2D(1, 1, 1, 0));
+  vert_list.push_back(CreateVertex2D(0, 0, 0, 0));
+  vert_list.push_back(CreateVertex2D(1, 0, 0, 1));
+  vert_list.push_back(CreateVertex2D(1, 1, 1, 0));
 
   GLVertexBufferObject vbo;
   EXPECT_EQ(false, vbo.Loaded());

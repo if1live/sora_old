@@ -18,37 +18,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_test_stdafx.h"
-#include "renderer/buffer_object.h"
+#include "sora_stdafx.h"
+#include "vertex.h"
 
-using namespace std;
-using namespace sora;
-
-TEST(BufferObject, vbo) {
-  typedef VertexListSelector<Vertex2D>::Result VertType;
-  VertType vert_list;
-  vert_list.push_back(CreateVertex2D(0, 0, 0, 0));
-  vert_list.push_back(CreateVertex2D(1, 0, 0, 1));
-  vert_list.push_back(CreateVertex2D(1, 1, 1, 0));
-
-  VBOSelector<VertType::value_type>::Result vbo;
-  EXPECT_EQ(false, vbo.Loaded());
-  vbo.Init(vert_list, kBufferUsageStatic);
-  EXPECT_EQ(true, vbo.Loaded());
-  vbo.Deinit();
-  EXPECT_EQ(false, vbo.Loaded());
+namespace sora {;
+Vertex CreateVertex(const glm::vec3 &pos, const glm::vec2 &texcoord) {
+  Vertex vert;
+  vert.set_pos(pos);
+  vert.set_texcoord(texcoord);
+  return vert;
 }
 
-TEST(BufferObject, ibo) {
-  IndexList index_list;
-  index_list.push_back(1);
-  index_list.push_back(4);
-  index_list.push_back(5);
-
-  IndexBufferObject ibo;
-  EXPECT_EQ(false, ibo.Loaded());
-  ibo.Init(index_list);
-  EXPECT_EQ(true, ibo.Loaded());
-  ibo.Deinit();
-  EXPECT_EQ(false, ibo.Loaded());
+Vertex2D CreateVertex2D(float x, float y, float s, float t) {
+  Vertex2D vert;
+  vert.pos[0] = x;
+  vert.pos[1] = y;
+  vert.texcoord[0] = s;
+  vert.texcoord[1] = t;
+  return vert;
+}
 }
