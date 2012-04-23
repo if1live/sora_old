@@ -156,10 +156,8 @@ namespace gl {
     HandleType SetValue(const GLHandle &handle, T value);
     
     //connect vertex attrib
-    
-    void SetVertexList(char *base_ptr, Type2Type<TangentVertex>);
-    void SetVertexList(char *base_ptr, Type2Type<Vertex>);
-    void SetVertexList(char *base_ptr, Type2Type<Vertex2D>);
+    template<typename T>
+    void SetVertexList(char *base_ptr);
 
     template<typename VertexType>
     void SetVertexList(const std::vector<VertexType> &vert_list);
@@ -178,11 +176,12 @@ namespace gl {
     template<typename BaseBufferType>
     void DrawElements(DrawType mode, const IndexBufferObjectT<BaseBufferType> &ibo);
 
-    template<typename VertexType> void SetPositionAttrib(char *base_ptr);
-    template<typename VertexType> void SetTexcoordAttrib(char *base_ptr);
-    template<typename VertexType> void SetNormalAttrib(char *base_ptr);
-    template<typename VertexType> void SetColorAttrib(char *base_ptr);
-    template<typename VertexType> void SetTangentAttrib(char *base_ptr);
+  private:
+    void SetPositionAttrib(char *base_ptr, const VertexInfo &info);
+    void SetTexcoordAttrib(char *base_ptr, const VertexInfo &info);
+    void SetNormalAttrib(char *base_ptr, const VertexInfo &info);
+    void SetColorAttrib(char *base_ptr, const VertexInfo &info);
+    void SetTangentAttrib(char *base_ptr, const VertexInfo &info);
   public:
     GLuint prog;
 
@@ -353,109 +352,27 @@ namespace gl {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   }
 
+  template<typename T>
+  void GLProgram::SetVertexList(char *base_ptr) {
+    VertexInfo &info = VertexInfoHolder<T>::Get();
+    SetPositionAttrib(base_ptr, info);
+    SetTexcoordAttrib(base_ptr, info);
+    SetNormalAttrib(base_ptr, info);
+    SetColorAttrib(base_ptr, info);
+    SetTangentAttrib(base_ptr, info);
+  }
+
   template<typename VertexType>
   void GLProgram::SetVertexList(const std::vector<VertexType> &vert_list) {
     char *ptr = (char*)&vert_list[0];
-    SetVertexList(ptr, Type2Type<VertexType>());
+    SetVertexList<VertexType>(ptr);
   }
   template<typename VertexType, typename BaseBufferType>
   void GLProgram::SetVertexList(const VertexBufferObjectT<BaseBufferType, VertexType> &vbo) {
     glBindBuffer(GL_ARRAY_BUFFER, vbo.vbo().buffer());
-    SetVertexList((char*)NULL, Type2Type<VertexType>());
+    SetVertexList<VertexType>(nullptr);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
-
-  template<typename VertexType>
-  void GLProgram::SetPositionAttrib(char *base_ptr) {
-    const GLHandle *pos_handle = attrib_var(kPositionHandleName);
-    const VertexInfo &info = VertexInfoHolder<VertexType>::Get();
-    const int vertex_size = sizeof(VertexType);
-    if(pos_handle != NULL) {
-      int offset = info.pos_offset;
-      GLenum type = info.pos_type;
-      int loc = pos_handle->location;
-      if(offset != -1) {
-        //glEnableVertexAttribArray(pos_var.location);
-        char *ptr = base_ptr + offset;
-        glVertexAttribPointer(loc, 3, type, GL_FALSE, vertex_size, ptr);
-        SR_CHECK_ERROR("glVertexAttribPointer");
-      }
-    }
-  }
-  template<typename VertexType>
-  void GLProgram::SetTexcoordAttrib(char *base_ptr) {
-    const GLHandle *pos_handle = attrib_var(kPositionHandleName);
-    const VertexInfo &info = VertexInfoHolder<VertexType>::Get();
-    const int vertex_size = sizeof(VertexType);
-    const GLHandle *texcoord_handle = this->attrib_var(kTexcoordHandleName);
-    if(texcoord_handle != NULL) {
-      int offset = info.texcoord_offset;
-      GLenum type = info.texcoord_type;
-      int loc = texcoord_handle->location;
-      if(offset != -1) {
-        //glEnableVertexAttribArray(texcoord_var.location);
-        char *ptr = base_ptr + offset;
-        glVertexAttribPointer(loc, 2, type, GL_FALSE, vertex_size, ptr);
-        SR_CHECK_ERROR("glVertexAttribPointer");
-      }
-    }
-  }
-  template<typename VertexType>
-  void GLProgram::SetNormalAttrib(char *base_ptr) {
-    const GLHandle *pos_handle = attrib_var(kPositionHandleName);
-    const VertexInfo &info = VertexInfoHolder<VertexType>::Get();
-    const int vertex_size = sizeof(VertexType);
-    const GLHandle *normal_handle = this->attrib_var(kNormalHandleName);
-    if(normal_handle != NULL) {
-      int offset = info.normal_offset;
-      GLenum type = info.normal_type;
-      int loc = normal_handle->location;
-      if(offset != -1) {
-        char *ptr = base_ptr + offset;
-        glEnableVertexAttribArray(loc);
-        glVertexAttribPointer(loc, 3, type, GL_FALSE, vertex_size, ptr);
-        SR_CHECK_ERROR("glVertexAttribPointer");
-      }
-    }
-  }
-  template<typename VertexType>
-  void GLProgram::SetColorAttrib(char *base_ptr) {
-    const GLHandle *pos_handle = attrib_var(kPositionHandleName);
-    const VertexInfo &info = VertexInfoHolder<VertexType>::Get();
-    const int vertex_size = sizeof(VertexType);
-    const GLHandle *color_handle = this->attrib_var(kColorHandleName);
-    if(color_handle != NULL) {
-      int offset = info.color_offset;
-      GLenum type = info.color_type;
-      int loc = color_handle->location;
-      if(offset != -1) {
-        //색속성은 ubyte니까 normalize해야됨
-        char *ptr = base_ptr + offset;
-        glEnableVertexAttribArray(loc);
-        glVertexAttribPointer(loc, 4, type, GL_TRUE, vertex_size, ptr);
-        SR_CHECK_ERROR("glVertexAttribPointer");
-      }
-    }
-  }
-  template<typename VertexType> 
-  void GLProgram::SetTangentAttrib(char *base_ptr) {
-    const GLHandle *pos_handle = attrib_var(kPositionHandleName);
-    const VertexInfo &info = VertexInfoHolder<VertexType>::Get();
-    const int vertex_size = sizeof(VertexType);
-    const GLHandle *tangent_handle = this->attrib_var(kTangentHandleName);
-    if(tangent_handle != NULL) {
-      int offset = info.tangent_offset;
-      GLenum type = info.tangent_type;
-      int loc = tangent_handle->location;
-      if(offset != -1) {
-        char *ptr = base_ptr + offset;
-        glEnableVertexAttribArray(loc);
-        glVertexAttribPointer(loc, 4, type, GL_FALSE, vertex_size, ptr);
-        SR_CHECK_ERROR("glVertexAttribPointer");
-      }
-    }
-  }
-
   
 } //namespace gl
 } //namespace sora

@@ -65,8 +65,8 @@ static SFG_StrokeFont* fghStrokeByID( void* font )
 /*
 * Draw a stroke character
 */
-std::vector< DrawCmdData<Vertex> > glutStrokeCharacter( void* fontID, int character ) {
-  std::vector< DrawCmdData<Vertex> > result;
+std::vector< DrawCmdData<glm::vec2> > glutStrokeCharacter( void* fontID, int character ) {
+  std::vector< DrawCmdData<glm::vec2> > result;
 
   const SFG_StrokeChar *schar;
   const SFG_StrokeStrip *strip;
@@ -90,21 +90,19 @@ std::vector< DrawCmdData<Vertex> > glutStrokeCharacter( void* fontID, int charac
   strip = schar->Strips;
 
   for( i = 0; i < schar->Number; i++, strip++ ) {
-    DrawCmdData<Vertex> line_cmd;
+    DrawCmdData<glm::vec2> line_cmd;
     line_cmd.draw_mode = kDrawLineStrip;
     for( j = 0; j < strip->Number; j++ ) {
       //glVertex2f( strip->Vertices[ j ].X, strip->Vertices[ j ].Y );
-      Vertex vert;
-      vert.pos = vec3( strip->Vertices[ j ].X, strip->Vertices[ j ].Y , 0);
+      vec2 vert( strip->Vertices[ j ].X, strip->Vertices[ j ].Y);
       line_cmd.vertex_list.push_back(vert);
     }
     result.push_back(line_cmd);
 
-    DrawCmdData<Vertex> point_cmd;
+    DrawCmdData<glm::vec2> point_cmd;
     point_cmd.draw_mode = kDrawPoints;
     for( j = 0; j < strip->Number; j++ ) {
-      Vertex vert;
-      vert.pos = vec3( strip->Vertices[ j ].X, strip->Vertices[ j ].Y, 0 );
+      vec2 vert( strip->Vertices[ j ].X, strip->Vertices[ j ].Y);
       line_cmd.vertex_list.push_back(vert);
     }
     result.push_back(point_cmd);
@@ -113,8 +111,8 @@ std::vector< DrawCmdData<Vertex> > glutStrokeCharacter( void* fontID, int charac
   return result;
 }
 
-std::vector< DrawCmdData<Vertex> > glutStrokeString( void* fontID, const char *string ) {
-  std::vector< DrawCmdData<Vertex> > result;
+std::vector< DrawCmdData<glm::vec2> > glutStrokeString( void* fontID, const char *string ) {
+  std::vector< DrawCmdData<glm::vec2> > result;
   unsigned char c;
   int i, j;
   float length = 0.0;
@@ -155,14 +153,13 @@ std::vector< DrawCmdData<Vertex> > glutStrokeString( void* fontID, const char *s
 
           for( i = 0; i < schar->Number; i++, strip++ )
           {
-            DrawCmdData<Vertex> cmd;
+            DrawCmdData<glm::vec2> cmd;
             cmd.draw_mode = kDrawLineStrip;
             for( j = 0; j < strip->Number; j++ ) {
               //glVertex2f( strip->Vertices[ j ].X, strip->Vertices[ j ].Y);
               float x = translate_x + strip->Vertices[ j ].X;
               float y = translate_y + strip->Vertices[ j ].Y;
-              Vertex vert;
-              vert.pos = vec3(x, y, 0);
+              vec2 vert(x, y);
               cmd.vertex_list.push_back(vert);
             }
             result.push_back(cmd);

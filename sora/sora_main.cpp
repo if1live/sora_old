@@ -491,10 +491,10 @@ void renderFrame(Device *device) {
       auto font_vert_data = glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, '@');
       auto it = font_vert_data.begin();
       auto endit = font_vert_data.end();
-
+      
       glLineWidth(3.0f);
       for( ; it != endit ; ++it) {
-        const DrawCmdData<Vertex> &cmd = *it;
+        const DrawCmdData<vec2> &cmd = *it;
         if(cmd.disable_cull_face == true) {
           glDisable(GL_CULL_FACE);
         }

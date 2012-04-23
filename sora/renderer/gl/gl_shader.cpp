@@ -348,30 +348,96 @@ namespace gl {
     }
     return NULL;
   }
-
-  ///////////////////////////////////
-  void GLProgram::SetVertexList(char *base_ptr, Type2Type<TangentVertex>) {
-    typedef TangentVertex T;
-    SetPositionAttrib<T>(base_ptr);
-    SetTexcoordAttrib<T>(base_ptr);
-    SetNormalAttrib<T>(base_ptr);
-    SetColorAttrib<T>(base_ptr);
-    SetTangentAttrib<T>(base_ptr);
+  
+  void GLProgram::SetPositionAttrib(char *base_ptr, const VertexInfo &info) {
+    int offset = info.pos_offset;
+    if(offset == -1) {
+      return;
+    }
+    const GLHandle *pos_handle = attrib_var(kPositionHandleName);
+    const int vertex_size = info.size;
+    if(pos_handle != NULL) {
+      GLenum type = info.pos_type;
+      int loc = pos_handle->location;   
+      int dim = info.pos_dim;
+      //glEnableVertexAttribArray(pos_var.location);
+      char *ptr = base_ptr + offset;
+      glVertexAttribPointer(loc, dim, type, GL_FALSE, vertex_size, ptr);
+      SR_CHECK_ERROR("glVertexAttribPointer");
+    }
   }
-
-  void GLProgram::SetVertexList(char *base_ptr, Type2Type<Vertex>) {
-    typedef Vertex T;
-    SetPositionAttrib<T>(base_ptr);
-    SetTexcoordAttrib<T>(base_ptr);
-    SetNormalAttrib<T>(base_ptr);
-    SetColorAttrib<T>(base_ptr);
+  
+  void GLProgram::SetTexcoordAttrib(char *base_ptr, const VertexInfo &info) {
+    int offset = info.texcoord_offset;
+    if(offset == -1) {
+      return;
+    }
+    const int vertex_size = info.size;
+    const GLHandle *texcoord_handle = this->attrib_var(kTexcoordHandleName);
+    if(texcoord_handle != NULL) {
+      GLenum type = info.texcoord_type;
+      int loc = texcoord_handle->location;
+      int dim = info.texcoord_dim;
+      //glEnableVertexAttribArray(texcoord_var.location);
+      char *ptr = base_ptr + offset;
+      glVertexAttribPointer(loc, dim, type, GL_FALSE, vertex_size, ptr);
+      SR_CHECK_ERROR("glVertexAttribPointer");
+    }
   }
-
-  void GLProgram::SetVertexList(char *base_ptr, Type2Type<Vertex2D>) {
-    typedef Vertex2D T;
-    SetPositionAttrib<T>(base_ptr);
-    SetTexcoordAttrib<T>(base_ptr);
+  
+  void GLProgram::SetNormalAttrib(char *base_ptr, const VertexInfo &info) {
+    int offset = info.normal_offset;
+    if(offset == -1) {
+      return;
+    }
+    const int vertex_size = info.size;
+    const GLHandle *normal_handle = this->attrib_var(kNormalHandleName);
+    if(normal_handle != NULL) {
+      GLenum type = info.normal_type;
+      int loc = normal_handle->location;
+      int dim = info.normal_dim;
+      char *ptr = base_ptr + offset;
+      glEnableVertexAttribArray(loc);
+      glVertexAttribPointer(loc, dim, type, GL_FALSE, vertex_size, ptr);
+      SR_CHECK_ERROR("glVertexAttribPointer");
+    }
   }
-
+  
+  void GLProgram::SetColorAttrib(char *base_ptr, const VertexInfo &info) {
+    int offset = info.color_offset;
+    if(offset == -1) {
+      return;
+    }
+    const int vertex_size = info.size;
+    const GLHandle *color_handle = this->attrib_var(kColorHandleName);
+    if(color_handle != NULL) {
+      GLenum type = info.color_type;
+      int loc = color_handle->location;
+      //색속성은 ubyte니까 normalize해야됨
+      char *ptr = base_ptr + offset;
+      int dim = info.color_dim;
+      glEnableVertexAttribArray(loc);
+      glVertexAttribPointer(loc, dim, type, GL_TRUE, vertex_size, ptr);
+      SR_CHECK_ERROR("glVertexAttribPointer");
+    }
+  }
+  
+  void GLProgram::SetTangentAttrib(char *base_ptr, const VertexInfo &info) {
+    int offset = info.tangent_offset;
+    if(offset == -1) {
+      return;
+    }
+    const int vertex_size = info.size;
+    const GLHandle *tangent_handle = this->attrib_var(kTangentHandleName);
+    if(tangent_handle != NULL) {
+      GLenum type = info.tangent_type;
+      int loc = tangent_handle->location;
+      char *ptr = base_ptr + offset;
+      int dim = info.tangent_dim;
+      glEnableVertexAttribArray(loc);
+      glVertexAttribPointer(loc, dim, type, GL_FALSE, vertex_size, ptr);
+      SR_CHECK_ERROR("glVertexAttribPointer");
+    }
+  }
 } //namespace gl
 } //namespace sora

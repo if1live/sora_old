@@ -81,8 +81,8 @@ struct tagSFG_StrokeFont
 int     glutStrokeWidth( void* font, int character );
 int     glutStrokeLength( void* font, const unsigned char* string );
 GLfloat glutStrokeHeight( void* font );
-std::vector< DrawCmdData<Vertex> > glutStrokeCharacter( void* font, int character );
-std::vector< DrawCmdData<Vertex> > glutStrokeString( void* font, const char *string );
+std::vector< DrawCmdData<glm::vec2> > glutStrokeCharacter( void* font, int character );
+std::vector< DrawCmdData<glm::vec2> > glutStrokeString( void* font, const char *string );
 
 /*
  * Following definitions are somewhat similiar to GLib's,
