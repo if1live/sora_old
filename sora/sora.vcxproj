@@ -93,6 +93,7 @@
     <ClCompile Include="core\timer.cpp" />
     <ClCompile Include="core\vertex.cpp" />
     <ClCompile Include="event\touch_device.cpp" />
+    <ClCompile Include="freeglut_main.cpp" />
     <ClCompile Include="lodepng\lodepng.cpp" />
     <ClCompile Include="mesh\freeglut_font.cpp" />
     <ClCompile Include="mesh\freeglut_stroke_mono_roman.cpp" />
@@ -157,6 +158,7 @@
     <ClInclude Include="event\keyboard_event.h" />
     <ClInclude Include="event\touch_device.h" />
     <ClInclude Include="event\touch_event.h" />
+    <ClInclude Include="freeglut_main.h" />
     <ClInclude Include="lodepng\lodepng.h" />
     <ClInclude Include="mesh\freeglut_font.h" />
     <ClInclude Include="mesh\geometric_object.h" />

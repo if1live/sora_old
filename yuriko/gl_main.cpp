@@ -33,12 +33,34 @@
 #include "sora/celshading_main.h"
 #include "sora/depth_map_main.h"
 
+#include "sora/freeglut_main.h"
+
 #if SR_WIN && (SR_GLES == 0)
 
 //const int kWinWidth = 480;
 //const int kWinHeight = 800;
 const int kWinWidth = 640;
 const int kWinHeight = 480;
+
+void run_freeglutfont(sora::Device *dev) {
+  //selection test
+  sora::freeglut::setup_graphics(dev, kWinWidth, kWinHeight);
+  float prev_time = Timer_GetSecond();
+  while(true) {
+    sora::freeglut::draw_frame(dev);
+    float curr_time = Timer_GetSecond();
+    float dt = curr_time - prev_time;
+    sora::freeglut::update_frame(dev, dt);
+
+    glfwSwapBuffers();
+    prev_time = curr_time;
+    Timer_Tick();
+
+    if (glfwGetKey(GLFW_KEY_ESC) == GLFW_PRESS) {
+      break;
+    }
+  }
+}
 
 /*
 void run_selection(sora::Device *dev) {
@@ -156,6 +178,7 @@ int main(int argc, char *argv[]) {
 
   sora::Device device;
 
+  /*
 	//logic begin
   SORA_setup_graphics(&device, kWinWidth, kWinHeight);
   float prev_time = Timer_GetSecond();
@@ -200,8 +223,10 @@ int main(int argc, char *argv[]) {
       exit(0);
     }
   }
+  */
   
   //logic end
+  run_freeglutfont(&device);
   //run_selection(&device);
   //run_depthmap(&device);
   //run_shadow_map(&device);

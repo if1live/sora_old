@@ -166,6 +166,9 @@
     <ClCompile Include="core\vertex.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="freeglut_main.cpp">
+      <Filter>logic_test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -374,6 +377,9 @@
     </ClInclude>
     <ClInclude Include="mesh\freeglut_font.h">
       <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="freeglut_main.h">
+      <Filter>logic_test</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
