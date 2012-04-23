@@ -21,6 +21,7 @@
 #include "sora/renderer/gl/gl_inc.h"
 #include <cstdlib>
 #include <cstdio>
+#include <functional>
 
 #include "sora/event/keyboard_event.h"
 
@@ -34,6 +35,7 @@
 #include "sora/depth_map_main.h"
 
 #include "sora/freeglut_main.h"
+#include "sora/sysfont_main.h"
 
 #if SR_WIN && (SR_GLES == 0)
 
@@ -42,15 +44,20 @@
 const int kWinWidth = 640;
 const int kWinHeight = 480;
 
-void run_freeglutfont(sora::Device *dev) {
+typedef std::function<void(sora::Device*,int, int)> InitFunctionType;
+typedef std::function<void(sora::Device*)> DrawFunctionType;
+typedef std::function<void(sora::Device*, float)> UpdateFunctionType;
+
+//간단함 함수객체 기반의 테스트 함수
+void run_sample(sora::Device *dev, InitFunctionType init_func, DrawFunctionType draw_func, UpdateFunctionType update_func) {
   //selection test
-  sora::freeglut::setup_graphics(dev, kWinWidth, kWinHeight);
+  init_func(dev, kWinWidth, kWinHeight);
   float prev_time = Timer_GetSecond();
   while(true) {
-    sora::freeglut::draw_frame(dev);
+    draw_func(dev);
     float curr_time = Timer_GetSecond();
     float dt = curr_time - prev_time;
-    sora::freeglut::update_frame(dev, dt);
+    update_func(dev, dt);
 
     glfwSwapBuffers();
     prev_time = curr_time;
@@ -60,6 +67,20 @@ void run_freeglutfont(sora::Device *dev) {
       break;
     }
   }
+}
+
+void run_freeglutfont(sora::Device *dev) {
+  InitFunctionType init_func = sora::freeglut::setup_graphics;
+  DrawFunctionType draw_func = sora::freeglut::draw_frame;
+  UpdateFunctionType update_func = sora::freeglut::update_frame;
+  run_sample(dev, init_func, draw_func, update_func);
+}
+
+void run_sysfont(sora::Device *dev) {
+  InitFunctionType init_func = sora::sysfont::setup_graphics;
+  DrawFunctionType draw_func = sora::sysfont::draw_frame;
+  UpdateFunctionType update_func = sora::sysfont::update_frame;
+  run_sample(dev, init_func, draw_func, update_func);
 }
 
 /*
@@ -226,7 +247,8 @@ int main(int argc, char *argv[]) {
   */
   
   //logic end
-  run_freeglutfont(&device);
+  //run_freeglutfont(&device);
+  run_sysfont(&device);
   //run_selection(&device);
   //run_depthmap(&device);
   //run_shadow_map(&device);

@@ -60,6 +60,9 @@ namespace freeglut {
     }
   }
   void draw_frame(sora::Device *dev) {
+    glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     SR_CHECK_ERROR("Render 2d start");
     //텍스트는 3d에도 찍을수 잇겟지만 지금은 2d로 충분하니까 2D로 렌더링함
     //glut font는 디버깅이라든가 그런 용도에 쓰이게 될 것이다

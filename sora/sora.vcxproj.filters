@@ -169,6 +169,9 @@
     <ClCompile Include="freeglut_main.cpp">
       <Filter>logic_test</Filter>
     </ClCompile>
+    <ClCompile Include="sysfont_main.cpp">
+      <Filter>logic_test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -379,6 +382,9 @@
       <Filter>mesh</Filter>
     </ClInclude>
     <ClInclude Include="freeglut_main.h">
+      <Filter>logic_test</Filter>
+    </ClInclude>
+    <ClInclude Include="sysfont_main.h">
       <Filter>logic_test</Filter>
     </ClInclude>
   </ItemGroup>
