@@ -132,15 +132,6 @@ struct IndexBufferInfoHolder< std::vector<unsigned short> > {
   };
   static unsigned int buffer(const std::vector<unsigned short> &o) { return 0; }
 };
-
-template<>
-struct IndexBufferInfoHolder<IndexArray> {
-  enum {
-    is_buffer = false,
-  };
-  static unsigned int buffer(const IndexArray &o) { return 0; }
-};
-
 template<typename T>
 struct IndexBufferInfoHolder< IndexBufferObjectT<T> > {
   enum {

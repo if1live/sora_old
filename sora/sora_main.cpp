@@ -334,7 +334,7 @@ void renderFrame(Device *device) {
     vbo.Init(vert_list);
   }
   if(wire_ibo.Loaded() == false) {
-    IndexArray index_list;
+    IndexList index_list;
     index_list.push_back(0);
     index_list.push_back(1);
     index_list.push_back(1);

@@ -110,7 +110,7 @@ Label::~Label() {
 }
 void Label::Init(const std::string &text) {
   Vertex2DList &vertex_list = vert_list_;
-  IndexArray &index_list = index_list_;
+  IndexList &index_list = index_list_;
 
   for (size_t i = 0 ; i < text.size() ; i++) {
     unsigned char ch = text[i];

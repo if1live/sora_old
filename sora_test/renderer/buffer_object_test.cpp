@@ -40,7 +40,7 @@ TEST(BufferObject, vbo) {
 }
 
 TEST(BufferObject, ibo) {
-  IndexArray index_list;
+  IndexList index_list;
   index_list.push_back(1);
   index_list.push_back(4);
   index_list.push_back(5);
