@@ -107,12 +107,17 @@ struct DrawCmdData {
   std::vector<unsigned short> index_list;
 };
 
-struct BufferObjectHandle {
-  BufferObjectHandle() : handle(0) {}
-  BufferObjectHandle(unsigned int handle) : handle(handle) {}
-  unsigned int handle;
-};
 
+struct BasicUintHandle {
+  BasicUintHandle() : handle(0) {}
+  BasicUintHandle(unsigned int handle) : handle(handle) {}
+  unsigned int handle;
+  bool operator==(const BasicUintHandle &o) const { return handle == o.handle; }
+  bool operator!=(const BasicUintHandle &o) const { return !(*this == o); }
+};
+typedef BasicUintHandle BufferObjectHandle;
+typedef BasicUintHandle TextureHandle;
+typedef BasicUintHandle ShaderHandle;
 
 //predefined semantic
 #define kPositionHandleName "a_position"

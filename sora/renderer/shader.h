@@ -31,54 +31,49 @@ typedef ShaderT<sora::gl::GLProgram> Shader;
 template<typename PolicyType>
 class ShaderT {
 public:
+  typedef PolicyType Policy;
+public:
   ShaderT() {}
   ~ShaderT() {}
 
   bool LoadFromFile(const std::string &vert_path, const std::string &frag_path);
   bool Init(const char *vert_src, const char *frag_src) {
-    return policy_.Init(vert_src, frag_src);
+    return Policy::Init(&handle_, vert_src, frag_src);
   }
   void Deinit() {
-    policy_.Deinit();
+    Policy::Deinit(&handle_);
   }
 
   //uniform bind function
   template<typename T>
   HandleType SetMatrix(const std::string &name, const glm::detail::tmat4x4<T> &mat) {
-    return policy_.SetMatrix(name, mat);
+    return Policy::SetMatrix(handle_, name, mat);
   }
   template<typename T>
   HandleType SetMatrix(const std::string &name, const glm::detail::tmat3x3<T> &mat) {
-    return policy_.SetMatrix(name, mat);
+    return Policy::SetMatrix(handle_, name, mat);
   }
   template<typename T>
   HandleType SetVector(const std::string &name, const glm::detail::tvec4<T> &vec) {
-    return policy_.SetVector(name, vec);
+    return Policy::SetVector(handle_, name, vec);
   }
   template<typename T>
   HandleType SetVector(const std::string &name, const glm::detail::tvec3<T>&vec) {
-    return policy_.SetVector(name, vec);
+    return Policy::SetVector(handle_, name, vec);
   }
   template<typename T>
   HandleType SetValue(const std::string &name, T value) {
-    return policy_.SetValue(name, value);
+    return Policy::SetValue(handle_, name, value);
   }
 
   //attrib bind function
   //connect vertex attrib
-  template<typename VertexType>
-  void SetVertexList(const std::vector<VertexType> &vert_list) {
-    if(vert_list.empty()) {
+  template<typename VertexContainer>
+  void SetVertexList(const VertexContainer &vert_data) {
+    if(vert_data.empty()) {
       return;
     }
-    policy_.SetVertexList(vert_list);
-  }
-  template<typename VertexType>
-  void SetVertexList(const VertexBufferObjectT<VertexType> &vbo) {
-    if(vbo.count() == 0) {
-      return;
-    }
-    policy_.SetVertexList(vbo);
+    Policy::SetVertexList(handle_, vert_data);
   }
 
   void DrawArrays(DrawType mode, unsigned int vertex_count) {
@@ -88,7 +83,7 @@ public:
     if(vertex_count == 0) {
       return;
     }
-    return policy_.DrawArrays(mode, vertex_count);
+    return Policy::DrawArrays(handle_, mode, vertex_count);
   }
   
   template<typename IndexContainer>
@@ -96,26 +91,25 @@ public:
     if(index_data.size() == 0) {
       return;
     }
-    policy_.DrawElements(mode, index_data);
+    Policy::DrawElements(handle_, mode, index_data);
   }
 
   //set vertex list + drawXXX를 붙인 조합형태
   template<typename VertexContainer>
   void DrawArrays(DrawType mode, const VertexContainer &vert_data) {
-    policy_.SetVertexList(vert_data);
-    policy_.DrawArrays(mode, vert_data.size());
+    Policy::SetVertexList(handle_, vert_data);
+    Policy::DrawArrays(handle_, mode, vert_data.size());
   }
 
   template<typename VertexContainer, typename IndexContainer>
   void DrawElements(DrawType mode, const VertexContainer &vertex_data, const IndexContainer &index_data) {
-    policy_.SetVertexList(vertex_data);
-    policy_.DrawElements(mode, index_data);
+    Policy::SetVertexList(handle_, vertex_data);
+    Policy::DrawElements(handle_, mode, index_data);
   }
 
-  PolicyType &policy() { return policy_; }
-
+  const ShaderHandle &handle() const { return handle_; }
 private:
-  PolicyType policy_;
+  ShaderHandle handle_;
 };
 } //namespace sora
 

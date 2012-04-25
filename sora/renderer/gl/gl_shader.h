@@ -42,15 +42,15 @@ namespace sora {;
 namespace gl {
   class GLShader;
   class GLProgram;
-  struct GLHandle;
+  struct GLShaderVarHandle;
 
-  struct GLHandle {
+  struct GLShaderVarHandle {
   public:
-    GLHandle();
+    GLShaderVarHandle();
     void Set(int var_type, HandleType loc_type, const char *attr_name, int size);
 
-    bool operator==(const GLHandle &o) const;
-    bool operator!=(const GLHandle &o) const;
+    bool operator==(const GLShaderVarHandle &o) const;
+    bool operator!=(const GLShaderVarHandle &o) const;
 
     std::string str() const;
 
@@ -94,10 +94,61 @@ namespace gl {
 
   class GLProgram {
   public:
+    //policy에 연결시켜서 쓸 함수
     static bool Validate(GLuint prog);
+    static bool Validate(const ShaderHandle &handle);
+
+    static bool Init(ShaderHandle *handle, const std::string &v_src, const std::string &f_src);
+    static void Deinit(ShaderHandle *handle);
+    static bool IsInit(const ShaderHandle &handle);
+
+    template<typename T>
+    static HandleType SetMatrix(const ShaderHandle &handle, const std::string &name, const glm::detail::tmat4x4<T> &mat) {
+      GLProgram prog(handle.handle);
+      return prog.SetMatrix(name, mat);
+    }
+    template<typename T>
+    static HandleType SetMatrix(const ShaderHandle &handle, const std::string &name, const glm::detail::tmat3x3<T> &mat) {
+      GLProgram prog(handle.handle);
+      return prog.SetMatrix(name, mat);
+    }
+    template<typename T>
+    static HandleType SetVector(const ShaderHandle &handle, const std::string &name, const glm::detail::tvec4<T> &vec) {
+      GLProgram prog(handle.handle);
+      return prog.SetVector(name, vec);
+    }
+    template<typename T>
+    static HandleType SetVector(const ShaderHandle &handle, const std::string &name, const glm::detail::tvec3<T>&vec) {
+      GLProgram prog(handle.handle);
+      return prog.SetVector(name, vec);
+    }
+
+    template<typename T>
+    static HandleType SetValue(const ShaderHandle &handle, const std::string &name, T value) {
+      GLProgram prog(handle.handle);
+      return prog.SetValue(name, value);
+    }
+    template<typename VertexContainer>
+    static void SetVertexList(const ShaderHandle &handle, const VertexContainer &vertex_data) {
+      GLProgram prog(handle.handle);
+      prog.SetVertexList(vertex_data);
+    }
+
+    //진짜로 그리기
+    static void DrawArrays(const ShaderHandle &handle, DrawType mode, int vertex_count) {
+      GLProgram prog(handle.handle);
+      prog.DrawArrays(mode, vertex_count);
+    }
+
+    template<typename IndexContainer>
+    static void DrawElements(const ShaderHandle &handle, DrawType mode, const IndexContainer &index_data) {
+      GLProgram prog(handle.handle);
+      prog.DrawElements(mode, index_data);
+    }
 
   public:
     GLProgram();
+    GLProgram(GLuint prog);
     ~GLProgram();
 
     bool Init(const char *v_src, const char *f_src);
@@ -105,29 +156,37 @@ namespace gl {
       return Init(v_src.c_str(), f_src.c_str());
     }
     bool Init(const std::vector<const char*> &v_src_list, const std::vector<const char*> &f_src_list);
-    
+
 
     void Deinit();
-    bool IsInit() const { return (prog != 0); }
+    bool IsInit() const {
+      return (prog != 0); 
+    }
 
+    GLint GetAttribLocation(const std::string &name) const {
+      return GetAttribLocation(name.c_str());
+    }
+    GLint GetUniformLocation(const std::string &name) const {
+      return GetUniformLocation(name.c_str());
+    }
     GLint GetAttribLocation(const char *name) const;
     GLint GetUniformLocation(const char *name) const;
 
     //최초실행시에는 모든목록을 얻을수잇다
-    std::vector<GLHandle> GetActiveUniformVarList();
-    std::vector<GLHandle> GetActiveAttributeVarList();
+    std::vector<GLShaderVarHandle> GetActiveUniformVarList() const;
+    std::vector<GLShaderVarHandle> GetActiveAttributeVarList() const;
 
-    const GLHandle *uniform_var(const char *name) const {
+    GLShaderVarHandle uniform_var(const char *name) const {
       return uniform_var(std::string(name));
     }
-    const GLHandle *attrib_var(const char *name) const {
+    GLShaderVarHandle attrib_var(const char *name) const {
       return attrib_var(std::string(name));
     }
-    const GLHandle *uniform_var(const std::string &name) const;
-    const GLHandle *attrib_var(const std::string &name) const;
+    GLShaderVarHandle uniform_var(const std::string &name) const;
+    GLShaderVarHandle attrib_var(const std::string &name) const;
     //uniform, attrib가리지 않고 얻기. 핸들안에 타입정보가 잇으니
     //얻기만 하면 어떻게든 된다
-    const GLHandle *GetHandle(const std::string &name) const;
+    GLShaderVarHandle GetHandle(const std::string &name) const;
 
     //속성 연결하기. 이름을 기반으로 연결. 검색속도가 영 느리다 싶으면
     //해시를 적용하든 뭘 하자
@@ -145,16 +204,27 @@ namespace gl {
     HandleType SetValue(const std::string &name, T value);
 
     template<typename T>
-    HandleType SetMatrix(const GLHandle &handle, const glm::detail::tmat4x4<T> &mat);
+    HandleType SetMatrix(const GLShaderVarHandle &handle, const glm::detail::tmat4x4<T> &mat);
     template<typename T>
-    HandleType SetMatrix(const GLHandle &handle, const glm::detail::tmat3x3<T> &mat);
+    HandleType SetMatrix(const GLShaderVarHandle &handle, const glm::detail::tmat3x3<T> &mat);
     template<typename T>
-    HandleType SetVector(const GLHandle &handle, const glm::detail::tvec4<T> &vec);
+    HandleType SetVector(const GLShaderVarHandle &handle, const glm::detail::tvec4<T> &vec);
     template<typename T>
-    HandleType SetVector(const GLHandle &handle, const glm::detail::tvec3<T>&vec);
+    HandleType SetVector(const GLShaderVarHandle &handle, const glm::detail::tvec3<T>&vec);
     template<typename T>
-    HandleType SetValue(const GLHandle &handle, T value);
-    
+    HandleType SetValue(const GLShaderVarHandle &handle, T value);
+
+    template<typename T>
+    HandleType SetMatrix(GLuint loc, const glm::detail::tmat4x4<T> &mat);
+    template<typename T>
+    HandleType SetMatrix(GLuint loc, const glm::detail::tmat3x3<T> &mat);
+    template<typename T>
+    HandleType SetVector(GLuint loc, const glm::detail::tvec4<T> &vec);
+    template<typename T>
+    HandleType SetVector(GLuint loc, const glm::detail::tvec3<T>&vec);
+    template<typename T>
+    HandleType SetValue(GLuint loc, T value);
+
     //connect vertex attrib
     template<typename T>
     void SetVertexList(char *base_ptr);
@@ -207,61 +277,56 @@ namespace gl {
     GLuint prog;
 
   private:
-    GLShader vert_shader_;
-    GLShader frag_shader_;
-
-    std::vector<GLHandle> uniform_var_list_;
-    std::vector<GLHandle> attrib_var_list_;
-    const GLHandle *FindShaderVar(const std::string &name, const std::vector<GLHandle> &var_list) const;
+    GLShaderVarHandle FindShaderVar(const std::string &name, const std::vector<GLShaderVarHandle> &var_list) const;
   };
 
   //impl
   template<typename T>
   HandleType GLProgram::SetMatrix(const std::string &name, const glm::detail::tmat4x4<T> &mat) {
-    const GLHandle *handle = uniform_var(name);
-    if(handle == NULL) {
+    int loc = GetUniformLocation(name);
+    if(loc == -1) {
       return kHandleNone;
     }
-    return SetMatrix(*handle, mat);
+    return SetMatrix(loc, mat);
   }
 
   template<typename T>
   HandleType GLProgram::SetMatrix(const std::string &name, const glm::detail::tmat3x3<T> &mat) {
-    const GLHandle *handle = uniform_var(name);
-    if(handle == NULL) {
+    int loc = GetUniformLocation(name);
+    if(loc == -1) {
       return kHandleNone;
     }
-    return SetMatrix(*handle, mat);
+    return SetMatrix(loc, mat);
   }
 
   template<typename T>
   HandleType GLProgram::SetVector(const std::string &name, const glm::detail::tvec4<T> &vec) {
-    const GLHandle *handle = uniform_var(name);
-    if(handle == NULL) {
+    int loc = GetUniformLocation(name);
+    if(loc == -1) {
       return kHandleNone;
     }
-    return SetVector(*handle, vec);
+    return SetVector(loc, vec);
   }
   template<typename T>
   HandleType GLProgram::SetVector(const std::string &name, const glm::detail::tvec3<T>&vec) {
-    const GLHandle *handle = uniform_var(name);
-    if(handle == NULL) {
+    int loc = GetUniformLocation(name);
+    if(loc == -1) {
       return kHandleNone;
     }
-    return SetVector(*handle, vec);
+    return SetVector(loc, vec);
   }
 
   template<typename T>
   HandleType GLProgram::SetValue(const std::string &name, T value) {
-    const GLHandle *handle = uniform_var(name);
-    if(handle == NULL) {
+    int loc = GetUniformLocation(name);
+    if(loc == -1) {
       return kHandleNone;
     }
-    return SetVector(*handle, value);
+    return SetVector(loc, value);
   }
 
   template<typename T>
-  HandleType GLProgram::SetMatrix(const GLHandle &handle, const glm::detail::tmat4x4<T> &mat) {
+  HandleType GLProgram::SetMatrix(const GLShaderVarHandle &handle, const glm::detail::tmat4x4<T> &mat) {
     SR_ASSERT(handle.location_type == kHandleUniform);
     SR_ASSERT(handle.size == 1);
 
@@ -278,7 +343,7 @@ namespace gl {
     return kHandleNone;
   }
   template<typename T>
-  HandleType GLProgram::SetMatrix(const GLHandle &handle, const glm::detail::tmat3x3<T> &mat) {
+  HandleType GLProgram::SetMatrix(const GLShaderVarHandle &handle, const glm::detail::tmat3x3<T> &mat) {
     SR_ASSERT(handle.location_type == kHandleUniform);
     SR_ASSERT(handle.size == 1);
 
@@ -296,7 +361,7 @@ namespace gl {
   }
 
   template<typename T>
-  HandleType GLProgram::SetVector(const GLHandle &handle, const glm::detail::tvec4<T> &vec) {
+  HandleType GLProgram::SetVector(const GLShaderVarHandle &handle, const glm::detail::tvec4<T> &vec) {
     SR_ASSERT(handle.location_type == kHandleUniform);
     SR_ASSERT(handle.size == 1);
 
@@ -319,7 +384,7 @@ namespace gl {
     }
   }
   template<typename T>
-  HandleType GLProgram::SetVector(const GLHandle &handle, const glm::detail::tvec3<T>&vec) {
+  HandleType GLProgram::SetVector(const GLShaderVarHandle &handle, const glm::detail::tvec3<T>&vec) {
     SR_ASSERT(handle.location_type == kHandleUniform);
     SR_ASSERT(handle.size == 1);
 
@@ -343,7 +408,7 @@ namespace gl {
   }
 
   template<typename T>
-  HandleType GLProgram::SetValue(const GLHandle &handle, T value) {
+  HandleType GLProgram::SetValue(const GLShaderVarHandle &handle, T value) {
     SR_ASSERT(handle.location_type == kHandleUniform);
     SR_ASSERT(handle.size == 1);
 
@@ -366,6 +431,86 @@ namespace gl {
   }
 
   template<typename T>
+  HandleType GLProgram::SetMatrix(GLuint loc, const glm::detail::tmat4x4<T> &mat) {
+    const bool is_float_type = std::is_same<T, float>::value;
+    static_assert(is_float_type, "only uniform matrix support float");
+
+    if(is_float_type) {
+      glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
+      SR_CHECK_ERROR("glUniformMatrix4fv");
+      return kHandleUniform;
+    }
+    SR_ASSERT(!"do not reach");
+    return kHandleNone;
+  }
+  template<typename T>
+  HandleType GLProgram::SetMatrix(GLuint loc, const glm::detail::tmat3x3<T> &mat) {
+    const bool is_float_type = std::is_same<T, float>::value;
+    static_assert(is_float_type, "only uniform matrix support float");
+
+    if(is_float_type) {
+      glUniformMatrix3fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
+      return kHandleUniform;
+    }
+
+    SR_ASSERT(!"do not reach");
+    return kHandleNone;
+  }
+  template<typename T>
+  HandleType GLProgram::SetVector(GLuint loc, const glm::detail::tvec4<T> &vec) {
+    const bool is_float_type = std::is_same<T, float>::value;
+    const bool is_int_type = std::is_same<T, int>::value;
+    static_assert(is_float_type || is_int_type, "vec4 support int, float");
+
+    void *ptr = (void*)glm::value_ptr(vec);
+    if(is_float_type) {
+      glUniform4fv(loc, 1, (float*)ptr);
+      return kHandleUniform;
+    } else if(is_int_type) {
+      glUniform4iv(loc, 1, (int*)ptr);
+      return kHandleUniform;
+    } else {
+      SR_ASSERT(!"do not reach");
+      return kHandleNone;
+    }
+  }
+  template<typename T>
+  HandleType GLProgram::SetVector(GLuint loc, const glm::detail::tvec3<T>&vec) {
+    const bool is_float_type = std::is_same<T, float>::value;
+    const bool is_int_type = std::is_same<T, int>::value;
+    static_assert(is_float_type || is_int_type, "vec3 support int, float");
+
+    void *ptr = (void*)glm::value_ptr(vec);
+    if(is_float_type) {
+      glUniform3fv(loc, 1, (float*)ptr);
+      return kHandleUniform;
+    } else if(is_int_type) {
+      glUniform3iv(loc, 1, (int*)ptr);
+      return kHandleUniform;
+    } else {
+      SR_ASSERT(!"do not reach");
+      return kHandleNone;
+    }
+  }
+  template<typename T>
+  HandleType GLProgram::SetValue(GLuint loc, T value) {
+    const bool is_float_type = std::is_same<T, float>::value;
+    const bool is_int_type = std::is_same<T, int>::value;
+    static_assert(is_float_type || is_int_type, "support int, float");
+
+    if(std::tr1::is_same<T, float>::value) {
+      glUniform1f(loc, value);
+      return kHandleUniform;
+    } else if(std::tr1::is_same<T, int>::value) {
+      glUniform1i(loc, value);
+      return kHandleUniform;
+    } else {
+      SR_ASSERT(!"do not reach")
+        return kHandleNone;
+    }
+  }
+
+  template<typename T>
   void GLProgram::SetVertexList(char *base_ptr) {
     VertexInfo &info = VertexInfoHolder<T>::Get();
     SetPositionAttrib(base_ptr, info);
@@ -374,7 +519,7 @@ namespace gl {
     SetColorAttrib(base_ptr, info);
     SetTangentAttrib(base_ptr, info);
   }
-  
+
 } //namespace gl
 } //namespace sora
 #endif  // SORA_SHADER_H_

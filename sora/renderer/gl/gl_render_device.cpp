@@ -30,10 +30,8 @@ namespace sora {;
 namespace gl {
   GLRenderDevice::GLRenderDevice(Device *dev)
   : win_width_(640),
-  win_height_(480),
-  last_prog_id_(-1),
-  last_tex_id_(-1) {
-
+  win_height_(480) {
+    EndRender();
   }
   GLRenderDevice::~GLRenderDevice() {
 
@@ -49,13 +47,13 @@ namespace gl {
     }
   }
   void GLRenderDevice::EndRender() {
-    last_prog_id_ = -1;
-    last_tex_id_ = -1;
+    last_prog_id_.handle = 0;
+    last_tex_id_ = 0;
   }
-  void GLRenderDevice::UseShader(GLProgram &prog) {
-    if(last_prog_id_ != prog.prog) {
-      glUseProgram(prog.prog);
-      last_prog_id_ = prog.prog;
+  void GLRenderDevice::UseShader(const ShaderHandle &handle) {
+    if(last_prog_id_ != handle) {
+      glUseProgram(handle.handle);
+      last_prog_id_ = handle;
     }
   }
   void GLRenderDevice::UseTexture(GLTexture &tex) {

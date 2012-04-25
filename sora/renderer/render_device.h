@@ -37,7 +37,7 @@ public:
   RenderDeviceT(Device *dev) : policy_(dev) {}
   ~RenderDeviceT() {}
 
-  void UseShader(Shader &shader) { policy_.UseShader(shader.policy()); }
+  void UseShader(Shader &shader) { policy_.UseShader(shader.handle()); }
   void UseTexture(Texture &tex) { policy_.UseTexture(tex.obj()); }
 
   void Set2D() { policy_.Set2D(); }
@@ -49,6 +49,7 @@ public:
   int win_height() const { return policy_.win_height(); }
   TextureManager &tex_mgr() { return tex_mgr_; }
   SysFont &sys_font() { return sys_font_; }
+
 private:
   PolicyType policy_;
   TextureManager tex_mgr_;
