@@ -21,6 +21,8 @@
 #include "sora_test_stdafx.h"
 #include "sora/core/template_lib.h"
 
+using namespace std;
+
 struct CtorDtorSample {
   CtorDtorSample() { value = 1; }
   ~CtorDtorSample() { value = 0;}
@@ -39,4 +41,21 @@ TEST(CallConstructor_CallDestructor, test) {
   CallDestructor(ptr);
   free(ptr);
   EXPECT_EQ(0, CtorDtorSample::value);
+}
+
+
+//간단한 문법 테스트
+template<typename T, int D, typename T2>
+struct ArraySample {
+  template< template<typename T, typename T2> class Container >
+  void Get(Container<T, T2> &o) {
+    o.push_back(1);
+  }
+};
+
+TEST(TemplateSample, test) {
+  //vector<int> a;
+  ArraySample<int, 3, allocator<int>> as;
+  vector<int> a;
+  //as.Get(a);
 }

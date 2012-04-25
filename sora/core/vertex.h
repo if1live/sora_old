@@ -67,7 +67,27 @@ typedef VertexT<
 typedef std::vector<Vertex> VertexList;
 typedef std::vector<TangentVertex> TangentVertexList;
 typedef std::vector<Vertex2D> Vertex2DList;
-typedef std::vector<unsigned short> IndexList;
+//typedef std::vector<unsigned short> IndexList;
+
+typedef unsigned short IndexType;
+//unsigned short가 인덱스용으로 최적의 타입이다
+struct IndexArray {
+  IndexArray() {}
+  IndexArray(const std::vector<IndexType> &data) : data(data) {}
+
+  //익숙한 api. vector와 동일하게 유지하기 위해서 이렇게 처리함
+  bool empty() const { return data.empty(); }
+  void push_back(IndexType v) { data.push_back(v); }
+  void clear() { data.clear(); }
+  IndexType &operator[](int i) { return data[i]; }
+  const IndexType &operator[](int i) const { return data[i]; }
+  int size() const { return data.size(); }
+
+  //index buffer object와의 공통 인터페이스. 이것을 통해서 템플릿 타임에 적절히 구현됨
+  int count() const { return size(); }
+
+  std::vector<IndexType> data;
+};
 
 template<typename VertexType>
 struct VertexListSelector {
@@ -200,6 +220,7 @@ template<
 Vertex CreateVertex(const glm::vec3 &pos, const glm::vec2 &texcoord);
 Vertex2D CreateVertex2D(float x, float y, float s, float t);
 
+/*
 template<typename VertexType>
 struct VertexHelper {
   //triangles로 구성된 vertex list+index list를 입력으로 받아서
@@ -274,7 +295,7 @@ void VertexHelper<VertexType>::BuildNormal(std::vector<VertexType> &vert_list, c
 template<typename VertexType>
 void VertexHelper<VertexType>::BuildTangent(std::vector<VertexType> &vert_list, const IndexList &index_list) {
 }
-
+*/
 }
 
 #endif  // SORA_VERTEX_H_

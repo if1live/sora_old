@@ -128,7 +128,7 @@ void PrimitiveMeshHelper::SolidCube(float width, float height, float depth) {
   DrawCmdData<Vertex> cmd;
   cmd.draw_mode = kDrawTriangles;
   VertexList &vert_list = cmd.vertex_list;
-  IndexList &index_list = cmd.index_list;
+  std::vector<unsigned short> &index_list = cmd.index_list;
 
   //normal
   {
@@ -790,7 +790,7 @@ void PrimitiveMeshHelper::WirePlane(float half_size, float grid_size) {
   }
 
   //////////////////////////
-  IndexList &index_list = cmd.index_list;
+  std::vector<unsigned short> &index_list = cmd.index_list;
 
   //build index list
   int line_vert_size = grid_range * 2 + 1;
@@ -850,7 +850,7 @@ void PrimitiveMeshHelper::SolidPlane(float half_size) {
     kRightFront,
   };
 
-  IndexList &index_list = cmd.index_list;
+  std::vector<unsigned short> &index_list = cmd.index_list;
   index_list.reserve(6);
   index_list.push_back(kLeftBack); 
   index_list.push_back(kLeftFront);  

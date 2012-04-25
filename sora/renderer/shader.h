@@ -87,7 +87,8 @@ public:
     }
     return policy_.DrawArrays(mode, vertex_count);
   }
-  void DrawElements(DrawType mode, const IndexList &index_list) {
+  template<typename IndexContainer>
+  void DrawElements(DrawType mode, const IndexContainer &index_list) {
     if(index_list.empty()) {
       return;
     }
@@ -113,8 +114,8 @@ public:
     policy_.DrawArrays(mode, vbo.count());
   }
 
-  template<typename VertexType>
-  void DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexList &index_list) {
+  template<typename VertexType, typename IndexContainer>
+  void DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexContainer &index_list) {
     policy_.SetVertexList(vert_list);
     policy_.DrawElements(mode, index_list);
   }
@@ -131,8 +132,8 @@ public:
     policy_.DrawElements(mode, ibo);
   }
 
-  template<typename VertexType, typename VBOType>
-  void DrawElements(DrawType mode, const VertexBufferObjectT<VBOType, VertexType> &vbo, const IndexList &index_list) {
+  template<typename VertexType, typename VBOType, typename IndexContainer>
+  void DrawElements(DrawType mode, const VertexBufferObjectT<VBOType, VertexType> &vbo, const IndexContainer &index_list) {
     policy_.SetVertexList(vbo);
     policy_.DrawElements(mode, index_list);
   }

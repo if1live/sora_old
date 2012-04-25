@@ -33,8 +33,8 @@ namespace gl {
 
     template<typename VertexType>
     void DrawArrays(DrawType mode, const std::vector<VertexType> &vert_list);
-    template<typename VertexType>
-    void DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexList &index_list);
+    template<typename VertexType, typename IndexContainer>
+    void DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexContainer &index_list);
   private:
   };
 
@@ -42,8 +42,8 @@ namespace gl {
   template<typename VertexType>
   void GLRenderer::DrawArrays(DrawType mode, const std::vector<VertexType> &vert_list) {
   }
-  template<typename VertexType>
-  void GLRenderer::DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexList &index_list) {
+  template<typename VertexType, typename IndexContainer>
+  void GLRenderer::DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexContainer &index_list) {
 
   }
 

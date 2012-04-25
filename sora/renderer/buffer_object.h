@@ -27,13 +27,16 @@
 #include "renderer/gl/gl_buffer_object.h"
 
 namespace sora {;
+typedef sora::gl::GLVertexBufferObject BaseVBOPolicy;
+typedef sora::gl::GLIndexBufferObject BaseIBOPolicy;
+
 template<typename T, typename VertexT> class VertexBufferObjectT;
-typedef VertexBufferObjectT<sora::gl::GLVertexBufferObject, Vertex> VertexBufferObject;
-typedef VertexBufferObjectT<sora::gl::GLVertexBufferObject, Vertex2D> Vertex2DBufferObject;
-typedef VertexBufferObjectT<sora::gl::GLVertexBufferObject, TangentVertex> TangentVertexBufferObject;
+typedef VertexBufferObjectT<BaseVBOPolicy, Vertex> VertexBufferObject;
+typedef VertexBufferObjectT<BaseVBOPolicy, Vertex2D> Vertex2DBufferObject;
+typedef VertexBufferObjectT<BaseVBOPolicy, TangentVertex> TangentVertexBufferObject;
 
 template<typename T> class IndexBufferObjectT;
-typedef IndexBufferObjectT<sora::gl::GLIndexBufferObject> IndexBufferObject;
+typedef IndexBufferObjectT<BaseIBOPolicy> IndexBufferObject;
 
 template<typename T, typename VertexT>
 class VertexBufferObjectT {
@@ -89,7 +92,12 @@ public:
   ~IndexBufferObjectT() {}
   bool Loaded() const { return ibo_.Loaded(); }
   void Deinit() { ibo_.Deinit(); }
-  bool Init(const IndexList &index_list, BufferUsageType usage = kBufferUsageStatic) {
+
+  template<typename IndexContainer>
+  bool Init(const IndexContainer &index_list, BufferUsageType usage = kBufferUsageStatic) {
+    //typedef IndexContainer::value_type IndexElemType;
+    //static_assert(std::is_same<unsigned short, IndexElemType>::value, "not unsigned short index");
+
     SR_ASSERT(Loaded() == false);
     if(index_list.empty()) {
       return false;

@@ -199,7 +199,7 @@ int main(int argc, char *argv[]) {
 
   sora::Device device;
 
-  /*
+  
 	//logic begin
   SORA_setup_graphics(&device, kWinWidth, kWinHeight);
   float prev_time = Timer_GetSecond();
@@ -244,11 +244,11 @@ int main(int argc, char *argv[]) {
       exit(0);
     }
   }
-  */
+  
   
   //logic end
   //run_freeglutfont(&device);
-  run_sysfont(&device);
+  //run_sysfont(&device);
   //run_selection(&device);
   //run_depthmap(&device);
   //run_shadow_map(&device);

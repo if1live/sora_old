@@ -169,7 +169,8 @@ namespace gl {
       glDrawArrays(GLEnv::TypeToGLEnum(mode), 0, vertex_count);
       SR_CHECK_ERROR("glDrawArrays");
     }
-    void DrawElements(DrawType mode, const IndexList &index_list) {
+    template<typename IndexContainer>
+    void DrawElements(DrawType mode, const IndexContainer &index_list) {
       glDrawElements(GLEnv::TypeToGLEnum(mode), index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
       SR_CHECK_ERROR("glDrawElements");
     }
