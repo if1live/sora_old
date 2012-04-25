@@ -30,18 +30,19 @@ namespace sora {;
 typedef sora::gl::GLVertexBufferObject BaseVBOPolicy;
 typedef sora::gl::GLIndexBufferObject BaseIBOPolicy;
 
-template<typename T, typename VertexT> class VertexBufferObjectT;
-typedef VertexBufferObjectT<BaseVBOPolicy, Vertex> VertexBufferObject;
-typedef VertexBufferObjectT<BaseVBOPolicy, Vertex2D> Vertex2DBufferObject;
-typedef VertexBufferObjectT<BaseVBOPolicy, TangentVertex> TangentVertexBufferObject;
+template<typename VertexT> class VertexBufferObjectT;
+typedef VertexBufferObjectT<Vertex> VertexBufferObject;
+typedef VertexBufferObjectT<Vertex2D> Vertex2DBufferObject;
+typedef VertexBufferObjectT<TangentVertex> TangentVertexBufferObject;
 
-template<typename T> class IndexBufferObjectT;
-typedef IndexBufferObjectT<BaseIBOPolicy> IndexBufferObject;
+class IndexBufferObject;
 
-template<typename T, typename VertexT>
+template<typename VertexT>
 class VertexBufferObjectT {
 public:
+  typedef BaseVBOPolicy Policy;
   typedef VertexT VertexType;
+  typedef VertexT value_type;
 public:
   VertexBufferObjectT() : size_(0) {}
   ~VertexBufferObjectT() {}
@@ -58,12 +59,16 @@ public:
       return true;
   }
   void Deinit() { vbo_.Deinit(); }
-  T &vbo() { return vbo_; }
-  const T &vbo() const { return vbo_; }
-  VertexType vert_type() const { return VertexType::Type(); }
+  Policy &vbo() { return vbo_; }
+  const Policy &vbo() const { return vbo_; }
   int size() const { return size_; }
+
+  VertexType *data() { return nullptr; }
+  const VertexType *data() const { return nullptr; }
+  unsigned int buffer() const { return vbo_.buffer(); }
+
 private:
-  T vbo_;
+  Policy vbo_;
   int size_;
 };
 
@@ -85,11 +90,12 @@ struct VBOSelector<sora::TangentVertex> {
 
 
 
-template<typename T> 
-class IndexBufferObjectT {
+class IndexBufferObject {
 public:
-  IndexBufferObjectT() : size_(0) {}
-  ~IndexBufferObjectT() {}
+  typedef BaseIBOPolicy Policy;
+public:
+  IndexBufferObject() : size_(0) {}
+  ~IndexBufferObject() {}
   bool Loaded() const { return ibo_.Loaded(); }
   void Deinit() { ibo_.Deinit(); }
 
@@ -109,15 +115,15 @@ public:
     }
   }
   int size() const { return size_; }
-  T &ibo() { return ibo_; }
-  const T &ibo() const { return ibo_; }
+  Policy &ibo() { return ibo_; }
+  const Policy &ibo() const { return ibo_; }
 
   IndexType *data() { return nullptr; }
   const IndexType *data() const { return nullptr; }
   unsigned int buffer() const { return ibo_.buffer(); }
 
 private:
-  T ibo_;
+  Policy ibo_;
   int size_;
 };
 
@@ -132,14 +138,34 @@ struct IndexBufferInfoHolder< std::vector<unsigned short> > {
   };
   static unsigned int buffer(const std::vector<unsigned short> &o) { return 0; }
 };
-template<typename T>
-struct IndexBufferInfoHolder< IndexBufferObjectT<T> > {
+
+template<>
+struct IndexBufferInfoHolder< IndexBufferObject > {
   enum {
     is_buffer = true,
   };
-  static unsigned int buffer(const IndexBufferObjectT<T> &o) { return o.buffer(); }
+  static unsigned int buffer(const IndexBufferObject &o) { return o.buffer(); }
 };
 
+//버텍스 버퍼에 대한 추가 정보를 가지고 있는것
+template<typename T>
+struct VertexBufferInfoHolder {};
+
+template<typename T>
+struct VertexBufferInfoHolder< std::vector<T> > {
+  enum {
+    is_buffer = false,
+  };
+  static unsigned int buffer(const std::vector<T> &o) { return 0; }
+};
+
+template<typename T>
+struct VertexBufferInfoHolder< VertexBufferObjectT<T> > {
+  enum {
+    is_buffer = true,
+  };
+  static unsigned int buffer(const VertexBufferObjectT<T> &o) { return o.buffer(); }
+};
 }
 
 #endif  // SORA_BUFFER_OBJECT_H_

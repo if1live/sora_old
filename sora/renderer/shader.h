@@ -73,14 +73,17 @@ public:
     }
     policy_.SetVertexList(vert_list);
   }
-  template<typename VertexType, typename BaseBufferType>
-  void SetVertexList(const VertexBufferObjectT<BaseBufferType, VertexType> &vbo) {
+  template<typename VertexType>
+  void SetVertexList(const VertexBufferObjectT<VertexType> &vbo) {
     if(vbo.count() == 0) {
       return;
     }
     policy_.SetVertexList(vbo);
   }
 
+  void DrawArrays(DrawType mode, unsigned int vertex_count) {
+    DrawArrays(mode, static_cast<int>(vertex_count));
+  }
   void DrawArrays(DrawType mode, int vertex_count) {
     if(vertex_count == 0) {
       return;
@@ -97,26 +100,15 @@ public:
   }
 
   //set vertex list + drawXXX를 붙인 조합형태
-  template<typename VertexType>
-  void DrawArrays(DrawType mode, const std::vector<VertexType> &vert_list) {
-    policy_.SetVertexList(vert_list);
-    policy_.DrawArrays(mode, vert_list.size());
-  }
-  template<typename VertexType, typename BaseBufferType>
-  void DrawArrays(DrawType mode, const VertexBufferObjectT<BaseBufferType, VertexType> &vbo) {
-    policy_.SetVertexList(vbo);
-    policy_.DrawArrays(mode, vbo.size());
+  template<typename VertexContainer>
+  void DrawArrays(DrawType mode, const VertexContainer &vert_data) {
+    policy_.SetVertexList(vert_data);
+    policy_.DrawArrays(mode, vert_data.size());
   }
 
-  template<typename VertexType, typename VBOType, typename IndexContainer>
-  void DrawElements(DrawType mode, const VertexBufferObjectT<VBOType, VertexType> &vbo, const IndexContainer &index_data) {
-    policy_.SetVertexList(vbo);
-    policy_.DrawElements(mode, index_data);
-  }
-
-  template<typename VertexType, typename IndexContainer>
-  void DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexContainer &index_data) {
-    policy_.SetVertexList(vert_list);
+  template<typename VertexContainer, typename IndexContainer>
+  void DrawElements(DrawType mode, const VertexContainer &vertex_data, const IndexContainer &index_data) {
+    policy_.SetVertexList(vertex_data);
     policy_.DrawElements(mode, index_data);
   }
 

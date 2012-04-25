@@ -159,10 +159,22 @@ namespace gl {
     template<typename T>
     void SetVertexList(char *base_ptr);
 
-    template<typename VertexType>
-    void SetVertexList(const std::vector<VertexType> &vert_list);
-    template<typename VertexType, typename BaseBufferType>
-    void SetVertexList(const VertexBufferObjectT<BaseBufferType, VertexType> &vbo);
+    template<typename VertexContainer>
+    void SetVertexList(const VertexContainer &vertex_data) {
+      typedef typename VertexContainer::value_type VertexType;
+      typedef VertexBufferInfoHolder<VertexContainer> InfoHolder;
+      unsigned int buffer = InfoHolder::buffer(vertex_data);
+      const bool is_buffer = InfoHolder::is_buffer;
+      char *ptr = (char*)vertex_data.data();
+
+      if(is_buffer) {
+        glBindBuffer(GL_ARRAY_BUFFER, buffer);
+      }
+      SetVertexList<VertexType>(ptr);
+      if(is_buffer) {
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+      }
+    }
 
     //진짜로 그리기
     void DrawArrays(DrawType mode, int vertex_count) {
@@ -184,22 +196,6 @@ namespace gl {
       }
       SR_CHECK_ERROR("glDrawElements");
     }
-    /*
-    template<typename BaseBufferType>
-    void DrawElements(DrawType mode, const IndexBufferObjectT<BaseBufferType> &ibo) {
-      GLenum draw_mode = GLEnv::TypeToGLEnum(mode);
-
-      const bool is_buffer = IndexBufferInfoHolder< IndexBufferObjectT<BaseBufferType> >::is_buffer;
-      if(is_buffer) {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo.ibo().buffer());
-      }
-      glDrawElements(draw_mode, ibo.size(), GL_UNSIGNED_SHORT, ibo.data());
-      if(is_buffer) {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-      }
-      SR_CHECK_ERROR("glDrawElements");
-    }
-    */
 
   private:
     void SetPositionAttrib(char *base_ptr, const VertexInfo &info);
@@ -377,18 +373,6 @@ namespace gl {
     SetNormalAttrib(base_ptr, info);
     SetColorAttrib(base_ptr, info);
     SetTangentAttrib(base_ptr, info);
-  }
-
-  template<typename VertexType>
-  void GLProgram::SetVertexList(const std::vector<VertexType> &vert_list) {
-    char *ptr = (char*)&vert_list[0];
-    SetVertexList<VertexType>(ptr);
-  }
-  template<typename VertexType, typename BaseBufferType>
-  void GLProgram::SetVertexList(const VertexBufferObjectT<BaseBufferType, VertexType> &vbo) {
-    glBindBuffer(GL_ARRAY_BUFFER, vbo.vbo().buffer());
-    SetVertexList<VertexType>(nullptr);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
   }
   
 } //namespace gl
