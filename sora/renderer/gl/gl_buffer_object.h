@@ -30,56 +30,41 @@ namespace gl {
   typedef GLBufferObject<GL_ARRAY_BUFFER> GLVertexBufferObject;
   typedef GLBufferObject<GL_ELEMENT_ARRAY_BUFFER> GLIndexBufferObject;
 
+  //버퍼 객체 다루는 정적함수로 구성하자. 정적함수로 구성해야
+  //policy 로 꽂아넣기 적절하다(그리고 지저분한 연산이 줄어든다)
+  //실제 데이터(핸들)보관은 Handle라는 독립된 클래스를 쓰자
   template<GLenum Target>
   class GLBufferObject {
   public:
-    GLBufferObject();
-    ~GLBufferObject();
+    static void Init(BufferObjectHandle *handle, int size, void *data, BufferUsageType usage) {
+      GLenum gl_usage = GLEnv::TypeToGLEnum(usage);
+      Init(handle, size, data, gl_usage);
+    }
+    static void Init(BufferObjectHandle *handle, int size, void *data, GLenum usage) {
+      unsigned int &buffer = handle->handle;
+      
+      if(buffer == 0) {
+        glGenBuffers(1, &buffer);
+      }
+      glBindBuffer(Target, buffer);
+      glBufferData(Target, size, data, usage);
 
-    void Init(int size, void *data, BufferUsageType usage);
-    void Init(int size, void *data, GLenum usage);
-    void Deinit();
-    bool Loaded() const { return (buffer_ != 0); }
+      //unbind
+      glBindBuffer(Target, 0);
+    }
+    static void Deinit(BufferObjectHandle *handle) {
+      unsigned int &buffer = handle->handle;
+      if(buffer != 0) {
+        glDeleteBuffers(1, &buffer);
+        buffer = 0;
+      }
+    }
 
-    GLuint buffer() const { return buffer_; }
-  private:
-    GLuint buffer_;
+    static bool Loaded(const BufferObjectHandle &handle) {
+      const unsigned int &buffer = handle.handle;
+      return (buffer != 0); 
+    }
   };
-
-  template<GLenum Target>
-  GLBufferObject<Target>::GLBufferObject() 
-    : buffer_(0) {
-  }
-
-  template<GLenum Target>
-  GLBufferObject<Target>::~GLBufferObject() {
-  }
-
-  template<GLenum Target>
-  void GLBufferObject<Target>::Init(int size, void *data, BufferUsageType usage) {
-    GLenum gl_usage = GLEnv::TypeToGLEnum(usage);
-    Init(size, data, gl_usage);
-  }
-  template<GLenum Target>
-  void GLBufferObject<Target>::Init(int size, void *data, GLenum usage) {
-    if(buffer_ == 0) {
-      glGenBuffers(1, &buffer_);
-    }
-    glBindBuffer(Target, buffer_);
-    glBufferData(Target, size, data, usage);
-
-    //unbind
-    glBindBuffer(Target, 0);
-  }
-
-  template<GLenum Target>
-  void GLBufferObject<Target>::Deinit() {
-    if(buffer_ != 0) {
-      glDeleteBuffers(1, &buffer_);
-      buffer_ = 0;
-    }
-  }
-
 } //namespace gl
 } //namespace sora
 

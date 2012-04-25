@@ -46,7 +46,7 @@ public:
 public:
   VertexBufferObjectT() : size_(0) {}
   ~VertexBufferObjectT() {}
-  bool Loaded() const { return vbo_.Loaded(); }
+  bool Loaded() const { return Policy::Loaded(handle_); }
 
   bool Init(const std::vector<VertexType> &vert_list, BufferUsageType usage = kBufferUsageStatic) {
     SR_ASSERT(Loaded() == false);
@@ -54,21 +54,20 @@ public:
       return false;
     } else {}
       int size = vert_list.size() * sizeof(VertexType);
-      vbo_.Init(size, (void*)&vert_list[0], usage);
+      Policy::Init(&handle_, size, (void*)&vert_list[0], usage);
       size_ = vert_list.size();
       return true;
   }
-  void Deinit() { vbo_.Deinit(); }
-  Policy &vbo() { return vbo_; }
-  const Policy &vbo() const { return vbo_; }
+  void Deinit() { Policy::Deinit(&handle_); }
   int size() const { return size_; }
 
   VertexType *data() { return nullptr; }
   const VertexType *data() const { return nullptr; }
-  unsigned int buffer() const { return vbo_.buffer(); }
 
+  const BufferObjectHandle &handle() const { return handle_; }
+  
 private:
-  Policy vbo_;
+  BufferObjectHandle handle_;
   int size_;
 };
 
@@ -96,8 +95,8 @@ public:
 public:
   IndexBufferObject() : size_(0) {}
   ~IndexBufferObject() {}
-  bool Loaded() const { return ibo_.Loaded(); }
-  void Deinit() { ibo_.Deinit(); }
+  bool Loaded() const { return Policy::Loaded(handle_); }
+  void Deinit() { Policy::Deinit(&handle_); }
 
   template<typename IndexContainer>
   bool Init(const IndexContainer &index_list, BufferUsageType usage = kBufferUsageStatic) {
@@ -109,21 +108,19 @@ public:
       return false;
     } else {
       int size = index_list.size() * sizeof(index_list[0]);
-      ibo_.Init(size, (void*)&index_list[0], usage);
+      Policy::Init(&handle_, size, (void*)&index_list[0], usage);
       size_ = index_list.size();
       return true;
     }
   }
   int size() const { return size_; }
-  Policy &ibo() { return ibo_; }
-  const Policy &ibo() const { return ibo_; }
 
   IndexType *data() { return nullptr; }
   const IndexType *data() const { return nullptr; }
-  unsigned int buffer() const { return ibo_.buffer(); }
+  const BufferObjectHandle &handle() const { return handle_; }
 
 private:
-  Policy ibo_;
+  BufferObjectHandle handle_;
   int size_;
 };
 
@@ -144,7 +141,7 @@ struct IndexBufferInfoHolder< IndexBufferObject > {
   enum {
     is_buffer = true,
   };
-  static unsigned int buffer(const IndexBufferObject &o) { return o.buffer(); }
+  static unsigned int buffer(const IndexBufferObject &o) { return o.handle().handle; }
 };
 
 //버텍스 버퍼에 대한 추가 정보를 가지고 있는것
@@ -164,7 +161,7 @@ struct VertexBufferInfoHolder< VertexBufferObjectT<T> > {
   enum {
     is_buffer = true,
   };
-  static unsigned int buffer(const VertexBufferObjectT<T> &o) { return o.buffer(); }
+  static unsigned int buffer(const VertexBufferObjectT<T> &o) { return o.handle().handle; }
 };
 }
 

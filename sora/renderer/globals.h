@@ -107,6 +107,12 @@ struct DrawCmdData {
   std::vector<unsigned short> index_list;
 };
 
+struct BufferObjectHandle {
+  BufferObjectHandle() : handle(0) {}
+  BufferObjectHandle(unsigned int handle) : handle(handle) {}
+  unsigned int handle;
+};
+
 
 //predefined semantic
 #define kPositionHandleName "a_position"

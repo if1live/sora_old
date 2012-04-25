@@ -33,12 +33,12 @@ TEST(GLBufferData, test) {
   vert_list.push_back(CreateVertex2D(1, 0, 0, 1));
   vert_list.push_back(CreateVertex2D(1, 1, 1, 0));
 
-  GLVertexBufferObject vbo;
-  EXPECT_EQ(false, vbo.Loaded());
+  BufferObjectHandle handle;
+  EXPECT_EQ(false, GLVertexBufferObject::Loaded(handle));
 
-  vbo.Init(sizeof(Vertex2D) * vert_list.size(), &vert_list[0], GL_STATIC_DRAW);
-  EXPECT_EQ(true, vbo.Loaded());
+  GLVertexBufferObject::Init(&handle, sizeof(Vertex2D) * vert_list.size(), &vert_list[0], GL_STATIC_DRAW);
+  EXPECT_EQ(true, GLVertexBufferObject::Loaded(handle));
 
-  vbo.Deinit();
-  EXPECT_EQ(false, vbo.Loaded());
+  GLVertexBufferObject::Deinit(&handle);
+  EXPECT_EQ(false, GLVertexBufferObject::Loaded(handle));
 }
