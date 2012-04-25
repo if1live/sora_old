@@ -86,8 +86,6 @@ struct IndexArray {
   //index buffer object와의 공통 인터페이스. 이것을 통해서 템플릿 타임에 적절히 구현됨
   IndexType *data() { return &data_[0]; }
   const IndexType *data() const { return &data_[0]; }
-  //buffer일 경우, handle data
-  unsigned int buffer() const { return 0; }
 
 private:
   std::vector<IndexType> data_;

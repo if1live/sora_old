@@ -170,18 +170,13 @@ namespace gl {
       SR_CHECK_ERROR("glDrawArrays");
     }
 
-    void DrawElements(DrawType mode, const std::vector<unsigned short> &index_list) {
-      GLenum draw_mode = GLEnv::TypeToGLEnum(mode);
-      glDrawElements(draw_mode, index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
-      SR_CHECK_ERROR("glDrawElements");
-    }
-
     template<typename IndexContainer>
     void DrawElements(DrawType mode, const IndexContainer &index_data) {
       GLenum draw_mode = GLEnv::TypeToGLEnum(mode);
       const bool is_buffer = IndexBufferInfoHolder<IndexContainer>::is_buffer;
+      unsigned int buffer = IndexBufferInfoHolder<IndexContainer>::buffer(index_data);
       if(is_buffer) {
-        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_data.buffer());
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
       }
       glDrawElements(draw_mode, index_data.size(), GL_UNSIGNED_SHORT, index_data.data());
       if(is_buffer) {

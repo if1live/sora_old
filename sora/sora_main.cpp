@@ -356,9 +356,11 @@ void renderFrame(Device *device) {
     color_shader.SetVector(kConstColorHandleName, color);
     SR_CHECK_ERROR("SetVector");
 
-    //color_shader.SetVertexList(vert_list);
-    //color_shader.DrawArrays(kDrawTriangles, vert_list.size());
-    //color_shader.DrawArrays(kDrawTriangles, vbo);
+    color_shader.SetVertexList(vert_list);
+    color_shader.DrawArrays(kDrawTriangles, vert_list.size());
+
+    color_shader.DrawArrays(kDrawTriangles, vbo);
+    
     color_shader.DrawElements(kDrawLines, vbo, wire_ibo);
   }
   
@@ -441,7 +443,7 @@ void renderFrame(Device *device) {
     device->render_device().Set2D();
 
     device->render_device().UseShader(simple_shader);
-    /*
+    
     sora::SysFont &font = device->render_device().sys_font();
     device->render_device().UseTexture(font.font_texture());
 
@@ -452,10 +454,10 @@ void renderFrame(Device *device) {
     simple_shader.SetMatrix(kMVPHandleName, projection);
 
     Vertex2DList vert_list;
-    vert_list.push_back(sora::Vertex2D(100, 100, 0, 1));
-    vert_list.push_back(sora::Vertex2D(100+128*2, 100, 1, 1));
-    vert_list.push_back(sora::Vertex2D(100+128*2, 100+128*2, 1, 0));
-    vert_list.push_back(sora::Vertex2D(100, 100+128*2, 0, 0));
+    vert_list.push_back(CreateVertex2D(100, 100, 0, 1));
+    vert_list.push_back(CreateVertex2D(100+128*2, 100, 1, 1));
+    vert_list.push_back(CreateVertex2D(100+128*2, 100+128*2, 1, 0));
+    vert_list.push_back(CreateVertex2D(100, 100+128*2, 0, 0));
     simple_shader.SetVertexList(vert_list);
     simple_shader.DrawArrays(kDrawTriangleFan, vert_list.size());
 
@@ -467,7 +469,7 @@ void renderFrame(Device *device) {
     sora::Label label(&font, "PQRS_1234_asdf");
     simple_shader.SetVertexList(label.vertex_list());
     simple_shader.DrawElements(kDrawTriangles, label.index_list());
-    */
+    
 
     {
       //단색으로 glut용 그리기
