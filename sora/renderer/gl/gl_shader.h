@@ -169,13 +169,42 @@ namespace gl {
       glDrawArrays(GLEnv::TypeToGLEnum(mode), 0, vertex_count);
       SR_CHECK_ERROR("glDrawArrays");
     }
-    template<typename IndexContainer>
-    void DrawElements(DrawType mode, const IndexContainer &index_list) {
-      glDrawElements(GLEnv::TypeToGLEnum(mode), index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
+
+    void DrawElements(DrawType mode, const std::vector<unsigned short> &index_list) {
+      GLenum draw_mode = GLEnv::TypeToGLEnum(mode);
+      glDrawElements(draw_mode, index_list.size(), GL_UNSIGNED_SHORT, &index_list[0]);
       SR_CHECK_ERROR("glDrawElements");
     }
+
+    template<typename IndexContainer>
+    void DrawElements(DrawType mode, const IndexContainer &index_data) {
+      GLenum draw_mode = GLEnv::TypeToGLEnum(mode);
+      const bool is_buffer = IndexBufferInfoHolder<IndexContainer>::is_buffer;
+      if(is_buffer) {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_data.buffer());
+      }
+      glDrawElements(draw_mode, index_data.size(), GL_UNSIGNED_SHORT, index_data.data());
+      if(is_buffer) {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+      }
+      SR_CHECK_ERROR("glDrawElements");
+    }
+    /*
     template<typename BaseBufferType>
-    void DrawElements(DrawType mode, const IndexBufferObjectT<BaseBufferType> &ibo);
+    void DrawElements(DrawType mode, const IndexBufferObjectT<BaseBufferType> &ibo) {
+      GLenum draw_mode = GLEnv::TypeToGLEnum(mode);
+
+      const bool is_buffer = IndexBufferInfoHolder< IndexBufferObjectT<BaseBufferType> >::is_buffer;
+      if(is_buffer) {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo.ibo().buffer());
+      }
+      glDrawElements(draw_mode, ibo.size(), GL_UNSIGNED_SHORT, ibo.data());
+      if(is_buffer) {
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+      }
+      SR_CHECK_ERROR("glDrawElements");
+    }
+    */
 
   private:
     void SetPositionAttrib(char *base_ptr, const VertexInfo &info);
@@ -343,14 +372,6 @@ namespace gl {
       SR_ASSERT(!"do not reach")
         return kHandleNone;
     }
-  }
-
-  template<typename BaseBufferType>
-  void GLProgram::DrawElements(DrawType mode, const IndexBufferObjectT<BaseBufferType> &ibo) {
-    GLenum draw_mode = GLEnv::TypeToGLEnum(mode);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo.ibo().buffer());
-    glDrawElements(draw_mode, ibo.count(), GL_UNSIGNED_SHORT, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
   }
 
   template<typename T>

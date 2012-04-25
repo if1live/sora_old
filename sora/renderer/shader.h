@@ -87,19 +87,19 @@ public:
     }
     return policy_.DrawArrays(mode, vertex_count);
   }
-  template<typename IndexContainer>
-  void DrawElements(DrawType mode, const IndexContainer &index_list) {
+  
+  void DrawElements(DrawType mode, const std::vector<IndexType> &index_list) {
     if(index_list.empty()) {
       return;
     }
     return policy_.DrawElements(mode, index_list);
   }
-  template<typename BaseBufferType>
-  void DrawElements(DrawType mode, const IndexBufferObjectT<BaseBufferType> &ibo) {
-    if(ibo.count() == 0) {
+  template<typename IndexContainer>
+  void DrawElements(DrawType mode, const IndexContainer &index_data) {
+    if(index_data.size() == 0) {
       return;
     }
-    policy_.DrawElements(mode, ibo);
+    policy_.DrawElements(mode, index_data);
   }
 
   //set vertex list + drawXXX를 붙인 조합형태
@@ -114,26 +114,26 @@ public:
     policy_.DrawArrays(mode, vbo.count());
   }
 
-  template<typename VertexType, typename IndexContainer>
-  void DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexContainer &index_list) {
+  template<typename VertexType>
+  void DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const std::vector<IndexType> &index_list) {
     policy_.SetVertexList(vert_list);
     policy_.DrawElements(mode, index_list);
   }
 
-  template<typename VertexType, typename VBOType, typename IBOType>
-  void DrawElements(DrawType mode, const VertexBufferObjectT<VBOType, VertexType> &vbo, const IndexBufferObjectT<IBOType> &ibo) {
-    policy_.SetVertexList(vbo);
-    policy_.DrawElements(mode, ibo);
-  }
-
-  template<typename VertexType, typename IBOType>
-  void DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexBufferObjectT<IBOType> &ibo) {
-    policy_.SetVertexList(vert_list);
-    policy_.DrawElements(mode, ibo);
-  }
-
   template<typename VertexType, typename VBOType, typename IndexContainer>
-  void DrawElements(DrawType mode, const VertexBufferObjectT<VBOType, VertexType> &vbo, const IndexContainer &index_list) {
+  void DrawElements(DrawType mode, const VertexBufferObjectT<VBOType, VertexType> &vbo, const IndexContainer &index_data) {
+    policy_.SetVertexList(vbo);
+    policy_.DrawElements(mode, index_data);
+  }
+
+  template<typename VertexType, typename IndexContainer>
+  void DrawElements(DrawType mode, const std::vector<VertexType> &vert_list, const IndexContainer &index_data) {
+    policy_.SetVertexList(vert_list);
+    policy_.DrawElements(mode, index_data);
+  }
+
+  template<typename VertexType, typename VBOType>
+  void DrawElements(DrawType mode, const VertexBufferObjectT<VBOType, VertexType> &vbo, const std::vector<IndexType> &index_list) {
     policy_.SetVertexList(vbo);
     policy_.DrawElements(mode, index_list);
   }

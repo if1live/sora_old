@@ -73,20 +73,24 @@ typedef unsigned short IndexType;
 //unsigned short가 인덱스용으로 최적의 타입이다
 struct IndexArray {
   IndexArray() {}
-  IndexArray(const std::vector<IndexType> &data) : data(data) {}
+  IndexArray(const std::vector<IndexType> &data) : data_(data) {}
 
   //익숙한 api. vector와 동일하게 유지하기 위해서 이렇게 처리함
-  bool empty() const { return data.empty(); }
-  void push_back(IndexType v) { data.push_back(v); }
-  void clear() { data.clear(); }
-  IndexType &operator[](int i) { return data[i]; }
-  const IndexType &operator[](int i) const { return data[i]; }
-  int size() const { return data.size(); }
+  bool empty() const { return data_.empty(); }
+  void push_back(IndexType v) { data_.push_back(v); }
+  void clear() { data_.clear(); }
+  IndexType &operator[](int i) { return data_[i]; }
+  const IndexType &operator[](int i) const { return data_[i]; }
+  int size() const { return data_.size(); }
 
   //index buffer object와의 공통 인터페이스. 이것을 통해서 템플릿 타임에 적절히 구현됨
-  int count() const { return size(); }
+  IndexType *data() { return &data_[0]; }
+  const IndexType *data() const { return &data_[0]; }
+  //buffer일 경우, handle data
+  unsigned int buffer() const { return 0; }
 
-  std::vector<IndexType> data;
+private:
+  std::vector<IndexType> data_;
 };
 
 template<typename VertexType>

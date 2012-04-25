@@ -43,7 +43,7 @@ class VertexBufferObjectT {
 public:
   typedef VertexT VertexType;
 public:
-  VertexBufferObjectT() : count_(0) {}
+  VertexBufferObjectT() : size_(0) {}
   ~VertexBufferObjectT() {}
   bool Loaded() const { return vbo_.Loaded(); }
 
@@ -54,17 +54,17 @@ public:
     } else {}
       int size = vert_list.size() * sizeof(VertexType);
       vbo_.Init(size, (void*)&vert_list[0], usage);
-      count_ = vert_list.size();
+      size_ = vert_list.size();
       return true;
   }
   void Deinit() { vbo_.Deinit(); }
   T &vbo() { return vbo_; }
   const T &vbo() const { return vbo_; }
   VertexType vert_type() const { return VertexType::Type(); }
-  int count() const { return count_; }
+  int size() const { return size_; }
 private:
   T vbo_;
-  int count_;
+  int size_;
 };
 
 template<typename VertexT>
@@ -88,7 +88,7 @@ struct VBOSelector<sora::TangentVertex> {
 template<typename T> 
 class IndexBufferObjectT {
 public:
-  IndexBufferObjectT() : count_(0) {}
+  IndexBufferObjectT() : size_(0) {}
   ~IndexBufferObjectT() {}
   bool Loaded() const { return ibo_.Loaded(); }
   void Deinit() { ibo_.Deinit(); }
@@ -104,16 +104,48 @@ public:
     } else {
       int size = index_list.size() * sizeof(index_list[0]);
       ibo_.Init(size, (void*)&index_list[0], usage);
-      count_ = index_list.size();
+      size_ = index_list.size();
       return true;
     }
   }
-  int count() const { return count_; }
+  int size() const { return size_; }
   T &ibo() { return ibo_; }
   const T &ibo() const { return ibo_; }
+
+  IndexType *data() { return nullptr; }
+  const IndexType *data() const { return nullptr; }
+  unsigned int buffer() const { return ibo_.buffer(); }
+
 private:
   T ibo_;
-  int count_;
+  int size_;
 };
+
+//인덱스 버퍼에 대한 추가 정보를 가지고 있는 것
+template<typename T>
+struct IndexBufferInfoHolder { };
+
+template<>
+struct IndexBufferInfoHolder< std::vector<unsigned short> > {
+  enum {
+    is_buffer = false,
+  };
+};
+
+template<>
+struct IndexBufferInfoHolder<IndexArray> {
+  enum {
+    is_buffer = false,
+  };
+};
+
+template<typename T>
+struct IndexBufferInfoHolder< IndexBufferObjectT<T> > {
+  enum {
+    is_buffer = true,
+  };
+};
+
 }
+
 #endif  // SORA_BUFFER_OBJECT_H_
