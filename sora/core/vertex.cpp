@@ -37,4 +37,23 @@ Vertex2D CreateVertex2D(float x, float y, float s, float t) {
   vert.texcoord[1] = t;
   return vert;
 }
+
+VertexInfo::VertexInfo()
+  : size(0),
+  pos_offset(-1),
+  pos_type(kVertexElemFloat),
+  pos_dim(0),
+  color_offset(-1),
+  color_type(kVertexElemFloat),
+  color_dim(0),
+  texcoord_offset(-1),
+  texcoord_type(kVertexElemFloat),
+  texcoord_dim(0),
+  normal_offset(-1),
+  normal_type(kVertexElemFloat),
+  normal_dim(0),
+  tangent_offset(-1),
+  tangent_type(kVertexElemFloat),
+  tangent_dim(0) { }
+
 }

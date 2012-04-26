@@ -176,7 +176,6 @@
     <ClInclude Include="renderer\gl\gl_render_device.h" />
     <ClInclude Include="renderer\gl\gl_shader.h" />
     <ClInclude Include="renderer\gl\gl_texture.h" />
-    <ClInclude Include="renderer\gl\gl_vertex.h" />
     <ClInclude Include="renderer\matrix_stack.h" />
     <ClInclude Include="renderer\renderer_env.h" />
     <ClInclude Include="renderer\render_device.h" />

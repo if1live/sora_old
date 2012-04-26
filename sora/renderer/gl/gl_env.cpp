@@ -224,5 +224,31 @@ namespace gl {
     return enum_list[(int)type];
   }
 
+  GLenum GLEnv::VertexElemTypeToGLEnum(VertexElemType type) {
+    static bool run = false;
+    static std::array<GLenum, 10> enum_list;
+    if(run == false) {
+      run = true;
+      enum_list[kVertexElemFloat] = GL_FLOAT,
+      enum_list[kVertexElemInt] = GL_INT,
+      enum_list[kVertexElemUint] = GL_UNSIGNED_INT;
+      enum_list[kVertexElemShort] = GL_SHORT;
+      enum_list[kVertexElemUshort] = GL_UNSIGNED_SHORT;
+      enum_list[kVertexElemChar] = GL_BYTE;
+      enum_list[kVertexElemUchar] = GL_UNSIGNED_BYTE;
+    }
+    return enum_list[(GLenum)type];
+  }
+
+  VertexInfo GLEnv::ToGLVertexInfo(const VertexInfo &info) {
+    VertexInfo result = info;
+    result.pos_type = VertexElemTypeToGLEnum(info.pos_type);
+    result.color_type = VertexElemTypeToGLEnum(info.color_type);
+    result.normal_type = VertexElemTypeToGLEnum(info.normal_type);
+    result.texcoord_type = VertexElemTypeToGLEnum(info.texcoord_type);
+    result.tangent_type = VertexElemTypeToGLEnum(info.tangent_type);
+    return result;
+  }
+
 } //namespace gl
 } //namespace sora

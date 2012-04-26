@@ -28,16 +28,11 @@
 namespace sora {;
 
 template<
-  typename PosT,
-  int PosD,
-  typename TexcoordT,
-  int TexcoordD,
-  typename NormalT,
-  int NormalD,
-  typename ColorT,
-  int ColorD,
-  typename TangentT,
-  int TangentD
+  typename PosT, int PosD,
+  typename TexcoordT, int TexcoordD,
+  typename NormalT, int NormalD,
+  typename ColorT, int ColorD,
+  typename TangentT, int TangentD
 > struct VertexT;
 
 typedef VertexT<
@@ -70,24 +65,6 @@ typedef std::vector<Vertex2D> Vertex2DList;
 
 typedef unsigned short IndexType;
 typedef std::vector<unsigned short> IndexList;
-
-
-template<typename VertexType>
-struct VertexListSelector {
-};
-template<>
-struct VertexListSelector<Vertex> {
-  typedef VertexList Result;
-};
-template<>
-struct VertexListSelector<Vertex2D> {
-  typedef Vertex2DList Result;
-};
-template<>
-struct VertexListSelector<TangentVertex> {
-  typedef TangentVertexList Result;
-};
-
 
 template<typename T>
 struct VertexMaxValue { enum { value = 1 }; };
@@ -203,6 +180,145 @@ template<
 Vertex CreateVertex(const glm::vec3 &pos, const glm::vec2 &texcoord);
 Vertex2D CreateVertex2D(float x, float y, float s, float t);
 
+//int, float,,과 같이 vertex의 항목 하나하나가 될수 잇는것에 대한 타입
+enum {
+  kVertexElemFloat,
+  kVertexElemInt,
+  kVertexElemUint,
+  kVertexElemShort,
+  kVertexElemUshort,
+  kVertexElemChar,
+  kVertexElemUchar,
+};
+typedef int VertexElemType;
+
+template<typename T> struct BaseTypeToVertexElemType { };
+template<> struct BaseTypeToVertexElemType<float> { enum { value = kVertexElemFloat }; };
+template<> struct BaseTypeToVertexElemType<int> { enum { value = kVertexElemInt }; };
+template<> struct BaseTypeToVertexElemType<unsigned int> { enum { value = kVertexElemUint }; };
+template<> struct BaseTypeToVertexElemType<short> { enum { value = kVertexElemShort }; };
+template<> struct BaseTypeToVertexElemType<unsigned short> { enum { value = kVertexElemUshort }; };
+template<> struct BaseTypeToVertexElemType<char> { enum { value = kVertexElemChar }; };
+template<> struct BaseTypeToVertexElemType<unsigned char> { enum { value = kVertexElemUchar }; };
+
+template<typename T>
+struct VecToVertexElemType {
+  enum {
+    value = BaseTypeToVertexElemType<typename T::value_type>::value
+  };
+};
+//vertex에 대한 정보를 가지고 있는 클래스. 런타임중에서 쓰임
+struct VertexInfo {
+  VertexInfo();
+
+  int size;
+
+  int pos_offset;
+  VertexElemType pos_type;
+  int pos_dim;
+
+  int color_offset;
+  VertexElemType color_type;
+  int color_dim;
+
+  int texcoord_offset;
+  VertexElemType texcoord_type;
+  int texcoord_dim;
+
+  int normal_offset;
+  VertexElemType normal_type;
+  int normal_dim;
+
+  int tangent_offset;
+  VertexElemType tangent_type;
+  int tangent_dim;
+};
+
+//표준형 vertex에 대한 구현
+template<typename T>
+struct VertexInfoHolder {
+  typedef T VertexType;
+  static VertexInfo &Get() {
+    static VertexInfo info;
+    static bool init = false;
+    if(init == false) {
+      init = true;
+      typedef T VertexType;
+      VertexType vert;
+      info.size = sizeof(T);
+
+      info.pos_dim = T::PosDim;
+      if(T::PosDim > 0) {
+        info.pos_offset = offsetof(VertexType, pos);
+        typedef decltype(vert.pos) PosType;
+        info.pos_type = (VertexElemType)VecToVertexElemType<PosType>::value;
+      }
+      info.texcoord_dim = T::TexcoordDim;
+      if(T::TexcoordDim > 0) {
+        info.texcoord_offset = offsetof(VertexType, texcoord);
+        typedef decltype(vert.texcoord) TexcoordType;
+        info.texcoord_type = (VertexElemType)VecToVertexElemType<TexcoordType>::value;
+      }
+      info.color_dim = T::ColorDim;
+      if(T::ColorDim > 0) {
+        info.color_offset = offsetof(VertexType, color);
+        typedef decltype(vert.color) ColorType;
+        info.color_type = (VertexElemType)VecToVertexElemType<ColorType>::value;
+      }
+      info.normal_dim = T::NormalDim;
+      if(T::NormalDim > 0) {
+        info.normal_offset = offsetof(VertexType, normal);
+        typedef decltype(vert.normal) NormalType;
+        info.normal_type = (VertexElemType)VecToVertexElemType<NormalType>::value;
+      }
+      info.tangent_dim = T::TangentDim;
+      if(T::TangentDim > 0) {
+        info.tangent_offset = offsetof(VertexType, tangent);
+        typedef decltype(vert.tangent) TangentType;
+        info.tangent_type = (VertexElemType)VecToVertexElemType<TangentType>::value;    
+      }
+    }
+    return info;
+  }
+};
+
+template<>
+struct VertexInfoHolder<glm::vec2> {
+  typedef glm::vec2 VertexType;
+  static VertexInfo &Get() {
+    static VertexInfo info;
+    static bool init = false;
+    if(init == false) {
+      init = true;
+      info.size = sizeof(glm::vec2);
+
+      info.pos_offset = 0;
+      info.pos_type = kVertexElemFloat;
+      info.pos_dim = 2;
+    }
+    return info;
+  }
+};
+
+template<>
+struct VertexInfoHolder<glm::vec3> {
+  typedef glm::vec3 VertexType;
+  static VertexInfo &Get() {
+    static VertexInfo info;
+    static bool init = false;
+    if(init == false) {
+      init = true;
+      info.size = sizeof(glm::vec3);
+
+      info.pos_offset = 0;
+      info.pos_type = kVertexElemFloat;
+      info.pos_dim = 3;
+    }
+    return info;
+  }
+};
+
+
 /*
 template<typename VertexType>
 struct VertexHelper {
@@ -279,6 +395,10 @@ template<typename VertexType>
 void VertexHelper<VertexType>::BuildTangent(std::vector<VertexType> &vert_list, const IndexList &index_list) {
 }
 */
-}
+
+//vertex info impl
+//표준형 vertex에 대한 구현
+
+} //namespace sora
 
 #endif  // SORA_VERTEX_H_

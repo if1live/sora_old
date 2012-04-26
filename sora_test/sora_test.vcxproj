@@ -102,7 +102,7 @@
     <ClCompile Include="renderer\buffer_object_test.cpp" />
     <ClCompile Include="renderer\gl_buffer_object_test.cpp" />
     <ClCompile Include="renderer\gl_env_test.cpp" />
-    <ClCompile Include="renderer\gl_vertex_test.cpp" />
+    <ClCompile Include="renderer\vertex_test.cpp" />
     <ClCompile Include="renderer\matrix_stack_test.cpp" />
     <ClCompile Include="renderer\gl_shader_test.cpp" />
     <ClCompile Include="renderer\shader_test.cpp" />

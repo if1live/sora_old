@@ -324,9 +324,6 @@
     <ClInclude Include="renderer\gl\gl_buffer_object.h">
       <Filter>renderer\gl</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\gl\gl_vertex.h">
-      <Filter>renderer\gl</Filter>
-    </ClInclude>
     <ClInclude Include="renderer\globals.h">
       <Filter>renderer</Filter>
     </ClInclude>

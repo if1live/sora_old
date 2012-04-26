@@ -24,6 +24,7 @@
 #include <vector>
 #include <string>
 #include "renderer/globals.h"
+#include "core/vertex.h"
 
 namespace sora {;
 namespace gl {
@@ -54,7 +55,23 @@ namespace gl {
     static GLenum TypeToGLEnum(TexMinFilter type);
     static GLenum TypeToGLEnum(TexWrapMode type);
     static GLenum TypeToGLEnum(BufferUsageType type);
+
+    //vertex 가공용
+  public:
+    static GLenum VertexElemTypeToGLEnum(VertexElemType type);
+    static VertexInfo ToGLVertexInfo(const VertexInfo &info);
+    template<typename T>
+    static VertexInfo &GetGLVertexInfo() {
+      static bool run = false;
+      static VertexInfo info;
+      if(run == false) {
+        run = true;
+        info = ToGLVertexInfo(VertexInfoHolder<T>::Get());
+      }
+      return info;
+    }
   };
+  
 
   template<typename T>
   struct TypeToEnum { };

@@ -34,7 +34,6 @@
 
 #include "core/assert_inc.h"
 #include "renderer/globals.h"
-#include "gl_vertex.h"
 #include "renderer/renderer_env.h"
 #include "renderer/buffer_object.h"
 
@@ -512,7 +511,7 @@ namespace gl {
 
   template<typename T>
   void GLProgram::SetVertexList(char *base_ptr) {
-    VertexInfo &info = VertexInfoHolder<T>::Get();
+    VertexInfo &info = GLEnv::GetGLVertexInfo<T>();
     SetPositionAttrib(base_ptr, info);
     SetTexcoordAttrib(base_ptr, info);
     SetNormalAttrib(base_ptr, info);
