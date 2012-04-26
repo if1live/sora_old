@@ -36,7 +36,7 @@ public:
   typedef PolicyType Policy;
   typedef sora::gl::ShaderHandleType HandleType;
 public:
-  ShaderT() {}
+  ShaderT() : handle_(0) {}
   ~ShaderT() {}
 
   bool LoadFromFile(const std::string &vert_path, const std::string &frag_path);
@@ -97,6 +97,10 @@ public:
   //얻기만 하면 어떻게든 된다
   ShaderVariable GetHandle(const std::string &name) const;
   ShaderVariable FindShaderVar(const std::string &name, const std::vector<ShaderVariable> &var_list) const;
+
+  bool Validate() const {
+    return Policy::Validate(handle_);
+  }
 
 private:
   HandleType handle_;

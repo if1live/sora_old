@@ -23,7 +23,6 @@
 
 using namespace sora;
 
-/*
 const char *sample_vert_src = ""
   "uniform mat4 u_mvpMatrix;  "
   "attribute vec4 a_position;  "
@@ -48,11 +47,12 @@ TEST(Shader, basic) {
   Shader shader;
   EXPECT_EQ(true, shader.Init(sample_vert_src, sample_frag_src));
 
+  //validate
+  EXPECT_EQ(true, shader.Validate());
+
   glm::mat4 m1;
-  EXPECT_EQ(kHandleUniform, shader.SetMatrix("u_mvpMatrix", m1));
+  EXPECT_EQ(true, shader.SetMatrix("u_mvpMatrix", m1));
   glm::vec3 v1;
-  EXPECT_EQ(kHandleUniform, shader.SetVector("sample_color", v1));
-  shader.Deinit();
-  
+  EXPECT_EQ(true, shader.SetVector("sample_color", v1));
+  shader.Deinit(); 
 }
-*/

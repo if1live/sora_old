@@ -73,36 +73,3 @@ TEST(GLShader, InitFragmentGLShader) {
   //쉐이더를 복사해도 문제가 생기지 않도록햇다.
   fsh.Deinit();
 }
-
-/*
-TEST(GLProgram, GLProgram) {
-  using sora::gl::GLProgram;
-  using std::string;
-  GLProgram prog;
-
-  EXPECT_EQ(false, prog.IsInit());
-  prog.Init(vert_src, frag_src);
-  EXPECT_EQ(true, prog.IsInit());
-  EXPECT_EQ(true, prog.Validate(prog.prog));
-
-  //쉐이더 해제는 소멸자로 하지 않도록 고쳐서
-  //쉐이더를 복사해도 문제가 생기지 않도록햇다.
-  prog.Deinit();
-}
-
-TEST(GLProgram, SetValueEtc) {
-  using sora::gl::GLProgram;
-  using std::string;
-  using namespace sora;
-  GLProgram prog;
-  prog.Init(vert_src, frag_src);
-
-  glm::mat4 m1;
-  EXPECT_EQ(kHandleUniform, prog.SetMatrix("u_mvpMatrix", m1));
-
-  //쉐이더 해제는 소멸자로 하지 않도록 고쳐서
-  //쉐이더를 복사해도 문제가 생기지 않도록햇다.
-  prog.Deinit();
-}
-
-*/
