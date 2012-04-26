@@ -25,13 +25,12 @@ using namespace std;
 using namespace sora;
 
 TEST(BufferObject, vbo) {
-  typedef VertexListSelector<Vertex2D>::Result VertType;
-  VertType vert_list;
+  Vertex2DList vert_list;
   vert_list.push_back(CreateVertex2D(0, 0, 0, 0));
   vert_list.push_back(CreateVertex2D(1, 0, 0, 1));
   vert_list.push_back(CreateVertex2D(1, 1, 1, 0));
 
-  VBOSelector<VertType::value_type>::Result vbo;
+  Vertex2DBufferObject vbo;
   EXPECT_EQ(false, vbo.Loaded());
   vbo.Init(vert_list, kBufferUsageStatic);
   EXPECT_EQ(true, vbo.Loaded());

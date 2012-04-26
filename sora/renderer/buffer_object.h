@@ -27,29 +27,31 @@
 #include "renderer/gl/gl_buffer_object.h"
 
 namespace sora {;
-typedef sora::gl::GLVertexBufferObject BaseVBOPolicy;
-typedef sora::gl::GLIndexBufferObject BaseIBOPolicy;
+typedef sora::gl::GLVertexBufferObject GLVBOPolicy;
+typedef sora::gl::GLIndexBufferObject GLIBOPolicy;
 
-template<typename VertexT> class VertexBufferObjectT;
-typedef VertexBufferObjectT<Vertex> VertexBufferObject;
-typedef VertexBufferObjectT<Vertex2D> Vertex2DBufferObject;
-typedef VertexBufferObjectT<TangentVertex> TangentVertexBufferObject;
+template<typename VertexT, typename GLVBOPolicy> class VertexBufferObjectT;
+typedef VertexBufferObjectT<Vertex, GLVBOPolicy> VertexBufferObject;
+typedef VertexBufferObjectT<Vertex2D, GLVBOPolicy> Vertex2DBufferObject;
+typedef VertexBufferObjectT<TangentVertex, GLVBOPolicy> TangentVertexBufferObject;
 
-//class IndexBufferObject;
 template<typename BasePolicy> class IndexBufferObjectT;
-typedef IndexBufferObjectT<BaseIBOPolicy> IndexBufferObject;
+typedef IndexBufferObjectT<GLIBOPolicy> IndexBufferObject;
 
-template<typename VertexT>
-class VertexBufferObjectT : public BaseVBOPolicy {
+typedef GLVBOPolicy::HandleType VertexBufferHandle;
+typedef GLIBOPolicy::HandleType IndexBufferHandle;
+
+template<typename VertexT, typename BasePolicy>
+class VertexBufferObjectT : public BasePolicy {
 public:
   typedef VertexT VertexType;
   typedef VertexT value_type;
-  typedef BaseVBOPolicy::HandleType HandleType;
+  typedef typename BasePolicy::HandleType HandleType;
 
 public:
-  VertexBufferObjectT() : size_(0) { BaseVBOPolicy::Reset(&handle_); }
+  VertexBufferObjectT() : size_(0) { BasePolicy::Reset(&handle_); }
   ~VertexBufferObjectT() {}
-  bool Loaded() const { return BaseVBOPolicy::Loaded(handle_); }
+  bool Loaded() const { return BasePolicy::Loaded(handle_); }
 
   bool Init(const std::vector<VertexType> &vert_list, BufferUsageType usage = kBufferUsageStatic) {
     SR_ASSERT(Loaded() == false);
@@ -57,11 +59,11 @@ public:
       return false;
     } else {}
       int size = vert_list.size() * sizeof(VertexType);
-      BaseVBOPolicy::Init(&handle_, size, (void*)&vert_list[0], usage);
+      BasePolicy::Init(&handle_, size, (void*)&vert_list[0], usage);
       size_ = vert_list.size();
       return true;
   }
-  void Deinit() { BaseVBOPolicy::Deinit(&handle_); }
+  void Deinit() { BasePolicy::Deinit(&handle_); }
   int size() const { return size_; }
 
   VertexType *data() { return nullptr; }
@@ -73,23 +75,6 @@ private:
   HandleType handle_;
   int size_;
 };
-
-template<typename VertexT>
-struct VBOSelector {
-};
-template<>
-struct VBOSelector<sora::Vertex> {
-  typedef VertexBufferObject Result;
-};
-template<>
-struct VBOSelector<sora::Vertex2D> {
-  typedef Vertex2DBufferObject Result;
-};
-template<>
-struct VBOSelector<sora::TangentVertex> {
-  typedef TangentVertexBufferObject Result;
-};
-
 
 template<typename BasePolicy>
 class IndexBufferObjectT {
@@ -133,7 +118,7 @@ struct IndexBufferInfoHolder {
   enum {
     is_buffer = true,
   };
-  static IndexBufferObject::HandleType buffer(const T &o) { return o.handle(); }
+  static IndexBufferHandle buffer(const T &o) { return o.handle(); }
 };
 
 template<>
@@ -141,12 +126,16 @@ struct IndexBufferInfoHolder< std::vector<unsigned short> > {
   enum {
     is_buffer = false,
   };
-  static IndexBufferObject::HandleType buffer(const std::vector<unsigned short> &o) { return 0; }
+  static IndexBufferHandle buffer(const std::vector<unsigned short> &o) { return 0; }
 };
 
 //버텍스 버퍼에 대한 추가 정보를 가지고 있는것
 template<typename T>
 struct VertexBufferInfoHolder {
+  enum {
+    is_buffer = true,
+  };
+  static VertexBufferHandle buffer(const T &o) { return o.handle(); }
 };
 
 template<typename T>
@@ -154,16 +143,9 @@ struct VertexBufferInfoHolder< std::vector<T> > {
   enum {
     is_buffer = false,
   };
-  static VertexBufferObjectT<Vertex>::HandleType buffer(const std::vector<T> &o) { return 0; }
+  static VertexBufferHandle buffer(const std::vector<T> &o) { return 0; }
 };
 
-template<typename T>
-struct VertexBufferInfoHolder< VertexBufferObjectT<T> > {
-  enum {
-    is_buffer = true,
-  };
-  static VertexBufferObjectT<Vertex>::HandleType buffer(const VertexBufferObjectT<T> &o) { return o.handle(); }
-};
 }
 
 #endif  // SORA_BUFFER_OBJECT_H_
