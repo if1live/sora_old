@@ -35,7 +35,9 @@ typedef VertexBufferObjectT<Vertex> VertexBufferObject;
 typedef VertexBufferObjectT<Vertex2D> Vertex2DBufferObject;
 typedef VertexBufferObjectT<TangentVertex> TangentVertexBufferObject;
 
-class IndexBufferObject;
+//class IndexBufferObject;
+template<typename BasePolicy> class IndexBufferObjectT;
+typedef IndexBufferObjectT<BaseIBOPolicy> IndexBufferObject;
 
 template<typename VertexT>
 class VertexBufferObjectT : public BaseVBOPolicy {
@@ -89,15 +91,15 @@ struct VBOSelector<sora::TangentVertex> {
 };
 
 
-
-class IndexBufferObject : public BaseIBOPolicy {
+template<typename BasePolicy>
+class IndexBufferObjectT {
 public:
-  typedef BaseIBOPolicy::HandleType HandleType;
+  typedef typename BasePolicy::HandleType HandleType;
 public:
-  IndexBufferObject() : size_(0) { BaseIBOPolicy::Reset(&handle_); }
-  ~IndexBufferObject() {}
-  bool Loaded() const { return BaseIBOPolicy::Loaded(handle_); }
-  void Deinit() { BaseIBOPolicy::Deinit(&handle_); }
+  IndexBufferObjectT() : size_(0) { BasePolicy::Reset(&handle_); }
+  ~IndexBufferObjectT() {}
+  bool Loaded() const { return BasePolicy::Loaded(handle_); }
+  void Deinit() { BasePolicy::Deinit(&handle_); }
 
   template<typename IndexContainer>
   bool Init(const IndexContainer &index_list, BufferUsageType usage = kBufferUsageStatic) {
@@ -109,7 +111,7 @@ public:
       return false;
     } else {
       int size = index_list.size() * sizeof(index_list[0]);
-      BaseIBOPolicy::Init(&handle_, size, (void*)&index_list[0], usage);
+      BasePolicy::Init(&handle_, size, (void*)&index_list[0], usage);
       size_ = index_list.size();
       return true;
     }
@@ -128,8 +130,10 @@ private:
 //인덱스 버퍼에 대한 추가 정보를 가지고 있는 것
 template<typename T>
 struct IndexBufferInfoHolder {
-  typedef IndexBufferObject::HandleType HandleType;
-
+  enum {
+    is_buffer = true,
+  };
+  static IndexBufferObject::HandleType buffer(const T &o) { return o.handle(); }
 };
 
 template<>
@@ -138,14 +142,6 @@ struct IndexBufferInfoHolder< std::vector<unsigned short> > {
     is_buffer = false,
   };
   static IndexBufferObject::HandleType buffer(const std::vector<unsigned short> &o) { return 0; }
-};
-
-template<>
-struct IndexBufferInfoHolder< IndexBufferObject > {
-  enum {
-    is_buffer = true,
-  };
-  static IndexBufferObject::HandleType buffer(const IndexBufferObject &o) { return o.handle(); }
 };
 
 //버텍스 버퍼에 대한 추가 정보를 가지고 있는것
