@@ -38,15 +38,16 @@ typedef VertexBufferObjectT<TangentVertex> TangentVertexBufferObject;
 class IndexBufferObject;
 
 template<typename VertexT>
-class VertexBufferObjectT {
+class VertexBufferObjectT : public BaseVBOPolicy {
 public:
-  typedef BaseVBOPolicy Policy;
   typedef VertexT VertexType;
   typedef VertexT value_type;
+  typedef BaseVBOPolicy::HandleType HandleType;
+
 public:
-  VertexBufferObjectT() : size_(0) {}
+  VertexBufferObjectT() : size_(0) { BaseVBOPolicy::Reset(&handle_); }
   ~VertexBufferObjectT() {}
-  bool Loaded() const { return Policy::Loaded(handle_); }
+  bool Loaded() const { return BaseVBOPolicy::Loaded(handle_); }
 
   bool Init(const std::vector<VertexType> &vert_list, BufferUsageType usage = kBufferUsageStatic) {
     SR_ASSERT(Loaded() == false);
@@ -54,20 +55,20 @@ public:
       return false;
     } else {}
       int size = vert_list.size() * sizeof(VertexType);
-      Policy::Init(&handle_, size, (void*)&vert_list[0], usage);
+      BaseVBOPolicy::Init(&handle_, size, (void*)&vert_list[0], usage);
       size_ = vert_list.size();
       return true;
   }
-  void Deinit() { Policy::Deinit(&handle_); }
+  void Deinit() { BaseVBOPolicy::Deinit(&handle_); }
   int size() const { return size_; }
 
   VertexType *data() { return nullptr; }
   const VertexType *data() const { return nullptr; }
 
-  const BufferObjectHandle &handle() const { return handle_; }
+  HandleType handle() const { return handle_; }
   
 private:
-  BufferObjectHandle handle_;
+  HandleType handle_;
   int size_;
 };
 
@@ -89,14 +90,14 @@ struct VBOSelector<sora::TangentVertex> {
 
 
 
-class IndexBufferObject {
+class IndexBufferObject : public BaseIBOPolicy {
 public:
-  typedef BaseIBOPolicy Policy;
+  typedef BaseIBOPolicy::HandleType HandleType;
 public:
-  IndexBufferObject() : size_(0) {}
+  IndexBufferObject() : size_(0) { BaseIBOPolicy::Reset(&handle_); }
   ~IndexBufferObject() {}
-  bool Loaded() const { return Policy::Loaded(handle_); }
-  void Deinit() { Policy::Deinit(&handle_); }
+  bool Loaded() const { return BaseIBOPolicy::Loaded(handle_); }
+  void Deinit() { BaseIBOPolicy::Deinit(&handle_); }
 
   template<typename IndexContainer>
   bool Init(const IndexContainer &index_list, BufferUsageType usage = kBufferUsageStatic) {
@@ -108,7 +109,7 @@ public:
       return false;
     } else {
       int size = index_list.size() * sizeof(index_list[0]);
-      Policy::Init(&handle_, size, (void*)&index_list[0], usage);
+      BaseIBOPolicy::Init(&handle_, size, (void*)&index_list[0], usage);
       size_ = index_list.size();
       return true;
     }
@@ -117,23 +118,26 @@ public:
 
   IndexType *data() { return nullptr; }
   const IndexType *data() const { return nullptr; }
-  const BufferObjectHandle &handle() const { return handle_; }
+  HandleType handle() const { return handle_; }
 
 private:
-  BufferObjectHandle handle_;
+  HandleType handle_;
   int size_;
 };
 
 //인덱스 버퍼에 대한 추가 정보를 가지고 있는 것
 template<typename T>
-struct IndexBufferInfoHolder { };
+struct IndexBufferInfoHolder {
+  typedef IndexBufferObject::HandleType HandleType;
+
+};
 
 template<>
 struct IndexBufferInfoHolder< std::vector<unsigned short> > {
   enum {
     is_buffer = false,
   };
-  static unsigned int buffer(const std::vector<unsigned short> &o) { return 0; }
+  static IndexBufferObject::HandleType buffer(const std::vector<unsigned short> &o) { return 0; }
 };
 
 template<>
@@ -141,19 +145,20 @@ struct IndexBufferInfoHolder< IndexBufferObject > {
   enum {
     is_buffer = true,
   };
-  static unsigned int buffer(const IndexBufferObject &o) { return o.handle().handle; }
+  static IndexBufferObject::HandleType buffer(const IndexBufferObject &o) { return o.handle(); }
 };
 
 //버텍스 버퍼에 대한 추가 정보를 가지고 있는것
 template<typename T>
-struct VertexBufferInfoHolder {};
+struct VertexBufferInfoHolder {
+};
 
 template<typename T>
 struct VertexBufferInfoHolder< std::vector<T> > {
   enum {
     is_buffer = false,
   };
-  static unsigned int buffer(const std::vector<T> &o) { return 0; }
+  static VertexBufferObjectT<Vertex>::HandleType buffer(const std::vector<T> &o) { return 0; }
 };
 
 template<typename T>
@@ -161,7 +166,7 @@ struct VertexBufferInfoHolder< VertexBufferObjectT<T> > {
   enum {
     is_buffer = true,
   };
-  static unsigned int buffer(const VertexBufferObjectT<T> &o) { return o.handle().handle; }
+  static VertexBufferObjectT<Vertex>::HandleType buffer(const VertexBufferObjectT<T> &o) { return o.handle(); }
 };
 }
 

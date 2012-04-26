@@ -115,7 +115,6 @@ struct BasicUintHandle {
   bool operator==(const BasicUintHandle &o) const { return handle == o.handle; }
   bool operator!=(const BasicUintHandle &o) const { return !(*this == o); }
 };
-typedef BasicUintHandle BufferObjectHandle;
 typedef BasicUintHandle TextureHandle;
 typedef BasicUintHandle ShaderHandle;
 

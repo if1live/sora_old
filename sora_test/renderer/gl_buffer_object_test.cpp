@@ -33,7 +33,7 @@ TEST(GLBufferData, test) {
   vert_list.push_back(CreateVertex2D(1, 0, 0, 1));
   vert_list.push_back(CreateVertex2D(1, 1, 1, 0));
 
-  BufferObjectHandle handle;
+  GLVertexBufferObject::HandleType handle = 0;
   EXPECT_EQ(false, GLVertexBufferObject::Loaded(handle));
 
   GLVertexBufferObject::Init(&handle, sizeof(Vertex2D) * vert_list.size(), &vert_list[0], GL_STATIC_DRAW);

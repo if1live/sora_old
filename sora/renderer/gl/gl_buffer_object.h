@@ -36,13 +36,18 @@ namespace gl {
   template<GLenum Target>
   class GLBufferObject {
   public:
-    static void Init(BufferObjectHandle *handle, int size, void *data, BufferUsageType usage) {
+    typedef GLuint HandleType;
+  public:
+    static void Reset(HandleType *handle) {
+      *handle = 0;
+    }
+
+    static void Init(HandleType *handle, int size, void *data, BufferUsageType usage) {
       GLenum gl_usage = GLEnv::TypeToGLEnum(usage);
       Init(handle, size, data, gl_usage);
     }
-    static void Init(BufferObjectHandle *handle, int size, void *data, GLenum usage) {
-      unsigned int &buffer = handle->handle;
-      
+    static void Init(HandleType *handle, int size, void *data, GLenum usage) {
+      HandleType &buffer = *handle;     
       if(buffer == 0) {
         glGenBuffers(1, &buffer);
       }
@@ -52,16 +57,14 @@ namespace gl {
       //unbind
       glBindBuffer(Target, 0);
     }
-    static void Deinit(BufferObjectHandle *handle) {
-      unsigned int &buffer = handle->handle;
+    static void Deinit(HandleType *handle) {
+      HandleType &buffer = *handle;
       if(buffer != 0) {
         glDeleteBuffers(1, &buffer);
         buffer = 0;
       }
     }
-
-    static bool Loaded(const BufferObjectHandle &handle) {
-      const unsigned int &buffer = handle.handle;
+    static bool Loaded(HandleType buffer) {
       return (buffer != 0); 
     }
   };
