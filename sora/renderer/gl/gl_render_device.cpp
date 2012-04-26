@@ -47,12 +47,12 @@ namespace gl {
     }
   }
   void GLRenderDevice::EndRender() {
-    last_prog_id_.handle = 0;
+    last_prog_id_ = 0;
     last_tex_id_ = 0;
   }
-  void GLRenderDevice::UseShader(const ShaderHandle &handle) {
+  void GLRenderDevice::UseShader(const ShaderHandleType &handle) {
     if(last_prog_id_ != handle) {
-      glUseProgram(handle.handle);
+      glUseProgram(handle);
       last_prog_id_ = handle;
     }
   }

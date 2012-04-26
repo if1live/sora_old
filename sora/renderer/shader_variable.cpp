@@ -18,41 +18,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_test_stdafx.h"
-#include "renderer/shader.h"
+#include "sora_stdafx.h"
+#include "shader_variable.h"
 
-using namespace sora;
-
-/*
-const char *sample_vert_src = ""
-  "uniform mat4 u_mvpMatrix;  "
-  "attribute vec4 a_position;  "
-  "attribute vec4 a_color;  "
-  "varying vec4 v_color;  "
-  "void main()  "
-  "{  "
-  "v_color = a_color; "
-  "gl_Position = u_mvpMatrix * a_position;"
-  "}";
-
-const char *sample_frag_src = ""
-  "precision mediump float;  "
-  "varying vec4 v_color;  "
-  "uniform vec3 sample_color;"
-  "void main()  "
-  "{  "
-  "gl_FragColor = vec4(sample_color, 0.5);  "
-  "}  ";
-
-TEST(Shader, basic) {
-  Shader shader;
-  EXPECT_EQ(true, shader.Init(sample_vert_src, sample_frag_src));
-
-  glm::mat4 m1;
-  EXPECT_EQ(kHandleUniform, shader.SetMatrix("u_mvpMatrix", m1));
-  glm::vec3 v1;
-  EXPECT_EQ(kHandleUniform, shader.SetVector("sample_color", v1));
-  shader.Deinit();
-  
+using namespace std;
+namespace sora {;
+ShaderVariable::ShaderVariable()
+  : var_type(kTypeFloat),
+  location_type(kHandleNone),
+  size(0),
+  name(""),
+  location(-1) {
 }
-*/
+
+void ShaderVariable::Set(VarType var_type, HandleType loc_type, const char *attr_name, int size, HandleType loc) {
+  this->var_type = var_type;
+  this->location_type = loc_type;
+  this->size = size;
+  this->name = attr_name;
+  this->location = loc;
+}
+
+std::string ShaderVariable::str() const {
+  std::ostringstream oss;
+
+  if(location_type == kHandleAttrib) {
+    oss << "[Attrib ] " << location << " / " << name;
+  } else if(location_type == kHandleUniform) {
+    oss << "[Uniform] " << location << " / " << name;
+  }
+
+  return oss.str();
+}
+
+bool ShaderVariable::operator==(const ShaderVariable &o) const {
+  return (name == o.name 
+    && location == o.location
+    && size == o.size 
+    && var_type == o.var_type
+    && location_type == o.location_type
+    && location == o.location);
+}
+bool ShaderVariable::operator!=(const ShaderVariable &o) const {
+  return !(*this == o);
+}
+}

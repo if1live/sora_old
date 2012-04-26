@@ -27,7 +27,7 @@ typedef enum {
   kHandleNone = 0,
   kHandleAttrib,
   kHandleUniform,
-} HandleType;
+} VariableHandleType;
 
 //텍스쳐 관련
 typedef enum {
@@ -78,6 +78,30 @@ typedef enum {
   kTexWrapMirroredRepeat
 } TexWrapMode;
 
+typedef enum {
+  kTypeFloat,
+  kTypeInt,
+  kTypeUint,
+  kTypeShort,
+  kTypeUshort,
+  kTypeByte,
+  kTypeUbyte,
+
+  kTypeFloatMat4,
+  kTypeFloatMat3,
+  kTypeFloatMat2,
+
+  kTypeFloatVec4,
+  kTypeFloatVec3,
+  kTypeFloatVec2,
+  kTypeIntVec4,
+  kTypeIntVec3,
+  kTypeIntVec2,
+
+  kTypeSample2D, 
+  kTypeSampleCube,
+} VarType;
+
 struct TextureParam {
   TextureParam() 
     : mag_filter(kTexMagLinear),
@@ -107,16 +131,6 @@ struct DrawCmdData {
   std::vector<unsigned short> index_list;
 };
 
-
-struct BasicUintHandle {
-  BasicUintHandle() : handle(0) {}
-  BasicUintHandle(unsigned int handle) : handle(handle) {}
-  unsigned int handle;
-  bool operator==(const BasicUintHandle &o) const { return handle == o.handle; }
-  bool operator!=(const BasicUintHandle &o) const { return !(*this == o); }
-};
-typedef BasicUintHandle TextureHandle;
-typedef BasicUintHandle ShaderHandle;
 
 //predefined semantic
 #define kPositionHandleName "a_position"

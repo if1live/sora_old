@@ -28,6 +28,9 @@
 
 namespace sora {;
 namespace gl {
+  typedef GLint ShaderVariableHandleType;
+  typedef GLuint ShaderHandleType;
+
   class GLEnv {
   public:
     static bool CheckFrameBufferStatus(const char *name);
@@ -70,6 +73,9 @@ namespace gl {
       }
       return info;
     }
+
+    static VarType GLEnumToVarType(GLenum type);
+    static GLenum VarTypeToGLEnum(VarType type);
   };
   
 
@@ -89,6 +95,29 @@ namespace gl {
       value = TypeToEnum<typename T::value_type>::value
     };
   };
+
+  template<VarType N> struct VarTypeToEnum {};
+  template<> struct VarTypeToEnum<kTypeFloat> { enum { value = GL_FLOAT }; };
+  template<> struct VarTypeToEnum<kTypeInt> { enum { value = GL_INT }; };
+  template<> struct VarTypeToEnum<kTypeUint> { enum { value = GL_UNSIGNED_INT }; };
+  template<> struct VarTypeToEnum<kTypeShort> { enum { value = GL_SHORT }; };
+  template<> struct VarTypeToEnum<kTypeUshort> { enum { value = GL_UNSIGNED_SHORT }; };
+  template<> struct VarTypeToEnum<kTypeByte> { enum { value = GL_BYTE }; };
+  template<> struct VarTypeToEnum<kTypeUbyte> { enum { value = GL_UNSIGNED_BYTE }; };
+
+  template<> struct VarTypeToEnum<kTypeFloatMat4> { enum { value = GL_FLOAT_MAT4 }; };
+  template<> struct VarTypeToEnum<kTypeFloatMat3> { enum { value = GL_FLOAT_MAT3 }; };
+  template<> struct VarTypeToEnum<kTypeFloatMat2> { enum { value = GL_FLOAT_MAT2 }; };
+
+  template<> struct VarTypeToEnum<kTypeFloatVec4> { enum { value = GL_FLOAT_VEC4 }; };
+  template<> struct VarTypeToEnum<kTypeFloatVec3> { enum { value = GL_FLOAT_VEC3 }; };
+  template<> struct VarTypeToEnum<kTypeFloatVec2> { enum { value = GL_FLOAT_VEC2 }; };
+  template<> struct VarTypeToEnum<kTypeIntVec4> { enum { value = GL_INT_VEC4 }; };
+  template<> struct VarTypeToEnum<kTypeIntVec3> { enum { value = GL_INT_VEC3 }; };
+  template<> struct VarTypeToEnum<kTypeIntVec2> { enum { value = GL_INT_VEC2 }; };
+
+  template<> struct VarTypeToEnum<kTypeSample2D> { enum { value = GL_SAMPLER_2D }; };
+  template<> struct VarTypeToEnum<kTypeSampleCube> { enum { value = GL_SAMPLER_CUBE }; };
 } //namespace gl
 } //namespace sora
 

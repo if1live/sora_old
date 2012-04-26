@@ -18,41 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_test_stdafx.h"
-#include "renderer/shader.h"
+#include "sora_stdafx.h"
+#include "shader.h"
 
-using namespace sora;
+using namespace std;
 
-/*
-const char *sample_vert_src = ""
-  "uniform mat4 u_mvpMatrix;  "
-  "attribute vec4 a_position;  "
-  "attribute vec4 a_color;  "
-  "varying vec4 v_color;  "
-  "void main()  "
-  "{  "
-  "v_color = a_color; "
-  "gl_Position = u_mvpMatrix * a_position;"
-  "}";
-
-const char *sample_frag_src = ""
-  "precision mediump float;  "
-  "varying vec4 v_color;  "
-  "uniform vec3 sample_color;"
-  "void main()  "
-  "{  "
-  "gl_FragColor = vec4(sample_color, 0.5);  "
-  "}  ";
-
-TEST(Shader, basic) {
-  Shader shader;
-  EXPECT_EQ(true, shader.Init(sample_vert_src, sample_frag_src));
-
-  glm::mat4 m1;
-  EXPECT_EQ(kHandleUniform, shader.SetMatrix("u_mvpMatrix", m1));
-  glm::vec3 v1;
-  EXPECT_EQ(kHandleUniform, shader.SetVector("sample_color", v1));
-  shader.Deinit();
-  
+namespace sora {;
 }
-*/

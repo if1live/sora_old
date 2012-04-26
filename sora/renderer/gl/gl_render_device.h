@@ -22,6 +22,7 @@
 #define SORA_GL_RENDER_DEVIDE_H_
 
 #include "renderer/globals.h"
+#include "gl_env.h"
 
 namespace sora {;
 class Device;
@@ -59,9 +60,9 @@ namespace gl {
 
     //shader
   public:
-    void UseShader(const ShaderHandle &handle);
+    void UseShader(const gl::ShaderHandleType &handle);
   private:
-    ShaderHandle last_prog_id_;
+    ShaderHandleType last_prog_id_;
 
   public:
     //win size

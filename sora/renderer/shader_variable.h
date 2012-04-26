@@ -18,41 +18,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_test_stdafx.h"
-#include "renderer/shader.h"
+#ifndef SORA_SHADER_VARIABLE_H_
+#define SORA_SHADER_VARIABLE_H_
 
-using namespace sora;
+#include "renderer/gl/gl_env.h"
 
-/*
-const char *sample_vert_src = ""
-  "uniform mat4 u_mvpMatrix;  "
-  "attribute vec4 a_position;  "
-  "attribute vec4 a_color;  "
-  "varying vec4 v_color;  "
-  "void main()  "
-  "{  "
-  "v_color = a_color; "
-  "gl_Position = u_mvpMatrix * a_position;"
-  "}";
+namespace sora {;
+struct ShaderVariable {
+  typedef sora::gl::ShaderVariableHandleType HandleType;
 
-const char *sample_frag_src = ""
-  "precision mediump float;  "
-  "varying vec4 v_color;  "
-  "uniform vec3 sample_color;"
-  "void main()  "
-  "{  "
-  "gl_FragColor = vec4(sample_color, 0.5);  "
-  "}  ";
+  ShaderVariable();
+  void Set(VarType var_type, HandleType loc_type, const char *attr_name, int size, HandleType loc);
 
-TEST(Shader, basic) {
-  Shader shader;
-  EXPECT_EQ(true, shader.Init(sample_vert_src, sample_frag_src));
+  bool operator==(const ShaderVariable &o) const;
+  bool operator!=(const ShaderVariable &o) const;
 
-  glm::mat4 m1;
-  EXPECT_EQ(kHandleUniform, shader.SetMatrix("u_mvpMatrix", m1));
-  glm::vec3 v1;
-  EXPECT_EQ(kHandleUniform, shader.SetVector("sample_color", v1));
-  shader.Deinit();
-  
+  std::string str() const;
+
+public:
+  VarType var_type; //vec2? mat4? float?
+  HandleType location_type;  //attrib/uniform
+  std::string name;  //shader코드에서의 변수이름
+  int size; //속성의 크기. 쉐이더에서 배열이 아니면 전부1이다
+  HandleType location; //쉐이더에서의 위치값. 연결안되잇으면 일단 -1
+};
 }
-*/
+
+#endif // SORA_SHADER_VARIABLE_H_

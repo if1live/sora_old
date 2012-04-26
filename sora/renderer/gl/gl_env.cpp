@@ -250,5 +250,49 @@ namespace gl {
     return result;
   }
 
+  int vartype_glenum_table[][2] = {
+    { kTypeFloat, GL_FLOAT },
+    { kTypeInt, GL_INT },
+    { kTypeUint, GL_UNSIGNED_INT },
+    { kTypeShort, GL_SHORT },
+    { kTypeUshort, GL_UNSIGNED_SHORT },
+    { kTypeByte, GL_BYTE },
+    { kTypeUbyte, GL_UNSIGNED_BYTE },
+
+    { kTypeFloatMat4, GL_FLOAT_MAT4 },
+    { kTypeFloatMat3, GL_FLOAT_MAT3 },
+    { kTypeFloatMat2, GL_FLOAT_MAT2 },
+
+    { kTypeFloatVec4, GL_FLOAT_VEC4 },
+    { kTypeFloatVec3, GL_FLOAT_VEC3 },
+    { kTypeFloatVec2, GL_FLOAT_VEC2 },
+    { kTypeIntVec4, GL_INT_VEC4 },
+    { kTypeIntVec3, GL_INT_VEC3 },
+    { kTypeIntVec2, GL_INT_VEC2 },
+
+    { kTypeSample2D, GL_SAMPLER_2D },
+    { kTypeSampleCube, GL_SAMPLER_CUBE },
+  };
+
+  VarType GLEnv::GLEnumToVarType(GLenum type) {
+    const int table_size = sizeof(vartype_glenum_table) / sizeof(vartype_glenum_table[0]);
+    for(int i = 0 ; i < table_size ; i++) {
+      if(vartype_glenum_table[i][1] == type) {
+        return (VarType)vartype_glenum_table[i][0];
+      }
+    }
+    SR_ASSERT(!"do not reach, not valid glenum");
+    return kTypeFloat;
+  }
+  GLenum GLEnv::VarTypeToGLEnum(VarType type) {
+    const int table_size = sizeof(vartype_glenum_table) / sizeof(vartype_glenum_table[0]);
+    for(int i = 0 ; i < table_size ; i++) {
+      if(vartype_glenum_table[i][0] == type) {
+        return vartype_glenum_table[i][1];
+      }
+    }
+    SR_ASSERT(!"do not reach, not valid VarType");
+    return kTypeFloat;
+  }
 } //namespace gl
 } //namespace sora

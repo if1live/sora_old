@@ -74,6 +74,7 @@ TEST(GLShader, InitFragmentGLShader) {
   fsh.Deinit();
 }
 
+/*
 TEST(GLProgram, GLProgram) {
   using sora::gl::GLProgram;
   using std::string;
@@ -103,3 +104,5 @@ TEST(GLProgram, SetValueEtc) {
   //쉐이더를 복사해도 문제가 생기지 않도록햇다.
   prog.Deinit();
 }
+
+*/

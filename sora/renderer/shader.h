@@ -28,10 +28,13 @@ namespace sora {;
 template<typename T> class ShaderT;
 typedef ShaderT<sora::gl::GLProgram> Shader;
 
+
+
 template<typename PolicyType>
-class ShaderT {
+class ShaderT : public PolicyType {
 public:
   typedef PolicyType Policy;
+  typedef sora::gl::ShaderHandleType HandleType;
 public:
   ShaderT() {}
   ~ShaderT() {}
@@ -69,47 +72,36 @@ public:
   //attrib bind function
   //connect vertex attrib
   template<typename VertexContainer>
-  void SetVertexList(const VertexContainer &vert_data) {
-    if(vert_data.empty()) {
-      return;
-    }
-    Policy::SetVertexList(handle_, vert_data);
-  }
+  void SetVertexList(const VertexContainer &vert_data);
 
-  void DrawArrays(DrawType mode, unsigned int vertex_count) {
-    DrawArrays(mode, static_cast<int>(vertex_count));
-  }
-  void DrawArrays(DrawType mode, int vertex_count) {
-    if(vertex_count == 0) {
-      return;
-    }
-    return Policy::DrawArrays(handle_, mode, vertex_count);
-  }
+  void DrawArrays(DrawType mode, unsigned int vertex_count);
+  void DrawArrays(DrawType mode, int vertex_count);
   
   template<typename IndexContainer>
-  void DrawElements(DrawType mode, const IndexContainer &index_data) {
-    if(index_data.size() == 0) {
-      return;
-    }
-    Policy::DrawElements(handle_, mode, index_data);
-  }
+  void DrawElements(DrawType mode, const IndexContainer &index_data);
 
   //set vertex list + drawXXX를 붙인 조합형태
   template<typename VertexContainer>
-  void DrawArrays(DrawType mode, const VertexContainer &vert_data) {
-    Policy::SetVertexList(handle_, vert_data);
-    Policy::DrawArrays(handle_, mode, vert_data.size());
-  }
+  void DrawArrays(DrawType mode, const VertexContainer &vert_data);
 
   template<typename VertexContainer, typename IndexContainer>
-  void DrawElements(DrawType mode, const VertexContainer &vertex_data, const IndexContainer &index_data) {
-    Policy::SetVertexList(handle_, vertex_data);
-    Policy::DrawElements(handle_, mode, index_data);
-  }
+  void DrawElements(DrawType mode, const VertexContainer &vertex_data, const IndexContainer &index_data);
 
-  const ShaderHandle &handle() const { return handle_; }
+  const HandleType &handle() const { return handle_; }
+
+  //shader variable access
+  ShaderVariable uniform_var(const std::string &name) const;
+  ShaderVariable attrib_var(const std::string &name) const;
+
+  //uniform, attrib가리지 않고 얻기. 핸들안에 타입정보가 잇으니
+  //얻기만 하면 어떻게든 된다
+  ShaderVariable GetHandle(const std::string &name) const;
+  ShaderVariable FindShaderVar(const std::string &name, const std::vector<ShaderVariable> &var_list) const;
+
 private:
-  ShaderHandle handle_;
+  HandleType handle_;
+  std::vector<ShaderVariable> uniform_list_;
+  std::vector<ShaderVariable> attrib_list_;
 };
 } //namespace sora
 
@@ -131,6 +123,91 @@ bool ShaderT<PolicyType>::LoadFromFile(const std::string &vert_path, const std::
     LOGE("Could not create program.");
   }
   return prog_result;
+}
+
+//connect vertex attrib
+template<typename PolicyType>
+template<typename VertexContainer>
+void ShaderT<PolicyType>::SetVertexList(const VertexContainer &vert_data) {
+  if(vert_data.empty() == false) {
+    Policy::SetVertexList(handle_, vert_data);
+  }
+}
+
+template<typename PolicyType>
+void ShaderT<PolicyType>::DrawArrays(DrawType mode, unsigned int vertex_count) {
+  DrawArrays(mode, static_cast<int>(vertex_count));
+}
+
+template<typename PolicyType>
+void ShaderT<PolicyType>::DrawArrays(DrawType mode, int vertex_count) {
+  if(vertex_count > 0) {
+    return Policy::DrawArrays(handle_, mode, vertex_count);
+  }
+}
+
+template<typename PolicyType>
+template<typename IndexContainer>
+void ShaderT<PolicyType>::DrawElements(DrawType mode, const IndexContainer &index_data) {
+  if(index_data.size() > 0) {
+    Policy::DrawElements(handle_, mode, index_data);
+  }
+}
+
+//set vertex list + drawXXX를 붙인 조합형태
+template<typename PolicyType>
+template<typename VertexContainer>
+void ShaderT<PolicyType>::DrawArrays(DrawType mode, const VertexContainer &vert_data) {
+  Policy::SetVertexList(handle_, vert_data);
+  Policy::DrawArrays(handle_, mode, vert_data.size());
+}
+
+template<typename PolicyType>
+template<typename VertexContainer, typename IndexContainer>
+void ShaderT<PolicyType>::DrawElements(DrawType mode, const VertexContainer &vertex_data, const IndexContainer &index_data) {
+  Policy::SetVertexList(handle_, vertex_data);
+  Policy::DrawElements(handle_, mode, index_data);
+}
+
+
+template<typename PolicyType>
+ShaderVariable ShaderT<PolicyType>::uniform_var(const std::string &name) const {
+  std::vector<ShaderVariable> uniform_var_list = GetActiveUniformVarList();
+  return FindShaderVar(name, uniform_var_list);
+}
+
+template<typename PolicyType>
+ShaderVariable ShaderT<PolicyType>::attrib_var(const std::string &name) const {
+  std::vector<ShaderVariable> attrib_var_list = GetActiveAttributeVarList();
+  return FindShaderVar(name, attrib_var_list);
+}
+
+template<typename PolicyType>
+ShaderVariable ShaderT<PolicyType>::GetHandle(const std::string &name) const {
+  ShaderVariable handle;
+  handle = uniform_var(name);
+  if(handle.location != -1) {
+    return handle;
+  }
+  handle = attrib_var(name);
+  if(handle.location != -1) {
+    return handle;
+  }
+  return handle;
+}
+
+template<typename PolicyType>
+ShaderVariable ShaderT<PolicyType>::FindShaderVar(const std::string &name, const std::vector<ShaderVariable> &var_list) const {
+  auto it = var_list.begin();
+  auto endit = var_list.end();
+  for( ; it != endit ; ++it) {
+    if(it->name == name) {
+      const ShaderVariable &var = *it;
+      return var;
+    }
+  }
+  ShaderVariable empty;
+  return empty;
 }
 
 } //namespace sora

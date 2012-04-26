@@ -35,48 +35,7 @@ using namespace std::tr1;
 
 namespace sora {;
 namespace gl {
-  GLShaderVarHandle::GLShaderVarHandle()
-    : var_type(0),
-    location_type(kHandleNone),
-    size(0),
-    name(""),
-    location(-1) {
-  }
-
-  void GLShaderVarHandle::Set(int var_type, HandleType loc_type, const char *attr_name, int size) {
-    this->var_type = var_type;
-    this->location_type = loc_type;
-    this->size = size;
-    this->name = attr_name;
-    this->location = -1;
-  }
-
-  std::string GLShaderVarHandle::str() const {
-    std::ostringstream oss;
-
-    if(location_type == kHandleAttrib) {
-      oss << "[Attrib ] " << location << " / " << name;
-    } else if(location_type == kHandleUniform) {
-      oss << "[Uniform] " << location << " / " << name;
-    }
-
-    return oss.str();
-  }
-
-  bool GLShaderVarHandle::operator==(const GLShaderVarHandle &o) const {
-    return (name == o.name 
-      && location == o.location
-      && size == o.size 
-      && var_type == o.var_type
-      && location_type == o.location_type
-      && location == o.location);
-  }
-  bool GLShaderVarHandle::operator!=(const GLShaderVarHandle &o) const {
-    return !(*this == o);
-  }
-
-  //////////////////////////////
-
+  
   GLShader::GLShader()
     : handle(0), type(0) {
   }
@@ -145,22 +104,16 @@ namespace gl {
     return InitShader(GL_FRAGMENT_SHADER, src_list);
   }
   /////////////////////
-  GLProgram::GLProgram() : prog(0) {}
-  GLProgram::GLProgram(GLuint prog) : prog(prog) {}
-  GLProgram::~GLProgram() {
-    // deinit is manual call
-  }
-
-  void GLProgram::Deinit() {
-    if (prog != 0) {
-      glDeleteProgram(prog);
-      prog = 0;
+  void GLProgram::Deinit(HandleType *handle) {
+    if (*handle != 0) {
+      glDeleteProgram(*handle);
+      *handle = 0;
     }
   }
 
-  bool GLProgram::Init(const std::vector<const char*> &v_src_list, const std::vector<const char*> &f_src_list) {
-    if(prog != 0) {
-      Deinit();
+  bool GLProgram::Init(HandleType *handle, const std::vector<const char*> &v_src_list, const std::vector<const char*> &f_src_list) {
+    if(*handle != 0) {
+      Deinit(handle);
     }
 
     GLShader vert_shader;
@@ -172,42 +125,42 @@ namespace gl {
       return false;
     }
 
-    prog = glCreateProgram();
-    if(!prog) {
+    *handle = glCreateProgram();
+    if(*handle == 0) {
       return false;
     }
 
-    glAttachShader(prog, vert_shader.handle);
-    glAttachShader(prog, frag_shader.handle);
+    glAttachShader(*handle, vert_shader.handle);
+    glAttachShader(*handle, frag_shader.handle);
 
-    glLinkProgram(prog);
+    glLinkProgram(*handle);
     GLint linkStatus = GL_FALSE;
-    glGetProgramiv(prog, GL_LINK_STATUS, &linkStatus);
+    glGetProgramiv(*handle, GL_LINK_STATUS, &linkStatus);
     if (linkStatus != GL_TRUE) {
       //link fail
       GLint bufLength = 0;
-      glGetProgramiv(prog, GL_INFO_LOG_LENGTH, &bufLength);
+      glGetProgramiv(*handle, GL_INFO_LOG_LENGTH, &bufLength);
       if (bufLength) {
         char* buf = (char*) SR_MALLOC(bufLength);
         if (buf) {
-          glGetProgramInfoLog(prog, bufLength, NULL, buf);
+          glGetProgramInfoLog(*handle, bufLength, NULL, buf);
           LOGE("Could not link program:\n%s\n", buf);
           SR_FREE(buf);
         }
       }
-      glDeleteProgram(prog);
-      prog = 0;
+      glDeleteProgram(*handle);
+      *handle = 0;
       SR_ASSERT(false);
       return false;
     }
 
     LOGI("Active Uniform/Attrib list");
-    std::vector<GLShaderVarHandle> uniform_var_list = GetActiveUniformVarList();
-    BOOST_FOREACH(const GLShaderVarHandle &loc, uniform_var_list) {
+    std::vector<ShaderVariable> uniform_var_list = GetActiveUniformVarList(*handle);
+    BOOST_FOREACH(const ShaderVariable &loc, uniform_var_list) {
       LOGI("%s", loc.str().c_str());
     }
-    std::vector<GLShaderVarHandle> attrib_var_list = GetActiveAttributeVarList();
-    BOOST_FOREACH(const GLShaderVarHandle &loc, attrib_var_list) {
+    std::vector<ShaderVariable> attrib_var_list = GetActiveAttributeVarList(*handle);
+    BOOST_FOREACH(const ShaderVariable &loc, attrib_var_list) {
       LOGI("%s", loc.str().c_str());
       //모든 attribute를 일단 활성화. 설마disable해놓고 쓰는 일은 없을테니까
       glEnableVertexAttribArray(loc.location);
@@ -216,37 +169,14 @@ namespace gl {
     return true;
   }
 
-  bool GLProgram::Init(ShaderHandle *handle, const std::string &v_src, const std::string &f_src) {
-    SR_ASSERT(handle->handle == 0);
-    GLProgram prog;
-    bool retval = prog.Init(v_src, f_src);
-    handle->handle = prog.prog;
-    return retval;
-  }
-  void GLProgram::Deinit(ShaderHandle *handle) {
-    if(handle->handle == 0) {
-      return;
-    }
-    GLProgram prog(handle->handle);
-    prog.Deinit();
-  }
-  bool GLProgram::IsInit(const ShaderHandle &handle) {
-    GLProgram prog(handle.handle);
-    return prog.IsInit();
+  bool GLProgram::Init(HandleType *handle, const std::string &v_src, const std::string &f_src) {
+    SR_ASSERT(*handle == 0);
+    vector<const char*> v_src_list(1, v_src.c_str());
+    vector<const char*> f_src_list(1, f_src.c_str());
+    return Init(handle, v_src_list, f_src_list);
   }
 
-  bool GLProgram::Init(const char *v_src, const char *f_src) {
-    vector<const char*> v_src_list;
-    vector<const char*> f_src_list;
-    v_src_list.push_back(v_src);
-    f_src_list.push_back(f_src);
-    return Init(v_src_list, f_src_list);
-  }
-
-  bool GLProgram::Validate(const ShaderHandle &handle) {
-    return Validate(handle.handle);
-  }
-  bool GLProgram::Validate(GLuint prog) {
+  bool GLProgram::Validate(HandleType prog) {
     GLint logLength, status;
 
     glValidateProgram(prog);
@@ -265,23 +195,15 @@ namespace gl {
     }
     return true;
   }
-  GLint GLProgram::GetAttribLocation(const char *name) const {
-    return glGetAttribLocation(prog, name);
-  }
 
-  GLint GLProgram::GetUniformLocation(const char *name) const {
-    return glGetUniformLocation(prog, name);
-  }
-
-
-  std::vector<GLShaderVarHandle> GLProgram::GetActiveUniformVarList() const {
-    vector<GLShaderVarHandle> list;
+  std::vector<ShaderVariable> GLProgram::GetActiveUniformVarList(HandleType handle) {
+    vector<ShaderVariable> list;
 
     GLint maxUniformLen;
     GLint numUniform;
 
-    glGetProgramiv(prog, GL_ACTIVE_UNIFORMS, &numUniform);
-    glGetProgramiv(prog, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformLen);
+    glGetProgramiv(handle, GL_ACTIVE_UNIFORMS, &numUniform);
+    glGetProgramiv(handle, GL_ACTIVE_UNIFORM_MAX_LENGTH, &maxUniformLen);
 
     const int MaxNameLength = 1024;
     char uniformName[MaxNameLength];
@@ -290,15 +212,15 @@ namespace gl {
       GLint size;
       GLenum type;
       // get uniform information
-      glGetActiveUniform(prog, i, maxUniformLen, NULL, &size, &type, uniformName);
-      GLint location = glGetUniformLocation(prog, uniformName);
+      glGetActiveUniform(handle, i, maxUniformLen, NULL, &size, &type, uniformName);
+      GLint location = glGetUniformLocation(handle, uniformName);
 
-      GLShaderVarHandle sl;
+      ShaderVariable sl;
       sl.location = location;
       sl.location_type = kHandleUniform;
       sl.name = uniformName;
       sl.size = size;
-      sl.var_type = type;
+      sl.var_type = GLEnv::GLEnumToVarType(type);
 
       list.push_back(sl);
     }
@@ -306,13 +228,13 @@ namespace gl {
     return list;
   }
 
-  std::vector<GLShaderVarHandle> GLProgram::GetActiveAttributeVarList() const {
-    vector<GLShaderVarHandle> list;
+  std::vector<ShaderVariable> GLProgram::GetActiveAttributeVarList(HandleType handle) {
+    vector<ShaderVariable> list;
 
     GLint maxAttributeLen;
     GLint numAttribute;
-    glGetProgramiv(prog, GL_ACTIVE_ATTRIBUTES, &numAttribute);
-    glGetProgramiv(prog, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxAttributeLen);
+    glGetProgramiv(handle, GL_ACTIVE_ATTRIBUTES, &numAttribute);
+    glGetProgramiv(handle, GL_ACTIVE_ATTRIBUTE_MAX_LENGTH, &maxAttributeLen);
 
     const int MaxNameLength = 1024;
     char attributeName[MaxNameLength];
@@ -320,63 +242,30 @@ namespace gl {
     for (int i = 0 ; i < numAttribute ; i++) {
       GLint size;
       GLenum type;
-      glGetActiveAttrib(prog, i, maxAttributeLen, NULL, &size, &type, attributeName);
-      GLint location = glGetAttribLocation(prog, attributeName);
+      glGetActiveAttrib(handle, i, maxAttributeLen, NULL, &size, &type, attributeName);
+      GLint location = glGetAttribLocation(handle, attributeName);
 
-      GLShaderVarHandle sl;
+      ShaderVariable sl;
       sl.location = location;
       sl.location_type = kHandleAttrib;
       sl.name = attributeName;
       sl.size = size;
-      sl.var_type = type;
+      sl.var_type = GLEnv::GLEnumToVarType(type);
 
       list.push_back(sl);
     }
     return list;
   }
 
-  GLShaderVarHandle GLProgram::uniform_var(const std::string &name) const {
-    std::vector<GLShaderVarHandle> uniform_var_list = GetActiveUniformVarList();
-    return FindShaderVar(name, uniform_var_list);
-  }
-  GLShaderVarHandle GLProgram::attrib_var(const std::string &name) const {
-    std::vector<GLShaderVarHandle> attrib_var_list = GetActiveAttributeVarList();
-    return FindShaderVar(name, attrib_var_list);
-  }
-  GLShaderVarHandle GLProgram::GetHandle(const std::string &name) const {
-    GLShaderVarHandle handle;
-    handle = uniform_var(name);
-    if(handle.location != -1) {
-      return handle;
-    }
-    handle = attrib_var(name);
-    if(handle.location != -1) {
-      return handle;
-    }
-    return handle;
-  }
-
-  GLShaderVarHandle GLProgram::FindShaderVar(const std::string &name, const std::vector<GLShaderVarHandle> &var_list) const {
-    auto it = var_list.begin();
-    auto endit = var_list.end();
-    for( ; it != endit ; ++it) {
-      if(it->name == name) {
-        const GLShaderVarHandle &var = *it;
-        return var;
-      }
-    }
-    GLShaderVarHandle empty;
-    return empty;
-  }
   
-  void GLProgram::SetPositionAttrib(char *base_ptr, const VertexInfo &info) {
+  void GLProgram::SetPositionAttrib(HandleType handle, char *base_ptr, const VertexInfo &info) {
     int offset = info.pos_offset;
     if(offset == -1) {
       return;
     }
     //GLShaderVarHandle pos_handle = attrib_var(kPositionHandleName);
     const int vertex_size = info.size;
-    int loc = GetAttribLocation(kPositionHandleName);
+    int loc = glGetAttribLocation(handle, kPositionHandleName);
     if(loc != -1) {
       GLenum type = info.pos_type;
       //int loc = pos_handle.location;   
@@ -389,18 +278,18 @@ namespace gl {
     }
   }
   
-  void GLProgram::SetTexcoordAttrib(char *base_ptr, const VertexInfo &info) {
+  void GLProgram::SetTexcoordAttrib(HandleType handle, char *base_ptr, const VertexInfo &info) {
     int offset = info.texcoord_offset;
     if(offset == -1) {
       return;
     }
     const int vertex_size = info.size;
     //GLShaderVarHandle *texcoord_handle = this->attrib_var(kTexcoordHandleName);
-    int loc = GetAttribLocation(kTexcoordHandleName);
+    int loc = glGetAttribLocation(handle, kTexcoordHandleName);
     if(loc != -1) {
       GLenum type = info.texcoord_type;
       //int loc = texcoord_handle->location;
-      int loc = GetAttribLocation(kTexcoordHandleName);
+      int loc = glGetAttribLocation(handle, kTexcoordHandleName);
       int dim = info.texcoord_dim;
       //glEnableVertexAttribArray(texcoord_var.location);
       char *ptr = base_ptr + offset;
@@ -409,14 +298,14 @@ namespace gl {
     }
   }
   
-  void GLProgram::SetNormalAttrib(char *base_ptr, const VertexInfo &info) {
+  void GLProgram::SetNormalAttrib(HandleType handle, char *base_ptr, const VertexInfo &info) {
     int offset = info.normal_offset;
     if(offset == -1) {
       return;
     }
     const int vertex_size = info.size;
     //const GLShaderVarHandle *normal_handle = this->attrib_var(kNormalHandleName);
-    int loc = GetAttribLocation(kNormalHandleName);
+    int loc = glGetAttribLocation(handle, kNormalHandleName);
     if(loc != -1) {
       GLenum type = info.normal_type;
       //int loc = normal_handle->location;
@@ -429,14 +318,14 @@ namespace gl {
     }
   }
   
-  void GLProgram::SetColorAttrib(char *base_ptr, const VertexInfo &info) {
+  void GLProgram::SetColorAttrib(HandleType handle, char *base_ptr, const VertexInfo &info) {
     int offset = info.color_offset;
     if(offset == -1) {
       return;
     }
     const int vertex_size = info.size;
     //const GLShaderVarHandle *color_handle = this->attrib_var(kColorHandleName);
-    int loc = GetAttribLocation(kColorHandleName);
+    int loc = glGetAttribLocation(handle, kColorHandleName);
     if(loc != -1) {
       GLenum type = info.color_type;
       //int loc = color_handle->location;
@@ -450,14 +339,14 @@ namespace gl {
     }
   }
   
-  void GLProgram::SetTangentAttrib(char *base_ptr, const VertexInfo &info) {
+  void GLProgram::SetTangentAttrib(HandleType handle, char *base_ptr, const VertexInfo &info) {
     int offset = info.tangent_offset;
     if(offset == -1) {
       return;
     }
     const int vertex_size = info.size;
     //const GLShaderVarHandle *tangent_handle = this->attrib_var(kTangentHandleName);
-    int loc = GetAttribLocation(kTangentHandleName);
+    int loc = glGetAttribLocation(handle, kTangentHandleName);
     if(loc != -1) {
       GLenum type = info.tangent_type;
       //int loc = tangent_handle->location;
@@ -469,5 +358,120 @@ namespace gl {
       SR_CHECK_ERROR("glVertexAttribPointer");
     }
   }
+
+  //legacy code, 조만간 지우자
+  /*
+  template<typename T>
+  HandleType GLProgram::SetMatrix(const ShaderVariable &handle, const glm::detail::tmat4x4<T> &mat) {
+    SR_ASSERT(handle.location_type == kHandleUniform);
+    SR_ASSERT(handle.size == 1);
+
+    const bool is_float_type = std::is_same<T, float>::value;
+    static_assert(is_float_type, "only uniform matrix support float");
+
+    if(is_float_type) {
+      GLenum var_type = GLEnv::VarTypeToGLEnum(handle.var_type);
+      SR_ASSERT(var_type == GL_FLOAT_MAT4);
+      glUniformMatrix4fv(handle.location, 1, GL_FALSE, glm::value_ptr(mat));
+      SR_CHECK_ERROR("glUniformMatrix4fv");
+      return kHandleUniform;
+    }
+    SR_ASSERT(!"do not reach");
+    return kHandleNone;
+  }
+  template<typename T>
+  HandleType GLProgram::SetMatrix(const ShaderVariable &handle, const glm::detail::tmat3x3<T> &mat) {
+    SR_ASSERT(handle.location_type == kHandleUniform);
+    SR_ASSERT(handle.size == 1);
+
+    const bool is_float_type = std::is_same<T, float>::value;
+    static_assert(is_float_type, "only uniform matrix support float");
+
+    if(is_float_type) {
+      GLenum var_type = GLEnv::VarTypeToGLEnum(handle.var_type);
+      SR_ASSERT(var_type == GL_FLOAT_MAT3);
+      glUniformMatrix3fv(handle.location, 1, GL_FALSE, glm::value_ptr(mat));
+      return kHandleUniform;
+    }
+
+    SR_ASSERT(!"do not reach");
+    return kHandleNone;
+  }
+
+  template<typename T>
+  HandleType GLProgram::SetVector(const ShaderVariable &handle, const glm::detail::tvec4<T> &vec) {
+    SR_ASSERT(handle.location_type == kHandleUniform);
+    SR_ASSERT(handle.size == 1);
+
+    const bool is_float_type = std::is_same<T, float>::value;
+    const bool is_int_type = std::is_same<T, int>::value;
+    static_assert(is_float_type || is_int_type, "vec4 support int, float");
+
+    void *ptr = (void*)glm::value_ptr(vec);
+    GLenum var_type = GLEnv::VarTypeToGLEnum(handle.var_type);
+    if(is_float_type) {
+      SR_ASSERT(var_type == GL_FLOAT_VEC4);
+      glUniform4fv(handle.location, 1, (float*)ptr);
+      return kHandleUniform;
+    } else if(is_int_type) {
+      SR_ASSERT(var_type == GL_INT_VEC4);
+      glUniform4iv(handle.location, 1, (int*)ptr);
+      return kHandleUniform;
+    } else {
+      SR_ASSERT(!"do not reach");
+      return kHandleNone;
+    }
+  }
+  template<typename T>
+  HandleType GLProgram::SetVector(const ShaderVariable &handle, const glm::detail::tvec3<T>&vec) {
+    SR_ASSERT(handle.location_type == kHandleUniform);
+    SR_ASSERT(handle.size == 1);
+
+    const bool is_float_type = std::is_same<T, float>::value;
+    const bool is_int_type = std::is_same<T, int>::value;
+    static_assert(is_float_type || is_int_type, "vec3 support int, float");
+
+    void *ptr = (void*)glm::value_ptr(vec);
+    GLenum var_type = GLEnv::VarTypeToGLEnum(handle.var_type);
+    if(is_float_type) {
+      SR_ASSERT(var_type == GL_FLOAT_VEC3);
+      glUniform3fv(handle.location, 1, (float*)ptr);
+      return kHandleUniform;
+    } else if(is_int_type) {
+      SR_ASSERT(var_type == GL_INT_VEC3);
+      glUniform3iv(handle.location, 1, (int*)ptr);
+      return kHandleUniform;
+    } else {
+      SR_ASSERT(!"do not reach");
+      return kHandleNone;
+    }
+  }
+
+  template<typename T>
+  HandleType GLProgram::SetValue(const ShaderVariable &handle, T value) {
+    SR_ASSERT(handle.location_type == kHandleUniform);
+    SR_ASSERT(handle.size == 1);
+
+    const bool is_float_type = std::is_same<T, float>::value;
+    const bool is_int_type = std::is_same<T, int>::value;
+    static_assert(is_float_type || is_int_type, "support int, float");
+    GLenum var_type = GLEnv::VarTypeToGLEnum(handle.var_type);
+
+    if(std::tr1::is_same<T, float>::value) {
+      SR_ASSERT(var_type == GL_FLOAT);
+      glUniform1f(handle.location, value);
+      return kHandleUniform;
+    } else if(std::tr1::is_same<T, int>::value) {
+      SR_ASSERT(var_type == GL_INT);
+      glUniform1i(handle.location, value);
+      return kHandleUniform;
+    } else {
+      SR_ASSERT(!"do not reach")
+        return kHandleNone;
+    }
+  }
+*/
+
+
 } //namespace gl
 } //namespace sora
