@@ -23,6 +23,8 @@
 
 #include "gl/gl_shader.h"
 #include "buffer_object.h"
+#include "shader_variable.h"
+#include "core/logger.h"
 
 namespace sora {;
 template<typename T> class ShaderT;
@@ -41,7 +43,25 @@ public:
 
   bool LoadFromFile(const std::string &vert_path, const std::string &frag_path);
   bool Init(const char *vert_src, const char *frag_src) {
-    return Policy::Init(&handle_, vert_src, frag_src);
+    bool result = Policy::Init(&handle_, vert_src, frag_src);
+
+    uniform_list_ = Policy::GetActiveUniformVarList(handle_);
+    auto it = uniform_list_.begin();
+    auto endit = uniform_list_.end();
+    for( ; it != endit ; ++it) {
+      const ShaderVariable &loc = *it;
+      LOGI("%s", loc.str().c_str());
+    }
+    
+    attrib_list_ = Policy::GetActiveAttributeVarList(handle_);
+    it = attrib_list_.begin();
+    endit = attrib_list_.end();
+    for( ; it != endit ; ++it) {
+      const ShaderVariable &loc = *it;
+      LOGI("%s", loc.str().c_str());
+    }
+
+    return result;
   }
   void Deinit() {
     Policy::Deinit(&handle_);

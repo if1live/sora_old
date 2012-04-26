@@ -154,14 +154,8 @@ namespace gl {
       return false;
     }
 
-    LOGI("Active Uniform/Attrib list");
-    std::vector<ShaderVariable> uniform_var_list = GetActiveUniformVarList(*handle);
-    BOOST_FOREACH(const ShaderVariable &loc, uniform_var_list) {
-      LOGI("%s", loc.str().c_str());
-    }
     std::vector<ShaderVariable> attrib_var_list = GetActiveAttributeVarList(*handle);
     BOOST_FOREACH(const ShaderVariable &loc, attrib_var_list) {
-      LOGI("%s", loc.str().c_str());
       //모든 attribute를 일단 활성화. 설마disable해놓고 쓰는 일은 없을테니까
       glEnableVertexAttribArray(loc.location);
     }
