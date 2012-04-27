@@ -24,7 +24,6 @@
 
 #if SR_USE_PCH == 0
 #include <iostream>
-#include "lodepng/lodepng.h"
 #include "gl_inc.h"
 #endif
 
@@ -32,92 +31,10 @@
 
 #include "soil/SOIL.h"
 #include "gl_env.h"
+#include "renderer/image.h"
 
 namespace sora {;
 namespace gl {
-  //format별 image loader
-  class PNGLoader {
-  public:
-    PNGLoader();
-    ~PNGLoader();
-
-    bool Decode(uchar *data, int data_size);
-    const void *data() const { return &image_[0]; }
-
-    int width() const { return width_; }
-    int height() const { return height_; }
-    int bit_depth() const { return bit_depth_; }
-    int bpp() const { return bpp_; }
-    int color_channels() const { return color_channels_; }
-
-    void PrintLog();
-
-  private:
-    std::vector<unsigned char> image_;
-
-    //image data
-    int width_;
-    int height_;
-    int bit_depth_;
-    int bpp_;
-    int color_channels_;
-
-    LodePNG::Decoder decoder_;
-  };
-
-  PNGLoader::PNGLoader()
-    : width_(0),
-    height_(0),
-    bit_depth_(0),
-    bpp_(0),
-    color_channels_(0) {
-  }
-
-  PNGLoader::~PNGLoader() {
-  }
-
-  bool PNGLoader::Decode(uchar *data, int data_size) {
-    SR_ASSERT(data != NULL);
-    SR_ASSERT(data_size > 0);
-    image_.clear();
-
-    decoder_.decode(image_, data, data_size);
-    if(decoder_.hasError()) { 
-      return false;
-
-    } else {
-      width_ = decoder_.getWidth();
-      height_ = decoder_.getHeight();
-      bit_depth_ = decoder_.getInfoPng().color.bitDepth;
-      bpp_ = decoder_.getBpp();
-      color_channels_ = decoder_.getChannels();
-
-      return true;
-    }
-  }
-  void PNGLoader::PrintLog() {
-    if(decoder_.hasError()) {
-      std::cout << "error " << decoder_.getError() << ": " << LodePNG_error_text(decoder_.getError()) << std::endl;
-    } else {
-      std::cout << "\n" <<
-        "w: " << decoder_.getWidth() << "\n" <<
-        "h: " << decoder_.getHeight() << "\n" <<
-        "bitDepth: " << decoder_.getInfoPng().color.bitDepth << "\n" <<
-        "bpp: " << decoder_.getBpp() << "\n" <<
-        "colorChannels: " << decoder_.getChannels() << "\n" <<
-        "paletteSize: " << decoder_.getInfoPng().color.palettesize / 4 << "\n" <<
-        "colorType: " << decoder_.getInfoPng().color.colorType << "\n" <<
-        "compressionMethod: " << decoder_.getInfoPng().compressionMethod << "\n" <<
-        "filterMethod: " << decoder_.getInfoPng().filterMethod << "\n" <<
-        "interlaceMethod: " << decoder_.getInfoPng().interlaceMethod << "\n";
-      for(size_t i = 0; i < decoder_.getInfoPng().text.num; i++) {
-        std::cout << decoder_.getInfoPng().text.keys[i] << ": " << decoder_.getInfoPng().text.strings[i] << "\n";
-      }
-    }
-  }
-
-  ////////////////////////////////////////////
-
   GLTexture::GLTexture(const char *name, uint policy)
     : start_(NULL), 
     end_(NULL), 
@@ -411,21 +328,21 @@ namespace gl {
   }
 
   bool GLTexture::Load_PNG(GLuint tex_id) {
+    Image img;
     int size = end_ - start_;
-    PNGLoader loader;
-    bool decode_result = loader.Decode(start_, size);
-    if(decode_result == false) {
+    bool load_result = img.LoadPNG(start_, size);
+    if(load_result == false) {
       return false;
     }
 
     GLenum format = GL_RGBA;
-    if(loader.color_channels() == 4) {
+    if(img.color_channels() == 4) {
       format = GL_RGBA;
-    } else if(loader.color_channels() == 3) {
+    } else if(img.color_channels() == 3) {
       format = GL_RGB;
-    } else if(loader.color_channels() == 2) {
+    } else if(img.color_channels() == 2) {
       //format = GL_LUMINANCE_ALPHA;
-    } else if(loader.color_channels() == 1) {
+    } else if(img.color_channels() == 1) {
       //format = GL_LUMINANCE;
     }
 
@@ -438,9 +355,9 @@ namespace gl {
     }
     */
     is_render_to_texture_ = false;
-    int width = loader.width();
-    int height = loader.height();
-    unsigned char *data = (unsigned char*)loader.data();
+    int width = img.width();
+    int height = img.height();
+    unsigned char *data = (unsigned char*)img.data();
     bool result = LoadTexture(tex_id, data, width, height, format);
     return result;
   }
