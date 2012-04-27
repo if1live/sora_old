@@ -45,6 +45,7 @@
 #include "renderer/shader.h"
 #include "renderer/texture.h"
 #include "renderer/buffer_object.h"
+#include "renderer/image.h"
 
 #include "mesh/geometric_object.h"
 #include "mesh/freeglut_font.h"
@@ -141,7 +142,11 @@ bool setupGraphics(Device *device, int w, int h) {
     sora::MemoryFile tex_file(tex_path);
     tex_file.Open();
     Texture tex(texture_table[i][0]);
-    tex.SetData(sora::kTexFilePNG, tex_file.start, tex_file.end);
+    tex.Init();
+
+    Image img;
+    img.LoadPNG(tex_file.start, tex_file.end - tex_file.start);
+    tex.LoadTexture(img);
     device->render_device().tex_mgr().Add(tex);
   }
   {
@@ -150,7 +155,11 @@ bool setupGraphics(Device *device, int w, int h) {
     sora::MemoryFile tex_file(tex_path);
     tex_file.Open();
     Texture tex("jellyfish");
-    tex.SetData(sora::kTexFileJPEG, tex_file.start, tex_file.end);
+    tex.Init();
+
+    Image img;
+    img.LoadPNG(tex_file.start, tex_file.end - tex_file.start);
+    tex.LoadTexture(img);
     device->render_device().tex_mgr().Add(tex);
   }
   

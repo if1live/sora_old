@@ -51,6 +51,7 @@ public:
   bool is_grayscale() const { return is_grayscale_; }
   bool is_alpha() const { return is_alpha_; }
   const uchar *data() const { return image_data_.data(); }
+  uchar *data() { return image_data_.data(); }
   std::vector<uchar> &image_data() { return image_data_; }
 
 private:

@@ -30,24 +30,20 @@
 #include "gl_env.h"
 
 namespace sora {;
-
+class Image;
 namespace gl {
   class GLTexture {
   public:
     typedef TextureHandleType HandleType;
   public:
-    GLTexture(const char *name, uint policy = 0);
     GLTexture(const std::string &name, uint policy = 0);
     ~GLTexture();
 
     void Deinit();
-    void SetData(TexFileType file_fmt, uchar *start, uchar *end);
     bool Init();
-    //외부에서 생성된 GL텍스쳐를 sora텍스쳐로 사용하기
+    //외부에서 생성된 GL텍스쳐를 sora텍스쳐로 사용하기. 근데 쓰나?
     bool Init(uint tex_id, int width, int height, bool has_alpha, bool is_rtt);
     bool Loaded() const;
-
-    bool Reload(GLTexture &data);
 
     uint handle() const { return handle_; }
     const std::string &name() const { return name_; }
@@ -56,17 +52,12 @@ namespace gl {
 
     //raw image에서 텍스쳐 생성하기
     bool LoadTexture(unsigned char *image, int w, int h, TexFormatType format, const TextureParam &param);
+    bool LoadTexture(const Image &image);
 
   private:
     uint handle_;
     //텍스쳐 고유이름을 둬서 디버깅이나 검색이나 뭐 기타 용도로 쓰자
     std::string name_;
-
-    //텍스쳐 정보가 잇는 메모리를 올려서
-    //텍스쳐를 나중에 생성하는것이 가능하도록하자
-    TexFileType file_fmt_;
-    uchar *start_;
-    uchar *end_;
 
     int tex_width_;
     int tex_height_;
@@ -80,11 +71,9 @@ namespace gl {
     bool is_render_to_texture_;
 
   private:
-    bool Load_PNG(GLuint tex_id);  //파일 포맷별 로딩을 다르게 할수잇도록. 함수깊이를 얕게 하기 위해서
-    bool Load_ImageBySOIL(GLuint tex_id);
-
     //압축이 풀린 데이터로부터 적절히 텍스쳐 생성하기
     bool LoadTexture(GLuint tex_id, unsigned char *image, int width, int height, GLenum format);
+    bool LoadTexture(GLuint tex_id, const Image &image);
   };
 } //namespace gl
 } //namespace sora

@@ -62,6 +62,7 @@ SysFont::SysFont()
   TextureParam param;
   param.mag_filter = kTexMagNearest;
   param.min_filter = kTexMinNearest;
+  font_tex_.Init();
   font_tex_.LoadTexture(data, kTextureWidth, kTextureHeight, kTexFormatAlpha, param);
   
 

@@ -26,6 +26,7 @@
 #include "core/unordered_map_inc.h"
 
 namespace sora {;
+class Image;
 
 template<typename T> class TextureT;
 typedef TextureT<sora::gl::GLTexture> Texture;
@@ -43,15 +44,17 @@ public:
   //bool Reload(GLTexture &data)
 
   void Deinit() { obj_.Deinit(); }
-  void SetData(TexFileType file_fmt, uchar *start, uchar *end) {
-    obj_.SetData(file_fmt, start, end);
-  }
   void Init() { obj_.Init(); }
+
   bool Loaded() const { return obj_.Loaded(); }
   const std::string &name() const { return obj_.name(); }
+  
   bool has_alpha() const { return obj_.has_alpha(); }
   bool is_render_to_texture() const { return obj_.is_render_to_texture(); }
 
+  bool LoadTexture(const Image &img) {
+    return obj_.LoadTexture(img);
+  }
   bool LoadTexture(unsigned char *image, int w, int h, TexFormatType format, const TextureParam &param) {
     return obj_.LoadTexture(image, w, h, format, param);
   }

@@ -35,26 +35,9 @@
 
 namespace sora {;
 namespace gl {
-  GLTexture::GLTexture(const char *name, uint policy)
-    : start_(NULL), 
-    end_(NULL), 
-    handle_(0),
-    file_fmt_(kTexFileUnknown),
-    tex_width_(0),
-    tex_height_(0),
-    src_width_(0),
-    src_height_(0),
-    policy_(policy),
-    name_(name),
-    has_alpha_(false),
-    is_render_to_texture_(false) {
-  }
-
   GLTexture::GLTexture(const std::string &name, uint policy)
-    : start_(NULL), 
-    end_(NULL), 
+    :  
     handle_(0),
-    file_fmt_(kTexFileUnknown),
     tex_width_(0),
     tex_height_(0),
     src_width_(0),
@@ -73,11 +56,6 @@ namespace gl {
       glDeleteTextures(1, &handle_);
       handle_ = 0;
     }
-  }
-  void GLTexture::SetData(TexFileType file, uchar *start, uchar *end) {
-    file_fmt_ = file;
-    start_ = start;
-    end_ = end;
   }
 
   /** create sample texture
@@ -104,9 +82,6 @@ namespace gl {
 
     is_render_to_texture_ = is_rtt;
     handle_ = tex_id;
-    file_fmt_ = kTexFileUnknown;
-    start_ = NULL;
-    end_ = NULL;
     tex_width_ = width;
     tex_height_ = height;
     src_width_ = width;
@@ -126,109 +101,18 @@ namespace gl {
     if(Loaded() == true) {
       return false;
     }
-
-    bool result = false;
-
-    switch(file_fmt_) {
-    case kTexFileUnknown:
-    case kTexFileJPEG:
-      glGenTextures(1, &handle_);
-      result = Load_ImageBySOIL(handle_);
-      break;
-
-    case kTexFilePNG:
-      glGenTextures(1, &handle_);
-      result = Load_PNG(handle_);
-      break;
-
-    default:
-      result = false;
-      break;
-    }
-    //clear data
-    file_fmt_ = kTexFileUnknown;
-    start_ = NULL;
-    end_ = NULL;
-    
-    return result;
+    glGenTextures(1, &handle_);
+    return true;
   }
 
-  bool GLTexture::Reload(GLTexture &data) {
-    if(Loaded() == false) {
-      SetData(data.file_fmt_, data.start_, data.end_);
-      bool result = Init();
-      return result;
-    }
-    //else...reload
-    SetData(data.file_fmt_, data.start_, data.end_);
-    bool result = false;
-
-    switch(file_fmt_) {
-    case kTexFileUnknown:
-    case kTexFileJPEG:
-      result = Load_ImageBySOIL(handle_);
-      break;
-
-    case kTexFilePNG:
-      result = Load_PNG(handle_);
-      break;
-
-    default:
-      result = false;
-      break;
-    }
-    //clear data
-    file_fmt_ = kTexFileUnknown;
-    start_ = NULL;
-    end_ = NULL;
-    
-    return result;
+  bool GLTexture::LoadTexture(const Image &image) {
+    SR_ASSERT(handle_ != 0 && "not inited");
+    return LoadTexture(handle_, image);
   }
-
-  bool GLTexture::Load_ImageBySOIL(GLuint tex_id) {
-    //귀찮은 관계로 soil에 떠넘기자
-    unsigned char *data = start_;
-    int size = end_ - start_;
-    is_render_to_texture_ = false;
-
-    //압축된거같은 데이터에서 쌩 데이터로 떠내기
-    int width, height, channels;
-    unsigned char *img = SOIL_load_image_from_memory(
-      data, size, &width, &height, &channels, SOIL_LOAD_AUTO
-      );
-    if(img != NULL) {
-      //텍스쳐로 생성
-      GLenum format = 0;
-      switch(channels) {
-      case SOIL_LOAD_L:
-        format = GL_LUMINANCE;
-        break;
-      case SOIL_LOAD_LA:
-        format = GL_LUMINANCE_ALPHA;
-        break;
-      case SOIL_LOAD_RGB:
-        format = GL_RGB;
-        break;
-      case SOIL_LOAD_RGBA:
-        format = GL_RGBA;
-        break;
-      default:
-        SR_ASSERT(!"do not reach");
-        break;
-      }
-      bool result = LoadTexture(tex_id, img, width, height, format);
-      SOIL_free_image_data(img);
-      return result;
-    } else {
-      return false;
-    }
-  }
-
   bool GLTexture::LoadTexture(unsigned char *image, int w, int h, TexFormatType format, const TextureParam &param) {
+    SR_ASSERT(handle_ != 0 && "not inited");
     GLenum gl_format = GLEnv::TypeToGLEnum(format);
-    if(handle_ == 0) {
-      glGenTextures(1, &handle_);
-    }
+
     bool result = LoadTexture(handle_, image, w, h, gl_format);
     //change tex filter
     GLenum mag_filter = GLEnv::TypeToGLEnum(param.mag_filter);
@@ -327,38 +211,23 @@ namespace gl {
     return true;
   }
 
-  bool GLTexture::Load_PNG(GLuint tex_id) {
-    Image img;
-    int size = end_ - start_;
-    bool load_result = img.LoadPNG(start_, size);
-    if(load_result == false) {
-      return false;
-    }
+  bool GLTexture::LoadTexture(GLuint tex_id, const Image &image) {
+    unsigned char *data = const_cast<unsigned char*>(image.data());
+    int w = image.width();
+    int h = image.height();
 
     GLenum format = GL_RGBA;
-    if(img.color_channels() == 4) {
+    if(image.color_channels() == 4) {
       format = GL_RGBA;
-    } else if(img.color_channels() == 3) {
+    } else if(image.color_channels() == 3) {
       format = GL_RGB;
-    } else if(img.color_channels() == 2) {
+    } else if(image.color_channels() == 2) {
       //format = GL_LUMINANCE_ALPHA;
-    } else if(img.color_channels() == 1) {
+    } else if(image.color_channels() == 1) {
       //format = GL_LUMINANCE;
     }
-
-    /*
-    GLenum elem_type = GL_UNSIGNED_BYTE;
-    if(loader.bit_depth() == 8) {
-    elem_type = GL_UNSIGNED_BYTE;
-    } else {
-    SR_ASSERT(!"unknowkn bit depth");
-    }
-    */
     is_render_to_texture_ = false;
-    int width = img.width();
-    int height = img.height();
-    unsigned char *data = (unsigned char*)img.data();
-    bool result = LoadTexture(tex_id, data, width, height, format);
+    bool result = LoadTexture(tex_id, data, w, h, format);
     return result;
   }
 } //namespace gl
