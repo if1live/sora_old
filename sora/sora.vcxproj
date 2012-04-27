@@ -100,6 +100,7 @@
     <ClCompile Include="mesh\freeglut_stroke_roman.cpp" />
     <ClCompile Include="mesh\geometric_object.cpp" />
     <ClCompile Include="mesh\parametric_surface.cpp" />
+    <ClCompile Include="renderer\image.cpp" />
     <ClCompile Include="renderer\shader.cpp" />
     <ClCompile Include="renderer\shader_variable.cpp" />
     <ClCompile Include="renderer\sys_font.cpp" />
@@ -169,6 +170,7 @@
     <ClInclude Include="mesh\parametric_surface.h" />
     <ClInclude Include="mesh\teapot.h" />
     <ClInclude Include="renderer\buffer_object.h" />
+    <ClInclude Include="renderer\image.h" />
     <ClInclude Include="renderer\shader_variable.h" />
     <ClInclude Include="renderer\sys_font.h" />
     <ClInclude Include="renderer\globals.h" />

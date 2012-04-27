@@ -27,11 +27,14 @@
 #include "gl_inc.h"
 #endif
 #include "renderer/globals.h"
+#include "gl_env.h"
 
 namespace sora {;
 
 namespace gl {
   class GLTexture {
+  public:
+    typedef TextureHandleType HandleType;
   public:
     GLTexture(const char *name, uint policy = 0);
     GLTexture(const std::string &name, uint policy = 0);

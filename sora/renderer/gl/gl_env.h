@@ -30,6 +30,7 @@ namespace sora {;
 namespace gl {
   typedef GLint ShaderVariableHandleType;
   typedef GLuint ShaderHandleType;
+  typedef GLuint TextureHandleType;
 
   class GLEnv {
   public:
