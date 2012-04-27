@@ -69,24 +69,24 @@ public:
 
   //uniform bind function
   template<typename T>
-  HandleType SetMatrix(const std::string &name, const glm::detail::tmat4x4<T> &mat) {
-    return Policy::SetMatrix(handle_, name, mat);
+  HandleType SetMatrix(const ShaderVariable &var, const glm::detail::tmat4x4<T> &mat) {
+    return Policy::SetMatrix(handle_, var, mat);
   }
   template<typename T>
-  HandleType SetMatrix(const std::string &name, const glm::detail::tmat3x3<T> &mat) {
-    return Policy::SetMatrix(handle_, name, mat);
+  HandleType SetMatrix(const ShaderVariable &var, const glm::detail::tmat3x3<T> &mat) {
+    return Policy::SetMatrix(handle_, var, mat);
   }
   template<typename T>
-  HandleType SetVector(const std::string &name, const glm::detail::tvec4<T> &vec) {
-    return Policy::SetVector(handle_, name, vec);
+  HandleType SetVector(const ShaderVariable &var, const glm::detail::tvec4<T> &vec) {
+    return Policy::SetVector(handle_, var, vec);
   }
   template<typename T>
-  HandleType SetVector(const std::string &name, const glm::detail::tvec3<T>&vec) {
-    return Policy::SetVector(handle_, name, vec);
+  HandleType SetVector(const ShaderVariable &var, const glm::detail::tvec3<T>&vec) {
+    return Policy::SetVector(handle_, var, vec);
   }
   template<typename T>
-  HandleType SetValue(const std::string &name, T value) {
-    return Policy::SetValue(handle_, name, value);
+  HandleType SetValue(const ShaderVariable &var, T value) {
+    return Policy::SetValue(handle_, var, value);
   }
 
   //attrib bind function
@@ -196,14 +196,12 @@ void ShaderT<PolicyType>::DrawElements(DrawType mode, const VertexContainer &ver
 
 template<typename PolicyType>
 ShaderVariable ShaderT<PolicyType>::uniform_var(const std::string &name) const {
-  std::vector<ShaderVariable> uniform_var_list = GetActiveUniformVarList();
-  return FindShaderVar(name, uniform_var_list);
+  return FindShaderVar(name, uniform_list_);
 }
 
 template<typename PolicyType>
 ShaderVariable ShaderT<PolicyType>::attrib_var(const std::string &name) const {
-  std::vector<ShaderVariable> attrib_var_list = GetActiveAttributeVarList();
-  return FindShaderVar(name, attrib_var_list);
+  return FindShaderVar(name, attrib_list_);
 }
 
 template<typename PolicyType>

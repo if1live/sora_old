@@ -51,8 +51,11 @@ TEST(Shader, basic) {
   EXPECT_EQ(true, shader.Validate());
 
   glm::mat4 m1;
-  EXPECT_EQ(true, shader.SetMatrix("u_mvpMatrix", m1));
+  ShaderVariable mvp_var = shader.uniform_var("u_mvpMatrix");
+  EXPECT_EQ(true, shader.SetMatrix(mvp_var, m1));
+
   glm::vec3 v1;
-  EXPECT_EQ(true, shader.SetVector("sample_color", v1));
+  ShaderVariable sample_color = shader.uniform_var("sample_color");
+  EXPECT_EQ(true, shader.SetVector(sample_color, v1));
   shader.Deinit(); 
 }
