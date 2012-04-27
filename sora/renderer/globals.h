@@ -114,6 +114,18 @@ struct TextureParam {
   TexWrapMode wrap_t;
 };
 
+
+struct ImageDesc {
+  ImageDesc() { memset(this, sizeof(ImageDesc), 0); }
+  int width;
+  int height;
+  int bit_depth;
+  int bpp;
+  int color_channels;
+  bool is_grayscale;
+  bool is_alpha;
+};
+
 typedef enum {
   kBufferUsageStatic,
   kBufferUsageDyanmic,

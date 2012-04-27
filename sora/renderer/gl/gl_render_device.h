@@ -54,13 +54,13 @@ namespace gl {
 
     //texture
   public:
-    void UseTexture(GLTexture &tex);
+    void UseTexture(gl::TextureHandleType handle);
   private:
-    GLuint last_tex_id_;
+    TextureHandleType last_tex_id_;
 
     //shader
   public:
-    void UseShader(const gl::ShaderHandleType &handle);
+    void UseShader(gl::ShaderHandleType handle);
   private:
     ShaderHandleType last_prog_id_;
 

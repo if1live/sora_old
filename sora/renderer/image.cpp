@@ -51,7 +51,7 @@ public:
     }
   }
 
-  static bool Load(Image *img, uchar *data, int data_size) {
+  static bool Load(Image *img, ImageDesc *desc, uchar *data, int data_size) {
     //lodepng를 기반으로 적절히 로딩하기  
     SR_ASSERT(data != NULL);
     SR_ASSERT(data_size > 0);
@@ -63,13 +63,13 @@ public:
       return false;
 
     } else {
-      img->width_ = decoder.getWidth();
-      img->height_ = decoder.getHeight();
-      img->bit_depth_ = decoder.getInfoPng().color.bitDepth;
-      img->bpp_ = decoder.getBpp();
-      img->color_channels_ = decoder.getChannels();
-      img->is_grayscale_ = decoder.isGreyscaleType();
-      img->is_alpha_ = decoder.isAlphaType();
+      desc->width = decoder.getWidth();
+      desc->height = decoder.getHeight();
+      desc->bit_depth = decoder.getInfoPng().color.bitDepth;
+      desc->bpp = decoder.getBpp();
+      desc->color_channels = decoder.getChannels();
+      desc->is_grayscale = decoder.isGreyscaleType();
+      desc->is_alpha = decoder.isAlphaType();
 
       return true;
     }
@@ -78,7 +78,7 @@ public:
 
 class SOILLoader {
 public:
-  static bool Load(Image *img, uchar *data, int data_size) {
+  static bool Load(Image *img, ImageDesc *desc, uchar *data, int data_size) {
     //귀찮은 관계로 soil에 떠넘기자
     //압축된거같은 데이터에서 쌩 데이터로 떠내기
     int width, height, channels;
@@ -94,28 +94,28 @@ public:
     SOIL_free_image_data(raw_img);
 
     //텍스쳐에서 얻어낸 속성을 적절히 재가공
-    img->width_ = width;
-    img->height_ = height;
-    img->bit_depth_ = 8; //?
-    img->bpp_ = 8 * channels;
-    img->color_channels_ = channels;
+    desc->width = width;
+    desc->height = height;
+    desc->bit_depth = 8; //?
+    desc->bpp = 8 * channels;
+    desc->color_channels = channels;
 
     switch(channels) {
     case SOIL_LOAD_L:
-      img->is_grayscale_ = true;
-      img->is_alpha_ = false;
+      desc->is_grayscale = true;
+      desc->is_alpha = false;
       break;
     case SOIL_LOAD_LA:
-      img->is_grayscale_ = true;
-      img->is_alpha_ = true;
+      desc->is_grayscale = true;
+      desc->is_alpha = true;
       break;
     case SOIL_LOAD_RGB:
-      img->is_grayscale_ = false;
-      img->is_alpha_ = false;
+      desc->is_grayscale = false;
+      desc->is_alpha = false;
       break;
     case SOIL_LOAD_RGBA:
-      img->is_grayscale_ = false;
-      img->is_alpha_ = true;
+      desc->is_grayscale = false;
+      desc->is_alpha = true;
       break;
     default:
       SR_ASSERT(!"do not reach");
@@ -125,30 +125,23 @@ public:
   }
 };
 
-Image::Image()
-  : width_(0),
-height_(0),
-bit_depth_(0),
-bpp_(0),
-color_channels_(0),
-is_grayscale_(false),
-is_alpha_(false) {
-
+Image::Image() {
 }
+
 
 Image::~Image() {
 }
 bool Image::LoadPNG(uchar *data, int data_size) {
-  //return LodePNGLoader::Load(this, data, data_size);
-  return SOILLoader::Load(this, data, data_size);
+  return LodePNGLoader::Load(this, &desc_, data, data_size);
+  //return SOILLoader::Load(this, &desc_, data, data_size);
 }
 
 bool Image::LoadJPG(uchar *data, int data_size) {
-  return SOILLoader::Load(this, data, data_size);
+  return SOILLoader::Load(this, &desc_, data, data_size);
 }
 
 bool Image::LoadETC(uchar *data, int data_size) {
-  return SOILLoader::Load(this, data, data_size);
+  return SOILLoader::Load(this, &desc_, data, data_size);
 }
 
 }

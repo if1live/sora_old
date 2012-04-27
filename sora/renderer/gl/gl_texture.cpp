@@ -35,26 +35,11 @@
 
 namespace sora {;
 namespace gl {
-  GLTexture::GLTexture(const std::string &name, uint policy)
-    :  
-    handle_(0),
-    tex_width_(0),
-    tex_height_(0),
-    src_width_(0),
-    src_height_(0),
-    policy_(policy),
-    name_(name),
-    has_alpha_(false),
-    is_render_to_texture_(false) {
-  }
-
-  GLTexture::~GLTexture() {
-  }
-
-  void GLTexture::Deinit() {
-    if(handle_ != 0) {
-      glDeleteTextures(1, &handle_);
-      handle_ = 0;
+  void GLTexture::Deinit(HandleType *handle) {
+    GLuint &tex_id = *handle;
+    if(tex_id != 0) {
+      glDeleteTextures(1, handle);
+      tex_id = 0;
     }
   }
 
@@ -75,45 +60,22 @@ namespace gl {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   tex.Init(tex_id, 2, 2);
   */
-  bool GLTexture::Init(GLuint tex_id, int width, int height, bool has_alpha, bool is_rtt) {
-    if(Loaded() == true) {
-      return false;
-    }
-
-    is_render_to_texture_ = is_rtt;
-    handle_ = tex_id;
-    tex_width_ = width;
-    tex_height_ = height;
-    src_width_ = width;
-    src_height_ = height;
-    has_alpha_ = has_alpha;  //이 텍스쳐에 알파가 잇나 없나?
-    return true;
-  }
-
-  bool GLTexture::Loaded() const {
-    if(handle_ == 0) {
+  bool GLTexture::Loaded(const HandleType &handle) const {
+    if(handle == 0) {
       return false;
     } else {
       return true;
     }
   }
-  bool GLTexture::Init() {
-    if(Loaded() == true) {
+  bool GLTexture::Init(HandleType *handle) {
+    if(Loaded(*handle) == true) {
       return false;
     }
-    glGenTextures(1, &handle_);
+    glGenTextures(1, handle);
     return true;
   }
 
-  bool GLTexture::LoadTexture(const Image &image) {
-    SR_ASSERT(handle_ != 0 && "not inited");
-    return LoadTexture(handle_, image);
-  }
-  bool GLTexture::LoadTexture(unsigned char *image, int w, int h, TexFormatType format, const TextureParam &param) {
-    SR_ASSERT(handle_ != 0 && "not inited");
-    GLenum gl_format = GLEnv::TypeToGLEnum(format);
-
-    bool result = LoadTexture(handle_, image, w, h, gl_format);
+  void GLTexture::ApplyTextureParam(HandleType handle, const TextureParam &param) {
     //change tex filter
     GLenum mag_filter = GLEnv::TypeToGLEnum(param.mag_filter);
     GLenum min_filter = GLEnv::TypeToGLEnum(param.min_filter);
@@ -123,17 +85,31 @@ namespace gl {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap_s);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap_t);
-    return result;
   }
 
-  bool GLTexture::LoadTexture(GLuint tex_id, unsigned char *image, int width, int height, GLenum format) {
-    //알파 있는거/없는거 분류
-    if(format == GL_RGBA || format == GL_LUMINANCE_ALPHA || format == GL_ALPHA) {
-      has_alpha_ = true;
-    } else {
-      has_alpha_ = false;
+  bool GLTexture::LoadTexture(HandleType handle, unsigned char *image, const ImageDesc &img_desc, uint policy) {
+    int w = img_desc.width;
+    int h = img_desc.height;
+    GLenum format = GL_ALPHA;
+    //enum gray alpha
+    int tex_table[][3] = {
+      { GL_ALPHA, false, true },
+      { GL_LUMINANCE, true, false},
+      { GL_LUMINANCE_ALPHA, true, true },
+      { GL_RGB, false, false},
+      { GL_RGBA, false, true },
+    };
+    const int tex_table_size = sizeof(tex_table) / sizeof(tex_table[0]);
+    for(int i = 0 ; i < tex_table_size ; i++) {
+      if(tex_table[i][1] == (int)img_desc.is_grayscale && tex_table[i][2] == (int)img_desc.is_alpha) {
+        format = tex_table[i][0];
+        break;
+      }
     }
-  
+    return LoadTexture(handle, image, w, h, format, policy);
+  }
+
+  bool GLTexture::LoadTexture(GLuint tex_id, unsigned char *image, int width, int height, GLenum format, uint policy) {  
     int color_channel_table[][2] = {
       { GL_ALPHA, 1}, 
       { GL_LUMINANCE, 1 },
@@ -152,25 +128,27 @@ namespace gl {
 
 
     GLenum elem_type = GL_UNSIGNED_BYTE;
-    src_width_ = width;
-    src_height_ = height;
+    int src_width = width;
+    int src_height = height;
+    int tex_width = width;
+    int tex_height = height;
 
     glBindTexture(GL_TEXTURE_2D, tex_id);
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     //2의 승수로 되어야하는 경우, 미리 설정
     uchar *new_data = NULL;
-    uchar *image_data = NULL;
-    if((policy_ & kTexPolicyForcePOT) && IsPower(2, src_width_) && IsPower(2, src_height_)) {
+    uchar *image_data = image;
+    if((policy & kTexPolicyForcePOT) && IsPower(2, src_width) && IsPower(2, src_height)) {
       //2의 승수가 아니면 가상 이미지로 적절히 복사
-      tex_width_ = CeilPower(2, src_width_);
-      tex_height_ = CeilPower(2, src_height_);
+      int tex_width = CeilPower(2, src_width);
+      int tex_height = CeilPower(2, src_height);
 
-      new_data = (uchar*)SR_MALLOC(sizeof(uchar) * tex_width_ * tex_height_ * color_channel);
-      memset(new_data, 128, sizeof(uchar) * tex_width_ * tex_height_ * color_channel);
-      for(int y = 0 ; y < src_height_ ; y++) {
-        int new_scanline_size = tex_width_ * color_channel;
-        int old_scanline_size = src_width_ * color_channel;
+      new_data = (uchar*)SR_MALLOC(sizeof(uchar) * tex_width * tex_height * color_channel);
+      memset(new_data, 128, sizeof(uchar) * tex_width * tex_height * color_channel);
+      for(int y = 0 ; y < src_height ; y++) {
+        int new_scanline_size = tex_width * color_channel;
+        int old_scanline_size = src_width * color_channel;
         int new_data_idx = y * new_scanline_size;
         int old_data_idx = y * old_scanline_size;
         uchar *new_scanline = new_data + new_data_idx;
@@ -178,14 +156,10 @@ namespace gl {
         memcpy(new_scanline, old_scanline, old_scanline_size);
       }
       image_data = new_data;
-    } else {
-      tex_width_ = src_width_;
-      tex_height_ = src_height_;
-      image_data = image;
     }
 
     //정책설정이 텍스쳐보다 우선되어야한다
-    if(IsPower(2, tex_width_) == false || IsPower(2, tex_height_) == false) {
+    if(IsPower(2, tex_width) == false || IsPower(2, tex_height) == false) {
       //npot는 wrap로 GL_CLAMP_TO_EDGE, 만 허용한다
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -202,7 +176,7 @@ namespace gl {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }
-    glTexImage2D(GL_TEXTURE_2D, 0, format, tex_width_, tex_height_, 0, format, elem_type, image_data);
+    glTexImage2D(GL_TEXTURE_2D, 0, format, tex_width, tex_height, 0, format, elem_type, image_data);
 
     //메모리 할당한 경우, 지우기
     if(new_data != NULL) {
@@ -211,7 +185,7 @@ namespace gl {
     return true;
   }
 
-  bool GLTexture::LoadTexture(GLuint tex_id, const Image &image) {
+  bool GLTexture::LoadTexture(const HandleType &handle, const Image &image, uint policy) {
     unsigned char *data = const_cast<unsigned char*>(image.data());
     int w = image.width();
     int h = image.height();
@@ -226,8 +200,7 @@ namespace gl {
     } else if(image.color_channels() == 1) {
       //format = GL_LUMINANCE;
     }
-    is_render_to_texture_ = false;
-    bool result = LoadTexture(tex_id, data, w, h, format);
+    bool result = LoadTexture(handle, data, w, h, format, policy);
     return result;
   }
 } //namespace gl

@@ -26,6 +26,52 @@ using namespace std;
 
 namespace sora {;
 
+ImageDesc Texture::CreateImageDesc(int w, int h, TexFormatType format) {
+  ImageDesc desc;
+  desc.width = w;
+  desc.height = h;
+  desc.bit_depth = 32;
+
+  switch(format) {
+  case kTexFormatAlpha:
+    desc.bpp = 8;
+    desc.color_channels = 1;
+    desc.is_grayscale = false;
+    desc.is_alpha = true;
+    break;
+  case kTexFormatLumiance:
+    desc.bpp = 8;
+    desc.color_channels = 1;
+    desc.is_grayscale = true;
+    desc.is_alpha = false;
+    break;
+  case kTexFormatLumianceAlpha:
+    desc.bpp = 16;
+    desc.color_channels = 2;
+    desc.is_grayscale = true;
+    desc.is_alpha = true;
+    break;
+  case kTexFormatRGB:
+    desc.bpp = 24;
+    desc.color_channels = 3;
+    desc.is_grayscale = false;
+    desc.is_alpha = false;
+    break;
+  case kTexFormatRGBA:
+    desc.bpp = 32;
+    desc.color_channels = 4;
+    desc.is_grayscale = false;
+    desc.is_alpha = true;
+    break;
+  default:
+    SR_ASSERT(!"not valid tex format");
+  }
+
+  return desc;
+}
+
+/////////////////////////////////
+
 TextureManager::TextureManager() {
 }
 TextureManager::~TextureManager() {

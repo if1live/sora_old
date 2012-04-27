@@ -35,45 +35,19 @@ namespace gl {
   class GLTexture {
   public:
     typedef TextureHandleType HandleType;
+  protected:
+    ~GLTexture() {}
+
   public:
-    GLTexture(const std::string &name, uint policy = 0);
-    ~GLTexture();
+    void Deinit(HandleType *handle);
+    bool Init(HandleType *handle);
+    bool Loaded(const HandleType &handle) const;
 
-    void Deinit();
-    bool Init();
-    //외부에서 생성된 GL텍스쳐를 sora텍스쳐로 사용하기. 근데 쓰나?
-    bool Init(uint tex_id, int width, int height, bool has_alpha, bool is_rtt);
-    bool Loaded() const;
-
-    uint handle() const { return handle_; }
-    const std::string &name() const { return name_; }
-    bool has_alpha() const { return has_alpha_; }
-    bool is_render_to_texture() const { return is_render_to_texture_; }
-
-    //raw image에서 텍스쳐 생성하기
-    bool LoadTexture(unsigned char *image, int w, int h, TexFormatType format, const TextureParam &param);
-    bool LoadTexture(const Image &image);
-
-  private:
-    uint handle_;
-    //텍스쳐 고유이름을 둬서 디버깅이나 검색이나 뭐 기타 용도로 쓰자
-    std::string name_;
-
-    int tex_width_;
-    int tex_height_;
-    int src_width_;
-    int src_height_;
-    bool has_alpha_;
-
-    uint policy_;
-
-    //render to texture?
-    bool is_render_to_texture_;
-
-  private:
-    //압축이 풀린 데이터로부터 적절히 텍스쳐 생성하기
-    bool LoadTexture(GLuint tex_id, unsigned char *image, int width, int height, GLenum format);
-    bool LoadTexture(GLuint tex_id, const Image &image);
+    bool LoadTexture(const HandleType &handle, const Image &image, uint policy);
+    void ApplyTextureParam(HandleType handle, const TextureParam &param);
+    bool LoadTexture(HandleType handle, unsigned char *image, const ImageDesc &img_desc, uint policy);
+  public:
+    bool LoadTexture(HandleType tex_id, unsigned char *image, int width, int height, GLenum format, uint policy);
   };
 } //namespace gl
 } //namespace sora

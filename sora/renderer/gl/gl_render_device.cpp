@@ -50,17 +50,17 @@ namespace gl {
     last_prog_id_ = 0;
     last_tex_id_ = 0;
   }
-  void GLRenderDevice::UseShader(const ShaderHandleType &handle) {
+  void GLRenderDevice::UseShader(ShaderHandleType handle) {
     if(last_prog_id_ != handle) {
       glUseProgram(handle);
       last_prog_id_ = handle;
     }
   }
-  void GLRenderDevice::UseTexture(GLTexture &tex) {
-    if(last_tex_id_ != tex.handle()) {
+  void GLRenderDevice::UseTexture(TextureHandleType handle) {
+    if(last_tex_id_ != handle) {
       glActiveTexture(GL_TEXTURE0);
-      glBindTexture(GL_TEXTURE_2D, tex.handle());
-      last_tex_id_ = tex.handle();
+      glBindTexture(GL_TEXTURE_2D, handle);
+      last_tex_id_ = handle;
     }
   }
   void GLRenderDevice::Set2D() {

@@ -20,10 +20,13 @@
 // Ŭnicode please
 #pragma once
 
+#include "globals.h"
+
 namespace sora {;
 
 class LodePNGLoader;
 class SOILLoader;
+
 //이미지를 적절히 로딩해서 보관하는 클래스이다
 //이것을 기반으로 gl/gles/dx같은곳에서 로딩을 할수도 있도록 하자
 //이미지 데이터 자체를 멤버변수로 저장할수 있으면
@@ -43,25 +46,19 @@ public:
   bool LoadETC(uchar *data, int data_size);
 
 public:
-  int width() const { return width_; }
-  int height() const { return height_; }
-  int bit_depth() const { return bit_depth_; }
-  int bpp() const { return bpp_; }
-  int color_channels() const { return color_channels_; }
-  bool is_grayscale() const { return is_grayscale_; }
-  bool is_alpha() const { return is_alpha_; }
+  int width() const { return desc_.width; }
+  int height() const { return desc_.height; }
+  int bit_depth() const { return desc_.bit_depth; }
+  int bpp() const { return desc_.bpp; }
+  int color_channels() const { return desc_.color_channels; }
+  bool is_grayscale() const { return desc_.is_grayscale; }
+  bool is_alpha() const { return desc_.is_alpha; }
   const uchar *data() const { return image_data_.data(); }
   uchar *data() { return image_data_.data(); }
   std::vector<uchar> &image_data() { return image_data_; }
-
+  const ImageDesc &desc() const { return desc_; }
 private:
-  int width_;
-  int height_;
-  int bit_depth_;
-  int bpp_;
-  int color_channels_;
-  bool is_grayscale_;
-  bool is_alpha_;
+  ImageDesc desc_;
 
   std::vector<uchar> image_data_;
 };

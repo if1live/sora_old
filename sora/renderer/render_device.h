@@ -38,7 +38,7 @@ public:
   ~RenderDeviceT() {}
 
   void UseShader(Shader &shader) { policy_.UseShader(shader.handle()); }
-  void UseTexture(Texture &tex) { policy_.UseTexture(tex.obj()); }
+  void UseTexture(Texture &tex) { policy_.UseTexture(tex.handle()); }
 
   void Set2D() { policy_.Set2D(); }
   void Set3D() { policy_.Set3D(); }
