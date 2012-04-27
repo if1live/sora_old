@@ -21,11 +21,17 @@
 #pragma once
 
 namespace sora {;
+
+class LodePNGLoader;
+class SOILLoader;
 //이미지를 적절히 로딩해서 보관하는 클래스이다
 //이것을 기반으로 gl/gles/dx같은곳에서 로딩을 할수도 있도록 하자
 //이미지 데이터 자체를 멤버변수로 저장할수 있으면
 //추가적인 작업이 가능할거다
 class Image {
+public:
+  friend class LodePNGLoader;
+  friend class SOILLoader;
 public:
   Image();
   ~Image();
@@ -45,6 +51,7 @@ public:
   bool is_grayscale() const { return is_grayscale_; }
   bool is_alpha() const { return is_alpha_; }
   const uchar *data() const { return image_data_.data(); }
+  std::vector<uchar> &image_data() { return image_data_; }
 
 private:
   int width_;
