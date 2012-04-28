@@ -46,6 +46,7 @@
 #include "renderer/texture.h"
 #include "renderer/buffer_object.h"
 #include "renderer/image.h"
+#include "renderer/renderer.h"
 
 #include "mesh/geometric_object.h"
 #include "mesh/freeglut_font.h"
@@ -327,9 +328,8 @@ void SORA_set_cam_pos(float a, float b) {
 
 void renderFrame(Device *device) {
   SR_CHECK_ERROR("Begin RenderFrame");
-  glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-  SR_CHECK_ERROR("Begin RenderFrame");
+  Renderer::SetClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+  Renderer::ClearScreen();
 
   //3d
   device->render_device().Set3D();

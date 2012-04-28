@@ -20,3 +20,14 @@
 // Ŭnicode please
 #include "sora_stdafx.h"
 #include "gl_renderer.h"
+
+namespace sora {;
+namespace gl {
+  void GLRenderer::SetClearColor(float r, float g, float b, float a) {
+    glClearColor(r, g, b, a);
+  }
+  void GLRenderer::ClearScreen() {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  }
+}
+}

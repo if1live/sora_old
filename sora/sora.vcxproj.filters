@@ -405,5 +405,8 @@
     <ClInclude Include="renderer\gl\gl_shader_variable.h">
       <Filter>renderer\gl</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\renderer.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

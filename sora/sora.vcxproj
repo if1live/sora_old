@@ -173,6 +173,7 @@
     <ClInclude Include="renderer\buffer_object.h" />
     <ClInclude Include="renderer\gl\gl_shader_variable.h" />
     <ClInclude Include="renderer\image.h" />
+    <ClInclude Include="renderer\renderer.h" />
     <ClInclude Include="renderer\shader_variable.h" />
     <ClInclude Include="renderer\sys_font.h" />
     <ClInclude Include="renderer\globals.h" />

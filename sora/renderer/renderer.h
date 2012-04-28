@@ -18,23 +18,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_GL_DEFERRED_RENDERER_H_
-#define SORA_GL_DEFERRED_RENDERER_H_
+#pragma  once
 
-#include "renderer/globals.h"
-#include "core/vertex.h"
-
+#include "renderer/gl/gl_renderer.h"
 namespace sora {;
-namespace gl {
-  class GLRenderer {
-  protected:
-    ~GLRenderer() {}
-  public:
-    GLRenderer() {}
-    static void SetClearColor(float r, float g, float b, float a);
-    static void ClearScreen();
-  };
-} // namespace gl
-} // namespace sora
+template<typename PolicyType> class RendererT;
+typedef sora::gl::GLRenderer RendererPolicy;
+typedef RendererT<RendererPolicy> Renderer;
 
-#endif  // SORA_GL_DEFERRED_RENDERER_H_
+template<typename PolicyType>
+class RendererT : public PolicyType {
+public:
+  typedef PolicyType Policy;
+public:
+  static void SetClearColor(float r, float g, float b, float a) {
+    ctx.clear_color_[0] = r;
+    ctx.clear_color_[1] = g;
+    ctx.clear_color_[2] = b;
+    ctx.clear_color_[3] = a;
+    Policy::SetClearColor(r, g, b, a);
+  }
+  static void ClearScreen() {
+    Policy::ClearScreen();
+  }
+private:
+  RendererT() { }
+  static RendererT ctx;
+
+  glm::vec4 clear_color_;
+};
+
+template<typename PolicyType>
+RendererT<PolicyType> RendererT<PolicyType>::ctx;
+
+}

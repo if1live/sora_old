@@ -46,11 +46,18 @@ public:
   ~TextureT() {}
 
   //외부에서 생성된 GL텍스쳐를 sora텍스쳐로 사용하기
-  //bool Init(uint tex_id, int width, int height, bool has_alpha, bool is_rtt);
-  //bool Reload(GLTexture &data)
-
   void Deinit() { Policy::Deinit(&handle_); }
   void Init() { Policy::Init(&handle_); }
+  //외부에서 생성된 텍스쳐를 직접 찔러넣기. renter texture나 외부 라이브러리에서 생성된 텍스쳐에서 쓴다
+  bool Init(HandleType handle, const ImageDesc &img_desc, bool is_rtt) {
+    if(handle_ != 0) {
+      Deinit();
+    }
+    handle_ = handle;
+    img_desc_ = img_desc;
+    is_render_to_texture_ = is_rtt;
+  }
+
   bool Loaded() const { return Policy::Loaded(handle_); }
   const std::string &name() const { return name_; }
   
