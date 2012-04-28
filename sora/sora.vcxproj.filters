@@ -184,6 +184,9 @@
     <ClCompile Include="renderer\gl\gl_shader_variable.cpp">
       <Filter>renderer\gl</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\gl\gl_frame_buffer.cpp">
+      <Filter>renderer\gl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -407,6 +410,12 @@
     </ClInclude>
     <ClInclude Include="renderer\renderer.h">
       <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\frame_buffer.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\gl\gl_frame_buffer.h">
+      <Filter>renderer\gl</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

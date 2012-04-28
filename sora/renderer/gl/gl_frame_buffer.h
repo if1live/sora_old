@@ -18,43 +18,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#pragma  once
+#pragma once
 
-#include "renderer/gl/gl_renderer.h"
 #include "renderer/texture.h"
 
 namespace sora {;
-template<typename PolicyType> class RendererT;
-typedef sora::gl::GLRenderer RendererPolicy;
-typedef RendererT<RendererPolicy> Renderer;
+namespace gl {
+  class GLFrameBuffer {
+  public:
+    typedef unsigned int HandleType;
+  public:
+    static void InitAsDepthTex(HandleType *handle, int w, int h, Texture *color_tex, Texture *depth_tex);
+    static void Deinit(HandleType *handle);
+    static bool IsInit(HandleType handle);
 
-typedef unsigned int FBOHandleType;
-
-template<typename PolicyType>
-class RendererT : public PolicyType {
-public:
-  typedef PolicyType Policy;
-public:
-  static void SetClearColor(float r, float g, float b, float a) {
-    ctx.clear_color_[0] = r;
-    ctx.clear_color_[1] = g;
-    ctx.clear_color_[2] = b;
-    ctx.clear_color_[3] = a;
-    Policy::SetClearColor(r, g, b, a);
-  }
-  static void ClearScreen() {
-    Policy::ClearScreen();
-  }
-
-private:
-  RendererT() {  }
-
-  static RendererT ctx;
-  glm::vec4 clear_color_;
-
-};
-
-template<typename PolicyType>
-RendererT<PolicyType> RendererT<PolicyType>::ctx;
-
-}
+    static void Bind(HandleType handle);
+    static void Unbind();
+  protected:
+    ~GLFrameBuffer() {}
+  private:
+    static void CreateDepthTex(int w, int h, Texture *depth_tex);
+    //unsigned byte + rgba texture
+    static void CreateNormalRGBAColorTex(int w, int h, Texture *color_tex);
+  };
+} //namespace gl
+} //namespace sora

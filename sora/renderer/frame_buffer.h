@@ -18,43 +18,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#pragma  once
+#pragma once
 
-#include "renderer/gl/gl_renderer.h"
+#include "globals.h"
+#include "renderer/gl/gl_frame_buffer.h"
 #include "renderer/texture.h"
 
 namespace sora {;
-template<typename PolicyType> class RendererT;
-typedef sora::gl::GLRenderer RendererPolicy;
-typedef RendererT<RendererPolicy> Renderer;
-
-typedef unsigned int FBOHandleType;
+template<typename PolicyType> class FrameBufferT;
+typedef sora::gl::GLFrameBuffer FrameBufferPolicy;
+typedef FrameBufferT<FrameBufferPolicy> FrameBuffer;
 
 template<typename PolicyType>
-class RendererT : public PolicyType {
+class FrameBufferT : public PolicyType {
 public:
-  typedef PolicyType Policy;
+ typedef PolicyType Policy;
+ typedef typename Policy::HandleType HandleType;
 public:
-  static void SetClearColor(float r, float g, float b, float a) {
-    ctx.clear_color_[0] = r;
-    ctx.clear_color_[1] = g;
-    ctx.clear_color_[2] = b;
-    ctx.clear_color_[3] = a;
-    Policy::SetClearColor(r, g, b, a);
+  FrameBufferT() : handle_(0) {}
+  ~FrameBufferT() {}
+  //깊이 테스트용으로 쓰기 위한 초기화함수
+  //깊이텍스쳐의 정밀도 높음. 색깔 텍스쳐 정밀도는 낮음
+  void InitAsDepthTex(int w, int h) {
+    Policy::InitAsDepthTex(&handle_, w, h, &color_tex_, &depth_tex_);
   }
-  static void ClearScreen() {
-    Policy::ClearScreen();
-  }
+  void Deinit() { Policy::Deinit(&handle_); }
+  bool IsInit() const { return Policy::IsInit(handle_); }
+
+  Texture &color_tex() { return color_tex_; }
+  Texture &depth_tex() { return depth_tex_; }
+
+  void Bind() { Policy::Bind(handle_); }
+  void Unbind() { Policy::Unbind(); }
 
 private:
-  RendererT() {  }
-
-  static RendererT ctx;
-  glm::vec4 clear_color_;
-
+  HandleType handle_;
+  Texture color_tex_;
+  Texture depth_tex_;
 };
-
-template<typename PolicyType>
-RendererT<PolicyType> RendererT<PolicyType>::ctx;
-
 }

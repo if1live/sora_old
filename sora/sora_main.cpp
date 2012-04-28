@@ -47,6 +47,7 @@
 #include "renderer/buffer_object.h"
 #include "renderer/image.h"
 #include "renderer/renderer.h"
+#include "renderer/frame_buffer.h"
 
 #include "mesh/geometric_object.h"
 #include "mesh/freeglut_font.h"
@@ -98,13 +99,15 @@ Shader color_shader;
 VertexBufferObject vbo;
 IndexBufferObject wire_ibo;
 
+FrameBuffer depth_fbo;
+
 void SORA_set_window_size(Device *device, int w, int h) {
   device->render_device().SetWinSize(w, h);
 }
 
 bool setupGraphics(Device *device, int w, int h) {
   device->render_device().SetWinSize(w, h);
-  Renderer::Init(w, h);
+  depth_fbo.InitAsDepthTex(w, h);
 
   LOGI("Version : %s", RendererEnv::Version().c_str());
   LOGI("Vendor : %s", RendererEnv::Vender().c_str());
@@ -334,7 +337,9 @@ void renderFrame(Device *device) {
 
   //3d
   device->render_device().Set3D();
-  Renderer::BindFBO();  //fbo로 그리기. deferred같은거 구현하기 위해서 임시로 시도함
+
+  depth_fbo.Bind();  //fbo로 그리기. deferred같은거 구현하기 위해서 임시로 시도함
+  device->render_device().Set3D();
   Renderer::SetClearColor(0.3f, 0.3f, 0.3f, 1.0f);
   Renderer::ClearScreen();
 
@@ -454,7 +459,7 @@ void renderFrame(Device *device) {
       }
     }
   }
-  Renderer::UnbindFBO();
+  depth_fbo.Unbind();
 
 
   //fbo에 있는 내용을 적절히 그리기
@@ -465,14 +470,14 @@ void renderFrame(Device *device) {
     mat4 world_mat(1.0f);
     SetUniformMatrix(mvp_var, world_mat);
 
-    //device->render_device().UseTexture(Renderer::color_tex());
-    device->render_device().UseTexture(Renderer::depth_tex());
+    //device->render_device().UseTexture(depth_fbo.color_tex());
+    device->render_device().UseTexture(depth_fbo.depth_tex());
 
     Vertex2DList vert_list;
     vert_list.push_back(CreateVertex2D(-1, -1, 0, 0));
     vert_list.push_back(CreateVertex2D(1, -1, 1, 0));
-    vert_list.push_back(CreateVertex2D(1, 0, 1, 1));
-    vert_list.push_back(CreateVertex2D(-1, 0, 0, 1));
+    vert_list.push_back(CreateVertex2D(1, 1, 1, 1));
+    vert_list.push_back(CreateVertex2D(-1, 1, 0, 1));
     simple_shader.SetVertexList(vert_list);
     simple_shader.DrawArrays(kDrawTriangleFan, vert_list.size());
   }
