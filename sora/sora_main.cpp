@@ -158,7 +158,7 @@ bool setupGraphics(Device *device, int w, int h) {
     tex.Init();
 
     Image img;
-    img.LoadPNG(tex_file.start, tex_file.end - tex_file.start);
+    img.LoadJPG(tex_file.start, tex_file.end - tex_file.start);
     tex.LoadTexture(img);
     device->render_device().tex_mgr().Add(tex);
   }
@@ -326,6 +326,7 @@ void SORA_set_cam_pos(float a, float b) {
 }
 
 void renderFrame(Device *device) {
+  SR_CHECK_ERROR("Begin RenderFrame");
   glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   SR_CHECK_ERROR("Begin RenderFrame");
@@ -360,11 +361,11 @@ void renderFrame(Device *device) {
 
     mat4 mvp(1.0f);
     ShaderVariable mvp_var = color_shader.uniform_var(kMVPHandleName);
-    color_shader.SetMatrix(mvp_var, mvp);
+    SetUniformMatrix(mvp_var, mvp);
 
     vec4 color(1.0f);
     ShaderVariable const_color_var = color_shader.uniform_var(kConstColorHandleName);
-    color_shader.SetVector(const_color_var, color);
+    SetUniformVector(const_color_var, color);
     SR_CHECK_ERROR("SetVector");
 
     color_shader.SetVertexList(vert_list);
@@ -384,7 +385,7 @@ void renderFrame(Device *device) {
     mat4 mvp(1.0f);
     mvp = glm::rotate(mvp, 10.0f, vec3(0, 0, 1));
     ShaderVariable mvp_var = simple_shader.uniform_var(kMVPHandleName);
-    simple_shader.SetMatrix(mvp_var, mvp);
+    SetUniformMatrix(mvp_var, mvp);
     SR_CHECK_ERROR("SetMatrix");
     simple_shader.SetVertexList(vert_list);
     simple_shader.DrawArrays(kDrawTriangles, vert_list.size());
@@ -408,7 +409,7 @@ void renderFrame(Device *device) {
     glm::mat4 mvp(1.0f);
     mvp = projection * view;
     ShaderVariable mvp_var = simple_shader.uniform_var(kMVPHandleName);
-    simple_shader.SetMatrix(mvp_var, mvp);
+    SetUniformMatrix(mvp_var, mvp);
     SR_CHECK_ERROR("SetMatrix");
 
     GeometricObject<Vertex> mesh;
@@ -465,7 +466,7 @@ void renderFrame(Device *device) {
     float win_height = (float)device->render_device().win_height();
     glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
     ShaderVariable mvp_var = simple_shader.uniform_var(kMVPHandleName);
-    simple_shader.SetMatrix(mvp_var, projection);
+    SetUniformMatrix(mvp_var, projection);
 
     Vertex2DList vert_list;
     vert_list.push_back(CreateVertex2D(100, 100, 0, 1));
@@ -479,7 +480,7 @@ void renderFrame(Device *device) {
     world_mat = glm::translate(world_mat, glm::vec3(0, 480, 0));
     world_mat = glm::scale(world_mat, glm::vec3(2, 2, 1));
     mat4 mvp = projection * world_mat;
-    simple_shader.SetMatrix(mvp_var, mvp);
+    SetUniformMatrix(mvp_var, mvp);
     sora::Label label(&font, "PQRS_1234_asdf");
     simple_shader.SetVertexList(label.vertex_list());
     simple_shader.DrawElements(kDrawTriangles, label.index_list());
@@ -492,7 +493,7 @@ void renderFrame(Device *device) {
 
       vec4 color(1.0f, 0, 0, 1.0f);
       ShaderVariable const_color_var = shader.uniform_var(kConstColorHandleName);
-      shader.SetVector(const_color_var, color);
+      SetUniformVector(const_color_var, color);
       SR_CHECK_ERROR("SetVector");
 
       float win_width = (float)device->render_device().win_width();
@@ -504,7 +505,7 @@ void renderFrame(Device *device) {
       mat4 mvp = projection * world_mat;
 
       ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
-      shader.SetMatrix(mvp_var, mvp);
+      SetUniformMatrix(mvp_var, mvp);
 
       //auto font_vert_data = glutStrokeString(GLUT_STROKE_MONO_ROMAN, "ABCD");
       auto font_vert_data = glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, '@');
@@ -601,7 +602,7 @@ void renderFrame(Device *device) {
   */
 
   //////////////////////////////
-  
+  SR_CHECK_ERROR("End RenderFrame");
 }
 
 void SORA_setup_graphics(Device *device, int w, int h) {

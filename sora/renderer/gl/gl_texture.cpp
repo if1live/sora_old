@@ -21,6 +21,7 @@
 #include "sora_stdafx.h"
 #include "gl_texture.h"
 #include "renderer/globals.h"
+#include "renderer/renderer_env.h"
 
 #if SR_USE_PCH == 0
 #include <iostream>
@@ -72,6 +73,7 @@ namespace gl {
       return false;
     }
     glGenTextures(1, handle);
+    SR_CHECK_ERROR("glGenTexture");
     return true;
   }
 
@@ -134,7 +136,9 @@ namespace gl {
     int tex_height = height;
 
     glBindTexture(GL_TEXTURE_2D, tex_id);
+    SR_CHECK_ERROR("glBindTexture");
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    SR_CHECK_ERROR("glPixelStorei");
 
     //2의 승수로 되어야하는 경우, 미리 설정
     uchar *new_data = NULL;
@@ -157,6 +161,7 @@ namespace gl {
       }
       image_data = new_data;
     }
+    SR_ASSERT(image_data != NULL);
 
     //정책설정이 텍스쳐보다 우선되어야한다
     if(IsPower(2, tex_width) == false || IsPower(2, tex_height) == false) {
@@ -176,12 +181,16 @@ namespace gl {
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     }
-    glTexImage2D(GL_TEXTURE_2D, 0, format, tex_width, tex_height, 0, format, elem_type, image_data);
+    SR_CHECK_ERROR("glTexParameteri");
 
+    glTexImage2D(GL_TEXTURE_2D, 0, format, tex_width, tex_height, 0, format, elem_type, image_data);
+    SR_CHECK_ERROR("glTexImage2D");
     //메모리 할당한 경우, 지우기
     if(new_data != NULL) {
       SR_FREE(new_data);
     }
+
+    SR_CHECK_ERROR("LoadTexture");
     return true;
   }
 

@@ -22,13 +22,17 @@
 #define SORA_SHADER_VARIABLE_H_
 
 #include "renderer/gl/gl_env.h"
+#include "renderer/gl/gl_shader_variable.h"
 
 namespace sora {;
+
 struct ShaderVariable {
   typedef sora::gl::ShaderVariableHandleType HandleType;
+  typedef sora::gl::ShaderHandleType ShaderHandleType;
+  typedef sora::gl::GLShaderVariable Policy;
 
   ShaderVariable();
-  void Set(VarType var_type, HandleType loc_type, const char *attr_name, int size, HandleType loc);
+  void Set(VarType var_type, HandleType loc_type, const char *attr_name, int size, HandleType loc, ShaderHandleType shader_handle);
 
   bool operator==(const ShaderVariable &o) const;
   bool operator!=(const ShaderVariable &o) const;
@@ -41,7 +45,8 @@ public:
   std::string name;  //shader코드에서의 변수이름
   int size; //속성의 크기. 쉐이더에서 배열이 아니면 전부1이다
   HandleType location; //쉐이더에서의 위치값. 연결안되잇으면 일단 -1
+  ShaderHandleType shader;  //쉐이더의 핸들
 };
-}
+} //namespace sora
 
 #endif // SORA_SHADER_VARIABLE_H_

@@ -75,7 +75,7 @@ namespace sysfont {
     float win_height = (float)device->render_device().win_height();
     glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
     ShaderVariable mvp_var = simple_shader.uniform_var(kMVPHandleName);
-    simple_shader.SetMatrix(mvp_var, projection);
+    SetUniformMatrix(mvp_var, projection);
 
     Vertex2DList vert_list;
     vert_list.push_back(CreateVertex2D(100, 100, 0, 1));
@@ -89,7 +89,7 @@ namespace sysfont {
     world_mat = glm::translate(world_mat, glm::vec3(0, 480, 0));
     world_mat = glm::scale(world_mat, glm::vec3(2, 2, 1));
     mat4 mvp = projection * world_mat;
-    simple_shader.SetMatrix(mvp_var, mvp);
+    SetUniformMatrix(mvp_var, mvp);
     sora::Label label(&font, "PQRS_1234_asdf");
     simple_shader.SetVertexList(label.vertex_list());
     simple_shader.DrawElements(kDrawTriangles, label.index_list());

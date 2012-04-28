@@ -28,15 +28,17 @@ ShaderVariable::ShaderVariable()
   location_type(kHandleNone),
   size(0),
   name(""),
-  location(-1) {
+  location(-1),
+  shader(0) {
 }
 
-void ShaderVariable::Set(VarType var_type, HandleType loc_type, const char *attr_name, int size, HandleType loc) {
+void ShaderVariable::Set(VarType var_type, HandleType loc_type, const char *attr_name, int size, HandleType loc, ShaderHandleType shader_handle) {
   this->var_type = var_type;
   this->location_type = loc_type;
   this->size = size;
   this->name = attr_name;
   this->location = loc;
+  this->shader = shader_handle;
 }
 
 std::string ShaderVariable::str() const {

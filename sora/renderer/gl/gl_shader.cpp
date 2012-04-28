@@ -215,6 +215,7 @@ namespace gl {
       sl.name = uniformName;
       sl.size = size;
       sl.var_type = GLEnv::GLEnumToVarType(type);
+      sl.shader = handle;
 
       list.push_back(sl);
     }
@@ -245,6 +246,7 @@ namespace gl {
       sl.name = attributeName;
       sl.size = size;
       sl.var_type = GLEnv::GLEnumToVarType(type);
+      sl.shader = handle;
 
       list.push_back(sl);
     }

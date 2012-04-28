@@ -85,23 +85,23 @@ namespace freeglut {
       if(i == 0) {
         vec4 color(1.0f, 0, 0, 1.0f);
         ShaderVariable const_color_var = shader.uniform_var(kConstColorHandleName);
-        shader.SetVector(const_color_var, color);
+        SetUniformVector(const_color_var, color);
 
         world_mat = glm::translate(world_mat, glm::vec3(200, 200, 0));
         mat4 mvp = projection * world_mat;
         ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
-        shader.SetMatrix(mvp_var, mvp);
+        SetUniformMatrix(mvp_var, mvp);
         font_vert_data = glutStrokeString(GLUT_STROKE_MONO_ROMAN, "ABCD");
 
       } else {
         vec4 color(0.0f, 1.0f, 0, 1.0f);
         ShaderVariable const_color_var = shader.uniform_var(kConstColorHandleName);
-        shader.SetVector(const_color_var, color);
+        SetUniformVector(const_color_var, color);
 
         world_mat = glm::translate(world_mat, glm::vec3(100, 100, 0));
         mat4 mvp = projection * world_mat;
         ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
-        shader.SetMatrix(mvp_var, mvp);
+        SetUniformMatrix(mvp_var, mvp);
         font_vert_data = glutStrokeCharacter(GLUT_STROKE_ROMAN, '@');
       }
       

@@ -21,16 +21,44 @@
 #ifndef SORA_SHADER_H_
 #define SORA_SHADER_H_
 
-#include "gl/gl_shader.h"
 #include "buffer_object.h"
 #include "shader_variable.h"
 #include "core/logger.h"
+
+#include "gl/gl_shader.h"
+#include "gl/gl_shader_variable.h"
 
 namespace sora {;
 template<typename T> class ShaderT;
 typedef ShaderT<sora::gl::GLProgram> Shader;
 
-
+//uniform 연결하는 전역함수
+//uniform bind function
+//shader variable클래스의 멤버함수로써 아래의 바인딩 함수를 넣는것을 시도한적이 잇는데 실패햇다
+//원인은 shader variable은 gl shader variable를 단위정책으로 사용하기 위해서 include해야되는데
+//gl shader variable은 shader variable의 내부에 잇는 정보를 참조해서 작동하기 떄문에 include해야한다
+//양쪽이 서로를 include해야되는 의존성 문제로 그냥 외부에 함수로 빼냇다. 단위정책을 기반으로 이상한 짓을 할떄는
+//이런식으로 전역함수같은 느낌으로 하는것이 의존성 문제를 회피하는데는 더 좋은듯하다
+template<typename T>
+bool SetUniformMatrix(const ShaderVariable &var, const glm::detail::tmat4x4<T> &mat) {
+  return ShaderVariable::Policy::SetMatrix(var, mat);
+}
+template<typename T>
+bool SetUniformMatrix(const ShaderVariable &var, const glm::detail::tmat3x3<T> &mat) {
+  return ShaderVariable::Policy::SetMatrix(var, mat);
+}
+template<typename T>
+bool SetUniformVector(const ShaderVariable &var, const glm::detail::tvec4<T> &vec) {
+  return ShaderVariable::Policy::SetVector(var, vec);
+}
+template<typename T>
+bool SetUniformVector(const ShaderVariable &var, const glm::detail::tvec3<T>&vec) {
+  return ShaderVariable::Policy::SetVector(var, vec);
+}
+template<typename T>
+bool SetUniformValue(const ShaderVariable &var, T value) {
+  return ShaderVariable::Policy::SetValue(var, value);
+}
 
 template<typename PolicyType>
 class ShaderT : public PolicyType {
@@ -66,29 +94,7 @@ public:
   void Deinit() {
     Policy::Deinit(&handle_);
   }
-
-  //uniform bind function
-  template<typename T>
-  HandleType SetMatrix(const ShaderVariable &var, const glm::detail::tmat4x4<T> &mat) {
-    return Policy::SetMatrix(handle_, var, mat);
-  }
-  template<typename T>
-  HandleType SetMatrix(const ShaderVariable &var, const glm::detail::tmat3x3<T> &mat) {
-    return Policy::SetMatrix(handle_, var, mat);
-  }
-  template<typename T>
-  HandleType SetVector(const ShaderVariable &var, const glm::detail::tvec4<T> &vec) {
-    return Policy::SetVector(handle_, var, vec);
-  }
-  template<typename T>
-  HandleType SetVector(const ShaderVariable &var, const glm::detail::tvec3<T>&vec) {
-    return Policy::SetVector(handle_, var, vec);
-  }
-  template<typename T>
-  HandleType SetValue(const ShaderVariable &var, T value) {
-    return Policy::SetValue(handle_, var, value);
-  }
-
+  
   //attrib bind function
   //connect vertex attrib
   template<typename VertexContainer>
@@ -166,7 +172,7 @@ void ShaderT<PolicyType>::DrawArrays(DrawType mode, unsigned int vertex_count) {
 template<typename PolicyType>
 void ShaderT<PolicyType>::DrawArrays(DrawType mode, int vertex_count) {
   if(vertex_count > 0) {
-    return Policy::DrawArrays(handle_, mode, vertex_count);
+    return Policy::DrawArrays(mode, vertex_count);
   }
 }
 
@@ -174,7 +180,7 @@ template<typename PolicyType>
 template<typename IndexContainer>
 void ShaderT<PolicyType>::DrawElements(DrawType mode, const IndexContainer &index_data) {
   if(index_data.size() > 0) {
-    Policy::DrawElements(handle_, mode, index_data);
+    Policy::DrawElements(mode, index_data);
   }
 }
 
@@ -183,14 +189,14 @@ template<typename PolicyType>
 template<typename VertexContainer>
 void ShaderT<PolicyType>::DrawArrays(DrawType mode, const VertexContainer &vert_data) {
   Policy::SetVertexList(handle_, vert_data);
-  Policy::DrawArrays(handle_, mode, vert_data.size());
+  Policy::DrawArrays(mode, vert_data.size());
 }
 
 template<typename PolicyType>
 template<typename VertexContainer, typename IndexContainer>
 void ShaderT<PolicyType>::DrawElements(DrawType mode, const VertexContainer &vertex_data, const IndexContainer &index_data) {
   Policy::SetVertexList(handle_, vertex_data);
-  Policy::DrawElements(handle_, mode, index_data);
+  Policy::DrawElements(mode, index_data);
 }
 
 
