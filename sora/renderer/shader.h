@@ -21,7 +21,7 @@
 #ifndef SORA_SHADER_H_
 #define SORA_SHADER_H_
 
-#include "buffer_object.h"
+//#include "buffer_object.h"
 #include "shader_variable.h"
 #include "core/logger.h"
 
@@ -29,8 +29,6 @@
 #include "gl/gl_shader_variable.h"
 
 namespace sora {;
-template<typename T> class ShaderT;
-typedef ShaderT<sora::gl::GLProgram> Shader;
 
 //uniform 연결하는 전역함수
 //uniform bind function
@@ -39,9 +37,6 @@ typedef ShaderT<sora::gl::GLProgram> Shader;
 //gl shader variable은 shader variable의 내부에 잇는 정보를 참조해서 작동하기 떄문에 include해야한다
 //양쪽이 서로를 include해야되는 의존성 문제로 그냥 외부에 함수로 빼냇다. 단위정책을 기반으로 이상한 짓을 할떄는
 //이런식으로 전역함수같은 느낌으로 하는것이 의존성 문제를 회피하는데는 더 좋은듯하다
-
-typedef sora::gl::GLShaderVariable ShaderVariablePolicy;
-
 template<typename T>
 bool SetUniformMatrix(const ShaderVariable &var, const glm::detail::tmat4x4<T> &mat) {
   return ShaderVariablePolicy::SetMatrix(var, mat);

@@ -21,36 +21,22 @@
 #pragma once
 
 #include "globals.h"
-#include "renderer/gl/gl_frame_buffer.h"
-#include "renderer/texture.h"
+#include "shader.h"
 
 namespace sora {;
 
-template<typename PolicyType>
-class FrameBufferT : public PolicyType {
+class PostEffect {
 public:
- typedef PolicyType Policy;
- typedef FrameBufferHandle HandleType;
+  PostEffect();
+  ~PostEffect();
+
+  void Deinit();
+  //post effect를 단계적으로 수행해야하는 경우 프레임버퍼를 적절히 써서 떄우자
+  void Draw(Texture &tex, RenderDevice *dev);
+  void InitFromFile(const std::string &vert_path, const std::string &frag_path);
+
 public:
-  FrameBufferT() : handle_(0) {}
-  ~FrameBufferT() {}
-  //깊이 테스트용으로 쓰기 위한 초기화함수
-  //깊이텍스쳐의 정밀도 높음. 색깔 텍스쳐 정밀도는 낮음
-  void InitAsDepthTex(int w, int h) {
-    Policy::InitAsDepthTex(&handle_, w, h, &color_tex_, &depth_tex_);
-  }
-  void Deinit() { Policy::Deinit(&handle_); }
-  bool IsInit() const { return Policy::IsInit(handle_); }
-
-  Texture &color_tex() { return color_tex_; }
-  Texture &depth_tex() { return depth_tex_; }
-
-  void Bind() { Policy::Bind(handle_); }
-  void Unbind() { Policy::Unbind(); }
-
-private:
-  HandleType handle_;
-  Texture color_tex_;
-  Texture depth_tex_;
+  Shader post_effect_;
 };
+
 }

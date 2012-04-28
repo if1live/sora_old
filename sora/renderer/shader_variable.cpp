@@ -32,7 +32,7 @@ ShaderVariable::ShaderVariable()
   shader(0) {
 }
 
-void ShaderVariable::Set(VarType var_type, HandleType loc_type, const char *attr_name, int size, HandleType loc, ShaderHandleType shader_handle) {
+void ShaderVariable::Set(VarType var_type, VariableHandleType loc_type, const char *attr_name, int size, Location loc, ShaderHandleType shader_handle) {
   this->var_type = var_type;
   this->location_type = loc_type;
   this->size = size;

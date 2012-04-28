@@ -187,6 +187,9 @@
     <ClCompile Include="renderer\gl\gl_frame_buffer.cpp">
       <Filter>renderer\gl</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\post_effect.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -416,6 +419,9 @@
     </ClInclude>
     <ClInclude Include="renderer\gl\gl_frame_buffer.h">
       <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\post_effect.h">
+      <Filter>renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

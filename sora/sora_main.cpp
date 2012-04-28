@@ -48,9 +48,11 @@
 #include "renderer/image.h"
 #include "renderer/renderer.h"
 #include "renderer/frame_buffer.h"
+#include "renderer/post_effect.h"
 
 #include "mesh/geometric_object.h"
 #include "mesh/freeglut_font.h"
+
 
 //#include "renderer/uber_shader.h"
 //#include "renderer/matrix_stack.h"
@@ -95,6 +97,8 @@ using namespace glm;
 
 Shader simple_shader;
 Shader color_shader;
+PostEffect null_post_effect;
+PostEffect grayscale_post_effect;
 
 VertexBufferObject vbo;
 IndexBufferObject wire_ibo;
@@ -129,6 +133,14 @@ bool setupGraphics(Device *device, int w, int h) {
     string color_vs_path = Filesystem::GetAppPath("shader/const_color.vs");
     string color_fs_path = Filesystem::GetAppPath("shader/const_color.fs");
     color_shader.LoadFromFile(color_vs_path, color_fs_path);
+  }
+  {
+    //post effect
+    string vs_path = Filesystem::GetAppPath("posteffect/shared.vs");
+    string to_grayscale_fs_path = Filesystem::GetAppPath("posteffect/to_grayscale.fs");
+    string null_fs_path = Filesystem::GetAppPath("posteffect/null.fs");
+    grayscale_post_effect.InitFromFile(vs_path, to_grayscale_fs_path);
+    null_post_effect.InitFromFile(vs_path, null_fs_path);
   }
   //lodepng
   const char *texture_table[][2] = {
@@ -461,7 +473,7 @@ void renderFrame(Device *device) {
   }
   depth_fbo.Unbind();
 
-
+  /*
   //fbo에 있는 내용을 적절히 그리기
   {
     device->render_device().Set2D();
@@ -481,6 +493,8 @@ void renderFrame(Device *device) {
     simple_shader.SetVertexList(vert_list);
     simple_shader.DrawArrays(kDrawTriangleFan, vert_list.size());
   }
+  */
+  grayscale_post_effect.Draw(depth_fbo.color_tex(), &device->render_device());
 
   /*
   {

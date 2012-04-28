@@ -24,19 +24,15 @@
 #include "renderer/gl/gl_texture.h"
 #include "core/shared_ptr_inc.h"
 #include "core/unordered_map_inc.h"
+#include "renderer/globals.h"
 
 namespace sora {;
-class Image;
-
-template<typename PolicyType> class TextureT;
-typedef TextureT<sora::gl::GLTexture> Texture;
-typedef std::tr1::shared_ptr<Texture> TexturePtr;
 
 template<typename PolicyType>
 class TextureT : public PolicyType {
 public:
   typedef PolicyType Policy;
-  typedef typename PolicyType::HandleType HandleType;
+  typedef TextureHandle HandleType;
 public:
 
   TextureT(unsigned int policy = 0)

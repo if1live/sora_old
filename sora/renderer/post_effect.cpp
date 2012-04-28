@@ -18,39 +18,49 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#pragma once
+#include "sora_stdafx.h"
+#include "post_effect.h"
 
-#include "globals.h"
-#include "renderer/gl/gl_frame_buffer.h"
-#include "renderer/texture.h"
+#include "core/vertex.h"
+#include "renderer/render_device.h"
+
+using namespace glm;
+using namespace std;
 
 namespace sora {;
 
-template<typename PolicyType>
-class FrameBufferT : public PolicyType {
-public:
- typedef PolicyType Policy;
- typedef FrameBufferHandle HandleType;
-public:
-  FrameBufferT() : handle_(0) {}
-  ~FrameBufferT() {}
-  //깊이 테스트용으로 쓰기 위한 초기화함수
-  //깊이텍스쳐의 정밀도 높음. 색깔 텍스쳐 정밀도는 낮음
-  void InitAsDepthTex(int w, int h) {
-    Policy::InitAsDepthTex(&handle_, w, h, &color_tex_, &depth_tex_);
-  }
-  void Deinit() { Policy::Deinit(&handle_); }
-  bool IsInit() const { return Policy::IsInit(handle_); }
+PostEffect::PostEffect() {
 
-  Texture &color_tex() { return color_tex_; }
-  Texture &depth_tex() { return depth_tex_; }
+}
+PostEffect::~PostEffect() {
 
-  void Bind() { Policy::Bind(handle_); }
-  void Unbind() { Policy::Unbind(); }
+}
 
-private:
-  HandleType handle_;
-  Texture color_tex_;
-  Texture depth_tex_;
-};
+void PostEffect::Deinit() {
+  post_effect_.Deinit();
+}
+
+void PostEffect::Draw(Texture &tex, RenderDevice *dev) {
+  // -1~+1을 차지하게 tex를 그리면 될듯
+  dev->Set2D();
+  dev->UseShader(post_effect_);
+  ShaderVariable mvp_var = post_effect_.uniform_var(kMVPHandleName);
+  mat4 world_mat(1.0f);
+  SetUniformMatrix(mvp_var, world_mat);
+
+  //device->render_device().UseTexture(depth_fbo.color_tex());
+  dev->UseTexture(tex);
+
+  Vertex2DList vert_list;
+  vert_list.push_back(CreateVertex2D(-1, -1, 0, 0));
+  vert_list.push_back(CreateVertex2D(1, -1, 1, 0));
+  vert_list.push_back(CreateVertex2D(1, 1, 1, 1));
+  vert_list.push_back(CreateVertex2D(-1, 1, 0, 1));
+  post_effect_.SetVertexList(vert_list);
+  post_effect_.DrawArrays(kDrawTriangleFan, vert_list.size());
+
+}
+void PostEffect::InitFromFile(const std::string &vert_path, const std::string &frag_path) {
+  post_effect_.LoadFromFile(vert_path, frag_path);
+}
 }

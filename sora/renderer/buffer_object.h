@@ -24,12 +24,10 @@
 #include "core/vertex.h"
 #include "core/assert_inc.h"
 
+#include "renderer/globals.h"
 #include "renderer/gl/gl_buffer_object.h"
 
 namespace sora {;
-typedef sora::gl::GLVertexBufferObject GLVBOPolicy;
-typedef sora::gl::GLIndexBufferObject GLIBOPolicy;
-
 template<typename VertexT, typename GLVBOPolicy> class VertexBufferObjectT;
 typedef VertexBufferObjectT<Vertex, GLVBOPolicy> VertexBufferObject;
 typedef VertexBufferObjectT<Vertex2D, GLVBOPolicy> Vertex2DBufferObject;
@@ -38,15 +36,12 @@ typedef VertexBufferObjectT<TangentVertex, GLVBOPolicy> TangentVertexBufferObjec
 template<typename BasePolicy> class IndexBufferObjectT;
 typedef IndexBufferObjectT<GLIBOPolicy> IndexBufferObject;
 
-typedef GLVBOPolicy::HandleType VertexBufferHandle;
-typedef GLIBOPolicy::HandleType IndexBufferHandle;
-
 template<typename VertexT, typename BasePolicy>
 class VertexBufferObjectT : public BasePolicy {
 public:
   typedef VertexT VertexType;
   typedef VertexT value_type;
-  typedef typename BasePolicy::HandleType HandleType;
+  typedef VertexBufferHandle HandleType;
 
 public:
   VertexBufferObjectT() : size_(0) { BasePolicy::Reset(&handle_); }
@@ -80,7 +75,7 @@ private:
 template<typename BasePolicy>
 class IndexBufferObjectT {
 public:
-  typedef typename BasePolicy::HandleType HandleType;
+  typedef IndexBufferHandle HandleType;
 public:
   IndexBufferObjectT() : size_(0) { BasePolicy::Reset(&handle_); }
   ~IndexBufferObjectT() {}

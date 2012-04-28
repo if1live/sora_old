@@ -21,16 +21,16 @@
 #ifndef SORA_SHADER_VARIABLE_H_
 #define SORA_SHADER_VARIABLE_H_
 
-#include "renderer/gl/gl_env.h"
+#include "globals.h"
 
 namespace sora {;
 
 struct ShaderVariable {
-  typedef sora::gl::ShaderVariableHandleType HandleType;
-  typedef sora::gl::ShaderHandleType ShaderHandleType;
+  typedef ShaderVariableLocation Location;
+  typedef ShaderHandle ShaderHandleType;
 
   ShaderVariable();
-  void Set(VarType var_type, HandleType loc_type, const char *attr_name, int size, HandleType loc, ShaderHandleType shader_handle);
+  void Set(VarType var_type, VariableHandleType loc_type, const char *attr_name, int size, Location loc, ShaderHandleType shader_handle);
 
   bool operator==(const ShaderVariable &o) const;
   bool operator!=(const ShaderVariable &o) const;
@@ -39,10 +39,10 @@ struct ShaderVariable {
 
 public:
   VarType var_type; //vec2? mat4? float?
-  HandleType location_type;  //attrib/uniform
+  VariableHandleType location_type;  //attrib/uniform
   std::string name;  //shader코드에서의 변수이름
   int size; //속성의 크기. 쉐이더에서 배열이 아니면 전부1이다
-  HandleType location; //쉐이더에서의 위치값. 연결안되잇으면 일단 -1
+  Location location; //쉐이더에서의 위치값. 연결안되잇으면 일단 -1
   ShaderHandleType shader;  //쉐이더의 핸들
 };
 
