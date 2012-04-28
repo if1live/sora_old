@@ -33,6 +33,10 @@ public:
   void Deinit();
   //post effect를 단계적으로 수행해야하는 경우 프레임버퍼를 적절히 써서 떄우자
   void Draw(Texture &tex, RenderDevice *dev);
+  //화면의 일부에만 포스트 이펙트를 먹일경우에 사용한다
+  //디버깅이라든가하는곳에서 쓸수잇을듯하다
+  //좌표계는 scissor같은 느낌으로 왼쪽아래가 0, 0, 오르쪽위로가면 증가
+  void Draw(Texture &tex, RenderDevice *dev, int x, int y, int w, int h);
   void InitFromFile(const std::string &vert_path, const std::string &frag_path);
 
 public:
