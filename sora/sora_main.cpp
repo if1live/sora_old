@@ -494,8 +494,9 @@ void renderFrame(Device *device) {
     simple_shader.DrawArrays(kDrawTriangleFan, vert_list.size());
   }
   */
-  null_post_effect.Draw(depth_fbo.color_tex(), &device->render_device(), 0, 0, 320, 480);
-  grayscale_post_effect.Draw(depth_fbo.color_tex(), &device->render_device(), 320, 0, 320, 480);
+  null_post_effect.DrawScissor(depth_fbo.color_tex(), &device->render_device(), 0, 0, 320, 480);
+  grayscale_post_effect.DrawScissor(depth_fbo.color_tex(), &device->render_device(), 320, 0, 320, 480);
+  grayscale_post_effect.Draw(depth_fbo.color_tex(), &device->render_device(), 100, 100, 100, 100);
 
   /*
   {
