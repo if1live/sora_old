@@ -19,27 +19,29 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_stdafx.h"
-//#include "gl_shader_variable.h"
+#include "gl_shader_variable.h"
 
 namespace sora {;
 namespace gl {
-  /*
-  void GLShaderVariable::SetAttrib(int loc, int offset, int vert_size, GLenum var_type, int dim, bool normalize, char *base_ptr) {
-    if(offset == -1) {
-      return;
+  bool GLShaderVariable::SetAttrib(const ShaderVariable &var, const AttribBindParam &param, char *base_ptr) {
+    if(param.offset == -1 || var.location == -1) {
+      return false;
     }
-    if(loc != -1) {
-      glEnableVertexAttribArray(loc);
-      char *ptr = base_ptr + offset;
-      if(normalize == false) {
-        glVertexAttribPointer(loc, dim, var_type, GL_FALSE, vert_size, ptr);
-      } else {
-        glVertexAttribPointer(loc, dim, var_type, GL_TRUE, vert_size, ptr);
-      }
-      
-      SR_CHECK_ERROR("glVertexAttribPointer");
+    glEnableVertexAttribArray(var.location);
+    char *ptr = base_ptr + param.offset;
+
+    GLenum normalize = GL_FALSE;
+    if(param.normalize == true) {
+      normalize = GL_TRUE;
     }
+    glVertexAttribPointer(var.location, param.dim, param.var_type, normalize, param.vert_size, ptr);
+    
+    SR_CHECK_ERROR("glVertexAttribPointer");
+    return true;
   }
+
+  /*
+  
   void GLShaderVariable::SetPositionAttrib(const ShaderVariable &var, char *base_ptr, const VertexInfo &info) {
     SetAttrib(var.location, info.pos_offset, info.size, info.pos_type, info.pos_dim, false);
   }

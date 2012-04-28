@@ -39,6 +39,8 @@
 #include "renderer/shader_variable.h"
 
 namespace sora {;
+class VertexListBindParam;
+
 namespace gl {
   class GLShader;
   class GLProgram;
@@ -88,10 +90,10 @@ namespace gl {
     static bool IsInit(const HandleType &handle) { return (handle != 0); }
 
     template<typename T>
-    static void SetVertexList(const HandleType &handle, char *base_ptr);
+    static void SetVertexList(const VertexListBindParam &param, char *base_ptr);
 
     template<typename VertexContainer>
-    static void SetVertexList(const HandleType &handle, const VertexContainer &vertex_data);
+    static void SetVertexList(const VertexListBindParam &param, const VertexContainer &vertex_data);
 
     //진짜로 그리기
     static void DrawArrays(DrawType mode, int vertex_count) {
@@ -105,26 +107,69 @@ namespace gl {
     //최초실행시에는 모든목록을 얻을수잇다
     static std::vector<ShaderVariable> GetActiveUniformVarList(HandleType handle);
     static std::vector<ShaderVariable> GetActiveAttributeVarList(HandleType handle);
-  private:
-    static void SetPositionAttrib(HandleType handle, char *base_ptr, const VertexInfo &info);
-    static void SetTexcoordAttrib(HandleType handle, char *base_ptr, const VertexInfo &info);
-    static void SetNormalAttrib(HandleType handle, char *base_ptr, const VertexInfo &info);
-    static void SetColorAttrib(HandleType handle, char *base_ptr, const VertexInfo &info);
-    static void SetTangentAttrib(HandleType handle, char *base_ptr, const VertexInfo &info);
   };
 
   template<typename T>
-  void GLProgram::SetVertexList(const HandleType &handle, char *base_ptr) {
+  void GLProgram::SetVertexList(const VertexListBindParam &bind_param, char *base_ptr) {
     VertexInfo &info = GLEnv::GetGLVertexInfo<T>();
-    SetPositionAttrib(handle, base_ptr, info);
-    SetTexcoordAttrib(handle, base_ptr, info);
-    SetNormalAttrib(handle, base_ptr, info);
-    SetColorAttrib(handle, base_ptr, info);
-    SetTangentAttrib(handle, base_ptr, info);
+    //pos
+    {
+      AttribBindParam param;
+      param.dim = info.pos_dim;
+      param.normalize = false;
+      param.offset = info.pos_offset;
+      param.var_type = info.pos_type;
+      param.vert_size = info.size;
+      SetAttrib(bind_param.pos_var, param, base_ptr);
+    }
+
+    //texcoord 
+    {
+      AttribBindParam param;
+      param.dim = info.texcoord_dim;
+      param.normalize = false;
+      param.offset = info.texcoord_offset;
+      param.var_type = info.texcoord_type;
+      param.vert_size = info.size;
+      SetAttrib(bind_param.texcoord_var, param, base_ptr);
+    }
+
+    //normal
+    {
+      AttribBindParam param;
+      param.dim = info.normal_dim;
+      param.normalize = false;
+      param.offset = info.normal_offset;
+      param.var_type = info.normal_type;
+      param.vert_size = info.size;
+      SetAttrib(bind_param.normal_var, param, base_ptr);
+    }
+
+    //color
+    {
+      AttribBindParam param;
+      param.dim = info.color_dim;
+      param.normalize = true;
+      param.offset = info.color_offset;
+      param.var_type = info.color_type;
+      param.vert_size = info.size;
+      SetAttrib(bind_param.color_var, param, base_ptr);
+    }
+
+    //tangent
+    {
+      AttribBindParam param;
+      param.dim = info.tangent_dim;
+      param.normalize = false;
+      param.offset = info.tangent_offset;
+      param.var_type = info.tangent_type;
+      param.vert_size = info.size;
+      SetAttrib(bind_param.tangent_var, param, base_ptr);
+    }
   }
 
   template<typename VertexContainer>
-  void GLProgram::SetVertexList(const HandleType &handle, const VertexContainer &vertex_data) {
+  void GLProgram::SetVertexList(const VertexListBindParam &param, const VertexContainer &vertex_data) {
     typedef typename VertexContainer::value_type VertexType;
     typedef VertexBufferInfoHolder<VertexContainer> InfoHolder;
     unsigned int buffer = InfoHolder::buffer(vertex_data);
@@ -134,7 +179,7 @@ namespace gl {
     if(is_buffer) {
       glBindBuffer(GL_ARRAY_BUFFER, buffer);
     }
-    SetVertexList<VertexType>(handle, ptr);
+    SetVertexList<VertexType>(param, ptr);
     if(is_buffer) {
       glBindBuffer(GL_ARRAY_BUFFER, 0);
     }

@@ -26,6 +26,7 @@
 
 namespace sora {;
 struct ShaderVariable;
+struct AttribBindParam;
 namespace gl {
   class GLShaderVariable {
   public:
@@ -41,6 +42,8 @@ namespace gl {
     template<typename T>
     static bool SetValue(const ShaderVariable &var, T value);
 
+    //attrib bind function
+    static bool SetAttrib(const ShaderVariable &var, const AttribBindParam &param, char *base_ptr);
   };
 
   template<typename T>

@@ -24,4 +24,7 @@
 using namespace std;
 
 namespace sora {;
+bool SetAttrib(const ShaderVariable &var, const AttribBindParam &param, char *base_ptr) {
+  return ShaderVariablePolicy::SetAttrib(var, param, base_ptr);
+}
 }

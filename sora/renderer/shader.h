@@ -39,26 +39,30 @@ typedef ShaderT<sora::gl::GLProgram> Shader;
 //gl shader variable은 shader variable의 내부에 잇는 정보를 참조해서 작동하기 떄문에 include해야한다
 //양쪽이 서로를 include해야되는 의존성 문제로 그냥 외부에 함수로 빼냇다. 단위정책을 기반으로 이상한 짓을 할떄는
 //이런식으로 전역함수같은 느낌으로 하는것이 의존성 문제를 회피하는데는 더 좋은듯하다
+
+typedef sora::gl::GLShaderVariable ShaderVariablePolicy;
+
 template<typename T>
 bool SetUniformMatrix(const ShaderVariable &var, const glm::detail::tmat4x4<T> &mat) {
-  return ShaderVariable::Policy::SetMatrix(var, mat);
+  return ShaderVariablePolicy::SetMatrix(var, mat);
 }
 template<typename T>
 bool SetUniformMatrix(const ShaderVariable &var, const glm::detail::tmat3x3<T> &mat) {
-  return ShaderVariable::Policy::SetMatrix(var, mat);
+  return ShaderVariablePolicy::SetMatrix(var, mat);
 }
 template<typename T>
 bool SetUniformVector(const ShaderVariable &var, const glm::detail::tvec4<T> &vec) {
-  return ShaderVariable::Policy::SetVector(var, vec);
+  return ShaderVariablePolicy::SetVector(var, vec);
 }
 template<typename T>
 bool SetUniformVector(const ShaderVariable &var, const glm::detail::tvec3<T>&vec) {
-  return ShaderVariable::Policy::SetVector(var, vec);
+  return ShaderVariablePolicy::SetVector(var, vec);
 }
 template<typename T>
 bool SetUniformValue(const ShaderVariable &var, T value) {
-  return ShaderVariable::Policy::SetValue(var, value);
+  return ShaderVariablePolicy::SetValue(var, value);
 }
+bool SetAttrib(const ShaderVariable &var, const AttribBindParam &param, char *base_ptr);
 
 template<typename PolicyType>
 class ShaderT : public PolicyType {
@@ -160,7 +164,15 @@ template<typename PolicyType>
 template<typename VertexContainer>
 void ShaderT<PolicyType>::SetVertexList(const VertexContainer &vert_data) {
   if(vert_data.empty() == false) {
-    Policy::SetVertexList(handle_, vert_data);
+    //Policy::SetVertexList(handle_, vert_data);
+    VertexListBindParam param;
+    param.pos_var = attrib_var(kPositionHandleName);
+    param.texcoord_var = attrib_var(kTexcoordHandleName);
+    param.normal_var = attrib_var(kNormalHandleName);
+    param.color_var = attrib_var(kColorHandleName);
+    param.tangent_var = attrib_var(kTangentHandleName);
+
+    Policy::SetVertexList(param, vert_data);
   }
 }
 
@@ -188,14 +200,14 @@ void ShaderT<PolicyType>::DrawElements(DrawType mode, const IndexContainer &inde
 template<typename PolicyType>
 template<typename VertexContainer>
 void ShaderT<PolicyType>::DrawArrays(DrawType mode, const VertexContainer &vert_data) {
-  Policy::SetVertexList(handle_, vert_data);
+  SetVertexList(vert_data);
   Policy::DrawArrays(mode, vert_data.size());
 }
 
 template<typename PolicyType>
 template<typename VertexContainer, typename IndexContainer>
 void ShaderT<PolicyType>::DrawElements(DrawType mode, const VertexContainer &vertex_data, const IndexContainer &index_data) {
-  Policy::SetVertexList(handle_, vertex_data);
+  SetVertexList(vertex_data);
   Policy::DrawElements(mode, index_data);
 }
 

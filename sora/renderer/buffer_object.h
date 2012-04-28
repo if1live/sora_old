@@ -68,6 +68,7 @@ public:
 
   VertexType *data() { return nullptr; }
   const VertexType *data() const { return nullptr; }
+  bool empty() const { return (size_ == 0); }
 
   HandleType handle() const { return handle_; }
   
@@ -102,6 +103,7 @@ public:
     }
   }
   int size() const { return size_; }
+  bool empty() const { return (size_ == 0); }
 
   IndexType *data() { return nullptr; }
   const IndexType *data() const { return nullptr; }
