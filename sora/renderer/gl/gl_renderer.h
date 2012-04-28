@@ -23,8 +23,10 @@
 
 #include "renderer/globals.h"
 #include "core/vertex.h"
+#include "renderer/texture.h"
 
 namespace sora {;
+
 namespace gl {
   class GLRenderer {
   protected:
@@ -33,6 +35,13 @@ namespace gl {
     GLRenderer() {}
     static void SetClearColor(float r, float g, float b, float a);
     static void ClearScreen();
+
+    static void InitDepthTexture(int w, int h, Texture *tex);
+    static void InitColorTexture(int w, int h, Texture *tex);
+    static void InitFBO(GLuint *fbo, const Texture &color_tex, const Texture &depth_tex);
+
+    static void BindFBO(GLuint fbo);
+    static void UnbindFBO();
   };
 } // namespace gl
 } // namespace sora

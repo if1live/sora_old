@@ -21,10 +21,14 @@
 #pragma  once
 
 #include "renderer/gl/gl_renderer.h"
+#include "renderer/texture.h"
+
 namespace sora {;
 template<typename PolicyType> class RendererT;
 typedef sora::gl::GLRenderer RendererPolicy;
 typedef RendererT<RendererPolicy> Renderer;
+
+typedef unsigned int FBOHandleType;
 
 template<typename PolicyType>
 class RendererT : public PolicyType {
@@ -32,6 +36,7 @@ public:
   typedef PolicyType Policy;
 public:
   static void SetClearColor(float r, float g, float b, float a) {
+    SR_ASSERT(ctx.inited_ == true);
     ctx.clear_color_[0] = r;
     ctx.clear_color_[1] = g;
     ctx.clear_color_[2] = b;
@@ -39,13 +44,46 @@ public:
     Policy::SetClearColor(r, g, b, a);
   }
   static void ClearScreen() {
+    SR_ASSERT(ctx.inited_ == true);
     Policy::ClearScreen();
   }
+  static void Init(int w, int h) {
+    SR_ASSERT(ctx.inited_ == false);
+    ctx.inited_ = true;
+    Policy::InitColorTexture(w, h, &ctx.color_tex_);
+    Policy::InitDepthTexture(w, h, &ctx.depth_tex_);
+    Policy::InitFBO(&ctx.fbo_, ctx.color_tex_, ctx.depth_tex_);
+  }
+
+  static void BindFBO() {
+    SR_ASSERT(ctx.inited_ == true);
+    Policy::BindFBO(ctx.fbo_);
+  }
+  static void UnbindFBO() {
+    SR_ASSERT(ctx.inited_ == true);
+    Policy::UnbindFBO();
+  }
+
+  static Texture &depth_tex() {
+    SR_ASSERT(ctx.inited_ == true);
+    return ctx.depth_tex_;
+  }
+  static Texture &color_tex() {
+    SR_ASSERT(ctx.inited_ == true);
+    return ctx.color_tex_;
+  }
+
 private:
-  RendererT() { }
+  RendererT() : fbo_(0), inited_(false) { }
+
   static RendererT ctx;
 
   glm::vec4 clear_color_;
+  
+  bool inited_;
+  FBOHandleType fbo_;
+  Texture depth_tex_;
+  Texture color_tex_;
 };
 
 template<typename PolicyType>

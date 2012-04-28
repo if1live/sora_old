@@ -38,6 +38,12 @@ public:
   typedef PolicyType Policy;
   typedef typename PolicyType::HandleType HandleType;
 public:
+
+  TextureT(unsigned int policy = 0)
+    : is_render_to_texture_(false), 
+    tex_policy_(policy),
+    handle_(0) {}
+
   TextureT(const std::string &name, unsigned int policy = 0)
   : name_(name), 
   is_render_to_texture_(false), 
@@ -56,6 +62,7 @@ public:
     handle_ = handle;
     img_desc_ = img_desc;
     is_render_to_texture_ = is_rtt;
+    return true;
   }
 
   bool Loaded() const { return Policy::Loaded(handle_); }

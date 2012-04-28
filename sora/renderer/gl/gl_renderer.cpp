@@ -20,6 +20,9 @@
 // Ŭnicode please
 #include "sora_stdafx.h"
 #include "gl_renderer.h"
+#include "renderer/renderer_env.h"
+
+#include "renderer/texture.h"
 
 namespace sora {;
 namespace gl {
@@ -28,6 +31,60 @@ namespace gl {
   }
   void GLRenderer::ClearScreen() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  }
+
+  void GLRenderer::InitDepthTexture(int w, int h, Texture *tex) {
+    GLuint tex_id = 0;
+    //깊이를 텍스쳐에 연결
+    glGenTextures(1, &tex_id);
+    glBindTexture(GL_TEXTURE_2D, tex_id);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, w, h, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL);
+    SR_CHECK_ERROR("DepthTexture");
+
+    ImageDesc desc;
+    desc.width = w;
+    desc.height = h;
+    tex->Init(tex_id, desc, true);
+  }
+  void GLRenderer::InitColorTexture(int w, int h, Texture *tex) {
+    //색은 그냥 버퍼로 쓰자
+    /*
+    glGenRenderbuffers(1, &color_rb);
+    glBindRenderbuffer(GL_RENDERBUFFER, color_rb);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA4, w, h);
+    SR_CHECK_ERROR("1");
+    */
+    GLuint tex_id;
+    glGenTextures(1, &tex_id);
+    glBindTexture(GL_TEXTURE_2D, tex_id);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_SHORT, NULL);
+    SR_CHECK_ERROR("ColorTexture");
+
+    ImageDesc desc;
+    desc.width = w;
+    desc.height = h;
+    tex->Init(tex_id, desc, true);
+  }
+  void GLRenderer::InitFBO(GLuint *fbo, const Texture &color_tex, const Texture &depth_tex) {
+    glGenFramebuffers(1, fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, *fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_tex.handle(), 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_tex.handle(), 0);
+    //glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color_rb);
+    SR_CHECK_FRAMEBUFFER("fb");
+    SR_CHECK_ERROR("Create FB");
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+  }
+
+  void GLRenderer::BindFBO(GLuint fbo) {
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+  }
+  void GLRenderer::UnbindFBO() {
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
   }
 }
 }

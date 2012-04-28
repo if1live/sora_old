@@ -104,6 +104,7 @@ void SORA_set_window_size(Device *device, int w, int h) {
 
 bool setupGraphics(Device *device, int w, int h) {
   device->render_device().SetWinSize(w, h);
+  Renderer::Init(w, h);
 
   LOGI("Version : %s", RendererEnv::Version().c_str());
   LOGI("Vendor : %s", RendererEnv::Vender().c_str());
@@ -333,6 +334,9 @@ void renderFrame(Device *device) {
 
   //3d
   device->render_device().Set3D();
+  Renderer::BindFBO();  //fbo로 그리기. deferred같은거 구현하기 위해서 임시로 시도함
+  Renderer::SetClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+  Renderer::ClearScreen();
 
   VertexList vert_list;
   vert_list.push_back(CreateVertex(vec3(-0.5, -0.5, 0), vec2(0, 0)));
@@ -450,86 +454,27 @@ void renderFrame(Device *device) {
       }
     }
   }
+  Renderer::UnbindFBO();
 
-  //draw 2d
+
+  //fbo에 있는 내용을 적절히 그리기
   {
-    SR_CHECK_ERROR("Render 2d start");
     device->render_device().Set2D();
-
     device->render_device().UseShader(simple_shader);
-    
-    sora::SysFont &font = device->render_device().sys_font();
-    device->render_device().UseTexture(font.font_texture());
-
-    //해상도에 맞춰서 적절히 설정
-    float win_width = (float)device->render_device().win_width();
-    float win_height = (float)device->render_device().win_height();
-    glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
     ShaderVariable mvp_var = simple_shader.uniform_var(kMVPHandleName);
-    SetUniformMatrix(mvp_var, projection);
+    mat4 world_mat(1.0f);
+    SetUniformMatrix(mvp_var, world_mat);
+
+    //device->render_device().UseTexture(Renderer::color_tex());
+    device->render_device().UseTexture(Renderer::depth_tex());
 
     Vertex2DList vert_list;
-    vert_list.push_back(CreateVertex2D(100, 100, 0, 1));
-    vert_list.push_back(CreateVertex2D(100+128*2, 100, 1, 1));
-    vert_list.push_back(CreateVertex2D(100+128*2, 100+128*2, 1, 0));
-    vert_list.push_back(CreateVertex2D(100, 100+128*2, 0, 0));
+    vert_list.push_back(CreateVertex2D(-1, -1, 0, 0));
+    vert_list.push_back(CreateVertex2D(1, -1, 1, 0));
+    vert_list.push_back(CreateVertex2D(1, 0, 1, 1));
+    vert_list.push_back(CreateVertex2D(-1, 0, 0, 1));
     simple_shader.SetVertexList(vert_list);
     simple_shader.DrawArrays(kDrawTriangleFan, vert_list.size());
-
-    mat4 world_mat(1.0f);
-    world_mat = glm::translate(world_mat, glm::vec3(0, 480, 0));
-    world_mat = glm::scale(world_mat, glm::vec3(2, 2, 1));
-    mat4 mvp = projection * world_mat;
-    SetUniformMatrix(mvp_var, mvp);
-    sora::Label label(&font, "PQRS_1234_asdf");
-    simple_shader.SetVertexList(label.vertex_list());
-    simple_shader.DrawElements(kDrawTriangles, label.index_list());
-    
-
-    {
-      //단색으로 glut용 그리기
-      device->render_device().UseShader(color_shader);
-      sora::Shader &shader = color_shader;
-
-      vec4 color(1.0f, 0, 0, 1.0f);
-      ShaderVariable const_color_var = shader.uniform_var(kConstColorHandleName);
-      SetUniformVector(const_color_var, color);
-      SR_CHECK_ERROR("SetVector");
-
-      float win_width = (float)device->render_device().win_width();
-      float win_height = (float)device->render_device().win_height();
-      glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
-
-      mat4 world_mat(1.0f);
-      world_mat = glm::translate(world_mat, glm::vec3(200, 200, 0));
-      mat4 mvp = projection * world_mat;
-
-      ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
-      SetUniformMatrix(mvp_var, mvp);
-
-      //auto font_vert_data = glutStrokeString(GLUT_STROKE_MONO_ROMAN, "ABCD");
-      auto font_vert_data = glutStrokeCharacter(GLUT_STROKE_MONO_ROMAN, '@');
-      auto it = font_vert_data.begin();
-      auto endit = font_vert_data.end();
-      
-      glLineWidth(3.0f);
-      for( ; it != endit ; ++it) {
-        const DrawCmdData<vec2> &cmd = *it;
-        if(cmd.disable_cull_face == true) {
-          glDisable(GL_CULL_FACE);
-        }
-        shader.SetVertexList(cmd.vertex_list);
-        if(cmd.index_list.empty()) {
-          shader.DrawArrays(cmd.draw_mode, cmd.vertex_list.size());
-        } else {
-          shader.DrawElements(cmd.draw_mode, cmd.index_list);
-        }
-        if(cmd.disable_cull_face == true) {
-          glEnable(GL_CULL_FACE);
-        }
-      }
-      glLineWidth(1.0f);
-    }
   }
 
   /*
