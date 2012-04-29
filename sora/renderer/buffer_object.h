@@ -50,33 +50,54 @@ public:
   VertexBufferObjectT(const std::vector<VertexType> &vert_list, BufferUsageType usage = kBufferUsageStatic) 
     : size_(0) { 
       BasePolicy::Reset(&handle_);
-      Init(vert_list, usage);
+      Init(vert_list);
   }
 
   ~VertexBufferObjectT() {}
   bool Loaded() const { return BasePolicy::Loaded(handle_); }
 
-  bool Init(const std::vector<VertexType> &vert_list, BufferUsageType usage = kBufferUsageStatic) {
+  bool Init(const std::vector<Vertex> &vert_list) {
+    return InitWithTypeCheck(vert_list);
+  }
+  bool Init(const std::vector<Vertex2D> &vert_list) {
+    return InitWithTypeCheck(vert_list);
+  }
+  bool Init(const std::vector<TangentVertex> &vert_list) {
+    return InitWithTypeCheck(vert_list);
+  }
+  bool Init(const std::vector<glm::vec2> &vert_list) {
+    return InitWithTypeCheck(vert_list);
+  }
+  bool Init(const std::vector<glm::vec3> &vert_list) {
+    return InitWithTypeCheck(vert_list);
+  }
+
+  template<typename T2>
+  bool InitWithTypeCheck(const std::vector<T2> &vert_list) {
     SR_ASSERT(Loaded() == false);
     if(vert_list.empty()) {
       return false;
-    } else {}
-      int size = vert_list.size() * sizeof(VertexType);
-      BasePolicy::Init(&handle_, size, (void*)&vert_list[0], usage);
-      size_ = vert_list.size();
-      return true;
+    }
+    if(std::is_same<T2, VertexType>::value == false) {
+      return false;
+    }
+
+    BufferUsageType usage = kBufferUsageStatic; //일단은 내장함. 나중에 분리하자
+    int size = vert_list.size() * sizeof(VertexType);
+    BasePolicy::Init(&handle_, size, (void*)&vert_list[0], usage);
+    size_ = vert_list.size();
+    return true;
   }
+
   void Deinit() { BasePolicy::Deinit(&handle_); }
   int size() const { return size_; }
 
-  VertexType *data() { return nullptr; }
-  const VertexType *data() const { return nullptr; }
+  void *data() { return nullptr; }
+  const void *data() const { return nullptr; }
   bool empty() const { return (size_ == 0); }
 
   HandleType handle() const { return handle_; }
   bool IsBuffer() const { return true; }
-  void *ptr() { return nullptr; }
-  const void *ptr() const { return nullptr; }
   int ElemSize() const { return sizeof(VertexType); }
   VertexCode vertex_code() const { return (VertexCode)VertexInfoHolder<VertexType>::code; }
 
@@ -95,14 +116,13 @@ public:
   IndexBufferObjectT(const IndexContainer &index_list, BufferUsageType usage = kBufferUsageStatic)
     : size_(0) {
     BasePolicy::Reset(&handle_);
-    Init(index_list, usage);
+    Init(index_list);
   }
   ~IndexBufferObjectT() {}
   bool Loaded() const { return BasePolicy::Loaded(handle_); }
   void Deinit() { BasePolicy::Deinit(&handle_); }
 
-  template<typename IndexContainer>
-  bool Init(const IndexContainer &index_list, BufferUsageType usage = kBufferUsageStatic) {
+  bool Init(const std::vector<unsigned short> &index_list) {
     //typedef IndexContainer::value_type IndexElemType;
     //static_assert(std::is_same<unsigned short, IndexElemType>::value, "not unsigned short index");
 
@@ -110,21 +130,21 @@ public:
     if(index_list.empty()) {
       return false;
     } else {
+      BufferUsageType usage = kBufferUsageStatic;
       int size = index_list.size() * sizeof(index_list[0]);
       BasePolicy::Init(&handle_, size, (void*)&index_list[0], usage);
       size_ = index_list.size();
       return true;
     }
   }
+
   int size() const { return size_; }
   bool empty() const { return (size_ == 0); }
 
-  IndexType *data() { return nullptr; }
-  const IndexType *data() const { return nullptr; }
+  void *data() { return nullptr; }
+  const void *data() const { return nullptr; }
   HandleType handle() const { return handle_; }
   bool IsBuffer() const { return true; }
-  void *ptr() { return nullptr; }
-  const void *ptr() const { return nullptr; }
 
 private:
   HandleType handle_;

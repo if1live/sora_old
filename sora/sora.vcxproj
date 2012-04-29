@@ -104,6 +104,7 @@
     <ClCompile Include="renderer\gl\gl_frame_buffer.cpp" />
     <ClCompile Include="renderer\gl\gl_shader_variable.cpp" />
     <ClCompile Include="renderer\image.cpp" />
+    <ClCompile Include="renderer\mesh_buffer.cpp" />
     <ClCompile Include="renderer\post_effect.cpp" />
     <ClCompile Include="renderer\shader.cpp" />
     <ClCompile Include="renderer\shader_variable.cpp" />

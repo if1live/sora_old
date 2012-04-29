@@ -32,11 +32,12 @@ TEST(VertexBufferInterface, std_vector_version) {
   vert_list.push_back(CreateVertex2D(0, 0, 0, 1));
   vert_list.push_back(CreateVertex2D(0, 0, 2, 0));
 
-  unique_ptr<VertexBufferInterface> buffer(new VertexArray<Vertex2D>(vert_list));
+  unique_ptr<VertexBufferInterface> buffer(new VertexArray<Vertex2D>());
+  buffer->Init(vert_list);
   EXPECT_EQ(vert_list.size(), buffer->size());
   EXPECT_EQ(vert_list.empty(), buffer->empty());
   EXPECT_EQ(false, buffer->IsBuffer());
-  EXPECT_EQ(true, NULL != buffer->ptr());
+  EXPECT_EQ(true, NULL != buffer->data());
   EXPECT_EQ(sizeof(Vertex2D), buffer->ElemSize());
   EXPECT_EQ(0, buffer->handle());
   EXPECT_EQ(kVertex2D, buffer->vertex_code());
@@ -48,11 +49,12 @@ TEST(VertexBufferInterface, vbo_version) {
   vert_list.push_back(CreateVertex2D(0, 0, 0, 1));
   vert_list.push_back(CreateVertex2D(0, 0, 2, 0));
 
-  unique_ptr<VertexBufferInterface> buffer(new Vertex2DBufferObject(vert_list));
+  unique_ptr<VertexBufferInterface> buffer(new Vertex2DBufferObject());
+  buffer->Init(vert_list);
   EXPECT_EQ(vert_list.size(), buffer->size());
   EXPECT_EQ(vert_list.empty(), buffer->empty());
   EXPECT_EQ(true, buffer->IsBuffer());
-  EXPECT_EQ(nullptr, buffer->ptr());
+  EXPECT_EQ(nullptr, buffer->data());
   EXPECT_EQ(sizeof(Vertex2D), buffer->ElemSize());
   EXPECT_EQ(true, 0 < buffer->handle());
   EXPECT_EQ(kVertex2D, buffer->vertex_code());
@@ -61,22 +63,24 @@ TEST(VertexBufferInterface, vbo_version) {
 
 TEST(IndexBufferInterface, std_vector_version) {
   IndexList index_list(1, 10);
-  unique_ptr<IndexBufferInterface> buffer(new IndexArray(index_list));
+  unique_ptr<IndexBufferInterface> buffer(new IndexArray());
+  buffer->Init(index_list);
   EXPECT_EQ(index_list.size(), buffer->size());
   EXPECT_EQ(index_list.empty(), buffer->empty());
   EXPECT_EQ(false, buffer->IsBuffer());
-  EXPECT_EQ(true, NULL != buffer->ptr());
+  EXPECT_EQ(true, NULL != buffer->data());
   EXPECT_EQ(0, buffer->handle());
   buffer->Deinit();
 }
 
 TEST(IndexBufferInterface, ibo_version) {
   IndexList index_list(1, 10);
-  unique_ptr<IndexBufferInterface> buffer(new IndexBufferObject(index_list));
+  unique_ptr<IndexBufferInterface> buffer(new IndexBufferObject());
+  buffer->Init(index_list);
   EXPECT_EQ(index_list.size(), buffer->size());
   EXPECT_EQ(index_list.empty(), buffer->empty());
   EXPECT_EQ(true, buffer->IsBuffer());
-  EXPECT_EQ(nullptr, buffer->ptr());
+  EXPECT_EQ(nullptr, buffer->data());
   EXPECT_EQ(true, 0 < buffer->handle());
   buffer->Deinit();
 }

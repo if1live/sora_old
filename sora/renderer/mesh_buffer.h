@@ -20,6 +20,9 @@
 // Ŭnicode please
 #pragma once
 
+#include "globals.h"
+#include "core/vertex.h"
+
 namespace sora {;
 
 struct VertexBufferInterface {
@@ -28,14 +31,21 @@ struct VertexBufferInterface {
 
   virtual int size() const = 0;
   virtual bool empty() const = 0;
-  virtual void Deinit() = 0;
+  virtual void Deinit() = 0;  
   virtual bool IsBuffer() const = 0;
-  virtual void *ptr() = 0;
-  virtual const void *ptr() const = 0;
+  virtual void *data() = 0;
+  virtual const void *data() const = 0;
   virtual int ElemSize() const = 0;
   
   virtual VertexBufferHandle handle() const = 0;
   virtual VertexCode vertex_code() const = 0;
+
+  //template+virtual조합은 불가능하기 떄문에 가능한 vertex 마다 만들어야한다
+  virtual bool Init(const std::vector<Vertex> &vert_list) = 0;
+  virtual bool Init(const std::vector<Vertex2D> &vert_list) = 0;
+  virtual bool Init(const std::vector<TangentVertex> &vert_list) = 0;
+  virtual bool Init(const std::vector<glm::vec2> &vert_list) = 0;
+  virtual bool Init(const std::vector<glm::vec3> &vert_list) = 0;
 };
 
 class IndexBufferInterface {
@@ -45,10 +55,11 @@ public:
 
   virtual int size() const = 0;
   virtual bool empty() const = 0;
+  virtual bool Init(const std::vector<unsigned short> &index_list) = 0;
   virtual void Deinit() = 0;
   virtual bool IsBuffer() const = 0;
-  virtual void *ptr() = 0;
-  virtual const void *ptr() const = 0;
+  virtual void *data() = 0;
+  virtual const void *data() const = 0;
 
   virtual IndexBufferHandle handle() const = 0;
 };
@@ -68,19 +79,48 @@ public:
 
   void clear() { data_.clear(); }
   void push_back(const T &v) { data_.push_back(v); }
-  void Init(const std::vector<T> &data) { data_ = data; }
   int size() const { return data_.size(); }
-  T *data() { return data_.data(); }
-  const T *data() const { return data_.data(); }
+  void *data() { return data_.data(); }
+  const void *data() const { return data_.data(); }
   bool empty() const { return data_.empty(); }
   void Deinit() { data_.clear(); }
   bool IsBuffer() const { return false; }
-  void *ptr() { return data(); }
-  const void *ptr() const { return data(); }
   int ElemSize() const { return sizeof(T); }
   VertexBufferHandle handle() const { return 0; }
 
   VertexCode vertex_code() const { return (VertexCode)VertexInfoHolder<T>::code; }
+
+  //bool Init(const std::vector<T> &data) { data_ = data; return true;}
+
+  bool Init(const std::vector<Vertex> &vert_list) {
+    return InitWithTypeCheck(vert_list);
+  }
+  bool Init(const std::vector<Vertex2D> &vert_list) {
+    return InitWithTypeCheck(vert_list);
+  }
+  bool Init(const std::vector<TangentVertex> &vert_list) {
+    return InitWithTypeCheck(vert_list);
+  }
+  bool Init(const std::vector<glm::vec2> &vert_list) {
+    return InitWithTypeCheck(vert_list);
+  }
+  bool Init(const std::vector<glm::vec3> &vert_list) {
+    return InitWithTypeCheck(vert_list);
+  }
+  bool Init(const std::vector<unsigned short> &index_list) {
+    return InitWithTypeCheck(index_list);
+  }
+
+  template<typename T2>
+  bool InitWithTypeCheck(const std::vector<T2> &vert_list) {
+    if(std::is_same<T2, T>::value) {
+      data_.resize(vert_list.size());
+      memcpy(data_.data(), vert_list.data(), sizeof(T) * data_.size());
+      return true;
+    } else {
+      return false;
+    }
+  }
 
 protected:
   std::vector<T> data_;
