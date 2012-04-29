@@ -429,5 +429,8 @@
     <ClInclude Include="post_effect_main.h">
       <Filter>logic_test</Filter>
     </ClInclude>
+    <ClInclude Include="renderer\mesh_buffer.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -27,6 +27,8 @@
 #include "renderer/globals.h"
 #include "renderer/gl/gl_buffer_object.h"
 
+#include "mesh_buffer.h"
+
 namespace sora {;
 template<typename VertexT, typename GLVBOPolicy> class VertexBufferObjectT;
 typedef VertexBufferObjectT<Vertex, GLVBOPolicy> VertexBufferObject;
@@ -37,7 +39,7 @@ template<typename BasePolicy> class IndexBufferObjectT;
 typedef IndexBufferObjectT<GLIBOPolicy> IndexBufferObject;
 
 template<typename VertexT, typename BasePolicy>
-class VertexBufferObjectT : public BasePolicy {
+class VertexBufferObjectT : public BasePolicy, public VertexBufferInterface {
 public:
   typedef VertexT VertexType;
   typedef VertexT value_type;
@@ -45,6 +47,12 @@ public:
 
 public:
   VertexBufferObjectT() : size_(0) { BasePolicy::Reset(&handle_); }
+  VertexBufferObjectT(const std::vector<VertexType> &vert_list, BufferUsageType usage = kBufferUsageStatic) 
+    : size_(0) { 
+      BasePolicy::Reset(&handle_);
+      Init(vert_list, usage);
+  }
+
   ~VertexBufferObjectT() {}
   bool Loaded() const { return BasePolicy::Loaded(handle_); }
 
@@ -66,18 +74,29 @@ public:
   bool empty() const { return (size_ == 0); }
 
   HandleType handle() const { return handle_; }
-  
+  bool IsBuffer() const { return true; }
+  void *ptr() { return nullptr; }
+  const void *ptr() const { return nullptr; }
+  int ElemSize() const { return sizeof(VertexType); }
+  VertexCode vertex_code() const { return (VertexCode)VertexInfoHolder<VertexType>::code; }
+
 private:
   HandleType handle_;
   int size_;
 };
 
 template<typename BasePolicy>
-class IndexBufferObjectT {
+class IndexBufferObjectT : public IndexBufferInterface {
 public:
   typedef IndexBufferHandle HandleType;
 public:
   IndexBufferObjectT() : size_(0) { BasePolicy::Reset(&handle_); }
+  template<typename IndexContainer>
+  IndexBufferObjectT(const IndexContainer &index_list, BufferUsageType usage = kBufferUsageStatic)
+    : size_(0) {
+    BasePolicy::Reset(&handle_);
+    Init(index_list, usage);
+  }
   ~IndexBufferObjectT() {}
   bool Loaded() const { return BasePolicy::Loaded(handle_); }
   void Deinit() { BasePolicy::Deinit(&handle_); }
@@ -103,6 +122,9 @@ public:
   IndexType *data() { return nullptr; }
   const IndexType *data() const { return nullptr; }
   HandleType handle() const { return handle_; }
+  bool IsBuffer() const { return true; }
+  void *ptr() { return nullptr; }
+  const void *ptr() const { return nullptr; }
 
 private:
   HandleType handle_;

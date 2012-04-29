@@ -32,6 +32,7 @@ namespace gl {
   class GLRenderDevice {
   public:
     GLRenderDevice(Device *dev);
+    GLRenderDevice();
     ~GLRenderDevice();
 
     void EndRender();

@@ -35,6 +35,7 @@ template<typename PolicyType>
 class RenderDeviceT {
 public:
   RenderDeviceT(Device *dev) : policy_(dev) {}
+  RenderDeviceT() {}
   ~RenderDeviceT() {}
 
   void UseShader(Shader &shader) { policy_.UseShader(shader.handle()); }

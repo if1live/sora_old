@@ -39,7 +39,8 @@ Vertex2D CreateVertex2D(float x, float y, float s, float t) {
 }
 
 VertexInfo::VertexInfo()
-  : size(0),
+  : vert_code(kVertexNone),
+  size(0),
   pos_offset(-1),
   pos_type(kVertexElemFloat),
   pos_dim(0),
@@ -56,4 +57,30 @@ VertexInfo::VertexInfo()
   tangent_type(kVertexElemFloat),
   tangent_dim(0) { }
 
+const VertexInfo &VertexInfo::Info(VertexCode code) {
+  static bool run = false;
+  static std::array<VertexInfo, kVertexCodeCount> info_list;
+  if(run == false) {
+    run = true;
+
+    info_list[kVertex2D] = VertexInfoHolder<Vertex2D>::Get();
+    info_list[kVertex] = VertexInfoHolder<Vertex>::Get();
+    info_list[kVertexTangent] = VertexInfoHolder<TangentVertex>::Get();
+    info_list[kVertexPos2D] = VertexInfoHolder<glm::vec2>::Get();
+    info_list[kVertexPos3D] = VertexInfoHolder<glm::vec3>::Get();
+  }
+  return info_list[code];
 }
+bool VertexInfo::operator==(const VertexInfo &o) const {
+  if(memcmp(this, &o, sizeof(VertexInfo)) == 0) {
+    return true;
+  } else {
+    return false;
+  }
+}
+bool VertexInfo::operator!=(const VertexInfo &o) const {
+  return !(*this == o);
+}
+
+} //namespace sora
+

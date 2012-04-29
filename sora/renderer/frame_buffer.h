@@ -32,7 +32,7 @@ public:
  typedef PolicyType Policy;
  typedef FrameBufferHandle HandleType;
 public:
-  FrameBufferT() : handle_(0) {}
+  FrameBufferT() : handle_(0), width_(0), height_(0) {}
   ~FrameBufferT() {}
   //깊이 테스트용으로 쓰기 위한 초기화함수
   //깊이텍스쳐의 정밀도 높음. 색깔 텍스쳐 정밀도는 낮음
@@ -48,9 +48,14 @@ public:
   void Bind() { Policy::Bind(handle_); }
   void Unbind() { Policy::Unbind(); }
 
+  int width() const { return width_; }
+  int height() const { return height_; }
+
 private:
   HandleType handle_;
   Texture color_tex_;
   Texture depth_tex_;
+  int width_;
+  int height_;
 };
 }

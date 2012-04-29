@@ -27,7 +27,19 @@
 
 namespace sora {;
 
+typedef enum {
+  kVertexNone,
+  kVertex2D,
+  kVertex,
+  kVertexTangent,
+  kVertexPos2D,
+  kVertexPos3D,
+
+  kVertexCodeCount,
+} VertexCode;
+
 template<
+  int VertexCodeV,
   typename PosT, int PosD,
   typename TexcoordT, int TexcoordD,
   typename NormalT, int NormalD,
@@ -36,6 +48,7 @@ template<
 > struct VertexT;
 
 typedef VertexT<
+  kVertex,
   float, 3, 
   float, 2,
   float, 3,
@@ -44,6 +57,7 @@ typedef VertexT<
 > Vertex;
 
 typedef VertexT<
+  kVertexTangent,
   float, 3, 
   float, 2,
   float, 3,
@@ -52,6 +66,7 @@ typedef VertexT<
 > TangentVertex;
 
 typedef VertexT<
+  kVertex2D,
   float, 2,
   float, 2,
   float, 0,
@@ -111,6 +126,7 @@ struct ArrayT {
 };
 
 template<
+  int VertexCodeV,
   typename PosT,
   int PosD,
   typename TexcoordT,
@@ -130,6 +146,7 @@ template<
   typedef TangentT TangentType;
 
   enum {
+    kVertexCode = VertexCodeV,
     PosDim = PosD,
     ColorDim = ColorD,
     TexcoordDim = TexcoordD,
@@ -211,6 +228,7 @@ struct VecToVertexElemType {
 struct VertexInfo {
   VertexInfo();
 
+  VertexCode vert_code;
   int size;
 
   int pos_offset;
@@ -232,12 +250,20 @@ struct VertexInfo {
   int tangent_offset;
   VertexElemType tangent_type;
   int tangent_dim;
+
+public:
+  bool operator==(const VertexInfo &o) const;
+  bool operator!=(const VertexInfo &o) const;
+
+  //vertex code별로 info 를 적절히 연결시켜서 저장해놓기
+  static const VertexInfo &Info(VertexCode code);
 };
 
 //표준형 vertex에 대한 구현
 template<typename T>
 struct VertexInfoHolder {
   typedef T VertexType;
+  enum { code = T::kVertexCode };
   static VertexInfo &Get() {
     static VertexInfo info;
     static bool init = false;
@@ -246,6 +272,7 @@ struct VertexInfoHolder {
       typedef T VertexType;
       VertexType vert;
       info.size = sizeof(T);
+      info.vert_code = (VertexCode)T::kVertexCode;
 
       info.pos_dim = T::PosDim;
       if(T::PosDim > 0) {
@@ -285,12 +312,14 @@ struct VertexInfoHolder {
 template<>
 struct VertexInfoHolder<glm::vec2> {
   typedef glm::vec2 VertexType;
+  enum { code = kVertexPos2D };
   static VertexInfo &Get() {
     static VertexInfo info;
     static bool init = false;
     if(init == false) {
       init = true;
       info.size = sizeof(glm::vec2);
+      info.vert_code = kVertexPos2D;
 
       info.pos_offset = 0;
       info.pos_type = kVertexElemFloat;
@@ -303,12 +332,14 @@ struct VertexInfoHolder<glm::vec2> {
 template<>
 struct VertexInfoHolder<glm::vec3> {
   typedef glm::vec3 VertexType;
+  enum { code = kVertexPos3D };
   static VertexInfo &Get() {
     static VertexInfo info;
     static bool init = false;
     if(init == false) {
       init = true;
       info.size = sizeof(glm::vec3);
+      info.vert_code = kVertexPos3D;
 
       info.pos_offset = 0;
       info.pos_type = kVertexElemFloat;
@@ -317,6 +348,13 @@ struct VertexInfoHolder<glm::vec3> {
     return info;
   }
 };
+
+template<>
+struct VertexInfoHolder<unsigned short> {
+  typedef unsigned short VertexType;
+  enum { code = kVertexNone };
+};
+
 
 
 /*

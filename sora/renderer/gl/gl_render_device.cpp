@@ -33,6 +33,11 @@ namespace gl {
   win_height_(480) {
     EndRender();
   }
+  GLRenderDevice::GLRenderDevice()
+    : win_width_(640),
+    win_height_(480) {
+      EndRender();
+  }
   GLRenderDevice::~GLRenderDevice() {
 
   }

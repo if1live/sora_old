@@ -179,6 +179,7 @@
     <ClInclude Include="renderer\gl\gl_frame_buffer.h" />
     <ClInclude Include="renderer\gl\gl_shader_variable.h" />
     <ClInclude Include="renderer\image.h" />
+    <ClInclude Include="renderer\mesh_buffer.h" />
     <ClInclude Include="renderer\post_effect.h" />
     <ClInclude Include="renderer\renderer.h" />
     <ClInclude Include="renderer\shader_variable.h" />

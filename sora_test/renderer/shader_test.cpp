@@ -21,6 +21,8 @@
 #include "sora_test_stdafx.h"
 #include "renderer/shader.h"
 
+#include "sora/renderer/render_device.h"
+
 using namespace sora;
 
 const char *sample_vert_src = ""
@@ -49,6 +51,10 @@ TEST(Shader, basic) {
 
   //validate
   EXPECT_EQ(true, shader.Validate());
+  SR_CHECK_ERROR("Validate");
+
+  RenderDevice dev;
+  dev.UseShader(shader);
 
   glm::mat4 m1;
   ShaderVariable mvp_var = shader.uniform_var("u_mvpMatrix");

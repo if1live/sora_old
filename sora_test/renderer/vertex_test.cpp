@@ -44,3 +44,11 @@ TEST(VertexInfo, TangentVertex) {
   EXPECT_EQ(0, info.pos_offset);
   EXPECT_EQ(kVertexElemFloat, info.pos_type);
 }
+
+TEST(VertexInfo, Get) {
+  const VertexInfo &vert_info = VertexInfo::Info(kVertex);
+  EXPECT_EQ(true, VertexInfoHolder<Vertex>::Get() == vert_info);
+
+  const VertexInfo &pos2d_info = VertexInfo::Info(kVertexPos2D);
+  EXPECT_EQ(true, VertexInfoHolder<glm::vec2>::Get() == pos2d_info);
+}
