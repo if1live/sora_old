@@ -300,11 +300,9 @@ namespace gl {
     static std::array<VertexInfo, kVertexCodeCount> data;
     if(run == false) {
       run = true;
-      data[kVertex2D] = ToGLVertexInfo(VertexInfoHolder<Vertex2D>::Get());
-      data[kVertex] = ToGLVertexInfo(VertexInfoHolder<Vertex>::Get());
-      data[kVertexTangent] = ToGLVertexInfo(VertexInfoHolder<TangentVertex>::Get());
-      data[kVertexPos2D] = ToGLVertexInfo(VertexInfoHolder<glm::vec2>::Get());
-      data[kVertexPos3D] = ToGLVertexInfo(VertexInfoHolder<glm::vec3>::Get());
+      for(int i = 0 ; i < kVertexCodeCount ; i++) {
+        data[i] = ToGLVertexInfo(VertexInfo::Info(code));
+      }
     }
     return data[code];
   }

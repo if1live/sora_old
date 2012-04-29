@@ -18,28 +18,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_test_stdafx.h"
-#include "renderer/gl/gl_buffer_object.h"
+#ifndef SORA_LIGHT_H_
+#define SORA_LIGHT_H_
 
-#include "core/vertex.h"
+#if SR_USE_PCH == 0
+#include <glm/glm.hpp>
+#endif
 
-TEST(GLBufferData, test) {
-  using namespace sora::gl;
-  using namespace sora;
-  using namespace std;
+namespace sora {;
 
-  vector<Vertex2D> vert_list;
-  vert_list.push_back(CreateVertex2D(0, 0, 0, 0));
-  vert_list.push_back(CreateVertex2D(1, 0, 0, 1));
-  vert_list.push_back(CreateVertex2D(1, 1, 1, 0));
+struct Light {
+  Light()
+    : ambient(1.0f, 1.0f, 1.0f, 1.0f),
+    diffuse(1.0f, 1.0f, 1.0f, 1.0f),
+    specular(1.0f, 1.0f, 1.0f, 1.0f) {
+  }
 
-  GLVertexBufferObject::HandleType handle = 0;
-  EXPECT_EQ(false, GLVertexBufferObject::Loaded(handle));
+  //shadow map를 구성하기 위해서는 사실상 카메라와 동일한 속성이 필요하다
+  glm::vec3 pos;
+  glm::vec3 center;
+  glm::vec3 up;
 
-  GLVertexBufferObject::Init(&handle);
-  GLVertexBufferObject::Load(handle, sizeof(Vertex2D) * vert_list.size(), &vert_list[0], GL_STATIC_DRAW);
-  EXPECT_EQ(true, GLVertexBufferObject::Loaded(handle));
+  glm::vec4 ambient;
+  glm::vec4 diffuse;
+  glm::vec4 specular;
+  //float shininess;
+};
 
-  GLVertexBufferObject::Deinit(&handle);
-  EXPECT_EQ(false, GLVertexBufferObject::Loaded(handle));
 }
+
+#endif  // SORA_LIGHT_H_

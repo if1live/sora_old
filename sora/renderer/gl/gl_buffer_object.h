@@ -42,20 +42,23 @@ namespace gl {
       *handle = 0;
     }
 
-    static void Init(HandleType *handle, int size, void *data, BufferUsageType usage) {
+    static void Load(HandleType handle, int size, void *data, BufferUsageType usage) {
       GLenum gl_usage = GLEnv::TypeToGLEnum(usage);
-      Init(handle, size, data, gl_usage);
+      Load(handle, size, data, gl_usage);
     }
-    static void Init(HandleType *handle, int size, void *data, GLenum usage) {
-      HandleType &buffer = *handle;     
-      if(buffer == 0) {
-        glGenBuffers(1, &buffer);
-      }
-      glBindBuffer(Target, buffer);
+    static void Load(HandleType handle, int size, void *data, GLenum usage) {
+      glBindBuffer(Target, handle);
       glBufferData(Target, size, data, usage);
 
       //unbind
       glBindBuffer(Target, 0);
+    }
+
+    static void Init(HandleType *handle) {
+      HandleType &buffer = *handle;     
+      if(buffer == 0) {
+        glGenBuffers(1, &buffer);
+      }
     }
     static void Deinit(HandleType *handle) {
       HandleType &buffer = *handle;

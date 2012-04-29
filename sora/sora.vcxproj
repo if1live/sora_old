@@ -104,6 +104,7 @@
     <ClCompile Include="renderer\gl\gl_frame_buffer.cpp" />
     <ClCompile Include="renderer\gl\gl_shader_variable.cpp" />
     <ClCompile Include="renderer\image.cpp" />
+    <ClCompile Include="renderer\material.cpp" />
     <ClCompile Include="renderer\mesh_buffer.cpp" />
     <ClCompile Include="renderer\post_effect.cpp" />
     <ClCompile Include="renderer\shader.cpp" />
@@ -180,6 +181,8 @@
     <ClInclude Include="renderer\gl\gl_frame_buffer.h" />
     <ClInclude Include="renderer\gl\gl_shader_variable.h" />
     <ClInclude Include="renderer\image.h" />
+    <ClInclude Include="renderer\light.h" />
+    <ClInclude Include="renderer\material.h" />
     <ClInclude Include="renderer\mesh_buffer.h" />
     <ClInclude Include="renderer\post_effect.h" />
     <ClInclude Include="renderer\renderer.h" />

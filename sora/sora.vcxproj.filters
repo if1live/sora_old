@@ -196,6 +196,9 @@
     <ClCompile Include="renderer\mesh_buffer.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\material.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -433,6 +436,12 @@
       <Filter>logic_test</Filter>
     </ClInclude>
     <ClInclude Include="renderer\mesh_buffer.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\material.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\light.h">
       <Filter>renderer</Filter>
     </ClInclude>
   </ItemGroup>

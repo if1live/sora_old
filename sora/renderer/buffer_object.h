@@ -56,25 +56,32 @@ public:
   ~VertexBufferObjectT() {}
   bool Loaded() const { return BasePolicy::Loaded(handle_); }
 
-  bool Init(const std::vector<Vertex> &vert_list) {
-    return InitWithTypeCheck(vert_list);
-  }
-  bool Init(const std::vector<Vertex2D> &vert_list) {
-    return InitWithTypeCheck(vert_list);
-  }
-  bool Init(const std::vector<TangentVertex> &vert_list) {
-    return InitWithTypeCheck(vert_list);
-  }
-  bool Init(const std::vector<glm::vec2> &vert_list) {
-    return InitWithTypeCheck(vert_list);
-  }
-  bool Init(const std::vector<glm::vec3> &vert_list) {
-    return InitWithTypeCheck(vert_list);
-  }
+  bool Init(const std::vector<Vertex> &vert_list) { return InitWithTypeCheck(vert_list);  }
+  bool Init(const std::vector<Vertex2D> &vert_list) { return InitWithTypeCheck(vert_list); }
+  bool Init(const std::vector<TangentVertex> &vert_list) { return InitWithTypeCheck(vert_list); }
+  bool Init(const std::vector<glm::vec2> &vert_list) { return InitWithTypeCheck(vert_list); }
+  bool Init(const std::vector<glm::vec3> &vert_list) { return InitWithTypeCheck(vert_list); }
+
+  bool Load(const std::vector<Vertex> &vert_list) { return LoadWithTypeCheck(vert_list);  }
+  bool Load(const std::vector<Vertex2D> &vert_list) { return LoadWithTypeCheck(vert_list); }
+  bool Load(const std::vector<TangentVertex> &vert_list) { return LoadWithTypeCheck(vert_list); }
+  bool Load(const std::vector<glm::vec2> &vert_list) { return LoadWithTypeCheck(vert_list); }
+  bool Load(const std::vector<glm::vec3> &vert_list) { return LoadWithTypeCheck(vert_list); }
+  bool Load(const std::vector<unsigned short> &index_list) { return LoadWithTypeCheck(vert_list); }
 
   template<typename T2>
   bool InitWithTypeCheck(const std::vector<T2> &vert_list) {
     SR_ASSERT(Loaded() == false);
+    if(vert_list.empty()) {
+      return false;
+    }
+    BasePolicy::Init(&handle_);
+    return LoadWithTypeCheck(vert_list);
+  }
+
+  template<typename T2>
+  bool LoadWithTypeCheck(const std::vector<T2> &vert_list) {
+    SR_ASSERT(Loaded() == true);
     if(vert_list.empty()) {
       return false;
     }
@@ -84,7 +91,7 @@ public:
 
     BufferUsageType usage = kBufferUsageStatic; //일단은 내장함. 나중에 분리하자
     int size = vert_list.size() * sizeof(VertexType);
-    BasePolicy::Init(&handle_, size, (void*)&vert_list[0], usage);
+    BasePolicy::Load(handle_, size, (void*)&vert_list[0], usage);
     size_ = vert_list.size();
     return true;
   }
@@ -122,6 +129,18 @@ public:
   bool Loaded() const { return BasePolicy::Loaded(handle_); }
   void Deinit() { BasePolicy::Deinit(&handle_); }
 
+  bool Load(const std::vector<unsigned short> &index_list) { 
+    SR_ASSERT(Loaded() == true);
+    if(index_list.empty()) {
+      return false;
+    }
+    BufferUsageType usage = kBufferUsageStatic;
+    int size = index_list.size() * sizeof(index_list[0]);
+    BasePolicy::Load(handle_, size, (void*)&index_list[0], usage);
+    size_ = index_list.size();
+    return true;
+  }
+
   bool Init(const std::vector<unsigned short> &index_list) {
     //typedef IndexContainer::value_type IndexElemType;
     //static_assert(std::is_same<unsigned short, IndexElemType>::value, "not unsigned short index");
@@ -129,13 +148,9 @@ public:
     SR_ASSERT(Loaded() == false);
     if(index_list.empty()) {
       return false;
-    } else {
-      BufferUsageType usage = kBufferUsageStatic;
-      int size = index_list.size() * sizeof(index_list[0]);
-      BasePolicy::Init(&handle_, size, (void*)&index_list[0], usage);
-      size_ = index_list.size();
-      return true;
     }
+    BasePolicy::Init(&handle_);
+    return Load(index_list);
   }
 
   int size() const { return size_; }

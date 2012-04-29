@@ -46,6 +46,12 @@ struct VertexBufferInterface {
   virtual bool Init(const std::vector<TangentVertex> &vert_list) = 0;
   virtual bool Init(const std::vector<glm::vec2> &vert_list) = 0;
   virtual bool Init(const std::vector<glm::vec3> &vert_list) = 0;
+
+  virtual bool Load(const std::vector<Vertex> &vert_list) = 0;
+  virtual bool Load(const std::vector<Vertex2D> &vert_list) = 0;
+  virtual bool Load(const std::vector<TangentVertex> &vert_list) = 0;
+  virtual bool Load(const std::vector<glm::vec2> &vert_list) = 0;
+  virtual bool Load(const std::vector<glm::vec3> &vert_list) = 0;
 };
 
 class IndexBufferInterface {
@@ -56,6 +62,7 @@ public:
   virtual int size() const = 0;
   virtual bool empty() const = 0;
   virtual bool Init(const std::vector<unsigned short> &index_list) = 0;
+  virtual bool Load(const std::vector<unsigned short> &index_list) = 0;
   virtual void Deinit() = 0;
   virtual bool IsBuffer() const = 0;
   virtual void *data() = 0;
@@ -92,24 +99,19 @@ public:
 
   //bool Init(const std::vector<T> &data) { data_ = data; return true;}
 
-  bool Init(const std::vector<Vertex> &vert_list) {
-    return InitWithTypeCheck(vert_list);
-  }
-  bool Init(const std::vector<Vertex2D> &vert_list) {
-    return InitWithTypeCheck(vert_list);
-  }
-  bool Init(const std::vector<TangentVertex> &vert_list) {
-    return InitWithTypeCheck(vert_list);
-  }
-  bool Init(const std::vector<glm::vec2> &vert_list) {
-    return InitWithTypeCheck(vert_list);
-  }
-  bool Init(const std::vector<glm::vec3> &vert_list) {
-    return InitWithTypeCheck(vert_list);
-  }
-  bool Init(const std::vector<unsigned short> &index_list) {
-    return InitWithTypeCheck(index_list);
-  }
+  bool Init(const std::vector<Vertex> &vert_list) { return InitWithTypeCheck(vert_list); }
+  bool Init(const std::vector<Vertex2D> &vert_list) { return InitWithTypeCheck(vert_list); }
+  bool Init(const std::vector<TangentVertex> &vert_list) { return InitWithTypeCheck(vert_list); }
+  bool Init(const std::vector<glm::vec2> &vert_list) { return InitWithTypeCheck(vert_list); }
+  bool Init(const std::vector<glm::vec3> &vert_list) { return InitWithTypeCheck(vert_list); }
+  bool Init(const std::vector<unsigned short> &index_list) { return InitWithTypeCheck(index_list); }
+
+  bool Load(const std::vector<Vertex> &vert_list) { return InitWithTypeCheck(vert_list);  }
+  bool Load(const std::vector<Vertex2D> &vert_list) { return InitWithTypeCheck(vert_list); }
+  bool Load(const std::vector<TangentVertex> &vert_list) { return InitWithTypeCheck(vert_list); }
+  bool Load(const std::vector<glm::vec2> &vert_list) { return InitWithTypeCheck(vert_list); }
+  bool Load(const std::vector<glm::vec3> &vert_list) { return InitWithTypeCheck(vert_list); }
+  bool Load(const std::vector<unsigned short> &index_list) { return InitWithTypeCheck(index_list); }
 
   template<typename T2>
   bool InitWithTypeCheck(const std::vector<T2> &vert_list) {
@@ -121,7 +123,6 @@ public:
       return false;
     }
   }
-
 protected:
   std::vector<T> data_;
 };

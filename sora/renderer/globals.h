@@ -212,6 +212,19 @@ typedef VectorWrapper<unsigned short, IndexBufferInterface> IndexArray;
 template<typename T>  class VertexArrayT;
 //for mesh buffer - end
 
+//material/uber shader에서 사용되는 플래그용
+enum {
+  kMaterialAmbient = 0x01,
+  kMaterialDiffuse = 0x02,
+  kMaterialSpecular = 0x04,
+  kMaterialAmbientMap = 0x08,
+  kMaterialDiffuseMap = 0x10,
+  kMaterialSpecularMap = 0x20,
+  kMaterialNormapMap = 0x40,
+};
+enum {
+  kInvalidMaterialFlag = UINT_MAX,
+};
 
 //predefined semantic
 #define kPositionHandleName "a_position"
