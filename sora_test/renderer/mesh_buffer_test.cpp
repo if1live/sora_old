@@ -85,3 +85,18 @@ TEST(IndexBufferInterface, ibo_version) {
   buffer->Deinit();
 }
 
+TEST(MeshBuffer, Register) {
+  MeshBuffer mesh_buffer;
+  int v_id_1 = mesh_buffer.Register(new Vertex2DBufferObject());
+  int v_id_2 = mesh_buffer.Register(new VertexArrayT<Vertex2D>());
+  int i_id_1 = mesh_buffer.Register(new IndexArray());
+  int i_id_2 = mesh_buffer.Register(new IndexBufferObject());
+
+  EXPECT_EQ(true, mesh_buffer.IsVertexBufferExist(v_id_1));
+  EXPECT_EQ(true, mesh_buffer.IsVertexBufferExist(v_id_2));
+  EXPECT_EQ(true, mesh_buffer.IsIndexBufferExist(i_id_1));
+  EXPECT_EQ(true, mesh_buffer.IsIndexBufferExist(i_id_2));
+
+  EXPECT_EQ(false, mesh_buffer.IsVertexBufferExist(v_id_2 + 100));
+  EXPECT_EQ(false, mesh_buffer.IsIndexBufferExist(i_id_1 + 100));
+}

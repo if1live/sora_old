@@ -22,11 +22,12 @@
 
 #include "globals.h"
 #include "core/vertex.h"
+#include "core/unordered_map_inc.h"
 
 namespace sora {;
 
 struct VertexBufferInterface {
-  VertexBufferInterface() {}
+  VertexBufferInterface();
   virtual ~VertexBufferInterface() {}
 
   virtual int size() const = 0;
@@ -52,11 +53,15 @@ struct VertexBufferInterface {
   virtual bool Load(const std::vector<TangentVertex> &vert_list) = 0;
   virtual bool Load(const std::vector<glm::vec2> &vert_list) = 0;
   virtual bool Load(const std::vector<glm::vec3> &vert_list) = 0;
+
+  int uid() const { return uid_; }
+private:
+  int uid_;
 };
 
 class IndexBufferInterface {
 public:
-  IndexBufferInterface() {}
+  IndexBufferInterface();
   virtual ~IndexBufferInterface() {}
 
   virtual int size() const = 0;
@@ -69,6 +74,49 @@ public:
   virtual const void *data() const = 0;
 
   virtual IndexBufferHandle handle() const = 0;
+
+  int uid() const { return uid_; }
+private:
+  int uid_;
+};
+
+struct MeshDrawCommand {
+  MeshDrawCommand() : draw_mode(kDrawTriangles)
+    , vertex_buffer_handle(-1), index_buffer_handle(-1) {}
+  DrawType draw_mode;
+  int vertex_buffer_handle;
+  int index_buffer_handle;
+};
+
+class MeshBuffer {
+public:
+  typedef std::vector<MeshDrawCommand> MeshDrawCmdList;
+  typedef std::tr1::unordered_map<int, VertexBufferInterface*> VBufferList;
+  typedef std::tr1::unordered_map<int, IndexBufferInterface*> IBufferList;
+public:
+  MeshBuffer();
+  ~MeshBuffer();
+
+  //동적할당된 객체를 적절히 등록하기. 등록된 객체는 uid로 재접근 할수잇다
+  //uid로 따로 접근할수 잇도록 한 이유는, vertex buffer 1개를 2개 이상의 index list로 그릴수 잇기 떄문
+  int Register(VertexBufferInterface *vb);
+  int Register(IndexBufferInterface *ib);
+  VertexBufferInterface *VertexBuffer(int uid);
+  IndexBufferInterface *IndexBuffer(int uid);
+  bool IsVertexBufferExist(int uid) const;
+  bool IsIndexBufferExist(int uid) const;
+
+  //어떻게 그릴것인지에 대해서 적절히 등록
+  //인덱스는 있을수도 잇고, 없을수도 잇고
+  void AddDrawCmd(DrawType draw_mode, int vert, int index = -1);
+  MeshDrawCmdList::iterator begin() { return cmd_list_.begin(); }
+  MeshDrawCmdList::iterator end() { return cmd_list_.end(); }
+  bool empty() const { return cmd_list_.empty(); }
+
+private:
+  VBufferList vertex_buffer_list_;
+  IBufferList index_buffer_list_;
+  MeshDrawCmdList cmd_list_;
 };
 
 //std::vector<Vertex> 와 같은것에 대응하기 위한 용도로 만든 클래스이다
