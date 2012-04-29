@@ -22,6 +22,13 @@
 #define SORA_MEM_H_
 
 #include <cstddef>
+#include <new>
+
+//기본 new/delete 오버라이딩
+inline void *operator new(size_t x) throw (std::bad_alloc);
+inline void *operator new[](size_t x) throw (std::bad_alloc);
+inline void operator delete(void *p);
+inline void operator delete[](void *p);
 
 namespace sora {;
 

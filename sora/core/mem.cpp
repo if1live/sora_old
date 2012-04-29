@@ -22,6 +22,19 @@
 #include "sora/core/mem.h"
 #include <cstdlib>
 
+void *operator new(size_t x) throw (std::bad_alloc) {
+  return malloc(x);
+}
+void *operator new[](size_t x) throw (std::bad_alloc) {
+  return malloc(x);
+}
+void operator delete(void *p) {
+  return free(p);
+}
+void operator delete[](void *p) {
+  return free(p);
+}
+
 namespace sora {;
 
 namespace BasicAllocator {;
