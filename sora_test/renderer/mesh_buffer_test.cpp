@@ -92,6 +92,9 @@ TEST(MeshBuffer, Register) {
   int i_id_1 = mesh_buffer.Register(new IndexArray());
   int i_id_2 = mesh_buffer.Register(new IndexBufferObject());
 
+  EXPECT_TRUE(v_id_1 < v_id_2);
+  EXPECT_TRUE(i_id_1 < i_id_2);
+
   EXPECT_EQ(true, mesh_buffer.IsVertexBufferExist(v_id_1));
   EXPECT_EQ(true, mesh_buffer.IsVertexBufferExist(v_id_2));
   EXPECT_EQ(true, mesh_buffer.IsIndexBufferExist(i_id_1));

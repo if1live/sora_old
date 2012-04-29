@@ -81,7 +81,7 @@ void MeshBuffer::AddDrawCmd(DrawType draw_mode, int vert, int index) {
   cmd.draw_mode = draw_mode;
   cmd.vertex_buffer_handle = vert;
   cmd.index_buffer_handle = index;
-  cmd_list_.push_back(cmd_list_);
+  cmd_list_.push_back(cmd);
 }
 
 } // namespace sora
