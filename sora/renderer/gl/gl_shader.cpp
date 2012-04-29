@@ -69,6 +69,8 @@ namespace gl {
     const char *tmp = src.c_str();
     const char **src_ptr = &tmp;
     glShaderSource(handle, 1, src_ptr, 0);
+    //LOGI("== Shader Source ==");
+    //LOGI("%s", src.c_str());
 
     glCompileShader(handle);
 
@@ -334,7 +336,8 @@ namespace gl {
   }
 
   void GLProgram::DrawArrays(DrawType mode, int vertex_count) {
-    glDrawArrays(GLEnv::TypeToGLEnum(mode), 0, vertex_count);
+    GLenum draw_mode = GLEnv::TypeToGLEnum(mode);
+    glDrawArrays(draw_mode, 0, vertex_count);
     SR_CHECK_ERROR("glDrawArrays");
   }
 

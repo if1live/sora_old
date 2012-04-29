@@ -63,6 +63,7 @@ void run_sample(sora::Device *dev, InitFunctionType init_func, DrawFunctionType 
     glfwSwapBuffers();
     prev_time = curr_time;
     Timer_Tick();
+    dev->EndTick();
 
     if (glfwGetKey(GLFW_KEY_ESC) == GLFW_PRESS) {
       break;
@@ -91,6 +92,54 @@ void run_post_effect(sora::Device *dev) {
   run_sample(dev, init_func, draw_func, update_func);
 }
 
+void run_main(sora::Device *dev) {
+  //logic begin
+  SORA_setup_graphics(dev, kWinWidth, kWinHeight);
+  float prev_time = Timer_GetSecond();
+  while(true) {
+    //glfw 키보드 이벤트 처기
+    if(glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS) {
+      sora::KeyboardEvent evt;
+      evt.is_special_key = true;
+      evt.ch = sora::KeyboardEvent::kUp;
+      dev->keyboard_evt_queue().Push(evt);
+    }
+    if(glfwGetKey(GLFW_KEY_DOWN) == GLFW_PRESS) {
+      sora::KeyboardEvent evt;
+      evt.is_special_key = true;
+      evt.ch = sora::KeyboardEvent::kDown;
+      dev->keyboard_evt_queue().Push(evt);
+    }
+    if(glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS) {
+      sora::KeyboardEvent evt;
+      evt.is_special_key = true;
+      evt.ch = sora::KeyboardEvent::kLeft;
+      dev->keyboard_evt_queue().Push(evt);
+    }
+    if(glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS) {
+      sora::KeyboardEvent evt;
+      evt.is_special_key = true;
+      evt.ch = sora::KeyboardEvent::kRight;
+      dev->keyboard_evt_queue().Push(evt);
+    }
+
+    SORA_draw_frame(dev);
+    float curr_time = Timer_GetSecond();
+    float dt = curr_time - prev_time;
+    SORA_update_frame(dev, dt);
+    dev->EndTick();
+
+    glfwSwapBuffers();
+    prev_time = curr_time;
+    Timer_Tick();
+
+    if (glfwGetKey(GLFW_KEY_ESC) == GLFW_PRESS) {
+      exit(0);
+    }
+  }
+
+
+}
 /*
 void run_selection(sora::Device *dev) {
   //selection test
@@ -206,54 +255,8 @@ int main(int argc, char *argv[]) {
   Timer_Init();
 
   sora::Device device;
-
- 
-	//logic begin
-  SORA_setup_graphics(&device, kWinWidth, kWinHeight);
-  float prev_time = Timer_GetSecond();
-  while(true) {
-    //glfw 키보드 이벤트 처기
-    if(glfwGetKey(GLFW_KEY_UP) == GLFW_PRESS) {
-      sora::KeyboardEvent evt;
-      evt.is_special_key = true;
-      evt.ch = sora::KeyboardEvent::kUp;
-      device.keyboard_evt_queue().Push(evt);
-    }
-    if(glfwGetKey(GLFW_KEY_DOWN) == GLFW_PRESS) {
-      sora::KeyboardEvent evt;
-      evt.is_special_key = true;
-      evt.ch = sora::KeyboardEvent::kDown;
-      device.keyboard_evt_queue().Push(evt);
-    }
-    if(glfwGetKey(GLFW_KEY_LEFT) == GLFW_PRESS) {
-      sora::KeyboardEvent evt;
-      evt.is_special_key = true;
-      evt.ch = sora::KeyboardEvent::kLeft;
-      device.keyboard_evt_queue().Push(evt);
-    }
-    if(glfwGetKey(GLFW_KEY_RIGHT) == GLFW_PRESS) {
-      sora::KeyboardEvent evt;
-      evt.is_special_key = true;
-      evt.ch = sora::KeyboardEvent::kRight;
-      device.keyboard_evt_queue().Push(evt);
-    }
-
-    SORA_draw_frame(&device);
-    float curr_time = Timer_GetSecond();
-    float dt = curr_time - prev_time;
-    SORA_update_frame(&device, dt);
-    device.EndTick();
-
-    glfwSwapBuffers();
-    prev_time = curr_time;
-    Timer_Tick();
-
-    if (glfwGetKey(GLFW_KEY_ESC) == GLFW_PRESS) {
-      exit(0);
-    }
-  }
-  
-  
+  run_main(&device); 
+	
   //logic end
   //run_post_effect(&device);
   //run_freeglutfont(&device);

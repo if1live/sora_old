@@ -56,6 +56,6 @@ struct ArraySample {
 TEST(TemplateSample, test) {
   //vector<int> a;
   ArraySample<int, 3, allocator<int>> as;
-  vector<int> a;
+  as;
   //as.Get(a);
 }

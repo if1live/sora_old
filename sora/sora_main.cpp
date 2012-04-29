@@ -54,35 +54,16 @@
 #include "mesh/geometric_object.h"
 #include "mesh/freeglut_font.h"
 
-
-//#include "renderer/uber_shader.h"
-//#include "renderer/matrix_stack.h"
-
-//#include "renderer/obj_model.h"
-//#include "renderer/obj_loader.h"
-//#include "mesh/primitive_model_builder.h"
-//#include "renderer/material_manager.h"
-
-//#include "renderer/texture.h"
-//#include "renderer/renderer.h"
-
-//#include "renderer/material.h"
-//#include "renderer/camera.h"
-//#include "renderer/font.h"
-//#include "renderer/texture_manager.h"
-
-//#include "renderer/shader_bind_policy.h"
+#include "renderer/uber_shader.h"
+#include "renderer/material.h"
+#include "renderer/camera.h"
+#include "renderer/light.h"
 
 #include "event/touch_device.h"
 #include "event/touch_event.h"
 #include "event/keyboard_event.h"
 
-//#include "mesh/parametric_equations.h"
-//#include "mesh/parametric_surface.h"
-//#include "renderer/mesh_manager.h"
-//#include "renderer/light.h"
-
-
+#include "renderer/gl/gl_uber_shader_renderer.h"
 
 using namespace std;
 using namespace sora;
@@ -94,17 +75,18 @@ using namespace glm;
 //vector<string> mesh_name_list(kMaxObject);
 
 //빛1개를 전역변수처럼 쓰자
-//Light light;
+Light light;
 
 Shader simple_shader;
-Shader color_shader;
 PostEffect null_post_effect;
-PostEffect grayscale_post_effect;
 
 VertexBufferObject vbo;
 IndexBufferObject wire_ibo;
 
 FrameBuffer depth_fbo;
+
+//uber shader직통으로 써보기
+sora::gl::GLUberShaderRenderer uber_renderer;
 
 void SORA_set_window_size(Device *device, int w, int h) {
   device->render_device().SetWinSize(w, h);
@@ -113,6 +95,7 @@ void SORA_set_window_size(Device *device, int w, int h) {
 bool setupGraphics(Device *device, int w, int h) {
   device->render_device().SetWinSize(w, h);
   depth_fbo.InitAsDepthTex(w, h);
+  uber_renderer.Init();   //uber shader느낌으로 렌더링하기
 
   LOGI("Version : %s", RendererEnv::Version().c_str());
   LOGI("Vendor : %s", RendererEnv::Vender().c_str());
@@ -124,23 +107,18 @@ bool setupGraphics(Device *device, int w, int h) {
   for( ; ext_it != ext_endit ; ++ext_it) {
     LOGI("%s", ext_it->c_str());
   }
-    
+  
   {
     //create shader
     string simple_vs_path = Filesystem::GetAppPath("shader/simple.vs");
     string simple_fs_path = Filesystem::GetAppPath("shader/simple.fs");
     simple_shader.LoadFromFile(simple_vs_path, simple_fs_path);
-
-    string color_vs_path = Filesystem::GetAppPath("shader/const_color.vs");
-    string color_fs_path = Filesystem::GetAppPath("shader/const_color.fs");
-    color_shader.LoadFromFile(color_vs_path, color_fs_path);
   }
+  
   {
     //post effect
     string vs_path = Filesystem::GetAppPath("posteffect/shared.vs");
-    string to_grayscale_fs_path = Filesystem::GetAppPath("posteffect/to_grayscale.fs");
     string null_fs_path = Filesystem::GetAppPath("posteffect/null.fs");
-    grayscale_post_effect.InitFromFile(vs_path, to_grayscale_fs_path);
     null_post_effect.InitFromFile(vs_path, null_fs_path);
   }
   //lodepng
@@ -320,13 +298,12 @@ bool setupGraphics(Device *device, int w, int h) {
     //MeshManager::GetInstance().AddWire(surface, "knot");
     mesh_name_list[obj_model_idx] = "knot";
   }
-
+  */
   {
     //빛에 대한 기본 설정
-    light.pos = vec3(10, 10, 100);
+    light.pos = vec3(0, 0, 100);
     //light.ambient = vec4(3.0f, 0, 0, 1.0f);
   }
-  */
   return true;
 }
 
@@ -345,99 +322,21 @@ void SORA_set_cam_pos(float a, float b) {
 
 void renderFrame(Device *device) {
   SR_CHECK_ERROR("Begin RenderFrame");
-  Renderer::SetClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+  Renderer::SetClearColor(0.5f, 0.0f, 0.0f, 1.0f);
   Renderer::ClearScreen();
 
   //3d
   device->render_device().Set3D();
-
+  /*
   depth_fbo.Bind();  //fbo로 그리기. deferred같은거 구현하기 위해서 임시로 시도함
   device->render_device().Set3D();
   Renderer::SetClearColor(0.3f, 0.3f, 0.3f, 1.0f);
   Renderer::ClearScreen();
-
-  VertexList vert_list;
-  vert_list.push_back(CreateVertex(vec3(-0.5, -0.5, 0), vec2(0, 0)));
-  vert_list.push_back(CreateVertex(vec3(0.5, -0.5, 0), vec2(1, 0)));
-  vert_list.push_back(CreateVertex(vec3(0, 0.5, 0), vec2(0.5, 1)));
-  
-  //vbo, ibo 적절히 만들기
-  if(vbo.Loaded() == false) {
-    vbo.Init(vert_list);
-  }
-  if(wire_ibo.Loaded() == false) {
-    IndexList index_list;
-    index_list.push_back(0);
-    index_list.push_back(1);
-    index_list.push_back(1);
-    index_list.push_back(2);
-    index_list.push_back(2);
-    index_list.push_back(0);
-    wire_ibo.Init(index_list);
-  }
-  
-  {
-    //shader사용 선언이 가장 먼저
-    device->render_device().UseShader(color_shader);
-    SR_CHECK_ERROR("UseShader");
-
-    mat4 mvp(1.0f);
-    ShaderVariable mvp_var = color_shader.uniform_var(kMVPHandleName);
-    SetUniformMatrix(mvp_var, mvp);
-
-    vec4 color(1.0f);
-    ShaderVariable const_color_var = color_shader.uniform_var(kConstColorHandleName);
-    SetUniformVector(const_color_var, color);
-    SR_CHECK_ERROR("SetVector");
-
-    //color_shader.SetVertexList(vert_list);
-    //color_shader.DrawArrays(kDrawTriangles, vert_list.size());
-
-    //color_shader.DrawArrays(kDrawTriangles, vbo);
-    
-    color_shader.DrawElements(kDrawLines, vbo, wire_ibo);
-  }
-  
-  {
-    //shader사용 선언이 가장 먼저
-    device->render_device().UseShader(simple_shader);
-    TexturePtr tex = device->render_device().tex_mgr().Get("sora");
-    device->render_device().UseTexture(*tex);
-    SR_CHECK_ERROR("UseShader");
-    mat4 mvp(1.0f);
-    mvp = glm::rotate(mvp, 10.0f, vec3(0, 0, 1));
-    ShaderVariable mvp_var = simple_shader.uniform_var(kMVPHandleName);
-    SetUniformMatrix(mvp_var, mvp);
-    SR_CHECK_ERROR("SetMatrix");
-
-    //simple_shader.SetVertexList(vert_list);
-    //simple_shader.DrawArrays(kDrawTriangles, vert_list.size());
-    simple_shader.DrawArrays(kDrawTriangles, vbo);
-    
-  }
-  
+  */
   //일반 3d객체 그리기+카메라 회전 장착
   {
-    //set camera + projection
-    float win_width = (float)device->render_device().win_width();
-    float win_height = (float)device->render_device().win_height();
-    glm::mat4 projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 100.0f);
-    float radius = 4;
-    float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
-    float cam_y = radius * sin(SR_DEG_2_RAD(aptitude));
-    float cam_z = radius * cos(SR_DEG_2_RAD(aptitude)) * cos(SR_DEG_2_RAD(latitude));
-    vec3 eye(cam_x, cam_y, cam_z);
-    vec3 center(0);
-    vec3 up(0, 1, 0);
-    glm::mat4 view = glm::lookAt(eye, center, up);
-
-    glm::mat4 mvp(1.0f);
-    mvp = projection * view;
-    ShaderVariable mvp_var = simple_shader.uniform_var(kMVPHandleName);
-    SetUniformMatrix(mvp_var, mvp);
-    SR_CHECK_ERROR("SetMatrix");
-
-    GeometricObject<Vertex> mesh;
+    //GeometricObject<Vertex> mesh;
+    GeometricObject<TangentVertex> mesh;
     //mesh.PointTeapot(0.05f);
     //mesh.WireTeapot(0.05f);
     //mesh.SolidTeapot(0.05f);
@@ -446,61 +345,94 @@ void renderFrame(Device *device) {
     //mesh.SolidSphere(1, 16, 16);
     //mesh.SolidCube(1, 1, 1);
     //mesh.WireCube(1, 1, 1);
-    mesh.PointCube(1, 1, 1);
+    //mesh.PointCube(1, 1, 1);
     //mesh.PointCylinder(1, 1, 2, 8, 8);
     //mesh.WireCylinder(1, 1, 2, 8, 8);
-    mesh.SolidCylinder(1, 1, 2, 8, 8);
+    //mesh.SolidCylinder(1, 1, 2, 8, 8);
     //mesh.WireAxis(5);
     //mesh.SolidPlane(3);
     //mesh.WirePlane(3, 0.1f);
-    //mesh.SolidTorus(1, 0.1);
+    mesh.SolidTorus(1, 0.3);
     //mesh.SolidCone(2, 2);
+
+    //set material
+    Material mtl;
+    mtl.ambient = vec4(0.1, 0.1, 0.1, 1);
+    mtl.diffuse = vec4(0.3, 0.3, 0.3, 1);
+    //mtl.diffuse = vec4(1, 1, 1, 1);
+    mtl.specular = vec4(1);
+    mtl.shininess = 20;
+    mtl.ambient_map = "sora2";
+    mtl.diffuse_map = "mtl_diffuse";
+    mtl.specular_map = "mtl_specular";
+    mtl.normal_map = "mtl_normal";
+    mtl.props |= kMaterialAmbient;
+    mtl.props |= kMaterialAmbientMap;
+    mtl.props |= kMaterialDiffuse;
+    mtl.props |= kMaterialDiffuseMap;
+    mtl.props |= kMaterialSpecular;
+    mtl.props |= kMaterialSpecularMap;
+    //mtl.props |= kMaterialNormalMap;
+
+    uber_renderer.SetMaterial(mtl);
+    uber_renderer.SetLight(light);
+    Shader &shader = uber_renderer.GetCurrShader();
+    device->render_device().UseShader(shader);
+    uber_renderer.ApplyMaterialLight(&device->render_device());
+
+    
+    //device->render_device().UseShader(simple_shader);
+   
+    //set camera + projection
+    //float win_width = (float)device->render_device().win_width();
+    //float win_height = (float)device->render_device().win_height();
+    //glm::mat4 projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 100.0f);
+
+    float radius = 4;
+    float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
+    float cam_y = radius * sin(SR_DEG_2_RAD(aptitude));
+    float cam_z = radius * cos(SR_DEG_2_RAD(aptitude)) * cos(SR_DEG_2_RAD(latitude));
+    Camera cam;
+    cam.eye = vec3(cam_x, cam_y, cam_z);
+    cam.center = vec3(0);
+    cam.up = vec3(0, 1, 0);
+    /*
+    glm::mat4 view = cam.LookAt();
+
+    glm::mat4 mvp(1.0f);
+    mvp = projection * view;
+    ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
+    SR_ASSERT(mvp_var.location != -1);
+    SetUniformMatrix(mvp_var, mvp);
+    SR_CHECK_ERROR("SetMatrix");
+    */
+    uber_renderer.SetCamera(cam, &device->render_device());
+
     auto it = mesh.Begin();
     auto endit = mesh.End();
     for( ; it != endit ; ++it) {
-      const DrawCmdData<Vertex> &cmd = *it;
+      //const DrawCmdData<Vertex> &cmd = *it;
+      const DrawCmdData<TangentVertex> &cmd = *it;
       //앞면 뒷면 그리기를 허용/불가능 정보까지 내장해야
       //뚜껑없는 원통 그리기가 편하다
       if(cmd.disable_cull_face == true) {
         glDisable(GL_CULL_FACE);
       }
-      simple_shader.SetVertexList(cmd.vertex_list);
+      shader.SetVertexList(cmd.vertex_list);
       if(cmd.index_list.empty()) {
-        simple_shader.DrawArrays(cmd.draw_mode, cmd.vertex_list.size());
+        Shader::DrawArrays(cmd.draw_mode, cmd.vertex_list.size());
       } else {
-        simple_shader.DrawElements(cmd.draw_mode, cmd.index_list);
+        Shader::DrawElements(cmd.draw_mode, cmd.index_list);
       }
       if(cmd.disable_cull_face == true) {
         glEnable(GL_CULL_FACE);
       }
     }
   }
-  depth_fbo.Unbind();
+  //depth_fbo.Unbind();
 
-  /*
   //fbo에 있는 내용을 적절히 그리기
-  {
-    device->render_device().Set2D();
-    device->render_device().UseShader(simple_shader);
-    ShaderVariable mvp_var = simple_shader.uniform_var(kMVPHandleName);
-    mat4 world_mat(1.0f);
-    SetUniformMatrix(mvp_var, world_mat);
-
-    //device->render_device().UseTexture(depth_fbo.color_tex());
-    device->render_device().UseTexture(depth_fbo.depth_tex());
-
-    Vertex2DList vert_list;
-    vert_list.push_back(CreateVertex2D(-1, -1, 0, 0));
-    vert_list.push_back(CreateVertex2D(1, -1, 1, 0));
-    vert_list.push_back(CreateVertex2D(1, 1, 1, 1));
-    vert_list.push_back(CreateVertex2D(-1, 1, 0, 1));
-    simple_shader.SetVertexList(vert_list);
-    simple_shader.DrawArrays(kDrawTriangleFan, vert_list.size());
-  }
-  */
-  null_post_effect.DrawScissor(depth_fbo.color_tex(), &device->render_device(), 0, 0, 320, 480);
-  grayscale_post_effect.DrawScissor(depth_fbo.color_tex(), &device->render_device(), 320, 0, 320, 480);
-  grayscale_post_effect.Draw(depth_fbo.color_tex(), &device->render_device(), 100, 100, 100, 100);
+  //null_post_effect.Draw(depth_fbo.color_tex(), &device->render_device());
 
   /*
   {

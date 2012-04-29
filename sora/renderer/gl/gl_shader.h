@@ -106,6 +106,101 @@ namespace gl {
     //최초실행시에는 모든목록을 얻을수잇다
     static std::vector<ShaderVariable> GetActiveUniformVarList(HandleType handle);
     static std::vector<ShaderVariable> GetActiveAttributeVarList(HandleType handle);
+
+    template<typename T>
+    static bool SetUniformMatrix(HandleType handle, const std::string &name, const glm::detail::tmat4x4<T> &mat) {
+      int loc = glGetUniformLocation(handle, name.c_str());
+      if(loc != -1) {
+        const bool is_float_type = std::is_same<T, float>::value;
+        static_assert(is_float_type, "only uniform matrix support float");
+
+        if(is_float_type) {
+          glUniformMatrix4fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
+          SR_CHECK_ERROR("glUniformMatrix4fv");
+          return true;
+        }
+      }
+      return false;
+    }
+    template<typename T>
+    static bool SetUniformMatrix(HandleType handle, const std::string &name, const glm::detail::tmat3x3<T> &mat) {
+      int loc = glGetUniformLocation(handle, name.c_str());
+      if(loc != -1) {
+        const bool is_float_type = std::is_same<T, float>::value;
+        static_assert(is_float_type, "only uniform matrix support float");
+
+        if(is_float_type) {
+          glUniformMatrix3fv(loc, 1, GL_FALSE, glm::value_ptr(mat));
+          SR_CHECK_ERROR("glUniformMatrix4fv");
+          return true;
+        }
+      }
+      return false;
+    }
+    template<typename T>
+    static bool SetUniformVector(HandleType handle, const std::string &name, const glm::detail::tvec4<T> &vec) {
+      int loc = glGetUniformLocation(handle, name.c_str());
+      if(loc != -1) {
+        const bool is_float_type = std::is_same<T, float>::value;
+        const bool is_int_type = std::is_same<T, int>::value;
+        static_assert(is_float_type || is_int_type, "vec4 support int, float");
+
+        void *ptr = (void*)glm::value_ptr(vec);
+        if(is_float_type) {
+          glUniform4fv(loc, 1, (float*)ptr);
+          SR_CHECK_ERROR("glUniform4fv");
+          return true;
+        } else if(is_int_type) {
+          glUniform4iv(loc, 1, (int*)ptr);
+          SR_CHECK_ERROR("glUniform4fi");
+          return true;
+        } 
+      }
+      return false;
+    }
+
+    template<typename T>
+    static bool SetUniformVector(HandleType handle, const std::string &name, const glm::detail::tvec3<T>&vec) {
+      int loc = glGetUniformLocation(handle, name.c_str());
+      if(loc != -1) {
+        const bool is_float_type = std::is_same<T, float>::value;
+        const bool is_int_type = std::is_same<T, int>::value;
+        static_assert(is_float_type || is_int_type, "vec3 support int, float");
+
+        if(is_float_type) {
+          float *ptr = (float*)glm::value_ptr(vec);
+          glUniform3fv(loc, 1, ptr);
+          SR_CHECK_ERROR("glUniform3fv");
+          return true;
+        } else if(is_int_type) {
+          int *ptr = (int*)glm::value_ptr(vec);
+          glUniform3iv(loc, 1, ptr);
+          SR_CHECK_ERROR("glUniform3fi");
+          return true;
+        }
+      }
+      return false;
+    }
+    template<typename T>
+    static bool SetUniformValue(HandleType handle, const std::string &name, T value) {
+      int loc = glGetUniformLocation(handle, name.c_str());
+      if(loc != -1) {
+        const bool is_float_type = std::is_same<T, float>::value;
+        const bool is_int_type = std::is_same<T, int>::value;
+        static_assert(is_float_type || is_int_type, "support int, float");
+
+        if(std::tr1::is_same<T, float>::value) {
+          glUniform1f(loc, value);
+          SR_CHECK_ERROR("glUniform1f");
+          return true;
+        } else if(std::tr1::is_same<T, int>::value) {
+          glUniform1i(loc, value);
+          SR_CHECK_ERROR("glUniform1i");
+          return true;
+        }
+      }
+      return false;
+    }
   };
 
   template<typename T>

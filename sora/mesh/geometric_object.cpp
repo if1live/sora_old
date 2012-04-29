@@ -511,7 +511,7 @@ void PrimitiveMeshHelper::SolidSphere(float radius, int slices, int stacks) {
       float z = nsign * cos(rho);
 
       Vertex vert1;
-      vert1.set_normal(vec3(x * nsign, y * nsign, z * nsign));
+      vert1.normal = (vec3(x * nsign, y * nsign, z * nsign));
       vert1.texcoord = vec2(s, t);
       vert1.pos = vec3(x * radius, y * radius, z * radius);
       vert_list.push_back(vert1);

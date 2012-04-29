@@ -50,6 +50,7 @@ typedef enum {
   kDrawTriangles,
   kDrawTriangleStrip,
   kDrawTriangleFan,
+  kDrawTypeCount,
 } DrawType;
 
 typedef enum {
@@ -58,6 +59,7 @@ typedef enum {
   kTexFormatLumianceAlpha,
   kTexFormatRGBA,
   kTexFormatRGB,
+  kTexFormatTypeCount,
 } TexFormatType;
 
 typedef enum {
@@ -67,17 +69,20 @@ typedef enum {
   kTexMinNearestMipmapLinear,
   kTexMinLinearMipmapNearest,
   kTexMinLinearMipmapLinear,
+  kTexMinFilterCount,
 } TexMinFilter;
 
 typedef enum {
   kTexMagLinear,
   kTexMagNearest,
+  kTexMagFilterCount,
 } TexMagFilter;
 
 typedef enum {
   kTexWrapRepeat,
   kTexWrapClampToEdge,
-  kTexWrapMirroredRepeat
+  kTexWrapMirroredRepeat,
+  kTexWrapModeCount,
 } TexWrapMode;
 
 typedef enum {
@@ -102,6 +107,7 @@ typedef enum {
 
   kTypeSample2D, 
   kTypeSampleCube,
+  kVarTypeCount,
 } VarType;
 
 struct TextureParam {
@@ -214,16 +220,13 @@ template<typename T>  class VertexArrayT;
 
 //material/uber shader에서 사용되는 플래그용
 enum {
-  kMaterialAmbient = 0x01,
-  kMaterialDiffuse = 0x02,
-  kMaterialSpecular = 0x04,
-  kMaterialAmbientMap = 0x08,
-  kMaterialDiffuseMap = 0x10,
-  kMaterialSpecularMap = 0x20,
-  kMaterialNormapMap = 0x40,
-};
-enum {
-  kInvalidMaterialFlag = UINT_MAX,
+  kMaterialAmbient = 1 << 0,
+  kMaterialDiffuse = 1 << 1,
+  kMaterialSpecular = 1 << 2,
+  kMaterialAmbientMap = 1 << 3,
+  kMaterialDiffuseMap = 1 << 4,
+  kMaterialSpecularMap = 1 << 5,
+  kMaterialNormalMap = 1 << 6,
 };
 
 //predefined semantic
@@ -239,7 +242,7 @@ enum {
 #define kViewUpHandleName "u_viewUp"
 #define kViewDirHandleName "u_viewDir"
 #define kMVPHandleName "u_modelViewProjection"
-#define kWorldHandleName "u_world"
+#define kModelHandleName "u_model"
 #define kProjectionHandleName "u_projection"
 #define kViewHandleName "u_view"
 
@@ -254,6 +257,7 @@ enum {
 #define kAlbedoHandleName "s_texture"
 #define kNormalMapHandleName "s_normalMap"
 
+#define kLightPositionHandleName "u_lightPos"
 }
 
 #endif  // SORA_GLOBALS_H_

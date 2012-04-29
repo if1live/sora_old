@@ -103,6 +103,7 @@
     <ClCompile Include="post_effect_main.cpp" />
     <ClCompile Include="renderer\gl\gl_frame_buffer.cpp" />
     <ClCompile Include="renderer\gl\gl_shader_variable.cpp" />
+    <ClCompile Include="renderer\gl\gl_uber_shader_renderer.cpp" />
     <ClCompile Include="renderer\image.cpp" />
     <ClCompile Include="renderer\material.cpp" />
     <ClCompile Include="renderer\mesh_buffer.cpp" />
@@ -117,6 +118,7 @@
     <ClCompile Include="renderer\gl\gl_texture.cpp" />
     <ClCompile Include="renderer\matrix_stack.cpp" />
     <ClCompile Include="renderer\texture.cpp" />
+    <ClCompile Include="renderer\uber_shader.cpp" />
     <ClCompile Include="soil\image_DXT.cpp" />
     <ClCompile Include="soil\image_helper.cpp" />
     <ClCompile Include="soil\SOIL.cpp" />
@@ -177,9 +179,11 @@
     <ClInclude Include="mesh\teapot.h" />
     <ClInclude Include="post_effect_main.h" />
     <ClInclude Include="renderer\buffer_object.h" />
+    <ClInclude Include="renderer\camera.h" />
     <ClInclude Include="renderer\frame_buffer.h" />
     <ClInclude Include="renderer\gl\gl_frame_buffer.h" />
     <ClInclude Include="renderer\gl\gl_shader_variable.h" />
+    <ClInclude Include="renderer\gl\gl_uber_shader_renderer.h" />
     <ClInclude Include="renderer\image.h" />
     <ClInclude Include="renderer\light.h" />
     <ClInclude Include="renderer\material.h" />
@@ -201,6 +205,7 @@
     <ClInclude Include="renderer\render_device.h" />
     <ClInclude Include="renderer\shader.h" />
     <ClInclude Include="renderer\texture.h" />
+    <ClInclude Include="renderer\uber_shader.h" />
     <ClInclude Include="soil\image_DXT.h" />
     <ClInclude Include="soil\image_helper.h" />
     <ClInclude Include="soil\SOIL.h" />

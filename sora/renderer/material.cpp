@@ -36,7 +36,7 @@ Material::Material()
 
 const Material &Material::NullMaterial() {
   static Material mtl;
-  mtl.props = kInvalidMaterialFlag;
+  mtl.props = 0;  //0이면 플래그 검사 그냥 통과하니까 전부 disable의미
   return mtl;
 }
 

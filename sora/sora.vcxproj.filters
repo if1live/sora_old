@@ -199,6 +199,12 @@
     <ClCompile Include="renderer\material.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
+    <ClCompile Include="renderer\uber_shader.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="renderer\gl\gl_uber_shader_renderer.cpp">
+      <Filter>renderer\gl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -443,6 +449,15 @@
     </ClInclude>
     <ClInclude Include="renderer\light.h">
       <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\camera.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\uber_shader.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer\gl\gl_uber_shader_renderer.h">
+      <Filter>renderer\gl</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

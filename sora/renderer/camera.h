@@ -18,33 +18,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_LIGHT_H_
-#define SORA_LIGHT_H_
-
-#if SR_USE_PCH == 0
-#include <glm/glm.hpp>
-#endif
+#pragma once
 
 namespace sora {;
 
-struct Light {
-  Light()
-    : ambient(1.0f, 1.0f, 1.0f, 1.0f),
-    diffuse(1.0f, 1.0f, 1.0f, 1.0f),
-    specular(1.0f, 1.0f, 1.0f, 1.0f) {
-  }
+struct Camera {
+  Camera() 
+  : eye(0, 0, 1), 
+    center(0, 0, -1), 
+    up(0, 1, 0) { }
+  ~Camera() {}
 
-  //shadow map를 구성하기 위해서는 사실상 카메라와 동일한 속성이 필요하다
-  glm::vec3 pos;  //TODO pos의 4번쨰 값으로 directional인지 point인지를 구분하도록 고지치
+  glm::vec3 eye;
   glm::vec3 center;
   glm::vec3 up;
 
-  glm::vec4 ambient;
-  glm::vec4 diffuse;
-  glm::vec4 specular;
-  //float shininess;
+  glm::mat4 LookAt() const { return glm::lookAt(eye, center, up); }
 };
 
-}
-
-#endif  // SORA_LIGHT_H_
+} //namespace sora

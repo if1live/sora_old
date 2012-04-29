@@ -45,7 +45,8 @@ public:
   Torus(float majorRadius, float minorRadius) :
       m_majorRadius(majorRadius),
         m_minorRadius(minorRadius) {
-        ParametricInterval interval = { glm::ivec2(20, 20), glm::vec2(kTwoPi, kTwoPi), glm::vec2(40, 10) };
+        //ParametricInterval interval = { glm::ivec2(20, 20), glm::vec2(kTwoPi, kTwoPi), glm::vec2(40, 10) };
+        ParametricInterval interval = { glm::ivec2(20, 20), glm::vec2(kTwoPi, kTwoPi), glm::vec2(10, 5) };
         SetInterval(interval);
       }
       glm::vec3 Evaluate(const glm::vec2& domain) const {

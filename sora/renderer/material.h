@@ -25,7 +25,7 @@
 namespace sora {;
 struct Material {
   Material();
-  const Material &NullMaterial();
+  static const Material &NullMaterial();
 
   std::string name;
   uint props;   //flag저장 용도

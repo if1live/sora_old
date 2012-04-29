@@ -37,18 +37,6 @@ namespace gl {
 
     void EndRender();
     
-    //font
-    //renderer
-    //RenderState &render_state();
-    //MaterialManager &material_mgr();
-    //MeshManager &mesh_mgr();
-    /*
-    //uber shader + predefined shader
-    ShaderProgram &uber_shader(uint flag);
-    ShaderProgram &simple_shader(); //단순 2d용
-    Renderer &render3d();
-    Renderer &render2d();
-    */
   public:
     void Set2D();
     void Set3D();

@@ -71,7 +71,17 @@ public:
   bool LoadFromFile(const std::string &vert_path, const std::string &frag_path);
   bool Init(const char *vert_src, const char *frag_src) {
     bool result = Policy::Init(&handle_, vert_src, frag_src);
+    AfterInit();
+    return result;
+  }
 
+  bool Init(const std::vector<const char*> &vert_src_list, const std::vector<const char*> &frag_src_list) {
+    bool result = Policy::Init(&handle_, vert_src_list, frag_src_list);
+    AfterInit();
+    return result;
+  }
+
+  void AfterInit() {
     uniform_list_ = Policy::GetActiveUniformVarList(handle_);
     auto it = uniform_list_.begin();
     auto endit = uniform_list_.end();
@@ -79,7 +89,7 @@ public:
       const ShaderVariable &loc = *it;
       LOGI("%s", loc.str().c_str());
     }
-    
+
     attrib_list_ = Policy::GetActiveAttributeVarList(handle_);
     it = attrib_list_.begin();
     endit = attrib_list_.end();
@@ -87,9 +97,8 @@ public:
       const ShaderVariable &loc = *it;
       LOGI("%s", loc.str().c_str());
     }
-
-    return result;
   }
+
   void Deinit() {
     Policy::Deinit(&handle_);
   }
@@ -99,11 +108,11 @@ public:
   template<typename VertexContainer>
   void SetVertexList(const VertexContainer &vert_data);
 
-  void DrawArrays(DrawType mode, unsigned int vertex_count);
-  void DrawArrays(DrawType mode, int vertex_count);
+  static void DrawArrays(DrawType mode, unsigned int vertex_count);
+  static void DrawArrays(DrawType mode, int vertex_count);
   
   template<typename IndexContainer>
-  void DrawElements(DrawType mode, const IndexContainer &index_data);
+  static void DrawElements(DrawType mode, const IndexContainer &index_data);
 
   //set vertex list + drawXXX를 붙인 조합형태
   template<typename VertexContainer>
@@ -125,6 +134,27 @@ public:
 
   bool Validate() const {
     return Policy::Validate(handle_);
+  }
+
+  template<typename T>
+  bool SetUniformMatrix(const std::string &name, const glm::detail::tmat4x4<T> &mat) {
+    return Policy::SetUniformMatrix(handle_, name, mat);
+  }
+  template<typename T>
+  bool SetUniformMatrix(const std::string &name, const glm::detail::tmat3x3<T> &mat) {
+    return Policy::SetUniformMatrix(handle_, name, mat);
+  }
+  template<typename T>
+  bool SetUniformVector(const std::string &name, const glm::detail::tvec4<T> &vec) {
+    return Policy::SetUniformVector(handle_, name, vec);
+  }
+  template<typename T>
+  bool SetUniformVector(const std::string &name, const glm::detail::tvec3<T>&vec) {
+    return Policy::SetUniformVector(handle_, name, vec);
+  }
+  template<typename T>
+  bool SetUniformValue(const std::string &name, T value) {
+    return Policy::SetUniformValue(handle_, name, value);
   }
 
 private:

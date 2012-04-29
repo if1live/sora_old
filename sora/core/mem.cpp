@@ -22,10 +22,10 @@
 #include "sora/core/mem.h"
 #include <cstdlib>
 
-void *operator new(size_t x) throw (std::bad_alloc) {
+void *operator new(size_t x) {
   return malloc(x);
 }
-void *operator new[](size_t x) throw (std::bad_alloc) {
+void *operator new[](size_t x) {
   return malloc(x);
 }
 void operator delete(void *p) {

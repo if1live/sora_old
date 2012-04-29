@@ -84,4 +84,31 @@ void MeshBuffer::AddDrawCmd(DrawType draw_mode, int vert, int index) {
   cmd_list_.push_back(cmd);
 }
 
+MeshBufferManager::MeshBufferManager() {}
+MeshBufferManager::~MeshBufferManager() {
+  DestroyDict(&mesh_dict_);
+}
+
+bool MeshBufferManager::Add(const std::string &name, MeshBuffer *mesh) {
+  if(IsExist(name)) {
+    return false;
+  }
+  mesh_dict_[name] = mesh;
+  return true;
+}
+
+MeshBuffer *MeshBufferManager::Get(const std::string &name) {
+  auto found = mesh_dict_.find(name);
+  if(found == mesh_dict_.end()) {
+    static MeshBuffer empty;
+    return &empty;
+  } else {
+    return found->second;
+  }
+}
+bool MeshBufferManager::IsExist(const std::string &name) const {
+  auto found = mesh_dict_.find(name);
+  return (found != mesh_dict_.end()); 
+}
+
 } // namespace sora

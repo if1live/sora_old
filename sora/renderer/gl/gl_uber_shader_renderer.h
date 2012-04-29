@@ -18,33 +18,39 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_LIGHT_H_
-#define SORA_LIGHT_H_
+#pragma once
 
-#if SR_USE_PCH == 0
-#include <glm/glm.hpp>
-#endif
+#include "renderer/globals.h"
+#include "renderer/material.h"
+#include "renderer/light.h"
+
+#include "renderer/shader_variable.h"
+#include "renderer/uber_shader.h"
 
 namespace sora {;
+struct Material;
+struct Light;
+struct Camera;
+//기본적인 uber shader에 대응하기 위한 렌더러
+//이거로 기본 인터페이스를 테스트하고 인터페이스를 뽑아내는식으로 하면 될듯?
+namespace gl {
+  class GLUberShaderRenderer {
+  public:
+    GLUberShaderRenderer();
+    ~GLUberShaderRenderer();
+    void Init();
+    void SetMaterial(const Material &mtl);
+    void SetLight(const Light &light);
+    void ApplyMaterialLight(RenderDevice *render_dev);
+    void SetCamera(const Camera &cam, const glm::mat4 &model, RenderDevice *render_dev);
+    void SetCamera(const Camera &cam, RenderDevice *render_dev);
 
-struct Light {
-  Light()
-    : ambient(1.0f, 1.0f, 1.0f, 1.0f),
-    diffuse(1.0f, 1.0f, 1.0f, 1.0f),
-    specular(1.0f, 1.0f, 1.0f, 1.0f) {
-  }
+    Shader &GetCurrShader();
+  private:
+    Material material_;
+    Light light_;
+    UberShader uber_shader_;
 
-  //shadow map를 구성하기 위해서는 사실상 카메라와 동일한 속성이 필요하다
-  glm::vec3 pos;  //TODO pos의 4번쨰 값으로 directional인지 point인지를 구분하도록 고지치
-  glm::vec3 center;
-  glm::vec3 up;
-
-  glm::vec4 ambient;
-  glm::vec4 diffuse;
-  glm::vec4 specular;
-  //float shininess;
-};
-
-}
-
-#endif  // SORA_LIGHT_H_
+  };
+} //namespace gl
+} //namespace sora

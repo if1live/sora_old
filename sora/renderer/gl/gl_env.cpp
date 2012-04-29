@@ -151,7 +151,7 @@ namespace gl {
   }
   GLenum GLEnv::TypeToGLEnum(DrawType type) {
     static bool run = false;
-    static std::array<GLenum, 10> enum_list;
+    static std::array<GLenum, kDrawTypeCount> enum_list;
     if(run == false) {
       run = true;
       enum_list[kDrawPoints] = GL_POINTS;
@@ -162,11 +162,13 @@ namespace gl {
       enum_list[kDrawTriangleStrip] = GL_TRIANGLE_STRIP;
       enum_list[kDrawTriangleFan] = GL_TRIANGLE_FAN;
     }
+    SR_ASSERT(type >= 0);
+    SR_ASSERT(type < kDrawTypeCount);
     return enum_list[(int)type];
   }
   GLenum GLEnv::TypeToGLEnum(TexFormatType type) {
     static bool run = false;
-    static std::array<GLenum, 10> enum_list;
+    static std::array<GLenum, kTexFormatTypeCount> enum_list;
     if(run == false) {
       run = true;
       enum_list[kTexFormatAlpha] = GL_ALPHA;
@@ -175,21 +177,25 @@ namespace gl {
       enum_list[kTexFormatRGB] = GL_RGB;
       enum_list[kTexFormatRGBA] = GL_RGBA;
     }
+    SR_ASSERT(type >= 0);
+    SR_ASSERT(type < kTexFormatTypeCount);
     return enum_list[(int)type];
   }
   GLenum GLEnv::TypeToGLEnum(TexMagFilter type) {
     static bool run = false;
-    static std::array<GLenum, 10> enum_list;
+    static std::array<GLenum, kTexMagFilterCount> enum_list;
     if(run == false) {
       run = true;
       enum_list[kTexMagLinear] = GL_LINEAR;
       enum_list[kTexMagNearest] = GL_NEAREST;
     }
+    SR_ASSERT(type >= 0);
+    SR_ASSERT(type < kTexMagFilterCount);
     return enum_list[(int)type];
   }
   GLenum GLEnv::TypeToGLEnum(TexMinFilter type) {
     static bool run = false;
-    static std::array<GLenum, 10> enum_list;
+    static std::array<GLenum, kTexMinFilterCount> enum_list;
     if(run == false) {
       run = true;
       enum_list[kTexMinLinear] = GL_LINEAR;
@@ -199,17 +205,21 @@ namespace gl {
       enum_list[kTexMinLinearMipmapNearest] = GL_LINEAR_MIPMAP_NEAREST;
       enum_list[kTexMinLinearMipmapLinear] = GL_LINEAR_MIPMAP_LINEAR;
     }
+    SR_ASSERT(type >= 0);
+    SR_ASSERT(type < kTexMinFilterCount);
     return enum_list[(int)type];
   }
   GLenum GLEnv::TypeToGLEnum(TexWrapMode type) {
     static bool run = false;
-    static std::array<GLenum, 10> enum_list;
+    static std::array<GLenum, kTexWrapModeCount> enum_list;
     if(run == false) {
       run = true;
       enum_list[kTexWrapRepeat] = GL_REPEAT;
       enum_list[kTexWrapMirroredRepeat] = GL_MIRRORED_REPEAT;
       enum_list[kTexWrapClampToEdge] = GL_CLAMP_TO_EDGE;
     }
+    SR_ASSERT(type >= 0);
+    SR_ASSERT(type < kTexWrapModeCount);
     return enum_list[(int)type];
   }
   GLenum GLEnv::TypeToGLEnum(BufferUsageType type) {
@@ -226,7 +236,7 @@ namespace gl {
 
   GLenum GLEnv::VertexElemTypeToGLEnum(VertexElemType type) {
     static bool run = false;
-    static std::array<GLenum, 10> enum_list;
+    static std::array<GLenum, kVarTypeCount> enum_list;
     if(run == false) {
       run = true;
       enum_list[kVertexElemFloat] = GL_FLOAT,
@@ -237,6 +247,8 @@ namespace gl {
       enum_list[kVertexElemChar] = GL_BYTE;
       enum_list[kVertexElemUchar] = GL_UNSIGNED_BYTE;
     }
+    SR_ASSERT(type >= 0);
+    SR_ASSERT(type < kVarTypeCount);
     return enum_list[(GLenum)type];
   }
 

@@ -59,7 +59,9 @@
       <PrecompiledHeaderFile>sora_test_stdafx.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>SR_NDEBUG=0;SR_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <DisableSpecificWarnings>4819;4099;4251;4996</DisableSpecificWarnings>
-      <MinimalRebuild>true</MinimalRebuild>
+      <MinimalRebuild>false</MinimalRebuild>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalOptions>/Ylsymbol %(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
