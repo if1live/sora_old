@@ -127,10 +127,10 @@ protected:
 };
 
 template<typename T>
-class VertexArray : public VectorWrapper<T, VertexBufferInterface> {
+class VertexArrayT : public VectorWrapper<T, VertexBufferInterface> {
 public:
-  VertexArray() {}
-  VertexArray(const std::vector<T> &data) : VectorWrapper(data) {}
+  VertexArrayT() {}
+  VertexArrayT(const std::vector<T> &data) : VectorWrapper(data) {}
 };
 
 }

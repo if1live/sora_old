@@ -32,7 +32,7 @@ TEST(VertexBufferInterface, std_vector_version) {
   vert_list.push_back(CreateVertex2D(0, 0, 0, 1));
   vert_list.push_back(CreateVertex2D(0, 0, 2, 0));
 
-  unique_ptr<VertexBufferInterface> buffer(new VertexArray<Vertex2D>());
+  unique_ptr<VertexBufferInterface> buffer(new VertexArrayT<Vertex2D>());
   buffer->Init(vert_list);
   EXPECT_EQ(vert_list.size(), buffer->size());
   EXPECT_EQ(vert_list.empty(), buffer->empty());

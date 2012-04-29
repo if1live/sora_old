@@ -29,6 +29,8 @@
 #include <boost/foreach.hpp>
 #endif
 #include "renderer/globals.h"
+#include "renderer/shader.h"
+#include "renderer/mesh_buffer.h"
 
 using namespace std;
 using namespace std::tr1;
@@ -252,5 +254,106 @@ namespace gl {
     }
     return list;
   }
+
+  void GLProgram::SetVertexList(const VertexListBindParam &bind_param, char *base_ptr, const VertexInfo &info) {
+    //pos
+    {
+      AttribBindParam param;
+      param.dim = info.pos_dim;
+      param.normalize = false;
+      param.offset = info.pos_offset;
+      param.var_type = info.pos_type;
+      param.vert_size = info.size;
+      SetAttrib(bind_param.pos_var, param, base_ptr);
+    }
+
+    //texcoord 
+    {
+      AttribBindParam param;
+      param.dim = info.texcoord_dim;
+      param.normalize = false;
+      param.offset = info.texcoord_offset;
+      param.var_type = info.texcoord_type;
+      param.vert_size = info.size;
+      SetAttrib(bind_param.texcoord_var, param, base_ptr);
+    }
+
+    //normal
+    {
+      AttribBindParam param;
+      param.dim = info.normal_dim;
+      param.normalize = false;
+      param.offset = info.normal_offset;
+      param.var_type = info.normal_type;
+      param.vert_size = info.size;
+      SetAttrib(bind_param.normal_var, param, base_ptr);
+    }
+
+    //color
+    {
+      AttribBindParam param;
+      param.dim = info.color_dim;
+      param.normalize = true;
+      param.offset = info.color_offset;
+      param.var_type = info.color_type;
+      param.vert_size = info.size;
+      SetAttrib(bind_param.color_var, param, base_ptr);
+    }
+
+    //tangent
+    {
+      AttribBindParam param;
+      param.dim = info.tangent_dim;
+      param.normalize = false;
+      param.offset = info.tangent_offset;
+      param.var_type = info.tangent_type;
+      param.vert_size = info.size;
+      SetAttrib(bind_param.tangent_var, param, base_ptr);
+    }
+  }
+
+  void GLProgram::DrawElements(DrawType mode, const IndexList &index_data) {
+    GLenum draw_mode = GLEnv::TypeToGLEnum(mode);
+    glDrawElements(draw_mode, index_data.size(), GL_UNSIGNED_SHORT, index_data.data());
+    SR_CHECK_ERROR("glDrawElements");
+  }
+  void GLProgram::DrawElements(DrawType mode, const IndexBufferInterface &index_data) {
+    GLenum draw_mode = GLEnv::TypeToGLEnum(mode);
+    //const bool is_buffer = IndexBufferInfoHolder<IndexContainer>::is_buffer;
+    //unsigned int buffer = IndexBufferInfoHolder<IndexContainer>::buffer(index_data);
+    const bool is_buffer = index_data.IsBuffer();
+    if(is_buffer) {
+      unsigned int buffer = index_data.handle();
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
+    }
+    glDrawElements(draw_mode, index_data.size(), GL_UNSIGNED_SHORT, index_data.data());
+    if(is_buffer) {
+      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    }
+    SR_CHECK_ERROR("glDrawElements");
+  }
+
+  void GLProgram::DrawArrays(DrawType mode, int vertex_count) {
+    glDrawArrays(GLEnv::TypeToGLEnum(mode), 0, vertex_count);
+    SR_CHECK_ERROR("glDrawArrays");
+  }
+
+  void GLProgram::SetVertexList(const VertexListBindParam &param, const VertexBufferInterface &vertex_data) {
+    //unsigned int buffer = InfoHolder::buffer(vertex_data);
+    //const bool is_buffer = InfoHolder::is_buffer;
+    unsigned int buffer = vertex_data.handle();
+    const bool is_buffer = vertex_data.IsBuffer();
+    const VertexInfo &info = GLEnv::GetGLVertexInfo(vertex_data.vertex_code());
+    char *ptr = (char*)vertex_data.data();
+
+    if(is_buffer) {
+      glBindBuffer(GL_ARRAY_BUFFER, buffer);
+    }
+    SetVertexList(param, ptr, info);
+    if(is_buffer) {
+      glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+  }
+
 } //namespace gl
 } //namespace sora

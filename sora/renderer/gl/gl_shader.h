@@ -37,6 +37,7 @@
 #include "renderer/renderer_env.h"
 #include "renderer/buffer_object.h"
 #include "renderer/shader_variable.h"
+#include "renderer/mesh_buffer.h"
 
 namespace sora {;
 class VertexListBindParam;
@@ -91,18 +92,16 @@ namespace gl {
 
     template<typename T>
     static void SetVertexList(const VertexListBindParam &param, char *base_ptr);
+    static void SetVertexList(const VertexListBindParam &param, char *base_ptr, const VertexInfo &info);
 
-    template<typename VertexContainer>
-    static void SetVertexList(const VertexListBindParam &param, const VertexContainer &vertex_data);
+    template<typename T>
+    static void SetVertexList(const VertexListBindParam &param, const std::vector<T> &vertex_data);
+    static void SetVertexList(const VertexListBindParam &param, const VertexBufferInterface &vertex_data);
 
     //진짜로 그리기
-    static void DrawArrays(DrawType mode, int vertex_count) {
-      glDrawArrays(GLEnv::TypeToGLEnum(mode), 0, vertex_count);
-      SR_CHECK_ERROR("glDrawArrays");
-    }
-
-    template<typename IndexContainer>
-    static void DrawElements(DrawType mode, const IndexContainer &index_data);
+    static void DrawArrays(DrawType mode, int vertex_count);
+    static void DrawElements(DrawType mode, const IndexList &index_data);
+    static void DrawElements(DrawType mode, const IndexBufferInterface &index_data);
 
     //최초실행시에는 모든목록을 얻을수잇다
     static std::vector<ShaderVariable> GetActiveUniformVarList(HandleType handle);
@@ -111,96 +110,17 @@ namespace gl {
 
   template<typename T>
   void GLProgram::SetVertexList(const VertexListBindParam &bind_param, char *base_ptr) {
-    VertexInfo &info = GLEnv::GetGLVertexInfo<T>();
-    //pos
-    {
-      AttribBindParam param;
-      param.dim = info.pos_dim;
-      param.normalize = false;
-      param.offset = info.pos_offset;
-      param.var_type = info.pos_type;
-      param.vert_size = info.size;
-      SetAttrib(bind_param.pos_var, param, base_ptr);
-    }
-
-    //texcoord 
-    {
-      AttribBindParam param;
-      param.dim = info.texcoord_dim;
-      param.normalize = false;
-      param.offset = info.texcoord_offset;
-      param.var_type = info.texcoord_type;
-      param.vert_size = info.size;
-      SetAttrib(bind_param.texcoord_var, param, base_ptr);
-    }
-
-    //normal
-    {
-      AttribBindParam param;
-      param.dim = info.normal_dim;
-      param.normalize = false;
-      param.offset = info.normal_offset;
-      param.var_type = info.normal_type;
-      param.vert_size = info.size;
-      SetAttrib(bind_param.normal_var, param, base_ptr);
-    }
-
-    //color
-    {
-      AttribBindParam param;
-      param.dim = info.color_dim;
-      param.normalize = true;
-      param.offset = info.color_offset;
-      param.var_type = info.color_type;
-      param.vert_size = info.size;
-      SetAttrib(bind_param.color_var, param, base_ptr);
-    }
-
-    //tangent
-    {
-      AttribBindParam param;
-      param.dim = info.tangent_dim;
-      param.normalize = false;
-      param.offset = info.tangent_offset;
-      param.var_type = info.tangent_type;
-      param.vert_size = info.size;
-      SetAttrib(bind_param.tangent_var, param, base_ptr);
-    }
+    const VertexInfo &info = GLEnv::GetGLVertexInfo<T>();
+    SetVertexList(bind_param, base_ptr, info);
   }
 
-  template<typename VertexContainer>
-  void GLProgram::SetVertexList(const VertexListBindParam &param, const VertexContainer &vertex_data) {
-    typedef typename VertexContainer::value_type VertexType;
-    typedef VertexBufferInfoHolder<VertexContainer> InfoHolder;
-    unsigned int buffer = InfoHolder::buffer(vertex_data);
-    const bool is_buffer = InfoHolder::is_buffer;
+  template<typename T>
+  void GLProgram::SetVertexList(const VertexListBindParam &param, const std::vector<T> &vertex_data) {
     char *ptr = (char*)vertex_data.data();
-
-    if(is_buffer) {
-      glBindBuffer(GL_ARRAY_BUFFER, buffer);
-    }
-    SetVertexList<VertexType>(param, ptr);
-    if(is_buffer) {
-      glBindBuffer(GL_ARRAY_BUFFER, 0);
-    }
+    SetVertexList<T>(param, ptr);
   }
 
-  template<typename IndexContainer>
-  void GLProgram::DrawElements(DrawType mode, const IndexContainer &index_data) {
-    GLenum draw_mode = GLEnv::TypeToGLEnum(mode);
-    const bool is_buffer = IndexBufferInfoHolder<IndexContainer>::is_buffer;
-    unsigned int buffer = IndexBufferInfoHolder<IndexContainer>::buffer(index_data);
-    if(is_buffer) {
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffer);
-    }
-    glDrawElements(draw_mode, index_data.size(), GL_UNSIGNED_SHORT, index_data.data());
-    if(is_buffer) {
-      glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    }
-    SR_CHECK_ERROR("glDrawElements");
-  }
-
-
+  
 } //namespace gl
 } //namespace sora
 #endif  // SORA_SHADER_H_

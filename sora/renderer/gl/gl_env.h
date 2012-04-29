@@ -65,7 +65,7 @@ namespace gl {
     static GLenum VertexElemTypeToGLEnum(VertexElemType type);
     static VertexInfo ToGLVertexInfo(const VertexInfo &info);
     template<typename T>
-    static VertexInfo &GetGLVertexInfo() {
+    static const VertexInfo &GetGLVertexInfo() {
       static bool run = false;
       static VertexInfo info;
       if(run == false) {
@@ -74,6 +74,7 @@ namespace gl {
       }
       return info;
     }
+    static const VertexInfo &GetGLVertexInfo(VertexCode code);
 
     static VarType GLEnumToVarType(GLenum type);
     static GLenum VarTypeToGLEnum(VarType type);

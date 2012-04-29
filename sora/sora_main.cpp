@@ -49,6 +49,7 @@
 #include "renderer/renderer.h"
 #include "renderer/frame_buffer.h"
 #include "renderer/post_effect.h"
+#include "renderer/mesh_buffer.h"
 
 #include "mesh/geometric_object.h"
 #include "mesh/freeglut_font.h"
@@ -389,10 +390,10 @@ void renderFrame(Device *device) {
     SetUniformVector(const_color_var, color);
     SR_CHECK_ERROR("SetVector");
 
-    color_shader.SetVertexList(vert_list);
-    color_shader.DrawArrays(kDrawTriangles, vert_list.size());
+    //color_shader.SetVertexList(vert_list);
+    //color_shader.DrawArrays(kDrawTriangles, vert_list.size());
 
-    color_shader.DrawArrays(kDrawTriangles, vbo);
+    //color_shader.DrawArrays(kDrawTriangles, vbo);
     
     color_shader.DrawElements(kDrawLines, vbo, wire_ibo);
   }
@@ -408,8 +409,11 @@ void renderFrame(Device *device) {
     ShaderVariable mvp_var = simple_shader.uniform_var(kMVPHandleName);
     SetUniformMatrix(mvp_var, mvp);
     SR_CHECK_ERROR("SetMatrix");
-    simple_shader.SetVertexList(vert_list);
-    simple_shader.DrawArrays(kDrawTriangles, vert_list.size());
+
+    //simple_shader.SetVertexList(vert_list);
+    //simple_shader.DrawArrays(kDrawTriangles, vert_list.size());
+    simple_shader.DrawArrays(kDrawTriangles, vbo);
+    
   }
   
   //일반 3d객체 그리기+카메라 회전 장착

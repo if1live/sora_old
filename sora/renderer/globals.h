@@ -202,6 +202,16 @@ namespace gl {
 class Device;
 template<typename PolicyType> class RenderDeviceT;
 typedef RenderDeviceT<sora::gl::GLRenderDevice> RenderDevice;
+//for render device
+
+//for mesh buffer - begin
+struct VertexBufferInterface;
+struct IndexBufferInterface;
+template<typename T, typename InterfaceT> class VectorWrapper;
+typedef VectorWrapper<unsigned short, IndexBufferInterface> IndexArray;
+template<typename T>  class VertexArrayT;
+//for mesh buffer - end
+
 
 //predefined semantic
 #define kPositionHandleName "a_position"

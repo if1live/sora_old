@@ -294,5 +294,19 @@ namespace gl {
     SR_ASSERT(!"do not reach, not valid VarType");
     return kTypeFloat;
   }
+
+  const VertexInfo &GLEnv::GetGLVertexInfo(VertexCode code) {
+    static bool run = false;
+    static std::array<VertexInfo, kVertexCodeCount> data;
+    if(run == false) {
+      run = true;
+      data[kVertex2D] = ToGLVertexInfo(VertexInfoHolder<Vertex2D>::Get());
+      data[kVertex] = ToGLVertexInfo(VertexInfoHolder<Vertex>::Get());
+      data[kVertexTangent] = ToGLVertexInfo(VertexInfoHolder<TangentVertex>::Get());
+      data[kVertexPos2D] = ToGLVertexInfo(VertexInfoHolder<glm::vec2>::Get());
+      data[kVertexPos3D] = ToGLVertexInfo(VertexInfoHolder<glm::vec3>::Get());
+    }
+    return data[code];
+  }
 } //namespace gl
 } //namespace sora
