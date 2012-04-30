@@ -21,12 +21,12 @@
 #include "sora_stdafx.h"
 #include "freeglut_main.h"
 
-#include "renderer/shader.h"
-#include "sys/device.h"
-#include "renderer/renderer_env.h"
-#include "renderer/render_device.h"
-#include "sys/filesystem.h"
-#include "core/vertex.h"
+#include "shader.h"
+#include "device.h"
+#include "renderer_env.h"
+#include "render_device.h"
+#include "filesystem.h"
+#include "vertex.h"
 
 using namespace std;
 using namespace glm;

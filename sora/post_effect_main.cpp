@@ -25,7 +25,7 @@
 
 //android  OpenGL ES 2.0 code based
 #if SR_USE_PCH == 0
-#include "renderer/gl_inc.h"
+#include "gl_inc.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -35,22 +35,22 @@
 #include <cmath>
 #endif
 
-#include "sys/device.h"
-#include "sys/memory_file.h"
+#include "device.h"
+#include "memory_file.h"
 
-#include "core/vertex.h"
-#include "core/math_helper.h"
+#include "vertex.h"
+#include "math_helper.h"
 
-#include "renderer/renderer_env.h"
-#include "renderer/shader.h"
-#include "renderer/texture.h"
-#include "renderer/buffer_object.h"
-#include "renderer/image.h"
-#include "renderer/renderer.h"
-#include "renderer/frame_buffer.h"
-#include "renderer/post_effect.h"
+#include "renderer_env.h"
+#include "shader.h"
+#include "texture.h"
+#include "buffer_object.h"
+#include "image.h"
+#include "renderer.h"
+#include "frame_buffer.h"
+#include "post_effect.h"
 
-#include "mesh/geometric_object.h"
+#include "geometric_object.h"
 
 using namespace std;
 using namespace sora;

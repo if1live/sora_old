@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora/core/arch.h"
+#include "sora/arch.h"
 
 #if SR_USE_PCH
 #if SR_WIN
@@ -29,14 +29,14 @@
 
 #include <memory>
 #include <vector>
-#include "sora/core/shared_ptr_inc.h"
+#include "sora/shared_ptr_inc.h"
 
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-#include "sora/renderer/gl/gl_inc.h"
+#include "sora/gl_inc.h"
 
 //boost
 

@@ -25,7 +25,7 @@
 
 //android  OpenGL ES 2.0 code based
 #if SR_USE_PCH == 0
-#include "renderer/gl_inc.h"
+#include "gl_inc.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -35,35 +35,35 @@
 #include <cmath>
 #endif
 
-#include "sys/device.h"
-#include "sys/memory_file.h"
+#include "device.h"
+#include "memory_file.h"
 
-#include "core/vertex.h"
-#include "core/math_helper.h"
+#include "vertex.h"
+#include "math_helper.h"
 
-#include "renderer/renderer_env.h"
-#include "renderer/shader.h"
-#include "renderer/texture.h"
-#include "renderer/buffer_object.h"
-#include "renderer/image.h"
-#include "renderer/renderer.h"
-#include "renderer/frame_buffer.h"
-#include "renderer/post_effect.h"
-#include "renderer/mesh_buffer.h"
+#include "renderer_env.h"
+#include "shader.h"
+#include "texture.h"
+#include "buffer_object.h"
+#include "image.h"
+#include "renderer.h"
+#include "frame_buffer.h"
+#include "post_effect.h"
+#include "mesh_buffer.h"
 
-#include "mesh/geometric_object.h"
-#include "mesh/freeglut_font.h"
+#include "geometric_object.h"
+#include "freeglut_font.h"
 
-#include "renderer/uber_shader.h"
-#include "renderer/material.h"
-#include "renderer/camera.h"
-#include "renderer/light.h"
+#include "uber_shader.h"
+#include "material.h"
+#include "camera.h"
+#include "light.h"
 
-#include "event/touch_device.h"
-#include "event/touch_event.h"
-#include "event/keyboard_event.h"
+#include "touch_device.h"
+#include "touch_event.h"
+#include "keyboard_event.h"
 
-#include "renderer/gl/gl_uber_shader_renderer.h"
+#include "gl_uber_shader_renderer.h"
 
 using namespace std;
 using namespace sora;
@@ -706,7 +706,7 @@ SR_C_DLL void SORA_touch_cancelled(Device *device, int x, int y, int prev_x, int
 }
 
 #if SR_ANDROID
-#include "sys/zip_stream_file.h"
+#include "zip_stream_file.h"
 void SORA_set_apk_file_path(const char *abs_path) {
   sora::ZipStreamFile::SetApkFile(abs_path);
 }

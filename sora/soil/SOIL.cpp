@@ -1,7 +1,7 @@
 #include "sora_stdafx.h"
 
 #if SR_ANDROID
-#include "renderer/gl_inc.h"
+#include "gl_inc.h"
 #endif
 /*
 	Jonathan Dummer

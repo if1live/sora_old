@@ -18,16 +18,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#include "sora/renderer/gl/gl_inc.h"
+#include "sora/gl_inc.h"
 #include <cstdlib>
 #include <cstdio>
 #include <functional>
 
-#include "sora/event/keyboard_event.h"
+#include "sora/keyboard_event.h"
 
 #include "sora/sora_main.h"
-#include "sora/sys/device.h"
-#include "sora/core/timer.h"
+#include "sora/device.h"
+#include "sora/timer.h"
 #include "sora/shadow_map_main.h"
 #include "sora/test_function.h"
 #include "sora/selection_main.h"

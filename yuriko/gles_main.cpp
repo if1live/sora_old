@@ -1,20 +1,20 @@
 #if 0
-#include "sora/renderer/gl_inc.h"
+#include "sora/gl_inc.h"
 #include <stdlib.h>
 #include "esUtil.h"
 #include "esUtil_win.h"
 
 #include "sora/sora_main.h"
-#include "sora/sys/device.h"
-#include "sora/event/keyboard_event.h"
-#include "sora/core/timer.h"
+#include "sora/device.h"
+#include "sora/keyboard_event.h"
+#include "sora/timer.h"
 #include "sora/shadow_map_main.h"
 #include "sora/test_function.h"
 #include "sora/selection_main.h"
 #include "sora/celshading_main.h"
 #include "sora/depth_map_main.h"
 
-#include "sora/event/touch_device.h"
+#include "sora/touch_device.h"
 
 #include <queue>
 

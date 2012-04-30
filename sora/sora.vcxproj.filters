@@ -39,7 +39,7 @@
       <UniqueIdentifier>{38882dde-c366-4631-85e6-6e77d98f7702}</UniqueIdentifier>
     </Filter>
     <Filter Include="renderer\gl">
-      <UniqueIdentifier>{c091d859-626f-4c59-84b5-76a5e43efa5c}</UniqueIdentifier>
+      <UniqueIdentifier>{b7ba486f-8281-4238-b020-84e1e1cc1068}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -48,66 +48,6 @@
     </ClCompile>
     <ClCompile Include="lodepng\lodepng.cpp">
       <Filter>sdk\lodepng</Filter>
-    </ClCompile>
-    <ClCompile Include="cbes\world.cpp">
-      <Filter>cbes</Filter>
-    </ClCompile>
-    <ClCompile Include="cbes\component.cpp">
-      <Filter>cbes</Filter>
-    </ClCompile>
-    <ClCompile Include="cbes\component_list.cpp">
-      <Filter>cbes</Filter>
-    </ClCompile>
-    <ClCompile Include="cbes\entity.cpp">
-      <Filter>cbes</Filter>
-    </ClCompile>
-    <ClCompile Include="core\common_string.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="core\free_list_block_pool.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="core\heap.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="core\logger.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="core\math_helper.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="core\mem.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="core\string_hash.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="core\timer.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="core\arch.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\matrix_stack.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="sys\memory_file.cpp">
-      <Filter>sys</Filter>
-    </ClCompile>
-    <ClCompile Include="sys\sys_locale.cpp">
-      <Filter>sys</Filter>
-    </ClCompile>
-    <ClCompile Include="sys\zip_stream_file.cpp">
-      <Filter>sys</Filter>
-    </ClCompile>
-    <ClCompile Include="sys\filesystem.cpp">
-      <Filter>sys</Filter>
-    </ClCompile>
-    <ClCompile Include="sys\low_level_c_file.cpp">
-      <Filter>sys</Filter>
-    </ClCompile>
-    <ClCompile Include="event\touch_device.cpp">
-      <Filter>event</Filter>
     </ClCompile>
     <ClCompile Include="soil\image_DXT.cpp">
       <Filter>sdk\soil</Filter>
@@ -121,50 +61,8 @@
     <ClCompile Include="soil\stb_image_aug.cpp">
       <Filter>sdk\soil</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\gl\gl_env.cpp">
-      <Filter>renderer\gl</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\gl\gl_shader.cpp">
-      <Filter>renderer\gl</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\gl\gl_texture.cpp">
-      <Filter>renderer\gl</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\gl\gl_renderer.cpp">
-      <Filter>renderer\gl</Filter>
-    </ClCompile>
     <ClCompile Include="sora_main.cpp">
       <Filter>logic_test</Filter>
-    </ClCompile>
-    <ClCompile Include="sys\device.cpp">
-      <Filter>sys</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\gl\gl_render_device.cpp">
-      <Filter>renderer\gl</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\texture.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\sys_font.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh\geometric_object.cpp">
-      <Filter>mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh\parametric_surface.cpp">
-      <Filter>mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh\freeglut_font.cpp">
-      <Filter>mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh\freeglut_stroke_roman.cpp">
-      <Filter>mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh\freeglut_stroke_mono_roman.cpp">
-      <Filter>mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="core\vertex.cpp">
-      <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="freeglut_main.cpp">
       <Filter>logic_test</Filter>
@@ -172,38 +70,140 @@
     <ClCompile Include="sysfont_main.cpp">
       <Filter>logic_test</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\shader.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\shader_variable.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\image.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\gl\gl_shader_variable.cpp">
-      <Filter>renderer\gl</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\gl\gl_frame_buffer.cpp">
-      <Filter>renderer\gl</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\post_effect.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
     <ClCompile Include="post_effect_main.cpp">
       <Filter>logic_test</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\mesh_buffer.cpp">
+    <ClCompile Include="component_list.cpp">
+      <Filter>cbes</Filter>
+    </ClCompile>
+    <ClCompile Include="entity.cpp">
+      <Filter>cbes</Filter>
+    </ClCompile>
+    <ClCompile Include="world.cpp">
+      <Filter>cbes</Filter>
+    </ClCompile>
+    <ClCompile Include="component.cpp">
+      <Filter>cbes</Filter>
+    </ClCompile>
+    <ClCompile Include="common_string.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="free_list_block_pool.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="heap.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="logger.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="math_helper.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="mem.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="string_hash.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="timer.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="vertex.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="arch.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="touch_device.cpp">
+      <Filter>event</Filter>
+    </ClCompile>
+    <ClCompile Include="freeglut_font.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="freeglut_stroke_mono_roman.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="freeglut_stroke_roman.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="geometric_object.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="parametric_surface.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="texture.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\material.cpp">
+    <ClCompile Include="uber_shader.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\uber_shader.cpp">
+    <ClCompile Include="image.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\gl\gl_uber_shader_renderer.cpp">
+    <ClCompile Include="material.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix_stack.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh_buffer.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="post_effect.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="shader.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="shader_variable.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="sys_font.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="gl_env.cpp">
       <Filter>renderer\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="gl_frame_buffer.cpp">
+      <Filter>renderer\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="gl_render_device.cpp">
+      <Filter>renderer\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="gl_renderer.cpp">
+      <Filter>renderer\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="gl_shader.cpp">
+      <Filter>renderer\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="gl_shader_variable.cpp">
+      <Filter>renderer\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="gl_texture.cpp">
+      <Filter>renderer\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="gl_uber_shader_renderer.cpp">
+      <Filter>renderer\gl</Filter>
+    </ClCompile>
+    <ClCompile Include="device.cpp">
+      <Filter>sys</Filter>
+    </ClCompile>
+    <ClCompile Include="filesystem.cpp">
+      <Filter>sys</Filter>
+    </ClCompile>
+    <ClCompile Include="low_level_c_file.cpp">
+      <Filter>sys</Filter>
+    </ClCompile>
+    <ClCompile Include="memory_file.cpp">
+      <Filter>sys</Filter>
+    </ClCompile>
+    <ClCompile Include="sys_locale.cpp">
+      <Filter>sys</Filter>
+    </ClCompile>
+    <ClCompile Include="zip_stream_file.cpp">
+      <Filter>sys</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -215,108 +215,6 @@
     </ClInclude>
     <ClInclude Include="..\sdk\vincent\vincent.h">
       <Filter>sdk\vincent</Filter>
-    </ClInclude>
-    <ClInclude Include="cbes\entity.h">
-      <Filter>cbes</Filter>
-    </ClInclude>
-    <ClInclude Include="cbes\world.h">
-      <Filter>cbes</Filter>
-    </ClInclude>
-    <ClInclude Include="cbes\component.h">
-      <Filter>cbes</Filter>
-    </ClInclude>
-    <ClInclude Include="cbes\component_list.h">
-      <Filter>cbes</Filter>
-    </ClInclude>
-    <ClInclude Include="core\class_type.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\common_string.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\free_list_block_pool.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\free_list_manager.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\free_list_object_pool.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\heap.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\heap_alloc_header.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\id_generator.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\logger.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\math_helper.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\mem.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\rect.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\shared_ptr_inc.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\string_code_dictionary.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\string_hash.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\template_lib.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\timer.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\tuple_inc.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\unordered_map_inc.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\arch.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\array_inc.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="core\assert_inc.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\matrix_stack.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="sys\low_level_c_file.h">
-      <Filter>sys</Filter>
-    </ClInclude>
-    <ClInclude Include="sys\memory_file.h">
-      <Filter>sys</Filter>
-    </ClInclude>
-    <ClInclude Include="sys\sys_locale.h">
-      <Filter>sys</Filter>
-    </ClInclude>
-    <ClInclude Include="sys\zip_stream_file.h">
-      <Filter>sys</Filter>
-    </ClInclude>
-    <ClInclude Include="sys\filesystem.h">
-      <Filter>sys</Filter>
-    </ClInclude>
-    <ClInclude Include="event\touch_event.h">
-      <Filter>event</Filter>
-    </ClInclude>
-    <ClInclude Include="event\touch_device.h">
-      <Filter>event</Filter>
     </ClInclude>
     <ClInclude Include="soil\image_helper.h">
       <Filter>sdk\soil</Filter>
@@ -336,80 +234,8 @@
     <ClInclude Include="soil\image_DXT.h">
       <Filter>sdk\soil</Filter>
     </ClInclude>
-    <ClInclude Include="core\vector.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="event\keyboard_event.h">
-      <Filter>event</Filter>
-    </ClInclude>
-    <ClInclude Include="event\event_queue.h">
-      <Filter>event</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\renderer_env.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\gl\gl_inc.h">
-      <Filter>renderer\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\gl\gl_env.h">
-      <Filter>renderer\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\gl\gl_buffer_object.h">
-      <Filter>renderer\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\globals.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\gl\gl_shader.h">
-      <Filter>renderer\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="core\vertex.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\gl\gl_texture.h">
-      <Filter>renderer\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\shader.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\gl\gl_renderer.h">
-      <Filter>renderer\gl</Filter>
-    </ClInclude>
     <ClInclude Include="sora_main.h">
       <Filter>logic_test</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\gl\gl_render_device.h">
-      <Filter>renderer\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="sys\device.h">
-      <Filter>sys</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\render_device.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\texture.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\sys_font.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\buffer_object.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh\geometric_object.h">
-      <Filter>mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh\teapot.h">
-      <Filter>mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh\parametric_surface.h">
-      <Filter>mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh\parametric_equations.h">
-      <Filter>mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh\freeglut_font.h">
-      <Filter>mesh</Filter>
     </ClInclude>
     <ClInclude Include="freeglut_main.h">
       <Filter>logic_test</Filter>
@@ -417,47 +243,221 @@
     <ClInclude Include="sysfont_main.h">
       <Filter>logic_test</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\shader_variable.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\image.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\gl\gl_shader_variable.h">
-      <Filter>renderer\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\renderer.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\frame_buffer.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\gl\gl_frame_buffer.h">
-      <Filter>renderer\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="renderer\post_effect.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
     <ClInclude Include="post_effect_main.h">
       <Filter>logic_test</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\mesh_buffer.h">
+    <ClInclude Include="component.h">
+      <Filter>cbes</Filter>
+    </ClInclude>
+    <ClInclude Include="component_list.h">
+      <Filter>cbes</Filter>
+    </ClInclude>
+    <ClInclude Include="entity.h">
+      <Filter>cbes</Filter>
+    </ClInclude>
+    <ClInclude Include="world.h">
+      <Filter>cbes</Filter>
+    </ClInclude>
+    <ClInclude Include="assert_inc.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="class_type.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="common_string.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="free_list_block_pool.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="free_list_manager.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="free_list_object_pool.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="heap.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="heap_alloc_header.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="id_generator.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="logger.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="math_helper.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="mem.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="rect.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="shared_ptr_inc.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="string_code_dictionary.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="string_hash.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="template_lib.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="timer.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="tuple_inc.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="unordered_map_inc.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="vector.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="vertex.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="arch.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="array_inc.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="event_queue.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="keyboard_event.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="touch_device.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="touch_event.h">
+      <Filter>event</Filter>
+    </ClInclude>
+    <ClInclude Include="freeglut_font.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="geometric_object.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="parametric_equations.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="parametric_surface.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="teapot.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="texture.h">
       <Filter>renderer</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\material.h">
+    <ClInclude Include="uber_shader.h">
       <Filter>renderer</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\light.h">
+    <ClInclude Include="buffer_object.h">
       <Filter>renderer</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\camera.h">
+    <ClInclude Include="camera.h">
       <Filter>renderer</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\uber_shader.h">
+    <ClInclude Include="frame_buffer.h">
       <Filter>renderer</Filter>
     </ClInclude>
-    <ClInclude Include="renderer\gl\gl_uber_shader_renderer.h">
+    <ClInclude Include="globals.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="image.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="light.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix_stack.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh_buffer.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="post_effect.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="render_device.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="renderer_env.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="shader.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="shader_variable.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="sys_font.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_buffer_object.h">
       <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_env.h">
+      <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_frame_buffer.h">
+      <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_inc.h">
+      <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_render_device.h">
+      <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_renderer.h">
+      <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_shader.h">
+      <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_shader_variable.h">
+      <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_texture.h">
+      <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_uber_shader_renderer.h">
+      <Filter>renderer\gl</Filter>
+    </ClInclude>
+    <ClInclude Include="device.h">
+      <Filter>sys</Filter>
+    </ClInclude>
+    <ClInclude Include="filesystem.h">
+      <Filter>sys</Filter>
+    </ClInclude>
+    <ClInclude Include="low_level_c_file.h">
+      <Filter>sys</Filter>
+    </ClInclude>
+    <ClInclude Include="memory_file.h">
+      <Filter>sys</Filter>
+    </ClInclude>
+    <ClInclude Include="sys_locale.h">
+      <Filter>sys</Filter>
+    </ClInclude>
+    <ClInclude Include="zip_stream_file.h">
+      <Filter>sys</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

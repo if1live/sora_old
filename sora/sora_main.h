@@ -22,7 +22,7 @@
 #define SORA_SORA_MAIN_H_
 
 #if SR_USE_PCH == 0
-#include "core/arch.h"
+#include "arch.h"
 #endif
 
 namespace sora {;

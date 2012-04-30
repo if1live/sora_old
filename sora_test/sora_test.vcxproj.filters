@@ -16,9 +16,6 @@
     <Filter Include="renderer">
       <UniqueIdentifier>{a1549323-4d54-466b-962f-03973928a211}</UniqueIdentifier>
     </Filter>
-    <Filter Include="renderer\gl">
-      <UniqueIdentifier>{35f1603c-c2bd-4095-bdb6-04b772291b35}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora_test_stdafx.cpp">
@@ -27,78 +24,81 @@
     <ClCompile Include="testmain.cc">
       <Filter>support</Filter>
     </ClCompile>
-    <ClCompile Include="cbes\world_test.cpp">
+    <ClCompile Include="world_test.cpp">
       <Filter>cbes</Filter>
     </ClCompile>
-    <ClCompile Include="core\free_list_manager_test.cpp">
+    <ClCompile Include="free_list_manager_test.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="core\free_list_object_pool_test.cpp">
+    <ClCompile Include="free_list_object_pool_test.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="core\heap_test.cpp">
+    <ClCompile Include="heap_test.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="core\id_generator_test.cpp">
+    <ClCompile Include="id_generator_test.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="core\math_helper_test.cpp">
+    <ClCompile Include="math_helper_test.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="core\mem_test.cpp">
+    <ClCompile Include="mem_test.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="core\template_lib_test.cpp">
+    <ClCompile Include="template_lib_test.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="core\class_type_test.cpp">
+    <ClCompile Include="class_type_test.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="core\common_string_test.cpp">
+    <ClCompile Include="common_string_test.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="core\free_list_block_pool_test.cpp">
+    <ClCompile Include="free_list_block_pool_test.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="renderer\matrix_stack_test.cpp">
+    <ClCompile Include="gl_env_test.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="sys\low_level_c_file_test.cpp">
+    <ClCompile Include="gl_shader_test.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="matrix_stack_test.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh_buffer_test.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="obj_loader_test.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="shader_test.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="vertex_test.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="buffer_object_test.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="gl_buffer_object_test.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="filesystem_test.cpp">
       <Filter>sys</Filter>
     </ClCompile>
-    <ClCompile Include="sys\sys_locale_test.cpp">
+    <ClCompile Include="low_level_c_file_test.cpp">
       <Filter>sys</Filter>
     </ClCompile>
-    <ClCompile Include="sys\filesystem_test.cpp">
+    <ClCompile Include="sys_locale_test.cpp">
       <Filter>sys</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\shader_test.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\vertex_test.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\gl_shader_test.cpp">
-      <Filter>renderer\gl</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\gl_buffer_object_test.cpp">
-      <Filter>renderer\gl</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\gl_env_test.cpp">
-      <Filter>renderer\gl</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\buffer_object_test.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="renderer\mesh_buffer_test.cpp">
-      <Filter>renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h">
       <Filter>support</Filter>
     </ClInclude>
-    <ClInclude Include="cbes\sample_component.h">
+    <ClInclude Include="sample_component.h">
       <Filter>cbes</Filter>
     </ClInclude>
   </ItemGroup>

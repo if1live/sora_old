@@ -20,10 +20,10 @@
 #ifndef SORA_SORA_STDAFX_H_
 #define SORA_SORA_STDAFX_H_
 // 사실상 모든 소스에서 필요한건 미리 인클루드
-#include "core/arch.h"
-#include "core/assert_inc.h"
-#include "core/mem.h"
-#include "core/logger.h"
+#include "arch.h"
+#include "assert_inc.h"
+#include "mem.h"
+#include "logger.h"
 
 #if SR_USE_PCH
 #include <cmath>
@@ -36,8 +36,8 @@
 
 #include <type_traits> 
 
-#include <sys/types.h>
-#include <sys/stat.h>
+//#include <types.h>
+//#include <stat.h>
 #include <fcntl.h>
 #if SR_WIN
 // open, close...
@@ -62,11 +62,11 @@
 //#include <direct.h>
 //#endif
 
-#include "core/shared_ptr_inc.h"
-#include "core/unordered_map_inc.h"
-#include "renderer/gl/gl_inc.h"
-#include "core/tuple_inc.h"
-#include "core/array_inc.h"
+#include "shared_ptr_inc.h"
+#include "unordered_map_inc.h"
+#include "gl_inc.h"
+#include "tuple_inc.h"
+#include "array_inc.h"
 
 //boost
 #include <boost/foreach.hpp>
