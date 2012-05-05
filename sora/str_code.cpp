@@ -59,7 +59,8 @@ bool StrCode::operator==(const StrCode &o) const {
 }
 
 ////////////////////////////
-StrCodeDictionary::StrCodeDictionary() {
+StrCodeDictionary::StrCodeDictionary()
+: pool_(sizeof(StrCode)) {
 
 }
 StrCodeDictionary::~StrCodeDictionary() {
@@ -68,6 +69,8 @@ StrCodeDictionary::~StrCodeDictionary() {
   for( ; it != endit ; ++it) {
     StrCode *ptr = it->second;
     ptr->~StrCode();
+    //어차피 pool사라질떄 모든 할당된 객체가 사라질테니까 굳이 따로 free할 필요 없다
+    //pool_.free(ptr);
   }
 }
 SCode StrCodeDictionary::Get(const std::string &str) {
@@ -78,7 +81,7 @@ SCode StrCodeDictionary::Get(const std::string &str) {
     return obj->str;
   }
 
-  StrCode *str_code = reinterpret_cast<StrCode*>(sora::global_malloc(sizeof(StrCode)));
+  StrCode *str_code = reinterpret_cast<StrCode*>(pool_.malloc());
   //str_code = new(str_code) StrCode;
   CallConstructor(str_code);
   str_code->Init(str.c_str(), str.length());

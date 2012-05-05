@@ -23,6 +23,7 @@
 #include "unordered_map_inc.h"
 #include <boost/utility.hpp>
 #include "template_lib.h"
+#include <boost/pool/pool.hpp>
 
 namespace sora {;
 //외부에서 해당 클래스를 직접 사용하는 일은 피하자.
@@ -62,7 +63,7 @@ private:
   //hashcode, strcode object
   typedef std::tr1::unordered_map<unsigned int, StrCode*> StrCodeDict;
   StrCodeDict dict_;
-  
+  boost::pool<> pool_;
 };
 
 } //namespace sora

@@ -115,4 +115,8 @@ typedef unsigned char uchar;
 typedef unsigned short ushort;
 typedef unsigned int uint;
 
+
+//for boost
+//http://stackoverflow.com/questions/9691184/boostthread-without-library-windows
+#define BOOST_ALL_NO_LIB 
 #endif  // SORA_ARCH_H_
