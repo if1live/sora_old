@@ -125,6 +125,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="stack_allocator.cpp" />
     <ClCompile Include="string_hash.cpp" />
     <ClCompile Include="sysfont_main.cpp" />
     <ClCompile Include="sys_font.cpp" />
@@ -203,6 +204,7 @@
     <ClInclude Include="soil\stb_image_aug.h" />
     <ClInclude Include="sora_main.h" />
     <ClInclude Include="sora_stdafx.h" />
+    <ClInclude Include="stack_allocator.h" />
     <ClInclude Include="string_code_dictionary.h" />
     <ClInclude Include="string_hash.h" />
     <ClInclude Include="sysfont_main.h" />

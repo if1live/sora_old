@@ -1,4 +1,4 @@
-﻿/*  Copyright (C) 2011 by if1live */
+﻿/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,41 +18,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_ASSERT_INC_H_
-#define SORA_ASSERT_INC_H_
+#pragma once
 
-#include "arch.h"
-#include <cassert>
-#include <cstdlib>
+namespace sora {;
 
-#if SR_WIN
-//#define SR_ASSERT(EXPR) do { assert(EXPR); } while(0);
-#define SR_DEBUG_BREAK() { __asm{ int 3 }; }
-#define SR_ASSERT(EXPR) if(!(EXPR)) { SR_DEBUG_BREAK(); }
+class StackAllocator {
+public:
+  typedef uint Marker;
 
-#elif SR_IOS
-#define SR_ASSERT(EXPR) do { assert(EXPR); } while(0);
+  StackAllocator(int stack_size = 1024 * 64); //64kb
+  ~StackAllocator();
 
-#elif SR_ANDROID
-#include <android/log.h>
-#define SR_ASSERT(EXPR) do { \
-  if (!(EXPR)) {  \
-    __android_log_print(ANDROID_LOG_FATAL, "ASSERT", "%s : %d : %s", __FILE__, __LINE__, #EXPR); \
-    assert(EXPR); \
-    exit(-1); \
-  } } while(0);
+  void *Malloc(size_t x);
+  void Free(void *data);
+  
+  void FreeToMarker(Marker marker);
+  Marker GetMarker();
 
-#else
-#error "not support"
-#endif
+  void Clear();
 
-//static_assert
-#if SR_WIN || SR_IOS
-#define SR_STATIC_ASSERT(A, B) static_assert(A, B)
-#define SR_STATIC_ASSERT_NOMSG(A) static_assert(A, "no msg")
-#else
-#define SR_STATIC_ASSERT(A, B)
-#define SR_STATIC_ASSERT_NOMSG(A)
-#endif
+  int stack_size() const { return stack_size_; }
+  int remain_size() const { return stack_size_ - (top_ - data_); }
+  int GetAllocHeaderSize() const;
 
-#endif  // SORA_ASSERT_INC_H_
+private:
+  unsigned char *data_;
+  unsigned char *top_;
+  int stack_size_;
+
+  //메모리 할당 정보를 적절히 추적해서 디버깅이나 기타 용도에 쓸수잇을듯?
+  //할당 크기는 메모리 할당크기+Header를 합쳐서 치자. (이게 진짜 할당 크기니까)
+};
+
+} //namespace sora

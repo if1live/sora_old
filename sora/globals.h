@@ -31,6 +31,19 @@ typedef enum {
   kHandleUniform,
 } VariableHandleType;
 
+
+typedef enum {
+  kVertexNone,
+  kVertex2D,
+  kVertex,
+  kVertexTangent,
+  kVertexPos2D,
+  kVertexPos3D,
+
+  kVertexCodeCount,
+} VertexCode;
+
+
 //텍스쳐 관련
 typedef enum {
   kTexFileUnknown = -1,  //soil로 일단 시도해보자

@@ -43,7 +43,7 @@ Heap *Heap::GetSharedHeap() {
   return &h;
 }
 void* Heap::Malloc(size_t size) {
-#if SR_DEBUG
+#if _DEBUG
   int requestSize = size + sizeof(HeapAllocHeader);
   byte *mem = reinterpret_cast<byte*>(sora::global_malloc(requestSize));
   HeapAllocHeader *header = reinterpret_cast<HeapAllocHeader*>(mem);
@@ -58,7 +58,7 @@ void* Heap::Malloc(size_t size) {
 #endif
 }
 void Heap::Free(void *ptr) {
-#if SR_DEBUG
+#if _DEBUG
   HeapAllocHeader *header = reinterpret_cast<HeapAllocHeader*>(
     reinterpret_cast<byte*>(ptr) - sizeof(HeapAllocHeader));
   header->heap->RemoveAllocation(header->size);

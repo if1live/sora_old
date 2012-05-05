@@ -28,21 +28,21 @@ TEST(VertexInfo, Vertex2D) {
   VertexInfo &info = VertexInfoHolder<Vertex2D>::Get();
   EXPECT_EQ(sizeof(Vertex2D), info.size);
   EXPECT_EQ(0, info.pos_offset);
-  EXPECT_EQ(kVertexElemFloat, info.pos_type);
+  EXPECT_EQ(kTypeFloat, info.pos_type);
 }
 
 TEST(VertexInfo, Vertex) {
   VertexInfo &info = VertexInfoHolder<Vertex>::Get();
   EXPECT_EQ(sizeof(Vertex), info.size);
   EXPECT_EQ(0, info.pos_offset);
-  EXPECT_EQ(kVertexElemFloat, info.pos_type);
+  EXPECT_EQ(kTypeFloat, info.pos_type);
 }
 
 TEST(VertexInfo, TangentVertex) {
   VertexInfo &info = VertexInfoHolder<TangentVertex>::Get();
   EXPECT_EQ(sizeof(TangentVertex), info.size);
   EXPECT_EQ(0, info.pos_offset);
-  EXPECT_EQ(kVertexElemFloat, info.pos_type);
+  EXPECT_EQ(kTypeFloat, info.pos_type);
 }
 
 TEST(VertexInfo, Get) {

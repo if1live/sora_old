@@ -272,13 +272,6 @@ bool setupGraphics(Device *device, int w, int h) {
   }
 
   {
-    //surfaces[0] = new Cone(2, 1);
-    //surfaces[1] = new Sphere(0.5f);
-    //surfaces[2] = new Torus(0.5f, 0.2f);
-    //surfaces[3] = new TrefoilKnot(1.0f);
-    //surfaces[4] = new KleinBottle(0.2f);
-    //surfaces[5] = new MobiusStrip(1);
-    
     //네번째 물체
     int obj_model_idx = 3;
 

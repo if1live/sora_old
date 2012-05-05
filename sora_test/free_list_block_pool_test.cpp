@@ -15,8 +15,7 @@ public:
 };
 int KarenBlockTestObj::cnt = 0;
 
-TEST(FreeListBlockPool, test)
-{
+TEST(FreeListBlockPool, test) {
   FreeListBlockPool pool(3, sizeof(KarenBlockTestObj));
   EXPECT_EQ(0, KarenBlockTestObj::cnt);	//constructor is not called
   void *ptr1 = pool.Malloc();
@@ -38,8 +37,7 @@ TEST(FreeListBlockPool, test)
   EXPECT_EQ(ptr5, ptr2);
 }
 
-TEST(FreeListBlockPool, blockSize)
-{
+TEST(FreeListBlockPool, blockSize) {
   FreeListBlockPool pool(3, sizeof(KarenBlockTestObj));
   void *ptr1 = pool.Malloc();
   void *ptr2 = pool.Malloc();

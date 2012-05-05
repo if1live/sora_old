@@ -73,7 +73,7 @@ void *FreeListBlockPool::Malloc() {
 }
 
 void FreeListBlockPool::Free(void *ptr) {
-#if DEBUG
+#if _DEBUG
   bool found = false;
   // ptr must be member of object_list
   for (int i = 0 ; i < max_size_ ; i++) {

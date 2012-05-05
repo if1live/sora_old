@@ -16,6 +16,9 @@
     <Filter Include="renderer">
       <UniqueIdentifier>{a1549323-4d54-466b-962f-03973928a211}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mem">
+      <UniqueIdentifier>{3109995f-9a9d-4f84-b6f0-d7444fe640e1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora_test_stdafx.cpp">
@@ -27,22 +30,10 @@
     <ClCompile Include="world_test.cpp">
       <Filter>cbes</Filter>
     </ClCompile>
-    <ClCompile Include="free_list_manager_test.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="free_list_object_pool_test.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="heap_test.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="id_generator_test.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="math_helper_test.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="mem_test.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="template_lib_test.cpp">
@@ -52,9 +43,6 @@
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="common_string_test.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="free_list_block_pool_test.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="gl_env_test.cpp">
@@ -92,6 +80,24 @@
     </ClCompile>
     <ClCompile Include="sys_locale_test.cpp">
       <Filter>sys</Filter>
+    </ClCompile>
+    <ClCompile Include="free_list_block_pool_test.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
+    <ClCompile Include="free_list_manager_test.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
+    <ClCompile Include="free_list_object_pool_test.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
+    <ClCompile Include="heap_test.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
+    <ClCompile Include="mem_test.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
+    <ClCompile Include="stack_allocator_test.cpp">
+      <Filter>mem</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

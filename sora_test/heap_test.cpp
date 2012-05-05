@@ -5,7 +5,7 @@
 using namespace sora;
 using namespace std;
 
-#if SR_DEBUG
+#if _DEBUG
 TEST(KRHeap, test) {
   Heap heap(string("dummy_sample"));
   EXPECT_EQ(0, heap.GetAllocatedMemSize());

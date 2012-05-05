@@ -12,8 +12,7 @@ public:
   int a;
 };
 
-TEST(FreeListManager, test)
-{
+TEST(FreeListManager, test) {
   FreeListManagerTest *t1 = new FreeListManagerTest();
   FreeListManagerTest *t2 = new FreeListManagerTest();
   FreeListManagerTest *t3 = new FreeListManagerTest();
@@ -33,8 +32,7 @@ TEST(FreeListManager, test)
   delete(t5);
 }
 
-TEST(FreeListManager, blockSize)
-{
+TEST(FreeListManager, blockSize) {
   FreeListManagerTest *t1 = new FreeListManagerTest();
   FreeListManagerTest *t2 = new FreeListManagerTest();
   EXPECT_EQ(sizeof(FreeListManagerTest), abs((int)t1 - (int)t2));

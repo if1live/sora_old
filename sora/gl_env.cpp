@@ -234,18 +234,18 @@ namespace gl {
     return enum_list[(int)type];
   }
 
-  GLenum GLEnv::VertexElemTypeToGLEnum(VertexElemType type) {
+  GLenum GLEnv::VertexElemTypeToGLEnum(VarType type) {
     static bool run = false;
     static std::array<GLenum, kVarTypeCount> enum_list;
     if(run == false) {
       run = true;
-      enum_list[kVertexElemFloat] = GL_FLOAT,
-      enum_list[kVertexElemInt] = GL_INT,
-      enum_list[kVertexElemUint] = GL_UNSIGNED_INT;
-      enum_list[kVertexElemShort] = GL_SHORT;
-      enum_list[kVertexElemUshort] = GL_UNSIGNED_SHORT;
-      enum_list[kVertexElemChar] = GL_BYTE;
-      enum_list[kVertexElemUchar] = GL_UNSIGNED_BYTE;
+      enum_list[kTypeFloat] = GL_FLOAT,
+      enum_list[kTypeInt] = GL_INT,
+      enum_list[kTypeUint] = GL_UNSIGNED_INT;
+      enum_list[kTypeShort] = GL_SHORT;
+      enum_list[kTypeUshort] = GL_UNSIGNED_SHORT;
+      enum_list[kTypeByte] = GL_BYTE;
+      enum_list[kTypeUbyte] = GL_UNSIGNED_BYTE;
     }
     SR_ASSERT(type >= 0);
     SR_ASSERT(type < kVarTypeCount);
@@ -254,11 +254,11 @@ namespace gl {
 
   VertexInfo GLEnv::ToGLVertexInfo(const VertexInfo &info) {
     VertexInfo result = info;
-    result.pos_type = VertexElemTypeToGLEnum(info.pos_type);
-    result.color_type = VertexElemTypeToGLEnum(info.color_type);
-    result.normal_type = VertexElemTypeToGLEnum(info.normal_type);
-    result.texcoord_type = VertexElemTypeToGLEnum(info.texcoord_type);
-    result.tangent_type = VertexElemTypeToGLEnum(info.tangent_type);
+    result.pos_type = VertexElemTypeToGLEnum(static_cast<VarType>(info.pos_type));
+    result.color_type = VertexElemTypeToGLEnum(static_cast<VarType>(info.color_type));
+    result.normal_type = VertexElemTypeToGLEnum(static_cast<VarType>(info.normal_type));
+    result.texcoord_type = VertexElemTypeToGLEnum(static_cast<VarType>(info.texcoord_type));
+    result.tangent_type = VertexElemTypeToGLEnum(static_cast<VarType>(info.tangent_type));
     return result;
   }
 

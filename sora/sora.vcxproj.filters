@@ -44,6 +44,9 @@
     <Filter Include="mem">
       <UniqueIdentifier>{21937df2-c6c5-461e-9518-bb4c61ee925c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="math">
+      <UniqueIdentifier>{c58512e0-bb44-4dac-b1f4-bdf4a23da249}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora_stdafx.cpp">
@@ -208,6 +211,9 @@
     <ClCompile Include="heap.cpp">
       <Filter>mem</Filter>
     </ClCompile>
+    <ClCompile Include="stack_allocator.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -357,9 +363,6 @@
     <ClInclude Include="frame_buffer.h">
       <Filter>renderer</Filter>
     </ClInclude>
-    <ClInclude Include="globals.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
     <ClInclude Include="image.h">
       <Filter>renderer</Filter>
     </ClInclude>
@@ -458,6 +461,12 @@
     </ClInclude>
     <ClInclude Include="heap.h">
       <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="stack_allocator.h">
+      <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="globals.h">
+      <Filter>support</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

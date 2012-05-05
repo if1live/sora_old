@@ -62,7 +62,7 @@ namespace gl {
 
     //vertex 가공용
   public:
-    static GLenum VertexElemTypeToGLEnum(VertexElemType type);
+    static GLenum VertexElemTypeToGLEnum(VarType type);
     static VertexInfo ToGLVertexInfo(const VertexInfo &info);
     template<typename T>
     static const VertexInfo &GetGLVertexInfo() {
