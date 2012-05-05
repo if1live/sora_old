@@ -27,7 +27,7 @@ unsigned int RSHash::Hash(const char *str, int length) {
   unsigned int a    = 63689;
   unsigned int hash = 0;
 
-  for(std::size_t i = 0; i < length; i++) {
+  for(int i = 0; i < length; i++) {
     hash = hash * a + str[i];
     a    = a * b;
   }
@@ -38,7 +38,7 @@ unsigned int RSHash::Hash(const char *str, int length) {
 unsigned int JSHash::Hash(const char *str, int length) {
   unsigned int hash = 1315423911;
 
-  for(std::size_t i = 0; i < length; i++) {
+  for(int i = 0; i < length; i++) {
     hash ^= ((hash << 5) + str[i] + (hash >> 2));
   }
 
@@ -53,7 +53,7 @@ unsigned int PJWHash::Hash(const char *str, int length) {
   unsigned int hash              = 0;
   unsigned int test              = 0;
 
-  for(std::size_t i = 0; i < length; i++) {
+  for(int i = 0; i < length; i++) {
     hash = (hash << OneEighth) + str[i];
     if((test = hash & HighBits)  != 0) {
       hash = (( hash ^ (test >> ThreeQuarters)) & (~HighBits));
@@ -68,7 +68,7 @@ unsigned int ELFHash::Hash(const char *str, int length) {
   unsigned int hash = 0;
   unsigned int x    = 0;
 
-  for(std::size_t i = 0; i < length; i++) {
+  for(int i = 0; i < length; i++) {
     hash = (hash << 4) + str[i];
     if((x = hash & 0xF0000000L) != 0) {
       hash ^= (x >> 24);
@@ -84,7 +84,7 @@ unsigned int BKDRHash::Hash(const char *str, int length) {
   unsigned int seed = 131; // 31 131 1313 13131 131313 etc..
   unsigned int hash = 0;
 
-  for(std::size_t i = 0; i < length; i++) {
+  for(int i = 0; i < length; i++) {
     hash = (hash * seed) + str[i];
   }
 
@@ -94,7 +94,7 @@ unsigned int BKDRHash::Hash(const char *str, int length) {
 // SDBM Hash Function
 unsigned int SDBMHash::Hash(const char *str, int length) {
   unsigned int hash = 0;
-  for(std::size_t i = 0; i < length; i++) {
+  for(int i = 0; i < length; i++) {
     hash = str[i] + (hash << 6) + (hash << 16) - hash;
   }
 
@@ -104,7 +104,7 @@ unsigned int SDBMHash::Hash(const char *str, int length) {
 // DJB Hash Function
 unsigned int DJBHash::Hash(const char *str, int length) {
   unsigned int hash = 5381;
-  for(std::size_t i = 0; i < length; i++) {
+  for(int i = 0; i < length; i++) {
     hash = ((hash << 5) + hash) + str[i];
   }
 
@@ -115,7 +115,7 @@ unsigned int DJBHash::Hash(const char *str, int length) {
 unsigned int DEKHash::Hash(const char *str, int length) {
   unsigned int hash = static_cast<unsigned int>(length);
 
-  for(std::size_t i = 0; i < length; i++) {
+  for(int i = 0; i < length; i++) {
     hash = ((hash << 5) ^ (hash >> 27)) ^ str[i];
   }
 
@@ -126,7 +126,7 @@ unsigned int DEKHash::Hash(const char *str, int length) {
 unsigned int APHash::Hash(const char *str, int length) {
   unsigned int hash = 0;
 
-  for(std::size_t i = 0; i < length; i++) {
+  for(int i = 0; i < length; i++) {
     hash ^= ((i & 1) == 0) ? (  (hash <<  7) ^ str[i] ^ (hash >> 3)) :
       (~((hash << 11) ^ str[i] ^ (hash >> 5)));
   }

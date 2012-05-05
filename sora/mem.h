@@ -32,6 +32,10 @@ inline void operator delete[](void *p);
 
 namespace sora {;
 
+template<typename T>
+inline T* global_malloc() {
+  return reinterpret_cast<T*>(global_malloc(sizeof(T)));
+}
 inline void *global_malloc(size_t x);
 inline void global_free(void *p);
 

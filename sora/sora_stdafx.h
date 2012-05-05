@@ -60,6 +60,7 @@
 #include <map>
 #include <stack>
 #include <queue>
+#include <list>
 #include <functional>
 
 //#if SR_WIN

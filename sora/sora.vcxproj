@@ -83,6 +83,7 @@
     <ClCompile Include="common_string.cpp" />
     <ClCompile Include="component.cpp" />
     <ClCompile Include="component_list.cpp" />
+    <ClCompile Include="debug_draw_manager.cpp" />
     <ClCompile Include="device.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="filesystem.cpp" />
@@ -147,6 +148,7 @@
     <ClInclude Include="common_string.h" />
     <ClInclude Include="component.h" />
     <ClInclude Include="component_list.h" />
+    <ClInclude Include="debug_draw_manager.h" />
     <ClInclude Include="device.h" />
     <ClInclude Include="entity.h" />
     <ClInclude Include="event_queue.h" />

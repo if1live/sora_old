@@ -18,34 +18,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_VECTOR_H_
-#define SORA_VECTOR_H_
+#include "sora_test_stdafx.h"
+#include "debug_draw_manager.h"
 
-#include <glm/glm.hpp>
+using namespace glm;
+using namespace std;
+using namespace sora;
 
-//glm의 vector에는 unsigned char에 대응되는 것이 없다
-//왜나하면 저건 gl스펙에 맞춘거니까. 하지만 데이터를 최적화 하기 위해서는
-//자주 쓸거같아서 glm비슷하게해서 없는거 몇개를 뚫엇다
-namespace sora {;
-typedef glm::detail::tvec2<unsigned char> vec2ub;
-typedef glm::detail::tvec3<unsigned char> vec3ub;
-typedef glm::detail::tvec4<unsigned char> vec4ub;
+TEST(DebugDrawManager, test) {
+  DebugDrawManager mgr;
+  EXPECT_EQ(0, mgr.CmdCount());
 
-static vec4ub Color_White() {
-  return vec4ub(255, 255, 255, 255);
-}
-static vec4ub Color_Black() {
-  return vec4ub(0, 0, 0, 255);
-}
-static vec4ub Color_Red() {
-  return vec4ub(255, 0, 0, 255);
-}
-static vec4ub Color_Green() {
-  return vec4ub(0, 255, 0, 255);
-}
-static vec4ub Color_Blue() {
-  return vec4ub(0, 0, 255, 255);
-}
-}
+  mgr.AddAxis(mat4(1.0f), Color_White(), 1);
+  mgr.AddAxis(mat4(1.0f), Color_White(), 1, 1.0f);
+  EXPECT_EQ(2, mgr.CmdCount());
 
-#endif  // SORA_VECTOR_H_
+  mgr.Update(0.5f);
+  EXPECT_EQ(1, mgr.CmdCount());
+
+  mgr.Update(1.0f);
+  EXPECT_EQ(0, mgr.CmdCount());
+}

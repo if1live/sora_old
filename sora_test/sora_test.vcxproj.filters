@@ -105,6 +105,9 @@
     <ClCompile Include="sys_var_test.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="debug_draw_manager_test.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h">
