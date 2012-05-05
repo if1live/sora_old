@@ -52,6 +52,10 @@ private:
   void DrawElem(DebugDrawCmd_String *cmd);
   void DrawElem(DebugDrawCmd_Axis *cmd);
 
+  void ApplyDepthTest(DebugDrawCmd *cmd);
+  void UnapplyDepthTest(DebugDrawCmd *cmd);
+  glm::vec4 ConvertColor(const sora::vec4ub &orig);
+
   DebugDrawManager *mgr_;
   RenderDevice *dev_;
 };

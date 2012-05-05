@@ -394,7 +394,7 @@ void PrimitiveMeshHelper::SolidTeapot( float size ) {
 }
 
 //http://massapi.com/source/lwjgl-source-2.7.1/src/java/org/lwjutil/glu/Sphere.java.html
-void PrimitiveMeshHelper::PointShpere(float radius, int slices, int stacks) {
+void PrimitiveMeshHelper::PointSphere(float radius, int slices, int stacks) {
   float nsign = 1.0f;
   float drho = kPi / stacks;
   float dtheta = 2.0f * kPi / slices;
@@ -430,7 +430,7 @@ void PrimitiveMeshHelper::PointShpere(float radius, int slices, int stacks) {
   }
   this->cmd_list_->push_back(cmd);
 }
-void PrimitiveMeshHelper::WireShpere(float radius, int slices, int stacks) {
+void PrimitiveMeshHelper::WireSphere(float radius, int slices, int stacks) {
   float nsign = 1.0f;
   float drho = sora::kPi / stacks;
   float dtheta = 2.0f * sora::kPi / slices;
@@ -862,6 +862,54 @@ void PrimitiveMeshHelper::SolidPlane(float half_size) {
 
   ///////////
   this->cmd_list_->push_back(cmd);
+}
+
+/////////////////////////////////////////////////////////
+void BasicPrimitiveMeshHelper::WireSphere(float radius, int slices, int stacks) {
+  float nsign = 1.0f;
+  float drho = sora::kPi / stacks;
+  float dtheta = 2.0f * sora::kPi / slices;
+
+  // draw stack lines
+  for (int i = 1 ; i < stacks ; i++) { // stack line at i==stacks-1 was missing here
+    float rho = i * drho;
+
+    DrawCmdData<vec3> cmd;
+    cmd.draw_mode = kDrawLineLoop;
+    for (int j = 0; j < slices; j++) {
+      float theta = j * dtheta;
+      float x = cos(theta) * sin(rho);
+      float y = sin(theta) * sin(rho);
+      float z = cos(rho);
+
+      vec3 vert;
+      vert[0] = x * radius;
+      vert[1] = y * radius;
+      vert[2] = z * radius;
+      cmd.vertex_list.push_back(vert);
+    }
+    this->cmd_list_->push_back(cmd);
+  }
+  // draw slice lines
+  for (int j = 0; j < slices; j++) {
+    float theta = j * dtheta;
+
+    DrawCmdData<vec3> cmd;
+    cmd.draw_mode = kDrawLineStrip;
+    for (int i = 0; i <= stacks; i++) {
+      float rho = i * drho;
+      float x = cos(theta) * sin(rho);
+      float y = sin(theta) * sin(rho);
+      float z = cos(rho);
+
+      vec3 vert;
+      vert[0] = x * radius;
+      vert[1] = y * radius;
+      vert[2] = z * radius;
+      cmd.vertex_list.push_back(vert);
+    }
+    this->cmd_list_->push_back(cmd);
+  }
 }
 
 } //namespace sora

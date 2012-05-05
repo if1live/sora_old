@@ -295,33 +295,89 @@ void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_Line *cmd) {
   Shader &shader = DebugDrawManager::GetColorShader();
   dev_->UseShader(shader);
 
-  vec4 color;
-  for(int i = 0 ; i < 4 ; i++) {
-    color[i] = (float)cmd->color[i] / 255.0f;
-  }
+  vec4 color = ConvertColor(cmd->color);
   shader.SetUniformVector(kConstColorHandleName, color);
+
+  float win_width = (float)dev_->win_width();
+  float win_height = (float)dev_->win_height();
+  glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
+  ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
+  SetUniformMatrix(mvp_var, projection);
 
   vector<glm::vec3> vert_list;
   vert_list.push_back(cmd->p1);
   vert_list.push_back(cmd->p2);
+
+  shader.SetVertexList(vert_list);
+
+  ApplyDepthTest(cmd);
+  glLineWidth(cmd->line_width);
+  shader.DrawArrays(kDrawLines, 2);
+  glLineWidth(1.0f);
+  UnapplyDepthTest(cmd);
 }
 void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_Cross *cmd) {
   Shader &shader = DebugDrawManager::GetColorShader();
   dev_->UseShader(shader);
 
+  vec4 color = ConvertColor(cmd->color);
+  shader.SetUniformVector(kConstColorHandleName, color);
+
+  float win_width = (float)dev_->win_width();
+  float win_height = (float)dev_->win_height();
+  glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
+  ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
+  SetUniformMatrix(mvp_var, projection);
+
+  vector<glm::vec3> vert_list;
+  vert_list.push_back(cmd->pos);
+
+  shader.SetVertexList(vert_list);
+
+  ApplyDepthTest(cmd);
+  glPointSize(cmd->size);
+  shader.DrawArrays(kDrawPoints, 2);
+  glPointSize(1.0f);
+  UnapplyDepthTest(cmd);
+
 }
 void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_Sphere *cmd) {
   Shader &shader = DebugDrawManager::GetColorShader();
   dev_->UseShader(shader);
+
+  vec4 color = ConvertColor(cmd->color);
+  shader.SetUniformVector(kConstColorHandleName, color);
+
+  float win_width = (float)dev_->win_width();
+  float win_height = (float)dev_->win_height();
+  glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
+  glm::mat4 mvp = glm::translate(projection, cmd->pos);
+  ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
+  SetUniformMatrix(mvp_var, mvp);
+
+  GeometricObject<glm::vec3> mesh;
+  mesh.WireSphere(cmd->radius, 16, 16);
+
+  ApplyDepthTest(cmd);
+  auto it = mesh.Begin();
+  auto endit = mesh.End();
+  for( ; it != endit ; ++it) {
+    //const DrawCmdData<Vertex> &cmd = *it;
+    const DrawCmdData<vec3> &cmd = *it;
+    shader.SetVertexList(cmd.vertex_list);
+    if(cmd.index_list.empty()) {
+      Shader::DrawArrays(cmd.draw_mode, cmd.vertex_list.size());
+    } else {
+      Shader::DrawElements(cmd.draw_mode, cmd.index_list);
+    }
+  }
+  UnapplyDepthTest(cmd);
 }
 void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_String *cmd) {
   Shader &shader = DebugDrawManager::GetTextShader();
   dev_->UseShader(shader);
 
-  vec4 color;
-  for(int i = 0 ; i < 4 ; i++) {
-    color[i] = (float)cmd->color[i] / 255.0f;
-  }
+  vec4 color = ConvertColor(cmd->color);
   shader.SetUniformVector(kConstColorHandleName, color);
 
   sora::SysFont &font = dev_->sys_font();
@@ -332,7 +388,6 @@ void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_String *cmd) {
   float win_height = (float)dev_->win_height();
   glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
   ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
-  SetUniformMatrix(mvp_var, projection);
 
   mat4 world_mat(1.0f);
   world_mat = glm::translate(world_mat, cmd->pos);
@@ -341,7 +396,10 @@ void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_String *cmd) {
   SetUniformMatrix(mvp_var, mvp);
   sora::Label label(&font, "PQRS_1234_asdf");
   shader.SetVertexList(label.vertex_list());
+
+  ApplyDepthTest(cmd);
   shader.DrawElements(kDrawTriangles, label.index_list());
+  UnapplyDepthTest(cmd);
 }
 void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_Axis *cmd) {
   Shader &shader = DebugDrawManager::GetColorShader();
@@ -349,5 +407,22 @@ void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_Axis *cmd) {
 
 }
 
+void DebugDrawPolicy_2D::ApplyDepthTest(DebugDrawCmd *cmd) {
+  if(cmd->depth_enable == false) {
+    glDisable(GL_DEPTH_TEST);
+  }
+}
+void DebugDrawPolicy_2D::UnapplyDepthTest(DebugDrawCmd *cmd) {
+  if(cmd->depth_enable == false) {
+    glEnable(GL_DEPTH_TEST);
+  }
+}
+glm::vec4 DebugDrawPolicy_2D::ConvertColor(const sora::vec4ub &orig) {
+  vec4 color;
+  for(int i = 0 ; i < 4 ; i++) {
+    color[i] = (float)orig[i] / 255.0f;
+  }
+  return color;
+}
 
 } //namespace sora

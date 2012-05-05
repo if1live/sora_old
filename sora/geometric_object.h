@@ -41,6 +41,7 @@
 namespace sora {;
 
 class PrimitiveMeshHelper;
+class BasicPrimitiveMeshHelper;
 
 //내장 도형을 그리는 최상위 인터페이스
 //tangent vertex / vertex를 동시에 지원하기 위해서 적절히 템플릿으로 처리함
@@ -83,16 +84,17 @@ public:
     helper.SolidTeapot(size);
   }
 
-  void PointShpere(float radius, int slices, int stacks) {
+  void PointSphere(float radius, int slices, int stacks) {
     Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
     helper.PointShpere(radius, slices, stacks);
   }
-  void WireShpere(float radius, int slices, int stacks) {
+  void WireSphere(float radius, int slices, int stacks) {
     Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
     helper.WireShpere(radius, slices, stacks);
   }
+
   void SolidSphere(float radius, int slices, int stacks) {
     Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
@@ -225,8 +227,8 @@ public:
   void WireTeapot( float size );
   void SolidTeapot( float size );
 
-  void PointShpere(float radius, int slices, int stacks);
-  void WireShpere(float radius, int slices, int stacks);
+  void PointSphere(float radius, int slices, int stacks);
+  void WireSphere(float radius, int slices, int stacks);
   void SolidSphere(float radius, int slices, int stacks);
 
   void PointCylinder(float baseRadius, float topRadius, float height, int slices, int stacks);
@@ -241,5 +243,22 @@ public:
 private:
   std::vector< DrawCmdData<Vertex> > *cmd_list_;  
 };
+
+class BasicPrimitiveMeshHelper {
+public:
+  BasicPrimitiveMeshHelper(std::vector< DrawCmdData<glm::vec3> > *cmd_list) : cmd_list_(cmd_list) {}
+  void WireSphere(float radius, int slices, int stacks);
+private:
+  std::vector< DrawCmdData<glm::vec3> > *cmd_list_;  
+};
+
+
+
+template<>
+void GeometricObject<glm::vec3>::WireSphere(float radius, int slices, int stacks) {
+  Clear();
+  BasicPrimitiveMeshHelper helper(&cmd_list_);
+  helper.WireSphere(radius, slices, stacks);
+}
 } // namespace sora
 #endif // SORA_GEOMETRIC_OBJECT_H_
