@@ -73,3 +73,87 @@ TEST(StackAllocator, Clear) {
   void *ptr2 = allocator.Malloc(40);
   EXPECT_EQ(ptr1, ptr2);
 }
+
+
+TEST(DoubleStackAllocator, malloc_free) {
+  DoubleStackAllocator allocator;
+  const int header_size = allocator.GetAllocHeaderSize();
+  const int stack_size = allocator.stack_size();
+  EXPECT_EQ(stack_size, allocator.remain_size());
+
+  void *ptr1 = allocator.LowerMalloc(10);
+  EXPECT_EQ(stack_size - (10 + header_size), allocator.remain_size());
+
+  void *ptr2 = allocator.LowerMalloc(20);
+  EXPECT_EQ(stack_size - (10 + 20 + header_size * 2), allocator.remain_size());
+
+  void *ptr3 = allocator.UpperMalloc(30);
+  EXPECT_EQ(stack_size - (10 + 20 + 30 + header_size * 3), allocator.remain_size());
+
+  void *ptr4 = allocator.UpperMalloc(20);
+  EXPECT_EQ(stack_size - (10 + 20 + 30 + 20 + header_size * 4), allocator.remain_size());
+
+  //free start
+  allocator.LowerFree(ptr2);
+  EXPECT_EQ(stack_size - (10 + 30 + 20 + header_size * 3), allocator.remain_size());
+
+  allocator.UpperFree(ptr4);
+  EXPECT_EQ(stack_size - (10 + 30 + header_size * 2), allocator.remain_size());
+
+  allocator.UpperFree(ptr3);
+  EXPECT_EQ(stack_size - (10 + header_size), allocator.remain_size());
+
+  allocator.LowerFree(ptr1);
+  EXPECT_EQ(stack_size, allocator.remain_size());
+}
+
+TEST(DoubleStackAllocator, Clear) {
+  DoubleStackAllocator allocator;
+  const int header_size = allocator.GetAllocHeaderSize();
+  const int stack_size = allocator.stack_size();
+  EXPECT_EQ(stack_size, allocator.remain_size());
+
+  void *ptr1 = allocator.LowerMalloc(10);
+  EXPECT_EQ(stack_size - (10 + header_size), allocator.remain_size());
+
+  void *ptr2 = allocator.LowerMalloc(20);
+  EXPECT_EQ(stack_size - (10 + 20 + header_size * 2), allocator.remain_size());
+
+  void *ptr3 = allocator.UpperMalloc(30);
+  EXPECT_EQ(stack_size - (10 + 20 + 30 + header_size * 3), allocator.remain_size());
+
+  void *ptr4 = allocator.UpperMalloc(20);
+  EXPECT_EQ(stack_size - (10 + 20 + 30 + 20 + header_size * 4), allocator.remain_size());
+
+  //free start
+  allocator.LowerClear();
+  EXPECT_EQ(stack_size - (30 + 20 + header_size * 2), allocator.remain_size());
+
+  allocator.UpperClear();
+  EXPECT_EQ(stack_size, allocator.remain_size());
+}
+
+TEST(DoubleStackAllocator, Marker) {
+  DoubleStackAllocator allocator;
+  const int header_size = allocator.GetAllocHeaderSize();
+  const int stack_size = allocator.stack_size();
+  EXPECT_EQ(stack_size, allocator.remain_size());
+
+  void *ptr1 = allocator.LowerMalloc(10);
+  void *ptr2 = allocator.LowerMalloc(20);
+  DoubleStackAllocator::Marker lower_marker = allocator.GetLowerMarker();
+  void *ptr_lower_a = allocator.LowerMalloc(5);
+
+  void *ptr3 = allocator.UpperMalloc(30);
+  void *ptr4 = allocator.UpperMalloc(20);
+  DoubleStackAllocator::Marker upper_marker = allocator.GetUpperMarker();
+  void *ptr_upper_a = allocator.UpperMalloc(5);
+
+  allocator.FreeToLowerMarker(lower_marker);
+  void *ptr_lower_b = allocator.LowerMalloc(9);
+  EXPECT_EQ(ptr_lower_a, ptr_lower_b);
+
+  allocator.FreeToUpperMarker(upper_marker);
+  void *ptr_upper_b = allocator.UpperMalloc(5);
+  EXPECT_EQ(ptr_upper_a, ptr_upper_b);
+}

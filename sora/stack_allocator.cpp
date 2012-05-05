@@ -44,6 +44,8 @@ StackAllocator::~StackAllocator() {
   if(data_ != NULL) {
     sora::global_free(data_);
     data_ = NULL;
+    top_ = NULL;
+    stack_size_ = 0;
   }
 }
 
@@ -101,4 +103,114 @@ int StackAllocator::GetAllocHeaderSize() const {
 void StackAllocator::Clear() {
   top_ = data_;
 }
+
+//////////////////////////
+
+DoubleStackAllocator::DoubleStackAllocator(int stack_size)
+: data_(NULL),
+lower_(NULL), 
+upper_(NULL), 
+stack_size_(stack_size) {
+  data_ = reinterpret_cast<uchar*>(sora::global_malloc(stack_size));
+  LowerClear();
+  UpperClear();
+}
+DoubleStackAllocator::~DoubleStackAllocator() {
+  if(data_ != NULL) {
+    sora::global_free(data_);
+    data_ = NULL;
+    lower_ = NULL;
+    upper_ = NULL;
+    stack_size_ = 0;
+  }
+}
+
+int DoubleStackAllocator::remain_size() const {
+  return upper_ - lower_ + 1;
+}
+int DoubleStackAllocator::GetAllocHeaderSize() const {
+  return sizeof(StackAllocHeader);
+}
+
+void* DoubleStackAllocator::LowerMalloc(size_t x) {
+  //stack할당자와 다른것은 할당후 upper에 닿는지 확인해야한다는 점이다
+  int alloc_size = x + GetAllocHeaderSize();
+  if(upper_ - lower_ < alloc_size) {
+    SR_ASSERT(!"cannot alloc, more big stack required");
+    return NULL;
+  }
+
+  uchar *raw_ptr = lower_;
+  StackAllocHeader *header = reinterpret_cast<StackAllocHeader*>(raw_ptr);
+  header->alloc_size = x;
+  uchar *ptr = raw_ptr + GetAllocHeaderSize();
+  lower_ += alloc_size;
+
+  return ptr;
+}
+void DoubleStackAllocator::LowerFree(void *ptr) {
+  //data가 stack의 범위에 존재하는 메모리 좌표인가?
+  SR_ASSERT((uchar*)data_ <= ptr);
+  SR_ASSERT((uchar*)lower_ > ptr);
+
+  StackAllocHeader *header = reinterpret_cast<StackAllocHeader*>((uchar*)ptr - sizeof(StackAllocHeader));
+  int alloc_size = header->alloc_size;
+  //가장마지막에 할당한것을 해제한다면 top와 할당크기가 연관되어잇다.
+  //그렇지 않다면 top가 올바르지 않을것이다
+  int expected_alloc_size = (uchar*)lower_ - (uchar*)ptr;
+  if(expected_alloc_size == alloc_size) {
+    lower_ -= (sizeof(StackAllocHeader) + alloc_size);
+  } else {
+    SR_ASSERT(!"stack break?");
+  }
+}
+
+void* DoubleStackAllocator::UpperMalloc(size_t x) {
+  int alloc_size = x + GetAllocHeaderSize();
+  if(upper_ - lower_ < alloc_size) {
+    SR_ASSERT(!"cannot alloc, more big stack required");
+    return NULL;
+  }
+
+  uchar *raw_ptr = upper_ - (alloc_size + 1);
+  upper_ -= alloc_size;
+  StackAllocHeader *header = reinterpret_cast<StackAllocHeader*>(raw_ptr);
+  header->alloc_size = x;
+  uchar *ptr = raw_ptr + GetAllocHeaderSize();
+  return ptr;
+}
+void DoubleStackAllocator::UpperFree(void *ptr) {
+  //data가 stack의 범위에 존재하는 메모리 좌표인가?
+  SR_ASSERT((uchar*)upper_ <= ptr);
+  SR_ASSERT((uchar*)data_ + stack_size_ > ptr);
+
+  StackAllocHeader *header = reinterpret_cast<StackAllocHeader*>((uchar*)ptr - sizeof(StackAllocHeader));
+  int alloc_size = header->alloc_size;
+  upper_ += (sizeof(StackAllocHeader) + alloc_size);
+}
+
+void DoubleStackAllocator::LowerClear() {
+  lower_ = data_;
+}
+void DoubleStackAllocator::UpperClear() {
+  upper_ = data_ + stack_size_ - 1;
+}
+void DoubleStackAllocator::FreeToLowerMarker(Marker marker) {
+  uchar *marker_ptr = reinterpret_cast<uchar*>(marker);
+  lower_ = marker_ptr;
+}
+
+void DoubleStackAllocator::FreeToUpperMarker(Marker marker) {
+  uchar *marker_ptr = reinterpret_cast<uchar*>(marker);
+  upper_ = marker_ptr;
+}
+DoubleStackAllocator::Marker DoubleStackAllocator::GetLowerMarker() {
+  Marker marker= reinterpret_cast<Marker>(lower_);
+  return marker;
+}
+DoubleStackAllocator::Marker DoubleStackAllocator::GetUpperMarker() {
+  Marker marker= reinterpret_cast<Marker>(upper_);
+  return marker;
+}
+
 } //namespace sora
