@@ -217,6 +217,9 @@
     <ClCompile Include="str_code.cpp">
       <Filter>core</Filter>
     </ClCompile>
+    <ClCompile Include="sys_var.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -472,6 +475,9 @@
       <Filter>math</Filter>
     </ClInclude>
     <ClInclude Include="str_code.h">
+      <Filter>core</Filter>
+    </ClInclude>
+    <ClInclude Include="sys_var.h">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>

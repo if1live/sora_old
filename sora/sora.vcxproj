@@ -131,6 +131,7 @@
     <ClCompile Include="sysfont_main.cpp" />
     <ClCompile Include="sys_font.cpp" />
     <ClCompile Include="sys_locale.cpp" />
+    <ClCompile Include="sys_var.cpp" />
     <ClCompile Include="texture.cpp" />
     <ClCompile Include="timer.cpp" />
     <ClCompile Include="touch_device.cpp" />
@@ -212,6 +213,7 @@
     <ClInclude Include="sysfont_main.h" />
     <ClInclude Include="sys_font.h" />
     <ClInclude Include="sys_locale.h" />
+    <ClInclude Include="sys_var.h" />
     <ClInclude Include="teapot.h" />
     <ClInclude Include="template_lib.h" />
     <ClInclude Include="texture.h" />

@@ -116,6 +116,7 @@
     <ClCompile Include="stack_allocator_test.cpp" />
     <ClCompile Include="str_code_test.cpp" />
     <ClCompile Include="sys_locale_test.cpp" />
+    <ClCompile Include="sys_var_test.cpp" />
     <ClCompile Include="template_lib_test.cpp" />
     <ClCompile Include="testmain.cc" />
     <ClCompile Include="vertex_test.cpp" />
