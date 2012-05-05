@@ -27,6 +27,7 @@
 #include "render_device.h"
 #include "filesystem.h"
 #include "vertex.h"
+#include "debug_draw_manager.h"
 
 using namespace std;
 using namespace glm;
@@ -62,7 +63,7 @@ namespace sysfont {
   void draw_frame(sora::Device *device) {
     glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+    /*
     SR_CHECK_ERROR("Render 2d start");
     device->render_device().Set2D();
 
@@ -76,7 +77,9 @@ namespace sysfont {
     glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
     ShaderVariable mvp_var = simple_shader.uniform_var(kMVPHandleName);
     SetUniformMatrix(mvp_var, projection);
+    */
 
+    /*
     Vertex2DList vert_list;
     vert_list.push_back(CreateVertex2D(100, 100, 0, 1));
     vert_list.push_back(CreateVertex2D(100+128*2, 100, 1, 1));
@@ -84,7 +87,8 @@ namespace sysfont {
     vert_list.push_back(CreateVertex2D(100, 100+128*2, 0, 0));
     simple_shader.SetVertexList(vert_list);
     simple_shader.DrawArrays(kDrawTriangleFan, vert_list.size());
-
+    */
+    /*
     mat4 world_mat(1.0f);
     world_mat = glm::translate(world_mat, glm::vec3(0, 480, 0));
     world_mat = glm::scale(world_mat, glm::vec3(2, 2, 1));
@@ -93,6 +97,13 @@ namespace sysfont {
     sora::Label label(&font, "PQRS_1234_asdf");
     simple_shader.SetVertexList(label.vertex_list());
     simple_shader.DrawElements(kDrawTriangles, label.index_list());
+    */
+
+    //디버깅용으로 화면 2d좌표계에 렌더링 하는거
+    DebugDrawManager::Get2D().AddString(vec3(100, 100, 0), "asd", Color_Red(), 2.0f);
+    DebugDrawPolicy_2D debug_draw;
+    debug_draw.Draw(DebugDrawManager::Get2D(), &device->render_device());
+    DebugDrawManager::Get2D().Clear();
   }
   void update_frame(sora::Device *def, float dt) {
 

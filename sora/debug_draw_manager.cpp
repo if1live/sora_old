@@ -21,10 +21,19 @@
 #include "sora_stdafx.h"
 #include "debug_draw_manager.h"
 #include "template_lib.h"
+#include "shader.h"
+#include "filesystem.h"
+#include "render_device.h"
+#include "geometric_object.h"
 
 using namespace std;
+using namespace glm;
 
 namespace sora {;
+
+//디버깅 렌더링에서 쓰이는 쉐이더는 크게 2가지이다
+//쉐이더 고정 단색 + 좌표정보만 잇는 버텍스를 처리할수 잇는 쉐이더. 이것은 선이나 뭐 그런거에 쓴다
+//텍스쳐 + 쉐이더 고정 단색 + 좌표정보 잇는 버텍스. 문자출력에 사용한다
 
 struct DebugDrawCmd {
   typedef enum {
@@ -73,8 +82,9 @@ struct DebugDrawCmd_Sphere : public DebugDrawCmd {
   glm::vec3 pos;  //cross, sphere, string
 };
 struct DebugDrawCmd_String : public DebugDrawCmd {
-  DebugDrawCmd_String() : DebugDrawCmd(kDebugDrawString) {}
+  DebugDrawCmd_String() : DebugDrawCmd(kDebugDrawString), scale(1.0f) {}
   std::string msg;
+  float scale;
   glm::vec3 pos;  //cross, sphere, string
 };
 struct DebugDrawCmd_Axis : public DebugDrawCmd {
@@ -150,6 +160,7 @@ void DebugDrawManager::AddAxis(const glm::mat4 &xf,
 
 void DebugDrawManager::AddString(const glm::vec3 &pos, const std::string &msg,
                                  const sora::vec4ub &color,
+                                 float scale,
                                  float duration,
                                  bool depth_enable) {
   DebugDrawCmd_String *cmd = sora::global_malloc<DebugDrawCmd_String>();
@@ -158,6 +169,7 @@ void DebugDrawManager::AddString(const glm::vec3 &pos, const std::string &msg,
   cmd->pos = pos;
   cmd->msg = msg;
   cmd->color = color;
+  cmd->scale = scale;
   cmd->duration = duration;
   cmd->depth_enable = depth_enable;
   cmd_list_.push_back(cmd);
@@ -167,6 +179,10 @@ DebugDrawManager::DebugDrawManager() {
 
 }
 DebugDrawManager::~DebugDrawManager() {
+  Clear();
+}
+
+void DebugDrawManager::Clear() {
   auto it = cmd_list_.begin();
   auto endit = cmd_list_.end();
   for( ; it != endit ; ++it) {
@@ -199,5 +215,139 @@ void DebugDrawManager::Update(float dt) {
   
   cmd_list_.remove_if(functor);
 }
+
+
+DebugDrawManager &DebugDrawManager::Get2D() {
+  static DebugDrawManager mgr;
+  return mgr;
+}
+DebugDrawManager &DebugDrawManager::Get3D() {
+  static DebugDrawManager mgr;
+  return mgr;
+}
+Shader &DebugDrawManager::GetColorShader() {
+  static Shader shader;
+  static bool run = false;
+  if(run == false) {
+    run = true;
+    string color_vs_path = Filesystem::GetAppPath("shader/const_color.vs");
+    string color_fs_path = Filesystem::GetAppPath("shader/const_color.fs");
+    shader.LoadFromFile(color_vs_path, color_fs_path);
+  }
+  return shader;
+}
+Shader &DebugDrawManager::GetTextShader() {
+  static Shader shader;
+  static bool run = false;
+  if(run == false) {
+    run = true;
+    string simple_vs_path = Filesystem::GetAppPath("shader/simple.vs");
+    string simple_fs_path = Filesystem::GetAppPath("shader/text.fs");
+    shader.LoadFromFile(simple_vs_path, simple_fs_path);
+  }
+  return shader;
+}
+
+//////////////////////////////////////
+DebugDrawPolicy_2D::DebugDrawPolicy_2D()
+: mgr_(NULL), dev_(NULL) {
+
+}
+void DebugDrawPolicy_2D::Draw(const DebugDrawManager &mgr, RenderDevice *dev) {
+  mgr_ = const_cast<DebugDrawManager*>(&mgr);
+  dev_ = dev;
+
+  dev->Set2D();
+  auto it = mgr.cmd_list_.begin();
+  auto endit = mgr.cmd_list_.end();
+  for( ; it != endit ; ++it) {
+    Draw(*it);
+  }
+
+  mgr_ = NULL;
+  dev_ = NULL;
+}
+
+
+void DebugDrawPolicy_2D::Draw(DebugDrawCmd *cmd) {
+  switch(cmd->type) {
+  case DebugDrawCmd::kDebugDrawLine:
+    DrawElem(static_cast<DebugDrawCmd_Line*>(cmd));
+    break;
+  case DebugDrawCmd::kDebugDrawCross:
+    DrawElem(static_cast<DebugDrawCmd_Cross*>(cmd));
+    break;
+  case DebugDrawCmd::kDebugDrawSphere:
+    DrawElem(static_cast<DebugDrawCmd_Sphere*>(cmd));
+    break;
+  case DebugDrawCmd::kDebugDrawString:
+    DrawElem(static_cast<DebugDrawCmd_String*>(cmd));
+    break;
+  case DebugDrawCmd::kDebugDrawAxis:
+    DrawElem(static_cast<DebugDrawCmd_Axis*>(cmd));
+    break;
+  default:
+    break;
+  }
+}
+
+void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_Line *cmd) {
+  Shader &shader = DebugDrawManager::GetColorShader();
+  dev_->UseShader(shader);
+
+  vec4 color;
+  for(int i = 0 ; i < 4 ; i++) {
+    color[i] = (float)cmd->color[i] / 255.0f;
+  }
+  shader.SetUniformVector(kConstColorHandleName, color);
+
+  vector<glm::vec3> vert_list;
+  vert_list.push_back(cmd->p1);
+  vert_list.push_back(cmd->p2);
+}
+void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_Cross *cmd) {
+  Shader &shader = DebugDrawManager::GetColorShader();
+  dev_->UseShader(shader);
+
+}
+void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_Sphere *cmd) {
+  Shader &shader = DebugDrawManager::GetColorShader();
+  dev_->UseShader(shader);
+}
+void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_String *cmd) {
+  Shader &shader = DebugDrawManager::GetTextShader();
+  dev_->UseShader(shader);
+
+  vec4 color;
+  for(int i = 0 ; i < 4 ; i++) {
+    color[i] = (float)cmd->color[i] / 255.0f;
+  }
+  shader.SetUniformVector(kConstColorHandleName, color);
+
+  sora::SysFont &font = dev_->sys_font();
+  dev_->UseTexture(font.font_texture());
+
+  //해상도에 맞춰서 적절히 설정
+  float win_width = (float)dev_->win_width();
+  float win_height = (float)dev_->win_height();
+  glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
+  ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
+  SetUniformMatrix(mvp_var, projection);
+
+  mat4 world_mat(1.0f);
+  world_mat = glm::translate(world_mat, cmd->pos);
+  world_mat = glm::scale(world_mat, vec3(cmd->scale));
+  mat4 mvp = projection * world_mat;
+  SetUniformMatrix(mvp_var, mvp);
+  sora::Label label(&font, "PQRS_1234_asdf");
+  shader.SetVertexList(label.vertex_list());
+  shader.DrawElements(kDrawTriangles, label.index_list());
+}
+void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_Axis *cmd) {
+  Shader &shader = DebugDrawManager::GetColorShader();
+  dev_->UseShader(shader);
+
+}
+
 
 } //namespace sora

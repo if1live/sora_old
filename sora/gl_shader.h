@@ -187,13 +187,15 @@ namespace gl {
       if(loc != -1) {
         const bool is_float_type = std::is_same<T, float>::value;
         const bool is_int_type = std::is_same<T, int>::value;
-        static_assert(is_float_type || is_int_type, "support int, float");
+        const bool is_ushort_type = std::is_same<T, unsigned short>::value;
+        const bool is_ubyte_type = std::is_same<T, unsigned char>::value;
+        static_assert(is_float_type || is_int_type || is_ushort_type || is_ubyte_type, "support int, float");
 
-        if(std::tr1::is_same<T, float>::value) {
+        if(is_float_type) {
           glUniform1f(loc, static_cast<float>(value));
           SR_CHECK_ERROR("glUniform1f");
           return true;
-        } else if(std::tr1::is_same<T, int>::value) {
+        } else if(is_int_type || is_ushort_type || is_ubyte_type) {
           glUniform1i(loc, static_cast<int>(value));
           SR_CHECK_ERROR("glUniform1i");
           return true;

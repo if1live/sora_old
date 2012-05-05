@@ -255,12 +255,12 @@ int main(int argc, char *argv[]) {
   Timer_Init();
 
   sora::Device device;
-  run_main(&device); 
+  //run_main(&device); 
 	
   //logic end
   //run_post_effect(&device);
   //run_freeglutfont(&device);
-  //run_sysfont(&device);
+  run_sysfont(&device);
   //run_selection(&device);
   //run_depthmap(&device);
   //run_shadow_map(&device);

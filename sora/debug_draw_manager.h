@@ -21,19 +21,57 @@
 #pragma once
 
 #include "vector.h"
-#include "template_lib.h"
 #include <list>
+#include "globals.h"
 
 namespace sora {;
 
 struct DebugDrawCmd;
 
-class DebugDrawManager : public SharedObject<DebugDrawManager> {;
+struct DebugDrawCmd_Line;
+struct DebugDrawCmd_Cross;
+struct DebugDrawCmd_Sphere;
+struct DebugDrawCmd_String;
+struct DebugDrawCmd_Axis;
+
+class DebugDrawPolicy_2D;
+class DebugDrawPolicy_3D;
+
+class DebugDrawManager;
+
+class DebugDrawPolicy_2D {
+public:
+  DebugDrawPolicy_2D();
+  void Draw(const DebugDrawManager &mgr, RenderDevice *dev);
+
+private:
+  void Draw(DebugDrawCmd *cmd);
+  void DrawElem(DebugDrawCmd_Line *cmd);
+  void DrawElem(DebugDrawCmd_Cross *cmd);
+  void DrawElem(DebugDrawCmd_Sphere *cmd);
+  void DrawElem(DebugDrawCmd_String *cmd);
+  void DrawElem(DebugDrawCmd_Axis *cmd);
+
+  DebugDrawManager *mgr_;
+  RenderDevice *dev_;
+};
+
+class DebugDrawManager {;
+public:
+  friend class DebugDrawPolicy_2D;
+  friend class DebugDrawPolicy_3D;
+
+  static DebugDrawManager &Get2D();
+  static DebugDrawManager &Get3D();
+  static Shader &GetColorShader();
+  static Shader &GetTextShader();
+
 public:
   DebugDrawManager();
   ~DebugDrawManager();
   void Update(float dt);
   int CmdCount() const { return cmd_list_.size(); }
+  void Clear();
 
   void AddLine(const glm::vec3 &p1, const glm::vec3 &p2,
     const sora::vec4ub &color,
@@ -60,9 +98,10 @@ public:
 
   void AddString(const glm::vec3 &pos, const std::string &msg,
     const sora::vec4ub &color,
+    float scale = 1.0f,
     float duration = 0.0f,
     bool depth_enable = true);
-
+  
 private:
   std::list<DebugDrawCmd*> cmd_list_;
 };
