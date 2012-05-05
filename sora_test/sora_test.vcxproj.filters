@@ -99,6 +99,9 @@
     <ClCompile Include="stack_allocator_test.cpp">
       <Filter>mem</Filter>
     </ClCompile>
+    <ClCompile Include="str_code_test.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h">

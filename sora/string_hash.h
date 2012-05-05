@@ -27,41 +27,68 @@
 //문자열 해쉬함수 모음 (String Hash Function) 
 namespace sora {;
 struct RSHash {
-	static unsigned int Hash(const std::string &str);
+	static unsigned int Hash(const std::string &str) {
+    return Hash(str.data(), str.length());
+  }
+  static unsigned int Hash(const char *str, int length);
 };
 
 struct JSHash {
-	static unsigned int Hash(const std::string &str);
+	static unsigned int Hash(const std::string &str) {
+    return Hash(str.data(), str.length());
+  }
+  static unsigned int Hash(const char *str, int length);
 };
 
 // P. J. Weinberger Hash Function
 struct PJWHash {
-	static unsigned int Hash(const std::string &str);
+	static unsigned int Hash(const std::string &str) {
+    return Hash(str.data(), str.length());
+  }
+  static unsigned int Hash(const char *str, int length);
 };
 
 struct ELFHash {
-	static unsigned int Hash(const std::string &str);
+	static unsigned int Hash(const std::string &str) {
+    return Hash(str.data(), str.length());
+  }
+  static unsigned int Hash(const char *str, int length);
 };
 
 
 struct BKDRHash {
-	static unsigned int Hash(const std::string &str);
+	static unsigned int Hash(const std::string &str) {
+    return Hash(str.data(), str.length());
+  }
+  static unsigned int Hash(const char *str, int length);
 };
 
 struct SDBMHash {
-	static unsigned int Hash(const std::string &str);
+	static unsigned int Hash(const std::string &str) {
+    return Hash(str.data(), str.length());
+  }
+  static unsigned int Hash(const char *str, int length);
 };
 
 struct DJBHash {
-	static unsigned int Hash(const std::string &str);
+	static unsigned int Hash(const std::string &str) {
+    return Hash(str.data(), str.length());
+  }
+  static unsigned int Hash(const char *str, int length);
 };
 
 struct DEKHash {
-	static unsigned int Hash(const std::string &str);
+	static unsigned int Hash(const std::string &str) {
+    return Hash(str.data(), str.length());
+  }
+  static unsigned int Hash(const char *str, int length);
 };
 
 struct APHash {
-	static unsigned int Hash(const std::string &str);
+	static unsigned int Hash(const std::string &str) {
+    return Hash(str.data(), str.length());
+  }
+  static unsigned int Hash(const char *str, int length);
 };
 }
 

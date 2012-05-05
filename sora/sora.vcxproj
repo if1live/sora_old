@@ -127,6 +127,7 @@
     </ClCompile>
     <ClCompile Include="stack_allocator.cpp" />
     <ClCompile Include="string_hash.cpp" />
+    <ClCompile Include="str_code.cpp" />
     <ClCompile Include="sysfont_main.cpp" />
     <ClCompile Include="sys_font.cpp" />
     <ClCompile Include="sys_locale.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="renderer.h" />
     <ClInclude Include="renderer_env.h" />
     <ClInclude Include="render_device.h" />
+    <ClInclude Include="str_code.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="shader_variable.h" />
     <ClInclude Include="shared_ptr_inc.h" />

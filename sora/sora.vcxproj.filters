@@ -97,9 +97,6 @@
     <ClCompile Include="logger.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="math_helper.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="string_hash.cpp">
       <Filter>core</Filter>
     </ClCompile>
@@ -214,6 +211,12 @@
     <ClCompile Include="stack_allocator.cpp">
       <Filter>mem</Filter>
     </ClCompile>
+    <ClCompile Include="math_helper.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="str_code.cpp">
+      <Filter>core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -280,9 +283,6 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="logger.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="math_helper.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="rect.h">
@@ -467,6 +467,12 @@
     </ClInclude>
     <ClInclude Include="globals.h">
       <Filter>support</Filter>
+    </ClInclude>
+    <ClInclude Include="math_helper.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="str_code.h">
+      <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
