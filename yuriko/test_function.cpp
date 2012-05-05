@@ -1,4 +1,5 @@
-﻿/*  Copyright (C) 2011-2012 by if1live */
+﻿#if 0
+/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -21,13 +22,13 @@
 #include "sora_stdafx.h"
 #include "test_function.h"
 
-#include "renderer/renderer_env.h"
+#include "sora/renderer_env.h"
 
-#include "sys/filesystem.h"
-#include "renderer/shader.h"
-#include "sys/memory_file.h"
-#include "renderer/texture.h"
-#include "renderer/texture_manager.h"
+#include "sora/filesystem.h"
+#include "sora/shader.h"
+#include "sora/memory_file.h"
+#include "sora/texture.h"
+#include "sora/texture_manager.h"
 
 
 using namespace sora;
@@ -143,5 +144,6 @@ void SORA_test_draw(int w, int h) {
   glColorPointer(3, GL_UNSIGNED_BYTE, 0, color);
   glDrawArrays(GL_TRIANGLES, 0, 3);
 }
+#endif
 #endif
 #endif

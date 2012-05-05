@@ -87,7 +87,6 @@
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="filesystem.cpp" />
     <ClCompile Include="freeglut_font.cpp" />
-    <ClCompile Include="freeglut_main.cpp" />
     <ClCompile Include="freeglut_stroke_mono_roman.cpp" />
     <ClCompile Include="freeglut_stroke_roman.cpp" />
     <ClCompile Include="free_list_block_pool.cpp" />
@@ -113,14 +112,12 @@
     <ClCompile Include="mesh_buffer.cpp" />
     <ClCompile Include="parametric_surface.cpp" />
     <ClCompile Include="post_effect.cpp" />
-    <ClCompile Include="post_effect_main.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="shader_variable.cpp" />
     <ClCompile Include="soil\image_DXT.cpp" />
     <ClCompile Include="soil\image_helper.cpp" />
     <ClCompile Include="soil\SOIL.cpp" />
     <ClCompile Include="soil\stb_image_aug.cpp" />
-    <ClCompile Include="sora_main.cpp" />
     <ClCompile Include="sora_stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -128,7 +125,6 @@
     <ClCompile Include="stack_allocator.cpp" />
     <ClCompile Include="string_hash.cpp" />
     <ClCompile Include="str_code.cpp" />
-    <ClCompile Include="sysfont_main.cpp" />
     <ClCompile Include="sys_font.cpp" />
     <ClCompile Include="sys_locale.cpp" />
     <ClCompile Include="sys_var.cpp" />
@@ -157,7 +153,6 @@
     <ClInclude Include="filesystem.h" />
     <ClInclude Include="frame_buffer.h" />
     <ClInclude Include="freeglut_font.h" />
-    <ClInclude Include="freeglut_main.h" />
     <ClInclude Include="free_list_block_pool.h" />
     <ClInclude Include="free_list_manager.h" />
     <ClInclude Include="free_list_object_pool.h" />
@@ -190,7 +185,6 @@
     <ClInclude Include="parametric_equations.h" />
     <ClInclude Include="parametric_surface.h" />
     <ClInclude Include="post_effect.h" />
-    <ClInclude Include="post_effect_main.h" />
     <ClInclude Include="rect.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="renderer_env.h" />
@@ -205,12 +199,10 @@
     <ClInclude Include="soil\stbi_DDS_aug.h" />
     <ClInclude Include="soil\stbi_DDS_aug_c.h" />
     <ClInclude Include="soil\stb_image_aug.h" />
-    <ClInclude Include="sora_main.h" />
     <ClInclude Include="sora_stdafx.h" />
     <ClInclude Include="stack_allocator.h" />
     <ClInclude Include="string_code_dictionary.h" />
     <ClInclude Include="string_hash.h" />
-    <ClInclude Include="sysfont_main.h" />
     <ClInclude Include="sys_font.h" />
     <ClInclude Include="sys_locale.h" />
     <ClInclude Include="sys_var.h" />

@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="sample">
+      <UniqueIdentifier>{6475e9bb-23ef-4cd9-b868-8c6d063388f8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gl_main.cpp">
@@ -21,5 +24,58 @@
     <ClCompile Include="gles_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="shadow_map_main.cpp">
+      <Filter>sample</Filter>
+    </ClCompile>
+    <ClCompile Include="sora_main.cpp">
+      <Filter>sample</Filter>
+    </ClCompile>
+    <ClCompile Include="sysfont_main.cpp">
+      <Filter>sample</Filter>
+    </ClCompile>
+    <ClCompile Include="celshading_main.cpp">
+      <Filter>sample</Filter>
+    </ClCompile>
+    <ClCompile Include="depth_map_main.cpp">
+      <Filter>sample</Filter>
+    </ClCompile>
+    <ClCompile Include="freeglut_main.cpp">
+      <Filter>sample</Filter>
+    </ClCompile>
+    <ClCompile Include="post_effect_main.cpp">
+      <Filter>sample</Filter>
+    </ClCompile>
+    <ClCompile Include="selection_main.cpp">
+      <Filter>sample</Filter>
+    </ClCompile>
+    <ClCompile Include="test_function.cpp">
+      <Filter>sample</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="shadow_map_main.h">
+      <Filter>sample</Filter>
+    </ClInclude>
+    <ClInclude Include="sora_main.h">
+      <Filter>sample</Filter>
+    </ClInclude>
+    <ClInclude Include="sysfont_main.h">
+      <Filter>sample</Filter>
+    </ClInclude>
+    <ClInclude Include="celshading_main.h">
+      <Filter>sample</Filter>
+    </ClInclude>
+    <ClInclude Include="depth_map_main.h">
+      <Filter>sample</Filter>
+    </ClInclude>
+    <ClInclude Include="freeglut_main.h">
+      <Filter>sample</Filter>
+    </ClInclude>
+    <ClInclude Include="post_effect_main.h">
+      <Filter>sample</Filter>
+    </ClInclude>
+    <ClInclude Include="selection_main.h">
+      <Filter>sample</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

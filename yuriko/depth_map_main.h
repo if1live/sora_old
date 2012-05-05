@@ -1,4 +1,5 @@
-﻿/*  Copyright (C) 2011-2012 by if1live */
+﻿#if 0
+/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,3 +33,4 @@ namespace depthmap {
 }
 
 #endif  // SORA_DEPTH_MAP_MAIN_H_
+#endif

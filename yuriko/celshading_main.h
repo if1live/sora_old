@@ -1,4 +1,5 @@
-﻿/*  Copyright (C) 2011-2012 by if1live */
+﻿#if 0
+/*  Copyright (C) 2011-2012 by if1live */
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,17 +19,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_SHADOW_MAP_MAIN_H_
-#define SORA_SHADOW_MAP_MAIN_H_
+#ifndef SORA_CELSHADING_MAIN_H_
+#define SORA_CELSHADING_MAIN_H_
 
 namespace sora {;
 class Device;
 
-namespace shadowmap {
+namespace celshading {
   void setup_graphics(sora::Device *dev, int w, int h);
   void draw_frame(sora::Device *dev);
   void update_frame(sora::Device *dev, float dt);
-}
+};
 }
 
-#endif  // SORA_SHADOW_MAP_MAIN_H_
+#endif  // SORA_CELSHADING_MAIN_H_
+#endif

@@ -32,9 +32,6 @@
     <Filter Include="sdk\soil">
       <UniqueIdentifier>{676724de-b9dd-476e-b498-ac1125d85eab}</UniqueIdentifier>
     </Filter>
-    <Filter Include="logic_test">
-      <UniqueIdentifier>{2783cd81-060f-4288-b656-1e97dfcbb526}</UniqueIdentifier>
-    </Filter>
     <Filter Include="mesh">
       <UniqueIdentifier>{38882dde-c366-4631-85e6-6e77d98f7702}</UniqueIdentifier>
     </Filter>
@@ -66,18 +63,6 @@
     </ClCompile>
     <ClCompile Include="soil\stb_image_aug.cpp">
       <Filter>sdk\soil</Filter>
-    </ClCompile>
-    <ClCompile Include="sora_main.cpp">
-      <Filter>logic_test</Filter>
-    </ClCompile>
-    <ClCompile Include="freeglut_main.cpp">
-      <Filter>logic_test</Filter>
-    </ClCompile>
-    <ClCompile Include="sysfont_main.cpp">
-      <Filter>logic_test</Filter>
-    </ClCompile>
-    <ClCompile Include="post_effect_main.cpp">
-      <Filter>logic_test</Filter>
     </ClCompile>
     <ClCompile Include="component_list.cpp">
       <Filter>cbes</Filter>
@@ -248,18 +233,6 @@
     </ClInclude>
     <ClInclude Include="soil\image_DXT.h">
       <Filter>sdk\soil</Filter>
-    </ClInclude>
-    <ClInclude Include="sora_main.h">
-      <Filter>logic_test</Filter>
-    </ClInclude>
-    <ClInclude Include="freeglut_main.h">
-      <Filter>logic_test</Filter>
-    </ClInclude>
-    <ClInclude Include="sysfont_main.h">
-      <Filter>logic_test</Filter>
-    </ClInclude>
-    <ClInclude Include="post_effect_main.h">
-      <Filter>logic_test</Filter>
     </ClInclude>
     <ClInclude Include="component.h">
       <Filter>cbes</Filter>

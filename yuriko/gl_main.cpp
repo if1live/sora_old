@@ -25,18 +25,18 @@
 
 #include "sora/keyboard_event.h"
 
-#include "sora/sora_main.h"
+#include "sora_main.h"
 #include "sora/device.h"
 #include "sora/timer.h"
-#include "sora/shadow_map_main.h"
-#include "sora/test_function.h"
-#include "sora/selection_main.h"
-#include "sora/celshading_main.h"
-#include "sora/depth_map_main.h"
+#include "shadow_map_main.h"
+#include "test_function.h"
+#include "selection_main.h"
+#include "celshading_main.h"
+#include "depth_map_main.h"
 
-#include "sora/freeglut_main.h"
-#include "sora/sysfont_main.h"
-#include "sora/post_effect_main.h"
+#include "freeglut_main.h"
+#include "sysfont_main.h"
+#include "post_effect_main.h"
 
 #if SR_WIN && (SR_GLES == 0)
 
