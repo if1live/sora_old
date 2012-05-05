@@ -97,12 +97,19 @@ template<typename T>
 class Singleton {
 public:
   static T& GetInstance() {
-    if (ctx_ == 0) { ctx_ = new T; }
+    if (ctx_ == 0) { 
+      void *ptr = sora::global_malloc<T>();
+      ctx_ = new(ptr) T; 
+    }
     return *ctx_;
   }
 
   static void DestroyInstance() {
-    if (ctx_ != 0) { delete(ctx_); ctx_ = 0; }
+    if (ctx_ != 0) {
+      ctx_->~T();
+      sora::global_free(ctx_);
+      ctx_ = 0; 
+    }
   }
   static bool IsCreated() { return (ctx_ != 0); }
 
@@ -129,13 +136,15 @@ public:
   static T& GetInstance() {
     if (ctx_ == NULL) {
       inner_allcated_ = true;
-      ctx_ = new T; 
+      void *ptr = sora::global_malloc<T>();
+      ctx_ = new(ptr) T; 
     }
     return *ctx_;
   }
   static void DestoryInstance() {
     if (ctx_ != NULL && inner_allcated_) {
-      delete(ctx_);
+      ctx_->~T();
+      sora::global_free(ctx_);
       inner_allcated_ = false;
     }
     ctx_ = NULL;

@@ -35,13 +35,15 @@ World::~World() {
   sora::DestroyDict(&complist_dict_);
 }
 Entity *World::CreateEntity() {
-  Entity *entity = new Entity(this);
+  Entity *entity = sora::global_new<Entity>(this);
+
   int id = entity->id();
   entity_dict_[id] = entity;
   return entity;
 }
 Entity *World::CreateEntity(const std::string &name) {
-  Entity *entity = new Entity(this, name);
+  Entity *entity = sora::global_new<Entity>(this, name);
+
   int id = entity->id();
   entity_dict_[id] = entity;
   entity_name_dict_[name] = entity;
@@ -58,7 +60,8 @@ bool World::DestroyEntity(Entity *entity) {
   EntityDictType::iterator it = entity_dict_.find(entity->id());
   if (it != entity_dict_.end()) {
     entity_dict_.erase(it);
-    delete(entity);
+    sora::global_delete(entity);
+
     return true;
   } else {
     return false;
