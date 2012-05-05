@@ -20,7 +20,6 @@
 // Ŭnicode please
 #include "sora_stdafx.h"
 #include "heap.h"
-#include "heap_alloc_header.h"
 
 namespace sora {;
 int Heap::next_id_ = 1;
@@ -46,7 +45,7 @@ Heap *Heap::GetSharedHeap() {
 void* Heap::Malloc(size_t size) {
 #if SR_DEBUG
   int requestSize = size + sizeof(HeapAllocHeader);
-  byte *mem = reinterpret_cast<byte*>(::malloc(requestSize));
+  byte *mem = reinterpret_cast<byte*>(sora::global_malloc(requestSize));
   HeapAllocHeader *header = reinterpret_cast<HeapAllocHeader*>(mem);
   header->Reset(kAllocatedMemorySignature, size, this);
   this->AddAllocation(size);
@@ -54,7 +53,7 @@ void* Heap::Malloc(size_t size) {
   void *startBlock = mem + sizeof(HeapAllocHeader);
   return startBlock;
 #else
-  byte *mem = reinterpret_cast<byte*>(::malloc(size));
+  byte *mem = reinterpret_cast<byte*>(sora::global_malloc(size));
   return mem;
 #endif
 }
@@ -64,9 +63,9 @@ void Heap::Free(void *ptr) {
     reinterpret_cast<byte*>(ptr) - sizeof(HeapAllocHeader));
   header->heap->RemoveAllocation(header->size);
   SR_ASSERT(header->signature == kAllocatedMemorySignature);
-  ::free(header);
+  sora::global_free(header);
 #else
-  ::free(ptr);
+  sora::global_free(ptr);
 #endif
 }
 

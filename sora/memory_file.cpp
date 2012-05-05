@@ -45,6 +45,7 @@ data(NULL) {
   strcpy(filepath_, filepath.c_str());
 }
 MemoryFile::~MemoryFile() {
+  Close();
 }
 
 void MemoryFile::Close() {

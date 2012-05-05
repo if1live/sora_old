@@ -68,8 +68,8 @@ public:
       desc->bit_depth = decoder.getInfoPng().color.bitDepth;
       desc->bpp = decoder.getBpp();
       desc->color_channels = decoder.getChannels();
-      desc->is_grayscale = decoder.isGreyscaleType();
-      desc->is_alpha = decoder.isAlphaType();
+      desc->is_grayscale = decoder.isGreyscaleType() > 0 ? true : false;
+      desc->is_alpha = decoder.isAlphaType() > 0 ? true : false;
 
       return true;
     }

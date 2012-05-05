@@ -41,6 +41,9 @@
     <Filter Include="renderer\gl">
       <UniqueIdentifier>{b7ba486f-8281-4238-b020-84e1e1cc1068}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mem">
+      <UniqueIdentifier>{21937df2-c6c5-461e-9518-bb4c61ee925c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora_stdafx.cpp">
@@ -88,19 +91,10 @@
     <ClCompile Include="common_string.cpp">
       <Filter>core</Filter>
     </ClCompile>
-    <ClCompile Include="free_list_block_pool.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="heap.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
     <ClCompile Include="logger.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="math_helper.cpp">
-      <Filter>core</Filter>
-    </ClCompile>
-    <ClCompile Include="mem.cpp">
       <Filter>core</Filter>
     </ClCompile>
     <ClCompile Include="string_hash.cpp">
@@ -205,6 +199,15 @@
     <ClCompile Include="zip_stream_file.cpp">
       <Filter>sys</Filter>
     </ClCompile>
+    <ClCompile Include="mem.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
+    <ClCompile Include="free_list_block_pool.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
+    <ClCompile Include="heap.cpp">
+      <Filter>mem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -267,21 +270,6 @@
     <ClInclude Include="common_string.h">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="free_list_block_pool.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="free_list_manager.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="free_list_object_pool.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="heap.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="heap_alloc_header.h">
-      <Filter>core</Filter>
-    </ClInclude>
     <ClInclude Include="id_generator.h">
       <Filter>core</Filter>
     </ClInclude>
@@ -289,9 +277,6 @@
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="math_helper.h">
-      <Filter>core</Filter>
-    </ClInclude>
-    <ClInclude Include="mem.h">
       <Filter>core</Filter>
     </ClInclude>
     <ClInclude Include="rect.h">
@@ -458,6 +443,21 @@
     </ClInclude>
     <ClInclude Include="zip_stream_file.h">
       <Filter>sys</Filter>
+    </ClInclude>
+    <ClInclude Include="mem.h">
+      <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="free_list_block_pool.h">
+      <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="free_list_manager.h">
+      <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="free_list_object_pool.h">
+      <Filter>mem</Filter>
+    </ClInclude>
+    <ClInclude Include="heap.h">
+      <Filter>mem</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

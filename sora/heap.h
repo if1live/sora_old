@@ -23,11 +23,16 @@
 #pragma once
 
 #include <string>
-#include "heap_alloc_header.h"
 
 namespace sora {;
+class HeapAllocHeader;
+class Heap;
 
-class SR_DLL Heap {
+enum {
+  kAllocatedMemorySignature = 0x12345678,
+};
+
+class Heap {
 public:
   typedef unsigned char byte;
 
@@ -56,14 +61,33 @@ private:
   int allocated_size_;
   static int next_id_;
 };
-}
 
-namespace sora {;
+struct HeapAllocHeader {
+public:
+  explicit HeapAllocHeader()
+    : signature(kAllocatedMemorySignature),
+    size(0),
+    heap(NULL) {
+  }
+  ~HeapAllocHeader() {}
+  void Reset(int signature, int size, Heap *heap) {
+    this->signature = signature;
+    this->size = size;
+    this->heap = heap;
+  }
+
+public:
+  int signature;
+  int size;
+  Heap *heap;
+};
+
+//impl
 template<typename T>
 HeapAllocHeader *Heap::GetHeader(const T *ptr) {
   HeapAllocHeader *header = reinterpret_cast<HeapAllocHeader*>(
     (byte*)(ptr) - sizeof(HeapAllocHeader));
   return header;
 }
-}
+} //namespace sora
 #endif  // SORA_HEAP_H_

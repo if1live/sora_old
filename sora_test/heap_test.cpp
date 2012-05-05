@@ -1,7 +1,6 @@
 ﻿// Ŭnicode please 
 #include "sora_test_stdafx.h"
 #include "heap.h"
-#include "heap_alloc_header.h"
 
 using namespace sora;
 using namespace std;

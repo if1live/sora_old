@@ -94,7 +94,7 @@ int GetArraySize(T (&arr)[N]) {
 
 /////////////////////////////////////////
 template<typename T>
-class SR_DLL Singleton {
+class Singleton {
 public:
   static T& GetInstance() {
     if (ctx_ == 0) { ctx_ = new T; }

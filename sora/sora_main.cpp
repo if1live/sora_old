@@ -352,7 +352,7 @@ void renderFrame(Device *device) {
     //mesh.WireAxis(5);
     //mesh.SolidPlane(3);
     //mesh.WirePlane(3, 0.1f);
-    mesh.SolidTorus(1, 0.3);
+    mesh.SolidTorus(1.0f, 0.3f);
     //mesh.SolidCone(2, 2);
 
     //set material

@@ -32,6 +32,9 @@ inline void operator delete[](void *p);
 
 namespace sora {;
 
+inline void *global_malloc(size_t x);
+inline void global_free(void *p);
+
 // memory alloc stat
 struct AllocState {
   AllocState() : bytes(0), count(0) {}

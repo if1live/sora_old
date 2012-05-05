@@ -24,6 +24,7 @@
 //#include "sora/common/logger.h"
 //#include "sora/common/assert_inc.h"
 
+
 #if SR_WIN && (SR_GLES == 0)
 int main(int argc, char *argv[]) {
   //SHOW_LINE();
@@ -44,7 +45,6 @@ int main(int argc, char *argv[]) {
 
   ::testing::InitGoogleTest(&argc, argv);
 	int result = RUN_ALL_TESTS();
-
   glfwTerminate();
 	getchar();
 	return result;

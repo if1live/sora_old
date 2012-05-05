@@ -55,6 +55,7 @@
       <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <AdditionalOptions>/Ylsymbol %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4819;4099;4251;4996;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -70,6 +71,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>SR_NDEBUG=1;SR_DEBUG=0;%(PreprocessorDefinitions);BUILD_OGLES2</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>..\sdk\esUtil\Include;..\sdk\PVRShell\API\KEGL;..\sdk\PVRShell\;..\sdk\PVRShell\OS\Windows;$(SolutionDir)\sdk\OGLES2Tools\OGLES2;$(SolutionDir)\sdk\OGLES2Tools;$(SolutionDir)\sdk\OGLES2\Include;$(SolutionDir)\sdk\glm-0.9.3.1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4819;4099;4251;4996;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>

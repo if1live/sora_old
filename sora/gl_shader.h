@@ -190,11 +190,11 @@ namespace gl {
         static_assert(is_float_type || is_int_type, "support int, float");
 
         if(std::tr1::is_same<T, float>::value) {
-          glUniform1f(loc, value);
+          glUniform1f(loc, static_cast<float>(value));
           SR_CHECK_ERROR("glUniform1f");
           return true;
         } else if(std::tr1::is_same<T, int>::value) {
-          glUniform1i(loc, value);
+          glUniform1i(loc, static_cast<int>(value));
           SR_CHECK_ERROR("glUniform1i");
           return true;
         }

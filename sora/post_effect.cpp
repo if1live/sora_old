@@ -71,8 +71,8 @@ void PostEffect::Draw(Texture &tex, RenderDevice *dev, int x, int y, int w, int 
   float rect_y = (float)y;
   float rect_w = (float)w;
   float rect_h = (float)h;
-  float win_w = dev->win_width();
-  float win_h = dev->win_height();
+  float win_w = static_cast<float>(dev->win_width());
+  float win_h = static_cast<float>(dev->win_height());
 
   float pos_left = (2.0f / win_w * rect_x) - 1;
   float pos_bottom = (2.0f / win_h * rect_y) - 1;

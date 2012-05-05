@@ -54,7 +54,7 @@
       <PrecompiledHeaderFile>sora_stdafx.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>SR_NDEBUG=0;SR_DEBUG=1;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
-      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <DisableSpecificWarnings>4819;4099;4251;4996;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -70,6 +70,7 @@
       <PrecompiledHeaderFile>sora_stdafx.h</PrecompiledHeaderFile>
       <PreprocessorDefinitions>SR_NDEBUG=1;SR_DEBUG=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <MinimalRebuild>true</MinimalRebuild>
+      <DisableSpecificWarnings>4819;4099;4251;4996;</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -170,7 +171,6 @@
     <ClInclude Include="gl_texture.h" />
     <ClInclude Include="gl_uber_shader_renderer.h" />
     <ClInclude Include="heap.h" />
-    <ClInclude Include="heap_alloc_header.h" />
     <ClInclude Include="id_generator.h" />
     <ClInclude Include="image.h" />
     <ClInclude Include="keyboard_event.h" />

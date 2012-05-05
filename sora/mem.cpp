@@ -23,19 +23,26 @@
 #include <cstdlib>
 
 void *operator new(size_t x) {
-  return malloc(x);
+  return sora::global_malloc(x);
 }
 void *operator new[](size_t x) {
-  return malloc(x);
+  return sora::global_malloc(x);
 }
 void operator delete(void *p) {
-  return free(p);
+  return sora::global_free(p);
 }
 void operator delete[](void *p) {
-  return free(p);
+  return sora::global_free(p);
 }
 
 namespace sora {;
+
+void *global_malloc(size_t x) {
+  return malloc(x);
+}
+void global_free(void *p) {
+  return free(p);
+}
 
 namespace BasicAllocator {;
 struct BasicAllocHeader {
@@ -49,12 +56,13 @@ struct BasicAllocHeader {
 AllocState basic_alloc_state;
 
 AllocState &alloc_state() {
-  return basic_alloc_state;
+  AllocState &state = basic_alloc_state;
+  return state;
 }
 
 void *Malloc(size_t size) {
   size_t request_size = size + sizeof(BasicAllocHeader);
-  void *ptr = ::malloc(request_size);
+  void *ptr = sora::global_malloc(request_size);
   BasicAllocHeader *header = (BasicAllocHeader*)ptr;
   header->size = size;
   void *result = (void*)((long)ptr + sizeof(BasicAllocHeader));
@@ -72,7 +80,7 @@ void Free(void *ptr) {
   basic_alloc_state.bytes -= size;
   basic_alloc_state.count--;
 
-  ::free(header);
+  sora::global_free(header);
 }
 void *Calloc( size_t num, size_t size ) {
   int request_size = num * size;
@@ -146,7 +154,7 @@ void TagAllocator::Free(void *ptr) {
   ctx.tag_alloc_state_table[tag].bytes -= header->size;
   ctx.tag_alloc_state_table[tag].count--;
 
-  ::free(alloc_start);
+  sora::global_free(alloc_start);
   return;
 }
 
@@ -156,7 +164,7 @@ void *TagAllocator::Malloc(size_t size, int tag) {
   TagAllocatorImpl &ctx = impl();
 
   size_t request_size = size + sizeof(TagAllocHeader);
-  void *ptr = ::malloc(request_size);
+  void *ptr = sora::global_malloc(request_size);
   
   TagAllocHeader *header = (TagAllocHeader*)ptr;
   header->magic = kMagicNumber;

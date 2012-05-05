@@ -20,6 +20,7 @@
 // Ŭnicode please
 #include "sora_stdafx.h"
 #include "free_list_block_pool.h"
+#include "mem.h"
 
 namespace sora {;
 FreeListBlockPool::FreeListBlockPool(int max_size, int block_size)
@@ -34,8 +35,8 @@ FreeListBlockPool::FreeListBlockPool(int max_size, int block_size)
 FreeListBlockPool::~FreeListBlockPool() {
   // release all obj at once
   // SR_ASSERT(max_size_ == freeListSize_);
-  ::free(free_object_list_);
-  ::free(object_list_);
+  sora::global_free(free_object_list_);
+  sora::global_free(object_list_);
   object_list_ = NULL;
   free_object_list_ = NULL;
 }
@@ -44,17 +45,17 @@ void FreeListBlockPool::Reset(int max_size, int block_size) {
   if (object_list_ != NULL) {
     // all previous allocated block must be unused
     SR_ASSERT(max_size_ == top_+1);
-    ::free(free_object_list_);
-    ::free(object_list_);
+    sora::global_free(free_object_list_);
+    sora::global_free(object_list_);
   }
   // reallocate
   max_size_ = max_size;
 
   object_list_ = static_cast<byte*>(
-    ::malloc(sizeof(object_list_) * max_size * block_size));
+    sora::global_malloc(sizeof(object_list_) * max_size * block_size));
   memset(object_list_, 0, sizeof(byte) * max_size * block_size);
   free_object_list_ = static_cast<byte**>(
-    ::malloc(sizeof(object_list_) * max_size));
+    sora::global_malloc(sizeof(object_list_) * max_size));
   memset(free_object_list_, 0, sizeof(byte*) * max_size);
 
   for (int i = 0 ; i < max_size_ ; i++) {

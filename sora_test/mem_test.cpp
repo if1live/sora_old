@@ -27,8 +27,8 @@ TEST(BasicAllocator, malloc_free) {
 
   //empty
   AllocState &state = BasicAllocator::alloc_state();
-  EXPECT_EQ(0, state.bytes);
-  EXPECT_EQ(0, state.count);
+  ASSERT_EQ(0, state.bytes);
+  ASSERT_EQ(0, state.count);
 
   void *mem1 = SR_MALLOC(128);
   EXPECT_EQ(128, state.bytes);
