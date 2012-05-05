@@ -25,35 +25,8 @@
 #include <list>
 
 namespace sora {;
-struct DebugDrawCmd {
-  typedef enum {
-    kDebugDrawNone,
-    kDebugDrawLine,
-    kDebugDrawCross,
-    kDebugDrawSphere,
-    kDebugDrawAxis,
-    kDebugDrawString
-  } DebugDrawType;
 
-  DebugDrawCmd() :
-    type(kDebugDrawNone),
-    duration(0),
-    depth_enable(true) {}
-
-  DebugDrawCmd(DebugDrawType type) :
-    type(type),
-    duration(0),
-    depth_enable(true) {}
-
-  virtual ~DebugDrawCmd() {}
-  
-  DebugDrawType type;
-  
-  //shared
-  sora::vec4ub color;
-  float duration;
-  bool depth_enable;
-};
+struct DebugDrawCmd;
 
 class DebugDrawManager : public SharedObject<DebugDrawManager> {;
 public:
