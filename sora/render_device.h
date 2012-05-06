@@ -26,7 +26,7 @@
 #include "texture.h"
 #include "sys_font.h"
 #include "material.h"
-#include "mesh_buffer.h"
+#include "mesh.h"
 
 namespace sora {;
 class Device;
@@ -53,14 +53,14 @@ public:
   TextureManager &tex_mgr() { return tex_mgr_; }
   SysFont &sys_font() { return sys_font_; }
   MaterialManager &mtl_mgr() { return mtl_mgr_; }
-  MeshBufferManager &mesh_mgr() { return mesh_mgr_; }
+  MeshManager &mesh_mgr() { return mesh_mgr_; }
 
 private:
   PolicyType policy_;
   TextureManager tex_mgr_;
   SysFont sys_font_;
   MaterialManager mtl_mgr_;
-  MeshBufferManager mesh_mgr_;
+  MeshManager mesh_mgr_;
 };
 
 }

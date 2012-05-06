@@ -220,6 +220,9 @@
     <ClCompile Include="obj_model.cpp">
       <Filter>mesh</Filter>
     </ClCompile>
+    <ClCompile Include="mesh.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -478,6 +481,9 @@
       <Filter>mesh</Filter>
     </ClInclude>
     <ClInclude Include="obj_model.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
       <Filter>mesh</Filter>
     </ClInclude>
   </ItemGroup>

@@ -119,20 +119,6 @@ private:
   MeshDrawCmdList cmd_list_;
 };
 
-class MeshBufferManager {
-public:
-  MeshBufferManager();
-  ~MeshBufferManager();
-  bool Add(const std::string &name, MeshBuffer *mesh);
-  //같은 이름이 없으면 빈 메시를 반환
-  MeshBuffer *Get(const std::string &name);
-  bool IsExist(const std::string &name) const;
-
-private:
-  typedef std::tr1::unordered_map<std::string, MeshBuffer*> MeshDict;
-  MeshDict mesh_dict_;
-};
-
 //std::vector<Vertex> 와 같은것에 대응하기 위한 용도로 만든 클래스이다
 //특정 인터페이스를 상속받아야지만 map같은데 넣을수 있으니까. 
 //그래서 기본 인터페이스는 std::vector와 동일하게 설정햇다
