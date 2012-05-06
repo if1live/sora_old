@@ -35,8 +35,6 @@ using namespace glm;
 namespace sora {;
 namespace sysfont {
 
-  Shader simple_shader;
-
   void setup_graphics(sora::Device *dev, int w, int h) {
     dev->render_device().SetWinSize(w, h);
 
@@ -49,14 +47,6 @@ namespace sysfont {
     auto ext_endit = ext_list.end();
     for( ; ext_it != ext_endit ; ++ext_it) {
       LOGI("%s", ext_it->c_str());
-    }
-
-    {
-      //create shader
-      //create shader
-      string simple_vs_path = Filesystem::GetAppPath("shader/simple.vs");
-      string simple_fs_path = Filesystem::GetAppPath("shader/simple.fs");
-      simple_shader.LoadFromFile(simple_vs_path, simple_fs_path);
     }
   }
 

@@ -20,6 +20,8 @@
 // Ŭnicode please
 #pragma once
 
+#include "sora_stdafx.h"
+
 namespace sora {;
 
 struct Camera {

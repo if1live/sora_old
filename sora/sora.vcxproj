@@ -87,6 +87,7 @@
     <ClCompile Include="device.cpp" />
     <ClCompile Include="entity.cpp" />
     <ClCompile Include="filesystem.cpp" />
+    <ClCompile Include="fps_counter.cpp" />
     <ClCompile Include="freeglut_font.cpp" />
     <ClCompile Include="freeglut_stroke_mono_roman.cpp" />
     <ClCompile Include="freeglut_stroke_roman.cpp" />
@@ -153,6 +154,7 @@
     <ClInclude Include="entity.h" />
     <ClInclude Include="event_queue.h" />
     <ClInclude Include="filesystem.h" />
+    <ClInclude Include="fps_counter.h" />
     <ClInclude Include="frame_buffer.h" />
     <ClInclude Include="freeglut_font.h" />
     <ClInclude Include="free_list_block_pool.h" />

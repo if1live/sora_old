@@ -123,7 +123,6 @@ public:
     bool depth_enable = true);
 
   void AddAxis(const glm::mat4 &xf,
-    const sora::vec4ub &color,
     float size, 
     float duration = 0.0f,
     bool depth_enable = true);

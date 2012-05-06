@@ -47,7 +47,6 @@ bool Material::operator==(const Material &o) const {
   if(diffuse != o.diffuse) { return false; }
   if(specular != o.specular) { return false; }
   if(shininess != o.shininess) { return false; }
-  if(ambient_map != o.ambient_map) { return false; }
   if(diffuse_map != o.diffuse_map) { return false; }
   if(specular_map != o.specular_map) { return false; }
   if(normal_map != o.normal_map) { return false; }

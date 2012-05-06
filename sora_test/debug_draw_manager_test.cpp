@@ -29,8 +29,8 @@ TEST(DebugDrawManager, test) {
   DebugDrawManager mgr;
   EXPECT_EQ(0, mgr.CmdCount());
 
-  mgr.AddAxis(mat4(1.0f), Color_White(), 1);
-  mgr.AddAxis(mat4(1.0f), Color_White(), 1, 1.0f);
+  mgr.AddAxis(mat4(1.0f), 1);
+  mgr.AddAxis(mat4(1.0f), 1, 1.0f);
   EXPECT_EQ(2, mgr.CmdCount());
 
   mgr.Update(0.5f);

@@ -143,7 +143,6 @@ void DebugDrawManager::AddSphere(const glm::vec3 &pos, float radius,
 }
 
 void DebugDrawManager::AddAxis(const glm::mat4 &xf,
-                               const sora::vec4ub &color,
                                float size, 
                                float duration,
                                bool depth_enable) {
@@ -151,7 +150,6 @@ void DebugDrawManager::AddAxis(const glm::mat4 &xf,
   CallConstructor(cmd);
   
   cmd->xf = xf;
-  cmd->color = color;
   cmd->size = size;
   cmd->duration = duration;
   cmd->depth_enable = depth_enable;
@@ -420,7 +418,7 @@ void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_String *cmd) {
   world_mat = glm::scale(world_mat, vec3(cmd->scale));
   mat4 mvp = projection * world_mat;
   SetUniformMatrix(mvp_var, mvp);
-  sora::Label label(&font, "PQRS_1234_asdf");
+  sora::Label label(&font, cmd->msg);
   shader.SetVertexList(label.vertex_list());
 
   ApplyDepthTest(cmd);

@@ -59,7 +59,6 @@ struct LightUberShaderLoadPolicy {
     flag |= kMaterialAmbient;
     flag |= kMaterialDiffuse;
     flag |= kMaterialSpecular;
-    flag |= kMaterialAmbientMap;
     flag |= kMaterialDiffuseMap;
     flag |= kMaterialSpecularMap;
     //normal map

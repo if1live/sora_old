@@ -236,10 +236,9 @@ enum {
   kMaterialAmbient = 1 << 0,
   kMaterialDiffuse = 1 << 1,
   kMaterialSpecular = 1 << 2,
-  kMaterialAmbientMap = 1 << 3,
-  kMaterialDiffuseMap = 1 << 4,
-  kMaterialSpecularMap = 1 << 5,
-  kMaterialNormalMap = 1 << 6,
+  kMaterialDiffuseMap = 1 << 3,
+  kMaterialSpecularMap = 1 << 4,
+  kMaterialNormalMap = 1 << 5,
 };
 
 //predefined semantic
@@ -266,7 +265,6 @@ enum {
 
 #define kDiffuseMapHandleName "s_diffuseMap"
 #define kSpecularMapHandleName "s_specularMap"
-#define kAmbientMapHandleName "s_ambientMap"
 #define kAlbedoHandleName "s_texture"
 #define kNormalMapHandleName "s_normalMap"
 

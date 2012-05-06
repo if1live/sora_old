@@ -20,49 +20,26 @@
 // Ŭnicode please
 #pragma once
 
-#include "globals.h"
-
 namespace sora {;
-struct Material {
-  Material();
-  static const Material &NullMaterial();
 
-  std::string name;
-  uint props;   //flag저장 용도
-
-  glm::vec4 ambient;
-  glm::vec4 diffuse;
-  glm::vec4 specular;
-  float shininess;  //specular
-
-  std::string diffuse_map;
-  std::string specular_map;
-  std::string normal_map;
-
-  bool operator==(const Material &o) const;
-  bool operator!=(const Material &o) const {
-    return !(*this == o);
-  }
-};
-
-class MaterialManager {
+class FpsCounter {
 public:
-  MaterialManager();
-  ~MaterialManager();
+  FpsCounter();
+  ~FpsCounter();
 
-public:
-  //이름중복이 발생한 경우 false
-  bool Add(const std::vector<Material> &mtl_list);
-  bool Add(const Material &mtl);
-  bool IsExist(const std::string &name) const;
-  const Material &Get(const std::string &name) const;
-  void Clear();
+  void EndFrame(float frame_delta_time);
+  float GetFPS() const { return fps_; }
+  int total_frame_count() const { return count_; }
+  int elapsed_millisecond() const { return elapsed_millisecond_; }
+  float elapsed_second() const { return elapsed_millisecond_ / 1000.0f; }
 
 private:
-  //일단은 몇개 안될테니까 간단하게 구현
-  //재질정보는 그렇게 크지도 않고 많지도 않을테니까 전부 떄려박아도 심각한 문제가
-  //발생하지는 않을것이다.
-  typedef std::tr1::unordered_map<std::string, Material> MaterialDict;
-  MaterialDict material_list_;
+  int count_;
+  int elapsed_millisecond_;
+  //그냥 count/elapsed로 돌릴경우, 순간적인 변화량에 제대로 대응할수 없다
+  //그래서 프레임 측정은 일정단위(100프레임정도?)마다 1번씩 수행해서 값을 저장하도록 햇다
+  float fps_;
+  int prev_calculated_millisecond_;
 };
+
 } //namespace sora

@@ -64,6 +64,8 @@
 #include "keyboard_event.h"
 
 #include "gl_uber_shader_renderer.h"
+#include "debug_draw_manager.h"
+#include "fps_counter.h"
 
 using namespace std;
 using namespace sora;
@@ -87,6 +89,8 @@ FrameBuffer depth_fbo;
 
 //uber shader직통으로 써보기
 sora::gl::GLUberShaderRenderer uber_renderer;
+
+FpsCounter fps_counter;
 
 void SORA_set_window_size(Device *device, int w, int h) {
   device->render_device().SetWinSize(w, h);
@@ -355,12 +359,11 @@ void renderFrame(Device *device) {
     //mtl.diffuse = vec4(1, 1, 1, 1);
     mtl.specular = vec4(1);
     mtl.shininess = 20;
-    mtl.ambient_map = "sora2";
-    mtl.diffuse_map = "mtl_diffuse";
+    //mtl.diffuse_map = "mtl_diffuse";
+    mtl.diffuse_map = "sora2";
     mtl.specular_map = "mtl_specular";
     mtl.normal_map = "mtl_normal";
     mtl.props |= kMaterialAmbient;
-    mtl.props |= kMaterialAmbientMap;
     mtl.props |= kMaterialDiffuse;
     mtl.props |= kMaterialDiffuseMap;
     mtl.props |= kMaterialSpecular;
@@ -427,74 +430,38 @@ void renderFrame(Device *device) {
   //fbo에 있는 내용을 적절히 그리기
   //null_post_effect.Draw(depth_fbo.color_tex(), &device->render_device());
 
-  /*
   {
-    //uber shader
-    Renderer &render3d = device->render3d();
-    render3d.SetInitState();
-    
-    //set camera + projection
-    float win_width = (float)device->render_state().win_width();
-    float win_height = (float)device->render_state().win_height();
-    glm::mat4 &projection = render3d.projection_mat();
-    projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 100.0f);
-    float radius = 4;
-    float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
-    float cam_y = radius * sin(SR_DEG_2_RAD(aptitude));
-    float cam_z = radius * cos(SR_DEG_2_RAD(aptitude)) * cos(SR_DEG_2_RAD(latitude));
+    //디버깅용으로 화면 2d좌표계에 렌더링 하는거
+    DebugDrawManager &mgr_2d = DebugDrawManager::Get2D();
+    mgr_2d.AddString(vec3(100, 100, 0), "asd", Color_Red(), 2.0f);
+    mgr_2d.AddLine(vec3(100, 100, 0), vec3(150, 200, 0), Color_Blue(), 4.0f);
+    mgr_2d.AddSphere(vec3(200, 200, 0), 30, Color_Green());
+    mgr_2d.AddCross(vec3(200, 200, 0), Color_Green(), 5);
 
-    sora::Camera cam;
-    cam.eye = vec3(cam_x, cam_y, cam_z);
-    cam.center = vec3(0);
-    cam.up = vec3(0, 1, 0);
-    render3d.set_camera(cam);
+    //fps카운터 적절히 렌더링
+    char fps_buf[16];
+    sprintf(fps_buf, "FPS:%.2f", fps_counter.GetFPS());
+    //float scr_width = device->render_device().win_width();
+    float scr_height = device->render_device().win_height();
+    mgr_2d.AddString(vec3(0, scr_height, 0), fps_buf, Color_White(), 1.5f);
 
-    unsigned int flag = 0;
-    flag |= UberShader::kAmbientColor;
-    flag |= UberShader::kAmbientMap;
-    flag |= UberShader::kDiffuseColor;
-    flag |= UberShader::kDiffuseMap;
-    flag |= UberShader::kSpecularColor;
-    flag |= UberShader::kSpecularMap;
-    flag |= UberShader::kNormalMap;
-    ShaderProgram &shader = device->uber_shader(flag);
-    render3d.SetShader(shader);
-
-    ShaderBindPolicy &bind_policy = shader.bind_policy;
-
-    //평면하나만 일단 렌더링해서 테스트하자
-    render3d.SetLight(light);
-    //int obj_idx = 2;
-    //int obj_idx = 1;
-    int obj_idx = 3;
-    const mat4 &world_mat = world_mat_list[obj_idx];
-    render3d.ApplyMatrix(world_mat);
-
-    //Texture *tex = device->texture_mgr().Get_ptr(string("sora2"));
-    //render3d.SetTexture(*tex);
-
-    //재질데이터 적절히 설정하기
-    Material mtl;
-    mtl.ambient_map = "sora";
-    mtl.diffuse_map = "mtl_diffuse";
-    mtl.specular_map = "mtl_specular";
-    mtl.normal_map = "mtl_normal";
-    mtl.ambient = vec3(0.1, 0.1, 0.1);
-    //mtl.ambient = vec3(1, 1, 1);
-    mtl.diffuse = vec3(0.5, 0.5, 0.5);
-    mtl.specular = vec3(0.5, 0.5, 0.5);
-    mtl.shininess = 20;
-    mtl.uber_flag = flag;
-    render3d.SetMaterial(mtl);
-    render3d.ApplyMaterialLight();
-      
-    MeshBufferObject *mesh = device->mesh_mgr().Get(mesh_name_list[obj_idx]);
-    SR_ASSERT(mesh != NULL);
-    render3d.Draw(*mesh);
-
-    SR_CHECK_ERROR("Render End");
+    DebugDrawPolicy_2D debug_draw;
+    debug_draw.Draw(mgr_2d, &device->render_device());
   }
-  */
+  {
+    //디버깅용으로 화면 3d렌더링 하는거
+    DebugDrawManager &mgr_3d = DebugDrawManager::Get3D();
+    mgr_3d.AddAxis(mat4(1.0f), 10);
+    mgr_3d.AddLine(vec3(0.0f, 0.0f, 0.0f), vec3(100, 100, 100), Color_White(), 4);
+    mgr_3d.AddSphere(vec3(0, 0, 0), 3, Color_White());
+    mgr_3d.AddString(vec3(5, 1, 1), "asdf", Color_Blue(), 2);
+
+
+    DebugDrawPolicy_3D debug_draw;
+    debug_draw.Draw(mgr_3d, &device->render_device());
+  }
+
+  
 
   //////////////////////////////
   SR_CHECK_ERROR("End RenderFrame");
@@ -514,10 +481,12 @@ void SORA_init_gl_env() {
 }
 
 void SORA_update_frame(Device *device, float dt) {
-  static float elapsed_time = 0;
-  static int elapsed_tick_count = 0;
-  elapsed_tick_count++;
-  elapsed_time += dt;
+  fps_counter.EndFrame(dt);
+  DebugDrawManager &mgr_2d = DebugDrawManager::Get2D();
+  mgr_2d.Update(dt);
+  DebugDrawManager &mgr_3d = DebugDrawManager::Get3D();
+  mgr_3d.Update(dt);
+
 
   TouchEventQueue &touch_evt_queue = device->touch_evt_queue();
 
@@ -534,7 +503,9 @@ void SORA_update_frame(Device *device, float dt) {
   } else {
     left_btn_state = kInputPress;
   }
-  touch_device.UpdateState(left_btn_state, posx, posy, elapsed_tick_count, elapsed_time);
+  int elapsed_tick_count = fps_counter.total_frame_count();
+  float elapsed_second = fps_counter.elapsed_second();
+  touch_device.UpdateState(left_btn_state, posx, posy, elapsed_tick_count, elapsed_second);
   const vector<TouchEvent> &touch_evt_list = touch_device.GetCreatedEvent();
   auto touch_evt_it = touch_evt_list.begin();
   auto touch_evt_endit = touch_evt_list.end();

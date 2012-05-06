@@ -99,7 +99,6 @@ namespace gl {
     bool use_ambient = ((flag & kMaterialAmbient) == kMaterialAmbient);
     bool use_diffuse = ((flag & kMaterialDiffuse) == kMaterialDiffuse);
     bool use_specular = ((flag & kMaterialSpecular) == kMaterialSpecular);
-    bool use_ambient_map = ((flag & kMaterialAmbientMap) == kMaterialAmbientMap);
     bool use_diffuse_map = ((flag & kMaterialDiffuseMap) == kMaterialDiffuseMap);
     bool use_specular_map = ((flag & kMaterialSpecularMap) == kMaterialSpecularMap);
     bool use_normal_map = ((flag & kMaterialNormalMap) == kMaterialNormalMap);
@@ -137,39 +136,30 @@ namespace gl {
       shader.SetUniformValue(kSpecularShininessHandleName, material.shininess);
       SR_CHECK_ERROR("Set Shininess Color");
     }
-    //TODO 마지막에 등록된 재질과 지금 처리중인 재질이 다른 경우에만 아래의 텍스쳐 바인딩을 처리하자
-    if(use_ambient_map) {
-      Texture *ambient_map = render_dev->tex_mgr().Get_ptr(material.ambient_map);
-      if(ambient_map != NULL) {
-        render_dev->UseTexture(*ambient_map);
-        shader.SetUniformValue(kAmbientMapHandleName, 0);
-        SR_CHECK_ERROR("Set Ambient map");
-      }
-    }
+    //마지막에 등록된 재질과 지금 처리중인 재질이 다른 경우에만 아래의 텍스쳐 바인딩을 처리하자
     if(use_diffuse_map) {
       Texture *diffuse_map = render_dev->tex_mgr().Get_ptr(material.diffuse_map);
       if(diffuse_map != NULL) {
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, diffuse_map->handle());
-        shader.SetUniformValue(kDiffuseMapHandleName, 1);
-        SR_CHECK_ERROR("Set Diffuse map");
+        render_dev->UseTexture(*diffuse_map);
+        shader.SetUniformValue(kDiffuseMapHandleName, 0);
+        SR_CHECK_ERROR("Set Ambient map");
       }
     }
     if(use_specular_map) {
       Texture *specular_map = render_dev->tex_mgr().Get_ptr(material.specular_map);
       if(specular_map != NULL) {
-        glActiveTexture(GL_TEXTURE2);
+        glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, specular_map->handle());
-        shader.SetUniformValue(kSpecularMapHandleName, 2);
+        shader.SetUniformValue(kSpecularMapHandleName, 1);
         SR_CHECK_ERROR("Set Specular map");
       }
     }
     if(use_normal_map) {
       Texture *normal_map = render_dev->tex_mgr().Get_ptr(material.normal_map);
       if(normal_map != NULL) {
-        glActiveTexture(GL_TEXTURE3);
+        glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, normal_map->handle());
-        shader.SetUniformValue(kNormalMapHandleName, 3);
+        shader.SetUniformValue(kNormalMapHandleName, 2);
         SR_CHECK_ERROR("Set Normal map");
       }
     }
