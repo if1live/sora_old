@@ -217,6 +217,9 @@
     <ClCompile Include="obj_loader.cpp">
       <Filter>mesh</Filter>
     </ClCompile>
+    <ClCompile Include="obj_model.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -472,6 +475,9 @@
       <Filter>debug</Filter>
     </ClInclude>
     <ClInclude Include="obj_loader.h">
+      <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="obj_model.h">
       <Filter>mesh</Filter>
     </ClInclude>
   </ItemGroup>

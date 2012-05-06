@@ -113,6 +113,7 @@
     <ClCompile Include="memory_file.cpp" />
     <ClCompile Include="mesh_buffer.cpp" />
     <ClCompile Include="obj_loader.cpp" />
+    <ClCompile Include="obj_model.cpp" />
     <ClCompile Include="parametric_surface.cpp" />
     <ClCompile Include="post_effect.cpp" />
     <ClCompile Include="shader.cpp" />
@@ -188,6 +189,7 @@
     <ClInclude Include="memory_file.h" />
     <ClInclude Include="mesh_buffer.h" />
     <ClInclude Include="obj_loader.h" />
+    <ClInclude Include="obj_model.h" />
     <ClInclude Include="parametric_equations.h" />
     <ClInclude Include="parametric_surface.h" />
     <ClInclude Include="post_effect.h" />

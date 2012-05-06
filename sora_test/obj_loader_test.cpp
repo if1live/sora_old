@@ -23,6 +23,7 @@
 #include "memory_file.h"
 #include "filesystem.h"
 #include "material.h"
+#include "obj_model.h"
 
 using namespace std;
 using namespace sora;
@@ -105,7 +106,6 @@ TEST(ObjFormatHelper, String_Create) {
   EXPECT_STREQ("abc", str.c_str());
 }
 
-/*
 TEST(ObjLoader, Cube_Load) {
   using sora::MemoryFile;
   string path1 = Filesystem::GetAppPath("obj/cube.obj");
@@ -115,10 +115,10 @@ TEST(ObjLoader, Cube_Load) {
   
   ObjModel model;
   ObjLoader loader;
-  loader.LoadObj(file1.start, file1.end, &model);
-
+  loader.Load(file1.start, file1.end, &model);
+  EXPECT_EQ(true, model.vertex_count() > 0);
 }
-*/
+
 TEST(ObjLoader, LoadMtl) {
   using sora::MemoryFile;
   string path1 = Filesystem::GetAppPath("mtl/example.mtl");
