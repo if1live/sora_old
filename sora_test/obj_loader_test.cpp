@@ -19,37 +19,35 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_test_stdafx.h"
-#if 0
 #include "obj_loader.h"
 #include "memory_file.h"
 #include "filesystem.h"
-#include "obj_model.h"
 #include "material.h"
 
 using namespace std;
 using namespace sora;
 using namespace glm;
 
-TEST(ObjLoader, NewLineToNullChar) {
+TEST(ObjFormatHelper, NewLineToNullChar) {
   unsigned char str1[] = "asdf\nqwer\r\n1234";
   uchar *start = str1;
   uchar *end = start + strlen((const char*)str1);
 
-  ObjLoader::NewLineToNullChar(start, end);
+  ObjFormatHelper::NewLineToNullChar(start, end);
   unsigned char str2[] = "asdf\0qwer\r\01234";
   EXPECT_STREQ((char*)str2, (char*)str1);
 }
 
-TEST(ObjLoader, GetLineStartPos) {
+TEST(ObjFormatHelper, GetLineStartPos) {
   {
     //가장 간단한 형태
     unsigned char str1[] = "a\nb\n12";
     uchar *start = str1;
     uchar *end = start + strlen((const char*)str1);
-    ObjLoader::NewLineToNullChar(start, end);
+    ObjFormatHelper::NewLineToNullChar(start, end);
 
     vector<uchar*> line_list;
-    int line_count = ObjLoader::GetLineStartPos(start, end, line_list);
+    int line_count = ObjFormatHelper::GetLineStartPos(start, end, line_list);
     ASSERT_EQ(3, line_count);
     ASSERT_EQ(start, line_list[0]);
     ASSERT_EQ(start+2, line_list[1]);
@@ -60,26 +58,26 @@ TEST(ObjLoader, GetLineStartPos) {
     unsigned char str1[] = "a\n\nb\n\n\n\n12";
     uchar *start = str1;
     uchar *end = start + strlen((const char*)str1);
-    ObjLoader::NewLineToNullChar(start, end);
+    ObjFormatHelper::NewLineToNullChar(start, end);
 
     vector<uchar*> line_list;
-    int line_count = ObjLoader::GetLineStartPos(start, end, line_list);
+    int line_count = ObjFormatHelper::GetLineStartPos(start, end, line_list);
     ASSERT_EQ(3, line_count);
   }
 }
 
-TEST(ObjLoader, GetLineLength) {
+TEST(ObjFormatHelper, GetLineLength) {
   {
     //가장 간단한 형태
     unsigned char str1[] = "a\nb\n12";
     uchar *start = str1;
     uchar *end = start + strlen((const char*)str1);
-    ObjLoader::NewLineToNullChar(start, end);
+    ObjFormatHelper::NewLineToNullChar(start, end);
 
     vector<uchar*> line_list;
     vector<int> length_list;
-    int line_count = ObjLoader::GetLineStartPos(start, end, line_list);
-    ObjLoader::GetLineLength(line_list, length_list);
+    int line_count = ObjFormatHelper::GetLineStartPos(start, end, line_list);
+    ObjFormatHelper::GetLineLength(line_list, length_list);
     EXPECT_EQ(line_count, length_list.size());
     ASSERT_EQ(1, length_list[0]);
     ASSERT_EQ(1, length_list[1]);
@@ -90,23 +88,24 @@ TEST(ObjLoader, GetLineLength) {
     unsigned char str1[] = "a\n\nb\n\n\n\n12";
     uchar *start = str1;
     uchar *end = start + strlen((const char*)str1);
-    ObjLoader::NewLineToNullChar(start, end);
+    ObjFormatHelper::NewLineToNullChar(start, end);
 
     vector<uchar*> line_list;
     vector<int> length_list;
-    int line_count = ObjLoader::GetLineStartPos(start, end, line_list);
-    ObjLoader::GetLineLength(line_list, length_list);
+    int line_count = ObjFormatHelper::GetLineStartPos(start, end, line_list);
+    ObjFormatHelper::GetLineLength(line_list, length_list);
     EXPECT_EQ(line_count, length_list.size());
   }
 }
 
-TEST(ObjLoader, String_Create) {
+TEST(ObjFormatHelper, String_Create) {
   char str1[] = "abc\0\0\0\0";
   //std::string할떄 NULL이 추가로 붙어도 씹고 적절히 만들어낸다
   string str(str1, 6);
   EXPECT_STREQ("abc", str.c_str());
 }
 
+/*
 TEST(ObjLoader, Cube_Load) {
   using sora::MemoryFile;
   string path1 = Filesystem::GetAppPath("obj/cube.obj");
@@ -119,7 +118,7 @@ TEST(ObjLoader, Cube_Load) {
   loader.LoadObj(file1.start, file1.end, &model);
 
 }
-
+*/
 TEST(ObjLoader, LoadMtl) {
   using sora::MemoryFile;
   string path1 = Filesystem::GetAppPath("mtl/example.mtl");
@@ -128,8 +127,8 @@ TEST(ObjLoader, LoadMtl) {
   ASSERT_EQ(true, file1.Open());
 
   vector<Material> mtl_list;
-  ObjLoader loader;
-  loader.LoadMtl(file1.start, file1.end, &mtl_list);
+  MtlLoader loader;
+  loader.Load(file1.start, file1.end, &mtl_list);
 
 /*
 #sample material
@@ -178,7 +177,6 @@ Tr 0.4300
   EXPECT_EQ(100.2235f, mtl2.shininess);
   //EXPECT_EQ(2, mtl2.illumination_model);
 
-  Material &mtl3 = mtl_list[2];
-  EXPECT_EQ(0.43f, mtl3.alpha);
+  //Material &mtl3 = mtl_list[2];
+  //EXPECT_EQ(0.43f, mtl3.alpha);
 }
-#endif

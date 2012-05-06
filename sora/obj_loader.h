@@ -21,49 +21,39 @@
 #pragma once
 
 #include "globals.h"
-#include "unordered_map_inc.h"
+#include "material.h"
 
 namespace sora {;
-struct Material {
-  Material();
-  static const Material &NullMaterial();
 
-  std::string name;
-  uint props;   //flag저장 용도
-
-  glm::vec4 ambient;
-  glm::vec4 diffuse;
-  glm::vec4 specular;
-  float shininess;  //specular
-
-  std::string diffuse_map;
-  std::string specular_map;
-  std::string normal_map;
-
-  bool operator==(const Material &o) const;
-  bool operator!=(const Material &o) const {
-    return !(*this == o);
-  }
+//mtl / obj는 같은 형태를 공유하니까
+//공유하는걸 적절히 만들엇다
+class ObjFormatHelper {
+public:
+  //\n을 \0로 변환
+  static void NewLineToNullChar(uchar *start, uchar *end);
+  //\0을 기준으로 잘라서 문장의 시작을 의미하는 포인터 얻기
+  static int GetLineStartPos(uchar *start, uchar *end, std::vector<uchar*> &line_list);
+  static void GetLineLength(const std::vector<uchar*> &line_list, std::vector<int> &length_list);
 };
 
-class MaterialManager {
+class ObjLoader {
 public:
-  MaterialManager();
-  ~MaterialManager();
+  ObjLoader();
+  ~ObjLoader();
 
+  static int GetFaceVertexCount(int face_type, int elem_count);
+  //void Load(uchar *start, uchar *end, ObjModel *model);
+};
+
+class MtlLoader {
 public:
-  //이름중복이 발생한 경우 false
-  bool Add(const std::vector<Material> &mtl_list);
-  bool Add(const Material &mtl);
-  bool IsExist(const std::string &name) const;
-  const Material &Get(const std::string &name) const;
-  void Clear();
+  MtlLoader();
+  ~MtlLoader();
 
+  void Load(uchar *start, uchar *end, std::vector<Material> *mtl_list);
+  void Parse(uchar *str, int n);
 private:
-  //일단은 몇개 안될테니까 간단하게 구현
-  //재질정보는 그렇게 크지도 않고 많지도 않을테니까 전부 떄려박아도 심각한 문제가
-  //발생하지는 않을것이다.
-  typedef std::tr1::unordered_map<std::string, Material> MaterialDict;
-  MaterialDict material_list_;
+  std::vector<Material> *mtl_list_;
+  Material *GetLastMtl();
 };
 } //namespace sora

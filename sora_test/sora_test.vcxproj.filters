@@ -19,6 +19,9 @@
     <Filter Include="mem">
       <UniqueIdentifier>{3109995f-9a9d-4f84-b6f0-d7444fe640e1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="mesh">
+      <UniqueIdentifier>{dd961242-fdf9-497d-9750-5360c0cb6340}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora_test_stdafx.cpp">
@@ -55,9 +58,6 @@
       <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="mesh_buffer_test.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="obj_loader_test.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="shader_test.cpp">
@@ -107,6 +107,9 @@
     </ClCompile>
     <ClCompile Include="debug_draw_manager_test.cpp">
       <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="obj_loader_test.cpp">
+      <Filter>mesh</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

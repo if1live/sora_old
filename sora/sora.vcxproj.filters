@@ -214,6 +214,9 @@
     <ClCompile Include="fps_counter.cpp">
       <Filter>debug</Filter>
     </ClCompile>
+    <ClCompile Include="obj_loader.cpp">
+      <Filter>mesh</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -467,6 +470,9 @@
     </ClInclude>
     <ClInclude Include="fps_counter.h">
       <Filter>debug</Filter>
+    </ClInclude>
+    <ClInclude Include="obj_loader.h">
+      <Filter>mesh</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
