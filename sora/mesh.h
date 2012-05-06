@@ -44,8 +44,11 @@ public:
 
   void Register(MeshBuffer *mesh_buffer, const Material &mtl);
   void Register(MeshBuffer *mesh_buffer);
-  void Register(const std::vector<DrawCmdData<Vertex>> &cmd_list, const Material &mtl);
-  void Register(const std::vector<DrawCmdData<Vertex>> &cmd_list);
+
+  template<typename T>
+  void Register(const std::vector<DrawCmdData<T>> &cmd_list, const Material &mtl);
+  template<typename T>
+  void Register(const std::vector<DrawCmdData<T>> &cmd_list);
 
   std::vector<MeshElemPtr>::iterator Begin() { return elem_list_.begin(); }
   std::vector<MeshElemPtr>::iterator End() { return elem_list_.end(); }
@@ -68,4 +71,40 @@ private:
   MeshDict mesh_dict_;
 };
 
+
+template<typename T>
+void Mesh::Register(const std::vector<DrawCmdData<T>> &cmd_list, const Material &mtl) {
+  auto it = cmd_list.begin();
+  auto endit = cmd_list.end();
+  for( ; it != endit ; ++it) {
+    const DrawCmdData<T> &cmd = *it;
+
+    VertexBufferInterface *vbo = new VertexBufferObjectT<T, GLVBOPolicy>();
+    bool vbo_init_result = vbo->Init(cmd.vertex_list);
+    SR_ASSERT(vbo_init_result == true);
+
+    IndexBufferInterface *ibo = NULL;
+    if(cmd.index_list.empty() == false) {
+      ibo = new IndexBufferObject();
+      bool ibo_init_result = ibo->Init(cmd.index_list);
+      SR_ASSERT(ibo_init_result == true);
+    }
+
+    MeshBuffer *mesh_buffer = new MeshBuffer();
+    int vbo_id = mesh_buffer->Register(vbo);
+    if(ibo != NULL) {
+      int ibo_id = mesh_buffer->Register(ibo);
+      mesh_buffer->AddDrawCmd(cmd.draw_mode, cmd.disable_cull_face, vbo_id, ibo_id);
+    } else {
+      mesh_buffer->AddDrawCmd(cmd.draw_mode, cmd.disable_cull_face, vbo_id);
+    }
+
+    Register(mesh_buffer, mtl);
+  }
+}
+template<typename T>
+void Mesh::Register(const std::vector<DrawCmdData<T>> &cmd_list) {
+  Material null_mtl = Material::NullMaterial();
+  Register(cmd_list, null_mtl);
+}
 } //namespace sora

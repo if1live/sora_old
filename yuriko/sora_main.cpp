@@ -191,9 +191,9 @@ bool setupGraphics(Device *device, int w, int h) {
     ObjModel obj_model;
     loader.Load(file1.start, file1.end, &obj_model);
 
-    Mesh *mesh = new Mesh();
-    mesh->Register(obj_model.cmd_list());
-    device->render_device().mesh_mgr().Add("mesh", mesh);
+    //Mesh *mesh = new Mesh();
+    //mesh->Register(obj_model.cmd_list());
+    //device->render_device().mesh_mgr().Add("mesh", mesh);
     
     /*
     //첫번쨰 물체 = obj model
@@ -209,6 +209,32 @@ bool setupGraphics(Device *device, int w, int h) {
     //device->mesh_mgr().Add(obj_model.GetDrawCmdList_solid(), "obj_model");
     mesh_name_list[obj_model_idx] = "obj_model";
     */
+  }
+  {
+    //primitive model test
+    GeometricObject<Vertex> geo_obj;
+    //GeometricObject<TangentVertex> geo_obj;
+    //geo_obj.PointTeapot(0.05f);
+    //geo_obj.WireTeapot(0.05f);
+    //geo_obj.SolidTeapot(0.05f);
+    //geo_obj.WireShpere(1, 16, 16);
+    //geo_obj.PointShpere(1, 16, 16);
+    //geo_obj.SolidSphere(1, 16, 16);
+    //geo_obj.SolidCube(1, 1, 1);
+    //geo_obj.WireCube(1, 1, 1);
+    //geo_obj.PointCube(1, 1, 1);
+    //geo_obj.PointCylinder(1, 1, 2, 8, 8);
+    //geo_obj.WireCylinder(1, 1, 2, 8, 8);
+    //geo_obj.SolidCylinder(1, 1, 2, 8, 8);
+    //geo_obj.WireAxis(5);
+    //geo_obj.SolidPlane(3);
+    //geo_obj.WirePlane(3, 0.1f);
+    geo_obj.SolidTorus(1.0f, 0.3f);
+    //geo_obj.SolidCone(2, 2);
+
+    Mesh *mesh = new Mesh();
+    mesh->Register(geo_obj.cmd_list());
+    device->render_device().mesh_mgr().Add("mesh", mesh);
   }
   /*
   {
@@ -339,29 +365,6 @@ void renderFrame(Device *device) {
   */
   //일반 3d객체 그리기+카메라 회전 장착
   {
-    //GeometricObject<Vertex> mesh;
-    //GeometricObject<TangentVertex> mesh;
-    //mesh.PointTeapot(0.05f);
-    //mesh.WireTeapot(0.05f);
-    //mesh.SolidTeapot(0.05f);
-    //mesh.WireShpere(1, 16, 16);
-    //mesh.PointShpere(1, 16, 16);
-    //mesh.SolidSphere(1, 16, 16);
-    //mesh.SolidCube(1, 1, 1);
-    //mesh.WireCube(1, 1, 1);
-    //mesh.PointCube(1, 1, 1);
-    //mesh.PointCylinder(1, 1, 2, 8, 8);
-    //mesh.WireCylinder(1, 1, 2, 8, 8);
-    //mesh.SolidCylinder(1, 1, 2, 8, 8);
-    //mesh.WireAxis(5);
-    //mesh.SolidPlane(3);
-    //mesh.WirePlane(3, 0.1f);
-    //mesh.SolidTorus(1.0f, 0.3f);
-    //mesh.SolidCone(2, 2);
-
-    //ObjWireFrameModel mesh(obj_model);
-    //ObjModel &mesh = obj_model;
-
     //set material
     Material mtl;
     mtl.ambient = vec4(0.1, 0.1, 0.1, 1);
@@ -414,28 +417,6 @@ void renderFrame(Device *device) {
     */
     uber_renderer.SetCamera(cam, &device->render_device());
 
-    /*
-    auto it = mesh.Begin();
-    auto endit = mesh.End();
-    for( ; it != endit ; ++it) {
-      const DrawCmdData<Vertex> &cmd = *it;
-      //const DrawCmdData<TangentVertex> &cmd = *it;
-      //앞면 뒷면 그리기를 허용/불가능 정보까지 내장해야
-      //뚜껑없는 원통 그리기가 편하다
-      if(cmd.disable_cull_face == true) {
-        glDisable(GL_CULL_FACE);
-      }
-      shader.SetVertexList(cmd.vertex_list);
-      if(cmd.index_list.empty()) {
-        Shader::DrawArrays(cmd.draw_mode, cmd.vertex_list.size());
-      } else {
-        Shader::DrawElements(cmd.draw_mode, cmd.index_list);
-      }
-      if(cmd.disable_cull_face == true) {
-        glEnable(GL_CULL_FACE);
-      }
-    }
-    */
     Mesh *mesh = device->render_device().mesh_mgr().Get("mesh");
     auto it = mesh->Begin();
     auto endit = mesh->End();
