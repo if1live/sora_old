@@ -59,6 +59,9 @@
 #include "camera.h"
 #include "light.h"
 
+#include "obj_loader.h"
+#include "obj_model.h"
+
 #include "touch_device.h"
 #include "touch_event.h"
 #include "keyboard_event.h"
@@ -91,6 +94,8 @@ FrameBuffer depth_fbo;
 sora::gl::GLUberShaderRenderer uber_renderer;
 
 FpsCounter fps_counter;
+
+ObjModel obj_model;
 
 void SORA_set_window_size(Device *device, int w, int h) {
   device->render_device().SetWinSize(w, h);
@@ -163,21 +168,17 @@ bool setupGraphics(Device *device, int w, int h) {
     device->render_device().tex_mgr().Add(tex);
   }
   
-  /*
-  sora::ObjLoader loader;
-  //load material
   {
+    //load material
+    sora::MtlLoader loader;
     std::string mtl_path = Filesystem::GetAppPath("material/example.mtl");
     MemoryFile mtl_file(mtl_path);
     mtl_file.Open();
     vector<sora::Material> material_list;
-    ObjLoader loader;
-    loader.LoadMtl(mtl_file.start, mtl_file.end, &material_list);
+    loader.Load(mtl_file.start, mtl_file.end, &material_list);
     
-    device->material_mgr().Add(material_list);
+    device->render_device().mtl_mgr().Add(material_list);
   }
-  */
-  /*
   {
     //load model
     std::string path1 = sora::Filesystem::GetAppPath("obj/cube.obj");
@@ -186,9 +187,10 @@ bool setupGraphics(Device *device, int w, int h) {
     //std::string path1 = sora::Filesystem::GetAppPath("obj/Saber Fate Stay.obj");
     sora::MemoryFile file1(path1);
     file1.Open();
-    ObjModel obj_model;
-    loader.LoadObj(file1.start, file1.end, &obj_model);
-
+    ObjLoader loader;
+    loader.Load(file1.start, file1.end, &obj_model);
+    
+    /*
     //첫번쨰 물체 = obj model
     int obj_model_idx = 0;
     glm::mat4 entity_mat = glm::mat4(1.0f);
@@ -201,8 +203,8 @@ bool setupGraphics(Device *device, int w, int h) {
 
     //device->mesh_mgr().Add(obj_model.GetDrawCmdList_solid(), "obj_model");
     mesh_name_list[obj_model_idx] = "obj_model";
+    */
   }
-  */
   /*
   {
     //primitive model test
@@ -333,7 +335,7 @@ void renderFrame(Device *device) {
   //일반 3d객체 그리기+카메라 회전 장착
   {
     //GeometricObject<Vertex> mesh;
-    GeometricObject<TangentVertex> mesh;
+    //GeometricObject<TangentVertex> mesh;
     //mesh.PointTeapot(0.05f);
     //mesh.WireTeapot(0.05f);
     //mesh.SolidTeapot(0.05f);
@@ -349,8 +351,11 @@ void renderFrame(Device *device) {
     //mesh.WireAxis(5);
     //mesh.SolidPlane(3);
     //mesh.WirePlane(3, 0.1f);
-    mesh.SolidTorus(1.0f, 0.3f);
+    //mesh.SolidTorus(1.0f, 0.3f);
     //mesh.SolidCone(2, 2);
+
+    ObjWireFrameModel mesh(obj_model);
+    //ObjModel &mesh = obj_model;
 
     //set material
     Material mtl;
@@ -407,8 +412,8 @@ void renderFrame(Device *device) {
     auto it = mesh.Begin();
     auto endit = mesh.End();
     for( ; it != endit ; ++it) {
-      //const DrawCmdData<Vertex> &cmd = *it;
-      const DrawCmdData<TangentVertex> &cmd = *it;
+      const DrawCmdData<Vertex> &cmd = *it;
+      //const DrawCmdData<TangentVertex> &cmd = *it;
       //앞면 뒷면 그리기를 허용/불가능 정보까지 내장해야
       //뚜껑없는 원통 그리기가 편하다
       if(cmd.disable_cull_face == true) {

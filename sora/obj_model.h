@@ -24,39 +24,45 @@
 #include "vertex.h"
 
 namespace sora {;
+
+class ObjModel;
+class ObjWireFrameModel;
+
 class ObjModel {
+  friend class ObjWireFrameModel;
 public:
   ObjModel();
   ~ObjModel();
-  const Vertex *vertex_ptr() const;
-  const void *index_ptr() const;
   int vertex_count() const;
   int index_count() const;
-  
-  std::vector<DrawCmdData<Vertex>> GetDrawCmdList_wire() const;
-
-  template<typename VertexType>
-  std::vector< DrawCmdData<VertexType> > GetDrawCmdList_solid() const;
 
   void AddVertex(const Vertex &v);
   void AddIndex(ushort idx);
+
+  void OnLoadComplete();
+
+  std::vector< DrawCmdData<Vertex> >::iterator Begin() { return draw_cmd_list_.begin(); }
+  std::vector< DrawCmdData<Vertex> >::iterator End() { return draw_cmd_list_.end(); }
+  const std::vector< DrawCmdData<Vertex> > &cmd_list() const { return draw_cmd_list_; }
 
 private:
   std::vector<Vertex> vert_list_;
   // GL_TRIANGLES로 그릴수 잇도록 정렬된 인덱스 리스트
   std::vector<ushort> index_list_;
-  // GL_LINES로 그릴수 잇도록 정렬된거. 거의 테스트용으로 쓰일테니까 최적화는 안함
-  mutable std::vector<ushort> line_index_list_;
+  std::vector<DrawCmdData<Vertex>> draw_cmd_list_;
 };
 
-template<typename VertexType>
-std::vector< DrawCmdData<VertexType> > ObjModel::GetDrawCmdList_solid() const {
-  std::vector< DrawCmdData<VertexType> > cmd_list;
-  DrawCmdData draw_cmd;
-  draw_cmd.draw_mode = kDrawTriangles;
-  draw_cmd.vertex_list = vert_list_;
-  draw_cmd.index_list = index_list_;
-  cmd_list.push_back(draw_cmd);
-  return cmd_list;
-}
+class ObjWireFrameModel {
+public:
+  ObjWireFrameModel(const ObjModel &model);
+  ~ObjWireFrameModel();
+
+  std::vector< DrawCmdData<Vertex> >::iterator Begin() { return draw_cmd_list_.begin(); }
+  std::vector< DrawCmdData<Vertex> >::iterator End() { return draw_cmd_list_.end(); }
+  const std::vector< DrawCmdData<Vertex> > &cmd_list() const { return draw_cmd_list_; }
+
+private:
+  std::vector<DrawCmdData<Vertex>> draw_cmd_list_;
+};
+
 } //namespace sora

@@ -411,6 +411,7 @@ void ObjLoader::Load(uchar *start, uchar *end, ObjModel *model) {
     int length = length_list[i];
     Parse(line, length);
   }
+  model->OnLoadComplete();
 
   model_ = NULL;
 }

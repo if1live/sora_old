@@ -51,7 +51,7 @@ public:
   typename std::vector< DrawCmdData<T> >::iterator Begin() { return cmd_list_.begin(); }
   typename std::vector< DrawCmdData<T> >::iterator End() { return cmd_list_.end(); }
   const std::vector< DrawCmdData<T> > &cmd_list() const { return cmd_list_; }
-
+public:
   void PointCube(float width, float height, float depth) {
     Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
