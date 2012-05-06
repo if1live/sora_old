@@ -27,6 +27,7 @@
 
 #include "gl_shader.h"
 #include "gl_shader_variable.h"
+#include "mesh.h"
 
 namespace sora {;
 
@@ -157,6 +158,8 @@ public:
     return Policy::SetUniformValue(handle_, name, value);
   }
 
+  void DrawMeshIgnoreMaterial(Mesh *mesh);
+
 private:
   HandleType handle_;
   std::vector<ShaderVariable> uniform_list_;
@@ -273,6 +276,41 @@ ShaderVariable ShaderT<PolicyType>::FindShaderVar(const std::string &name, const
   }
   ShaderVariable empty;
   return empty;
+}
+
+template<typename PolicyType>
+void ShaderT<PolicyType>::DrawMeshIgnoreMaterial(Mesh *mesh) {
+  auto it = mesh->Begin();
+  auto endit = mesh->End();
+  for( ; it != endit ; ++it) {
+    MeshBuffer *mesh_buffer = (*it)->mesh_buffer;
+    auto mesh_it = mesh_buffer->begin();
+    auto mesh_endit = mesh_buffer->end();
+    for( ; mesh_it != mesh_endit ; ++mesh_it) {
+      VertexBufferInterface *vb = mesh_buffer->VertexBuffer(mesh_it->vertex_buffer_handle);
+      IndexBufferInterface *ib = mesh_buffer->IndexBuffer(mesh_it->index_buffer_handle);
+      DrawType draw_mode = mesh_it->draw_mode;
+      SetVertexList(*vb);
+
+      //앞면 뒷면 그리기를 허용/불가능 정보까지 내장해야
+      //뚜껑없는 원통 그리기가 편하다
+      if(mesh_it->disable_cull_face == true) {
+        glDisable(GL_CULL_FACE);
+      }
+
+      if(ib->empty()) {
+        Shader::DrawArrays(draw_mode, vb->size());
+      } else {
+        Shader::DrawElements(draw_mode, *ib);
+      }
+
+      //앞면 뒷면 그리기를 허용/불가능 정보까지 내장해야
+      //뚜껑없는 원통 그리기가 편하다
+      if(mesh_it->disable_cull_face == true) {
+        glEnable(GL_CULL_FACE);
+      }
+    }
+  }
 }
 
 } //namespace sora

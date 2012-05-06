@@ -355,6 +355,7 @@ void renderFrame(Device *device) {
   Renderer::SetClearColor(0.5f, 0.0f, 0.0f, 1.0f);
   Renderer::ClearScreen();
 
+
   //3d
   device->render_device().Set3D();
   /*
@@ -418,37 +419,7 @@ void renderFrame(Device *device) {
     uber_renderer.SetCamera(cam, &device->render_device());
 
     Mesh *mesh = device->render_device().mesh_mgr().Get("mesh");
-    auto it = mesh->Begin();
-    auto endit = mesh->End();
-    for( ; it != endit ; ++it) {
-      MeshBuffer *mesh_buffer = (*it)->mesh_buffer;
-      auto mesh_it = mesh_buffer->begin();
-      auto mesh_endit = mesh_buffer->end();
-      for( ; mesh_it != mesh_endit ; ++mesh_it) {
-        VertexBufferInterface *vb = mesh_buffer->VertexBuffer(mesh_it->vertex_buffer_handle);
-        IndexBufferInterface *ib = mesh_buffer->IndexBuffer(mesh_it->index_buffer_handle);
-        DrawType draw_mode = mesh_it->draw_mode;
-        shader.SetVertexList(*vb);
-
-        //앞면 뒷면 그리기를 허용/불가능 정보까지 내장해야
-        //뚜껑없는 원통 그리기가 편하다
-        if(mesh_it->disable_cull_face == true) {
-          glDisable(GL_CULL_FACE);
-        }
-
-        if(ib->empty()) {
-          Shader::DrawArrays(draw_mode, vb->size());
-        } else {
-          Shader::DrawElements(draw_mode, *ib);
-        }
-
-        //앞면 뒷면 그리기를 허용/불가능 정보까지 내장해야
-        //뚜껑없는 원통 그리기가 편하다
-        if(mesh_it->disable_cull_face == true) {
-          glEnable(GL_CULL_FACE);
-        }
-      }
-    }
+    shader.DrawMeshIgnoreMaterial(mesh);
   }
   //depth_fbo.Unbind();
 
