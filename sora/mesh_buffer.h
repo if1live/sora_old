@@ -82,8 +82,9 @@ private:
 
 struct MeshDrawCommand {
   MeshDrawCommand() : draw_mode(kDrawTriangles)
-    , vertex_buffer_handle(-1), index_buffer_handle(-1) {}
+    , vertex_buffer_handle(-1), index_buffer_handle(-1), disable_cull_face(false) {}
   DrawType draw_mode;
+  bool disable_cull_face;
   int vertex_buffer_handle;
   int index_buffer_handle;
 };
@@ -108,7 +109,7 @@ public:
 
   //어떻게 그릴것인지에 대해서 적절히 등록
   //인덱스는 있을수도 잇고, 없을수도 잇고
-  void AddDrawCmd(DrawType draw_mode, int vert, int index = -1);
+  void AddDrawCmd(DrawType draw_mode, bool disable_cull_face, int vert, int index = -1);
   MeshDrawCmdList::iterator begin() { return cmd_list_.begin(); }
   MeshDrawCmdList::iterator end() { return cmd_list_.end(); }
   bool empty() const { return cmd_list_.empty(); }

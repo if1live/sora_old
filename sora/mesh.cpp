@@ -22,6 +22,7 @@
 #include "mesh.h"
 #include "mesh_buffer.h"
 #include "template_lib.h"
+#include "buffer_object.h"
 
 namespace sora {;
 
@@ -50,6 +51,30 @@ void Mesh::Register(MeshBuffer *mesh_buffer, const Material &mtl) {
 void Mesh::Register(MeshBuffer *mesh_buffer) {
   Material null_mtl = Material::NullMaterial();
   Register(mesh_buffer, null_mtl);
+}
+void Mesh::Register(const std::vector<DrawCmdData<Vertex>> &cmd_list, const Material &mtl) {
+  auto it = cmd_list.begin();
+  auto endit = cmd_list.end();
+  for( ; it != endit ; ++it) {
+    const DrawCmdData<Vertex> &cmd = *it;
+
+    VertexBufferObject *vbo = new VertexBufferObject();
+    vbo->Init(cmd.vertex_list);
+
+    IndexBufferObject *ibo = new IndexBufferObject();
+    ibo->Init(cmd.index_list);
+
+    MeshBuffer *mesh_buffer = new MeshBuffer();
+    int vbo_id = mesh_buffer->Register(vbo);
+    int ibo_id = mesh_buffer->Register(ibo);
+    mesh_buffer->AddDrawCmd(cmd.draw_mode, cmd.disable_cull_face, vbo_id, ibo_id);
+
+    Register(mesh_buffer, mtl);
+  }
+}
+void Mesh::Register(const std::vector<DrawCmdData<Vertex>> &cmd_list) {
+  Material null_mtl = Material::NullMaterial();
+  Register(cmd_list, null_mtl);
 }
 ////////////////////////////////////////
 

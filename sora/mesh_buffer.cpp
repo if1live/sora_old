@@ -76,11 +76,12 @@ bool MeshBuffer::IsIndexBufferExist(int uid) const {
   return (found != index_buffer_list_.end());
 }
 
-void MeshBuffer::AddDrawCmd(DrawType draw_mode, int vert, int index) {
+void MeshBuffer::AddDrawCmd(DrawType draw_mode, bool disable_cull_face, int vert, int index) {
   MeshDrawCommand cmd;
   cmd.draw_mode = draw_mode;
   cmd.vertex_buffer_handle = vert;
   cmd.index_buffer_handle = index;
+  cmd.disable_cull_face = disable_cull_face;
   cmd_list_.push_back(cmd);
 }
 

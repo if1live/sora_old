@@ -61,6 +61,7 @@
 
 #include "obj_loader.h"
 #include "obj_model.h"
+#include "mesh.h"
 
 #include "touch_device.h"
 #include "touch_event.h"
@@ -95,7 +96,6 @@ sora::gl::GLUberShaderRenderer uber_renderer;
 
 FpsCounter fps_counter;
 
-ObjModel obj_model;
 
 void SORA_set_window_size(Device *device, int w, int h) {
   device->render_device().SetWinSize(w, h);
@@ -188,7 +188,12 @@ bool setupGraphics(Device *device, int w, int h) {
     sora::MemoryFile file1(path1);
     file1.Open();
     ObjLoader loader;
+    ObjModel obj_model;
     loader.Load(file1.start, file1.end, &obj_model);
+
+    Mesh *mesh = new Mesh();
+    mesh->Register(obj_model.cmd_list());
+    device->render_device().mesh_mgr().Add("mesh", mesh);
     
     /*
     //첫번쨰 물체 = obj model
@@ -354,7 +359,7 @@ void renderFrame(Device *device) {
     //mesh.SolidTorus(1.0f, 0.3f);
     //mesh.SolidCone(2, 2);
 
-    ObjWireFrameModel mesh(obj_model);
+    //ObjWireFrameModel mesh(obj_model);
     //ObjModel &mesh = obj_model;
 
     //set material
@@ -409,6 +414,7 @@ void renderFrame(Device *device) {
     */
     uber_renderer.SetCamera(cam, &device->render_device());
 
+    /*
     auto it = mesh.Begin();
     auto endit = mesh.End();
     for( ; it != endit ; ++it) {
@@ -427,6 +433,39 @@ void renderFrame(Device *device) {
       }
       if(cmd.disable_cull_face == true) {
         glEnable(GL_CULL_FACE);
+      }
+    }
+    */
+    Mesh *mesh = device->render_device().mesh_mgr().Get("mesh");
+    auto it = mesh->Begin();
+    auto endit = mesh->End();
+    for( ; it != endit ; ++it) {
+      MeshBuffer *mesh_buffer = (*it)->mesh_buffer;
+      auto mesh_it = mesh_buffer->begin();
+      auto mesh_endit = mesh_buffer->end();
+      for( ; mesh_it != mesh_endit ; ++mesh_it) {
+        VertexBufferInterface *vb = mesh_buffer->VertexBuffer(mesh_it->vertex_buffer_handle);
+        IndexBufferInterface *ib = mesh_buffer->IndexBuffer(mesh_it->index_buffer_handle);
+        DrawType draw_mode = mesh_it->draw_mode;
+        shader.SetVertexList(*vb);
+
+        //앞면 뒷면 그리기를 허용/불가능 정보까지 내장해야
+        //뚜껑없는 원통 그리기가 편하다
+        if(mesh_it->disable_cull_face == true) {
+          glDisable(GL_CULL_FACE);
+        }
+
+        if(ib->empty()) {
+          Shader::DrawArrays(draw_mode, vb->size());
+        } else {
+          Shader::DrawElements(draw_mode, *ib);
+        }
+
+        //앞면 뒷면 그리기를 허용/불가능 정보까지 내장해야
+        //뚜껑없는 원통 그리기가 편하다
+        if(mesh_it->disable_cull_face == true) {
+          glEnable(GL_CULL_FACE);
+        }
       }
     }
   }

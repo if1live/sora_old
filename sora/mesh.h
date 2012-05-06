@@ -21,6 +21,7 @@
 #pragma once
 
 #include "material.h"
+#include "vertex.h"
 
 namespace sora {;
 
@@ -43,6 +44,9 @@ public:
 
   void Register(MeshBuffer *mesh_buffer, const Material &mtl);
   void Register(MeshBuffer *mesh_buffer);
+  void Register(const std::vector<DrawCmdData<Vertex>> &cmd_list, const Material &mtl);
+  void Register(const std::vector<DrawCmdData<Vertex>> &cmd_list);
+
   std::vector<MeshElemPtr>::iterator Begin() { return elem_list_.begin(); }
   std::vector<MeshElemPtr>::iterator End() { return elem_list_.end(); }
 private:
