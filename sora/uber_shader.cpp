@@ -21,6 +21,8 @@
 #include "sora_stdafx.h"
 #include "uber_shader.h"
 #include "shader.h"
+#include "filesystem.h"
+#include "memory_file.h"
 
 using namespace std;
 

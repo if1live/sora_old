@@ -60,49 +60,22 @@ bool SetUniformValue(const ShaderVariable &var, T value) {
 }
 bool SetAttrib(const ShaderVariable &var, const AttribBindParam &param, char *base_ptr);
 
-template<typename PolicyType>
-class ShaderT : public PolicyType {
+class Shader {
 public:
-  typedef PolicyType Policy;
-  typedef sora::gl::ShaderHandleType HandleType;
+  typedef ShaderPolicy Policy;
+  typedef ShaderHandle HandleType;
+
 public:
-  ShaderT() : handle_(0) {}
-  ~ShaderT() {}
+  Shader();
+  ~Shader();
 
   bool LoadFromFile(const std::string &vert_path, const std::string &frag_path);
-  bool Init(const char *vert_src, const char *frag_src) {
-    bool result = Policy::Init(&handle_, vert_src, frag_src);
-    AfterInit();
-    return result;
-  }
+  bool Init(const char *vert_src, const char *frag_src);
+  bool Init(const std::vector<const char*> &vert_src_list, const std::vector<const char*> &frag_src_list);
 
-  bool Init(const std::vector<const char*> &vert_src_list, const std::vector<const char*> &frag_src_list) {
-    bool result = Policy::Init(&handle_, vert_src_list, frag_src_list);
-    AfterInit();
-    return result;
-  }
+  void AfterInit();
 
-  void AfterInit() {
-    uniform_list_ = Policy::GetActiveUniformVarList(handle_);
-    auto it = uniform_list_.begin();
-    auto endit = uniform_list_.end();
-    for( ; it != endit ; ++it) {
-      const ShaderVariable &loc = *it;
-      LOGI("%s", loc.str().c_str());
-    }
-
-    attrib_list_ = Policy::GetActiveAttributeVarList(handle_);
-    it = attrib_list_.begin();
-    endit = attrib_list_.end();
-    for( ; it != endit ; ++it) {
-      const ShaderVariable &loc = *it;
-      LOGI("%s", loc.str().c_str());
-    }
-  }
-
-  void Deinit() {
-    Policy::Deinit(&handle_);
-  }
+  void Deinit();
   
   //attrib bind function
   //connect vertex attrib
@@ -133,9 +106,6 @@ public:
   ShaderVariable GetHandle(const std::string &name) const;
   ShaderVariable FindShaderVar(const std::string &name, const std::vector<ShaderVariable> &var_list) const;
 
-  bool Validate() const {
-    return Policy::Validate(handle_);
-  }
 
   template<typename T>
   bool SetUniformMatrix(const std::string &name, const glm::detail::tmat4x4<T> &mat) {
@@ -159,6 +129,7 @@ public:
   }
 
   void DrawMeshIgnoreMaterial(Mesh *mesh);
+  bool Validate() const;
 
 private:
   HandleType handle_;
@@ -168,29 +139,13 @@ private:
 } //namespace sora
 
 
-#include "memory_file.h"
 
 namespace sora {;
 //impl
-template<typename PolicyType>
-bool ShaderT<PolicyType>::LoadFromFile(const std::string &vert_path, const std::string &frag_path) {
-  sora::MemoryFile vert_file(vert_path);
-  sora::MemoryFile frag_file(frag_path);
-  vert_file.Open();
-  frag_file.Open();
-  const char *vert_src = (const char*)(vert_file.start);
-  const char *frag_src = (const char*)(frag_file.start);
-  bool prog_result = Init(vert_src, frag_src);
-  if(prog_result == false) {
-    LOGE("Could not create program.");
-  }
-  return prog_result;
-}
 
 //connect vertex attrib
-template<typename PolicyType>
 template<typename VertexContainer>
-void ShaderT<PolicyType>::SetVertexList(const VertexContainer &vert_data) {
+void Shader::SetVertexList(const VertexContainer &vert_data) {
   if(vert_data.empty() == false) {
     //Policy::SetVertexList(handle_, vert_data);
     VertexListBindParam param;
@@ -204,113 +159,24 @@ void ShaderT<PolicyType>::SetVertexList(const VertexContainer &vert_data) {
   }
 }
 
-template<typename PolicyType>
-void ShaderT<PolicyType>::DrawArrays(DrawType mode, unsigned int vertex_count) {
-  DrawArrays(mode, static_cast<int>(vertex_count));
-}
-
-template<typename PolicyType>
-void ShaderT<PolicyType>::DrawArrays(DrawType mode, int vertex_count) {
-  if(vertex_count > 0) {
-    return Policy::DrawArrays(mode, vertex_count);
-  }
-}
-
-template<typename PolicyType>
 template<typename IndexContainer>
-void ShaderT<PolicyType>::DrawElements(DrawType mode, const IndexContainer &index_data) {
+void Shader::DrawElements(DrawType mode, const IndexContainer &index_data) {
   if(index_data.size() > 0) {
     Policy::DrawElements(mode, index_data);
   }
 }
 
 //set vertex list + drawXXX를 붙인 조합형태
-template<typename PolicyType>
 template<typename VertexContainer>
-void ShaderT<PolicyType>::DrawArrays(DrawType mode, const VertexContainer &vert_data) {
+void Shader::DrawArrays(DrawType mode, const VertexContainer &vert_data) {
   SetVertexList(vert_data);
   Policy::DrawArrays(mode, vert_data.size());
 }
 
-template<typename PolicyType>
 template<typename VertexContainer, typename IndexContainer>
-void ShaderT<PolicyType>::DrawElements(DrawType mode, const VertexContainer &vertex_data, const IndexContainer &index_data) {
+void Shader::DrawElements(DrawType mode, const VertexContainer &vertex_data, const IndexContainer &index_data) {
   SetVertexList(vertex_data);
   Policy::DrawElements(mode, index_data);
-}
-
-
-template<typename PolicyType>
-ShaderVariable ShaderT<PolicyType>::uniform_var(const std::string &name) const {
-  return FindShaderVar(name, uniform_list_);
-}
-
-template<typename PolicyType>
-ShaderVariable ShaderT<PolicyType>::attrib_var(const std::string &name) const {
-  return FindShaderVar(name, attrib_list_);
-}
-
-template<typename PolicyType>
-ShaderVariable ShaderT<PolicyType>::GetHandle(const std::string &name) const {
-  ShaderVariable handle;
-  handle = uniform_var(name);
-  if(handle.location != -1) {
-    return handle;
-  }
-  handle = attrib_var(name);
-  if(handle.location != -1) {
-    return handle;
-  }
-  return handle;
-}
-
-template<typename PolicyType>
-ShaderVariable ShaderT<PolicyType>::FindShaderVar(const std::string &name, const std::vector<ShaderVariable> &var_list) const {
-  auto it = var_list.begin();
-  auto endit = var_list.end();
-  for( ; it != endit ; ++it) {
-    if(it->name == name) {
-      const ShaderVariable &var = *it;
-      return var;
-    }
-  }
-  ShaderVariable empty;
-  return empty;
-}
-
-template<typename PolicyType>
-void ShaderT<PolicyType>::DrawMeshIgnoreMaterial(Mesh *mesh) {
-  auto it = mesh->Begin();
-  auto endit = mesh->End();
-  for( ; it != endit ; ++it) {
-    MeshBuffer *mesh_buffer = (*it)->mesh_buffer;
-    auto mesh_it = mesh_buffer->begin();
-    auto mesh_endit = mesh_buffer->end();
-    for( ; mesh_it != mesh_endit ; ++mesh_it) {
-      VertexBufferInterface *vb = mesh_buffer->VertexBuffer(mesh_it->vertex_buffer_handle);
-      IndexBufferInterface *ib = mesh_buffer->IndexBuffer(mesh_it->index_buffer_handle);
-      DrawType draw_mode = mesh_it->draw_mode;
-      SetVertexList(*vb);
-
-      //앞면 뒷면 그리기를 허용/불가능 정보까지 내장해야
-      //뚜껑없는 원통 그리기가 편하다
-      if(mesh_it->disable_cull_face == true) {
-        glDisable(GL_CULL_FACE);
-      }
-
-      if(ib->empty()) {
-        Shader::DrawArrays(draw_mode, vb->size());
-      } else {
-        Shader::DrawElements(draw_mode, *ib);
-      }
-
-      //앞면 뒷면 그리기를 허용/불가능 정보까지 내장해야
-      //뚜껑없는 원통 그리기가 편하다
-      if(mesh_it->disable_cull_face == true) {
-        glEnable(GL_CULL_FACE);
-      }
-    }
-  }
 }
 
 } //namespace sora

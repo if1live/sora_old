@@ -172,8 +172,9 @@ namespace gl {
 }
 typedef unsigned int ShaderHandle;
 typedef int ShaderVariableLocation;
-template<typename T> class ShaderT;
-typedef ShaderT<sora::gl::GLProgram> Shader;
+
+class Shader;
+typedef sora::gl::GLProgram ShaderPolicy;
 typedef sora::gl::GLShaderVariable ShaderVariablePolicy;
 //for shader - end
 
