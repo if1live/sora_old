@@ -70,6 +70,7 @@
 #include "gl_uber_shader_renderer.h"
 #include "debug_draw_manager.h"
 #include "fps_counter.h"
+#include "draw_2d_manager.h"
 
 using namespace std;
 using namespace sora;
@@ -95,6 +96,9 @@ FrameBuffer depth_fbo;
 sora::gl::GLUberShaderRenderer uber_renderer;
 
 FpsCounter fps_counter;
+
+//2차원 렌더링 헬퍼
+Draw2DManager draw_2d_mgr;
 
 
 void SORA_set_window_size(Device *device, int w, int h) {
@@ -428,23 +432,21 @@ void renderFrame(Device *device) {
 
   
   {
-    /*
     //디버깅용으로 화면 2d좌표계에 렌더링 하는거
-    DebugDrawManager &mgr_2d = DebugDrawManager::Get2D();
-    mgr_2d.AddString(vec3(100, 100, 0), "asd", Color_Red(), 2.0f);
-    mgr_2d.AddLine(vec3(100, 100, 0), vec3(150, 200, 0), Color_Blue(), 4.0f);
-    mgr_2d.AddSphere(vec3(200, 200, 0), 30, Color_Green());
-    mgr_2d.AddCross(vec3(200, 200, 0), Color_Green(), 5);
-    */
+    draw_2d_mgr.AddString(vec2(100, 100), "asd", Color_Red(), 2.0f);
+    draw_2d_mgr.AddLine(vec2(100, 100), vec2(150, 200), Color_Blue(), 4.0f);
+    //draw_2d_mgr.AddSphere(vec3(200, 200, 0), 30, Color_Green());
+    draw_2d_mgr.AddCross(vec2(200, 200), Color_Green(), 5);
+    
     //fps카운터 적절히 렌더링
     char fps_buf[16];
     sprintf(fps_buf, "FPS:%.2f", fps_counter.GetFPS());
     //float scr_width = device->render_device().win_width();
     float scr_height = device->render_device().win_height();
-    //mgr_2d.AddString(vec3(0, scr_height, 0), fps_buf, Color_White(), 1.5f);
+    draw_2d_mgr.AddString(vec2(0, scr_height), fps_buf, Color_White(), 1.5f);
 
-    //DebugDrawPolicy_2D debug_draw;
-    //debug_draw.Draw(mgr_2d, &device->render_device());
+    sora::Draw2DPolicy draw_policy;
+    draw_policy.Draw(draw_2d_mgr, &device->render_device());
   }
   {
     //디버깅용으로 화면 3d렌더링 하는거
@@ -480,8 +482,7 @@ void SORA_init_gl_env() {
 
 void SORA_update_frame(Device *device, float dt) {
   fps_counter.EndFrame(dt);
-  //DebugDrawManager &mgr_2d = DebugDrawManager::Get2D();
-  //mgr_2d.Update(dt);
+  draw_2d_mgr.Update(dt);
   DebugDrawManager &mgr_3d = DebugDrawManager::Get3D();
   mgr_3d.Update(dt);
 
