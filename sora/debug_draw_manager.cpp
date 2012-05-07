@@ -215,10 +215,6 @@ void DebugDrawManager::Update(float dt) {
 }
 
 
-DebugDrawManager &DebugDrawManager::Get2D() {
-  static DebugDrawManager mgr;
-  return mgr;
-}
 DebugDrawManager &DebugDrawManager::Get3D() {
   static DebugDrawManager mgr;
   return mgr;
@@ -311,125 +307,6 @@ glm::vec4 DebugDrawPolicy::ConvertColor(const sora::vec4ub &orig) {
 }
 
 ///////////////////////////////
-void DebugDrawPolicy_2D::BeforeDraw() {
-  dev()->Set2D();
-}
-
-void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_Line *cmd) {
-  Shader &shader = DebugDrawManager::GetColorShader();
-  dev()->UseShader(shader);
-
-  vec4 color = ConvertColor(cmd->color);
-  shader.SetUniformVector(kConstColorHandleName, color);
-
-  float win_width = (float)dev()->win_width();
-  float win_height = (float)dev()->win_height();
-  glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
-  ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
-  SetUniformMatrix(mvp_var, projection);
-
-  vector<glm::vec3> vert_list;
-  vert_list.push_back(cmd->p1);
-  vert_list.push_back(cmd->p2);
-
-  shader.SetVertexList(vert_list);
-
-  ApplyDepthTest(cmd);
-  glLineWidth(cmd->line_width);
-  shader.DrawArrays(kDrawLines, 2);
-  glLineWidth(1.0f);
-  UnapplyDepthTest(cmd);
-}
-void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_Cross *cmd) {
-  Shader &shader = DebugDrawManager::GetColorShader();
-  dev()->UseShader(shader);
-
-  vec4 color = ConvertColor(cmd->color);
-  shader.SetUniformVector(kConstColorHandleName, color);
-
-  float win_width = (float)dev()->win_width();
-  float win_height = (float)dev()->win_height();
-  glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
-  ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
-  SetUniformMatrix(mvp_var, projection);
-
-  vector<glm::vec3> vert_list;
-  vert_list.push_back(cmd->pos);
-
-  shader.SetVertexList(vert_list);
-
-  ApplyDepthTest(cmd);
-  glPointSize(cmd->size);
-  shader.DrawArrays(kDrawPoints, 2);
-  glPointSize(1.0f);
-  UnapplyDepthTest(cmd);
-
-}
-void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_Sphere *cmd) {
-  Shader &shader = DebugDrawManager::GetColorShader();
-  dev()->UseShader(shader);
-
-  vec4 color = ConvertColor(cmd->color);
-  shader.SetUniformVector(kConstColorHandleName, color);
-
-  float win_width = (float)dev()->win_width();
-  float win_height = (float)dev()->win_height();
-  glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
-  glm::mat4 mvp = glm::translate(projection, cmd->pos);
-  ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
-  SetUniformMatrix(mvp_var, mvp);
-
-  GeometricObject<glm::vec3> mesh;
-  mesh.WireSphere(cmd->radius, 16, 16);
-
-  ApplyDepthTest(cmd);
-  auto it = mesh.Begin();
-  auto endit = mesh.End();
-  for( ; it != endit ; ++it) {
-    //const DrawCmdData<Vertex> &cmd = *it;
-    const DrawCmdData<vec3> &cmd = *it;
-    shader.SetVertexList(cmd.vertex_list);
-    if(cmd.index_list.empty()) {
-      Shader::DrawArrays(cmd.draw_mode, cmd.vertex_list.size());
-    } else {
-      Shader::DrawElements(cmd.draw_mode, cmd.index_list);
-    }
-  }
-  UnapplyDepthTest(cmd);
-}
-void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_String *cmd) {
-  Shader &shader = DebugDrawManager::GetTextShader();
-  dev()->UseShader(shader);
-
-  vec4 color = ConvertColor(cmd->color);
-  shader.SetUniformVector(kConstColorHandleName, color);
-
-  sora::SysFont &font = dev()->sys_font();
-  dev()->UseTexture(font.font_texture());
-
-  //해상도에 맞춰서 적절히 설정
-  float win_width = (float)dev()->win_width();
-  float win_height = (float)dev()->win_height();
-  glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
-  ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
-
-  mat4 world_mat(1.0f);
-  world_mat = glm::translate(world_mat, cmd->pos);
-  world_mat = glm::scale(world_mat, vec3(cmd->scale));
-  mat4 mvp = projection * world_mat;
-  SetUniformMatrix(mvp_var, mvp);
-  sora::Label label(&font, cmd->msg);
-  shader.SetVertexList(label.vertex_list());
-
-  ApplyDepthTest(cmd);
-  shader.DrawElements(kDrawTriangles, label.index_list());
-  UnapplyDepthTest(cmd);
-}
-void DebugDrawPolicy_2D::DrawElem(DebugDrawCmd_Axis *cmd) {
-  Shader &shader = DebugDrawManager::GetColorShader();
-  dev()->UseShader(shader);
-
-}
 
 
 ///////////////////////////////////////////////

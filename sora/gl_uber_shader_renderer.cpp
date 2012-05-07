@@ -25,6 +25,7 @@
 #include "uber_shader.h"
 #include "texture.h"
 #include "camera.h"
+#include "device.h"
 
 using namespace std;
 using namespace glm;
@@ -44,11 +45,11 @@ namespace gl {
     Shader &shader = uber_shader_.Load(flag);
     return shader;
   }
-  void GLUberShaderRenderer::SetCamera(const Camera &cam, RenderDevice *render_dev) {
+  void GLUberShaderRenderer::SetCamera(const Camera &cam, Device *dev, RenderDevice *render_dev) {
     glm::mat4 model(1.0f);
-    SetCamera(cam, model, render_dev);
+    SetCamera(cam, model, dev, render_dev);
   }
-  void GLUberShaderRenderer::SetCamera(const Camera &cam, const glm::mat4 &model, RenderDevice *render_dev) {
+  void GLUberShaderRenderer::SetCamera(const Camera &cam, const glm::mat4 &model, Device *dev, RenderDevice *render_dev) {
     float win_w = (float)render_dev->win_width();
     float win_h = (float)render_dev->win_height();
     glm::mat4 projection = glm::perspective(45.0f, win_w/ win_h, 0.1f, 100.0f);
@@ -86,7 +87,7 @@ namespace gl {
     shader.SetUniformVector(kViewDirHandleName, dir_vec);
   }
 
-  void GLUberShaderRenderer::ApplyMaterialLight(RenderDevice *render_dev) {
+  void GLUberShaderRenderer::ApplyMaterialLight(Device *dev, RenderDevice *render_dev) {
     unsigned int flag = material_.props;
     Shader &shader = GetCurrShader();
     const Material &material = material_;
@@ -138,7 +139,7 @@ namespace gl {
     }
     //마지막에 등록된 재질과 지금 처리중인 재질이 다른 경우에만 아래의 텍스쳐 바인딩을 처리하자
     if(use_diffuse_map) {
-      Texture *diffuse_map = render_dev->tex_mgr().Get_ptr(material.diffuse_map);
+      Texture *diffuse_map = dev->tex_mgr()->Get_ptr(material.diffuse_map);
       if(diffuse_map != NULL) {
         render_dev->UseTexture(*diffuse_map);
         shader.SetUniformValue(kDiffuseMapHandleName, 0);
@@ -146,7 +147,7 @@ namespace gl {
       }
     }
     if(use_specular_map) {
-      Texture *specular_map = render_dev->tex_mgr().Get_ptr(material.specular_map);
+      Texture *specular_map = dev->tex_mgr()->Get_ptr(material.specular_map);
       if(specular_map != NULL) {
         glActiveTexture(GL_TEXTURE1);
         glBindTexture(GL_TEXTURE_2D, specular_map->handle());
@@ -155,7 +156,7 @@ namespace gl {
       }
     }
     if(use_normal_map) {
-      Texture *normal_map = render_dev->tex_mgr().Get_ptr(material.normal_map);
+      Texture *normal_map = dev->tex_mgr()->Get_ptr(material.normal_map);
       if(normal_map != NULL) {
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, normal_map->handle());

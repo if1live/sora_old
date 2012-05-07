@@ -69,16 +69,6 @@ private:
   RenderDevice *dev_;
 };
 
-class DebugDrawPolicy_2D : public DebugDrawPolicy {
-private:
-  void BeforeDraw();
-  void DrawElem(DebugDrawCmd_Line *cmd);
-  void DrawElem(DebugDrawCmd_Cross *cmd);
-  void DrawElem(DebugDrawCmd_Sphere *cmd);
-  void DrawElem(DebugDrawCmd_String *cmd);
-  void DrawElem(DebugDrawCmd_Axis *cmd);
-};
-
 class DebugDrawPolicy_3D : public DebugDrawPolicy {
 private:
   void BeforeDraw();
@@ -93,7 +83,6 @@ class DebugDrawManager {;
 public:
   friend class DebugDrawPolicy;
 
-  static DebugDrawManager &Get2D();
   static DebugDrawManager &Get3D();
   static Shader &GetColorShader();
   static Shader &GetTextShader();

@@ -41,9 +41,9 @@ namespace gl {
     void Init();
     void SetMaterial(const Material &mtl);
     void SetLight(const Light &light);
-    void ApplyMaterialLight(RenderDevice *render_dev);
-    void SetCamera(const Camera &cam, const glm::mat4 &model, RenderDevice *render_dev);
-    void SetCamera(const Camera &cam, RenderDevice *render_dev);
+    void ApplyMaterialLight(Device *dev, RenderDevice *render_dev);
+    void SetCamera(const Camera &cam, const glm::mat4 &model, Device *dev, RenderDevice *render_dev);
+    void SetCamera(const Camera &cam, Device *dev, RenderDevice *render_dev);
 
     Shader &GetCurrShader();
   private:

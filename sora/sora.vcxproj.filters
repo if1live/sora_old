@@ -226,6 +226,9 @@
     <ClCompile Include="buffer_object.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
+    <ClCompile Include="draw_2d_manager.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -488,6 +491,9 @@
     </ClInclude>
     <ClInclude Include="mesh.h">
       <Filter>mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="draw_2d_manager.h">
+      <Filter>renderer</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

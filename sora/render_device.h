@@ -24,9 +24,11 @@
 #include "gl_render_device.h"
 #include "shader.h"
 #include "texture.h"
-#include "sys_font.h"
 #include "material.h"
 #include "mesh.h"
+
+//조만간 떼자
+#include "sys_font.h"
 
 namespace sora {;
 class Device;
@@ -50,17 +52,11 @@ public:
   void SetWinSize(int width, int height) { policy_.SetWinSize(width, height); }
   int win_width() const { return policy_.win_width(); }
   int win_height() const { return policy_.win_height(); }
-  TextureManager &tex_mgr() { return tex_mgr_; }
   SysFont &sys_font() { return sys_font_; }
-  MaterialManager &mtl_mgr() { return mtl_mgr_; }
-  MeshManager &mesh_mgr() { return mesh_mgr_; }
 
 private:
   PolicyType policy_;
-  TextureManager tex_mgr_;
   SysFont sys_font_;
-  MaterialManager mtl_mgr_;
-  MeshManager mesh_mgr_;
 };
 
 }

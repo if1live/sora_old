@@ -31,64 +31,32 @@
 
 #include "render_device.h"
 
-/*
-#include "shader.h"
-#include "mesh_manager.h"
-#include "uber_shader.h"
-#include "render_state.h"
-#include "renderer.h"
-#include "font.h"
-#include "shader_bind_policy.h"
-#include "material_manager.h"
-#include "texture_manager.h"
-*/
+#include "mesh.h"
+#include "material.h"
+#include "texture.h"
+#include "sys_font.h"
+
+using namespace std;
 
 namespace sora {;
 
-struct DevicePrivate {
-  DevicePrivate(Device *dev)
-    : render_device(dev) {
-  }
-
-  ~DevicePrivate() {
-  }
-
-  TouchEventQueue touch_evt_queue;
-  KeyboardEventQueue keyboard_evt_queue;
-  RenderDevice render_device;
-};
-
-Device::Device() : pimpl_(NULL) {
-  pimpl_ = new DevicePrivate(this);
+Device::Device()
+: touch_evt_queue_(new TouchEventQueue()),
+keyboard_evt_queue_(new KeyboardEventQueue()),
+mesh_mgr_(new MeshManager()),
+tex_mgr_(new TextureManager()),
+mtl_mgr_(new MaterialManager()),
+sys_font_(new SysFont()) {
+  render_device_ = std::move(std::unique_ptr<RenderDevice>(new RenderDevice(this)));
 }
 
 Device::~Device() {
-  if(pimpl_ != NULL) {
-    SafeDelete(pimpl_);
-  }
-}
-
-RenderDevice &Device::render_device() {
-  return pimpl().render_device;
-}
-TouchEventQueue &Device::touch_evt_queue() {
-  return pimpl().touch_evt_queue;
-}
-KeyboardEventQueue &Device::keyboard_evt_queue() {
-  return pimpl().keyboard_evt_queue;
-}
-
-DevicePrivate &Device::pimpl() {
-  if(pimpl_ == NULL) {
-    pimpl_ = new DevicePrivate(this);
-  }
-  return *pimpl_;
 }
 
 void Device::EndTick() {
-  pimpl().keyboard_evt_queue.Clear();
-  pimpl().touch_evt_queue.Clear();
-  pimpl().render_device.EndRender();
+  keyboard_evt_queue_->Clear();
+  touch_evt_queue_->Clear();
+  render_device_->EndRender();
 }
 
 }

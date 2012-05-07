@@ -35,25 +35,38 @@ template<typename T>  class EventQueue;
 typedef EventQueue<TouchEvent> TouchEventQueue;
 typedef EventQueue<KeyboardEvent> KeyboardEventQueue;
 
+class TextureManager;
+class MaterialManager;
+class MeshManager;
+class SysFont;
 
 class Device {
 public:
   Device();
   ~Device();
 
-  RenderDevice &render_device();
+  RenderDevice &render_device() { return *render_device_; }
 
-  TouchEventQueue &touch_evt_queue();
-  KeyboardEventQueue &keyboard_evt_queue();
+  TouchEventQueue &touch_evt_queue() { return *touch_evt_queue_; }
+  KeyboardEventQueue &keyboard_evt_queue() { return *keyboard_evt_queue_; }
   
-  
+  TextureManager *tex_mgr() { return tex_mgr_.get(); }
+  MaterialManager *mtl_mgr() { return mtl_mgr_.get(); }
+  MeshManager *mesh_mgr() { return mesh_mgr_.get(); }
+  SysFont *sys_font() { return sys_font_.get(); }
 
   //한 프레임이 완료된후에 리셋할 정보를 적절히 리셋하기
   void EndTick();
 
 private:
-  DevicePrivate &pimpl();
-  mutable DevicePrivate *pimpl_;
+  std::unique_ptr<TouchEventQueue> touch_evt_queue_;
+  std::unique_ptr<KeyboardEventQueue> keyboard_evt_queue_;
+  std::unique_ptr<RenderDevice> render_device_;
+
+  std::unique_ptr<MeshManager> mesh_mgr_;
+  std::unique_ptr<TextureManager> tex_mgr_;
+  std::unique_ptr<MaterialManager> mtl_mgr_;
+  std::unique_ptr<SysFont> sys_font_;
 };
 }
 

@@ -152,7 +152,7 @@ bool setupGraphics(Device *device, int w, int h) {
     Image img;
     img.LoadPNG(tex_file.start, tex_file.end - tex_file.start);
     tex.LoadTexture(img);
-    device->render_device().tex_mgr().Add(tex);
+    device->tex_mgr()->Add(tex);
   }
   {
     //load jpeg
@@ -165,7 +165,7 @@ bool setupGraphics(Device *device, int w, int h) {
     Image img;
     img.LoadJPG(tex_file.start, tex_file.end - tex_file.start);
     tex.LoadTexture(img);
-    device->render_device().tex_mgr().Add(tex);
+    device->tex_mgr()->Add(tex);
   }
   
   {
@@ -177,7 +177,7 @@ bool setupGraphics(Device *device, int w, int h) {
     vector<sora::Material> material_list;
     loader.Load(mtl_file.start, mtl_file.end, &material_list);
     
-    device->render_device().mtl_mgr().Add(material_list);
+    device->mtl_mgr()->Add(material_list);
   }
   {
     //load model
@@ -234,7 +234,7 @@ bool setupGraphics(Device *device, int w, int h) {
 
     Mesh *mesh = new Mesh();
     mesh->Register(geo_obj.cmd_list());
-    device->render_device().mesh_mgr().Add("mesh", mesh);
+    device->mesh_mgr()->Add("mesh", mesh);
   }
   /*
   {
@@ -388,7 +388,7 @@ void renderFrame(Device *device) {
     uber_renderer.SetLight(light);
     Shader &shader = uber_renderer.GetCurrShader();
     device->render_device().UseShader(shader);
-    uber_renderer.ApplyMaterialLight(&device->render_device());
+    uber_renderer.ApplyMaterialLight(device, &device->render_device());
 
     
     //device->render_device().UseShader(simple_shader);
@@ -416,9 +416,9 @@ void renderFrame(Device *device) {
     SetUniformMatrix(mvp_var, mvp);
     SR_CHECK_ERROR("SetMatrix");
     */
-    uber_renderer.SetCamera(cam, &device->render_device());
+    uber_renderer.SetCamera(cam, device, &device->render_device());
 
-    Mesh *mesh = device->render_device().mesh_mgr().Get("mesh");
+    Mesh *mesh = device->mesh_mgr()->Get("mesh");
     shader.DrawMeshIgnoreMaterial(mesh);
   }
   //depth_fbo.Unbind();
@@ -426,23 +426,25 @@ void renderFrame(Device *device) {
   //fbo에 있는 내용을 적절히 그리기
   //null_post_effect.Draw(depth_fbo.color_tex(), &device->render_device());
 
+  
   {
+    /*
     //디버깅용으로 화면 2d좌표계에 렌더링 하는거
     DebugDrawManager &mgr_2d = DebugDrawManager::Get2D();
     mgr_2d.AddString(vec3(100, 100, 0), "asd", Color_Red(), 2.0f);
     mgr_2d.AddLine(vec3(100, 100, 0), vec3(150, 200, 0), Color_Blue(), 4.0f);
     mgr_2d.AddSphere(vec3(200, 200, 0), 30, Color_Green());
     mgr_2d.AddCross(vec3(200, 200, 0), Color_Green(), 5);
-
+    */
     //fps카운터 적절히 렌더링
     char fps_buf[16];
     sprintf(fps_buf, "FPS:%.2f", fps_counter.GetFPS());
     //float scr_width = device->render_device().win_width();
     float scr_height = device->render_device().win_height();
-    mgr_2d.AddString(vec3(0, scr_height, 0), fps_buf, Color_White(), 1.5f);
+    //mgr_2d.AddString(vec3(0, scr_height, 0), fps_buf, Color_White(), 1.5f);
 
-    DebugDrawPolicy_2D debug_draw;
-    debug_draw.Draw(mgr_2d, &device->render_device());
+    //DebugDrawPolicy_2D debug_draw;
+    //debug_draw.Draw(mgr_2d, &device->render_device());
   }
   {
     //디버깅용으로 화면 3d렌더링 하는거
@@ -478,8 +480,8 @@ void SORA_init_gl_env() {
 
 void SORA_update_frame(Device *device, float dt) {
   fps_counter.EndFrame(dt);
-  DebugDrawManager &mgr_2d = DebugDrawManager::Get2D();
-  mgr_2d.Update(dt);
+  //DebugDrawManager &mgr_2d = DebugDrawManager::Get2D();
+  //mgr_2d.Update(dt);
   DebugDrawManager &mgr_3d = DebugDrawManager::Get3D();
   mgr_3d.Update(dt);
 

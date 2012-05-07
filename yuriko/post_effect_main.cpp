@@ -118,7 +118,7 @@ namespace posteffect {
       Image img;
       img.LoadPNG(tex_file.start, tex_file.end - tex_file.start);
       tex.LoadTexture(img);
-      device->render_device().tex_mgr().Add(tex);
+      device->tex_mgr()->Add(tex);
     }
   }
 
@@ -183,7 +183,7 @@ namespace posteffect {
     {
       //shader사용 선언이 가장 먼저
       device->render_device().UseShader(simple_shader);
-      TexturePtr tex = device->render_device().tex_mgr().Get("sora");
+      TexturePtr tex = device->tex_mgr()->Get("sora");
       device->render_device().UseTexture(*tex);
       SR_CHECK_ERROR("UseShader");
       mat4 mvp(1.0f);
