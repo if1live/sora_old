@@ -80,6 +80,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="arch.cpp" />
+    <ClCompile Include="buffer_object.cpp" />
     <ClCompile Include="common_string.cpp" />
     <ClCompile Include="component.cpp" />
     <ClCompile Include="component_list.cpp" />

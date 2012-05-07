@@ -184,11 +184,11 @@ namespace gl {
   typedef GLBufferObject<GL_ARRAY_BUFFER> GLVertexBufferObject;
   typedef GLBufferObject<GL_ELEMENT_ARRAY_BUFFER> GLIndexBufferObject;
 }
-typedef sora::gl::GLVertexBufferObject GLVBOPolicy;
-typedef sora::gl::GLIndexBufferObject GLIBOPolicy;
+typedef sora::gl::GLVertexBufferObject VBOPolicy;
+typedef sora::gl::GLIndexBufferObject IBOPolicy;
 
-template<typename VertexT, typename GLVBOPolicy> class VertexBufferObjectT;
-template<typename BasePolicy> class IndexBufferObjectT;
+template<typename VertexT> class VertexBufferObjectT;
+class IndexBufferObject;
 
 typedef unsigned int VertexBufferHandle;
 typedef unsigned int IndexBufferHandle;

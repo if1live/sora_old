@@ -79,7 +79,7 @@ void Mesh::Register(const std::vector<DrawCmdData<T>> &cmd_list, const Material 
   for( ; it != endit ; ++it) {
     const DrawCmdData<T> &cmd = *it;
 
-    VertexBufferInterface *vbo = new VertexBufferObjectT<T, GLVBOPolicy>();
+    VertexBufferInterface *vbo = new VertexBufferObjectT<T>();
     bool vbo_init_result = vbo->Init(cmd.vertex_list);
     SR_ASSERT(vbo_init_result == true);
 

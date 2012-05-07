@@ -30,17 +30,17 @@
 #include "mesh_buffer.h"
 
 namespace sora {;
-template<typename VertexT, typename GLVBOPolicy> class VertexBufferObjectT;
-typedef VertexBufferObjectT<Vertex, GLVBOPolicy> VertexBufferObject;
-typedef VertexBufferObjectT<Vertex2D, GLVBOPolicy> Vertex2DBufferObject;
-typedef VertexBufferObjectT<TangentVertex, GLVBOPolicy> TangentVertexBufferObject;
+template<typename VertexT> class VertexBufferObjectT;
+typedef VertexBufferObjectT<Vertex> VertexBufferObject;
+typedef VertexBufferObjectT<Vertex2D> Vertex2DBufferObject;
+typedef VertexBufferObjectT<TangentVertex> TangentVertexBufferObject;
 
-template<typename BasePolicy> class IndexBufferObjectT;
-typedef IndexBufferObjectT<GLIBOPolicy> IndexBufferObject;
+class IndexBufferObject;
 
-template<typename VertexT, typename BasePolicy>
-class VertexBufferObjectT : public BasePolicy, public VertexBufferInterface {
+template<typename VertexT>
+class VertexBufferObjectT : public VertexBufferInterface {
 public:
+  typedef VBOPolicy BasePolicy;
   typedef VertexT VertexType;
   typedef VertexT value_type;
   typedef VertexBufferHandle HandleType;
@@ -113,45 +113,19 @@ private:
   int size_;
 };
 
-template<typename BasePolicy>
-class IndexBufferObjectT : public IndexBufferInterface {
+class IndexBufferObject : public IndexBufferInterface {
 public:
+  typedef IBOPolicy BasePolicy;
   typedef IndexBufferHandle HandleType;
 public:
-  IndexBufferObjectT() : size_(0) { BasePolicy::Reset(&handle_); }
-  template<typename IndexContainer>
-  IndexBufferObjectT(const IndexContainer &index_list, BufferUsageType usage = kBufferUsageStatic)
-    : size_(0) {
-    BasePolicy::Reset(&handle_);
-    Init(index_list);
-  }
-  ~IndexBufferObjectT() {}
-  bool Loaded() const { return BasePolicy::Loaded(handle_); }
-  void Deinit() { BasePolicy::Deinit(&handle_); }
+  IndexBufferObject();
+  ~IndexBufferObject();
 
-  bool Load(const std::vector<unsigned short> &index_list) { 
-    SR_ASSERT(Loaded() == true);
-    if(index_list.empty()) {
-      return false;
-    }
-    BufferUsageType usage = kBufferUsageStatic;
-    int size = index_list.size() * sizeof(index_list[0]);
-    BasePolicy::Load(handle_, size, (void*)&index_list[0], usage);
-    size_ = index_list.size();
-    return true;
-  }
+  bool Loaded() const;
+  void Deinit();
 
-  bool Init(const std::vector<unsigned short> &index_list) {
-    //typedef IndexContainer::value_type IndexElemType;
-    //static_assert(std::is_same<unsigned short, IndexElemType>::value, "not unsigned short index");
-
-    SR_ASSERT(Loaded() == false);
-    if(index_list.empty()) {
-      return false;
-    }
-    BasePolicy::Init(&handle_);
-    return Load(index_list);
-  }
+  bool Load(const std::vector<unsigned short> &index_list);
+  bool Init(const std::vector<unsigned short> &index_list);
 
   int size() const { return size_; }
   bool empty() const { return (size_ == 0); }
