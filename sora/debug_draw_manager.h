@@ -84,8 +84,6 @@ public:
   friend class DebugDrawPolicy;
 
   static DebugDrawManager &Get3D();
-  static Shader &GetColorShader();
-  static Shader &GetTextShader();
 
 public:
   DebugDrawManager();

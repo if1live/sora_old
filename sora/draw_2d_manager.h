@@ -65,6 +65,9 @@ public:
   Draw2DPolicy() : mgr_(NULL), dev_(NULL) {}
   ~Draw2DPolicy() {}
 
+  static Shader &GetColorShader();
+  static Shader &GetTextShader();
+
 public:
   void Draw(const Draw2DManager &mgr, RenderDevice *dev);
   void DrawCmdList(const Draw2DManager &mgr);

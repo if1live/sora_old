@@ -22,7 +22,6 @@
 #include "debug_draw_manager.h"
 #include "template_lib.h"
 #include "shader.h"
-#include "filesystem.h"
 #include "render_device.h"
 #include "geometric_object.h"
 
@@ -218,28 +217,6 @@ void DebugDrawManager::Update(float dt) {
 DebugDrawManager &DebugDrawManager::Get3D() {
   static DebugDrawManager mgr;
   return mgr;
-}
-Shader &DebugDrawManager::GetColorShader() {
-  static Shader shader;
-  static bool run = false;
-  if(run == false) {
-    run = true;
-    string color_vs_path = Filesystem::GetAppPath("shader/const_color.vs");
-    string color_fs_path = Filesystem::GetAppPath("shader/const_color.fs");
-    shader.LoadFromFile(color_vs_path, color_fs_path);
-  }
-  return shader;
-}
-Shader &DebugDrawManager::GetTextShader() {
-  static Shader shader;
-  static bool run = false;
-  if(run == false) {
-    run = true;
-    string simple_vs_path = Filesystem::GetAppPath("shader/simple.vs");
-    string simple_fs_path = Filesystem::GetAppPath("shader/text.fs");
-    shader.LoadFromFile(simple_vs_path, simple_fs_path);
-  }
-  return shader;
 }
 
 //////////////////////////////////////

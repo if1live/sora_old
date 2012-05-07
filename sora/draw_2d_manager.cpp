@@ -23,6 +23,7 @@
 #include "debug_draw_manager.h"
 #include "shader.h"
 #include "render_device.h"
+#include "filesystem.h"
 
 using namespace std;
 using namespace glm;
@@ -148,7 +149,7 @@ void Draw2DPolicy::BeforeDraw() {
 }
 
 void Draw2DPolicy::DrawElem(DrawCmd2D_Line *cmd) {
-  Shader &shader = DebugDrawManager::GetColorShader();
+  Shader &shader = GetColorShader();
   dev()->UseShader(shader);
 
   vec4 color = ConvertColor(cmd->color);
@@ -171,7 +172,7 @@ void Draw2DPolicy::DrawElem(DrawCmd2D_Line *cmd) {
   glLineWidth(1.0f);
 }
 void Draw2DPolicy::DrawElem(DrawCmd2D_Cross *cmd) {
-  Shader &shader = DebugDrawManager::GetColorShader();
+  Shader &shader = GetColorShader();
   dev()->UseShader(shader);
 
   vec4 color = ConvertColor(cmd->color);
@@ -227,7 +228,7 @@ void Draw2DPolicy::DrawElem(DebugDrawCmd_Sphere *cmd) {
 }
 */
 void Draw2DPolicy::DrawElem(DrawCmd2D_String *cmd) {
-  Shader &shader = DebugDrawManager::GetTextShader();
+  Shader &shader = GetTextShader();
   dev()->UseShader(shader);
 
   vec4 color = ConvertColor(cmd->color);
@@ -299,5 +300,28 @@ void Draw2DPolicy::Draw(DrawCmd2D *cmd) {
   }
 }
 
+
+Shader &Draw2DPolicy::GetColorShader() {
+  static Shader shader;
+  static bool run = false;
+  if(run == false) {
+    run = true;
+    string color_vs_path = Filesystem::GetAppPath("shader/const_color.vs");
+    string color_fs_path = Filesystem::GetAppPath("shader/const_color.fs");
+    shader.LoadFromFile(color_vs_path, color_fs_path);
+  }
+  return shader;
+}
+Shader &Draw2DPolicy::GetTextShader() {
+  static Shader shader;
+  static bool run = false;
+  if(run == false) {
+    run = true;
+    string simple_vs_path = Filesystem::GetAppPath("shader/simple.vs");
+    string simple_fs_path = Filesystem::GetAppPath("shader/text.fs");
+    shader.LoadFromFile(simple_vs_path, simple_fs_path);
+  }
+  return shader;
+}
 
 } //namespace sora
