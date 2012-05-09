@@ -29,15 +29,13 @@
 #include "vertex.h"
 #include "debug_draw_manager.h"
 #include "draw_2d_manager.h"
+#include "device.h"
 
 using namespace std;
 using namespace glm;
 
 namespace sora {;
 namespace sysfont {
-
-  Draw2DManager mgr_2d;
-
   void setup_graphics(sora::Device *dev, int w, int h) {
     dev->render_device().SetWinSize(w, h);
 
@@ -58,16 +56,18 @@ namespace sysfont {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     //디버깅용으로 화면 2d좌표계에 렌더링 하는거
-    mgr_2d.AddString(vec2(100, 100), "asd", Color_Red(), 2.0f);
-    mgr_2d.AddLine(vec2(100, 100), vec2(150, 200), Color_Blue(), 4.0f);
+    Draw2DManager *mgr_2d = device->draw_2d();
+    mgr_2d->AddString(vec2(100, 100), "asd", Color_Red(), 2.0f);
+    mgr_2d->AddLine(vec2(100, 100), vec2(150, 200), Color_Blue(), 4.0f);
     //mgr_2d.AddSphere(vec2(200, 200, 0), 30, Color_Green());
-    mgr_2d.AddCross(vec2(200, 200), Color_Green(), 5);
+    mgr_2d->AddCross(vec2(200, 200), Color_Green(), 5);
 
     sora::Draw2DPolicy draw_policy;
-    draw_policy.Draw(mgr_2d);
+    draw_policy.Draw(*mgr_2d);
   }
-  void update_frame(sora::Device *def, float dt) {
-    mgr_2d.Update(dt);
+  void update_frame(sora::Device *device, float dt) {
+    Draw2DManager *mgr_2d = device->draw_2d();
+    mgr_2d->Update(dt);
   }
 }
 }

@@ -24,19 +24,10 @@
     <ClCompile Include="gles_main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="shadow_map_main.cpp">
-      <Filter>sample</Filter>
-    </ClCompile>
     <ClCompile Include="sora_main.cpp">
       <Filter>sample</Filter>
     </ClCompile>
     <ClCompile Include="sysfont_main.cpp">
-      <Filter>sample</Filter>
-    </ClCompile>
-    <ClCompile Include="celshading_main.cpp">
-      <Filter>sample</Filter>
-    </ClCompile>
-    <ClCompile Include="depth_map_main.cpp">
       <Filter>sample</Filter>
     </ClCompile>
     <ClCompile Include="freeglut_main.cpp">
@@ -45,36 +36,18 @@
     <ClCompile Include="post_effect_main.cpp">
       <Filter>sample</Filter>
     </ClCompile>
-    <ClCompile Include="selection_main.cpp">
-      <Filter>sample</Filter>
-    </ClCompile>
-    <ClCompile Include="test_function.cpp">
-      <Filter>sample</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="shadow_map_main.h">
-      <Filter>sample</Filter>
-    </ClInclude>
     <ClInclude Include="sora_main.h">
       <Filter>sample</Filter>
     </ClInclude>
     <ClInclude Include="sysfont_main.h">
       <Filter>sample</Filter>
     </ClInclude>
-    <ClInclude Include="celshading_main.h">
-      <Filter>sample</Filter>
-    </ClInclude>
-    <ClInclude Include="depth_map_main.h">
-      <Filter>sample</Filter>
-    </ClInclude>
     <ClInclude Include="freeglut_main.h">
       <Filter>sample</Filter>
     </ClInclude>
     <ClInclude Include="post_effect_main.h">
-      <Filter>sample</Filter>
-    </ClInclude>
-    <ClInclude Include="selection_main.h">
       <Filter>sample</Filter>
     </ClInclude>
   </ItemGroup>

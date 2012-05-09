@@ -26,6 +26,7 @@
 #include "filesystem.h"
 #include "device.h"
 #include "sys_font.h"
+#include "geometric_object.h"
 
 using namespace std;
 using namespace glm;
@@ -37,6 +38,7 @@ typedef enum {
   kDraw2DLine,
   kDraw2DCross,
   kDraw2DString,
+  kDraw2DSphere,
 } Draw2DType;
 
 struct DrawCmd2D {
@@ -63,6 +65,12 @@ struct DrawCmd2D_String : public DrawCmd2D {
   std::string msg;
   float scale;
 };
+struct DrawCmd2D_Sphere : public DrawCmd2D {
+  DrawCmd2D_Sphere() : DrawCmd2D(kDraw2DSphere), radius(0) {}
+  float radius;
+  glm::vec2 pos;  //cross, sphere, string
+};
+
 
 Draw2DManager::Draw2DManager() {
 
@@ -144,6 +152,18 @@ void Draw2DManager::AddString(const glm::vec2 &pos, const std::string &msg,
   cmd_list_.push_back(cmd);
 }
 
+void Draw2DManager::AddSphere(const glm::vec2 &pos, float radius,
+               const sora::vec4ub &color,
+               float duration) {
+  DrawCmd2D_Sphere *cmd = sora::global_malloc<DrawCmd2D_Sphere>();
+  new(cmd) DrawCmd2D_Sphere;
+  cmd->pos = pos;
+  cmd->radius = radius;
+  cmd->color = color;
+  cmd->duration = duration;
+  cmd_list_.push_back(cmd);
+}
+
 ///////////////////////////////////////
 
 void Draw2DPolicy::BeforeDraw() {
@@ -199,9 +219,10 @@ void Draw2DPolicy::DrawElem(DrawCmd2D_Cross *cmd) {
   shader.DrawArrays(kDrawPoints, 2);
   glPointSize(1.0f);
 }
-/*
-void Draw2DPolicy::DrawElem(DebugDrawCmd_Sphere *cmd) {
-  Shader &shader = DebugDrawManager::GetColorShader();
+
+void Draw2DPolicy::DrawElem(DrawCmd2D_Sphere *cmd) {
+  Shader &shader = GetColorShader();
+  RenderDevice *dev = &Device::GetInstance()->render_device();
   dev->UseShader(shader);
 
   vec4 color = ConvertColor(cmd->color);
@@ -210,14 +231,13 @@ void Draw2DPolicy::DrawElem(DebugDrawCmd_Sphere *cmd) {
   float win_width = (float)dev->win_width();
   float win_height = (float)dev->win_height();
   glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
-  glm::mat4 mvp = glm::translate(projection, cmd->pos);
+  glm::mat4 mvp = glm::translate(projection, vec3(cmd->pos.x, cmd->pos.y, 0));
   ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
   SetUniformMatrix(mvp_var, mvp);
 
   GeometricObject<glm::vec3> mesh;
   mesh.WireSphere(cmd->radius, 16, 16);
 
-  ApplyDepthTest(cmd);
   auto it = mesh.Begin();
   auto endit = mesh.End();
   for( ; it != endit ; ++it) {
@@ -230,9 +250,8 @@ void Draw2DPolicy::DrawElem(DebugDrawCmd_Sphere *cmd) {
       Shader::DrawElements(cmd.draw_mode, cmd.index_list);
     }
   }
-  UnapplyDepthTest(cmd);
 }
-*/
+
 void Draw2DPolicy::DrawElem(DrawCmd2D_String *cmd) {
   Shader &shader = GetTextShader();
   RenderDevice *dev = &Device::GetInstance()->render_device();
@@ -299,6 +318,9 @@ void Draw2DPolicy::Draw(DrawCmd2D *cmd) {
     break;
   case kDraw2DString:
     DrawElem(static_cast<DrawCmd2D_String*>(cmd));
+    break;
+  case kDraw2DSphere:
+    DrawElem(static_cast<DrawCmd2D_Sphere*>(cmd));
     break;
   default:
     break;

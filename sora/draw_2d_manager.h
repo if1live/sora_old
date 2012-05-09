@@ -29,6 +29,7 @@ struct DrawCmd2D;
 struct DrawCmd2D_Line;
 struct DrawCmd2D_Cross;
 struct DrawCmd2D_String;
+struct DrawCmd2D_Sphere;
 
 class Draw2DPolicy;
 class Draw2DManager;
@@ -61,6 +62,11 @@ public:
     const sora::vec4ub &color,
     float scale = 1.0f,
     float duration = 0.0f);
+
+  void AddSphere(const glm::vec2 &pos, float radius,
+    const sora::vec4ub &color,
+    float duration = 0.0f);
+
 private:
   std::list<DrawCmd2D*> cmd_list_;
 };
@@ -83,6 +89,7 @@ private:
   void DrawElem(DrawCmd2D_Line *cmd);
   void DrawElem(DrawCmd2D_Cross *cmd);
   void DrawElem(DrawCmd2D_String *cmd);
+  void DrawElem(DrawCmd2D_Sphere *cmd);
 
   Draw2DManager *mgr() { return mgr_; }
   glm::vec4 ConvertColor(const sora::vec4ub &orig);

@@ -82,25 +82,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="celshading_main.cpp" />
-    <ClCompile Include="depth_map_main.cpp" />
     <ClCompile Include="freeglut_main.cpp" />
     <ClCompile Include="gles_main.cpp" />
     <ClCompile Include="gl_main.cpp" />
     <ClCompile Include="post_effect_main.cpp" />
-    <ClCompile Include="selection_main.cpp" />
-    <ClCompile Include="shadow_map_main.cpp" />
     <ClCompile Include="sora_main.cpp" />
     <ClCompile Include="sysfont_main.cpp" />
-    <ClCompile Include="test_function.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="celshading_main.h" />
-    <ClInclude Include="depth_map_main.h" />
     <ClInclude Include="freeglut_main.h" />
     <ClInclude Include="post_effect_main.h" />
-    <ClInclude Include="selection_main.h" />
-    <ClInclude Include="shadow_map_main.h" />
     <ClInclude Include="sora_main.h" />
     <ClInclude Include="sysfont_main.h" />
   </ItemGroup>

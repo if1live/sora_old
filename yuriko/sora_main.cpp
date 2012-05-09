@@ -98,9 +98,6 @@ sora::gl::GLUberShaderRenderer uber_renderer;
 
 FpsCounter fps_counter;
 
-//2차원 렌더링 헬퍼
-Draw2DManager draw_2d_mgr;
-
 
 void SORA_set_window_size(Device *device, int w, int h) {
   device->render_device().SetWinSize(w, h);
@@ -241,99 +238,6 @@ bool setupGraphics(Device *device, int w, int h) {
     mesh->Register(geo_obj.cmd_list());
     device->mesh_mgr()->Add("mesh", mesh);
   }
-  /*
-  {
-    //primitive model test
-    //sora::PrimitiveModel primitive_model;
-    //primitive_model.SolidCube(1, 2, 1, false);
-    //primitive_model.WireCube(1, 1, 1);
-    //primitive_model.WireAxis(2);
-    //primitive_model.WireSphere(1, 8, 8);
-    //primitive_model.WireCone(1, 2, 8, 8);
-    //primitive_model.SolidCone(1, 2, 8, 8);
-    //primitive_model.WireCylinder(1, 2, 8);
-    //primitive_model.SolidCylinder(1, 2, 16);
-    //primitive_model.SolidTeapot(2);
-    //primitive_model.WireTeapot(1);
-
-    //두번쨰 물체 = 썡물체
-    int obj_model_idx = 1;
-    glm::mat4 entity_mat = glm::mat4(1.0f);
-    //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
-    //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
-    //entity_mat = glm::rotate(glm::mat4(1.0f), 180.0f, vec3(1, 0, 0));
-    world_mat_list[obj_model_idx] = entity_mat;
-
-    //primitive_model.SolidSphere(0.5, 16, 16);
-    //primitive_model.WirePlane(10.0f, 0.5f);
-    //primitive_model.SolidPlane(2.0f);
-    //primitive_model.WireAxis(3);
-    //primitive_model.SolidCylinder(0.5, 2, 16);
-    //primitive_model.SolidCone(1, 2, 8, 8);
-    //device->mesh_mgr().Add(primitive_model.GetDrawCmdList(), "model1");
-    mesh_name_list[obj_model_idx] = "model1";
-  }
-
-  {
-    //세번쨰 물체 = 썡물체
-    int obj_model_idx = 2;
-    glm::mat4 entity_mat = glm::mat4(1.0f);
-    //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
-    //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
-    //entity_mat = glm::translate(entity_mat, vec3(0.8, 0.3, 0));
-    //entity_mat = glm::rotate(entity_mat, 180.0f, vec3(1, 0, 0));
-    world_mat_list[obj_model_idx] = entity_mat;
-    
-    //sora::PrimitiveModel primitive_model;
-    //primitive_model.SolidCube(0.5, 0.5, 0.5, true);
-    //primitive_model.SolidSphere(0.5, 16, 16);
-    //device->mesh_mgr().Add(primitive_model.GetDrawCmdList(), "model2");
-    vector<float> vert_data;
-    IndexListType index_list;
-
-    unsigned int total_flag = 0;
-    total_flag |= PrimitiveModelBuilder::kFlagColor;
-    total_flag |= PrimitiveModelBuilder::kFlagTexcoord;
-    total_flag |= PrimitiveModelBuilder::kFlagNormal;
-
-    MeshBufferObject mesh_obj;
-    //mesh_obj = PrimitiveModelBuilder::WireCube<TangentVertex>(0, 1, 1, 1);
-    //mesh_obj = PrimitiveModelBuilder::WireSphere<TangentVertex>(0, 0.5, 16, 16);
-    //mesh_obj = PrimitiveModelBuilder::SolidSphere<TangentVertex>(total_flag, 0.5, 16, 16);
-    //mesh_obj = PrimitiveModelBuilder::WireAxis<TangentVertex>(PrimitiveModelBuilder::kFlagColor, 1);
-    //mesh_obj = PrimitiveModelBuilder::WirePlane<TangentVertex>(0, 5, 0.2);
-    //mesh_obj = PrimitiveModelBuilder::SolidPlane<TangentVertex>(PrimitiveModelBuilder::kFlagTexcoord, 5);
-    //mesh_obj = PrimitiveModelBuilder::WireTeapot<TangentVertex>(0, 2);
-    //mesh_obj = PrimitiveModelBuilder::SolidTeapot<TangentVertex>(0, 2);
-    //mesh_obj = PrimitiveModelBuilder::WireCone<TangentVertex>(0, 1, 2, 8, 8);
-    mesh_obj = PrimitiveModelBuilder::WireCylinder<TangentVertex>(0, 1, 2, 8);
-
-    device->mesh_mgr().Add(mesh_obj, "model2");
-    mesh_name_list[obj_model_idx] = "model2";
-
-  }
-
-  {
-    //네번째 물체
-    int obj_model_idx = 3;
-
-    glm::mat4 entity_mat = glm::mat4(1.0f);
-    //-1로 하면 그리기가 영향을 받아서 망(vert가 뒤집히면서 그리기 방향도 뒤집혀 버림)
-    //entity_mat = glm::scale(glm::mat4(1.0f), vec3(1, -1, 1)); 
-    entity_mat = glm::translate(entity_mat, vec3(0, 1, 0));
-    world_mat_list[obj_model_idx] = entity_mat;
-
-    TrefoilKnot surface(1.5f);
-    //Sphere surface(1.0);
-    //KleinBottle surface(0.2f);
-
-    //MeshBufferObject mesh_obj = surface.CreateSolidMeshObject<TangentVertex>();
-    MeshBufferObject mesh_obj = surface.CreateSolidMeshObject<TangentVertex>();
-    device->mesh_mgr().Add(mesh_obj, "knot");
-    //MeshManager::GetInstance().AddWire(surface, "knot");
-    mesh_name_list[obj_model_idx] = "knot";
-  }
-  */
   {
     //빛에 대한 기본 설정
     light.pos = vec3(0, 0, 100);
@@ -433,21 +337,22 @@ void renderFrame(Device *device) {
 
   
   {
+    Draw2DManager *draw_2d_mgr = device->draw_2d();
     //디버깅용으로 화면 2d좌표계에 렌더링 하는거
-    draw_2d_mgr.AddString(vec2(100, 100), "asd", Color_Red(), 2.0f);
-    draw_2d_mgr.AddLine(vec2(100, 100), vec2(150, 200), Color_Blue(), 4.0f);
-    //draw_2d_mgr.AddSphere(vec3(200, 200, 0), 30, Color_Green());
-    draw_2d_mgr.AddCross(vec2(200, 200), Color_Green(), 5);
+    draw_2d_mgr->AddString(vec2(100, 100), "asd", Color_Red(), 2.0f);
+    draw_2d_mgr->AddLine(vec2(100, 100), vec2(150, 200), Color_Blue(), 4.0f);
+    draw_2d_mgr->AddSphere(vec2(200, 200), 30, Color_Green());
+    draw_2d_mgr->AddCross(vec2(200, 200), Color_Green(), 5);
     
     //fps카운터 적절히 렌더링
     char fps_buf[16];
     sprintf(fps_buf, "FPS:%.2f", fps_counter.GetFPS());
     //float scr_width = device->render_device().win_width();
     float scr_height = device->render_device().win_height();
-    draw_2d_mgr.AddString(vec2(0, scr_height), fps_buf, Color_White(), 1.5f);
+    draw_2d_mgr->AddString(vec2(0, scr_height), fps_buf, Color_White(), 1.5f);
 
     sora::Draw2DPolicy draw_policy;
-    draw_policy.Draw(draw_2d_mgr);
+    draw_policy.Draw(*draw_2d_mgr);
   }
   {
     //디버깅용으로 화면 3d렌더링 하는거
@@ -483,7 +388,8 @@ void SORA_init_gl_env() {
 
 void SORA_update_frame(Device *device, float dt) {
   fps_counter.EndFrame(dt);
-  draw_2d_mgr.Update(dt);
+  Draw2DManager *draw_2d_mgr = device->draw_2d();
+  draw_2d_mgr->Update(dt);
   DebugDrawManager &mgr_3d = DebugDrawManager::Get3D();
   mgr_3d.Update(dt);
 

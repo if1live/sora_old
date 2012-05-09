@@ -69,6 +69,7 @@ private:
   glm::mat4 projection_mat_;
   glm::mat4 view_mat_;
   std::unique_ptr<MatrixStack> model_mat_stack_;
+  //텍스쳐 좌표 스택까지 전역으로 묶을 필요가 잇을까? 해서 일단 미뤄놧다. 필요해지면 그떄 넣지뭐
 };
 
 struct RenderDeviceInterface {
