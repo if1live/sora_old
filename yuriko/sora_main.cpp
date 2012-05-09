@@ -348,7 +348,7 @@ void renderFrame(Device *device) {
     char fps_buf[16];
     sprintf(fps_buf, "FPS:%.2f", fps_counter.GetFPS());
     //float scr_width = device->render_device().win_width();
-    float scr_height = device->render_device().win_height();
+    float scr_height = (float)device->render_device().win_height();
     draw_2d_mgr->AddString(vec2(0, scr_height), fps_buf, Color_White(), 1.5f);
 
     sora::Draw2DPolicy draw_policy;
@@ -356,15 +356,15 @@ void renderFrame(Device *device) {
   }
   {
     //디버깅용으로 화면 3d렌더링 하는거
-    DebugDrawManager &mgr_3d = DebugDrawManager::Get3D();
-    mgr_3d.AddAxis(mat4(1.0f), 10);
-    mgr_3d.AddLine(vec3(0.0f, 0.0f, 0.0f), vec3(100, 100, 100), Color_White(), 4);
-    mgr_3d.AddSphere(vec3(0, 0, 0), 3, Color_White());
-    mgr_3d.AddString(vec3(5, 1, 1), "asdf", Color_Blue(), 2);
+    DebugDrawManager *mgr_3d = device->debug_draw_mgr();
+    mgr_3d->AddAxis(mat4(1.0f), 10);
+    mgr_3d->AddLine(vec3(0.0f, 0.0f, 0.0f), vec3(100, 100, 100), Color_White(), 4);
+    mgr_3d->AddSphere(vec3(0, 0, 0), 3, Color_White());
+    mgr_3d->AddString(vec3(5, 1, 1), "asdf", Color_Blue(), 2);
 
 
-    DebugDrawPolicy_3D debug_draw;
-    debug_draw.Draw(mgr_3d, &device->render_device());
+    DebugDrawPolicy debug_draw;
+    debug_draw.Draw(*mgr_3d);
   }
 
   
@@ -390,8 +390,8 @@ void SORA_update_frame(Device *device, float dt) {
   fps_counter.EndFrame(dt);
   Draw2DManager *draw_2d_mgr = device->draw_2d();
   draw_2d_mgr->Update(dt);
-  DebugDrawManager &mgr_3d = DebugDrawManager::Get3D();
-  mgr_3d.Update(dt);
+  DebugDrawManager *mgr_3d = device->debug_draw_mgr();
+  mgr_3d->Update(dt);
 
 
   TouchEventQueue &touch_evt_queue = device->touch_evt_queue();

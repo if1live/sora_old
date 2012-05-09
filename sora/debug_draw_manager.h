@@ -34,42 +34,17 @@ struct DebugDrawCmd_Sphere;
 struct DebugDrawCmd_String;
 struct DebugDrawCmd_Axis;
 
-class DebugDrawPolicy_2D;
-class DebugDrawPolicy_3D;
-
 class DebugDrawManager;
 
-struct DebugDrawPolicy {
+class DebugDrawPolicy {
 public:
-  DebugDrawPolicy() : mgr_(NULL), dev_(NULL) {}
+  DebugDrawPolicy() : mgr_(NULL) {}
   ~DebugDrawPolicy() {}
 
-public:
-  void Draw(const DebugDrawManager &mgr, RenderDevice *dev);
+  void Draw(const DebugDrawManager &mgr);
   void DrawCmdList(const DebugDrawManager &mgr);
   void Draw(DebugDrawCmd *cmd);
 
-protected:
-  virtual void BeforeDraw() = 0;
-  virtual void DrawElem(DebugDrawCmd_Line *cmd) = 0;
-  virtual void DrawElem(DebugDrawCmd_Cross *cmd) = 0;
-  virtual void DrawElem(DebugDrawCmd_Sphere *cmd) = 0;
-  virtual void DrawElem(DebugDrawCmd_String *cmd) = 0;
-  virtual void DrawElem(DebugDrawCmd_Axis *cmd) = 0;
-
-  DebugDrawManager *mgr() { return mgr_; }
-  RenderDevice *dev() { return dev_; }
-
-  void ApplyDepthTest(DebugDrawCmd *cmd);
-  void UnapplyDepthTest(DebugDrawCmd *cmd);
-  glm::vec4 ConvertColor(const sora::vec4ub &orig);
-
-private:
-  DebugDrawManager *mgr_;
-  RenderDevice *dev_;
-};
-
-class DebugDrawPolicy_3D : public DebugDrawPolicy {
 private:
   void BeforeDraw();
   void DrawElem(DebugDrawCmd_Line *cmd);
@@ -77,13 +52,19 @@ private:
   void DrawElem(DebugDrawCmd_Sphere *cmd);
   void DrawElem(DebugDrawCmd_String *cmd);
   void DrawElem(DebugDrawCmd_Axis *cmd);
+
+  DebugDrawManager *mgr() { return mgr_; }
+
+  void ApplyDepthTest(DebugDrawCmd *cmd);
+  void UnapplyDepthTest(DebugDrawCmd *cmd);
+
+private:
+  DebugDrawManager *mgr_;
 };
 
 class DebugDrawManager {;
 public:
   friend class DebugDrawPolicy;
-
-  static DebugDrawManager &Get3D();
 
 public:
   DebugDrawManager();

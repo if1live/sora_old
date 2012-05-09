@@ -87,5 +87,7 @@ void RenderDevice::ResetViewMat() {
 void RenderDevice::ResetModelMat() {
   model_mat_stack_->Clear();
 }
-
+const glm::mat4 &RenderDevice::model_mat() const {
+  return model_mat_stack_->Top();
+}
 }

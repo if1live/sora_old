@@ -24,6 +24,11 @@
 #include "shader.h"
 #include "render_device.h"
 #include "geometric_object.h"
+#include "matrix_stack.h"
+#include "device.h"
+#include "render_device.h"
+
+#include "draw_2d_manager.h"
 
 using namespace std;
 using namespace glm;
@@ -44,15 +49,15 @@ struct DebugDrawCmd {
     kDebugDrawString
   } DebugDrawType;
 
-  DebugDrawCmd() :
-    type(kDebugDrawNone),
+  DebugDrawCmd(DebugDrawType type)
+    : type(type),
     duration(0),
-    depth_enable(true) {}
-
-  DebugDrawCmd(DebugDrawType type) :
-    type(type),
-    duration(0),
-    depth_enable(true) {}
+    depth_enable(true) {
+    RenderDevice &render_dev = Device::GetInstance()->render_device();
+    projection_mat = render_dev.projection_mat();
+    view_mat = render_dev.view_mat();
+    model_mat = render_dev.model_mat();
+  }
 
   virtual ~DebugDrawCmd() {}
 
@@ -62,6 +67,10 @@ struct DebugDrawCmd {
   sora::vec4ub color;
   float duration;
   bool depth_enable;
+  
+  glm::mat4 projection_mat;
+  glm::mat4 view_mat;
+  glm::mat4 model_mat;
 };
 
 struct DebugDrawCmd_Line : public DebugDrawCmd {
@@ -213,12 +222,6 @@ void DebugDrawManager::Update(float dt) {
   cmd_list_.remove_if(functor);
 }
 
-
-DebugDrawManager &DebugDrawManager::Get3D() {
-  static DebugDrawManager mgr;
-  return mgr;
-}
-
 //////////////////////////////////////
 
 void DebugDrawPolicy::DrawCmdList(const DebugDrawManager &mgr) {
@@ -230,15 +233,13 @@ void DebugDrawPolicy::DrawCmdList(const DebugDrawManager &mgr) {
   }
 }
 
-void DebugDrawPolicy::Draw(const DebugDrawManager &mgr, RenderDevice *dev) {
+void DebugDrawPolicy::Draw(const DebugDrawManager &mgr) {
   mgr_ = const_cast<DebugDrawManager*>(&mgr);
-  dev_ = dev;
 
   BeforeDraw();
   DrawCmdList(mgr);
 
   mgr_ = NULL;
-  dev_ = NULL;
 }
 
 
@@ -275,13 +276,6 @@ void DebugDrawPolicy::UnapplyDepthTest(DebugDrawCmd *cmd) {
     glEnable(GL_DEPTH_TEST);
   }
 }
-glm::vec4 DebugDrawPolicy::ConvertColor(const sora::vec4ub &orig) {
-  vec4 color;
-  for(int i = 0 ; i < 4 ; i++) {
-    color[i] = (float)orig[i] / 255.0f;
-  }
-  return color;
-}
 
 ///////////////////////////////
 
@@ -289,22 +283,22 @@ glm::vec4 DebugDrawPolicy::ConvertColor(const sora::vec4ub &orig) {
 ///////////////////////////////////////////////
 
 
-void DebugDrawPolicy_3D::BeforeDraw() {
+void DebugDrawPolicy::BeforeDraw() {
 
 }
-void DebugDrawPolicy_3D::DrawElem(DebugDrawCmd_Line *cmd) {
+void DebugDrawPolicy::DrawElem(DebugDrawCmd_Line *cmd) {
 
 }
-void DebugDrawPolicy_3D::DrawElem(DebugDrawCmd_Cross *cmd) {
+void DebugDrawPolicy::DrawElem(DebugDrawCmd_Cross *cmd) {
 
 }
-void DebugDrawPolicy_3D::DrawElem(DebugDrawCmd_Sphere *cmd) {
+void DebugDrawPolicy::DrawElem(DebugDrawCmd_Sphere *cmd) {
 
 }
-void DebugDrawPolicy_3D::DrawElem(DebugDrawCmd_String *cmd) {
+void DebugDrawPolicy::DrawElem(DebugDrawCmd_String *cmd) {
 
 }
-void DebugDrawPolicy_3D::DrawElem(DebugDrawCmd_Axis *cmd) {
+void DebugDrawPolicy::DrawElem(DebugDrawCmd_Axis *cmd) {
 
 }
 

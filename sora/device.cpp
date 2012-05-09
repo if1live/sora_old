@@ -35,6 +35,7 @@
 #include "sys_font.h"
 
 #include "draw_2d_manager.h"
+#include "debug_draw_manager.h"
 
 using namespace std;
 
@@ -48,7 +49,8 @@ tex_mgr_(new TextureManager()),
 mtl_mgr_(new MaterialManager()),
 sys_font_(new SysFont()),
 render_device_(new RenderDevice()),
-draw_2d_(new Draw2DManager()) {
+draw_2d_(new Draw2DManager()),
+debug_draw_mgr_(new DebugDrawManager()) {
 }
 
 Device::~Device() {

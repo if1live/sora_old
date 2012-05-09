@@ -40,6 +40,7 @@ class MaterialManager;
 class MeshManager;
 class SysFont;
 class RenderDevice;
+class DebugDrawManager;
 
 class Device {
 public:
@@ -58,6 +59,7 @@ public:
   SysFont *sys_font() { return sys_font_.get(); }
 
   Draw2DManager *draw_2d() { return draw_2d_.get(); }
+  DebugDrawManager *debug_draw_mgr() { return debug_draw_mgr_.get(); }
 
   //한 프레임이 완료된후에 리셋할 정보를 적절히 리셋하기
   void EndTick();
@@ -77,6 +79,7 @@ private:
   std::unique_ptr<SysFont> sys_font_;
 
   std::unique_ptr<Draw2DManager> draw_2d_;
+  std::unique_ptr<DebugDrawManager> debug_draw_mgr_;
 
   static Device *dev_;
 };
