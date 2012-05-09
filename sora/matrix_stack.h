@@ -23,14 +23,17 @@
 
 #include <glm/glm.hpp>
 
-
 namespace sora {;
 class MatrixStack {
+public:
+  enum {
+    kMaxStackSize = 32  //설마 이거보다 많이 쓰진 않겟지? overflow검출용으로 쓰자
+  };
 public:
   MatrixStack();
   ~MatrixStack();
 
-  void Push();
+  bool Push();
   void Pop();
   const glm::mat4 &Top() const;
   int Size() const;

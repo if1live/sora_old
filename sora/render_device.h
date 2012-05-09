@@ -25,6 +25,7 @@
 
 namespace sora {;
 struct RenderDeviceInterface;
+class MatrixStack;
 
 class RenderDevice {
 public:
@@ -44,10 +45,30 @@ public:
   int win_width() const { return win_width_; }
   int win_height() const { return win_height_; }
 
+  //matrix 
+  glm::mat4 &projection_mat() { return projection_mat_; }
+  glm::mat4 &view_mat() { return view_mat_; }
+  MatrixStack &model_mat_stack() { return *model_mat_stack_; }
+  const glm::mat4 &projection_mat() const { return projection_mat_; }
+  const glm::mat4 &view_mat() const { return view_mat_; }
+  const MatrixStack &model_mat_stack() const { return *model_mat_stack_; }
+
+  void set_projection_mat(const glm::mat4 &m) { projection_mat_ = m; }
+  void set_view_mat(const glm::mat4 &m) { view_mat_ = m; }
+
+  void ResetAllMatrix();
+  void ResetProjectionMat();
+  void ResetViewMat();
+  void ResetModelMat();
+
 private:
   RenderDeviceInterface *policy_;
   int win_width_;
   int win_height_;
+
+  glm::mat4 projection_mat_;
+  glm::mat4 view_mat_;
+  std::unique_ptr<MatrixStack> model_mat_stack_;
 };
 
 struct RenderDeviceInterface {

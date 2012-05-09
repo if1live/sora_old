@@ -27,13 +27,19 @@
 #include "material.h"
 #include "mesh.h"
 
+#include "matrix_stack.h"
+
 namespace sora {;
 RenderDevice::RenderDevice()
 : policy_(nullptr),
 win_width_(640),
-win_height_(480) {
+win_height_(480),
+model_mat_stack_(new MatrixStack()), 
+projection_mat_(glm::mat4(1.0f)),
+view_mat_(glm::mat4(1.0f)) {
   policy_ = new sora::gl::GLRenderDevice();
 }
+
 RenderDevice::~RenderDevice() {
   if(policy_ != nullptr) {
     delete(policy_);
@@ -67,5 +73,19 @@ void RenderDevice::SetWinSize(int width, int height) {
   }
 }
 
+void RenderDevice::ResetAllMatrix() {
+  ResetProjectionMat();
+  ResetViewMat();
+  ResetModelMat();
+}
+void RenderDevice::ResetProjectionMat() {
+  projection_mat_ = glm::mat4(1.0f);
+}
+void RenderDevice::ResetViewMat() {
+  view_mat_ = glm::mat4(1.0f);
+}
+void RenderDevice::ResetModelMat() {
+  model_mat_stack_->Clear();
+}
 
 }

@@ -37,9 +37,15 @@ const glm::mat4 &MatrixStack::Top() const {
   SR_ASSERT(matrix_stack_.empty() == false);
   return matrix_stack_.back();
 }
-void MatrixStack::Push() {
+bool MatrixStack::Push() {
   const glm::mat4 &top = Top();
   matrix_stack_.push_back(top);
+  if(matrix_stack_.size() > kMaxStackSize) {
+    SR_ASSERT(!"Matrix Stack overflow, maybe leak occur!");
+    return false;
+  } else {
+    return true;
+  }
 }
 void MatrixStack::Pop() {
   if(matrix_stack_.size() > 0) {
