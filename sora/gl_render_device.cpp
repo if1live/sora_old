@@ -21,47 +21,42 @@
 #include "sora_stdafx.h"
 #include "gl_render_device.h"
 
+#if SR_USE_GL
+
 #include "gl_env.h"
 #include "renderer_env.h"
 #include "gl_shader.h"
 #include "gl_texture.h"
+#include "shader.h"
+#include "texture.h"
 
 namespace sora {;
 namespace gl {
-  GLRenderDevice::GLRenderDevice(Device *dev)
-  : win_width_(640),
-  win_height_(480) {
-    EndRender();
-  }
-  GLRenderDevice::GLRenderDevice()
-    : win_width_(640),
-    win_height_(480) {
+  GLRenderDevice::GLRenderDevice() {
       EndRender();
   }
   GLRenderDevice::~GLRenderDevice() {
 
   }
   void GLRenderDevice::SetWinSize(int w, int h) {
-    if(win_width_ != w || win_height_ != h) {
-      LOGI("setupGraphics(%d, %d)", (int)w, (int)h);
-      win_width_ = w;
-      win_height_ = h;
+    LOGI("setupGraphics(%d, %d)", (int)w, (int)h);
 
-      glViewport(0, 0, (int)w, (int)h);
-      SR_CHECK_ERROR("glViewport");
-    }
+    glViewport(0, 0, (int)w, (int)h);
+    SR_CHECK_ERROR("glViewport");
   }
   void GLRenderDevice::EndRender() {
     last_prog_id_ = 0;
     last_tex_id_ = 0;
   }
-  void GLRenderDevice::UseShader(ShaderHandleType handle) {
+  void GLRenderDevice::UseShader(Shader &shader) {
+    ShaderHandleType handle = shader.handle();
     if(last_prog_id_ != handle) {
       glUseProgram(handle);
       last_prog_id_ = handle;
     }
   }
-  void GLRenderDevice::UseTexture(TextureHandleType handle) {
+  void GLRenderDevice::UseTexture(Texture &tex) {
+    TextureHandleType handle = tex.handle();
     if(last_tex_id_ != handle) {
       glActiveTexture(GL_TEXTURE0);
       glBindTexture(GL_TEXTURE_2D, handle);
@@ -81,3 +76,5 @@ namespace gl {
   }
 } //namespace gl
 } //namespace sora
+
+#endif  // SR_USE_GL

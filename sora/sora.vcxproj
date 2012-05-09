@@ -119,6 +119,7 @@
     <ClCompile Include="obj_model.cpp" />
     <ClCompile Include="parametric_surface.cpp" />
     <ClCompile Include="post_effect.cpp" />
+    <ClCompile Include="render_device.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="shader_variable.cpp" />
     <ClCompile Include="soil\image_DXT.cpp" />

@@ -219,9 +219,8 @@ typedef FrameBufferT<FrameBufferPolicy> FrameBuffer;
 namespace gl {
   class GLRenderDevice;
 }
-class Device;
-template<typename PolicyType> class RenderDeviceT;
-typedef RenderDeviceT<sora::gl::GLRenderDevice> RenderDevice;
+class RenderDevice;
+typedef sora::gl::GLRenderDevice RenderDevicePolicy;
 //for render device
 
 //for mesh buffer - begin

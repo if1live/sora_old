@@ -46,8 +46,8 @@ keyboard_evt_queue_(new KeyboardEventQueue()),
 mesh_mgr_(new MeshManager()),
 tex_mgr_(new TextureManager()),
 mtl_mgr_(new MaterialManager()),
-sys_font_(new SysFont()) {
-  render_device_ = std::move(std::unique_ptr<RenderDevice>(new RenderDevice(this)));
+sys_font_(new SysFont()),
+render_device_(new RenderDevice()) {
 }
 
 Device::~Device() {

@@ -18,46 +18,54 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#ifndef SORA_GL_RENDER_DEVIDE_H_
-#define SORA_GL_RENDER_DEVIDE_H_
-
-#if SR_USE_GL
-
-#include "globals.h"
-#include "gl_env.h"
+#include "sora_stdafx.h"
 #include "render_device.h"
+#include "gl_render_device.h"
+
+#include "shader.h"
+#include "texture.h"
+#include "material.h"
+#include "mesh.h"
 
 namespace sora {;
-namespace gl {
-  class GLRenderDevice : public sora::RenderDeviceInterface {
-  public:
-    GLRenderDevice();
-    ~GLRenderDevice();
+RenderDevice::RenderDevice()
+: policy_(nullptr),
+win_width_(640),
+win_height_(480) {
+  policy_ = new sora::gl::GLRenderDevice();
+}
+RenderDevice::~RenderDevice() {
+  if(policy_ != nullptr) {
+    delete(policy_);
+    policy_ = nullptr;
+  }
+}
 
-    void EndRender();
 
-  public:
-    void Set2D();
-    void Set3D();
+void RenderDevice::UseShader(Shader &shader) { 
+  policy_->UseShader(shader); 
+}
+void RenderDevice::UseTexture(Texture &tex) { 
+  policy_->UseTexture(tex); 
+}
 
-    //texture
-  public:
-    void UseTexture(Texture &tex);
-  private:
-    TextureHandleType last_tex_id_;
+void RenderDevice::Set2D() {
+  policy_->Set2D(); 
+}
+void RenderDevice::Set3D() { 
+  policy_->Set3D(); 
+}
 
-    //shader
-  public:
-    void UseShader(Shader &shader);
-  private:
-    ShaderHandleType last_prog_id_;
+void RenderDevice::EndRender() {
+  policy_->EndRender(); 
+}
+void RenderDevice::SetWinSize(int width, int height) { 
+  if(win_width_ != width || win_height_ != height) {
+    policy_->SetWinSize(width, height); 
+    win_width_ = width;
+    win_height_ = height;
+  }
+}
 
-  public:
-    //win size
-    void SetWinSize(int width, int height);
-  };
-} //namespace gl
-} //namespace sora
 
-#endif  // SR_USE_GL
-#endif  // SORA_GL_RENDER_DEVIDE_H_
+}

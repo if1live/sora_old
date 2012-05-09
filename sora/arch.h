@@ -51,13 +51,6 @@
 #define SR_WIN 1
 #endif
 
-//gles?gl
-#if SR_WIN
-#define SR_GLES 0
-#else
-#define SR_GLES 1
-#endif
-
 #if SR_IOS == 1 || SR_WIN == 1
 #define SR_USE_PCH 1
 #else
@@ -119,4 +112,9 @@ typedef unsigned int uint;
 //for boost
 //http://stackoverflow.com/questions/9691184/boostthread-without-library-windows
 #define BOOST_ALL_NO_LIB 
+
+//gl같은 렌더러 뭘 쓸지 적절히 결정하기
+#define SR_USE_GL 1
+#define SR_USE_GLES 0
+
 #endif  // SORA_ARCH_H_

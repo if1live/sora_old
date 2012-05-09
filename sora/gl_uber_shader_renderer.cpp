@@ -45,11 +45,14 @@ namespace gl {
     Shader &shader = uber_shader_.Load(flag);
     return shader;
   }
-  void GLUberShaderRenderer::SetCamera(const Camera &cam, Device *dev, RenderDevice *render_dev) {
+  void GLUberShaderRenderer::SetCamera(const Camera &cam) {
     glm::mat4 model(1.0f);
-    SetCamera(cam, model, dev, render_dev);
+    SetCamera(cam, model);
   }
-  void GLUberShaderRenderer::SetCamera(const Camera &cam, const glm::mat4 &model, Device *dev, RenderDevice *render_dev) {
+  void GLUberShaderRenderer::SetCamera(const Camera &cam, const glm::mat4 &model) {
+    Device *dev = Device::GetInstance();
+    RenderDevice *render_dev = &dev->render_device();
+
     float win_w = (float)render_dev->win_width();
     float win_h = (float)render_dev->win_height();
     glm::mat4 projection = glm::perspective(45.0f, win_w/ win_h, 0.1f, 100.0f);
@@ -87,7 +90,10 @@ namespace gl {
     shader.SetUniformVector(kViewDirHandleName, dir_vec);
   }
 
-  void GLUberShaderRenderer::ApplyMaterialLight(Device *dev, RenderDevice *render_dev) {
+  void GLUberShaderRenderer::ApplyMaterialLight() {
+    Device *dev = Device::GetInstance();
+    RenderDevice *render_dev = &dev->render_device();
+
     unsigned int flag = material_.props;
     Shader &shader = GetCurrShader();
     const Material &material = material_;

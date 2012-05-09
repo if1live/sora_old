@@ -21,38 +21,48 @@
 #ifndef SORA_RENDER_DEVICE_H_
 #define SORA_RENDER_DEVICE_H_
 
-#include "gl_render_device.h"
-#include "shader.h"
-#include "texture.h"
-#include "material.h"
-#include "mesh.h"
+#include "globals.h"
 
 namespace sora {;
-class Device;
-template<typename PolicyType> class RenderDeviceT;
-typedef RenderDeviceT<sora::gl::GLRenderDevice> RenderDevice;
+struct RenderDeviceInterface;
 
-template<typename PolicyType>
-class RenderDeviceT {
+class RenderDevice {
 public:
-  RenderDeviceT(Device *dev) : policy_(dev) {}
-  RenderDeviceT() {}
-  ~RenderDeviceT() {}
+  RenderDevice();
+  ~RenderDevice();
 
-  void UseShader(Shader &shader) { policy_.UseShader(shader.handle()); }
-  void UseTexture(Texture &tex) { policy_.UseTexture(tex.handle()); }
+  void UseShader(Shader &shader);
+  void UseTexture(Texture &tex);
 
-  void Set2D() { policy_.Set2D(); }
-  void Set3D() { policy_.Set3D(); }
+  void Set2D();
+  void Set3D();
 
-  void EndRender() { policy_.EndRender(); }
-  void SetWinSize(int width, int height) { policy_.SetWinSize(width, height); }
-  int win_width() const { return policy_.win_width(); }
-  int win_height() const { return policy_.win_height(); }
+  void EndRender();
+
+  void SetWinSize(int width, int height);
+
+  int win_width() const { return win_width_; }
+  int win_height() const { return win_height_; }
 
 private:
-  PolicyType policy_;
+  RenderDeviceInterface *policy_;
+  int win_width_;
+  int win_height_;
 };
 
+struct RenderDeviceInterface {
+  RenderDeviceInterface() {}
+  virtual ~RenderDeviceInterface() {}
+
+  virtual void UseShader(Shader &shader) = 0;
+  virtual void UseTexture(Texture &tex) = 0;
+
+  virtual void Set2D() = 0;
+  virtual void Set3D() = 0;
+
+  virtual void EndRender() = 0;
+
+  virtual void SetWinSize(int width, int height) = 0;
+};
 }
 #endif  // SORA_RENDER_DEVICE_H_

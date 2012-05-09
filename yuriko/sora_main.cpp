@@ -392,7 +392,7 @@ void renderFrame(Device *device) {
     uber_renderer.SetLight(light);
     Shader &shader = uber_renderer.GetCurrShader();
     device->render_device().UseShader(shader);
-    uber_renderer.ApplyMaterialLight(device, &device->render_device());
+    uber_renderer.ApplyMaterialLight();
 
     
     //device->render_device().UseShader(simple_shader);
@@ -420,7 +420,7 @@ void renderFrame(Device *device) {
     SetUniformMatrix(mvp_var, mvp);
     SR_CHECK_ERROR("SetMatrix");
     */
-    uber_renderer.SetCamera(cam, device, &device->render_device());
+    uber_renderer.SetCamera(cam);
 
     Mesh *mesh = device->mesh_mgr()->Get("mesh");
     shader.DrawMeshIgnoreMaterial(mesh);
