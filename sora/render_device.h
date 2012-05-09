@@ -61,7 +61,7 @@ public:
   glm::vec3 view_up_vec() const;
   glm::vec3 view_dir_vec() const;
   glm::vec3 view_side_vec() const;
-
+  glm::vec3 view_pos() const;
 
   void ResetAllMatrix();
   void ResetProjectionMat();

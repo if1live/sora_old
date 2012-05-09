@@ -48,4 +48,9 @@ TEST(RenderDevice, view_vec) {
   EXPECT_EQ(true, dir_error < 0.001f);
   EXPECT_EQ(true, up_error < 0.001f);
   EXPECT_EQ(true, side_error < 0.001f);
+
+  //view에서 카메라 위치 역으로 계산하기
+  vec3 view_pos = dev.view_pos();
+  float pos_error = glm::length(view_pos - eye_vec);
+  EXPECT_EQ(true, pos_error < 0.001f);
 }

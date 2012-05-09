@@ -28,6 +28,7 @@
 #include "mesh.h"
 
 #include "matrix_stack.h"
+#include <glm/gtc/matrix_inverse.hpp>
 
 using namespace glm;
 
@@ -115,5 +116,21 @@ glm::vec3 RenderDevice::view_side_vec() const {
     side[i] = view_mat_[i][0];
   }
   return side;
+}
+glm::vec3 RenderDevice::view_pos() const {
+  mat3 view3_mat;
+  for(int i = 0 ; i < 3 ; i++) {
+    for(int j = 0 ; j < 3 ; j++) {
+      view3_mat[i][j] = view_mat_[i][j];
+    }
+  }
+  mat3 view3_inv_mat = glm::inverse(view3_mat);
+  vec3 last_vec;
+  for(int i = 0 ; i < 3 ; i++) {
+    last_vec[i] = view_mat_[3][i];  //view행렬의 다른것과 혼자 방향이 다르다
+  }
+
+  vec3 view_pos = view3_inv_mat * last_vec;
+  return -view_pos;
 }
 } //namespace sora
