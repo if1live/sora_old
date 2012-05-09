@@ -28,8 +28,11 @@ struct Material {
   Material();
   static const Material &NullMaterial();
 
+  MaterialType type;
+
   std::string name;
   uint props;   //flag저장 용도
+  bool use_light; //빛이 없으면(false인 경우) diffuse_map를 albedo로써 사용한다
 
   glm::vec4 ambient;
   glm::vec4 diffuse;

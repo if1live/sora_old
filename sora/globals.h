@@ -252,6 +252,11 @@ enum {
   kMaterialNormalMap = 1 << 5,
 };
 
+typedef enum {
+  kMaterialTypeNone,
+  kMaterialTypeUber,
+} MaterialType;
+
 //predefined semantic
 #define kPositionHandleName "a_position"
 #define kTexcoordHandleName "a_texcoord"
