@@ -109,6 +109,7 @@
     <ClCompile Include="mem_test.cpp" />
     <ClCompile Include="mesh_buffer_test.cpp" />
     <ClCompile Include="obj_loader_test.cpp" />
+    <ClCompile Include="render_device_test.cpp" />
     <ClCompile Include="shader_test.cpp" />
     <ClCompile Include="sora_test_stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

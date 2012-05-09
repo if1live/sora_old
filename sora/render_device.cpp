@@ -29,6 +29,8 @@
 
 #include "matrix_stack.h"
 
+using namespace glm;
+
 namespace sora {;
 RenderDevice::RenderDevice()
 : policy_(nullptr),
@@ -90,4 +92,28 @@ void RenderDevice::ResetModelMat() {
 const glm::mat4 &RenderDevice::model_mat() const {
   return model_mat_stack_->Top();
 }
+
+glm::vec3 RenderDevice::view_up_vec() const {
+  //y
+  vec3 side;
+  for(int i = 0 ; i < 3 ; i++) {
+    side[i] = view_mat_[i][1];
+  }
+  return side;
 }
+glm::vec3 RenderDevice::view_dir_vec() const {
+  vec3 side;
+  for(int i = 0 ; i < 3 ; i++) {
+    side[i] = -view_mat_[i][2];
+  }
+  return side;
+}
+glm::vec3 RenderDevice::view_side_vec() const {
+  //x
+  vec3 side;
+  for(int i = 0 ; i < 3 ; i++) {
+    side[i] = view_mat_[i][0];
+  }
+  return side;
+}
+} //namespace sora

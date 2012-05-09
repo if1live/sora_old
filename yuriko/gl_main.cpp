@@ -266,7 +266,9 @@ int main(int argc, char *argv[]) {
   //run_depthmap(device);
   //run_shadow_map(device);
 
+  sora::Device::DestroyDevice();
   glfwTerminate();
+
 	return 0;
 }
 #endif

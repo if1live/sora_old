@@ -111,6 +111,9 @@
     <ClCompile Include="obj_loader_test.cpp">
       <Filter>mesh</Filter>
     </ClCompile>
+    <ClCompile Include="render_device_test.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_test_stdafx.h">

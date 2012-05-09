@@ -20,7 +20,7 @@
 #include "sora_test_stdafx.h"
 
 #include "sora/gl_inc.h"
-
+#include "sora/device.h"
 //#include "sora/common/logger.h"
 //#include "sora/common/assert_inc.h"
 
@@ -43,8 +43,10 @@ int main(int argc, char *argv[]) {
   // init glew
   glewInit();
 
+  sora::Device::CreateDevice();
   ::testing::InitGoogleTest(&argc, argv);
 	int result = RUN_ALL_TESTS();
+  sora::Device::DestroyDevice();
   glfwTerminate();
 	getchar();
 	return result;
