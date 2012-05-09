@@ -39,15 +39,15 @@ namespace gl {
     ~GLTexture() {}
 
   public:
-    void Deinit(HandleType *handle);
-    bool Init(HandleType *handle);
-    bool Loaded(const HandleType &handle) const;
+    static void Deinit(HandleType *handle);
+    static bool Init(HandleType *handle);
+    static bool Loaded(const HandleType &handle);
 
-    bool LoadTexture(const HandleType &handle, const Image &image, uint policy);
-    void ApplyTextureParam(HandleType handle, const TextureParam &param);
-    bool LoadTexture(HandleType handle, unsigned char *image, const ImageDesc &img_desc, uint policy);
+    static bool LoadTexture(const HandleType &handle, const Image &image, uint policy);
+    static void ApplyTextureParam(HandleType handle, const TextureParam &param);
+    static bool LoadTexture(HandleType handle, unsigned char *image, const ImageDesc &img_desc, uint policy);
   public:
-    bool LoadTexture(HandleType tex_id, unsigned char *image, int width, int height, GLenum format, uint policy);
+    static bool LoadTexture(HandleType tex_id, unsigned char *image, int width, int height, GLenum format, uint policy);
   };
 } //namespace gl
 } //namespace sora

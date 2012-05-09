@@ -21,66 +21,39 @@
 #ifndef SORA_TEXTURE_H_
 #define SORA_TEXTURE_H_
 
-#include "gl_texture.h"
 #include "shared_ptr_inc.h"
 #include "unordered_map_inc.h"
 #include "globals.h"
 
 namespace sora {;
 
-template<typename PolicyType>
-class TextureT : public PolicyType {
+class Texture {
 public:
-  typedef PolicyType Policy;
+  typedef TexturePolicy Policy;
   typedef TextureHandle HandleType;
 public:
-
-  TextureT(unsigned int policy = 0)
-    : is_render_to_texture_(false), 
-    tex_policy_(policy),
-    handle_(0) {}
-
-  TextureT(const std::string &name, unsigned int policy = 0)
-  : name_(name), 
-  is_render_to_texture_(false), 
-  tex_policy_(policy),
-  handle_(0) {}
-  ~TextureT() {}
+  Texture(unsigned int policy = 0);
+  Texture(const std::string &name, unsigned int policy = 0);
+  ~Texture();
 
   //외부에서 생성된 GL텍스쳐를 sora텍스쳐로 사용하기
-  void Deinit() { Policy::Deinit(&handle_); }
-  void Init() { Policy::Init(&handle_); }
+  void Deinit();
+  void Init();
   //외부에서 생성된 텍스쳐를 직접 찔러넣기. renter texture나 외부 라이브러리에서 생성된 텍스쳐에서 쓴다
-  bool Init(HandleType handle, const ImageDesc &img_desc, bool is_rtt) {
-    if(handle_ != 0) {
-      Deinit();
-    }
-    handle_ = handle;
-    img_desc_ = img_desc;
-    is_render_to_texture_ = is_rtt;
-    return true;
-  }
+  bool Init(HandleType handle, const ImageDesc &img_desc, bool is_rtt);
 
-  bool Loaded() const { return Policy::Loaded(handle_); }
+  bool Loaded() const;
   const std::string &name() const { return name_; }
   
-  bool is_alpha() const { return img_desc_.is_alpha; }
-  bool is_grayscale() const { return img_desc_.is_grayscale; }
-  bool is_render_to_texture() const { return is_render_to_texture_; }
+  bool is_alpha() const;
+  bool is_grayscale() const;
+  bool is_render_to_texture() const;
 
-  bool LoadTexture(const Image &img) {
-    img_desc_ = img.desc();
-    return Policy::LoadTexture(handle_, img, tex_policy_);
-  }
+  bool LoadTexture(const Image &img);
 
   //압축 풀린 데이터를 올리는 경우
-  bool LoadTexture(unsigned char *image, int w, int h, TexFormatType format, const TextureParam &param) {
-    img_desc_ = CreateImageDesc(w, h, format);
-    bool result = Policy::LoadTexture(handle_, image, img_desc_, tex_policy_);
-    Policy::ApplyTextureParam(handle_, param);
-    return result;
-  }
-  const HandleType &handle() const { return handle_; }
+  bool LoadTexture(unsigned char *image, int w, int h, TexFormatType format, const TextureParam &param);
+  const HandleType &handle() { return handle_; }
 
   static ImageDesc CreateImageDesc(int w, int h, TexFormatType format);
 

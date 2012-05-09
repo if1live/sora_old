@@ -61,7 +61,7 @@ namespace gl {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
   tex.Init(tex_id, 2, 2);
   */
-  bool GLTexture::Loaded(const HandleType &handle) const {
+  bool GLTexture::Loaded(const HandleType &handle) {
     if(handle == 0) {
       return false;
     } else {

@@ -21,10 +21,75 @@
 #include "sora_stdafx.h"
 #include "texture.h"
 #include "template_lib.h"
+#include "gl_texture.h"
+#include "image.h"
 
 using namespace std;
 
 namespace sora {;
+
+Texture::Texture(unsigned int policy)
+  : is_render_to_texture_(false), 
+  tex_policy_(policy),
+  handle_(0) {
+
+}
+
+Texture::Texture(const std::string &name, unsigned int policy)
+  : name_(name), 
+  is_render_to_texture_(false), 
+  tex_policy_(policy),
+  handle_(0) {
+}
+
+Texture::~Texture() {
+}
+
+
+//외부에서 생성된 GL텍스쳐를 sora텍스쳐로 사용하기
+void Texture::Deinit() { 
+  Policy::Deinit(&handle_); 
+}
+void Texture::Init() {
+  Policy::Init(&handle_); 
+}
+//외부에서 생성된 텍스쳐를 직접 찔러넣기. renter texture나 외부 라이브러리에서 생성된 텍스쳐에서 쓴다
+bool Texture::Init(HandleType handle, const ImageDesc &img_desc, bool is_rtt) {
+  if(handle_ != 0) {
+    Deinit();
+  }
+  handle_ = handle;
+  img_desc_ = img_desc;
+  is_render_to_texture_ = is_rtt;
+  return true;
+}
+
+bool Texture::Loaded() const {
+  return Policy::Loaded(handle_); 
+}
+
+bool Texture::is_alpha() const {
+  return img_desc_.is_alpha; 
+}
+bool Texture::is_grayscale() const { 
+  return img_desc_.is_grayscale; 
+}
+bool Texture::is_render_to_texture() const { 
+  return is_render_to_texture_; 
+}
+
+bool Texture::LoadTexture(const Image &img) {
+  img_desc_ = img.desc();
+  return Policy::LoadTexture(handle_, img, tex_policy_);
+}
+
+//압축 풀린 데이터를 올리는 경우
+bool Texture::LoadTexture(unsigned char *image, int w, int h, TexFormatType format, const TextureParam &param) {
+  img_desc_ = CreateImageDesc(w, h, format);
+  bool result = Policy::LoadTexture(handle_, image, img_desc_, tex_policy_);
+  Policy::ApplyTextureParam(handle_, param);
+  return result;
+}
 
 ImageDesc Texture::CreateImageDesc(int w, int h, TexFormatType format) {
   ImageDesc desc;

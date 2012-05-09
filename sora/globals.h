@@ -22,6 +22,7 @@
 #define SORA_GLOBALS_H_
 
 #include "shared_ptr_inc.h"
+#include "arch.h"
 
 namespace sora {;
 
@@ -166,19 +167,21 @@ struct DrawCmdData {
 
 //템플릿을 사용한 클래스의 전방선언을 일일이 치는것은 좀 미친짓같다. 그래서 여기에 하나 모앗다
 //for shader - begin
+#if SR_USE_GL
 namespace gl {
   class GLProgram;
   class GLShaderVariable;
 }
 typedef unsigned int ShaderHandle;
 typedef int ShaderVariableLocation;
-
-class Shader;
 typedef sora::gl::GLProgram ShaderPolicy;
 typedef sora::gl::GLShaderVariable ShaderVariablePolicy;
+#endif
+class Shader;
 //for shader - end
 
 //for buffer - begin
+#if SR_USE_GL
 namespace gl {
   template<GLenum Target> class GLBufferObject;
   typedef GLBufferObject<GL_ARRAY_BUFFER> GLVertexBufferObject;
@@ -186,6 +189,7 @@ namespace gl {
 }
 typedef sora::gl::GLVertexBufferObject VBOPolicy;
 typedef sora::gl::GLIndexBufferObject IBOPolicy;
+#endif
 
 template<typename VertexT> class VertexBufferObjectT;
 class IndexBufferObject;
@@ -195,32 +199,39 @@ typedef unsigned int IndexBufferHandle;
 //for bufer - end
 
 //for texture - begin
+#if SR_USE_GL
 namespace gl {
   class GLTexture;
 }
-class Image;
-template<typename PolicyType> class TextureT;
-typedef TextureT<sora::gl::GLTexture> Texture;
-typedef std::tr1::shared_ptr<Texture> TexturePtr;
+typedef sora::gl::GLTexture TexturePolicy;
 typedef unsigned int TextureHandle;
+#endif
+class Image;
+class Texture;
+typedef std::tr1::shared_ptr<Texture> TexturePtr;
 //for texture - end
 
 //for frame buffer - begin
+#if SR_USE_GL
 namespace gl {
   class GLFrameBuffer;
 }
 typedef unsigned int FrameBufferHandle;
+#endif
+
 template<typename PolicyType> class FrameBufferT;
 typedef sora::gl::GLFrameBuffer FrameBufferPolicy;
 typedef FrameBufferT<FrameBufferPolicy> FrameBuffer;
 //for frame buffer - end
 
 //for render device
+#if SR_USE_GL
 namespace gl {
   class GLRenderDevice;
 }
-class RenderDevice;
 typedef sora::gl::GLRenderDevice RenderDevicePolicy;
+#endif
+class RenderDevice;
 //for render device
 
 //for mesh buffer - begin
