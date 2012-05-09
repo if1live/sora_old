@@ -50,6 +50,7 @@
 #include "frame_buffer.h"
 #include "post_effect.h"
 
+#include "render_device.h"
 #include "geometric_object.h"
 
 using namespace std;

@@ -21,8 +21,6 @@
 #include "sora_stdafx.h"
 #include "device.h"
 
-#include <algorithm>
-
 #include "template_lib.h"
 #include "touch_event.h"
 #include "keyboard_event.h"
@@ -36,6 +34,8 @@
 #include "texture.h"
 #include "sys_font.h"
 
+#include "draw_2d_manager.h"
+
 using namespace std;
 
 namespace sora {;
@@ -47,7 +47,8 @@ mesh_mgr_(new MeshManager()),
 tex_mgr_(new TextureManager()),
 mtl_mgr_(new MaterialManager()),
 sys_font_(new SysFont()),
-render_device_(new RenderDevice()) {
+render_device_(new RenderDevice()),
+draw_2d_(new Draw2DManager()) {
 }
 
 Device::~Device() {

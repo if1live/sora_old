@@ -37,6 +37,7 @@
 
 #include "device.h"
 #include "memory_file.h"
+#include "render_device.h"
 
 #include "vertex.h"
 #include "math_helper.h"

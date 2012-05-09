@@ -56,12 +56,12 @@
 #include <set>
 #include <string>
 #include <algorithm>
-#include <memory>
 #include <map>
 #include <stack>
 #include <queue>
 #include <list>
 #include <functional>
+#include <memory>
 
 //#if SR_WIN
 //#include <Windows.h>

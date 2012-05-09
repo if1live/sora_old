@@ -21,8 +21,7 @@
 #ifndef SORA_DEVICE_H_
 #define SORA_DEVICE_H_
 
-#include <vector>
-#include "render_device.h"
+#include <memory>
 
 namespace sora {;
 
@@ -35,10 +34,12 @@ template<typename T>  class EventQueue;
 typedef EventQueue<TouchEvent> TouchEventQueue;
 typedef EventQueue<KeyboardEvent> KeyboardEventQueue;
 
+class Draw2DManager;
 class TextureManager;
 class MaterialManager;
 class MeshManager;
 class SysFont;
+class RenderDevice;
 
 class Device {
 public:
@@ -56,6 +57,8 @@ public:
   MeshManager *mesh_mgr() { return mesh_mgr_.get(); }
   SysFont *sys_font() { return sys_font_.get(); }
 
+  Draw2DManager *draw_2d() { return draw_2d_.get(); }
+
   //한 프레임이 완료된후에 리셋할 정보를 적절히 리셋하기
   void EndTick();
 
@@ -72,6 +75,8 @@ private:
   std::unique_ptr<TextureManager> tex_mgr_;
   std::unique_ptr<MaterialManager> mtl_mgr_;
   std::unique_ptr<SysFont> sys_font_;
+
+  std::unique_ptr<Draw2DManager> draw_2d_;
 
   static Device *dev_;
 };
