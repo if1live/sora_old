@@ -91,7 +91,7 @@ private:
   //texture's image data
   ImageDesc img_desc_;
   bool is_render_to_texture_;
-  uint tex_policy_;
+  unsigned int tex_policy_;
 };
 
 //텍스쳐 관리까지 한군데에 전부 떠넘기자

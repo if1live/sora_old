@@ -33,6 +33,9 @@ struct DrawCmd2D_String;
 class Draw2DPolicy;
 class Draw2DManager;
 
+//draw 2d mgr, debug draw manger는 공통적으로 draw cmd를 가지고 잇고
+//적절히 update하면 duration에 따라서 cmd를 처리한다. 상속으로 묶어서 일부를 뺄수 잇을듯하다
+
 class Draw2DManager {
 public:
   friend class Draw2DPolicy;
@@ -41,6 +44,8 @@ public:
 
   void Clear();
   void Update(float dt);
+  int CmdCount() const { return cmd_list_.size(); }
+
 public:
   void AddLine(const glm::vec2 &p1, const glm::vec2 &p2,
     const sora::vec4ub &color,
@@ -62,14 +67,14 @@ private:
 
 class Draw2DPolicy {
 public:
-  Draw2DPolicy() : mgr_(NULL), dev_(NULL) {}
+  Draw2DPolicy() : mgr_(NULL) {}
   ~Draw2DPolicy() {}
 
   static Shader &GetColorShader();
   static Shader &GetTextShader();
 
 public:
-  void Draw(const Draw2DManager &mgr, RenderDevice *dev);
+  void Draw(const Draw2DManager &mgr);
   void DrawCmdList(const Draw2DManager &mgr);
   void Draw(DrawCmd2D *cmd);
 
@@ -80,11 +85,9 @@ private:
   void DrawElem(DrawCmd2D_String *cmd);
 
   Draw2DManager *mgr() { return mgr_; }
-  RenderDevice *dev() { return dev_; }
   glm::vec4 ConvertColor(const sora::vec4ub &orig);
 private:
   Draw2DManager *mgr_;
-  RenderDevice *dev_;
 };
 
 } // namespace sora

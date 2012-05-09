@@ -47,6 +47,9 @@
     <Filter Include="debug">
       <UniqueIdentifier>{34e36a7d-95aa-4fca-b49d-797179c1385c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="material">
+      <UniqueIdentifier>{59d5d8de-ad77-4239-89a2-48e9f44ce68c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="sora_stdafx.cpp">
@@ -121,13 +124,7 @@
     <ClCompile Include="image.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
-    <ClCompile Include="material.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
     <ClCompile Include="matrix_stack.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
-    <ClCompile Include="mesh_buffer.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
     <ClCompile Include="post_effect.cpp">
@@ -228,6 +225,12 @@
     </ClCompile>
     <ClCompile Include="draw_2d_manager.cpp">
       <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh_buffer.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="material.cpp">
+      <Filter>material</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -366,13 +369,7 @@
     <ClInclude Include="light.h">
       <Filter>renderer</Filter>
     </ClInclude>
-    <ClInclude Include="material.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
     <ClInclude Include="matrix_stack.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
-    <ClInclude Include="mesh_buffer.h">
       <Filter>renderer</Filter>
     </ClInclude>
     <ClInclude Include="post_effect.h">
@@ -494,6 +491,12 @@
     </ClInclude>
     <ClInclude Include="draw_2d_manager.h">
       <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh_buffer.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="material.h">
+      <Filter>material</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

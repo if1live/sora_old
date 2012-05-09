@@ -64,7 +64,7 @@ namespace sysfont {
     mgr_2d.AddCross(vec2(200, 200), Color_Green(), 5);
 
     sora::Draw2DPolicy draw_policy;
-    draw_policy.Draw(mgr_2d, &device->render_device());
+    draw_policy.Draw(mgr_2d);
   }
   void update_frame(sora::Device *def, float dt) {
     mgr_2d.Update(dt);

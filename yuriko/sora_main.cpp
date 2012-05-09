@@ -446,7 +446,7 @@ void renderFrame(Device *device) {
     draw_2d_mgr.AddString(vec2(0, scr_height), fps_buf, Color_White(), 1.5f);
 
     sora::Draw2DPolicy draw_policy;
-    draw_policy.Draw(draw_2d_mgr, &device->render_device());
+    draw_policy.Draw(draw_2d_mgr);
   }
   {
     //디버깅용으로 화면 3d렌더링 하는거

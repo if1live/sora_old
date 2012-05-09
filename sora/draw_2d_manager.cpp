@@ -24,6 +24,8 @@
 #include "shader.h"
 #include "render_device.h"
 #include "filesystem.h"
+#include "device.h"
+#include "sys_font.h"
 
 using namespace std;
 using namespace glm;
@@ -145,18 +147,21 @@ void Draw2DManager::AddString(const glm::vec2 &pos, const std::string &msg,
 ///////////////////////////////////////
 
 void Draw2DPolicy::BeforeDraw() {
-  dev()->Set2D();
+  RenderDevice *dev = &Device::GetInstance()->render_device();
+  dev->Set2D();
 }
 
 void Draw2DPolicy::DrawElem(DrawCmd2D_Line *cmd) {
   Shader &shader = GetColorShader();
-  dev()->UseShader(shader);
+  RenderDevice *dev = &Device::GetInstance()->render_device();
+  dev->UseShader(shader);
 
   vec4 color = ConvertColor(cmd->color);
   shader.SetUniformVector(kConstColorHandleName, color);
 
-  float win_width = (float)dev()->win_width();
-  float win_height = (float)dev()->win_height();
+
+  float win_width = (float)dev->win_width();
+  float win_height = (float)dev->win_height();
   glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
   ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
   SetUniformMatrix(mvp_var, projection);
@@ -173,13 +178,14 @@ void Draw2DPolicy::DrawElem(DrawCmd2D_Line *cmd) {
 }
 void Draw2DPolicy::DrawElem(DrawCmd2D_Cross *cmd) {
   Shader &shader = GetColorShader();
-  dev()->UseShader(shader);
+  RenderDevice *dev = &Device::GetInstance()->render_device();
+  dev->UseShader(shader);
 
   vec4 color = ConvertColor(cmd->color);
   shader.SetUniformVector(kConstColorHandleName, color);
 
-  float win_width = (float)dev()->win_width();
-  float win_height = (float)dev()->win_height();
+  float win_width = (float)dev->win_width();
+  float win_height = (float)dev->win_height();
   glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
   ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
   SetUniformMatrix(mvp_var, projection);
@@ -196,13 +202,13 @@ void Draw2DPolicy::DrawElem(DrawCmd2D_Cross *cmd) {
 /*
 void Draw2DPolicy::DrawElem(DebugDrawCmd_Sphere *cmd) {
   Shader &shader = DebugDrawManager::GetColorShader();
-  dev()->UseShader(shader);
+  dev->UseShader(shader);
 
   vec4 color = ConvertColor(cmd->color);
   shader.SetUniformVector(kConstColorHandleName, color);
 
-  float win_width = (float)dev()->win_width();
-  float win_height = (float)dev()->win_height();
+  float win_width = (float)dev->win_width();
+  float win_height = (float)dev->win_height();
   glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
   glm::mat4 mvp = glm::translate(projection, cmd->pos);
   ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
@@ -229,17 +235,18 @@ void Draw2DPolicy::DrawElem(DebugDrawCmd_Sphere *cmd) {
 */
 void Draw2DPolicy::DrawElem(DrawCmd2D_String *cmd) {
   Shader &shader = GetTextShader();
-  dev()->UseShader(shader);
+  RenderDevice *dev = &Device::GetInstance()->render_device();
+  dev->UseShader(shader);
 
   vec4 color = ConvertColor(cmd->color);
   shader.SetUniformVector(kConstColorHandleName, color);
 
-  sora::SysFont &font = dev()->sys_font();
-  dev()->UseTexture(font.font_texture());
+  sora::SysFont *font = Device::GetInstance()->sys_font();
+  dev->UseTexture(font->font_texture());
 
   //해상도에 맞춰서 적절히 설정
-  float win_width = (float)dev()->win_width();
-  float win_height = (float)dev()->win_height();
+  float win_width = (float)dev->win_width();
+  float win_height = (float)dev->win_height();
   glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
   ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
 
@@ -248,7 +255,7 @@ void Draw2DPolicy::DrawElem(DrawCmd2D_String *cmd) {
   world_mat = glm::scale(world_mat, vec3(cmd->scale));
   mat4 mvp = projection * world_mat;
   SetUniformMatrix(mvp_var, mvp);
-  sora::Label label(&font, cmd->msg);
+  sora::Label label(font, cmd->msg);
   shader.SetVertexList(label.vertex_list());
 
   shader.DrawElements(kDrawTriangles, label.index_list());
@@ -272,15 +279,13 @@ void Draw2DPolicy::DrawCmdList(const Draw2DManager &mgr) {
   }
 }
 
-void Draw2DPolicy::Draw(const Draw2DManager &mgr, RenderDevice *dev) {
+void Draw2DPolicy::Draw(const Draw2DManager &mgr) {
   mgr_ = const_cast<Draw2DManager*>(&mgr);
-  dev_ = dev;
 
   BeforeDraw();
   DrawCmdList(mgr);
 
   mgr_ = NULL;
-  dev_ = NULL;
 }
 
 

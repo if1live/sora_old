@@ -27,9 +27,6 @@
 #include "material.h"
 #include "mesh.h"
 
-//조만간 떼자
-#include "sys_font.h"
-
 namespace sora {;
 class Device;
 template<typename PolicyType> class RenderDeviceT;
@@ -52,11 +49,9 @@ public:
   void SetWinSize(int width, int height) { policy_.SetWinSize(width, height); }
   int win_width() const { return policy_.win_width(); }
   int win_height() const { return policy_.win_height(); }
-  SysFont &sys_font() { return sys_font_; }
 
 private:
   PolicyType policy_;
-  SysFont sys_font_;
 };
 
 }

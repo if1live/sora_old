@@ -59,4 +59,29 @@ void Device::EndTick() {
   render_device_->EndRender();
 }
 
+Device *Device::GetInstance() {
+  SR_ASSERT(dev_ != nullptr && "not created yet!");
+  return dev_;
+}
+bool Device::CreateDevice() {
+  SR_ASSERT(dev_ == nullptr && "already created");
+  if(dev_ == NULL) {
+    dev_ = new Device();
+    return true;
+  } else {
+    return false;
+  }
+}
+bool Device::DestroyDevice() {
+  SR_ASSERT(dev_ != nullptr && "device not exist");
+  if(dev_ != nullptr) {
+    delete(dev_);
+    dev_ = NULL;
+    return true;
+  } else {
+    return false;
+  }
+}
+
+Device *Device::dev_ = nullptr;
 }

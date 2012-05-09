@@ -42,8 +42,9 @@ class SysFont;
 
 class Device {
 public:
-  Device();
-  ~Device();
+  static Device *GetInstance();
+  static bool CreateDevice();
+  static bool DestroyDevice();
 
   RenderDevice &render_device() { return *render_device_; }
 
@@ -59,6 +60,10 @@ public:
   void EndTick();
 
 private:
+  Device();
+  ~Device();
+
+private:
   std::unique_ptr<TouchEventQueue> touch_evt_queue_;
   std::unique_ptr<KeyboardEventQueue> keyboard_evt_queue_;
   std::unique_ptr<RenderDevice> render_device_;
@@ -67,6 +72,8 @@ private:
   std::unique_ptr<TextureManager> tex_mgr_;
   std::unique_ptr<MaterialManager> mtl_mgr_;
   std::unique_ptr<SysFont> sys_font_;
+
+  static Device *dev_;
 };
 }
 
