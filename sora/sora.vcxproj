@@ -122,6 +122,7 @@
     <ClCompile Include="post_effect.cpp" />
     <ClCompile Include="render_device.cpp" />
     <ClCompile Include="shader.cpp" />
+    <ClCompile Include="shader_manager.cpp" />
     <ClCompile Include="shader_variable.cpp" />
     <ClCompile Include="soil\image_DXT.cpp" />
     <ClCompile Include="soil\image_helper.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="renderer.h" />
     <ClInclude Include="renderer_env.h" />
     <ClInclude Include="render_device.h" />
+    <ClInclude Include="shader_manager.h" />
     <ClInclude Include="str_code.h" />
     <ClInclude Include="shader.h" />
     <ClInclude Include="shader_variable.h" />

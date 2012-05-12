@@ -41,6 +41,7 @@ class MeshManager;
 class SysFont;
 class RenderDevice;
 class DebugDrawManager;
+class ShaderManager;
 
 class Device {
 public:
@@ -57,6 +58,7 @@ public:
   MaterialManager *mtl_mgr() { return mtl_mgr_.get(); }
   MeshManager *mesh_mgr() { return mesh_mgr_.get(); }
   SysFont *sys_font() { return sys_font_.get(); }
+  ShaderManager *shader_mgr() { return shader_mgr_.get(); }
 
   Draw2DManager *draw_2d() { return draw_2d_.get(); }
   DebugDrawManager *debug_draw_mgr() { return debug_draw_mgr_.get(); }
@@ -77,6 +79,7 @@ private:
   std::unique_ptr<TextureManager> tex_mgr_;
   std::unique_ptr<MaterialManager> mtl_mgr_;
   std::unique_ptr<SysFont> sys_font_;
+  std::unique_ptr<ShaderManager> shader_mgr_;
 
   std::unique_ptr<Draw2DManager> draw_2d_;
   std::unique_ptr<DebugDrawManager> debug_draw_mgr_;

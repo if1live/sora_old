@@ -36,6 +36,7 @@
 
 #include "draw_2d_manager.h"
 #include "debug_draw_manager.h"
+#include "shader_manager.h"
 
 using namespace std;
 
@@ -50,7 +51,9 @@ mtl_mgr_(new MaterialManager()),
 sys_font_(new SysFont()),
 render_device_(new RenderDevice()),
 draw_2d_(new Draw2DManager()),
-debug_draw_mgr_(new DebugDrawManager()) {
+debug_draw_mgr_(new DebugDrawManager()),
+shader_mgr_(new ShaderManager()) {
+  shader_mgr_->SetUp();
 }
 
 Device::~Device() {

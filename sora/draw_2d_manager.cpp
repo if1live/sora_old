@@ -27,6 +27,7 @@
 #include "device.h"
 #include "sys_font.h"
 #include "geometric_object.h"
+#include "shader_manager.h"
 
 using namespace std;
 using namespace glm;
@@ -172,7 +173,8 @@ void Draw2DPolicy::BeforeDraw() {
 }
 
 void Draw2DPolicy::DrawElem(DrawCmd2D_Line *cmd) {
-  Shader &shader = GetColorShader();
+  ShaderManager *shader_mgr = Device::GetInstance()->shader_mgr();
+  Shader &shader = *(shader_mgr->Get(ShaderManager::kConstColor));
   RenderDevice *dev = &Device::GetInstance()->render_device();
   dev->UseShader(shader);
 
@@ -197,7 +199,8 @@ void Draw2DPolicy::DrawElem(DrawCmd2D_Line *cmd) {
   glLineWidth(1.0f);
 }
 void Draw2DPolicy::DrawElem(DrawCmd2D_Cross *cmd) {
-  Shader &shader = GetColorShader();
+  ShaderManager *shader_mgr = Device::GetInstance()->shader_mgr();
+  Shader &shader = *(shader_mgr->Get(ShaderManager::kConstColor));
   RenderDevice *dev = &Device::GetInstance()->render_device();
   dev->UseShader(shader);
 
@@ -221,7 +224,8 @@ void Draw2DPolicy::DrawElem(DrawCmd2D_Cross *cmd) {
 }
 
 void Draw2DPolicy::DrawElem(DrawCmd2D_Sphere *cmd) {
-  Shader &shader = GetColorShader();
+  ShaderManager *shader_mgr = Device::GetInstance()->shader_mgr();
+  Shader &shader = *(shader_mgr->Get(ShaderManager::kConstColor));
   RenderDevice *dev = &Device::GetInstance()->render_device();
   dev->UseShader(shader);
 
@@ -253,7 +257,8 @@ void Draw2DPolicy::DrawElem(DrawCmd2D_Sphere *cmd) {
 }
 
 void Draw2DPolicy::DrawElem(DrawCmd2D_String *cmd) {
-  Shader &shader = GetTextShader();
+  ShaderManager *shader_mgr = Device::GetInstance()->shader_mgr();
+  Shader &shader = *(shader_mgr->Get(ShaderManager::kText));
   RenderDevice *dev = &Device::GetInstance()->render_device();
   dev->UseShader(shader);
 
@@ -326,29 +331,4 @@ void Draw2DPolicy::Draw(DrawCmd2D *cmd) {
     break;
   }
 }
-
-
-Shader &Draw2DPolicy::GetColorShader() {
-  static Shader shader;
-  static bool run = false;
-  if(run == false) {
-    run = true;
-    string color_vs_path = Filesystem::GetAppPath("shader/const_color.vs");
-    string color_fs_path = Filesystem::GetAppPath("shader/const_color.fs");
-    shader.LoadFromFile(color_vs_path, color_fs_path);
-  }
-  return shader;
-}
-Shader &Draw2DPolicy::GetTextShader() {
-  static Shader shader;
-  static bool run = false;
-  if(run == false) {
-    run = true;
-    string simple_vs_path = Filesystem::GetAppPath("shader/simple.vs");
-    string simple_fs_path = Filesystem::GetAppPath("shader/text.fs");
-    shader.LoadFromFile(simple_vs_path, simple_fs_path);
-  }
-  return shader;
-}
-
 } //namespace sora

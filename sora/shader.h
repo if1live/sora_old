@@ -71,6 +71,9 @@ public:
 
   bool LoadFromFile(const std::string &vert_path, const std::string &frag_path);
   bool Init(const char *vert_src, const char *frag_src);
+  bool Init(const std::string &vert_src, const std::string &frag_src) {
+    return Init(vert_src.c_str(), frag_src.c_str());
+  }
   bool Init(const std::vector<const char*> &vert_src_list, const std::vector<const char*> &frag_src_list);
 
   void AfterInit();
