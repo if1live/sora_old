@@ -57,12 +57,6 @@ public:
   void set_projection_mat(const glm::mat4 &m) { projection_mat_ = m; }
   void set_view_mat(const glm::mat4 &m) { view_mat_ = m; }
 
-  //view행렬로부터 카메라 정보를 뺴올수잇다
-  glm::vec3 view_up_vec() const;
-  glm::vec3 view_dir_vec() const;
-  glm::vec3 view_side_vec() const;
-  glm::vec3 view_pos() const;
-
   void ResetAllMatrix();
   void ResetProjectionMat();
   void ResetViewMat();

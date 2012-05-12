@@ -18,9 +18,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 // Ŭnicode please
-#include "sora_test_stdafx.h"
-#include "sora/render_device.h"
+#pragma once
 
-using namespace glm;
-using namespace std;
-using namespace sora;
+#include <glm/glm.hpp>
+
+namespace sora {;
+
+class MatrixHelper {
+public:
+  //view행렬로부터 카메라 정보를 뺴올수잇다
+  static glm::vec3 ViewUpVec(const glm::mat4 &view_mat);
+  static glm::vec3 ViewDirVec(const glm::mat4 &view_mat);
+  static glm::vec3 ViewSideVec(const glm::mat4 &view_mat);
+  static glm::vec3 ViewPos(const glm::mat4 &view_mat);
+};
+} //namespace sora

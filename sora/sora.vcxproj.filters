@@ -235,6 +235,9 @@
     <ClCompile Include="render_device.cpp">
       <Filter>renderer</Filter>
     </ClCompile>
+    <ClCompile Include="matrix_helper.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sora_stdafx.h">
@@ -500,6 +503,9 @@
     </ClInclude>
     <ClInclude Include="material.h">
       <Filter>material</Filter>
+    </ClInclude>
+    <ClInclude Include="matrix_helper.h">
+      <Filter>math</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

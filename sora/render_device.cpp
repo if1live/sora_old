@@ -94,43 +94,4 @@ const glm::mat4 &RenderDevice::model_mat() const {
   return model_mat_stack_->Top();
 }
 
-glm::vec3 RenderDevice::view_up_vec() const {
-  //y
-  vec3 side;
-  for(int i = 0 ; i < 3 ; i++) {
-    side[i] = view_mat_[i][1];
-  }
-  return side;
-}
-glm::vec3 RenderDevice::view_dir_vec() const {
-  vec3 side;
-  for(int i = 0 ; i < 3 ; i++) {
-    side[i] = -view_mat_[i][2];
-  }
-  return side;
-}
-glm::vec3 RenderDevice::view_side_vec() const {
-  //x
-  vec3 side;
-  for(int i = 0 ; i < 3 ; i++) {
-    side[i] = view_mat_[i][0];
-  }
-  return side;
-}
-glm::vec3 RenderDevice::view_pos() const {
-  mat3 view3_mat;
-  for(int i = 0 ; i < 3 ; i++) {
-    for(int j = 0 ; j < 3 ; j++) {
-      view3_mat[i][j] = view_mat_[i][j];
-    }
-  }
-  mat3 view3_inv_mat = glm::inverse(view3_mat);
-  vec3 last_vec;
-  for(int i = 0 ; i < 3 ; i++) {
-    last_vec[i] = view_mat_[3][i];  //view행렬의 다른것과 혼자 방향이 다르다
-  }
-
-  vec3 view_pos = view3_inv_mat * last_vec;
-  return -view_pos;
-}
 } //namespace sora

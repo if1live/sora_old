@@ -19,8 +19,34 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_test_stdafx.h"
-#include "sora/render_device.h"
+#include "matrix_helper.h"
 
-using namespace glm;
-using namespace std;
 using namespace sora;
+using namespace glm;
+
+TEST(MatrixHelper, view_vec) {
+  vec3 eye_vec(0, 1, 0);
+  //vec3 eye_vec(0, 0, 0);
+  vec3 center_vec(-1, 0, -1);
+  vec3 up_vec(0, 0.6f, -0.8f);  //up vector의 방향은 lookat에서 90도로 맞춰버린다
+  mat4 view_mat = lookAt(eye_vec, center_vec, up_vec);
+
+  vec3 dir_vec = glm::normalize(center_vec - eye_vec);
+  vec3 side_vec = glm::normalize(glm::cross(dir_vec, up_vec));
+  up_vec = glm::cross(side_vec, dir_vec);
+
+  vec3 expected_view_dir = MatrixHelper::ViewDirVec(view_mat);
+  vec3 expected_view_up = MatrixHelper::ViewUpVec(view_mat);
+  vec3 expected_view_side = MatrixHelper::ViewSideVec(view_mat);
+  float dir_error = glm::length(expected_view_dir - dir_vec);
+  float up_error = glm::length(expected_view_up - up_vec);
+  float side_error = glm::length(expected_view_side - side_vec);
+  EXPECT_EQ(true, dir_error < 0.001f);
+  EXPECT_EQ(true, up_error < 0.001f);
+  EXPECT_EQ(true, side_error < 0.001f);
+
+  //view에서 카메라 위치 역으로 계산하기
+  vec3 view_pos = MatrixHelper::ViewPos(view_mat);
+  float pos_error = glm::length(view_pos - eye_vec);
+  EXPECT_EQ(true, pos_error < 0.001f);
+}
