@@ -40,7 +40,7 @@ win_height_(480),
 model_mat_stack_(new MatrixStack()), 
 projection_mat_(glm::mat4(1.0f)),
 view_mat_(glm::mat4(1.0f)) {
-  policy_ = new sora::gl::GLRenderState();
+  policy_ = new sora::gl::GLRenderState(this);
 }
 
 RenderState::~RenderState() {

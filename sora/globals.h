@@ -40,6 +40,7 @@ typedef enum {
   kVertexTangent,
   kVertexPos2D,
   kVertexPos3D,
+  kVertexColor3D,   //color + 3d pos
 
   kVertexCodeCount,
 } VertexCode;
@@ -176,6 +177,7 @@ typedef unsigned int ShaderHandle;
 typedef int ShaderVariableLocation;
 typedef sora::gl::GLProgram ShaderPolicy;
 typedef sora::gl::GLShaderVariable ShaderVariablePolicy;
+const int kInvalidShaderVarLocation = -1;
 #endif
 class Shader;
 //for shader - end

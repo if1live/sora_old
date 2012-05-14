@@ -32,7 +32,8 @@
 
 namespace sora {;
 namespace gl {
-  GLRenderState::GLRenderState() {
+  GLRenderState::GLRenderState(RenderState *state)
+    : state_(state) {
       EndRender();
   }
   GLRenderState::~GLRenderState() {
@@ -67,12 +68,24 @@ namespace gl {
     glDisable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+    float win_w = (float)state_->win_width();
+    float win_h = (float)state_->win_height();
+    glm::mat4 projection = glm::ortho(0.0f, win_w, 0.0f, win_h);
+    state_->set_projection_mat(projection);
+
   }
   void GLRenderState::Set3D() {
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
     glDisable(GL_BLEND);
+
+    //projection 행렬 설정
+    float win_w = (float)state_->win_width();
+    float win_h = (float)state_->win_height();
+    glm::mat4 projection = glm::perspective(45.0f, win_w/ win_h, 0.1f, 100.0f);
+    state_->set_projection_mat(projection);
   }
 } //namespace gl
 } //namespace sora

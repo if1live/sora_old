@@ -64,6 +64,15 @@ typedef VertexT<
   float, 0
 > Vertex2D;
 
+typedef VertexT<
+  kVertexColor3D,
+  float, 3,
+  float, 0,
+  float, 0,
+  unsigned char, 4,
+  float, 3
+> ColorVertex3D;
+
 typedef std::vector<Vertex> VertexList;
 typedef std::vector<TangentVertex> TangentVertexList;
 typedef std::vector<Vertex2D> Vertex2DList;
@@ -186,6 +195,7 @@ template<
 //버텍스 생성을 조금더 쉽게 하기 위한 함수
 Vertex CreateVertex(const glm::vec3 &pos, const glm::vec2 &texcoord);
 Vertex2D CreateVertex2D(float x, float y, float s, float t);
+ColorVertex3D CreateColorVertex3D(float x, float y, float z, const sora::vec4ub &color);
 
 template<typename T> struct BaseTypeToVertexElemType { };
 template<> struct BaseTypeToVertexElemType<float> { enum { value = kTypeFloat }; };

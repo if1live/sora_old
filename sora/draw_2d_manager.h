@@ -80,6 +80,7 @@ public:
   void Draw(const Draw2DManager &mgr);
   void DrawCmdList(const Draw2DManager &mgr);
   void Draw(DrawCmd2D *cmd);
+  static glm::vec4 ConvertColor(const sora::vec4ub &orig);
 
 private:
   void BeforeDraw();
@@ -89,7 +90,6 @@ private:
   void DrawElem(DrawCmd2D_Sphere *cmd);
 
   Draw2DManager *mgr() { return mgr_; }
-  glm::vec4 ConvertColor(const sora::vec4ub &orig);
 private:
   Draw2DManager *mgr_;
 };

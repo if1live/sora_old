@@ -30,7 +30,7 @@
 namespace sora {;
 struct Material;
 struct Light;
-struct Camera;
+
 //기본적인 uber shader에 대응하기 위한 렌더러
 //이거로 기본 인터페이스를 테스트하고 인터페이스를 뽑아내는식으로 하면 될듯?
 namespace gl {
@@ -41,11 +41,12 @@ namespace gl {
     void Init();
     void SetMaterial(const Material &mtl);
     void SetLight(const Light &light);
-    void ApplyMaterialLight();
-    void SetCamera(const Camera &cam, const glm::mat4 &model);
-    void SetCamera(const Camera &cam);
+    void Apply();
 
     Shader &GetCurrShader();
+  private:
+    void ApplyCamera();
+
   private:
     Material material_;
     Light light_;

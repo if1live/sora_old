@@ -31,7 +31,7 @@ namespace sora {;
 namespace gl {
   class GLRenderState : public sora::RenderStateInterface {
   public:
-    GLRenderState();
+    GLRenderState(RenderState *state);
     ~GLRenderState();
 
     void EndRender();
@@ -55,6 +55,8 @@ namespace gl {
   public:
     //win size
     void SetWinSize(int width, int height);
+  private:
+    RenderState *state_;
   };
 } //namespace gl
 } //namespace sora

@@ -24,8 +24,8 @@
 #include "render_state.h"
 #include "uber_shader.h"
 #include "texture.h"
-#include "camera.h"
 #include "device.h"
+#include "matrix_helper.h"
 
 using namespace std;
 using namespace glm;
@@ -45,18 +45,13 @@ namespace gl {
     Shader &shader = uber_shader_.Load(flag);
     return shader;
   }
-  void GLUberShaderRenderer::SetCamera(const Camera &cam) {
-    glm::mat4 model(1.0f);
-    SetCamera(cam, model);
-  }
-  void GLUberShaderRenderer::SetCamera(const Camera &cam, const glm::mat4 &model) {
+
+  void GLUberShaderRenderer::ApplyCamera() {
     Device *dev = Device::GetInstance();
     RenderState *render_dev = &dev->render_state();
-
-    float win_w = (float)render_dev->win_width();
-    float win_h = (float)render_dev->win_height();
-    glm::mat4 projection = glm::perspective(45.0f, win_w/ win_h, 0.1f, 100.0f);
-    glm::mat4 view = cam.LookAt();
+    const glm::mat4 &projection = render_dev->projection_mat();
+    const glm::mat4 &view = render_dev->view_mat();
+    const glm::mat4 &model = render_dev->model_mat();
 
     Shader &shader = GetCurrShader();
 
@@ -71,10 +66,9 @@ namespace gl {
     shader.SetUniformMatrix(kProjectionHandleName, projection);
     shader.SetUniformMatrix(kViewHandleName, view);
 
-    const glm::vec3 &eye = cam.eye;
-    const glm::vec3 &center = cam.center;
-    const glm::vec3 &up = cam.up;
-    glm::vec3 dir = center - eye;
+    const glm::vec3 eye = MatrixHelper::ViewPos(view);
+    const glm::vec3 up = MatrixHelper::ViewUpVec(view);
+    const glm::vec3 dir = MatrixHelper::ViewDirVec(view);
     glm::vec3 view_side = glm::cross(dir, up);
 
     glm::vec4 view_side_vec(view_side.x, view_side.y, view_side.z, 1.0f);
@@ -90,10 +84,12 @@ namespace gl {
     shader.SetUniformVector(kViewDirHandleName, dir_vec);
   }
 
-  void GLUberShaderRenderer::ApplyMaterialLight() {
+  void GLUberShaderRenderer::Apply() {
     Device *dev = Device::GetInstance();
     RenderState *render_dev = &dev->render_state();
 
+    ApplyCamera();
+   
     unsigned int flag = material_.props;
     Shader &shader = GetCurrShader();
     const Material &material = material_;

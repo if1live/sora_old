@@ -181,10 +181,7 @@ void Draw2DPolicy::DrawElem(DrawCmd2D_Line *cmd) {
   vec4 color = ConvertColor(cmd->color);
   shader.SetUniformVector(kConstColorHandleName, color);
 
-
-  float win_width = (float)dev->win_width();
-  float win_height = (float)dev->win_height();
-  glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
+  const mat4 &projection = dev->projection_mat();
   ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
   SetUniformMatrix(mvp_var, projection);
 
@@ -207,9 +204,7 @@ void Draw2DPolicy::DrawElem(DrawCmd2D_Cross *cmd) {
   vec4 color = ConvertColor(cmd->color);
   shader.SetUniformVector(kConstColorHandleName, color);
 
-  float win_width = (float)dev->win_width();
-  float win_height = (float)dev->win_height();
-  glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
+  const mat4 &projection = dev->projection_mat();
   ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
   SetUniformMatrix(mvp_var, projection);
 
@@ -232,9 +227,7 @@ void Draw2DPolicy::DrawElem(DrawCmd2D_Sphere *cmd) {
   vec4 color = ConvertColor(cmd->color);
   shader.SetUniformVector(kConstColorHandleName, color);
 
-  float win_width = (float)dev->win_width();
-  float win_height = (float)dev->win_height();
-  glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
+  const mat4 &projection = dev->projection_mat();
   glm::mat4 mvp = glm::translate(projection, vec3(cmd->pos.x, cmd->pos.y, 0));
   ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
   SetUniformMatrix(mvp_var, mvp);
@@ -269,9 +262,7 @@ void Draw2DPolicy::DrawElem(DrawCmd2D_String *cmd) {
   dev->UseTexture(font->font_texture());
 
   //해상도에 맞춰서 적절히 설정
-  float win_width = (float)dev->win_width();
-  float win_height = (float)dev->win_height();
-  glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
+  const mat4 &projection = dev->projection_mat();
   ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
 
   mat4 world_mat(1.0f);

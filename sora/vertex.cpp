@@ -38,6 +38,15 @@ Vertex2D CreateVertex2D(float x, float y, float s, float t) {
   return vert;
 }
 
+ColorVertex3D CreateColorVertex3D(float x, float y, float z, const sora::vec4ub &color) {
+  ColorVertex3D vert;
+  vert.pos[0] = x;
+  vert.pos[1] = y;
+  vert.pos[2] = z;
+  vert.color = color;
+  return vert;
+}
+
 VertexInfo::VertexInfo()
   : vert_code(kVertexNone),
   size(0),

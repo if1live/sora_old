@@ -57,7 +57,6 @@
 
 #include "uber_shader.h"
 #include "material.h"
-#include "camera.h"
 #include "light.h"
 
 #include "obj_loader.h"
@@ -292,13 +291,6 @@ void renderFrame(Device *device) {
     mtl.props |= kMaterialSpecular;
     mtl.props |= kMaterialSpecularMap;
     //mtl.props |= kMaterialNormalMap;
-
-    uber_renderer.SetMaterial(mtl);
-    uber_renderer.SetLight(light);
-    Shader &shader = uber_renderer.GetCurrShader();
-    device->render_state().UseShader(shader);
-    uber_renderer.ApplyMaterialLight();
-
     
     //device->render_state().UseShader(simple_shader);
    
@@ -311,22 +303,22 @@ void renderFrame(Device *device) {
     float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
     float cam_y = radius * sin(SR_DEG_2_RAD(aptitude));
     float cam_z = radius * cos(SR_DEG_2_RAD(aptitude)) * cos(SR_DEG_2_RAD(latitude));
-    Camera cam;
-    cam.eye = vec3(cam_x, cam_y, cam_z);
-    cam.center = vec3(0);
-    cam.up = vec3(0, 1, 0);
-    /*
-    glm::mat4 view = cam.LookAt();
+    vec3 eye(cam_x, cam_y, cam_z);
+    vec3 center(0);
+    vec3 up(0, 1, 0);
 
-    glm::mat4 mvp(1.0f);
-    mvp = projection * view;
-    ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
-    SR_ASSERT(mvp_var.location != -1);
-    SetUniformMatrix(mvp_var, mvp);
-    SR_CHECK_ERROR("SetMatrix");
-    */
-    uber_renderer.SetCamera(cam);
+    //카메라 행렬을 view행렬로 등록
+    glm::mat4 view_mat = glm::lookAt(eye, center, up);
+    device->render_state().set_view_mat(view_mat);
 
+    uber_renderer.SetMaterial(mtl);
+    uber_renderer.SetLight(light);
+    Shader &shader = uber_renderer.GetCurrShader();
+    device->render_state().UseShader(shader);
+    //TODO 광원은 render state로 넘기기
+    uber_renderer.Apply();  //설정된 쉐이더 + 광원 + 카메라 정보를 uber shader로 넘기기
+
+    //메시 그리기 일단 제거
     Mesh *mesh = device->mesh_mgr()->Get("mesh");
     shader.DrawMeshIgnoreMaterial(mesh);
   }
@@ -337,8 +329,23 @@ void renderFrame(Device *device) {
 
   
   {
-    Draw2DManager *draw_2d_mgr = device->draw_2d();
+    //디버깅용으로 화면 3d렌더링 하는거
+    DebugDrawManager *mgr_3d = device->debug_draw_mgr();
+    mgr_3d->AddAxis(mat4(1.0f), 1);
+    mgr_3d->AddLine(vec3(0.0f, 0.0f, 0.0f), vec3(100, 100, 100), Color_White(), 4);
+    mgr_3d->AddSphere(vec3(0, 1, 0), 1, Color_White());
+    mgr_3d->AddCross(vec3(0, 0, 0), Color_Black(), 10, 0, false);
+    mgr_3d->AddString(vec3(0, 0, 0.5), "asdf", Color_Blue(), 1.5f);
+
+
+    DebugDrawPolicy debug_draw;
+    debug_draw.Draw(*mgr_3d);
+  }
+
+  {
     //디버깅용으로 화면 2d좌표계에 렌더링 하는거
+    //2d는 나중에 몰아서 처리하자
+    Draw2DManager *draw_2d_mgr = device->draw_2d();
     draw_2d_mgr->AddString(vec2(100, 100), "asd", Color_Red(), 2.0f);
     draw_2d_mgr->AddLine(vec2(100, 100), vec2(150, 200), Color_Blue(), 4.0f);
     draw_2d_mgr->AddSphere(vec2(200, 200), 30, Color_Green());
@@ -354,20 +361,6 @@ void renderFrame(Device *device) {
     sora::Draw2DPolicy draw_policy;
     draw_policy.Draw(*draw_2d_mgr);
   }
-  {
-    //디버깅용으로 화면 3d렌더링 하는거
-    DebugDrawManager *mgr_3d = device->debug_draw_mgr();
-    mgr_3d->AddAxis(mat4(1.0f), 10);
-    mgr_3d->AddLine(vec3(0.0f, 0.0f, 0.0f), vec3(100, 100, 100), Color_White(), 4);
-    mgr_3d->AddSphere(vec3(0, 0, 0), 3, Color_White());
-    mgr_3d->AddString(vec3(5, 1, 1), "asdf", Color_Blue(), 2);
-
-
-    DebugDrawPolicy debug_draw;
-    debug_draw.Draw(*mgr_3d);
-  }
-
-  
 
   //////////////////////////////
   SR_CHECK_ERROR("End RenderFrame");
