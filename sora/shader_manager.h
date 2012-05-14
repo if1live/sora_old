@@ -41,13 +41,13 @@ class ShaderManager {
 public:
   //간단한 쉐이더 몇개는 시스템에 내장 시켜버리자
   //그러면 디버깅이나 그런 용도로 접근하는데 편하다
-  enum {
+  typedef enum {
     kNone,
     kConstColor,
     kAlbedo,
     kVertexColor,
     kText,
-  };
+  } SystemShaderType;
 public:
   ShaderManager();
   ~ShaderManager();
@@ -62,8 +62,13 @@ public:
   bool IsExist(const std::string &name) const;
   static unsigned int Hash(const std::string &str);
 
+  //특수 행렬 몇개는 그냥 직접 얻을수 잇도록 햇다
+  Shader *Get(SystemShaderType type);
+
 private:
   typedef std::tr1::unordered_map<unsigned int, Shader> ShaderDictType;
   ShaderDictType shader_dict_;
+  typedef std::map<SystemShaderType, Shader> SysShaderDictType;
+  SysShaderDictType sys_shader_dict_;
 };
 } //namespace sora

@@ -21,6 +21,7 @@
 #include "sora_stdafx.h"
 #include "shader_manager.h"
 #include "string_hash.h"
+#include "template_lib.h"
 
 using namespace std;
 
@@ -85,44 +86,60 @@ namespace sora {;
 ShaderManager::ShaderManager() {
 }
 ShaderManager::~ShaderManager() {
-  auto it = shader_dict_.begin();
-  auto endit = shader_dict_.end();
-  for( ; it != endit ; ++it) {
-    Shader &shader = it->second;
-    shader.Deinit();
+  {
+    auto it = shader_dict_.begin();
+    auto endit = shader_dict_.end();
+    for( ; it != endit ; ++it) {
+      Shader &shader = it->second;
+      shader.Deinit();
+    }
+  }
+  {
+    auto it = sys_shader_dict_.begin();
+    auto endit = sys_shader_dict_.end();
+    for( ; it != endit ; ++it) {
+      Shader &shader = it->second;
+      shader.Deinit();
+    }
   }
 }
 
-void ShaderManager::SetUp() {
-  {
-    //const color shader
-    Shader shader;
-    shader.Init(const_color_vert_src, const_color_frag_src);
-    shader_dict_[kConstColor] = shader;
-  }
-
-  {
-    //albedo shader
-    Shader shader;
-    shader.Init(albedo_vert_src, albedo_frag_src);
-    shader_dict_[kAlbedo] = shader;
-  }
-
-  {
-    //vertex color shader
-    Shader shader;
-    shader.Init(vertex_color_vert_src, vertex_color_frag_src);
-    shader_dict_[kAlbedo] = shader;
-  }
-
-  {
-    //text
-    Shader shader;
-    shader.Init(albedo_vert_src, text_frag_src);
-    shader_dict_[kText] = shader;
-  }
-  
+void ShaderManager::SetUp() {  
 }
+
+Shader *ShaderManager::Get(SystemShaderType type) {
+  struct SysShaderInitData {
+    SystemShaderType type;
+    const char *vert_src;
+    const char *frag_src;
+    const char *name;
+  };
+  SysShaderInitData init_data[] = {
+    { kConstColor, const_color_vert_src, const_color_frag_src, "Const Color" },
+    { kAlbedo, albedo_vert_src, albedo_frag_src, "Albedo" },
+    { kVertexColor, vertex_color_vert_src, vertex_color_frag_src, "Vertex Color" },
+    { kText, albedo_vert_src, text_frag_src, "Text" },
+  };
+  int data_size = GetArraySize(init_data);
+  for(int i = 0 ; i < data_size ; ++i) {
+    const SysShaderInitData &data = init_data[i];
+    if(data.type == type) {
+      auto it = sys_shader_dict_.find(type);
+      if(it != sys_shader_dict_.end()) {
+        return &it->second;
+      }
+      Shader shader;
+      LOGI("System Shader Name : %s", data.name);
+      shader.Init(data.vert_src, data.frag_src);
+      sys_shader_dict_[type] = shader;
+      return &sys_shader_dict_[type];
+    }
+  }
+  SR_ASSERT(!"not valid system shader");
+  //not found..
+  return NULL;
+}
+
 bool ShaderManager::Add(const Shader &shader, const std::string &name) {
   if(IsExist(name) == true) {
     return false;
