@@ -98,7 +98,7 @@
     <ClCompile Include="gl_env.cpp" />
     <ClCompile Include="gl_frame_buffer.cpp" />
     <ClCompile Include="gl_renderer.cpp" />
-    <ClCompile Include="gl_render_device.cpp" />
+    <ClCompile Include="gl_render_state.cpp" />
     <ClCompile Include="gl_shader.cpp" />
     <ClCompile Include="gl_shader_variable.cpp" />
     <ClCompile Include="gl_texture.cpp" />
@@ -120,7 +120,7 @@
     <ClCompile Include="obj_model.cpp" />
     <ClCompile Include="parametric_surface.cpp" />
     <ClCompile Include="post_effect.cpp" />
-    <ClCompile Include="render_device.cpp" />
+    <ClCompile Include="render_state.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="shader_manager.cpp" />
     <ClCompile Include="shader_variable.cpp" />
@@ -176,7 +176,7 @@
     <ClInclude Include="gl_frame_buffer.h" />
     <ClInclude Include="gl_inc.h" />
     <ClInclude Include="gl_renderer.h" />
-    <ClInclude Include="gl_render_device.h" />
+    <ClInclude Include="gl_render_state.h" />
     <ClInclude Include="gl_shader.h" />
     <ClInclude Include="gl_shader_variable.h" />
     <ClInclude Include="gl_texture.h" />
@@ -205,7 +205,7 @@
     <ClInclude Include="rect.h" />
     <ClInclude Include="renderer.h" />
     <ClInclude Include="renderer_env.h" />
-    <ClInclude Include="render_device.h" />
+    <ClInclude Include="render_state.h" />
     <ClInclude Include="shader_manager.h" />
     <ClInclude Include="str_code.h" />
     <ClInclude Include="shader.h" />

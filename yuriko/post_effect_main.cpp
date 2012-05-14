@@ -50,7 +50,7 @@
 #include "frame_buffer.h"
 #include "post_effect.h"
 
-#include "render_device.h"
+#include "render_state.h"
 #include "geometric_object.h"
 
 using namespace std;
@@ -70,7 +70,7 @@ namespace posteffect {
   FrameBuffer depth_fbo;
 
   void setup_graphics(Device *device, int w, int h) {
-    device->render_device().SetWinSize(w, h);
+    device->render_state().SetWinSize(w, h);
     depth_fbo.InitAsDepthTex(w, h);
 
     LOGI("Version : %s", RendererEnv::Version().c_str());
@@ -132,10 +132,10 @@ namespace posteffect {
     Renderer::ClearScreen();
 
     //3d
-    device->render_device().Set3D();
+    device->render_state().Set3D();
 
     depth_fbo.Bind();  //fbo로 그리기. deferred같은거 구현하기 위해서 임시로 시도함
-    device->render_device().Set3D();
+    device->render_state().Set3D();
     Renderer::SetClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     Renderer::ClearScreen();
 
@@ -161,7 +161,7 @@ namespace posteffect {
 
     {
       //shader사용 선언이 가장 먼저
-      device->render_device().UseShader(color_shader);
+      device->render_state().UseShader(color_shader);
       SR_CHECK_ERROR("UseShader");
 
       mat4 mvp(1.0f);
@@ -183,9 +183,9 @@ namespace posteffect {
 
     {
       //shader사용 선언이 가장 먼저
-      device->render_device().UseShader(simple_shader);
+      device->render_state().UseShader(simple_shader);
       TexturePtr tex = device->tex_mgr()->Get("sora");
-      device->render_device().UseTexture(*tex);
+      device->render_state().UseTexture(*tex);
       SR_CHECK_ERROR("UseShader");
       mat4 mvp(1.0f);
       mvp = glm::rotate(mvp, 10.0f, vec3(0, 0, 1));
@@ -199,8 +199,8 @@ namespace posteffect {
     //일반 3d객체 그리기+카메라 회전 장착
     {
       //set camera + projection
-      float win_width = (float)device->render_device().win_width();
-      float win_height = (float)device->render_device().win_height();
+      float win_width = (float)device->render_state().win_width();
+      float win_height = (float)device->render_state().win_height();
       glm::mat4 projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 100.0f);
       float radius = 4;
       float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
@@ -260,14 +260,14 @@ namespace posteffect {
     /*
     //fbo에 있는 내용을 적절히 그리기
     {
-    device->render_device().Set2D();
-    device->render_device().UseShader(simple_shader);
+    device->render_state().Set2D();
+    device->render_state().UseShader(simple_shader);
     ShaderVariable mvp_var = simple_shader.uniform_var(kMVPHandleName);
     mat4 world_mat(1.0f);
     SetUniformMatrix(mvp_var, world_mat);
 
-    //device->render_device().UseTexture(depth_fbo.color_tex());
-    device->render_device().UseTexture(depth_fbo.depth_tex());
+    //device->render_state().UseTexture(depth_fbo.color_tex());
+    device->render_state().UseTexture(depth_fbo.depth_tex());
 
     Vertex2DList vert_list;
     vert_list.push_back(CreateVertex2D(-1, -1, 0, 0));
@@ -278,9 +278,9 @@ namespace posteffect {
     simple_shader.DrawArrays(kDrawTriangleFan, vert_list.size());
     }
     */
-    null_post_effect.DrawScissor(depth_fbo.color_tex(), &device->render_device(), 0, 0, 320, 480);
-    grayscale_post_effect.DrawScissor(depth_fbo.color_tex(), &device->render_device(), 320, 0, 320, 480);
-    grayscale_post_effect.Draw(depth_fbo.color_tex(), &device->render_device(), 100, 100, 100, 100);
+    null_post_effect.DrawScissor(depth_fbo.color_tex(), &device->render_state(), 0, 0, 320, 480);
+    grayscale_post_effect.DrawScissor(depth_fbo.color_tex(), &device->render_state(), 320, 0, 320, 480);
+    grayscale_post_effect.Draw(depth_fbo.color_tex(), &device->render_state(), 100, 100, 100, 100);
 
     SR_CHECK_ERROR("End RenderFrame");
   }

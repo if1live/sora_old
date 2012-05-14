@@ -25,14 +25,14 @@
 
 #include "globals.h"
 #include "gl_env.h"
-#include "render_device.h"
+#include "render_state.h"
 
 namespace sora {;
 namespace gl {
-  class GLRenderDevice : public sora::RenderDeviceInterface {
+  class GLRenderState : public sora::RenderStateInterface {
   public:
-    GLRenderDevice();
-    ~GLRenderDevice();
+    GLRenderState();
+    ~GLRenderState();
 
     void EndRender();
 

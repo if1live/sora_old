@@ -22,7 +22,7 @@
 #include "post_effect.h"
 
 #include "vertex.h"
-#include "render_device.h"
+#include "render_state.h"
 
 using namespace glm;
 using namespace std;
@@ -40,7 +40,7 @@ void PostEffect::Deinit() {
   post_effect_.Deinit();
 }
 
-void PostEffect::Draw(Texture &tex, RenderDevice *dev) {
+void PostEffect::Draw(Texture &tex, RenderState *dev) {
   dev->Set2D();
   dev->UseShader(post_effect_);
   dev->UseTexture(tex);
@@ -57,7 +57,7 @@ void PostEffect::Draw(Texture &tex, RenderDevice *dev) {
   post_effect_.SetVertexList(vert_list);
   post_effect_.DrawArrays(kDrawTriangleFan, vert_list.size());
 }
-void PostEffect::Draw(Texture &tex, RenderDevice *dev, int x, int y, int w, int h) {
+void PostEffect::Draw(Texture &tex, RenderState *dev, int x, int y, int w, int h) {
   dev->Set2D();
   dev->UseShader(post_effect_);
   dev->UseTexture(tex);
@@ -88,7 +88,7 @@ void PostEffect::Draw(Texture &tex, RenderDevice *dev, int x, int y, int w, int 
   post_effect_.DrawArrays(kDrawTriangleFan, vert_list.size());
 }
 
-void PostEffect::DrawScissor(Texture &tex, RenderDevice *dev, int x, int y, int w, int h) {
+void PostEffect::DrawScissor(Texture &tex, RenderState *dev, int x, int y, int w, int h) {
   glEnable(GL_SCISSOR_TEST);
   glScissor(x, y, w, h);
   Draw(tex, dev);

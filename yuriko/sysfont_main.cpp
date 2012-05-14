@@ -24,7 +24,7 @@
 #include "shader.h"
 #include "device.h"
 #include "renderer_env.h"
-#include "render_device.h"
+#include "render_state.h"
 #include "filesystem.h"
 #include "vertex.h"
 #include "debug_draw_manager.h"
@@ -37,7 +37,7 @@ using namespace glm;
 namespace sora {;
 namespace sysfont {
   void setup_graphics(sora::Device *dev, int w, int h) {
-    dev->render_device().SetWinSize(w, h);
+    dev->render_state().SetWinSize(w, h);
 
     LOGI("Version : %s", RendererEnv::Version().c_str());
     LOGI("Vendor : %s", RendererEnv::Vender().c_str());

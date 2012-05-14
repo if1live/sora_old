@@ -21,7 +21,7 @@
 #include "sora_test_stdafx.h"
 #include "shader.h"
 
-#include "sora/render_device.h"
+#include "sora/render_state.h"
 
 using namespace sora;
 
@@ -53,7 +53,7 @@ TEST(Shader, basic) {
   EXPECT_EQ(true, shader.Validate());
   SR_CHECK_ERROR("Validate");
 
-  RenderDevice dev;
+  RenderState dev;
   dev.UseShader(shader);
 
   glm::mat4 m1;

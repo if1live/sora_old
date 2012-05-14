@@ -19,8 +19,8 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_stdafx.h"
-#include "render_device.h"
-#include "gl_render_device.h"
+#include "render_state.h"
+#include "gl_render_state.h"
 
 #include "shader.h"
 #include "texture.h"
@@ -33,17 +33,17 @@
 using namespace glm;
 
 namespace sora {;
-RenderDevice::RenderDevice()
+RenderState::RenderState()
 : policy_(nullptr),
 win_width_(640),
 win_height_(480),
 model_mat_stack_(new MatrixStack()), 
 projection_mat_(glm::mat4(1.0f)),
 view_mat_(glm::mat4(1.0f)) {
-  policy_ = new sora::gl::GLRenderDevice();
+  policy_ = new sora::gl::GLRenderState();
 }
 
-RenderDevice::~RenderDevice() {
+RenderState::~RenderState() {
   if(policy_ != nullptr) {
     delete(policy_);
     policy_ = nullptr;
@@ -51,24 +51,24 @@ RenderDevice::~RenderDevice() {
 }
 
 
-void RenderDevice::UseShader(Shader &shader) { 
+void RenderState::UseShader(Shader &shader) { 
   policy_->UseShader(shader); 
 }
-void RenderDevice::UseTexture(Texture &tex) { 
+void RenderState::UseTexture(Texture &tex) { 
   policy_->UseTexture(tex); 
 }
 
-void RenderDevice::Set2D() {
+void RenderState::Set2D() {
   policy_->Set2D(); 
 }
-void RenderDevice::Set3D() { 
+void RenderState::Set3D() { 
   policy_->Set3D(); 
 }
 
-void RenderDevice::EndRender() {
+void RenderState::EndRender() {
   policy_->EndRender(); 
 }
-void RenderDevice::SetWinSize(int width, int height) { 
+void RenderState::SetWinSize(int width, int height) { 
   if(win_width_ != width || win_height_ != height) {
     policy_->SetWinSize(width, height); 
     win_width_ = width;
@@ -76,21 +76,21 @@ void RenderDevice::SetWinSize(int width, int height) {
   }
 }
 
-void RenderDevice::ResetAllMatrix() {
+void RenderState::ResetAllMatrix() {
   ResetProjectionMat();
   ResetViewMat();
   ResetModelMat();
 }
-void RenderDevice::ResetProjectionMat() {
+void RenderState::ResetProjectionMat() {
   projection_mat_ = glm::mat4(1.0f);
 }
-void RenderDevice::ResetViewMat() {
+void RenderState::ResetViewMat() {
   view_mat_ = glm::mat4(1.0f);
 }
-void RenderDevice::ResetModelMat() {
+void RenderState::ResetModelMat() {
   model_mat_stack_->Clear();
 }
-const glm::mat4 &RenderDevice::model_mat() const {
+const glm::mat4 &RenderState::model_mat() const {
   return model_mat_stack_->Top();
 }
 

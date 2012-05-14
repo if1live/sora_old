@@ -39,7 +39,7 @@ class TextureManager;
 class MaterialManager;
 class MeshManager;
 class SysFont;
-class RenderDevice;
+class RenderState;
 class DebugDrawManager;
 class ShaderManager;
 
@@ -49,7 +49,7 @@ public:
   static bool CreateDevice();
   static bool DestroyDevice();
 
-  RenderDevice &render_device() { return *render_device_; }
+  RenderState &render_state() { return *render_state_; }
 
   TouchEventQueue &touch_evt_queue() { return *touch_evt_queue_; }
   KeyboardEventQueue &keyboard_evt_queue() { return *keyboard_evt_queue_; }
@@ -73,7 +73,7 @@ private:
 private:
   std::unique_ptr<TouchEventQueue> touch_evt_queue_;
   std::unique_ptr<KeyboardEventQueue> keyboard_evt_queue_;
-  std::unique_ptr<RenderDevice> render_device_;
+  std::unique_ptr<RenderState> render_state_;
 
   std::unique_ptr<MeshManager> mesh_mgr_;
   std::unique_ptr<TextureManager> tex_mgr_;

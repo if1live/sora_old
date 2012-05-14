@@ -24,7 +24,7 @@
 #include "shader.h"
 #include "device.h"
 #include "renderer_env.h"
-#include "render_device.h"
+#include "render_state.h"
 #include "freeglut_font.h"
 #include "filesystem.h"
 
@@ -37,7 +37,7 @@ namespace freeglut {
   Shader color_shader;
 
   void setup_graphics(sora::Device *dev, int w, int h) {
-    dev->render_device().SetWinSize(w, h);
+    dev->render_state().SetWinSize(w, h);
 
     LOGI("Version : %s", RendererEnv::Version().c_str());
     LOGI("Vendor : %s", RendererEnv::Vender().c_str());
@@ -66,14 +66,14 @@ namespace freeglut {
     SR_CHECK_ERROR("Render 2d start");
     //텍스트는 3d에도 찍을수 잇겟지만 지금은 2d로 충분하니까 2D로 렌더링함
     //glut font는 디버깅이라든가 그런 용도에 쓰이게 될 것이다
-    dev->render_device().Set2D();
+    dev->render_state().Set2D();
     
     //단색으로 glut용 그리기
-    dev->render_device().UseShader(color_shader);
+    dev->render_state().UseShader(color_shader);
     sora::Shader &shader = color_shader;
 
-    float win_width = (float)dev->render_device().win_width();
-    float win_height = (float)dev->render_device().win_height();
+    float win_width = (float)dev->render_state().win_width();
+    float win_height = (float)dev->render_state().win_height();
     glm::mat4 projection = glm::ortho(0.0f, win_width, 0.0f, win_height);
 
     for(int i = 0 ; i < 2 ; i++) {

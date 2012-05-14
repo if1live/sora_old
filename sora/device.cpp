@@ -27,7 +27,7 @@
 #include "filesystem.h"
 #include "memory_file.h"
 
-#include "render_device.h"
+#include "render_state.h"
 
 #include "mesh.h"
 #include "material.h"
@@ -49,7 +49,7 @@ mesh_mgr_(new MeshManager()),
 tex_mgr_(new TextureManager()),
 mtl_mgr_(new MaterialManager()),
 sys_font_(new SysFont()),
-render_device_(new RenderDevice()),
+render_state_(new RenderState()),
 draw_2d_(new Draw2DManager()),
 debug_draw_mgr_(new DebugDrawManager()),
 shader_mgr_(new ShaderManager()) {
@@ -62,7 +62,7 @@ Device::~Device() {
 void Device::EndTick() {
   keyboard_evt_queue_->Clear();
   touch_evt_queue_->Clear();
-  render_device_->EndRender();
+  render_state_->EndRender();
 }
 
 Device *Device::GetInstance() {

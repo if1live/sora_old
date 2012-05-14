@@ -19,7 +19,7 @@
 // THE SOFTWARE.
 // Ŭnicode please
 #include "sora_test_stdafx.h"
-#include "sora/render_device.h"
+#include "sora/render_state.h"
 
 using namespace glm;
 using namespace std;

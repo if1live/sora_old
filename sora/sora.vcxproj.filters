@@ -145,9 +145,6 @@
     <ClCompile Include="gl_frame_buffer.cpp">
       <Filter>renderer\gl</Filter>
     </ClCompile>
-    <ClCompile Include="gl_render_device.cpp">
-      <Filter>renderer\gl</Filter>
-    </ClCompile>
     <ClCompile Include="gl_renderer.cpp">
       <Filter>renderer\gl</Filter>
     </ClCompile>
@@ -232,14 +229,17 @@
     <ClCompile Include="material.cpp">
       <Filter>material</Filter>
     </ClCompile>
-    <ClCompile Include="render_device.cpp">
-      <Filter>renderer</Filter>
-    </ClCompile>
     <ClCompile Include="matrix_helper.cpp">
       <Filter>math</Filter>
     </ClCompile>
     <ClCompile Include="shader_manager.cpp">
       <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="render_state.cpp">
+      <Filter>renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="gl_render_state.cpp">
+      <Filter>renderer\gl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -384,9 +384,6 @@
     <ClInclude Include="post_effect.h">
       <Filter>renderer</Filter>
     </ClInclude>
-    <ClInclude Include="render_device.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
     <ClInclude Include="renderer.h">
       <Filter>renderer</Filter>
     </ClInclude>
@@ -412,9 +409,6 @@
       <Filter>renderer\gl</Filter>
     </ClInclude>
     <ClInclude Include="gl_inc.h">
-      <Filter>renderer\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="gl_render_device.h">
       <Filter>renderer\gl</Filter>
     </ClInclude>
     <ClInclude Include="gl_renderer.h">
@@ -512,6 +506,12 @@
     </ClInclude>
     <ClInclude Include="shader_manager.h">
       <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="render_state.h">
+      <Filter>renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="gl_render_state.h">
+      <Filter>renderer\gl</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

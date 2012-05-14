@@ -22,11 +22,11 @@
 #include "debug_draw_manager.h"
 #include "template_lib.h"
 #include "shader.h"
-#include "render_device.h"
+#include "render_state.h"
 #include "geometric_object.h"
 #include "matrix_stack.h"
 #include "device.h"
-#include "render_device.h"
+#include "render_state.h"
 
 #include "draw_2d_manager.h"
 
@@ -53,7 +53,7 @@ struct DebugDrawCmd {
     : type(type),
     duration(0),
     depth_enable(true) {
-    RenderDevice &render_dev = Device::GetInstance()->render_device();
+    RenderState &render_dev = Device::GetInstance()->render_state();
     projection_mat = render_dev.projection_mat();
     view_mat = render_dev.view_mat();
     model_mat = render_dev.model_mat();

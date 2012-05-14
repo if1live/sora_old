@@ -22,7 +22,7 @@
 #include "draw_2d_manager.h"
 #include "debug_draw_manager.h"
 #include "shader.h"
-#include "render_device.h"
+#include "render_state.h"
 #include "filesystem.h"
 #include "device.h"
 #include "sys_font.h"
@@ -168,14 +168,14 @@ void Draw2DManager::AddSphere(const glm::vec2 &pos, float radius,
 ///////////////////////////////////////
 
 void Draw2DPolicy::BeforeDraw() {
-  RenderDevice *dev = &Device::GetInstance()->render_device();
+  RenderState *dev = &Device::GetInstance()->render_state();
   dev->Set2D();
 }
 
 void Draw2DPolicy::DrawElem(DrawCmd2D_Line *cmd) {
   ShaderManager *shader_mgr = Device::GetInstance()->shader_mgr();
   Shader &shader = *(shader_mgr->Get(ShaderManager::kConstColor));
-  RenderDevice *dev = &Device::GetInstance()->render_device();
+  RenderState *dev = &Device::GetInstance()->render_state();
   dev->UseShader(shader);
 
   vec4 color = ConvertColor(cmd->color);
@@ -201,7 +201,7 @@ void Draw2DPolicy::DrawElem(DrawCmd2D_Line *cmd) {
 void Draw2DPolicy::DrawElem(DrawCmd2D_Cross *cmd) {
   ShaderManager *shader_mgr = Device::GetInstance()->shader_mgr();
   Shader &shader = *(shader_mgr->Get(ShaderManager::kConstColor));
-  RenderDevice *dev = &Device::GetInstance()->render_device();
+  RenderState *dev = &Device::GetInstance()->render_state();
   dev->UseShader(shader);
 
   vec4 color = ConvertColor(cmd->color);
@@ -226,7 +226,7 @@ void Draw2DPolicy::DrawElem(DrawCmd2D_Cross *cmd) {
 void Draw2DPolicy::DrawElem(DrawCmd2D_Sphere *cmd) {
   ShaderManager *shader_mgr = Device::GetInstance()->shader_mgr();
   Shader &shader = *(shader_mgr->Get(ShaderManager::kConstColor));
-  RenderDevice *dev = &Device::GetInstance()->render_device();
+  RenderState *dev = &Device::GetInstance()->render_state();
   dev->UseShader(shader);
 
   vec4 color = ConvertColor(cmd->color);
@@ -259,7 +259,7 @@ void Draw2DPolicy::DrawElem(DrawCmd2D_Sphere *cmd) {
 void Draw2DPolicy::DrawElem(DrawCmd2D_String *cmd) {
   ShaderManager *shader_mgr = Device::GetInstance()->shader_mgr();
   Shader &shader = *(shader_mgr->Get(ShaderManager::kText));
-  RenderDevice *dev = &Device::GetInstance()->render_device();
+  RenderState *dev = &Device::GetInstance()->render_state();
   dev->UseShader(shader);
 
   vec4 color = ConvertColor(cmd->color);

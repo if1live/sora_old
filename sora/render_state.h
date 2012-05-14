@@ -24,13 +24,13 @@
 #include "globals.h"
 
 namespace sora {;
-struct RenderDeviceInterface;
+struct RenderStateInterface;
 class MatrixStack;
 
-class RenderDevice {
+class RenderState {
 public:
-  RenderDevice();
-  ~RenderDevice();
+  RenderState();
+  ~RenderState();
 
   void UseShader(Shader &shader);
   void UseTexture(Texture &tex);
@@ -63,7 +63,7 @@ public:
   void ResetModelMat();
 
 private:
-  RenderDeviceInterface *policy_;
+  RenderStateInterface *policy_;
   int win_width_;
   int win_height_;
 
@@ -73,9 +73,9 @@ private:
   //텍스쳐 좌표 스택까지 전역으로 묶을 필요가 잇을까? 해서 일단 미뤄놧다. 필요해지면 그떄 넣지뭐
 };
 
-struct RenderDeviceInterface {
-  RenderDeviceInterface() {}
-  virtual ~RenderDeviceInterface() {}
+struct RenderStateInterface {
+  RenderStateInterface() {}
+  virtual ~RenderStateInterface() {}
 
   virtual void UseShader(Shader &shader) = 0;
   virtual void UseTexture(Texture &tex) = 0;

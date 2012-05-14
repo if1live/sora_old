@@ -37,7 +37,7 @@
 
 #include "device.h"
 #include "memory_file.h"
-#include "render_device.h"
+#include "render_state.h"
 
 #include "vertex.h"
 #include "math_helper.h"
@@ -100,11 +100,11 @@ FpsCounter fps_counter;
 
 
 void SORA_set_window_size(Device *device, int w, int h) {
-  device->render_device().SetWinSize(w, h);
+  device->render_state().SetWinSize(w, h);
 }
 
 bool setupGraphics(Device *device, int w, int h) {
-  device->render_device().SetWinSize(w, h);
+  device->render_state().SetWinSize(w, h);
   depth_fbo.InitAsDepthTex(w, h);
   uber_renderer.Init();   //uber shader느낌으로 렌더링하기
 
@@ -195,7 +195,7 @@ bool setupGraphics(Device *device, int w, int h) {
 
     //Mesh *mesh = new Mesh();
     //mesh->Register(obj_model.cmd_list());
-    //device->render_device().mesh_mgr().Add("mesh", mesh);
+    //device->render_state().mesh_mgr().Add("mesh", mesh);
     
     /*
     //첫번쨰 물체 = obj model
@@ -266,10 +266,10 @@ void renderFrame(Device *device) {
 
 
   //3d
-  device->render_device().Set3D();
+  device->render_state().Set3D();
   /*
   depth_fbo.Bind();  //fbo로 그리기. deferred같은거 구현하기 위해서 임시로 시도함
-  device->render_device().Set3D();
+  device->render_state().Set3D();
   Renderer::SetClearColor(0.3f, 0.3f, 0.3f, 1.0f);
   Renderer::ClearScreen();
   */
@@ -296,15 +296,15 @@ void renderFrame(Device *device) {
     uber_renderer.SetMaterial(mtl);
     uber_renderer.SetLight(light);
     Shader &shader = uber_renderer.GetCurrShader();
-    device->render_device().UseShader(shader);
+    device->render_state().UseShader(shader);
     uber_renderer.ApplyMaterialLight();
 
     
-    //device->render_device().UseShader(simple_shader);
+    //device->render_state().UseShader(simple_shader);
    
     //set camera + projection
-    //float win_width = (float)device->render_device().win_width();
-    //float win_height = (float)device->render_device().win_height();
+    //float win_width = (float)device->render_state().win_width();
+    //float win_height = (float)device->render_state().win_height();
     //glm::mat4 projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 100.0f);
 
     float radius = 4;
@@ -333,7 +333,7 @@ void renderFrame(Device *device) {
   //depth_fbo.Unbind();
 
   //fbo에 있는 내용을 적절히 그리기
-  //null_post_effect.Draw(depth_fbo.color_tex(), &device->render_device());
+  //null_post_effect.Draw(depth_fbo.color_tex(), &device->render_state());
 
   
   {
@@ -347,8 +347,8 @@ void renderFrame(Device *device) {
     //fps카운터 적절히 렌더링
     char fps_buf[16];
     sprintf(fps_buf, "FPS:%.2f", fps_counter.GetFPS());
-    //float scr_width = device->render_device().win_width();
-    float scr_height = (float)device->render_device().win_height();
+    //float scr_width = device->render_state().win_width();
+    float scr_height = (float)device->render_state().win_height();
     draw_2d_mgr->AddString(vec2(0, scr_height), fps_buf, Color_White(), 1.5f);
 
     sora::Draw2DPolicy draw_policy;
@@ -433,8 +433,8 @@ void SORA_update_frame(Device *device, float dt) {
     bool is_right = false;
     bool is_bottom = false;
     bool is_top = false;
-    float scr_width = (float)device->render_device().win_width();
-    float scr_height = (float)device->render_device().win_height();
+    float scr_width = (float)device->render_state().win_width();
+    float scr_height = (float)device->render_state().win_height();
     if(x < scr_width / 3) {
       is_left = true;
     }

@@ -21,7 +21,7 @@
 #include "sora_stdafx.h"
 #include "gl_uber_shader_renderer.h"
 
-#include "render_device.h"
+#include "render_state.h"
 #include "uber_shader.h"
 #include "texture.h"
 #include "camera.h"
@@ -51,7 +51,7 @@ namespace gl {
   }
   void GLUberShaderRenderer::SetCamera(const Camera &cam, const glm::mat4 &model) {
     Device *dev = Device::GetInstance();
-    RenderDevice *render_dev = &dev->render_device();
+    RenderState *render_dev = &dev->render_state();
 
     float win_w = (float)render_dev->win_width();
     float win_h = (float)render_dev->win_height();
@@ -92,7 +92,7 @@ namespace gl {
 
   void GLUberShaderRenderer::ApplyMaterialLight() {
     Device *dev = Device::GetInstance();
-    RenderDevice *render_dev = &dev->render_device();
+    RenderState *render_dev = &dev->render_state();
 
     unsigned int flag = material_.props;
     Shader &shader = GetCurrShader();
