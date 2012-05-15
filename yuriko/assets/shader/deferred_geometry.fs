@@ -8,7 +8,7 @@ uniform sampler2D s_diffuseMap;
 
 void main() {
 	//RT0 : view-space normal
-	//RT1 : diffuse	
+	//RT1 : diffuse(albedo * diffuse * normal color)
 	gl_FragData[0] = vec4(v_normal, 1.0);
 	gl_FragData[1] = v_color;
 }

@@ -100,6 +100,14 @@ FpsCounter fps_counter;
 DeferredRenderer deferred_renderer;
 ForwardRenderer forward_renderer;
 
+//deferred renderer에서 어떤 버퍼를 렌더링 할 것인가?
+int curr_deferred_fbo_idx = 0;
+enum {
+  kDeferredRendererTexDepth,
+  kDeferredRendererTexNormal,
+  kDeferredRendererTexDiffuse,
+};
+
 void SORA_set_window_size(Device *device, int w, int h) {
   device->render_state().SetWinSize(w, h);
 }
@@ -282,8 +290,27 @@ void renderFrame(Device *device) {
   glm::mat4 view_mat = glm::lookAt(eye, center, up);
   device->render_state().set_view_mat(view_mat);
 
+  //테스트용 마테리얼은 일단 공통
+  Material mtl;
+  mtl.ambient = vec4(0.1, 0.1, 0.1, 1);
+  mtl.diffuse = vec4(0.3, 0.3, 0.3, 1);
+  //mtl.diffuse = vec4(1, 1, 1, 1);
+  mtl.specular = vec4(1);
+  mtl.shininess = 20;
+  //mtl.diffuse_map = "mtl_diffuse";
+  mtl.diffuse_map = "sora2";
+  mtl.specular_map = "mtl_specular";
+  mtl.normal_map = "mtl_normal";
+  mtl.props |= kMaterialAmbient;
+  mtl.props |= kMaterialDiffuse;
+  mtl.props |= kMaterialDiffuseMap;
+  mtl.props |= kMaterialSpecular;
+  mtl.props |= kMaterialSpecularMap;
+  //mtl.props |= kMaterialNormalMap;
+
   {
     deferred_renderer.BeginGeometryPass();
+    deferred_renderer.SetMaterial(mtl);
     deferred_renderer.ApplyGeomertyPassRenderState();
     Mesh *mesh = device->mesh_mgr()->Get("mesh");
     deferred_renderer.DrawMesh(mesh);
@@ -295,24 +322,6 @@ void renderFrame(Device *device) {
   {
     //forward renderer
     forward_renderer.BeginPass();
-
-    //일반 3d객체 그리기+카메라 회전 장착
-    Material mtl;
-    mtl.ambient = vec4(0.1, 0.1, 0.1, 1);
-    mtl.diffuse = vec4(0.3, 0.3, 0.3, 1);
-    //mtl.diffuse = vec4(1, 1, 1, 1);
-    mtl.specular = vec4(1);
-    mtl.shininess = 20;
-    //mtl.diffuse_map = "mtl_diffuse";
-    mtl.diffuse_map = "sora2";
-    mtl.specular_map = "mtl_specular";
-    mtl.normal_map = "mtl_normal";
-    mtl.props |= kMaterialAmbient;
-    mtl.props |= kMaterialDiffuse;
-    mtl.props |= kMaterialDiffuseMap;
-    mtl.props |= kMaterialSpecular;
-    mtl.props |= kMaterialSpecularMap;
-    //mtl.props |= kMaterialNormalMap;
 
     forward_renderer.SetMaterial(mtl);
     forward_renderer.SetLight(light);
@@ -328,8 +337,15 @@ void renderFrame(Device *device) {
 
   //fbo에 있는 내용을 적절히 그리기
   //null_post_effect.Draw(depth_fbo.color_tex(), &device->render_state());
-  //null_post_effect.Draw(deferred_renderer.DepthTex(), &device->render_state());
-  null_post_effect.Draw(deferred_renderer.NormalTex(), &device->render_state());
+  if(curr_deferred_fbo_idx == kDeferredRendererTexDepth) {
+    null_post_effect.Draw(deferred_renderer.DepthTex(), &device->render_state());
+  } else if(curr_deferred_fbo_idx == kDeferredRendererTexDiffuse) {
+    null_post_effect.Draw(deferred_renderer.DiffuseTex(), &device->render_state());
+  } else if(curr_deferred_fbo_idx == kDeferredRendererTexNormal) {
+    null_post_effect.Draw(deferred_renderer.NormalTex(), &device->render_state());
+  }
+  
+  
 
   /*
   {
@@ -500,6 +516,18 @@ void SORA_update_frame(Device *device, float dt) {
         break;
       case KeyboardEvent::kRight:
         SORA_set_cam_pos(0, -x);
+        break;
+      }
+    } else {
+      switch(evt.ch) {
+      case '1':
+        curr_deferred_fbo_idx = kDeferredRendererTexDepth;
+        break;
+      case '2':
+        curr_deferred_fbo_idx = kDeferredRendererTexNormal;
+        break;
+      case '3':
+        curr_deferred_fbo_idx = kDeferredRendererTexDiffuse;
         break;
       }
     }

@@ -34,7 +34,7 @@ struct KeyboardEvent {
     kUp,
     kDown,
     kLeft,
-    kRight
+    kRight,
   };
   KeyboardEvent() : state(-1), is_special_key(false), ch(0) { }
   int state;  //press/release

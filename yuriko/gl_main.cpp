@@ -122,6 +122,30 @@ void run_main(sora::Device *dev) {
       evt.ch = sora::KeyboardEvent::kRight;
       dev->keyboard_evt_queue().Push(evt);
     }
+    if(glfwGetKey('1') == GLFW_PRESS) {
+      sora::KeyboardEvent evt;
+      evt.is_special_key = false;
+      evt.ch = '1';
+      dev->keyboard_evt_queue().Push(evt);
+    }
+    if(glfwGetKey('2') == GLFW_PRESS) {
+      sora::KeyboardEvent evt;
+      evt.is_special_key = false;
+      evt.ch = '2';
+      dev->keyboard_evt_queue().Push(evt);
+    }
+    if(glfwGetKey('3') == GLFW_PRESS) {
+      sora::KeyboardEvent evt;
+      evt.is_special_key = false;
+      evt.ch = '3';
+      dev->keyboard_evt_queue().Push(evt);
+    }
+    if(glfwGetKey('4') == GLFW_PRESS) {
+      sora::KeyboardEvent evt;
+      evt.is_special_key = false;
+      evt.ch = '4';
+      dev->keyboard_evt_queue().Push(evt);
+    }
 
     SORA_draw_frame(dev);
     float curr_time = Timer_GetSecond();

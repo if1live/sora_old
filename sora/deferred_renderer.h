@@ -25,6 +25,7 @@
 namespace sora {;
 class GBuffer;
 class Mesh;
+class Material;
 
 class DeferredRenderer {
 public:
@@ -38,6 +39,7 @@ public:
   void EndGeometryPass();
   void ApplyGeomertyPassRenderState();
   void DrawMesh(Mesh *mesh);
+  void SetMaterial(const Material &mtl);
 
   GBuffer &gbuffer() { return *gbuffer_; }
 
@@ -48,6 +50,7 @@ public:
 private:
   std::unique_ptr<Shader> geometry_shader_;
   std::unique_ptr<GBuffer> gbuffer_;
+  std::unique_ptr<Material> material_;
 };
 
 } //namespace sora

@@ -29,13 +29,16 @@
 #include "renderer.h"
 #include "device.h"
 #include "render_state.h"
+#include "material.h"
+#include "texture.h"
 
 using namespace std;
 using namespace glm;
 
 namespace sora {;
 
-DeferredRenderer::DeferredRenderer() {
+DeferredRenderer::DeferredRenderer()
+  : material_(new Material()) {
 }
 DeferredRenderer::~DeferredRenderer() {
 
@@ -89,6 +92,9 @@ void DeferredRenderer::ApplyGeomertyPassRenderState() {
   ShaderVariable view_inv_transpose_var = geometry_shader_->uniform_var("u_model3_InverseTranspose");
   SR_ASSERT(view_inv_transpose_var.location != kInvalidShaderVarLocation);
   SetUniformMatrix(view_inv_transpose_var, view_mat3_inv_transpose);
+
+  //마테리얼 정보 적절히 수동으로 설정하기
+  //deferred와 forward에서의 쉐이더 코드는 완전히 다르니까 render state로 마테리얼 설정은 불가능하다
 }
 void DeferredRenderer::DrawMesh(Mesh *mesh) {
   geometry_shader_->DrawMeshIgnoreMaterial(mesh);
@@ -102,6 +108,10 @@ Texture DeferredRenderer::NormalTex() const {
 }
 Texture DeferredRenderer::DiffuseTex() const {
   return gbuffer_->DiffuseTex();
+}
+
+void DeferredRenderer::SetMaterial(const Material &mtl) {
+  *material_ = mtl;
 }
 
 } //namespace sora
