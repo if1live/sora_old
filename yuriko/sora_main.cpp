@@ -72,6 +72,10 @@
 #include "fps_counter.h"
 #include "draw_2d_manager.h"
 
+#include "deferred_renderer.h"
+#include "gbuffer.h"
+#include "forward_renderer.h"
+
 using namespace std;
 using namespace sora;
 using namespace glm;
@@ -92,11 +96,9 @@ IndexBufferObject wire_ibo;
 
 FrameBuffer depth_fbo;
 
-//uber shader직통으로 써보기
-sora::gl::GLUberShaderRenderer uber_renderer;
-
 FpsCounter fps_counter;
-
+DeferredRenderer deferred_renderer;
+ForwardRenderer forward_renderer;
 
 void SORA_set_window_size(Device *device, int w, int h) {
   device->render_state().SetWinSize(w, h);
@@ -105,7 +107,7 @@ void SORA_set_window_size(Device *device, int w, int h) {
 bool setupGraphics(Device *device, int w, int h) {
   device->render_state().SetWinSize(w, h);
   depth_fbo.InitAsDepthTex(w, h);
-  uber_renderer.Init();   //uber shader느낌으로 렌더링하기
+
 
   LOGI("Version : %s", RendererEnv::Version().c_str());
   LOGI("Vendor : %s", RendererEnv::Vender().c_str());
@@ -117,7 +119,11 @@ bool setupGraphics(Device *device, int w, int h) {
   for( ; ext_it != ext_endit ; ++ext_it) {
     LOGI("%s", ext_it->c_str());
   }
-  
+
+  //deferred renderer
+  deferred_renderer.Init(w, h);
+  forward_renderer.Init();
+
   {
     //create shader
     string simple_vs_path = Filesystem::GetAppPath("shader/simple.vs");
@@ -260,21 +266,36 @@ void SORA_set_cam_pos(float a, float b) {
 
 void renderFrame(Device *device) {
   SR_CHECK_ERROR("Begin RenderFrame");
-  Renderer::SetClearColor(0.5f, 0.0f, 0.0f, 1.0f);
-  Renderer::ClearScreen();
-
-
-  //3d
-  device->render_state().Set3D();
   /*
-  depth_fbo.Bind();  //fbo로 그리기. deferred같은거 구현하기 위해서 임시로 시도함
-  device->render_state().Set3D();
-  Renderer::SetClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-  Renderer::ClearScreen();
-  */
-  //일반 3d객체 그리기+카메라 회전 장착
   {
-    //set material
+    deferred_renderer.BeginGeometryPass();
+
+    //물체 적절히 그리자
+    float radius = 4;
+    float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
+    float cam_y = radius * sin(SR_DEG_2_RAD(aptitude));
+    float cam_z = radius * cos(SR_DEG_2_RAD(aptitude)) * cos(SR_DEG_2_RAD(latitude));
+    vec3 eye(cam_x, cam_y, cam_z);
+    vec3 center(0);
+    vec3 up(0, 1, 0);
+
+    //카메라 행렬을 view행렬로 등록
+    glm::mat4 view_mat = glm::lookAt(eye, center, up);
+    device->render_state().set_view_mat(view_mat);
+
+    //Mesh *mesh = device->mesh_mgr()->Get("mesh");
+    //deferred_geomerty_shader.DrawMeshIgnoreMaterial(mesh);
+
+    deferred_renderer.EndGeometryPass();
+  }
+  */
+
+  /*
+  {
+    //forward renderer
+    forward_renderer.BeginPass();
+
+    //일반 3d객체 그리기+카메라 회전 장착
     Material mtl;
     mtl.ambient = vec4(0.1, 0.1, 0.1, 1);
     mtl.diffuse = vec4(0.3, 0.3, 0.3, 1);
@@ -291,13 +312,6 @@ void renderFrame(Device *device) {
     mtl.props |= kMaterialSpecular;
     mtl.props |= kMaterialSpecularMap;
     //mtl.props |= kMaterialNormalMap;
-    
-    //device->render_state().UseShader(simple_shader);
-   
-    //set camera + projection
-    //float win_width = (float)device->render_state().win_width();
-    //float win_height = (float)device->render_state().win_height();
-    //glm::mat4 projection = glm::perspective(45.0f, win_width / win_height, 0.1f, 100.0f);
 
     float radius = 4;
     float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
@@ -311,23 +325,24 @@ void renderFrame(Device *device) {
     glm::mat4 view_mat = glm::lookAt(eye, center, up);
     device->render_state().set_view_mat(view_mat);
 
-    uber_renderer.SetMaterial(mtl);
-    uber_renderer.SetLight(light);
-    Shader &shader = uber_renderer.GetCurrShader();
-    device->render_state().UseShader(shader);
-    //TODO 광원은 render state로 넘기기
-    uber_renderer.Apply();  //설정된 쉐이더 + 광원 + 카메라 정보를 uber shader로 넘기기
+    forward_renderer.SetMaterial(mtl);
+    forward_renderer.SetLight(light);
+    forward_renderer.ApplyRenderState();
 
     //메시 그리기 일단 제거
     Mesh *mesh = device->mesh_mgr()->Get("mesh");
-    shader.DrawMeshIgnoreMaterial(mesh);
+    forward_renderer.DrawMesh(mesh);
+
+    forward_renderer.EndPass();
   }
-  //depth_fbo.Unbind();
+  */
 
   //fbo에 있는 내용을 적절히 그리기
   //null_post_effect.Draw(depth_fbo.color_tex(), &device->render_state());
+  //null_post_effect.Draw(gbuffer.DepthTex(), &device->render_state());
+  //null_post_effect.Draw(gbuffer.NormalTex(), &device->render_state());
 
-  
+  /*
   {
     //디버깅용으로 화면 3d렌더링 하는거
     DebugDrawManager *mgr_3d = device->debug_draw_mgr();
@@ -361,6 +376,7 @@ void renderFrame(Device *device) {
     sora::Draw2DPolicy draw_policy;
     draw_policy.Draw(*draw_2d_mgr);
   }
+  */
 
   //////////////////////////////
   SR_CHECK_ERROR("End RenderFrame");

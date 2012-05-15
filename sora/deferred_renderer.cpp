@@ -1,0 +1,84 @@
+﻿/*  Copyright (C) 2011-2012 by if1live */
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+// Ŭnicode please
+#include "sora_stdafx.h"
+#include "deferred_renderer.h"
+#include "shader.h"
+
+#include "mesh_buffer.h"
+#include "gbuffer.h"
+#include "filesystem.h"
+
+#include "renderer.h"
+#include "device.h"
+#include "render_state.h"
+
+using namespace std;
+using namespace glm;
+
+namespace sora {;
+
+DeferredRenderer::DeferredRenderer() {
+}
+DeferredRenderer::~DeferredRenderer() {
+
+}
+bool DeferredRenderer::Init(int w, int h) {
+  gbuffer_ = move(unique_ptr<GBuffer>(new GBuffer()));
+  gbuffer_->Init(w, h);
+
+  string deferred_geomerty_vs_path = Filesystem::GetAppPath("shader/deferred_geometry.vs");
+  string deferred_geomerty_fs_path = Filesystem::GetAppPath("shader/deferred_geometry.fs");
+  geometry_shader_ = move(unique_ptr<Shader>(new Shader()));
+  geometry_shader_->LoadFromFile(deferred_geomerty_vs_path, deferred_geomerty_fs_path);
+  return true;
+}
+void DeferredRenderer::Deinit() {
+  if(gbuffer_.get() != NULL) {
+    gbuffer_->Deinit();
+  }
+  if(geometry_shader_.get() != NULL) {
+    geometry_shader_->Deinit();
+  }
+}
+void DeferredRenderer::BeginGeometryPass() {
+  gbuffer_->Bind();
+  Renderer::SetClearColor(0.5f, 0.0f, 0.0f, 1.0f);
+  Renderer::ClearScreen();
+  Device *device = Device::GetInstance();
+  device->render_state().Set3D();
+}
+void DeferredRenderer::EndGeometryPass() {
+  gbuffer_->Unbind();
+}
+void DeferredRenderer::ApplyGeomertyPassEnv() {
+  Device *device = Device::GetInstance();
+  RenderState &render_state = device->render_state();
+
+  const mat4 &projection_mat = render_state.projection_mat();
+  const mat4 &view_mat = render_state.view_mat();
+  const mat4 &model_mat = render_state.model_mat();
+}
+void DeferredRenderer::DrawMesh(Mesh *mesh) {
+  //Mesh *mesh = device->mesh_mgr()->Get("mesh");
+  //deferred_geomerty_shader.DrawMeshIgnoreMaterial(mesh);
+}
+
+} //namespace sora
