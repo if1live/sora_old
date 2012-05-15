@@ -44,6 +44,7 @@ bool DeferredRenderer::Init(int w, int h) {
   gbuffer_ = move(unique_ptr<GBuffer>(new GBuffer()));
   gbuffer_->Init(w, h);
 
+  LOGI("Deferred Renderer :: Geomerty Shader");
   string deferred_geomerty_vs_path = Filesystem::GetAppPath("shader/deferred_geometry.vs");
   string deferred_geomerty_fs_path = Filesystem::GetAppPath("shader/deferred_geometry.fs");
   geometry_shader_ = move(unique_ptr<Shader>(new Shader()));
@@ -68,17 +69,39 @@ void DeferredRenderer::BeginGeometryPass() {
 void DeferredRenderer::EndGeometryPass() {
   gbuffer_->Unbind();
 }
-void DeferredRenderer::ApplyGeomertyPassEnv() {
+void DeferredRenderer::ApplyGeomertyPassRenderState() {
   Device *device = Device::GetInstance();
   RenderState &render_state = device->render_state();
+
+  render_state.UseShader(*geometry_shader_);
 
   const mat4 &projection_mat = render_state.projection_mat();
   const mat4 &view_mat = render_state.view_mat();
   const mat4 &model_mat = render_state.model_mat();
+
+  mat4 mvp = projection_mat * view_mat * model_mat;
+  ShaderVariable mvp_var = geometry_shader_->uniform_var(kMVPHandleName);
+  SetUniformMatrix(mvp_var, mvp);
+
+  mat3 view_mat3(view_mat);
+  mat3 view_mat3_inv = glm::inverse(view_mat3);
+  mat3 view_mat3_inv_transpose = glm::transpose(view_mat3_inv);
+  ShaderVariable view_inv_transpose_var = geometry_shader_->uniform_var("u_model3_InverseTranspose");
+  SR_ASSERT(view_inv_transpose_var.location != kInvalidShaderVarLocation);
+  SetUniformMatrix(view_inv_transpose_var, view_mat3_inv_transpose);
 }
 void DeferredRenderer::DrawMesh(Mesh *mesh) {
-  //Mesh *mesh = device->mesh_mgr()->Get("mesh");
-  //deferred_geomerty_shader.DrawMeshIgnoreMaterial(mesh);
+  geometry_shader_->DrawMeshIgnoreMaterial(mesh);
+}
+
+Texture DeferredRenderer::DepthTex() const {
+  return gbuffer_->DepthTex();
+}
+Texture DeferredRenderer::NormalTex() const {
+  return gbuffer_->NormalTex();
+}
+Texture DeferredRenderer::DiffuseTex() const {
+  return gbuffer_->DiffuseTex();
 }
 
 } //namespace sora

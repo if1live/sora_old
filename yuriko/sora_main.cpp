@@ -126,6 +126,7 @@ bool setupGraphics(Device *device, int w, int h) {
 
   {
     //create shader
+    LOGI("Simple Shader");
     string simple_vs_path = Filesystem::GetAppPath("shader/simple.vs");
     string simple_fs_path = Filesystem::GetAppPath("shader/simple.fs");
     simple_shader.LoadFromFile(simple_vs_path, simple_fs_path);
@@ -133,6 +134,7 @@ bool setupGraphics(Device *device, int w, int h) {
   
   {
     //post effect
+    LOGI("PostEffect Shader");
     string vs_path = Filesystem::GetAppPath("posteffect/shared.vs");
     string null_fs_path = Filesystem::GetAppPath("posteffect/null.fs");
     null_post_effect.InitFromFile(vs_path, null_fs_path);
@@ -266,29 +268,28 @@ void SORA_set_cam_pos(float a, float b) {
 
 void renderFrame(Device *device) {
   SR_CHECK_ERROR("Begin RenderFrame");
-  /*
+  
+  //카메라 행렬 설정은 뭘 해도 공통
+  float radius = 4;
+  float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
+  float cam_y = radius * sin(SR_DEG_2_RAD(aptitude));
+  float cam_z = radius * cos(SR_DEG_2_RAD(aptitude)) * cos(SR_DEG_2_RAD(latitude));
+  vec3 eye(cam_x, cam_y, cam_z);
+  vec3 center(0);
+  vec3 up(0, 1, 0);
+
+  //카메라 행렬을 view행렬로 등록
+  glm::mat4 view_mat = glm::lookAt(eye, center, up);
+  device->render_state().set_view_mat(view_mat);
+
   {
     deferred_renderer.BeginGeometryPass();
-
-    //물체 적절히 그리자
-    float radius = 4;
-    float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
-    float cam_y = radius * sin(SR_DEG_2_RAD(aptitude));
-    float cam_z = radius * cos(SR_DEG_2_RAD(aptitude)) * cos(SR_DEG_2_RAD(latitude));
-    vec3 eye(cam_x, cam_y, cam_z);
-    vec3 center(0);
-    vec3 up(0, 1, 0);
-
-    //카메라 행렬을 view행렬로 등록
-    glm::mat4 view_mat = glm::lookAt(eye, center, up);
-    device->render_state().set_view_mat(view_mat);
-
-    //Mesh *mesh = device->mesh_mgr()->Get("mesh");
-    //deferred_geomerty_shader.DrawMeshIgnoreMaterial(mesh);
-
+    deferred_renderer.ApplyGeomertyPassRenderState();
+    Mesh *mesh = device->mesh_mgr()->Get("mesh");
+    deferred_renderer.DrawMesh(mesh);
     deferred_renderer.EndGeometryPass();
   }
-  */
+  
 
   /*
   {
@@ -313,18 +314,6 @@ void renderFrame(Device *device) {
     mtl.props |= kMaterialSpecularMap;
     //mtl.props |= kMaterialNormalMap;
 
-    float radius = 4;
-    float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
-    float cam_y = radius * sin(SR_DEG_2_RAD(aptitude));
-    float cam_z = radius * cos(SR_DEG_2_RAD(aptitude)) * cos(SR_DEG_2_RAD(latitude));
-    vec3 eye(cam_x, cam_y, cam_z);
-    vec3 center(0);
-    vec3 up(0, 1, 0);
-
-    //카메라 행렬을 view행렬로 등록
-    glm::mat4 view_mat = glm::lookAt(eye, center, up);
-    device->render_state().set_view_mat(view_mat);
-
     forward_renderer.SetMaterial(mtl);
     forward_renderer.SetLight(light);
     forward_renderer.ApplyRenderState();
@@ -339,8 +328,8 @@ void renderFrame(Device *device) {
 
   //fbo에 있는 내용을 적절히 그리기
   //null_post_effect.Draw(depth_fbo.color_tex(), &device->render_state());
-  //null_post_effect.Draw(gbuffer.DepthTex(), &device->render_state());
-  //null_post_effect.Draw(gbuffer.NormalTex(), &device->render_state());
+  //null_post_effect.Draw(deferred_renderer.DepthTex(), &device->render_state());
+  null_post_effect.Draw(deferred_renderer.NormalTex(), &device->render_state());
 
   /*
   {

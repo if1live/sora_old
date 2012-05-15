@@ -36,10 +36,14 @@ public:
 
   void BeginGeometryPass();
   void EndGeometryPass();
-  void ApplyGeomertyPassEnv();
+  void ApplyGeomertyPassRenderState();
   void DrawMesh(Mesh *mesh);
 
   GBuffer &gbuffer() { return *gbuffer_; }
+
+  Texture DepthTex() const;
+  Texture NormalTex() const;
+  Texture DiffuseTex() const;
 
 private:
   std::unique_ptr<Shader> geometry_shader_;
