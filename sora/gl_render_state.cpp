@@ -47,7 +47,13 @@ namespace gl {
   }
   void GLRenderState::EndRender() {
     last_prog_id_ = 0;
-    last_tex_id_ = 0;
+    {
+      auto it = last_tex_id_list_.begin();
+      auto endit = last_tex_id_list_.end();
+      for( ; it != endit ; ++it) {
+        *it = 0;
+      }
+    }
   }
   void GLRenderState::UseShader(Shader &shader) {
     ShaderHandleType handle = shader.handle();
@@ -56,12 +62,18 @@ namespace gl {
       last_prog_id_ = handle;
     }
   }
-  void GLRenderState::UseTexture(Texture &tex) {
+  void GLRenderState::UnuseTexture(int unit) {
+    GLenum unit_code = GL_TEXTURE0 + unit;
+    glActiveTexture(unit_code);
+    glBindTexture(GL_TEXTURE_2D, 0);
+  }
+  void GLRenderState::UseTexture(Texture &tex, int unit) {
     TextureHandleType handle = tex.handle();
-    if(last_tex_id_ != handle) {
-      glActiveTexture(GL_TEXTURE0);
+    if(last_tex_id_list_[unit] != handle) {
+      GLenum unit_code = GL_TEXTURE0 + unit;
+      glActiveTexture(unit_code);
       glBindTexture(GL_TEXTURE_2D, handle);
-      last_tex_id_ = handle;
+      last_tex_id_list_[unit] = handle;
     }
   }
   void GLRenderState::Set2D() {

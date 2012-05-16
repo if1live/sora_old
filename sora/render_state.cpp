@@ -54,10 +54,13 @@ RenderState::~RenderState() {
 void RenderState::UseShader(Shader &shader) { 
   policy_->UseShader(shader); 
 }
-void RenderState::UseTexture(Texture &tex) { 
-  policy_->UseTexture(tex); 
-}
 
+void RenderState::UseTexture(Texture &tex, int unit) {
+  policy_->UseTexture(tex, unit);
+}
+void RenderState::UnuseTexture(int unit) {
+  policy_->UnuseTexture(unit);
+}
 void RenderState::Set2D() {
   policy_->Set2D(); 
 }

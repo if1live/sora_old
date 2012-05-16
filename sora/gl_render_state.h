@@ -43,9 +43,10 @@ namespace gl {
 
     //texture
   public:
-    void UseTexture(Texture &tex);
+    void UseTexture(Texture &tex, int unit);
+    void UnuseTexture(int unit);
   private:
-    TextureHandleType last_tex_id_;
+    std::array<TextureHandleType, 8> last_tex_id_list_;
 
     //shader
   public:

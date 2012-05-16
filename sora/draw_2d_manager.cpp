@@ -259,7 +259,7 @@ void Draw2DPolicy::DrawElem(DrawCmd2D_String *cmd) {
   shader.SetUniformVector(kConstColorHandleName, color);
 
   sora::SysFont *font = Device::GetInstance()->sys_font();
-  dev->UseTexture(font->font_texture());
+  dev->UseTexture(font->font_texture(), 0);
 
   //해상도에 맞춰서 적절히 설정
   const mat4 &projection = dev->projection_mat();

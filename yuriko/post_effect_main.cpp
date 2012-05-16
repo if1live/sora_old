@@ -184,7 +184,7 @@ namespace posteffect {
       //shader사용 선언이 가장 먼저
       device->render_state().UseShader(simple_shader);
       TexturePtr tex = device->tex_mgr()->Get("sora");
-      device->render_state().UseTexture(*tex);
+      device->render_state().UseTexture(*tex, 0);
       SR_CHECK_ERROR("UseShader");
       mat4 mvp(1.0f);
       mvp = glm::rotate(mvp, 10.0f, vec3(0, 0, 1));

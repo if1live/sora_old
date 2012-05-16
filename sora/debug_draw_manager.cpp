@@ -397,7 +397,7 @@ void DebugDrawPolicy::DrawElem(DebugDrawCmd_String *cmd) {
   shader.SetUniformVector(kConstColorHandleName, color);
 
   sora::SysFont *font = Device::GetInstance()->sys_font();
-  dev->UseTexture(font->font_texture());
+  dev->UseTexture(font->font_texture(), 0);
 
   mat4 mvp_mat = glm::ortho(0.0f, win_w, 0.0f, win_h);
   mvp_mat = glm::translate(mvp_mat, win_coord);

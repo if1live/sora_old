@@ -43,7 +43,7 @@ void PostEffect::Deinit() {
 void PostEffect::Draw(Texture &tex, RenderState *dev) {
   dev->Set2D();
   dev->UseShader(post_effect_);
-  dev->UseTexture(tex);
+  dev->UseTexture(tex, 0);
 
   ShaderVariable mvp_var = post_effect_.uniform_var(kMVPHandleName);
   mat4 world_mat(1.0f);
@@ -60,7 +60,7 @@ void PostEffect::Draw(Texture &tex, RenderState *dev) {
 void PostEffect::Draw(Texture &tex, RenderState *dev, int x, int y, int w, int h) {
   dev->Set2D();
   dev->UseShader(post_effect_);
-  dev->UseTexture(tex);
+  dev->UseTexture(tex, 0);
 
   ShaderVariable mvp_var = post_effect_.uniform_var(kMVPHandleName);
   mat4 world_mat(1.0f);

@@ -34,7 +34,8 @@ public:
   ~RenderState();
 
   void UseShader(Shader &shader);
-  void UseTexture(Texture &tex);
+  void UseTexture(Texture &tex, int unit);
+  void UnuseTexture(int unit);
 
   void Set2D();
   void Set3D();
@@ -82,7 +83,8 @@ struct RenderStateInterface {
   virtual ~RenderStateInterface() {}
 
   virtual void UseShader(Shader &shader) = 0;
-  virtual void UseTexture(Texture &tex) = 0;
+  virtual void UseTexture(Texture &tex, int unit) = 0;
+  virtual void UnuseTexture(int unit) = 0;
 
   virtual void Set2D() = 0;
   virtual void Set3D() = 0;

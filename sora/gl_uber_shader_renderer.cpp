@@ -149,7 +149,7 @@ namespace gl {
     if(use_diffuse_map) {
       Texture *diffuse_map = dev->tex_mgr()->Get_ptr(material.diffuse_map);
       if(diffuse_map != NULL) {
-        render_dev->UseTexture(*diffuse_map);
+        render_dev->UseTexture(*diffuse_map, 0);
         shader.SetUniformValue(kDiffuseMapHandleName, 0);
         SR_CHECK_ERROR("Set Ambient map");
       }
@@ -157,8 +157,7 @@ namespace gl {
     if(use_specular_map) {
       Texture *specular_map = dev->tex_mgr()->Get_ptr(material.specular_map);
       if(specular_map != NULL) {
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, specular_map->handle());
+        render_dev->UseTexture(*specular_map, 1);
         shader.SetUniformValue(kSpecularMapHandleName, 1);
         SR_CHECK_ERROR("Set Specular map");
       }
@@ -166,8 +165,7 @@ namespace gl {
     if(use_normal_map) {
       Texture *normal_map = dev->tex_mgr()->Get_ptr(material.normal_map);
       if(normal_map != NULL) {
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, normal_map->handle());
+        render_dev->UseTexture(*normal_map, 2);
         shader.SetUniformValue(kNormalMapHandleName, 2);
         SR_CHECK_ERROR("Set Normal map");
       }
