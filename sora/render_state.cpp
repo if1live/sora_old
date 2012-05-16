@@ -94,4 +94,8 @@ const glm::mat4 &RenderState::model_mat() const {
   return model_mat_stack_->Top();
 }
 
+void RenderState::ClearBuffer(bool color, bool depth, bool stencil, const sora::vec4ub &value) {
+  policy_->ClearBuffer(color, depth, stencil, value);  
+}
+
 } //namespace sora

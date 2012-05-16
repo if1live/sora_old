@@ -60,11 +60,8 @@ uniform sampler2D s_texture;\
 uniform vec4 u_constColor;\
 void main() {\
 	vec4 color = texture2D(s_texture, v_texcoord);\
-	if(color.w == 0.0) {\
-		gl_FragColor = vec4(0.0, 0.0, 0.0, color.w);\
-	} else {\
-		gl_FragColor = u_constColor;\
-	}\
+  color.xyz = u_constColor.xyz; \
+  gl_FragColor = color;\
 }";
 
 const char *vertex_color_vert_src = "attribute vec4 a_position;\

@@ -39,6 +39,7 @@ namespace gl {
   public:
     void Set2D();
     void Set3D();
+    void ClearBuffer(bool color, bool depth, bool stencil, const sora::vec4ub &value);
 
     //texture
   public:

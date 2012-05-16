@@ -23,7 +23,6 @@
 #include "render_state.h"
 #include "device.h"
 #include "mesh.h"
-#include "renderer.h"
 #include "gl_uber_shader_renderer.h"
 
 using namespace glm;
@@ -36,11 +35,13 @@ ForwardRenderer::~ForwardRenderer() {
 }
 
 void ForwardRenderer::BeginPass() {
-  Renderer::SetClearColor(0.5f, 0.0f, 0.0f, 1.0f);
-  Renderer::ClearScreen();
-  //3d
   Device *device = Device::GetInstance();
-  device->render_state().Set3D();
+  RenderState &render_state = device->render_state();
+
+  vec4ub color(128, 0, 0, 255);
+  render_state.ClearBuffer(true, true, false, color);
+  //3d
+  render_state.Set3D();
 }
 void ForwardRenderer::EndPass() {
 }

@@ -12,53 +12,20 @@ uniform float u_specularShininess;
 
 varying vec3 v_viewDir;
 varying vec3 v_lightDir;
-varying mat3 v_model;
+varying mat3 v_modelInverseTranspose;
 
 //ambient/diffuse/specular map
-uniform sampler2D s_ambientMap;
 uniform sampler2D s_diffuseMap;
 uniform sampler2D s_specularMap;
 uniform sampler2D s_normalMap;
 
 void main() {
-#if AMBIENT_MASK == 1
-	const bool use_ambient = true;
-#else
-	const bool use_ambient = false;
-#endif
-#if AMBIENT_MAP_MASK == 1
-	const bool use_ambient_map = true;
-#else
-	const bool use_ambient_map = false;
-#endif
-
-#if DIFFUSE_MASK == 1
-	const bool use_diffuse = true;
-#else
-	const bool use_diffuse = false;
-#endif
-#if DIFFUSE_MAP_MASK == 1
-	const bool use_diffuse_map = true;
-#else
-	const bool use_diffuse_map = false;
-#endif
-
-#if SPECULAR_MASK == 1
-	const bool use_specular = true;
-#else
-	const bool use_specular = false;
-#endif
-#if SPECULAR_MAP_MASK == 1
-	const bool use_specular_map = true;
-#else
-	const bool use_specular_map = false;
-#endif
-
-#if NORMAL_MAP_MASK == 1
-	const bool use_normal_map = true;
-#else
-	const bool use_normal_map = false;
-#endif
+	const bool use_ambient = AMBIENT_MASK == 1 ? true : false;
+	const bool use_diffuse = DIFFUSE_MASK == 1 ? true : false;
+	const bool use_diffuse_map = DIFFUSE_MAP_MASK == 1 ? true : false;
+	const bool use_specular = SPECULAR_MASK == 1 ? true : false;
+	const bool use_specular_map = SPECULAR_MAP_MASK == 1 ? true : false;
+	const bool use_normal_map = NORMAL_MAP_MASK == 1 ? true : false;
 
 	vec4 color = vec4(0.0);
 	vec3 normal = v_normal;
@@ -76,15 +43,11 @@ void main() {
 	}
 	if(use_ambient) {
 		vec4 ambient_color = u_ambientColor;
-		if(use_ambient_map) {
-			vec4 ambient_tex = texture2D(s_ambientMap, v_texcoord);
-			ambient_color = ambient_color * ambient_tex;
-		}
 		color = color + ambient_color;
 	}
 	
 	if(use_diffuse || use_specular) {
-		vec3 model_normal = v_model * normal;
+		vec3 model_normal = v_modelInverseTranspose * normal;
 		model_normal = normalize(model_normal);
 		
 		if(use_diffuse) {

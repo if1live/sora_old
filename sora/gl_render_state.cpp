@@ -87,6 +87,26 @@ namespace gl {
     glm::mat4 projection = glm::perspective(45.0f, win_w/ win_h, 0.1f, 100.0f);
     state_->set_projection_mat(projection);
   }
+  void GLRenderState::ClearBuffer(bool color, bool depth, bool stencil, const sora::vec4ub &value) {
+    unsigned int flag = 0;
+    if(color) {
+      flag |= GL_COLOR_BUFFER_BIT;
+      float r = value.r / 255.0f;
+      float g = value.g / 255.0f;
+      float b = value.b / 255.0f;
+      float a = value.a / 255.0f;
+      glClearColor(r, g, b, a);
+    }
+    if(depth) {
+      flag |= GL_DEPTH_BUFFER_BIT;
+    }
+    if(stencil) {
+      flag |= GL_STENCIL_BUFFER_BIT;
+    }
+    if(flag) {
+      glClear(flag);
+    }
+  }
 } //namespace gl
 } //namespace sora
 

@@ -145,9 +145,6 @@
     <ClCompile Include="gl_frame_buffer.cpp">
       <Filter>renderer\gl</Filter>
     </ClCompile>
-    <ClCompile Include="gl_renderer.cpp">
-      <Filter>renderer\gl</Filter>
-    </ClCompile>
     <ClCompile Include="gl_shader.cpp">
       <Filter>renderer\gl</Filter>
     </ClCompile>
@@ -393,9 +390,6 @@
     <ClInclude Include="post_effect.h">
       <Filter>renderer</Filter>
     </ClInclude>
-    <ClInclude Include="renderer.h">
-      <Filter>renderer</Filter>
-    </ClInclude>
     <ClInclude Include="renderer_env.h">
       <Filter>renderer</Filter>
     </ClInclude>
@@ -418,9 +412,6 @@
       <Filter>renderer\gl</Filter>
     </ClInclude>
     <ClInclude Include="gl_inc.h">
-      <Filter>renderer\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="gl_renderer.h">
       <Filter>renderer\gl</Filter>
     </ClInclude>
     <ClInclude Include="gl_shader.h">

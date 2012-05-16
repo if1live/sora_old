@@ -26,7 +26,6 @@
 #include "gbuffer.h"
 #include "filesystem.h"
 
-#include "renderer.h"
 #include "device.h"
 #include "render_state.h"
 #include "material.h"
@@ -64,10 +63,11 @@ void DeferredRenderer::Deinit() {
 }
 void DeferredRenderer::BeginGeometryPass() {
   gbuffer_->Bind();
-  Renderer::SetClearColor(0.5f, 0.0f, 0.0f, 1.0f);
-  Renderer::ClearScreen();
   Device *device = Device::GetInstance();
-  device->render_state().Set3D();
+  RenderState &render_state = device->render_state();
+  vec4ub color(0, 0, 0, 255);
+  render_state.ClearBuffer(true, true, false, color);
+  render_state.Set3D();
 }
 void DeferredRenderer::EndGeometryPass() {
   gbuffer_->Unbind();

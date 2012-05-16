@@ -66,6 +66,12 @@ namespace gl {
     shader.SetUniformMatrix(kProjectionHandleName, projection);
     shader.SetUniformMatrix(kViewHandleName, view);
 
+    //빛 계산에는 normal계산 뒤집는 행렬이 필요하다
+    mat4 model_mat4(model);
+    mat4 model_mat4_inv = glm::inverse(model_mat4);
+    mat4 model_mat4_inv_transpose = glm::transpose(model_mat4_inv);
+    shader.SetUniformMatrix(kModelInverseTransposeHandleName, model_mat4_inv_transpose);
+
     const glm::vec3 eye = MatrixHelper::ViewPos(view);
     const glm::vec3 up = MatrixHelper::ViewUpVec(view);
     const glm::vec3 dir = MatrixHelper::ViewDirVec(view);

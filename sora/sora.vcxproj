@@ -100,7 +100,6 @@
     <ClCompile Include="geometric_object.cpp" />
     <ClCompile Include="gl_env.cpp" />
     <ClCompile Include="gl_frame_buffer.cpp" />
-    <ClCompile Include="gl_renderer.cpp" />
     <ClCompile Include="gl_render_state.cpp" />
     <ClCompile Include="gl_shader.cpp" />
     <ClCompile Include="gl_shader_variable.cpp" />
@@ -181,7 +180,6 @@
     <ClInclude Include="gl_env.h" />
     <ClInclude Include="gl_frame_buffer.h" />
     <ClInclude Include="gl_inc.h" />
-    <ClInclude Include="gl_renderer.h" />
     <ClInclude Include="gl_render_state.h" />
     <ClInclude Include="gl_shader.h" />
     <ClInclude Include="gl_shader_variable.h" />
@@ -209,7 +207,6 @@
     <ClInclude Include="parametric_surface.h" />
     <ClInclude Include="post_effect.h" />
     <ClInclude Include="rect.h" />
-    <ClInclude Include="renderer.h" />
     <ClInclude Include="renderer_env.h" />
     <ClInclude Include="render_state.h" />
     <ClInclude Include="shader_manager.h" />

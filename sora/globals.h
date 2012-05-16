@@ -275,6 +275,7 @@ typedef enum {
 #define kModelHandleName "u_model"
 #define kProjectionHandleName "u_projection"
 #define kViewHandleName "u_view"
+#define kModelInverseTransposeHandleName "u_modelInverseTranspose"
 
 #define kAmbientColorHandleName "u_ambientColor"
 #define kDiffuseColorHandleName "u_diffuseColor"

@@ -46,7 +46,6 @@
 #include "texture.h"
 #include "buffer_object.h"
 #include "image.h"
-#include "renderer.h"
 #include "frame_buffer.h"
 #include "post_effect.h"
 
@@ -128,16 +127,16 @@ namespace posteffect {
 
   void draw_frame(Device *device) {
     SR_CHECK_ERROR("Begin RenderFrame");
-    Renderer::SetClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-    Renderer::ClearScreen();
+    RenderState &render_state = device->render_state();
+    vec4ub color(77, 77, 77, 255);
+    render_state.ClearBuffer(true, true, false, color);
 
     //3d
     device->render_state().Set3D();
 
     depth_fbo.Bind();  //fbo로 그리기. deferred같은거 구현하기 위해서 임시로 시도함
     device->render_state().Set3D();
-    Renderer::SetClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-    Renderer::ClearScreen();
+    render_state.ClearBuffer(true, true, false, color);
 
     VertexList vert_list;
     vert_list.push_back(CreateVertex(vec3(-0.5, -0.5, 0), vec2(0, 0)));

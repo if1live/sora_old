@@ -22,6 +22,7 @@
 #define SORA_RENDER_DEVICE_H_
 
 #include "globals.h"
+#include "vector.h"
 
 namespace sora {;
 struct RenderStateInterface;
@@ -44,6 +45,9 @@ public:
 
   int win_width() const { return win_width_; }
   int win_height() const { return win_height_; }
+
+  //buffer관련 사항
+  void ClearBuffer(bool color, bool depth, bool stencil, const sora::vec4ub &value);
 
   //matrix 
   glm::mat4 &projection_mat() { return projection_mat_; }
@@ -82,6 +86,7 @@ struct RenderStateInterface {
 
   virtual void Set2D() = 0;
   virtual void Set3D() = 0;
+  virtual void ClearBuffer(bool color, bool depth, bool stencil, const sora::vec4ub &value) = 0;
 
   virtual void EndRender() = 0;
 

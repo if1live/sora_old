@@ -29,6 +29,7 @@ using namespace std;
 namespace sora {;
 
 //uber shader의 enum에 정의된 순서대로 맞춰서 쓴다
+//define만이 아니라 숫자까지 넣어준이유는 쉐이더 코드에서 바로 갖다쓰기 위해서
 const char *enable_define_list[] = {
   "#define AMBIENT_MASK 1 \n",
   "#define DIFFUSE_MASK 1 \n",
@@ -37,6 +38,7 @@ const char *enable_define_list[] = {
   "#define SPECULAR_MAP_MASK 1 \n",
   "#define NORMAL_MAP_MASK 1 \n",
 };
+//undef가 아니라 0으로 해서 쉐이더코드쪽에서 바로 갖다쓸수 잇도록햇다
 const char *disable_define_list[] = {
   "#define AMBIENT_MASK 0 \n",
   "#define DIFFUSE_MASK 0 \n",

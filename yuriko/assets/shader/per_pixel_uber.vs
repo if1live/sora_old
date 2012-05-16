@@ -18,46 +18,19 @@ varying vec2 v_texcoord;
 
 //light calc
 uniform vec3 u_modelLightPosition;
-uniform mat4 u_model;
+uniform mat4 u_modelInverseTranspose;
 uniform vec4 u_viewPosition;
 
-varying mat3 v_model;
+varying mat3 v_modelInverseTranspose;
 varying vec3 v_viewDir;
 varying vec3 v_lightDir;
 
 void main() {
-#if AMBIENT_MASK == 1
-	const bool use_ambient = true;
-#else
-	const bool use_ambient = false;
-#endif
-#if AMBIENT_MAP_MASK == 1
-	const bool use_ambient_map = true;
-#else
-	const bool use_ambient_map = false;
-#endif
-
-#if DIFFUSE_MASK == 1
-	const bool use_diffuse = true;
-#else
-	const bool use_diffuse = false;
-#endif
-#if DIFFUSE_MAP_MASK == 1
-	const bool use_diffuse_map = true;
-#else
-	const bool use_diffuse_map = false;
-#endif
-
-#if SPECULAR_MASK == 1
-	const bool use_specular = true;
-#else
-	const bool use_specular = false;
-#endif
-#if SPECULAR_MAP_MASK == 1
-	const bool use_specular_map = true;
-#else
-	const bool use_specular_map = false;
-#endif
+	const bool use_ambient = AMBIENT_MASK == 1 ? true : false;
+	const bool use_diffuse = DIFFUSE_MASK == 1 ? true : false;
+	const bool use_diffuse_map = DIFFUSE_MAP_MASK == 1 ? true : false;
+	const bool use_specular = SPECULAR_MASK == 1 ? true : false;
+	const bool use_specular_map = SPECULAR_MAP_MASK == 1 ? true : false;
 
 	gl_Position = u_modelViewProjection * a_position;
 	v_color = a_color;
@@ -70,8 +43,10 @@ void main() {
 		v_lightDir = normalize(light_dir);	
 		v_viewDir = normalize(a_position.xyz - u_viewPosition.xyz);
 		
-		v_model = mat3(u_model[0].x, u_model[0].y, u_model[0].z,
-						u_model[1].x, u_model[1].y, u_model[1].z,
-						u_model[2].x, u_model[2].y, u_model[2].z);
+		v_modelInverseTranspose = mat3(
+			u_modelInverseTranspose[0].x, u_modelInverseTranspose[0].y, u_modelInverseTranspose[0].z,
+			u_modelInverseTranspose[1].x, u_modelInverseTranspose[1].y, u_modelInverseTranspose[1].z,
+			u_modelInverseTranspose[2].x, u_modelInverseTranspose[2].y, u_modelInverseTranspose[2].z
+		);
 	}
 }

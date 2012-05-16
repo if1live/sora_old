@@ -47,7 +47,6 @@
 #include "texture.h"
 #include "buffer_object.h"
 #include "image.h"
-#include "renderer.h"
 #include "frame_buffer.h"
 #include "post_effect.h"
 #include "mesh_buffer.h"
@@ -101,12 +100,13 @@ DeferredRenderer deferred_renderer;
 ForwardRenderer forward_renderer;
 
 //deferred renderer에서 어떤 버퍼를 렌더링 할 것인가?
-int curr_deferred_fbo_idx = 0;
 enum {
   kDeferredRendererTexDepth,
   kDeferredRendererTexNormal,
   kDeferredRendererTexDiffuse,
 };
+int curr_deferred_fbo_idx = kDeferredRendererTexNormal;
+
 
 void SORA_set_window_size(Device *device, int w, int h) {
   device->render_state().SetWinSize(w, h);
@@ -308,6 +308,7 @@ void renderFrame(Device *device) {
   mtl.props |= kMaterialSpecularMap;
   //mtl.props |= kMaterialNormalMap;
 
+  /*
   {
     deferred_renderer.BeginGeometryPass();
     deferred_renderer.SetMaterial(mtl);
@@ -316,9 +317,8 @@ void renderFrame(Device *device) {
     deferred_renderer.DrawMesh(mesh);
     deferred_renderer.EndGeometryPass();
   }
-  
+  */
 
-  /*
   {
     //forward renderer
     forward_renderer.BeginPass();
@@ -333,10 +333,10 @@ void renderFrame(Device *device) {
 
     forward_renderer.EndPass();
   }
-  */
 
   //fbo에 있는 내용을 적절히 그리기
   //null_post_effect.Draw(depth_fbo.color_tex(), &device->render_state());
+  /*
   if(curr_deferred_fbo_idx == kDeferredRendererTexDepth) {
     null_post_effect.Draw(deferred_renderer.DepthTex(), &device->render_state());
   } else if(curr_deferred_fbo_idx == kDeferredRendererTexDiffuse) {
@@ -344,10 +344,10 @@ void renderFrame(Device *device) {
   } else if(curr_deferred_fbo_idx == kDeferredRendererTexNormal) {
     null_post_effect.Draw(deferred_renderer.NormalTex(), &device->render_state());
   }
-  
+  */
   
 
-  /*
+  
   {
     //디버깅용으로 화면 3d렌더링 하는거
     DebugDrawManager *mgr_3d = device->debug_draw_mgr();
@@ -381,7 +381,7 @@ void renderFrame(Device *device) {
     sora::Draw2DPolicy draw_policy;
     draw_policy.Draw(*draw_2d_mgr);
   }
-  */
+  
 
   //////////////////////////////
   SR_CHECK_ERROR("End RenderFrame");
