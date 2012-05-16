@@ -219,12 +219,9 @@ void UberShader::ApplyMaterial() {
   ApplyMaterial(material);
 }
 
-void UberShader::ApplyCamera() {
+void UberShader::ApplyCamera(const glm::mat4 &projection, const glm::mat4 &view, const glm::mat4 &model) {
   Device *dev = Device::GetInstance();
   RenderState *render_dev = &dev->render_state();
-  const glm::mat4 &projection = render_dev->projection_mat();
-  const glm::mat4 &view = render_dev->view_mat();
-  const glm::mat4 &model = render_dev->model_mat();
   const Material &material = render_dev->LastMaterial();
 
   Shader &shader = Load(material.props);
@@ -262,6 +259,15 @@ void UberShader::ApplyCamera() {
 
   glm::vec4 dir_vec(dir.x, dir.y, dir.z, 1.0f);
   shader.SetUniformVector(kViewDirHandleName, dir_vec);
+
+}
+void UberShader::ApplyCamera() {
+  Device *dev = Device::GetInstance();
+  RenderState *render_dev = &dev->render_state();
+  const glm::mat4 &projection = render_dev->projection_mat();
+  const glm::mat4 &view = render_dev->view_mat();
+  const glm::mat4 &model = render_dev->model_mat();
+  ApplyCamera(projection, view, model);
 }
 
 } //namespace sora

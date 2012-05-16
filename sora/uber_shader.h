@@ -41,6 +41,8 @@ public:
 
 public:
   void ApplyCamera();
+  void ApplyCamera(const glm::mat4 &proj, const glm::mat4 &view, const glm::mat4 &model);
+
   void ApplyMaterial();
   void ApplyMaterial(
     const glm::vec4 &light_ambient, 
