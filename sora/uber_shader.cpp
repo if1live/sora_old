@@ -136,10 +136,9 @@ Shader &UberShader::Load(uint flag) {
   return prog_dict_[flag];
 }
 
-void UberShader::ApplyMaterial() {
+void UberShader::ApplyMaterial(const Material &material) {
   Device *dev = Device::GetInstance();
   RenderState *render_dev = &dev->render_state();
-  const Material &material = render_dev->LastMaterial();
   unsigned int flag = material.props;
 
   Shader &shader = Load(flag);
@@ -151,24 +150,21 @@ void UberShader::ApplyMaterial() {
   bool use_specular_map = ((flag & kMaterialSpecularMap) == kMaterialSpecularMap);
   bool use_normal_map = ((flag & kMaterialNormalMap) == kMaterialNormalMap);
 
-  glm::vec4 ambient_color;
-  glm::vec4 diffuse_color;
-  glm::vec4 specular_color;
+  glm::vec4 ambient_color = material.ambient;
+  glm::vec4 diffuse_color = material.diffuse;
+  glm::vec4 specular_color = material.specular;
 
   //색 정보 얻기
   if(use_ambient) {
     //material의 색속성
-    ambient_color = material.ambient;
     shader.SetUniformVector(kAmbientColorHandleName, ambient_color);
     SR_CHECK_ERROR("Set Ambient Color");
   }
   if(use_diffuse) {
-    diffuse_color = material.diffuse;
     shader.SetUniformVector(kDiffuseColorHandleName, diffuse_color);
     SR_CHECK_ERROR("Set Diffuse Color");
   }
   if(use_specular) {
-    specular_color = material.specular;
     shader.SetUniformVector(kSpecularColorHandleName, specular_color);
     SR_CHECK_ERROR("Set Specular Color");
     shader.SetUniformValue(kSpecularShininessHandleName, material.shininess);
@@ -202,6 +198,25 @@ void UberShader::ApplyMaterial() {
   //최초 상태로 돌려놓기
   glActiveTexture(GL_TEXTURE0);
   SR_CHECK_ERROR("Apply Material");
+
+}
+void UberShader::ApplyMaterial(const glm::vec4 &light_ambient, const glm::vec4 &light_diffuse, const glm::vec4 &light_specular) {
+  Device *dev = Device::GetInstance();
+  RenderState *render_dev = &dev->render_state();
+  Material material = render_dev->LastMaterial();
+  for(int i = 0 ; i < 4 ; i++) {
+    material.ambient[i] *= light_ambient[i];
+    material.diffuse[i] *= light_diffuse[i];
+    material.specular[i] *= light_specular[i];
+  }
+  ApplyMaterial(material);
+}
+
+void UberShader::ApplyMaterial() {
+  Device *dev = Device::GetInstance();
+  RenderState *render_dev = &dev->render_state();
+  const Material &material = render_dev->LastMaterial();
+  ApplyMaterial(material);
 }
 
 void UberShader::ApplyCamera() {

@@ -43,7 +43,6 @@ public:
 
   void SetLight(const Light &light);
 
-  void ApplyMaterialWithLight();
 private:
   //uber shader기반으로 forware만들기
   std::unique_ptr<UberShader> uber_shader_;

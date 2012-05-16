@@ -25,6 +25,8 @@
 #include "shader.h"
 
 namespace sora {;
+struct Material;
+
 class UberShader {
 public:
   UberShader();
@@ -40,7 +42,12 @@ public:
 public:
   void ApplyCamera();
   void ApplyMaterial();
-  //void ApplyMaterial();
+  void ApplyMaterial(
+    const glm::vec4 &light_ambient, 
+    const glm::vec4 &light_diffuse, 
+    const glm::vec4 &light_specular
+    );
+  void ApplyMaterial(const Material &material);
 
 protected:
   void LoadRawSrc(const std::string &v_file, const std::string &f_file);
