@@ -29,11 +29,12 @@
 #include "gl_texture.h"
 #include "shader.h"
 #include "texture.h"
+#include "material.h"
 
 namespace sora {;
 namespace gl {
   GLRenderState::GLRenderState(RenderState *state)
-    : state_(state) {
+    : state_(state), last_mtl_(new Material()) {
       EndRender();
   }
   GLRenderState::~GLRenderState() {
@@ -47,6 +48,7 @@ namespace gl {
   }
   void GLRenderState::EndRender() {
     last_prog_id_ = 0;
+    *last_mtl_ = Material();
     {
       auto it = last_tex_id_list_.begin();
       auto endit = last_tex_id_list_.end();
@@ -118,6 +120,18 @@ namespace gl {
     if(flag) {
       glClear(flag);
     }
+  }
+  void GLRenderState::UseMaterial(const Material &mtl) {
+    if(mtl == *last_mtl_) {
+      return;
+    }
+    *last_mtl_ = mtl;
+  }
+  void GLRenderState::UnuseMaterial() {
+    *last_mtl_ = Material();
+  }
+  const Material &GLRenderState::LastMaterial() const {
+    return *last_mtl_;
   }
 } //namespace gl
 } //namespace sora

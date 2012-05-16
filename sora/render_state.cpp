@@ -61,6 +61,15 @@ void RenderState::UseTexture(Texture &tex, int unit) {
 void RenderState::UnuseTexture(int unit) {
   policy_->UnuseTexture(unit);
 }
+void RenderState::UseMaterial(const Material &mtl) {
+  policy_->UseMaterial(mtl);
+}
+void RenderState::UnuseMaterial() {
+  policy_->UnuseMaterial();
+}
+const Material &RenderState::LastMaterial() const {
+  return policy_->LastMaterial();
+}
 void RenderState::Set2D() {
   policy_->Set2D(); 
 }

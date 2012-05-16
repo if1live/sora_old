@@ -27,6 +27,7 @@
 namespace sora {;
 struct RenderStateInterface;
 class MatrixStack;
+class Material;
 
 class RenderState {
 public:
@@ -36,6 +37,10 @@ public:
   void UseShader(Shader &shader);
   void UseTexture(Texture &tex, int unit);
   void UnuseTexture(int unit);
+
+  void UseMaterial(const Material &mtl);
+  void UnuseMaterial();
+  const Material &LastMaterial() const;
 
   void Set2D();
   void Set3D();
@@ -76,6 +81,7 @@ private:
   glm::mat4 view_mat_;
   std::unique_ptr<MatrixStack> model_mat_stack_;
   //텍스쳐 좌표 스택까지 전역으로 묶을 필요가 잇을까? 해서 일단 미뤄놧다. 필요해지면 그떄 넣지뭐
+
 };
 
 struct RenderStateInterface {
@@ -85,6 +91,10 @@ struct RenderStateInterface {
   virtual void UseShader(Shader &shader) = 0;
   virtual void UseTexture(Texture &tex, int unit) = 0;
   virtual void UnuseTexture(int unit) = 0;
+
+  virtual void UseMaterial(const Material &mtl) = 0;
+  virtual void UnuseMaterial() = 0;
+  virtual const Material &LastMaterial() const = 0;
 
   virtual void Set2D() = 0;
   virtual void Set3D() = 0;

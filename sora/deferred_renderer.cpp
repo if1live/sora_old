@@ -36,13 +36,13 @@ using namespace glm;
 
 namespace sora {;
 
-DeferredRenderer::DeferredRenderer()
-  : material_(new Material()) {
+DeferredRenderer::DeferredRenderer() {
 }
 DeferredRenderer::~DeferredRenderer() {
-
+  Deinit();
 }
 bool DeferredRenderer::Init(int w, int h) {
+  material_.reset(new Material());
   gbuffer_ = move(unique_ptr<GBuffer>(new GBuffer()));
   gbuffer_->Init(w, h);
 

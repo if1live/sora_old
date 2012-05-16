@@ -154,9 +154,6 @@
     <ClCompile Include="gl_texture.cpp">
       <Filter>renderer\gl</Filter>
     </ClCompile>
-    <ClCompile Include="gl_uber_shader_renderer.cpp">
-      <Filter>renderer\gl</Filter>
-    </ClCompile>
     <ClCompile Include="device.cpp">
       <Filter>sys</Filter>
     </ClCompile>
@@ -421,9 +418,6 @@
       <Filter>renderer\gl</Filter>
     </ClInclude>
     <ClInclude Include="gl_texture.h">
-      <Filter>renderer\gl</Filter>
-    </ClInclude>
-    <ClInclude Include="gl_uber_shader_renderer.h">
       <Filter>renderer\gl</Filter>
     </ClInclude>
     <ClInclude Include="device.h">

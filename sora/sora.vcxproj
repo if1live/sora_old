@@ -104,7 +104,6 @@
     <ClCompile Include="gl_shader.cpp" />
     <ClCompile Include="gl_shader_variable.cpp" />
     <ClCompile Include="gl_texture.cpp" />
-    <ClCompile Include="gl_uber_shader_renderer.cpp" />
     <ClCompile Include="heap.cpp" />
     <ClCompile Include="image.cpp" />
     <ClCompile Include="lodepng\lodepng.cpp" />
@@ -184,7 +183,6 @@
     <ClInclude Include="gl_shader.h" />
     <ClInclude Include="gl_shader_variable.h" />
     <ClInclude Include="gl_texture.h" />
-    <ClInclude Include="gl_uber_shader_renderer.h" />
     <ClInclude Include="heap.h" />
     <ClInclude Include="id_generator.h" />
     <ClInclude Include="image.h" />

@@ -26,11 +26,7 @@ namespace sora {;
 class Mesh;
 class Light;
 class Material;
-
-namespace gl {
-  class GLUberShaderRenderer;
-};
-
+class UberShader;
 
 class ForwardRenderer {
 public:
@@ -45,11 +41,12 @@ public:
   void ApplyRenderState();
   void DrawMesh(Mesh *mesh);
 
-  void SetMaterial(const Material &mtl);
   void SetLight(const Light &light);
 
+  void ApplyMaterialWithLight();
 private:
   //uber shader기반으로 forware만들기
-  std::unique_ptr<sora::gl::GLUberShaderRenderer> uber_renderer_;
+  std::unique_ptr<UberShader> uber_shader_;
+  std::unique_ptr<Light> light_;
 };
 } //namespace sora

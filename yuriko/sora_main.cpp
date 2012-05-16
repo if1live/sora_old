@@ -66,7 +66,6 @@
 #include "touch_event.h"
 #include "keyboard_event.h"
 
-#include "gl_uber_shader_renderer.h"
 #include "debug_draw_manager.h"
 #include "fps_counter.h"
 #include "draw_2d_manager.h"
@@ -307,6 +306,7 @@ void renderFrame(Device *device) {
   mtl.props |= kMaterialSpecular;
   mtl.props |= kMaterialSpecularMap;
   //mtl.props |= kMaterialNormalMap;
+  device->render_state().UseMaterial(mtl);
 
   /*
   {
@@ -319,11 +319,11 @@ void renderFrame(Device *device) {
   }
   */
 
+  
   {
     //forward renderer
     forward_renderer.BeginPass();
 
-    forward_renderer.SetMaterial(mtl);
     forward_renderer.SetLight(light);
     forward_renderer.ApplyRenderState();
 
@@ -333,9 +333,10 @@ void renderFrame(Device *device) {
 
     forward_renderer.EndPass();
   }
-
+  
   //fbo에 있는 내용을 적절히 그리기
   //null_post_effect.Draw(depth_fbo.color_tex(), &device->render_state());
+  
   /*
   if(curr_deferred_fbo_idx == kDeferredRendererTexDepth) {
     null_post_effect.Draw(deferred_renderer.DepthTex(), &device->render_state());
@@ -345,7 +346,6 @@ void renderFrame(Device *device) {
     null_post_effect.Draw(deferred_renderer.NormalTex(), &device->render_state());
   }
   */
-  
 
   
   {

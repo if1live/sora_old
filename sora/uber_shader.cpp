@@ -23,6 +23,10 @@
 #include "shader.h"
 #include "filesystem.h"
 #include "memory_file.h"
+#include "device.h"
+#include "render_state.h"
+#include "matrix_helper.h"
+#include "texture.h"
 
 using namespace std;
 
@@ -69,6 +73,9 @@ void UberShader::LoadRawSrc(const std::string &v_file, const std::string &f_file
 }
 
 UberShader::~UberShader() {
+  Deinit();
+}
+void UberShader::Deinit() {
   auto it = prog_dict_.begin();
   auto endit = prog_dict_.end();
   for( ; it != endit ; ++it) {
@@ -127,6 +134,119 @@ Shader &UberShader::Load(uint flag) {
 
   prog_dict_[flag] = shader_prog;
   return prog_dict_[flag];
+}
+
+void UberShader::ApplyMaterial() {
+  Device *dev = Device::GetInstance();
+  RenderState *render_dev = &dev->render_state();
+  const Material &material = render_dev->LastMaterial();
+  unsigned int flag = material.props;
+
+  Shader &shader = Load(flag);
+  
+  bool use_ambient = ((flag & kMaterialAmbient) == kMaterialAmbient);
+  bool use_diffuse = ((flag & kMaterialDiffuse) == kMaterialDiffuse);
+  bool use_specular = ((flag & kMaterialSpecular) == kMaterialSpecular);
+  bool use_diffuse_map = ((flag & kMaterialDiffuseMap) == kMaterialDiffuseMap);
+  bool use_specular_map = ((flag & kMaterialSpecularMap) == kMaterialSpecularMap);
+  bool use_normal_map = ((flag & kMaterialNormalMap) == kMaterialNormalMap);
+
+  glm::vec4 ambient_color;
+  glm::vec4 diffuse_color;
+  glm::vec4 specular_color;
+
+  //색 정보 얻기
+  if(use_ambient) {
+    //material의 색속성
+    ambient_color = material.ambient;
+    shader.SetUniformVector(kAmbientColorHandleName, ambient_color);
+    SR_CHECK_ERROR("Set Ambient Color");
+  }
+  if(use_diffuse) {
+    diffuse_color = material.diffuse;
+    shader.SetUniformVector(kDiffuseColorHandleName, diffuse_color);
+    SR_CHECK_ERROR("Set Diffuse Color");
+  }
+  if(use_specular) {
+    specular_color = material.specular;
+    shader.SetUniformVector(kSpecularColorHandleName, specular_color);
+    SR_CHECK_ERROR("Set Specular Color");
+    shader.SetUniformValue(kSpecularShininessHandleName, material.shininess);
+    SR_CHECK_ERROR("Set Shininess Color");
+  }
+  //마지막에 등록된 재질과 지금 처리중인 재질이 다른 경우에만 아래의 텍스쳐 바인딩을 처리하자
+  if(use_diffuse_map) {
+    Texture *diffuse_map = dev->tex_mgr()->Get_ptr(material.diffuse_map);
+    if(diffuse_map != NULL) {
+      render_dev->UseTexture(*diffuse_map, 0);
+      shader.SetUniformValue(kDiffuseMapHandleName, 0);
+      SR_CHECK_ERROR("Set Ambient map");
+    }
+  }
+  if(use_specular_map) {
+    Texture *specular_map = dev->tex_mgr()->Get_ptr(material.specular_map);
+    if(specular_map != NULL) {
+      render_dev->UseTexture(*specular_map, 1);
+      shader.SetUniformValue(kSpecularMapHandleName, 1);
+      SR_CHECK_ERROR("Set Specular map");
+    }
+  }
+  if(use_normal_map) {
+    Texture *normal_map = dev->tex_mgr()->Get_ptr(material.normal_map);
+    if(normal_map != NULL) {
+      render_dev->UseTexture(*normal_map, 2);
+      shader.SetUniformValue(kNormalMapHandleName, 2);
+      SR_CHECK_ERROR("Set Normal map");
+    }
+  }
+  //최초 상태로 돌려놓기
+  glActiveTexture(GL_TEXTURE0);
+  SR_CHECK_ERROR("Apply Material");
+}
+
+void UberShader::ApplyCamera() {
+  Device *dev = Device::GetInstance();
+  RenderState *render_dev = &dev->render_state();
+  const glm::mat4 &projection = render_dev->projection_mat();
+  const glm::mat4 &view = render_dev->view_mat();
+  const glm::mat4 &model = render_dev->model_mat();
+  const Material &material = render_dev->LastMaterial();
+
+  Shader &shader = Load(material.props);
+
+  //world-view-projection
+  //world, view, projection 같은것을 등록할수 잇으면 등록하기
+  glm::mat4 mvp = glm::mat4(1.0f);
+  mvp *= projection;
+  mvp *= view;
+  mvp *= model;
+  shader.SetUniformMatrix(kMVPHandleName, mvp);
+  shader.SetUniformMatrix(kModelHandleName, model);
+  shader.SetUniformMatrix(kProjectionHandleName, projection);
+  shader.SetUniformMatrix(kViewHandleName, view);
+
+  //빛 계산에는 normal계산 뒤집는 행렬이 필요하다
+  glm::mat4 model_mat4(model);
+  glm::mat4 model_mat4_inv = glm::inverse(model_mat4);
+  glm::mat4 model_mat4_inv_transpose = glm::transpose(model_mat4_inv);
+  shader.SetUniformMatrix(kModelInverseTransposeHandleName, model_mat4_inv_transpose);
+
+  const glm::vec3 eye = MatrixHelper::ViewPos(view);
+  const glm::vec3 up = MatrixHelper::ViewUpVec(view);
+  const glm::vec3 dir = MatrixHelper::ViewDirVec(view);
+  glm::vec3 view_side = glm::cross(dir, up);
+
+  glm::vec4 view_side_vec(view_side.x, view_side.y, view_side.z, 1.0f);
+  shader.SetUniformVector(kViewSideHandleName, view_side);
+
+  glm::vec4 eye_vec(eye.x, eye.y, eye.z, 1.0f);
+  shader.SetUniformVector(kViewPositionHandleName, eye_vec);
+
+  glm::vec4 up_vec(up.x, up.y, up.z, 1.0f);
+  shader.SetUniformVector(kViewUpHandleName, up_vec);
+
+  glm::vec4 dir_vec(dir.x, dir.y, dir.z, 1.0f);
+  shader.SetUniformVector(kViewDirHandleName, dir_vec);
 }
 
 } //namespace sora

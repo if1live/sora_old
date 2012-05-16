@@ -32,9 +32,15 @@ public:
 
   template<typename T>
   void Init();
+  void Deinit();
   Shader &Load(uint flag);
 
   bool IsValidFlag(uint flag) const;
+
+public:
+  void ApplyCamera();
+  void ApplyMaterial();
+  //void ApplyMaterial();
 
 protected:
   void LoadRawSrc(const std::string &v_file, const std::string &f_file);
@@ -50,8 +56,6 @@ protected:
 //ambient / diffuse / specular 지원
 //쌩텍스쳐는 곧 diffuse map라고 생각해서 연결한다
 struct LightUberShaderLoadPolicy {
-  //static const char *vert_file() { return "shader/uber.vs"; }
-  //static const char *frag_file() { return "shader/uber.fs"; }
   static const char *vert_file() { return "shader/per_pixel_uber.vs"; }
   static const char *frag_file() { return "shader/per_pixel_uber.fs"; }
   static uint avail_mask() {
@@ -67,6 +71,21 @@ struct LightUberShaderLoadPolicy {
   }
 };
 
+struct DeferredGeometryUberShaderLoadPolicy {
+  static const char *vert_file() { return "shader/deferred_geometry.vs"; }
+  static const char *frag_file() { return "shader/deferred_geometry.fs"; }
+  static uint avail_mask() {
+    uint flag = 0;
+    flag |= kMaterialAmbient;
+    flag |= kMaterialDiffuse;
+    flag |= kMaterialSpecular;
+    flag |= kMaterialDiffuseMap;
+    flag |= kMaterialSpecularMap;
+    //normal map
+    flag |= kMaterialNormalMap;
+    return flag;
+  }
+};
 
 template<typename T>
 void UberShader::Init() {

@@ -28,6 +28,8 @@
 #include "render_state.h"
 
 namespace sora {;
+struct Material;
+
 namespace gl {
   class GLRenderState : public sora::RenderStateInterface {
   public:
@@ -53,6 +55,14 @@ namespace gl {
     void UseShader(Shader &shader);
   private:
     ShaderHandleType last_prog_id_;
+
+    //material
+  public:
+    void UseMaterial(const Material &mtl);
+    void UnuseMaterial();
+    const Material &LastMaterial() const;
+  private:
+    std::unique_ptr<Material> last_mtl_;
 
   public:
     //win size
