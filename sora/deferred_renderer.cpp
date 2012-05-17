@@ -31,6 +31,7 @@
 #include "material.h"
 #include "texture.h"
 #include "uber_shader.h"
+#include "light.h"
 
 using namespace std;
 using namespace glm;
@@ -50,7 +51,7 @@ bool DeferredRenderer::Init(int w, int h) {
   const char *vert_file = "shader/deferred_geometry.vs";
   const char *frag_file = "shader/deferred_geometry.fs";
   unsigned int flag = 0;
-  flag |= kMaterialAmbient;
+  //flag |= kMaterialAmbient; //디퍼드는 객체별 ambient가 먹히지 않는다(속성을 따로 저장하지 않아서)
   flag |= kMaterialDiffuse;
   flag |= kMaterialSpecular;
   flag |= kMaterialDiffuseMap;
@@ -80,41 +81,23 @@ void DeferredRenderer::BeginGeometryPass() {
   vec4ub color(0, 0, 0, 255);
   render_state.ClearBuffer(true, true, false, color);
   render_state.Set3D();
-
-  const Material &material = render_state.LastMaterial();
-  Shader &shader = geometry_uber_shader_->Load(material.props);
-  render_state.UseShader(shader);
-
-  geometry_uber_shader_->ApplyCamera();
-  geometry_uber_shader_->ApplyMaterial(material);
 }
 void DeferredRenderer::EndGeometryPass() {
   gbuffer_->Unbind();
 }
-void DeferredRenderer::ApplyGeomertyPassRenderState() {
-  Device *device = Device::GetInstance();
-  RenderState &render_state = device->render_state();
-  const Material &material = render_state.LastMaterial();
-  unsigned int shader_flag = material.props;
-  Shader &shader = geometry_uber_shader_->Load(shader_flag);
 
-  const mat4 &projection_mat = render_state.projection_mat();
-  const mat4 &view_mat = render_state.view_mat();
-  const mat4 &model_mat = render_state.model_mat();
-
-  mat4 mvp = projection_mat * view_mat * model_mat;
-  ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
-  SetUniformMatrix(mvp_var, mvp);
-
-  //마테리얼 정보 적절히 수동으로 설정하기
-  //deferred와 forward에서의 쉐이더 코드는 완전히 다르니까 render state로 마테리얼 설정은 불가능하다
-}
 void DeferredRenderer::DrawMesh(Mesh *mesh) {
   Device *device = Device::GetInstance();
   RenderState &render_state = device->render_state();
   const Material &material = render_state.LastMaterial();
   unsigned int shader_flag = material.props;
   Shader &shader = geometry_uber_shader_->Load(shader_flag);
+
+  //물체그릴떄마다 재질이 바뀌면 쉐이더도 바뀌니까 적절히 쉐이더 속성 같이 설정해주기
+  render_state.UseShader(shader);
+  geometry_uber_shader_->ApplyCamera();
+  geometry_uber_shader_->ApplyMaterial(material);
+
   shader.DrawMeshIgnoreMaterial(mesh);
 }
 
@@ -134,4 +117,40 @@ Texture DeferredRenderer::PositionTex() const {
   return gbuffer_->PositionTex();
 }
 
+
+void DeferredRenderer::BeginLightPass() {
+  Device *device = Device::GetInstance();
+  RenderState &render_state = device->render_state();
+  render_state.Set2D();
+  vec4ub color(0, 0, 0, 255);
+  render_state.ClearBuffer(true, true, false, color);
+}
+void DeferredRenderer::EndLightPass() {
+}
+void DeferredRenderer::DrawLight(const Light &light) {
+  switch(light.type) {
+  case kLightDirection:
+    DrawDirectionalLight(light);
+    break;
+  case kLightPoint:
+    DrawPointLight(light);
+    break;
+  case kLightSpotLight:
+    DrawSpotLight(light);
+    break;
+  default:
+    SR_ASSERT(!"not valid");
+  }
+}
+void DeferredRenderer::DrawDirectionalLight(const Light &light) {
+  SR_ASSERT(light.type == kLightDirection);
+}
+void DeferredRenderer::DrawPointLight(const Light &light) {
+  SR_ASSERT(light.type == kLightPoint);
+}
+void DeferredRenderer::DrawSpotLight(const Light &light) {
+  SR_ASSERT(light.type == kLightSpotLight);
+}
+void DeferredRenderer::DrawAmbientLight(const glm::vec3 &color) {
+}
 } //namespace sora

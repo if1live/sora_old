@@ -34,7 +34,7 @@ void main() {
 	v_color = a_color;
 	v_tangent = a_tangent;
 	v_texcoord = a_texcoord;
-	a_normal = normal;
+	v_normal = a_normal;
 
 	if(use_diffuse || use_specular) {
 		vec3 light_dir = a_position.xyz - u_modelLightPosition.xyz;

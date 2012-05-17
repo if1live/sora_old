@@ -77,6 +77,8 @@ private:
   int win_width_;
   int win_height_;
 
+  RenderStateType render_state_;
+
   glm::mat4 projection_mat_;
   glm::mat4 view_mat_;
   std::unique_ptr<MatrixStack> model_mat_stack_;

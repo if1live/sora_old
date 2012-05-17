@@ -92,7 +92,7 @@ namespace gl {
         string src;
         for(size_t i = 0 ; i < src_list.size() ; i++) {
           src += src_list[i];
-          src += '\n';
+          //src += '\n';
         }
         LOGE("ShaderSrc : %s", src.c_str());
         SR_ASSERT(false);

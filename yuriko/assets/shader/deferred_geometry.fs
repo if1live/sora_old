@@ -33,26 +33,12 @@ vec4 calc_specular_color() {
 }
 
 vec4 calc_diffuse_color() {
-	const bool use_ambient = AMBIENT_MASK == 1 ? true : false;
 	const bool use_diffuse = DIFFUSE_MASK == 1 ? true : false;
 	const bool use_diffuse_map = DIFFUSE_MAP_MASK == 1 ? true : false;
-	
-	/*
-	vec4 color = vec4(0.0);
-	if(use_ambient) {
-		vec4 ambient_color = u_ambientColor;
-		if(use_diffuse == false && use_diffuse_map) {
-			vec4 diffuse_texel = texture2D(s_diffuseMap, v_texcoord);
-			ambient_color = ambient_color * diffuse_texel;
-		}
-		color = color + ambient_color;
-	}
-	*/
 	
 	if(use_diffuse == false) {
 		return vec4(0.0);
 	}
-	
 	vec4 diffuse_color = u_diffuseColor;
 	if(use_diffuse_map) {
 		vec4 diffuse_texel = texture2D(s_diffuseMap, v_texcoord);

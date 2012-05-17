@@ -50,6 +50,7 @@ public:
   static bool DestroyDevice();
 
   RenderState &render_state() { return *render_state_; }
+  const RenderState &render_state() const { return *render_state_; }
 
   TouchEventQueue &touch_evt_queue() { return *touch_evt_queue_; }
   KeyboardEventQueue &keyboard_evt_queue() { return *keyboard_evt_queue_; }

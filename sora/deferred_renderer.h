@@ -27,6 +27,7 @@ class GBuffer;
 class Mesh;
 class Material;
 class UberShader;
+class Light;
 
 class DeferredRenderer {
 public:
@@ -38,8 +39,15 @@ public:
 
   void BeginGeometryPass();
   void EndGeometryPass();
-  void ApplyGeomertyPassRenderState();
   void DrawMesh(Mesh *mesh);
+
+  void BeginLightPass();
+  void DrawAmbientLight(const glm::vec3 &color);
+  void DrawLight(const Light &light);
+  void DrawDirectionalLight(const Light &light);
+  void DrawPointLight(const Light &light);
+  void DrawSpotLight(const Light &light);
+  void EndLightPass();
 
   GBuffer &gbuffer() { return *gbuffer_; }
 

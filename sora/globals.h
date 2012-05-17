@@ -125,6 +125,17 @@ typedef enum {
   kVarTypeCount,
 } VarType;
 
+typedef enum {
+  kLightPoint,
+  kLightDirection,
+  kLightSpotLight,
+} LightType;
+
+typedef enum {
+  kRenderState2D,
+  kRenderState3D,
+} RenderStateType;
+
 struct TextureParam {
   TextureParam() 
     : mag_filter(kTexMagLinear),

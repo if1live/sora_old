@@ -278,6 +278,10 @@ void SORA_set_cam_pos(float a, float b) {
 void renderFrame(Device *device) {
   SR_CHECK_ERROR("Begin RenderFrame");
   
+  vec4ub color(128, 0, 0, 255);
+  RenderState &render_state = device->render_state();
+  render_state.ClearBuffer(true, true, false, color);
+
   //카메라 행렬 설정은 뭘 해도 공통
   float radius = 4;
   float cam_x = radius * cos(SR_DEG_2_RAD(aptitude)) * sin(SR_DEG_2_RAD(latitude));
@@ -310,33 +314,37 @@ void renderFrame(Device *device) {
   //mtl.props |= kMaterialNormalMap;
   device->render_state().UseMaterial(mtl);
 
+  /*
   {
+    //디퍼스 속성 렌더링
     deferred_renderer.BeginGeometryPass();
-    deferred_renderer.ApplyGeomertyPassRenderState();
     Mesh *mesh = device->mesh_mgr()->Get("mesh");
     deferred_renderer.DrawMesh(mesh);
     deferred_renderer.EndGeometryPass();
-  }
 
-  /*
+    //라이팅 처리
+    deferred_renderer.BeginLightPass();
+    deferred_renderer.DrawAmbientLight(glm::vec3(0.1, 0.0, 0.3));
+    deferred_renderer.EndLightPass();
+  }
+  */
   {
     //forward renderer
-    forward_renderer.BeginPass();
-
+    //forward_renderer.BeginPass();
+    /*
     forward_renderer.SetLight(light);
     forward_renderer.ApplyRenderState();
 
     //메시 그리기 일단 제거
     Mesh *mesh = device->mesh_mgr()->Get("mesh");
     forward_renderer.DrawMesh(mesh);
-
-    forward_renderer.EndPass();
+    */
+    //forward_renderer.EndPass();
   }
-  */
   
   //fbo에 있는 내용을 적절히 그리기
   //null_post_effect.Draw(depth_fbo.color_tex(), &device->render_state());
-  
+  /*
   if(curr_deferred_fbo_idx == kDeferredRendererTexDepth) {
     null_post_effect.Draw(deferred_renderer.DepthTex(), &device->render_state());
   } else if(curr_deferred_fbo_idx == kDeferredRendererTexDiffuse) {
@@ -348,9 +356,8 @@ void renderFrame(Device *device) {
   } else if(curr_deferred_fbo_idx == kDeferredRendererTexPosition) {
     null_post_effect.Draw(deferred_renderer.PositionTex(), &device->render_state());
   }
+  */
 
-
-  
   {
     //디버깅용으로 화면 3d렌더링 하는거
     DebugDrawManager *mgr_3d = device->debug_draw_mgr();
@@ -359,7 +366,6 @@ void renderFrame(Device *device) {
     mgr_3d->AddSphere(vec3(0, 1, 0), 1, Color_White());
     mgr_3d->AddCross(vec3(0, 0, 0), Color_Black(), 10, 0, false);
     mgr_3d->AddString(vec3(0, 0, 0.5), "asdf", Color_Blue(), 1.5f);
-
 
     DebugDrawPolicy debug_draw;
     debug_draw.Draw(*mgr_3d);

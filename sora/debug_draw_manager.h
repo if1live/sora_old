@@ -46,7 +46,6 @@ public:
   void Draw(DebugDrawCmd *cmd);
 
 private:
-  void BeforeDraw();
   void DrawElem(DebugDrawCmd_Line *cmd);
   void DrawElem(DebugDrawCmd_Cross *cmd);
   void DrawElem(DebugDrawCmd_Sphere *cmd);

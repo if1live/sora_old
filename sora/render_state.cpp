@@ -71,10 +71,16 @@ const Material &RenderState::LastMaterial() const {
   return policy_->LastMaterial();
 }
 void RenderState::Set2D() {
-  policy_->Set2D(); 
+  if(render_state_ != kRenderState2D) {
+    policy_->Set2D(); 
+    render_state_ = kRenderState2D;
+  }
 }
 void RenderState::Set3D() { 
-  policy_->Set3D(); 
+  if(render_state_ != kRenderState3D) {
+    policy_->Set3D(); 
+    render_state_ = kRenderState3D;
+  }
 }
 
 void RenderState::EndRender() {

@@ -14,7 +14,6 @@ uniform float u_specularShininess;
 
 varying vec3 v_viewDir;
 varying vec3 v_lightDir;
-varying mat3 v_modelInverseTranspose;
 
 //ambient/diffuse/specular map
 uniform sampler2D s_diffuseMap;
@@ -49,9 +48,9 @@ void main() {
 	}
 	
 	if(use_diffuse || use_specular) {
-		vec4 tmp_normal(normal, 1.0);
-		vec4 tmp_model_normal = v_modelInverseTranspose * tmp_normal;
-		vec4 model_normal(tmp_model_normal.xyz);
+		vec4 tmp_normal = vec4(normal, 1.0);
+		vec4 tmp_model_normal = u_mvInvTranspose * tmp_normal;
+		vec3 model_normal = vec3(tmp_model_normal.xyz);
 		model_normal = normalize(model_normal);
 		
 		if(use_diffuse) {

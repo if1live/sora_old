@@ -56,6 +56,8 @@ struct DebugDrawCmd {
     duration(0),
     depth_enable(true) {
     RenderState &render_dev = Device::GetInstance()->render_state();
+    render_dev.Set3D();
+
     projection_mat = render_dev.projection_mat();
     view_mat = render_dev.view_mat();
     model_mat = render_dev.model_mat();
@@ -240,7 +242,9 @@ void DebugDrawPolicy::DrawCmdList(const DebugDrawManager &mgr) {
 void DebugDrawPolicy::Draw(const DebugDrawManager &mgr) {
   mgr_ = const_cast<DebugDrawManager*>(&mgr);
 
-  BeforeDraw();
+  RenderState *dev = &Device::GetInstance()->render_state();
+  dev->Set3D();
+
   DrawCmdList(mgr);
 
   mgr_ = NULL;
@@ -283,10 +287,6 @@ void DebugDrawPolicy::UnapplyDepthTest(DebugDrawCmd *cmd) {
 
 ///////////////////////////////////////////////
 
-void DebugDrawPolicy::BeforeDraw() {
-  RenderState *dev = &Device::GetInstance()->render_state();
-  dev->Set3D();
-}
 void DebugDrawPolicy::DrawElem(DebugDrawCmd_Line *cmd) {
   ShaderManager *shader_mgr = Device::GetInstance()->shader_mgr();
   Shader *shader = shader_mgr->Get(ShaderManager::kConstColor);
