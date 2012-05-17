@@ -31,6 +31,7 @@ public:
     kNormalTex,
     kDiffuseTex,
     kSpecularTex,
+    kPositionTex,
     kTexCount
   };
 
@@ -48,13 +49,17 @@ public:
   Texture NormalTex() const;
   Texture DiffuseTex() const;
   Texture SpecularTex() const;
+  Texture PositionTex() const;
 
 private:
+  Texture GetTex(int tex_code) const;
+
   FrameBufferHandle fbo_;
   //depth texture(그냥 깊이버퍼)
   //RT0, view-space normal
   //RT1, diffuse(color * albedo)
   //RT2, specular map(rgb + shininess)
+  //RT3, position map(xyz, 일단 간단한 구현 위해서 놓지만 최적화하면 제거하자)
   std::array<TextureHandle, kTexCount> tex_list_;
 
   int width_;

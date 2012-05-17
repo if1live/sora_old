@@ -5,6 +5,7 @@ uniform mat4 u_mvInvTranspose;
 varying vec4 v_color;
 varying vec2 v_texcoord;
 varying vec3 v_normal;
+varying vec3 v_position;
 
 uniform vec4 u_ambientColor;
 uniform vec4 u_diffuseColor;
@@ -80,4 +81,7 @@ void main() {
 	//RT2 : specular(grayscale + shininess)
 	vec4 specular_color = calc_specular_color();
 	gl_FragData[2] = specular_color;
+	
+	//RT3 : pos tex
+	gl_FragData[3] = vec4(v_position, 1.0);
 }

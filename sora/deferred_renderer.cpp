@@ -130,5 +130,8 @@ Texture DeferredRenderer::DiffuseTex() const {
 Texture DeferredRenderer::SpecularTex() const {
   return gbuffer_->SpecularTex();
 }
+Texture DeferredRenderer::PositionTex() const {
+  return gbuffer_->PositionTex();
+}
 
 } //namespace sora

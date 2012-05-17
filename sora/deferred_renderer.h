@@ -47,7 +47,7 @@ public:
   Texture NormalTex() const;
   Texture DiffuseTex() const;
   Texture SpecularTex() const;
-
+  Texture PositionTex() const;
 private:
   //std::unique_ptr<Shader> geometry_shader_;
   std::unique_ptr<UberShader> geometry_uber_shader_;
@@ -56,3 +56,4 @@ private:
 };
 
 } //namespace sora
+

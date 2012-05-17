@@ -13,6 +13,8 @@ varying vec3 v_normal;
 attribute vec2 a_texcoord;
 varying vec2 v_texcoord;
 
+varying vec3 v_position;
+
 void main() {
 	const bool use_ambient = AMBIENT_MASK == 1 ? true : false;
 	const bool use_diffuse = DIFFUSE_MASK == 1 ? true : false;
@@ -21,7 +23,9 @@ void main() {
 	const bool use_specular_map = SPECULAR_MAP_MASK == 1 ? true : false;
 	const bool use_normal_map = NORMAL_MAP_MASK == 1 ? true : false;
 
-	gl_Position = u_mvp * a_position;
+	vec4 position = u_mvp * a_position;
+	gl_Position = position;
+	v_position = position.xyz;
 	v_color = a_color;	
 	v_texcoord = a_texcoord;
 	v_normal = a_normal;

@@ -104,6 +104,7 @@ enum {
   kDeferredRendererTexNormal,
   kDeferredRendererTexDiffuse,
   kDeferredRendererTexSpecular,
+  kDeferredRendererTexPosition
 };
 int curr_deferred_fbo_idx = kDeferredRendererTexNormal;
 
@@ -344,6 +345,8 @@ void renderFrame(Device *device) {
     null_post_effect.Draw(deferred_renderer.NormalTex(), &device->render_state());
   } else if(curr_deferred_fbo_idx == kDeferredRendererTexSpecular) {
     null_post_effect.Draw(deferred_renderer.SpecularTex(), &device->render_state());
+  } else if(curr_deferred_fbo_idx == kDeferredRendererTexPosition) {
+    null_post_effect.Draw(deferred_renderer.PositionTex(), &device->render_state());
   }
 
 
@@ -531,6 +534,9 @@ void SORA_update_frame(Device *device, float dt) {
         break;
       case '4':
         curr_deferred_fbo_idx = kDeferredRendererTexSpecular;
+        break;
+      case '5':
+        curr_deferred_fbo_idx = kDeferredRendererTexPosition;
         break;
       }
     }

@@ -37,6 +37,7 @@
 #include "freeglut_main.h"
 #include "sysfont_main.h"
 #include "post_effect_main.h"
+#include "sora/template_lib.h"
 
 #if SR_WIN && (SR_GLES == 0)
 
@@ -122,29 +123,18 @@ void run_main(sora::Device *dev) {
       evt.ch = sora::KeyboardEvent::kRight;
       dev->keyboard_evt_queue().Push(evt);
     }
-    if(glfwGetKey('1') == GLFW_PRESS) {
-      sora::KeyboardEvent evt;
-      evt.is_special_key = false;
-      evt.ch = '1';
-      dev->keyboard_evt_queue().Push(evt);
-    }
-    if(glfwGetKey('2') == GLFW_PRESS) {
-      sora::KeyboardEvent evt;
-      evt.is_special_key = false;
-      evt.ch = '2';
-      dev->keyboard_evt_queue().Push(evt);
-    }
-    if(glfwGetKey('3') == GLFW_PRESS) {
-      sora::KeyboardEvent evt;
-      evt.is_special_key = false;
-      evt.ch = '3';
-      dev->keyboard_evt_queue().Push(evt);
-    }
-    if(glfwGetKey('4') == GLFW_PRESS) {
-      sora::KeyboardEvent evt;
-      evt.is_special_key = false;
-      evt.ch = '4';
-      dev->keyboard_evt_queue().Push(evt);
+    unsigned char check_key_list[] = {
+      '1', '2', '3', '4', '5', '6',
+    };
+    int key_list_size = sora::GetArraySize(check_key_list);
+    for(int i = 0 ; i < key_list_size ; ++i) {
+      char ch = check_key_list[i];
+      if(glfwGetKey(ch) == GLFW_PRESS) {
+        sora::KeyboardEvent evt;
+        evt.is_special_key = false;
+        evt.ch = ch;
+        dev->keyboard_evt_queue().Push(evt);
+      }
     }
 
     SORA_draw_frame(dev);
