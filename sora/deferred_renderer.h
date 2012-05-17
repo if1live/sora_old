@@ -46,6 +46,7 @@ public:
   Texture DepthTex() const;
   Texture NormalTex() const;
   Texture DiffuseTex() const;
+  Texture SpecularTex() const;
 
 private:
   //std::unique_ptr<Shader> geometry_shader_;

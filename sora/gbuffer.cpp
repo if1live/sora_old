@@ -58,7 +58,7 @@ bool GBuffer::Init(int w, int h) {
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
-    SR_CHECK_ERROR("ColorTexture");
+    SR_CHECK_ERROR("DiffuseTexture");
   }
   {
     //normal tex
@@ -67,7 +67,16 @@ bool GBuffer::Init(int w, int h) {
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, w, h, 0, GL_RGB, GL_FLOAT, NULL);
-    SR_CHECK_ERROR("ColorTexture");
+    SR_CHECK_ERROR("NormalTexture");
+  }
+  {
+    //specular tex
+    TextureHandle &tex_id = tex_list_[kSpecularTex];
+    glBindTexture(GL_TEXTURE_2D, tex_id);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    SR_CHECK_ERROR("SpecularTexture");
   }
   //fbo생성
   {
@@ -76,6 +85,7 @@ bool GBuffer::Init(int w, int h) {
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, tex_list_[kDepthTex], 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex_list_[kNormalTex], 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, tex_list_[kDiffuseTex], 0);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, tex_list_[kSpecularTex], 0);
     //glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color_rb);
     SR_CHECK_FRAMEBUFFER("fb");
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -104,6 +114,7 @@ void GBuffer::Bind() {
   GLenum buffers[] = { 
     GL_COLOR_ATTACHMENT0, 
     GL_COLOR_ATTACHMENT1,
+    GL_COLOR_ATTACHMENT2,
   };
   int buffer_size = GetArraySize(buffers);
   glDrawBuffers(buffer_size, buffers);
@@ -134,6 +145,15 @@ Texture GBuffer::DiffuseTex() const {
   img_desc.width = width_;
   img_desc.height = height_;
   tex.Init(tex_list_[kDiffuseTex], img_desc, true);
+  return tex;
+}
+
+Texture GBuffer::SpecularTex() const {
+  Texture tex;
+  ImageDesc img_desc;
+  img_desc.width = width_;
+  img_desc.height = height_;
+  tex.Init(tex_list_[kSpecularTex], img_desc, true);
   return tex;
 }
 

@@ -127,5 +127,8 @@ Texture DeferredRenderer::NormalTex() const {
 Texture DeferredRenderer::DiffuseTex() const {
   return gbuffer_->DiffuseTex();
 }
+Texture DeferredRenderer::SpecularTex() const {
+  return gbuffer_->SpecularTex();
+}
 
 } //namespace sora

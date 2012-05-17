@@ -30,6 +30,7 @@ public:
     kDepthTex,
     kNormalTex,
     kDiffuseTex,
+    kSpecularTex,
     kTexCount
   };
 
@@ -46,12 +47,14 @@ public:
   Texture DepthTex() const;
   Texture NormalTex() const;
   Texture DiffuseTex() const;
+  Texture SpecularTex() const;
 
 private:
   FrameBufferHandle fbo_;
   //depth texture(그냥 깊이버퍼)
   //RT0, view-space normal
   //RT1, diffuse(color * albedo)
+  //RT2, specular map(rgb + shininess)
   std::array<TextureHandle, kTexCount> tex_list_;
 
   int width_;

@@ -103,6 +103,7 @@ enum {
   kDeferredRendererTexDepth,
   kDeferredRendererTexNormal,
   kDeferredRendererTexDiffuse,
+  kDeferredRendererTexSpecular,
 };
 int curr_deferred_fbo_idx = kDeferredRendererTexNormal;
 
@@ -292,15 +293,15 @@ void renderFrame(Device *device) {
   //테스트용 마테리얼은 일단 공통
   Material mtl;
   mtl.ambient = vec4(0.1, 0.1, 0.1, 1);
-  mtl.diffuse = vec4(0.3, 0.3, 0.3, 1);
+  mtl.diffuse = vec4(0.3, 0.3, 1.0, 1);
   //mtl.diffuse = vec4(1, 1, 1, 1);
-  mtl.specular = vec4(1);
+  mtl.specular = vec4(1, 0.5, 1, 1);
   mtl.shininess = 20;
   //mtl.diffuse_map = "mtl_diffuse";
   mtl.diffuse_map = "sora2";
   mtl.specular_map = "mtl_specular";
   mtl.normal_map = "mtl_normal";
-  mtl.props |= kMaterialAmbient;
+  //mtl.props |= kMaterialAmbient;
   mtl.props |= kMaterialDiffuse;
   mtl.props |= kMaterialDiffuseMap;
   mtl.props |= kMaterialSpecular;
@@ -341,6 +342,8 @@ void renderFrame(Device *device) {
     null_post_effect.Draw(deferred_renderer.DiffuseTex(), &device->render_state());
   } else if(curr_deferred_fbo_idx == kDeferredRendererTexNormal) {
     null_post_effect.Draw(deferred_renderer.NormalTex(), &device->render_state());
+  } else if(curr_deferred_fbo_idx == kDeferredRendererTexSpecular) {
+    null_post_effect.Draw(deferred_renderer.SpecularTex(), &device->render_state());
   }
 
 
@@ -525,6 +528,9 @@ void SORA_update_frame(Device *device, float dt) {
         break;
       case '3':
         curr_deferred_fbo_idx = kDeferredRendererTexDiffuse;
+        break;
+      case '4':
+        curr_deferred_fbo_idx = kDeferredRendererTexSpecular;
         break;
       }
     }
