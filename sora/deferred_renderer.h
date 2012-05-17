@@ -56,6 +56,8 @@ public:
   Texture DiffuseTex() const;
   Texture SpecularTex() const;
   Texture PositionTex() const;
+
+  uint GBufferHandle() const;
 private:
   //std::unique_ptr<Shader> geometry_shader_;
   std::unique_ptr<UberShader> geometry_uber_shader_;

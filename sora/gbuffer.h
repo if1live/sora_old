@@ -51,6 +51,8 @@ public:
   Texture SpecularTex() const;
   Texture PositionTex() const;
 
+  FrameBufferHandle fbo() const { return fbo_; }
+
 private:
   Texture GetTex(int tex_code) const;
 

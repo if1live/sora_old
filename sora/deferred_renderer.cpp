@@ -153,4 +153,7 @@ void DeferredRenderer::DrawSpotLight(const Light &light) {
 }
 void DeferredRenderer::DrawAmbientLight(const glm::vec3 &color) {
 }
+unsigned int DeferredRenderer::GBufferHandle() const {
+  return gbuffer_->fbo();
+}
 } //namespace sora

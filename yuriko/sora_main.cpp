@@ -314,7 +314,6 @@ void renderFrame(Device *device) {
   //mtl.props |= kMaterialNormalMap;
   device->render_state().UseMaterial(mtl);
 
-  /*
   {
     //디퍼스 속성 렌더링
     deferred_renderer.BeginGeometryPass();
@@ -327,24 +326,22 @@ void renderFrame(Device *device) {
     deferred_renderer.DrawAmbientLight(glm::vec3(0.1, 0.0, 0.3));
     deferred_renderer.EndLightPass();
   }
-  */
+  /*
   {
     //forward renderer
-    //forward_renderer.BeginPass();
-    /*
+    forward_renderer.BeginPass();
     forward_renderer.SetLight(light);
     forward_renderer.ApplyRenderState();
 
     //메시 그리기 일단 제거
     Mesh *mesh = device->mesh_mgr()->Get("mesh");
     forward_renderer.DrawMesh(mesh);
-    */
     //forward_renderer.EndPass();
   }
+*/
   
   //fbo에 있는 내용을 적절히 그리기
   //null_post_effect.Draw(depth_fbo.color_tex(), &device->render_state());
-  /*
   if(curr_deferred_fbo_idx == kDeferredRendererTexDepth) {
     null_post_effect.Draw(deferred_renderer.DepthTex(), &device->render_state());
   } else if(curr_deferred_fbo_idx == kDeferredRendererTexDiffuse) {
@@ -356,7 +353,16 @@ void renderFrame(Device *device) {
   } else if(curr_deferred_fbo_idx == kDeferredRendererTexPosition) {
     null_post_effect.Draw(deferred_renderer.PositionTex(), &device->render_state());
   }
-  */
+
+  //디버깅렌더링 하기전에 deferred renderer에 잇는 depth buffer를 적절히 복사하기
+  //그래야 깊이테스트가 올바르게 돌아간다
+  //만약 이게 없다면 테스트 렌더링도 deferred 안쪽에 집어넣어야한다
+  //http://stackoverflow.com/questions/9914046/opengl-how-to-use-depthbuffer-from-framebuffer-as-usual-depth-buffer
+  glBindFramebuffer(GL_READ_FRAMEBUFFER, deferred_renderer.GBufferHandle());
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+  int win_w = render_state.win_width();
+  int win_h = render_state.win_height();
+  glBlitFramebuffer(0, 0, win_w, win_h, 0, 0, win_w, win_h, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
 
   {
     //디버깅용으로 화면 3d렌더링 하는거
