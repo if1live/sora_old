@@ -30,6 +30,7 @@
 #include "render_state.h"
 #include "material.h"
 #include "texture.h"
+#include "uber_shader.h"
 
 using namespace std;
 using namespace glm;
@@ -42,23 +43,34 @@ DeferredRenderer::~DeferredRenderer() {
   Deinit();
 }
 bool DeferredRenderer::Init(int w, int h) {
-  material_.reset(new Material());
   gbuffer_ = move(unique_ptr<GBuffer>(new GBuffer()));
   gbuffer_->Init(w, h);
 
   LOGI("Deferred Renderer :: Geomerty Shader");
-  string deferred_geomerty_vs_path = Filesystem::GetAppPath("shader/deferred_geometry.vs");
-  string deferred_geomerty_fs_path = Filesystem::GetAppPath("shader/deferred_geometry.fs");
-  geometry_shader_ = move(unique_ptr<Shader>(new Shader()));
-  geometry_shader_->LoadFromFile(deferred_geomerty_vs_path, deferred_geomerty_fs_path);
+  const char *vert_file = "shader/deferred_geometry.vs";
+  const char *frag_file = "shader/deferred_geometry.fs";
+  unsigned int flag = 0;
+  flag |= kMaterialAmbient;
+  flag |= kMaterialDiffuse;
+  flag |= kMaterialSpecular;
+  flag |= kMaterialDiffuseMap;
+  flag |= kMaterialSpecularMap;
+  //normal map
+  flag |= kMaterialNormalMap;
+
+  geometry_uber_shader_.reset(new UberShader());
+  geometry_uber_shader_->InitWithFile(vert_file, frag_file, flag);
+
   return true;
 }
 void DeferredRenderer::Deinit() {
   if(gbuffer_.get() != NULL) {
     gbuffer_->Deinit();
+    gbuffer_.reset(NULL);
   }
-  if(geometry_shader_.get() != NULL) {
-    geometry_shader_->Deinit();
+  if(geometry_uber_shader_.get() != NULL) {
+    geometry_uber_shader_->Deinit();
+    geometry_uber_shader_.reset(NULL);
   }
 }
 void DeferredRenderer::BeginGeometryPass() {
@@ -68,6 +80,13 @@ void DeferredRenderer::BeginGeometryPass() {
   vec4ub color(0, 0, 0, 255);
   render_state.ClearBuffer(true, true, false, color);
   render_state.Set3D();
+
+  const Material &material = render_state.LastMaterial();
+  Shader &shader = geometry_uber_shader_->Load(material.props);
+  render_state.UseShader(shader);
+
+  geometry_uber_shader_->ApplyCamera();
+  geometry_uber_shader_->ApplyMaterial(material);
 }
 void DeferredRenderer::EndGeometryPass() {
   gbuffer_->Unbind();
@@ -75,29 +94,28 @@ void DeferredRenderer::EndGeometryPass() {
 void DeferredRenderer::ApplyGeomertyPassRenderState() {
   Device *device = Device::GetInstance();
   RenderState &render_state = device->render_state();
-
-  render_state.UseShader(*geometry_shader_);
+  const Material &material = render_state.LastMaterial();
+  unsigned int shader_flag = material.props;
+  Shader &shader = geometry_uber_shader_->Load(shader_flag);
 
   const mat4 &projection_mat = render_state.projection_mat();
   const mat4 &view_mat = render_state.view_mat();
   const mat4 &model_mat = render_state.model_mat();
 
   mat4 mvp = projection_mat * view_mat * model_mat;
-  ShaderVariable mvp_var = geometry_shader_->uniform_var(kMVPHandleName);
+  ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
   SetUniformMatrix(mvp_var, mvp);
-
-  mat3 view_mat3(view_mat);
-  mat3 view_mat3_inv = glm::inverse(view_mat3);
-  mat3 view_mat3_inv_transpose = glm::transpose(view_mat3_inv);
-  ShaderVariable view_inv_transpose_var = geometry_shader_->uniform_var("u_model3_InverseTranspose");
-  SR_ASSERT(view_inv_transpose_var.location != kInvalidShaderVarLocation);
-  SetUniformMatrix(view_inv_transpose_var, view_mat3_inv_transpose);
 
   //마테리얼 정보 적절히 수동으로 설정하기
   //deferred와 forward에서의 쉐이더 코드는 완전히 다르니까 render state로 마테리얼 설정은 불가능하다
 }
 void DeferredRenderer::DrawMesh(Mesh *mesh) {
-  geometry_shader_->DrawMeshIgnoreMaterial(mesh);
+  Device *device = Device::GetInstance();
+  RenderState &render_state = device->render_state();
+  const Material &material = render_state.LastMaterial();
+  unsigned int shader_flag = material.props;
+  Shader &shader = geometry_uber_shader_->Load(shader_flag);
+  shader.DrawMeshIgnoreMaterial(mesh);
 }
 
 Texture DeferredRenderer::DepthTex() const {
@@ -108,10 +126,6 @@ Texture DeferredRenderer::NormalTex() const {
 }
 Texture DeferredRenderer::DiffuseTex() const {
   return gbuffer_->DiffuseTex();
-}
-
-void DeferredRenderer::SetMaterial(const Material &mtl) {
-  *material_ = mtl;
 }
 
 } //namespace sora

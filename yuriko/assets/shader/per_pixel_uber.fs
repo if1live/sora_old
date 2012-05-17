@@ -1,5 +1,7 @@
 precision mediump float;
 
+uniform mat4 u_mvInvTranspose;
+
 varying vec4 v_color;
 varying vec2 v_texcoord;
 varying vec3 v_normal;
@@ -47,7 +49,9 @@ void main() {
 	}
 	
 	if(use_diffuse || use_specular) {
-		vec3 model_normal = v_modelInverseTranspose * normal;
+		vec4 tmp_normal(normal, 1.0);
+		vec4 tmp_model_normal = v_modelInverseTranspose * tmp_normal;
+		vec4 model_normal(tmp_model_normal.xyz);
 		model_normal = normalize(model_normal);
 		
 		if(use_diffuse) {

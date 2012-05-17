@@ -26,9 +26,9 @@
 using namespace std;
 
 const char *const_color_vert_src = "attribute vec4 a_position;\
-uniform mat4 u_modelViewProjection;\
+uniform mat4 u_mvp;\
 void main() {\
-  gl_Position = u_modelViewProjection * a_position;\
+  gl_Position = u_mvp * a_position;\
 }";
 
 const char *const_color_frag_src = "precision mediump float;\
@@ -39,11 +39,11 @@ void main() {\
 
 const char *albedo_vert_src = "attribute vec4 a_position;\
 attribute vec2 a_texcoord;\
-uniform mat4 u_modelViewProjection;\
+uniform mat4 u_mvp;\
 varying vec2 v_texcoord;\
 void main() {\
   v_texcoord = a_texcoord;\
-  gl_Position = u_modelViewProjection * a_position;\
+  gl_Position = u_mvp * a_position;\
 }";
 
 const char *albedo_frag_src = "precision mediump float;\
@@ -65,12 +65,12 @@ void main() {\
 }";
 
 const char *vertex_color_vert_src = "attribute vec4 a_position;\
-uniform mat4 u_modelViewProjection;\
+uniform mat4 u_mvp;\
 attribute vec4 a_color;\
 varying vec4 v_color;\
 void main() {\
   v_color = a_color;\
-  gl_Position = u_modelViewProjection * a_position;\
+  gl_Position = u_mvp * a_position;\
 }";
 
 const char *vertex_color_frag_src = "  precision mediump float;\

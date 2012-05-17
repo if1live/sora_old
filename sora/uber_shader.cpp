@@ -238,10 +238,10 @@ void UberShader::ApplyCamera(const glm::mat4 &projection, const glm::mat4 &view,
   shader.SetUniformMatrix(kViewHandleName, view);
 
   //빛 계산에는 normal계산 뒤집는 행렬이 필요하다
-  glm::mat4 model_mat4(model);
-  glm::mat4 model_mat4_inv = glm::inverse(model_mat4);
-  glm::mat4 model_mat4_inv_transpose = glm::transpose(model_mat4_inv);
-  shader.SetUniformMatrix(kModelInverseTransposeHandleName, model_mat4_inv_transpose);
+  glm::mat4 modelview_mat4(view * model);
+  glm::mat4 modelview_mat4_inv = glm::inverse(modelview_mat4);
+  glm::mat4 modelview_mat4_inv_transpose = glm::transpose(modelview_mat4_inv);
+  shader.SetUniformMatrix(kMVInvTransposeHandleName, modelview_mat4_inv_transpose);
 
   const glm::vec3 eye = MatrixHelper::ViewPos(view);
   const glm::vec3 up = MatrixHelper::ViewUpVec(view);
@@ -270,6 +270,10 @@ void UberShader::ApplyCamera() {
   ApplyCamera(projection, view, model);
 }
 
+void UberShader::InitWithFile(const char *vert_file, const char *frag_file, uint avail_mask) {
+  avail_mask_ = avail_mask;
+  LoadRawSrc(vert_file, frag_file);
+}
 } //namespace sora
 
 

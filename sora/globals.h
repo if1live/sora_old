@@ -267,15 +267,17 @@ typedef enum {
 #define kTangentHandleName "a_tangent"
 
 #define kConstColorHandleName "u_constColor"
+
 #define kViewPositionHandleName "u_viewPosition"
 #define kViewSideHandleName "u_viewSide"
 #define kViewUpHandleName "u_viewUp"
 #define kViewDirHandleName "u_viewDir"
-#define kMVPHandleName "u_modelViewProjection"
+
+#define kMVPHandleName "u_mvp"
 #define kModelHandleName "u_model"
 #define kProjectionHandleName "u_projection"
 #define kViewHandleName "u_view"
-#define kModelInverseTransposeHandleName "u_modelInverseTranspose"
+#define kMVInvTransposeHandleName "u_mvInvTranspose"
 
 #define kAmbientColorHandleName "u_ambientColor"
 #define kDiffuseColorHandleName "u_diffuseColor"

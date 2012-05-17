@@ -74,7 +74,18 @@ void ForwardRenderer::SetLight(const Light &light) {
 void ForwardRenderer::Init() {
   SR_ASSERT(uber_shader_.get() == NULL);
   uber_shader_ = move(unique_ptr<UberShader>(new UberShader()));
-  uber_shader_->Init<LightUberShaderLoadPolicy>();
+
+  const char *vert_file = "shader/per_pixel_uber.vs";
+  const char *frag_file = "shader/per_pixel_uber.fs";
+  unsigned int flag = 0;
+  flag |= kMaterialAmbient;
+  flag |= kMaterialDiffuse;
+  flag |= kMaterialSpecular;
+  flag |= kMaterialDiffuseMap;
+  flag |= kMaterialSpecularMap;
+  //normal map
+  flag |= kMaterialNormalMap;
+  uber_shader_->InitWithFile(vert_file, frag_file, flag);
 
   light_.reset(new Light());
 }

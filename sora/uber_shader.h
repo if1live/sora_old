@@ -32,8 +32,7 @@ public:
   UberShader();
   ~UberShader();
 
-  template<typename T>
-  void Init();
+  void InitWithFile(const char *vert_file, const char *frag_file, uint avail_mask);
   void Deinit();
   Shader &Load(uint flag);
 
@@ -61,47 +60,4 @@ protected:
   std::string orig_frag_src_;
   uint avail_mask_;
 };
-
-//ambient / diffuse / specular 지원
-//쌩텍스쳐는 곧 diffuse map라고 생각해서 연결한다
-struct LightUberShaderLoadPolicy {
-  static const char *vert_file() { return "shader/per_pixel_uber.vs"; }
-  static const char *frag_file() { return "shader/per_pixel_uber.fs"; }
-  static uint avail_mask() {
-    uint flag = 0;
-    flag |= kMaterialAmbient;
-    flag |= kMaterialDiffuse;
-    flag |= kMaterialSpecular;
-    flag |= kMaterialDiffuseMap;
-    flag |= kMaterialSpecularMap;
-    //normal map
-    flag |= kMaterialNormalMap;
-    return flag;
-  }
-};
-
-struct DeferredGeometryUberShaderLoadPolicy {
-  static const char *vert_file() { return "shader/deferred_geometry.vs"; }
-  static const char *frag_file() { return "shader/deferred_geometry.fs"; }
-  static uint avail_mask() {
-    uint flag = 0;
-    flag |= kMaterialAmbient;
-    flag |= kMaterialDiffuse;
-    flag |= kMaterialSpecular;
-    flag |= kMaterialDiffuseMap;
-    flag |= kMaterialSpecularMap;
-    //normal map
-    flag |= kMaterialNormalMap;
-    return flag;
-  }
-};
-
-template<typename T>
-void UberShader::Init() {
-  std::string vert_file(T::vert_file());
-  std::string frag_file(T::frag_file());
-  avail_mask_ = T::avail_mask();
-  LoadRawSrc(vert_file, frag_file);
-}
-
 } //namespace sora

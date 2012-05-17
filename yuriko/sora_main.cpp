@@ -308,18 +308,15 @@ void renderFrame(Device *device) {
   //mtl.props |= kMaterialNormalMap;
   device->render_state().UseMaterial(mtl);
 
-  /*
   {
     deferred_renderer.BeginGeometryPass();
-    deferred_renderer.SetMaterial(mtl);
     deferred_renderer.ApplyGeomertyPassRenderState();
     Mesh *mesh = device->mesh_mgr()->Get("mesh");
     deferred_renderer.DrawMesh(mesh);
     deferred_renderer.EndGeometryPass();
   }
-  */
 
-  
+  /*
   {
     //forward renderer
     forward_renderer.BeginPass();
@@ -333,11 +330,11 @@ void renderFrame(Device *device) {
 
     forward_renderer.EndPass();
   }
+  */
   
   //fbo에 있는 내용을 적절히 그리기
   //null_post_effect.Draw(depth_fbo.color_tex(), &device->render_state());
   
-  /*
   if(curr_deferred_fbo_idx == kDeferredRendererTexDepth) {
     null_post_effect.Draw(deferred_renderer.DepthTex(), &device->render_state());
   } else if(curr_deferred_fbo_idx == kDeferredRendererTexDiffuse) {
@@ -345,7 +342,7 @@ void renderFrame(Device *device) {
   } else if(curr_deferred_fbo_idx == kDeferredRendererTexNormal) {
     null_post_effect.Draw(deferred_renderer.NormalTex(), &device->render_state());
   }
-  */
+
 
   
   {
