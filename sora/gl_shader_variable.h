@@ -123,10 +123,12 @@ namespace gl {
     if(is_float_type) {
       SR_ASSERT(var_type == GL_FLOAT_VEC3);
       glUniform3fv(var.location, 1, (float*)ptr);
+      SR_CHECK_ERROR("glUniform3fv");
       return true;
     } else if(is_int_type) {
       SR_ASSERT(var_type == GL_INT_VEC3);
       glUniform3iv(var.location, 1, (int*)ptr);
+      SR_CHECK_ERROR("glUniform3iv");
       return true;
     } else {
       SR_ASSERT(!"do not reach");
@@ -147,14 +149,16 @@ namespace gl {
     if(std::tr1::is_same<T, float>::value) {
       SR_ASSERT(var_type == GL_FLOAT);
       glUniform1f(var.location, value);
+      SR_CHECK_ERROR("glUniform1f");
       return true;
     } else if(std::tr1::is_same<T, int>::value) {
-      SR_ASSERT(var_type == GL_INT);
+      SR_ASSERT(var_type == GL_INT || var_type == GL_SAMPLER_2D);
       glUniform1i(var.location, value);
+      SR_CHECK_ERROR("glUniform1i");
       return true;
     } else {
       SR_ASSERT(!"do not reach")
-        return false;
+      return false;
     }
   }
 } //namespace gl

@@ -50,6 +50,7 @@ bool DeferredRenderer::Init(int w, int h) {
   SR_ASSERT(gbuffer_.get() == NULL);
   SR_ASSERT(final_result_fb_.get() == NULL);
   SR_ASSERT(ambient_shader_.get() == NULL);
+  SR_ASSERT(directional_shader_.get() == NULL);
 
   gbuffer_ = move(unique_ptr<GBuffer>(new GBuffer()));
   gbuffer_->Init(w, h);
@@ -86,6 +87,12 @@ bool DeferredRenderer::Init(int w, int h) {
   ambient_shader_.reset(new Shader());
   ambient_shader_->LoadFromFile(ambient_vert_file, ambient_frag_file);
 
+  LOGI("Deferred Renderer :: Directional Light Shader");
+  const char *directional_vert_file = "shader/deferred_directional_light.vs";
+  const char *directional_frag_file = "shader/deferred_directional_light.fs";
+  directional_shader_.reset(new Shader());
+  directional_shader_->LoadFromFile(directional_vert_file, directional_frag_file);
+
   return true;
 }
 void DeferredRenderer::Deinit() {
@@ -108,6 +115,10 @@ void DeferredRenderer::Deinit() {
   if(ambient_shader_.get() != NULL) {
     ambient_shader_->Deinit();
     ambient_shader_.reset(NULL);
+  }
+  if(directional_shader_.get() != NULL) {
+    directional_shader_->Deinit();
+    directional_shader_.reset(NULL);
   }
 }
 
@@ -190,6 +201,9 @@ void DeferredRenderer::BeginLightPass() {
 
   vec4ub color(0, 0, 0, 255);
   render_state.ClearBuffer(true, false, false, color);
+
+  //blend잘 써서 같은 버퍼에 덮어서 그린다고 이전 색깔 정보 날라가지 않고
+  //적절히 누적되도록함
 }
 void DeferredRenderer::EndLightPass() {
   final_result_fb_->Unbind();
@@ -211,6 +225,55 @@ void DeferredRenderer::DrawLight(const Light &light) {
 }
 void DeferredRenderer::DrawDirectionalLight(const Light &light) {
   SR_ASSERT(light.type == kLightDirection);
+  //동적 라이팅중에서 구조가 가장 간단한 방향으로 뱉어지는 빛이다. 이것의 경우
+  //그냥 화면 전체에 대해서 2d로 잘 적용하면 된다
+  Device *device = Device::GetInstance();
+  RenderState &render_state = device->render_state();
+  render_state.UseShader(*directional_shader_);
+
+  directional_shader_->SetUniformVector(kDiffuseColorHandleName, light.diffuse);
+  directional_shader_->SetUniformVector(kSpecularColorHandleName, light.specular);
+
+  ShaderVariable view_space_normal_var = directional_shader_->uniform_var("s_viewSpaceNormal");
+  ShaderVariable depth_var = directional_shader_->uniform_var("s_depth");
+  ShaderVariable pos_var = directional_shader_->uniform_var("s_pos");
+  if(view_space_normal_var.location != kInvalidShaderVarLocation) {
+    Texture view_space_normal_tex = NormalTex();
+    render_state.UseTexture(view_space_normal_tex, 0);
+    SetUniformValue(view_space_normal_var, 0);
+  }
+  if(depth_var.location != kInvalidShaderVarLocation) {
+    Texture depth_tex = DepthTex();
+    render_state.UseTexture(depth_tex, 1);
+    SetUniformValue(depth_var, 1);
+  }
+  if(pos_var.location != kInvalidShaderVarLocation) {
+    Texture pos_tex = PositionTex();
+    render_state.UseTexture(pos_tex, 2);
+    SetUniformValue(pos_var, 2);
+  }
+
+  const mat4 &proj_mat = render_state.projection_mat();
+  const mat4 &view_mat = render_state.view_mat();
+  //mat4 light_mvp = proj_mat * view_mat * light.model_mat;
+  mat4 light_mvp = proj_mat * view_mat * render_state.model_mat();
+  vec4 light_dir_vec4 = light_mvp * vec4(light.dir, 1.0);
+  vec3 light_dir(light_dir_vec4);
+  light_dir = glm::normalize(light_dir);
+  light_dir = vec3(1, 1, -1); // FIXME
+
+  directional_shader_->SetUniformVector("u_lightDir", light_dir);
+
+  //full screen quad를 그리기 위해서 쓰는 mvp. 내부 계산용으로 쓸 행렬은 따로 취급한다
+  mat4 mvp(1.0f);
+  directional_shader_->SetUniformMatrix(kMVPHandleName, mvp);
+
+  vector<Vertex2D> vert_list;
+  vert_list.push_back(CreateVertex2D(-1, -1, 0, 0));
+  vert_list.push_back(CreateVertex2D(1, -1, 1, 0));
+  vert_list.push_back(CreateVertex2D(1, 1, 1, 1));
+  vert_list.push_back(CreateVertex2D(-1, 1, 0, 1));
+  directional_shader_->DrawArrays(kDrawTriangleFan, vert_list);
 }
 void DeferredRenderer::DrawPointLight(const Light &light) {
   SR_ASSERT(light.type == kLightPoint);

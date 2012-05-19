@@ -37,7 +37,8 @@ struct Light {
   type(kLightPoint),
   radius(0),
   inner_cone(20),
-  outer_cone(30) {
+  outer_cone(30),
+  model_mat(1.0f) {
   }
   void SetPoint(const glm::vec3 &pos, float radius) {
     type = kLightPoint;
@@ -68,6 +69,8 @@ struct Light {
   glm::vec4 specular;
 
   LightType type;
+
+  glm::mat4 model_mat;
 };
 
 }

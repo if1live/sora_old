@@ -83,9 +83,6 @@ using namespace glm;
 //vector<glm::mat4> world_mat_list(kMaxObject);
 //vector<string> mesh_name_list(kMaxObject);
 
-//빛1개를 전역변수처럼 쓰자
-Light light;
-
 Shader simple_shader;
 PostEffect null_post_effect;
 
@@ -257,7 +254,7 @@ bool setupGraphics(Device *device, int w, int h) {
   }
   {
     //빛에 대한 기본 설정
-    light.pos = vec3(0, 0, 100);
+    //light.pos = vec3(0, 0, 100);
     //light.ambient = vec4(3.0f, 0, 0, 1.0f);
   }
   return true;
@@ -292,7 +289,8 @@ void renderFrame(Device *device) {
   vec3 center(0);
   vec3 up(0, 1, 0);
 
-  //카메라 행렬을 view행렬로 등록
+  //카메라 행렬을 view행렬로 등록. 카메라에 의해서 projection, view가 결정되니까
+  //카메라 설절을 가장 먼저 수행한다
   glm::mat4 view_mat = glm::lookAt(eye, center, up);
   device->render_state().set_view_mat(view_mat);
 
@@ -315,6 +313,12 @@ void renderFrame(Device *device) {
   //mtl.props |= kMaterialNormalMap;
   device->render_state().UseMaterial(mtl);
 
+  //방향성 빛 설정
+  Light direction_light;
+  //direction_light.SetDirection(vec3(1, 1, 1));
+  direction_light.SetDirection(vec3(0, 0, -1));
+  direction_light.diffuse = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+
   {
     Mesh *mesh = device->mesh_mgr()->Get("mesh");
 
@@ -330,7 +334,11 @@ void renderFrame(Device *device) {
 
     //라이팅 처리
     deferred_renderer.BeginLightPass();
-    deferred_renderer.DrawAmbientLight(glm::vec3(0.1, 0.0, 0.3));
+    //deferred_renderer.DrawAmbientLight(glm::vec3(0.1, 0.0, 0.3));
+
+    //directional
+    deferred_renderer.DrawDirectionalLight(direction_light);
+
     deferred_renderer.EndLightPass();
 
   }
