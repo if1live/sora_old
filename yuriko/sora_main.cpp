@@ -232,8 +232,8 @@ bool setupGraphics(Device *device, int w, int h) {
     //geo_obj.PointTeapot(0.05f);
     //geo_obj.WireTeapot(0.05f);
     //geo_obj.SolidTeapot(0.05f);
-    //geo_obj.WireShpere(1, 16, 16);
-    //geo_obj.PointShpere(1, 16, 16);
+    //geo_obj.WireSphere(1, 16, 16);
+    //geo_obj.PointSphere(1, 16, 16);
     geo_obj.SolidSphere(1, 16, 16);
     //geo_obj.SolidCube(1, 1, 1);
     //geo_obj.WireCube(1, 1, 1);

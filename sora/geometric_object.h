@@ -87,12 +87,12 @@ public:
   void PointSphere(float radius, int slices, int stacks) {
     Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
-    helper.PointShpere(radius, slices, stacks);
+    helper.PointSphere(radius, slices, stacks);
   }
   void WireSphere(float radius, int slices, int stacks) {
     Clear();
     PrimitiveMeshHelper helper(&cmd_list_);
-    helper.WireShpere(radius, slices, stacks);
+    helper.WireSphere(radius, slices, stacks);
   }
 
   void SolidSphere(float radius, int slices, int stacks) {
