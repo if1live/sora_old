@@ -497,12 +497,17 @@ void PrimitiveMeshHelper::SolidSphere(float radius, int slices, int stacks) {
   int imin = 0;
   int imax = stacks;
 
+  DrawCmdData<Vertex> cmd;
+  cmd.draw_mode = kDrawTriangles;
+  vector<Vertex> &vert_list = cmd.vertex_list;
+  vector<unsigned short> &index_list = cmd.index_list;
+
   // draw intermediate stacks as quad strips
   for (int i = imin; i < imax; i++) {
     float rho = i * drho;
 
     //quad strip로 구성된 vertex 목록 구성하기
-    VertexList vert_list;
+    VertexList tmp_vert_list;
     float s = 0.0f;
     for (int j = 0; j <= slices; j++) {
       float theta = (j == slices) ? 0.0f : j * dtheta;
@@ -514,7 +519,7 @@ void PrimitiveMeshHelper::SolidSphere(float radius, int slices, int stacks) {
       vert1.normal = (vec3(x * nsign, y * nsign, z * nsign));
       vert1.texcoord = vec2(s, t);
       vert1.pos = vec3(x * radius, y * radius, z * radius);
-      vert_list.push_back(vert1);
+      tmp_vert_list.push_back(vert1);
 
       x = -sin(theta) * sin(rho + drho);
       y = cos(theta) * sin(rho + drho);
@@ -525,17 +530,36 @@ void PrimitiveMeshHelper::SolidSphere(float radius, int slices, int stacks) {
       vert2.texcoord = vec2(s, t - dt);
       s += ds;
       vert2.pos = vec3(x * radius, y * radius, z * radius);
-      vert_list.push_back(vert2);
+      tmp_vert_list.push_back(vert2);
     }
 
-    DrawCmdData<Vertex> cmd;
-    cmd.draw_mode = kDrawTriangleStrip;
+    //DrawCmdData<vec3> cmd;
+    //cmd.draw_mode = kDrawTriangleStrip;
     //quad strip -> triangle strip
-    cmd.vertex_list = vert_list;
-    this->cmd_list_->push_back(cmd);
+    //cmd.vertex_list = vert_list;
+    //this->cmd_list_->push_back(cmd);
+    int base_vert_list_size = vert_list.size();
+    std::copy(tmp_vert_list.begin(), tmp_vert_list.end(), back_inserter(vert_list));
+    
+    for(int i = 0 ; i < (int)tmp_vert_list.size()-2 ; ++i) {
+      unsigned short idx1, idx2, idx3;
+      if(i % 2 == 1) {
+        idx1 = i;
+        idx2 = i + 2;
+        idx3 = i + 1;
+      } else {
+        idx1 = i;
+        idx2 = i + 1;
+        idx3 = i + 2;
+      }
+      index_list.push_back(base_vert_list_size + idx1);
+      index_list.push_back(base_vert_list_size + idx2);
+      index_list.push_back(base_vert_list_size + idx3);
+    }
 
     t -= dt;
   }
+  this->cmd_list_->push_back(cmd);
 }
 
 
@@ -941,5 +965,73 @@ void BasicPrimitiveMeshHelper::WireSphere(float radius, int slices, int stacks) 
 
   this->cmd_list_->push_back(cmd);
 }
+
+void BasicPrimitiveMeshHelper::SolidSphere(float radius, int slices, int stacks) {
+  bool normals = true;
+  float nsign = 1.0f;
+  float drho = kPi / stacks;
+  float dtheta = 2.0f * kPi / slices;
+
+  int imin = 0;
+  int imax = stacks;
+
+  //triangle strip를 묶어서 vertex/index list로 재구성하기
+  DrawCmdData<vec3> cmd;
+  cmd.draw_mode = kDrawTriangles;
+  vector<vec3> &vert_list = cmd.vertex_list;
+  vector<unsigned short> &index_list = cmd.index_list;
+
+  // draw intermediate stacks as quad strips
+  for (int i = imin; i < imax; i++) {
+    float rho = i * drho;
+
+    //quad strip로 구성된 vertex 목록 구성하기
+    vector<vec3> tmp_vert_list;
+    float s = 0.0f;
+    for (int j = 0; j <= slices; j++) {
+      float theta = (j == slices) ? 0.0f : j * dtheta;
+      float x = -sin(theta) * sin(rho);
+      float y = cos(theta) * sin(rho);
+      float z = nsign * cos(rho);
+
+      vec3 vert1(x * radius, y * radius, z * radius);
+      tmp_vert_list.push_back(vert1);
+
+      x = -sin(theta) * sin(rho + drho);
+      y = cos(theta) * sin(rho + drho);
+      z = nsign * cos(rho + drho);
+
+      vec3 vert2(x * radius, y * radius, z * radius);
+      tmp_vert_list.push_back(vert2);
+    }
+
+    //DrawCmdData<vec3> cmd;
+    //cmd.draw_mode = kDrawTriangleStrip;
+    //quad strip -> triangle strip
+    //cmd.vertex_list = vert_list;
+    //this->cmd_list_->push_back(cmd);
+    int base_vert_list_size = vert_list.size();
+    std::copy(tmp_vert_list.begin(), tmp_vert_list.end(), back_inserter(vert_list));
+    
+    for(int i = 0 ; i < (int)tmp_vert_list.size()-2 ; ++i) {
+      unsigned short idx1, idx2, idx3;
+      if(i % 2 == 1) {
+        idx1 = i;
+        idx2 = i + 2;
+        idx3 = i + 1;
+      } else {
+        idx1 = i;
+        idx2 = i + 1;
+        idx3 = i + 2;
+      }
+      index_list.push_back(base_vert_list_size + idx1);
+      index_list.push_back(base_vert_list_size + idx2);
+      index_list.push_back(base_vert_list_size + idx3);
+    }
+  }
+
+  this->cmd_list_->push_back(cmd);
+}
+
 
 } //namespace sora

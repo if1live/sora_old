@@ -103,7 +103,7 @@ enum {
   kDeferredRendererTexSpecular,
   kDeferredRendererTexFinalResult,
 };
-int curr_deferred_fbo_idx = kDeferredRendererTexNormal;
+int curr_deferred_fbo_idx = kDeferredRendererTexFinalResult;
 
 
 void SORA_set_window_size(Device *device, int w, int h) {
@@ -234,7 +234,7 @@ bool setupGraphics(Device *device, int w, int h) {
     //geo_obj.SolidTeapot(0.05f);
     //geo_obj.WireShpere(1, 16, 16);
     //geo_obj.PointShpere(1, 16, 16);
-    //geo_obj.SolidSphere(1, 16, 16);
+    geo_obj.SolidSphere(1, 16, 16);
     //geo_obj.SolidCube(1, 1, 1);
     //geo_obj.WireCube(1, 1, 1);
     //geo_obj.PointCube(1, 1, 1);
@@ -244,7 +244,7 @@ bool setupGraphics(Device *device, int w, int h) {
     //geo_obj.WireAxis(5);
     //geo_obj.SolidPlane(3);
     //geo_obj.WirePlane(3, 0.1f);
-    geo_obj.SolidTorus(1.0f, 0.3f);
+    //geo_obj.SolidTorus(1.0f, 0.3f);
     //geo_obj.SolidCone(2, 2);
 
     Mesh *mesh = new Mesh();
@@ -327,7 +327,7 @@ void renderFrame(Device *device) {
 
   //포인트 빛설정
   Light point_light;
-  point_light.SetPoint(vec3(0, 0, 0), 1);
+  point_light.SetPoint(vec3(1, 0, 1), 1);
 
   {
     Mesh *mesh = device->mesh_mgr()->Get("mesh");

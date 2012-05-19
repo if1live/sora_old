@@ -248,6 +248,7 @@ class BasicPrimitiveMeshHelper {
 public:
   BasicPrimitiveMeshHelper(std::vector< DrawCmdData<glm::vec3> > *cmd_list) : cmd_list_(cmd_list) {}
   void WireSphere(float radius, int slices, int stacks);
+  void SolidSphere(float radius, int slices, int stacks);
 private:
   std::vector< DrawCmdData<glm::vec3> > *cmd_list_;  
 };
@@ -259,6 +260,12 @@ void GeometricObject<glm::vec3>::WireSphere(float radius, int slices, int stacks
   Clear();
   BasicPrimitiveMeshHelper helper(&cmd_list_);
   helper.WireSphere(radius, slices, stacks);
+}
+template<>
+void GeometricObject<glm::vec3>::SolidSphere(float radius, int slices, int stacks) {
+  Clear();
+  BasicPrimitiveMeshHelper helper(&cmd_list_);
+  helper.SolidSphere(radius, slices, stacks);
 }
 } // namespace sora
 #endif // SORA_GEOMETRIC_OBJECT_H_

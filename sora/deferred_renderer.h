@@ -83,7 +83,7 @@ private:
 
   //최종 렌더링 결과가 될 fbo. 순수하게 색깔 데이터만 있어도 된다
   std::unique_ptr<FrameBuffer> final_result_fb_;
-
+  
   std::unique_ptr<Shader> ambient_shader_;
   std::unique_ptr<Shader> directional_shader_;
   std::unique_ptr<Shader> point_shader_;
