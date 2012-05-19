@@ -214,18 +214,19 @@ void DebugDrawManager::Update(float dt) {
   RemoveFindFunctor functor;
 
   auto it = cmd_list_.begin();
-  auto endit = cmd_list_.end();
-  for( ; it != endit ; ++it) {
+  while(it != cmd_list_.end()) {
     DebugDrawCmd *cmd = *it;
     cmd->duration -= dt;
     
     if(functor(cmd) == true) {
+      it = cmd_list_.erase(it);
       cmd->~DebugDrawCmd();
       sora::global_free(cmd);
+      
+    } else {
+      it++;
     }
   }
-  
-  cmd_list_.remove_if(functor);
 }
 
 //////////////////////////////////////

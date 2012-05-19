@@ -30,8 +30,8 @@ use_light(true),
 type(kMaterialTypeUber) {
   //mtl format default value
   for(int i = 0 ; i < 4 ; i++) {
-    ambient[i] = 0.2f;
-    diffuse[i] = 0.8f;
+    ambient[i] = 1.0f;
+    diffuse[i] = 1.0f;
     specular[i] = 1.0f;
   }
 };

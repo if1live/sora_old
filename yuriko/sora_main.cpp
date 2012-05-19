@@ -260,8 +260,8 @@ bool setupGraphics(Device *device, int w, int h) {
   return true;
 }
 
-float aptitude = 10; //위도. -90~90. 세로 위치 표현
-float latitude = 10; //경도
+float aptitude = 0; //위도. -90~90. 세로 위치 표현
+float latitude = 0; //경도
 
 void SORA_set_cam_pos(float a, float b) {
   aptitude += a;
@@ -296,10 +296,10 @@ void renderFrame(Device *device) {
 
   //테스트용 마테리얼은 일단 공통
   Material mtl;
-  mtl.ambient = vec4(0.1, 0.1, 0.1, 1);
-  mtl.diffuse = vec4(0.3, 0.3, 1.0, 1);
+  //mtl.ambient = vec4(0.1, 0.1, 0.1, 1);
+  //mtl.diffuse = vec4(0.3, 0.3, 1.0, 1);
   //mtl.diffuse = vec4(1, 1, 1, 1);
-  mtl.specular = vec4(1, 0.5, 1, 1);
+  //mtl.specular = vec4(1, 0.5, 1, 1);
   mtl.shininess = 20;
   //mtl.diffuse_map = "mtl_diffuse";
   mtl.diffuse_map = "sora2";
@@ -315,7 +315,7 @@ void renderFrame(Device *device) {
 
   //방향성 빛 설정
   Light direction_light;
-  //direction_light.SetDirection(vec3(1, 1, 1));
+  //direction_light.SetDirection(vec3(1, 1, -1));
   direction_light.SetDirection(vec3(0, 0, -1));
   direction_light.diffuse = vec4(1.0f, 0.0f, 0.0f, 1.0f);
   direction_light.specular = vec4(0.0f, 0.0f, 1.0f, 1.0f);
@@ -335,7 +335,7 @@ void renderFrame(Device *device) {
 
     //라이팅 처리
     deferred_renderer.BeginLightPass();
-    //deferred_renderer.DrawAmbientLight(glm::vec3(0.1, 0.0, 0.3));
+    //deferred_renderer.DrawAmbientLight(glm::vec3(0.0, 0.2, 0.0));
 
     //directional
     deferred_renderer.DrawDirectionalLight(direction_light);
@@ -373,7 +373,7 @@ void renderFrame(Device *device) {
     null_post_effect.Draw(deferred_renderer.FinalResultTex(), &device->render_state());
   }
 
-  /*
+  
   //디버깅렌더링 하기전에 deferred renderer에 잇는 depth buffer를 적절히 복사하기
   //그래야 깊이테스트가 올바르게 돌아간다
   //만약 이게 없다면 테스트 렌더링도 deferred 안쪽에 집어넣어야한다
@@ -388,10 +388,10 @@ void renderFrame(Device *device) {
     //디버깅용으로 화면 3d렌더링 하는거
     DebugDrawManager *mgr_3d = device->debug_draw_mgr();
     mgr_3d->AddAxis(mat4(1.0f), 1);
-    mgr_3d->AddLine(vec3(0.0f, 0.0f, 0.0f), vec3(100, 100, 100), Color_White(), 4);
-    mgr_3d->AddSphere(vec3(0, 1, 0), 1, Color_White());
-    mgr_3d->AddCross(vec3(0, 0, 0), Color_Black(), 10, 0, false);
-    mgr_3d->AddString(vec3(0, 0, 0.5), "asdf", Color_Blue(), 1.5f);
+    //mgr_3d->AddLine(vec3(0.0f, 0.0f, 0.0f), vec3(100, 100, 100), Color_White(), 4);
+    //mgr_3d->AddSphere(vec3(0, 1, 0), 1, Color_White());
+    //mgr_3d->AddCross(vec3(0, 0, 0), Color_Black(), 10, 0, false);
+    //mgr_3d->AddString(vec3(0, 0, 0.5), "asdf", Color_Blue(), 1.5f);
 
     DebugDrawPolicy debug_draw;
     debug_draw.Draw(*mgr_3d);
@@ -401,10 +401,10 @@ void renderFrame(Device *device) {
     //디버깅용으로 화면 2d좌표계에 렌더링 하는거
     //2d는 나중에 몰아서 처리하자
     Draw2DManager *draw_2d_mgr = device->draw_2d();
-    draw_2d_mgr->AddString(vec2(100, 100), "asd", Color_Red(), 2.0f);
-    draw_2d_mgr->AddLine(vec2(100, 100), vec2(150, 200), Color_Blue(), 4.0f);
-    draw_2d_mgr->AddSphere(vec2(200, 200), 30, Color_Green());
-    draw_2d_mgr->AddCross(vec2(200, 200), Color_Green(), 5);
+    //draw_2d_mgr->AddString(vec2(100, 100), "asd", Color_Red(), 2.0f);
+    //draw_2d_mgr->AddLine(vec2(100, 100), vec2(150, 200), Color_Blue(), 4.0f);
+    //draw_2d_mgr->AddSphere(vec2(200, 200), 30, Color_Green());
+    //draw_2d_mgr->AddCross(vec2(200, 200), Color_Green(), 5);
     
     //fps카운터 적절히 렌더링
     char fps_buf[16];
@@ -416,7 +416,7 @@ void renderFrame(Device *device) {
     sora::Draw2DPolicy draw_policy;
     draw_policy.Draw(*draw_2d_mgr);
   }
-  */
+  
   
 
   //////////////////////////////
@@ -535,7 +535,8 @@ void SORA_update_frame(Device *device, float dt) {
   }
 
   //check key
-  float x = 1.0f;
+  //float x = 1.0f;
+  float x = 0.5f;
   KeyboardEventQueue &keyboard_evt_queue = device->keyboard_evt_queue();
   while(keyboard_evt_queue.IsEmpty() == false) {
     KeyboardEvent evt = keyboard_evt_queue.Get();

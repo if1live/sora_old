@@ -34,6 +34,8 @@
 #include "light.h"
 #include "frame_buffer.h"
 
+#include "draw_2d_manager.h"
+
 using namespace std;
 using namespace glm;
 
@@ -206,6 +208,9 @@ void DeferredRenderer::BeginLightPass() {
   RenderState &render_state = device->render_state();
   render_state.Set2D();
 
+  //일반 2d blend와 다르게 지속적으로 색을 누적시킨다
+  glBlendFunc(GL_ONE, GL_ONE);
+
   final_result_fb_->Bind();
 
   vec4ub color(0, 0, 0, 255);
@@ -216,6 +221,8 @@ void DeferredRenderer::BeginLightPass() {
 }
 void DeferredRenderer::EndLightPass() {
   final_result_fb_->Unbind();
+  //원래 2d스타일의 bleud로 되돌리기
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 }
 void DeferredRenderer::DrawLight(const Light &light) {
   switch(light.type) {
@@ -270,16 +277,24 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
     SetUniformValue(specular_var, 3);
   }
 
-  const mat4 &proj_mat = render_state.projection_mat();
-  const mat4 &view_mat = render_state.view_mat();
-  //mat4 light_mvp = proj_mat * view_mat * light.model_mat;
-  mat4 light_mvp = proj_mat * view_mat * render_state.model_mat();
-  vec4 light_dir_vec4 = light_mvp * vec4(light.dir, 1.0);
-  vec3 light_dir(light_dir_vec4);
-  light_dir = glm::normalize(light_dir);
-  light_dir = vec3(1, 1, -1); // FIXME
+  //방향성빛은 방향만 잇으니까 행렬의 3*3만 쓴다
+  mat3 view_mat(render_state.view_mat());
+  //mat3 model_mat(render_state.model_mat());
+  mat3 model_mat(light.model_mat);
+  mat3 light_mv = view_mat * model_mat;
 
-  shader.SetUniformVector("u_lightDir", light_dir);
+  vec3 light_target_pos(light.dir);
+  vec3 viewspace_light_target_pos(light_mv * light_target_pos);
+  viewspace_light_target_pos = normalize(viewspace_light_target_pos);
+  vec3 light_pos(viewspace_light_target_pos);
+
+  //빛 방향을 디버깅을 위해서 출력하기
+  //Draw2DManager *draw_2d_mgr = device->draw_2d();
+  //char light_dir_buf[128];  
+  //sprintf(light_dir_buf, "LightDir:%.4f, %.4f, %.4f", light_pos.x, light_pos.y, light_pos.z);
+  //draw_2d_mgr->AddString(vec2(0, 100), light_dir_buf, Color_Red(), 1.0f);
+
+  shader.SetUniformVector("u_lightDir", light_pos);
 
   //full screen quad를 그리기 위해서 쓰는 mvp. 내부 계산용으로 쓸 행렬은 따로 취급한다
   shader.SetUniformMatrix(kMVPHandleName, mat4(1.0f));
