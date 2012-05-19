@@ -28,6 +28,7 @@ class Mesh;
 class Material;
 class UberShader;
 class Light;
+class Shader;
 
 class DeferredRenderer {
 public:
@@ -36,6 +37,13 @@ public:
 
   bool Init(int w, int h);
   void Deinit();
+
+  //early z-pass의 구현을 위해서 화면을 간단하게 렌더링해서 깊이만 얻는다
+  //early z-pass와 geometry pass는 기본적으로 같은 gbuffer를 공유한다
+  //다만 렌더링할떄 z에만 렌더링/컬러에 렌더링을 분리해서 사용하게 된다
+  void BeginDepthPass();
+  void DrawDepthPass(Mesh *mesh);
+  void EndDepthPass();
 
   void BeginGeometryPass();
   void EndGeometryPass();
@@ -57,12 +65,19 @@ public:
   Texture SpecularTex() const;
   Texture PositionTex() const;
 
+  Texture &FinalResultTex() const;
+
   uint GBufferHandle() const;
 private:
-  //std::unique_ptr<Shader> geometry_shader_;
   std::unique_ptr<UberShader> geometry_uber_shader_;
+  std::unique_ptr<Shader> depth_shader_;
 
   std::unique_ptr<GBuffer> gbuffer_;
+
+  //최종 렌더링 결과가 될 fbo. 순수하게 색깔 데이터만 있어도 된다
+  std::unique_ptr<FrameBuffer> final_result_fb_;
+
+  std::unique_ptr<Shader> ambient_shader_;
 };
 
 } //namespace sora

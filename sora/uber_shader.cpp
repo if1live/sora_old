@@ -129,6 +129,7 @@ Shader &UberShader::Load(uint flag) {
 
 
   //쉐이더 프로그램 적절히 생성
+  LOGI("UberShader Load :: %d", flag);
   Shader shader_prog;
   shader_prog.Init(vert_src_list, frag_src_list);
 

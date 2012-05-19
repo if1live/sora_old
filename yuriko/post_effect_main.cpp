@@ -70,7 +70,7 @@ namespace posteffect {
 
   void setup_graphics(Device *device, int w, int h) {
     device->render_state().SetWinSize(w, h);
-    depth_fbo.InitAsDepthTex(w, h);
+    depth_fbo.Init(w, h);
 
     LOGI("Version : %s", RendererEnv::Version().c_str());
     LOGI("Vendor : %s", RendererEnv::Vender().c_str());

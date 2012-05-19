@@ -115,5 +115,12 @@ const glm::mat4 &RenderState::model_mat() const {
 void RenderState::ClearBuffer(bool color, bool depth, bool stencil, const sora::vec4ub &value) {
   policy_->ClearBuffer(color, depth, stencil, value);  
 }
+glm::mat4 RenderState::GetMVPMatrix() const {
+  mat4 mvp(1.0f);
+  mvp *= projection_mat();
+  mvp *= view_mat();
+  mvp *= model_mat();
+  return mvp;
+}
 
 } //namespace sora

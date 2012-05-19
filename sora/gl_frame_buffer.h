@@ -28,7 +28,9 @@ namespace gl {
   public:
     typedef unsigned int HandleType;
   public:
-    static void InitAsDepthTex(HandleType *handle, int w, int h, Texture *color_tex, Texture *depth_tex);
+    static void Init(HandleType *handle, int w, int h, Texture *color_tex, Texture *depth_tex);
+    static void InitWithoutDepth(HandleType *handle, int w, int h, Texture *color_tex);
+
     static void Deinit(HandleType *handle);
     static bool IsInit(HandleType handle);
 

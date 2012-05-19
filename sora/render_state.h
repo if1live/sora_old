@@ -63,6 +63,7 @@ public:
   const glm::mat4 &view_mat() const { return view_mat_; }
   const MatrixStack &model_mat_stack() const { return *model_mat_stack_; }
   const glm::mat4 &model_mat() const;
+  glm::mat4 GetMVPMatrix() const;
 
   void set_projection_mat(const glm::mat4 &m) { projection_mat_ = m; }
   void set_view_mat(const glm::mat4 &m) { view_mat_ = m; }

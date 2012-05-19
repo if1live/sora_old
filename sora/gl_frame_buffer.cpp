@@ -32,7 +32,7 @@ namespace gl {
     glBindTexture(GL_TEXTURE_2D, tex_id);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, w, h, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT16, w, h, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_INT, NULL);
     SR_CHECK_ERROR("DepthTexture");
 
     ImageDesc desc;
@@ -62,7 +62,7 @@ namespace gl {
     color_tex->Init(tex_id, desc, true);
   }
 
-  void GLFrameBuffer::InitAsDepthTex(HandleType *handle, int w, int h, Texture *color_tex, Texture *depth_tex) {
+  void GLFrameBuffer::Init(HandleType *handle, int w, int h, Texture *color_tex, Texture *depth_tex) {
     SR_ASSERT(*handle == 0);
     CreateDepthTex(w, h, depth_tex);
     CreateNormalRGBAColorTex(w, h, color_tex);
@@ -80,6 +80,19 @@ namespace gl {
       glBindFramebuffer(GL_FRAMEBUFFER, 0);
       *handle = fbo;
     }
+  }
+  void GLFrameBuffer::InitWithoutDepth(HandleType *handle, int w, int h, Texture *color_tex) {
+    SR_ASSERT(*handle == 0);
+    CreateNormalRGBAColorTex(w, h, color_tex);
+
+    GLuint fbo = 0;
+    glGenFramebuffers(1, &fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_tex->handle(), 0);
+    SR_CHECK_FRAMEBUFFER("fb");
+    SR_CHECK_ERROR("Create FB");
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    *handle = fbo;
   }
   void GLFrameBuffer::Deinit(HandleType *handle) {
     if(*handle != 0) {

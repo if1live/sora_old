@@ -104,7 +104,8 @@ enum {
   kDeferredRendererTexNormal,
   kDeferredRendererTexDiffuse,
   kDeferredRendererTexSpecular,
-  kDeferredRendererTexPosition
+  kDeferredRendererTexPosition,
+  kDeferredRendererTexFinalResult,
 };
 int curr_deferred_fbo_idx = kDeferredRendererTexNormal;
 
@@ -115,7 +116,7 @@ void SORA_set_window_size(Device *device, int w, int h) {
 
 bool setupGraphics(Device *device, int w, int h) {
   device->render_state().SetWinSize(w, h);
-  depth_fbo.InitAsDepthTex(w, h);
+  depth_fbo.Init(w, h);
 
 
   LOGI("Version : %s", RendererEnv::Version().c_str());
@@ -315,9 +316,15 @@ void renderFrame(Device *device) {
   device->render_state().UseMaterial(mtl);
 
   {
+    Mesh *mesh = device->mesh_mgr()->Get("mesh");
+
+    //early z-pass
+    deferred_renderer.BeginDepthPass();
+    deferred_renderer.DrawDepthPass(mesh);
+    deferred_renderer.EndDepthPass();
+
     //디퍼스 속성 렌더링
     deferred_renderer.BeginGeometryPass();
-    Mesh *mesh = device->mesh_mgr()->Get("mesh");
     deferred_renderer.DrawMesh(mesh);
     deferred_renderer.EndGeometryPass();
 
@@ -325,6 +332,7 @@ void renderFrame(Device *device) {
     deferred_renderer.BeginLightPass();
     deferred_renderer.DrawAmbientLight(glm::vec3(0.1, 0.0, 0.3));
     deferred_renderer.EndLightPass();
+
   }
   /*
   {
@@ -352,8 +360,11 @@ void renderFrame(Device *device) {
     null_post_effect.Draw(deferred_renderer.SpecularTex(), &device->render_state());
   } else if(curr_deferred_fbo_idx == kDeferredRendererTexPosition) {
     null_post_effect.Draw(deferred_renderer.PositionTex(), &device->render_state());
+  } else if(curr_deferred_fbo_idx == kDeferredRendererTexFinalResult) {
+    null_post_effect.Draw(deferred_renderer.FinalResultTex(), &device->render_state());
   }
 
+  /*
   //디버깅렌더링 하기전에 deferred renderer에 잇는 depth buffer를 적절히 복사하기
   //그래야 깊이테스트가 올바르게 돌아간다
   //만약 이게 없다면 테스트 렌더링도 deferred 안쪽에 집어넣어야한다
@@ -391,11 +402,12 @@ void renderFrame(Device *device) {
     sprintf(fps_buf, "FPS:%.2f", fps_counter.GetFPS());
     //float scr_width = device->render_state().win_width();
     float scr_height = (float)device->render_state().win_height();
-    draw_2d_mgr->AddString(vec2(0, scr_height), fps_buf, Color_White(), 1.5f);
+    draw_2d_mgr->AddString(vec2(0, scr_height), fps_buf, Color_Blue(), 1.5f);
 
     sora::Draw2DPolicy draw_policy;
     draw_policy.Draw(*draw_2d_mgr);
   }
+  */
   
 
   //////////////////////////////
@@ -549,6 +561,9 @@ void SORA_update_frame(Device *device, float dt) {
         break;
       case '5':
         curr_deferred_fbo_idx = kDeferredRendererTexPosition;
+        break;
+      case '6':
+        curr_deferred_fbo_idx = kDeferredRendererTexFinalResult;
         break;
       }
     }

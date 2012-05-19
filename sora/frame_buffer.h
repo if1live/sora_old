@@ -34,12 +34,24 @@ public:
 public:
   FrameBufferT() : handle_(0), width_(0), height_(0) {}
   ~FrameBufferT() {}
-  //깊이 테스트용으로 쓰기 위한 초기화함수
-  //깊이텍스쳐의 정밀도 높음. 색깔 텍스쳐 정밀도는 낮음
-  void InitAsDepthTex(int w, int h) {
-    Policy::InitAsDepthTex(&handle_, w, h, &color_tex_, &depth_tex_);
+  
+  //표준형 fbo, 깊이16bit, 8bit rgba
+  void Init(int w, int h) {
+    Policy::Init(&handle_, w, h, &color_tex_, &depth_tex_);
   }
-  void Deinit() { Policy::Deinit(&handle_); }
+  void InitWithoutDepth(int w, int h) {
+    Policy::InitWithoutDepth(&handle_, w, h, &color_tex_);
+  }
+
+  void Deinit() {
+    if(color_tex_.handle() != 0) {
+      color_tex_.Deinit();
+    }
+    if(depth_tex_.handle() != 0) {
+      depth_tex_.Deinit();
+    }
+    Policy::Deinit(&handle_); 
+  }
   bool IsInit() const { return Policy::IsInit(handle_); }
 
   Texture &color_tex() { return color_tex_; }
