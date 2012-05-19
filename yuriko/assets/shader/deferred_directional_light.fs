@@ -11,7 +11,7 @@ uniform sampler2D s_specularMap;
 
 vec4 calc_diffuse(vec3 normal, out float diffuse_var) {
 	//diffuse 적절히 계산하기
-	float diffuse = dot(-u_lightDir, normal);
+	float diffuse = dot(u_lightDir, normal);
 	diffuse = clamp(diffuse, 0.0, 1.0);
 	vec4 diffuse_color = u_diffuseColor * diffuse;
 	diffuse_var = diffuse;
@@ -22,13 +22,15 @@ vec4 calc_specular(vec3 normal, float depth) {
 	//vec3 pos = texture2D(s_pos, v_texcoord).xyz;
 	vec2 raw_pos = vec2(gl_FragCoord.x / 640.0, gl_FragCoord.y / 480.0);	//0~1
 	vec3 pos = vec3((raw_pos * 2.0) - vec2(1.0), depth);
-	
-	vec3 view_dir = normalize(pos);
+	vec3 view_dir = -normalize(pos);
 	
 	vec3 reflection = reflect(u_lightDir, normal);
 	reflection = normalize(reflection);
 
-	float dot_result = clamp(dot(reflection, -view_dir), 0.0, 1.0);
+	float dot_result = clamp(dot(reflection, view_dir), 0.0, 1.0);
+	if(dot_result == 0) {
+		return vec4(0.0);
+	}
 	float pow_result = pow(dot_result, shininess);
 	vec4 specular_color = u_specularColor * pow_result;
 	return specular_color;

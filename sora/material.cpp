@@ -24,7 +24,7 @@
 
 namespace sora {;
 Material::Material() 
-: shininess(10.0f), 
+: shininess(20.0f), 
 props(0),
 use_light(true),
 type(kMaterialTypeUber) {

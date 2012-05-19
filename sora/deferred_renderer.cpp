@@ -293,7 +293,7 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
   vec3 light_target_pos(light.dir);
   vec3 viewspace_light_target_pos(light_mv * light_target_pos);
   viewspace_light_target_pos = normalize(viewspace_light_target_pos);
-  vec3 light_pos(viewspace_light_target_pos);
+  vec3 light_pos = (viewspace_light_target_pos);
 
   //빛 방향을 디버깅을 위해서 출력하기
   //Draw2DManager *draw_2d_mgr = device->draw_2d();

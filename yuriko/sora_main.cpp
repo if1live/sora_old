@@ -234,7 +234,7 @@ bool setupGraphics(Device *device, int w, int h) {
     //geo_obj.SolidTeapot(0.05f);
     //geo_obj.WireSphere(1, 16, 16);
     //geo_obj.PointSphere(1, 16, 16);
-    geo_obj.SolidSphere(1, 16, 16);
+    //geo_obj.SolidSphere(1, 16, 16);
     //geo_obj.SolidCube(1, 1, 1);
     //geo_obj.WireCube(1, 1, 1);
     //geo_obj.PointCube(1, 1, 1);
@@ -244,7 +244,7 @@ bool setupGraphics(Device *device, int w, int h) {
     //geo_obj.WireAxis(5);
     //geo_obj.SolidPlane(3);
     //geo_obj.WirePlane(3, 0.1f);
-    //geo_obj.SolidTorus(1.0f, 0.3f);
+    geo_obj.SolidTorus(1.0f, 0.3f);
     //geo_obj.SolidCone(2, 2);
 
     Mesh *mesh = new Mesh();
@@ -315,13 +315,14 @@ void renderFrame(Device *device) {
   //방향성 빛 설정
   Light direction_light;
   //direction_light.SetDirection(vec3(1, 1, -1));
-  direction_light.SetDirection(vec3(0, 0, -1));
-  direction_light.diffuse = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+  direction_light.SetDirection(vec3(0, 0, 1));
+  direction_light.diffuse = vec4(0.5f, 0.0f, 0.0f, 1.0f);
+  //direction_light.diffuse = vec4(0.0f, 0.0f, 0.0f, 1.0f);
   direction_light.specular = vec4(0.0f, 0.0f, 1.0f, 1.0f);
 
   //역방향 빛 1개 더 추가해서 적용시켜보기
   Light direction_light1;
-  direction_light1.SetDirection(vec3(0, 0, 1));
+  direction_light1.SetDirection(vec3(0, 0, -1));
   direction_light1.diffuse = vec4(1.0f, 1.0f, 0.0f, 1.0f);
   direction_light1.specular = vec4(0.0f, 1.0f, 1.0f, 1.0f);
 
@@ -351,8 +352,8 @@ void renderFrame(Device *device) {
     //deferred_renderer.DrawDirectionalLight(direction_light1);
 
     //point빛 디버깅 하기 위해서 구 렌더링을 예약하기. 진짜 draw는 후처리 식으로
-    deferred_renderer.DrawPointLight(point_light);
-    deferred_renderer.DrawPointLightArea(point_light);
+    //deferred_renderer.DrawPointLight(point_light);
+    //deferred_renderer.DrawPointLightArea(point_light);
 
     deferred_renderer.EndLightPass();
 
