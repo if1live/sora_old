@@ -63,7 +63,6 @@ public:
   Texture NormalTex() const;
   Texture DiffuseTex() const;
   Texture SpecularTex() const;
-  Texture PositionTex() const;
 
   Texture &FinalResultTex() const;
 

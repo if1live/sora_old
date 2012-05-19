@@ -73,6 +73,9 @@ public:
   void ResetViewMat();
   void ResetModelMat();
 
+  glm::mat4 GetProjection3D() const;
+  glm::mat4 GetProjection2D() const;
+
 private:
   RenderStateInterface *policy_;
   int win_width_;
@@ -98,6 +101,9 @@ struct RenderStateInterface {
   virtual void UseMaterial(const Material &mtl) = 0;
   virtual void UnuseMaterial() = 0;
   virtual const Material &LastMaterial() const = 0;
+
+  virtual glm::mat4 GetProjection3D() const = 0;
+  virtual glm::mat4 GetProjection2D() const = 0;
 
   virtual void Set2D() = 0;
   virtual void Set3D() = 0;

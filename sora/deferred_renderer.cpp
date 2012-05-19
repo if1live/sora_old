@@ -198,10 +198,6 @@ Texture DeferredRenderer::DiffuseTex() const {
 Texture DeferredRenderer::SpecularTex() const {
   return gbuffer_->SpecularTex();
 }
-Texture DeferredRenderer::PositionTex() const {
-  return gbuffer_->PositionTex();
-}
-
 
 void DeferredRenderer::BeginLightPass() {
   Device *device = Device::GetInstance();
@@ -253,7 +249,6 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
 
   ShaderVariable view_space_normal_var = shader.uniform_var("s_viewSpaceNormal");
   ShaderVariable depth_var = shader.uniform_var("s_depth");
-  ShaderVariable pos_var = shader.uniform_var("s_pos");
   ShaderVariable specular_var = shader.uniform_var("s_specularMap");
 
   if(view_space_normal_var.location != kInvalidShaderVarLocation) {
@@ -266,16 +261,15 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
     render_state.UseTexture(depth_tex, 1);
     SetUniformValue(depth_var, 1);
   }
-  if(pos_var.location != kInvalidShaderVarLocation) {
-    Texture pos_tex = PositionTex();
-    render_state.UseTexture(pos_tex, 2);
-    SetUniformValue(pos_var, 2);
-  }
   if(specular_var.location != kInvalidShaderVarLocation) {
     Texture specular_tex = SpecularTex();
     render_state.UseTexture(specular_tex, 3);
     SetUniformValue(specular_var, 3);
   }
+
+  mat4 projection = render_state.GetProjection3D();
+  mat4 inv_proj = glm::inverse(projection);
+  shader.SetUniformMatrix("u_projectionInv", inv_proj);
 
   //방향성빛은 방향만 잇으니까 행렬의 3*3만 쓴다
   mat3 view_mat(render_state.view_mat());

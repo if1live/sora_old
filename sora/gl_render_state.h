@@ -41,6 +41,8 @@ namespace gl {
   public:
     void Set2D();
     void Set3D();
+    glm::mat4 GetProjection3D() const;
+    glm::mat4 GetProjection2D() const;
     void ClearBuffer(bool color, bool depth, bool stencil, const sora::vec4ub &value);
 
     //texture

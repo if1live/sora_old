@@ -31,7 +31,6 @@ public:
     kNormalTex,
     kDiffuseTex,
     kSpecularTex,
-    kPositionTex,
     kTexCount
   };
 
@@ -49,7 +48,6 @@ public:
   Texture NormalTex() const;
   Texture DiffuseTex() const;
   Texture SpecularTex() const;
-  Texture PositionTex() const;
 
   FrameBufferHandle fbo() const { return fbo_; }
 

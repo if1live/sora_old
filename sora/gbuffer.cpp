@@ -78,16 +78,6 @@ bool GBuffer::Init(int w, int h) {
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     SR_CHECK_ERROR("SpecularTexture");
   }
-  {
-    //위치 텍스쳐
-    TextureHandle &tex_id = tex_list_[kPositionTex];
-    glBindTexture(GL_TEXTURE_2D, tex_id);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, w, h, 0, GL_RGB, GL_FLOAT, NULL);
-    SR_CHECK_ERROR("PositionTexture");
-  }
-
   //fbo생성
   {
     glGenFramebuffers(1, &fbo_);
@@ -96,7 +86,6 @@ bool GBuffer::Init(int w, int h) {
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, tex_list_[kNormalTex], 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, tex_list_[kDiffuseTex], 0);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT2, GL_TEXTURE_2D, tex_list_[kSpecularTex], 0);
-    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT3, GL_TEXTURE_2D, tex_list_[kPositionTex], 0);
     //glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color_rb);
     SR_CHECK_FRAMEBUFFER("fb");
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -126,10 +115,10 @@ void GBuffer::Bind() {
     GL_COLOR_ATTACHMENT0, 
     GL_COLOR_ATTACHMENT1,
     GL_COLOR_ATTACHMENT2,
-    GL_COLOR_ATTACHMENT3,
   };
   int buffer_size = GetArraySize(buffers);
   glDrawBuffers(buffer_size, buffers);
+  SR_CHECK_ERROR("glDrawBuffers");
 }
 void GBuffer::Unbind() {
   glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -149,9 +138,6 @@ Texture GBuffer::SpecularTex() const {
   return GetTex(kSpecularTex);
 }
 
-Texture GBuffer::PositionTex() const {
-  return GetTex(kPositionTex);
-}
 Texture GBuffer::GetTex(int tex_code) const {
   Texture tex;
   ImageDesc img_desc;

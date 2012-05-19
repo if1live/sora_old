@@ -83,6 +83,12 @@ void RenderState::Set3D() {
   }
 }
 
+glm::mat4 RenderState::GetProjection3D() const {
+  return policy_->GetProjection3D();
+}
+glm::mat4 RenderState::GetProjection2D() const {
+  return policy_->GetProjection2D();
+}
 void RenderState::EndRender() {
   policy_->EndRender(); 
 }

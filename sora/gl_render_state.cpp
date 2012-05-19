@@ -83,10 +83,7 @@ namespace gl {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    float win_w = (float)state_->win_width();
-    float win_h = (float)state_->win_height();
-    glm::mat4 projection = glm::ortho(0.0f, win_w, 0.0f, win_h);
-    state_->set_projection_mat(projection);
+    state_->set_projection_mat(GetProjection2D());
 
   }
   void GLRenderState::Set3D() {
@@ -96,10 +93,21 @@ namespace gl {
     glDisable(GL_BLEND);
 
     //projection 행렬 설정
+    state_->set_projection_mat(GetProjection3D());
+  }
+
+  glm::mat4 GLRenderState::GetProjection3D() const {
     float win_w = (float)state_->win_width();
     float win_h = (float)state_->win_height();
     glm::mat4 projection = glm::perspective(45.0f, win_w/ win_h, 0.1f, 100.0f);
-    state_->set_projection_mat(projection);
+    return projection;
+  }
+  glm::mat4 GLRenderState::GetProjection2D() const {
+    float win_w = (float)state_->win_width();
+    float win_h = (float)state_->win_height();
+    glm::mat4 projection = glm::ortho(0.0f, win_w, 0.0f, win_h);
+    return projection;
+    
   }
   void GLRenderState::ClearBuffer(bool color, bool depth, bool stencil, const sora::vec4ub &value) {
     unsigned int flag = 0;

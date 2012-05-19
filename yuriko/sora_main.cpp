@@ -101,7 +101,6 @@ enum {
   kDeferredRendererTexNormal,
   kDeferredRendererTexDiffuse,
   kDeferredRendererTexSpecular,
-  kDeferredRendererTexPosition,
   kDeferredRendererTexFinalResult,
 };
 int curr_deferred_fbo_idx = kDeferredRendererTexNormal;
@@ -320,6 +319,13 @@ void renderFrame(Device *device) {
   direction_light.diffuse = vec4(1.0f, 0.0f, 0.0f, 1.0f);
   direction_light.specular = vec4(0.0f, 0.0f, 1.0f, 1.0f);
 
+  //역방향 빛 1개 더 추가해서 적용시켜보기
+  Light direction_light1;
+  direction_light1.SetDirection(vec3(0, 0, 1));
+  direction_light1.diffuse = vec4(1.0f, 1.0f, 0.0f, 1.0f);
+  direction_light1.specular = vec4(0.0f, 1.0f, 1.0f, 1.0f);
+
+
   {
     Mesh *mesh = device->mesh_mgr()->Get("mesh");
 
@@ -339,6 +345,7 @@ void renderFrame(Device *device) {
 
     //directional
     deferred_renderer.DrawDirectionalLight(direction_light);
+    deferred_renderer.DrawDirectionalLight(direction_light1);
 
     deferred_renderer.EndLightPass();
 
@@ -359,19 +366,26 @@ void renderFrame(Device *device) {
   
   //fbo에 있는 내용을 적절히 그리기
   //null_post_effect.Draw(depth_fbo.color_tex(), &device->render_state());
-  if(curr_deferred_fbo_idx == kDeferredRendererTexDepth) {
+  switch (curr_deferred_fbo_idx) {
+  case kDeferredRendererTexDepth:
     null_post_effect.Draw(deferred_renderer.DepthTex(), &device->render_state());
-  } else if(curr_deferred_fbo_idx == kDeferredRendererTexDiffuse) {
+    break;
+  case kDeferredRendererTexDiffuse:
     null_post_effect.Draw(deferred_renderer.DiffuseTex(), &device->render_state());
-  } else if(curr_deferred_fbo_idx == kDeferredRendererTexNormal) {
+    break;
+  case kDeferredRendererTexNormal:
     null_post_effect.Draw(deferred_renderer.NormalTex(), &device->render_state());
-  } else if(curr_deferred_fbo_idx == kDeferredRendererTexSpecular) {
+    break;
+  case kDeferredRendererTexSpecular:
     null_post_effect.Draw(deferred_renderer.SpecularTex(), &device->render_state());
-  } else if(curr_deferred_fbo_idx == kDeferredRendererTexPosition) {
-    null_post_effect.Draw(deferred_renderer.PositionTex(), &device->render_state());
-  } else if(curr_deferred_fbo_idx == kDeferredRendererTexFinalResult) {
+    break;
+  case kDeferredRendererTexFinalResult:
     null_post_effect.Draw(deferred_renderer.FinalResultTex(), &device->render_state());
+    break;
+  default:
+    break;
   }
+  
 
   
   //디버깅렌더링 하기전에 deferred renderer에 잇는 depth buffer를 적절히 복사하기
@@ -535,8 +549,8 @@ void SORA_update_frame(Device *device, float dt) {
   }
 
   //check key
-  //float x = 1.0f;
-  float x = 0.5f;
+  float x = 1.0f;
+  //float x = 0.5f;
   KeyboardEventQueue &keyboard_evt_queue = device->keyboard_evt_queue();
   while(keyboard_evt_queue.IsEmpty() == false) {
     KeyboardEvent evt = keyboard_evt_queue.Get();
@@ -570,9 +584,6 @@ void SORA_update_frame(Device *device, float dt) {
         curr_deferred_fbo_idx = kDeferredRendererTexSpecular;
         break;
       case '5':
-        curr_deferred_fbo_idx = kDeferredRendererTexPosition;
-        break;
-      case '6':
         curr_deferred_fbo_idx = kDeferredRendererTexFinalResult;
         break;
       }
