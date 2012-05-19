@@ -68,6 +68,11 @@ public:
   Texture &FinalResultTex() const;
 
   uint GBufferHandle() const;
+
+private:
+  Shader &ambient_shader();
+  Shader &directional_shader();
+
 private:
   std::unique_ptr<UberShader> geometry_uber_shader_;
   std::unique_ptr<Shader> depth_shader_;

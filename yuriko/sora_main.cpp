@@ -318,6 +318,7 @@ void renderFrame(Device *device) {
   //direction_light.SetDirection(vec3(1, 1, 1));
   direction_light.SetDirection(vec3(0, 0, -1));
   direction_light.diffuse = vec4(1.0f, 0.0f, 0.0f, 1.0f);
+  direction_light.specular = vec4(0.0f, 0.0f, 1.0f, 1.0f);
 
   {
     Mesh *mesh = device->mesh_mgr()->Get("mesh");

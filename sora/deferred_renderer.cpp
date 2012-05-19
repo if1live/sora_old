@@ -81,18 +81,6 @@ bool DeferredRenderer::Init(int w, int h) {
   final_result_fb_.reset(new FrameBuffer());
   final_result_fb_->InitWithoutDepth(w, h);
 
-  LOGI("Deferred Renderer :: Ambient Shader");
-  const char *ambient_vert_file = "shader/deferred_ambient_light.vs";
-  const char *ambient_frag_file = "shader/deferred_ambient_light.fs";
-  ambient_shader_.reset(new Shader());
-  ambient_shader_->LoadFromFile(ambient_vert_file, ambient_frag_file);
-
-  LOGI("Deferred Renderer :: Directional Light Shader");
-  const char *directional_vert_file = "shader/deferred_directional_light.vs";
-  const char *directional_frag_file = "shader/deferred_directional_light.fs";
-  directional_shader_.reset(new Shader());
-  directional_shader_->LoadFromFile(directional_vert_file, directional_frag_file);
-
   return true;
 }
 void DeferredRenderer::Deinit() {
@@ -100,7 +88,7 @@ void DeferredRenderer::Deinit() {
     gbuffer_->Deinit();
     gbuffer_.reset(NULL);
   }
-  if(geometry_uber_shader_.get() != NULL) {
+  if(geometry_uber_shader_ != NULL) {
     geometry_uber_shader_->Deinit();
     geometry_uber_shader_.reset(NULL);
   }
@@ -120,6 +108,27 @@ void DeferredRenderer::Deinit() {
     directional_shader_->Deinit();
     directional_shader_.reset(NULL);
   }
+}
+
+Shader &DeferredRenderer::ambient_shader() {
+  if(ambient_shader_ == NULL) {
+    LOGI("Deferred Renderer :: Ambient Shader");
+    const char *ambient_vert_file = "shader/deferred_ambient_light.vs";
+    const char *ambient_frag_file = "shader/deferred_ambient_light.fs";
+    ambient_shader_.reset(new Shader());
+    ambient_shader_->LoadFromFile(ambient_vert_file, ambient_frag_file);
+  }
+  return *ambient_shader_;  
+}
+Shader &DeferredRenderer::directional_shader() {
+  if(directional_shader_ == NULL) {
+    LOGI("Deferred Renderer :: Directional Light Shader");
+    const char *directional_vert_file = "shader/deferred_directional_light.vs";
+    const char *directional_frag_file = "shader/deferred_directional_light.fs";
+    directional_shader_.reset(new Shader());
+    directional_shader_->LoadFromFile(directional_vert_file, directional_frag_file);
+  }
+  return *directional_shader_;
 }
 
 void DeferredRenderer::BeginDepthPass() {
@@ -229,14 +238,17 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
   //그냥 화면 전체에 대해서 2d로 잘 적용하면 된다
   Device *device = Device::GetInstance();
   RenderState &render_state = device->render_state();
-  render_state.UseShader(*directional_shader_);
+  Shader &shader = directional_shader();
+  render_state.UseShader(shader);
 
-  directional_shader_->SetUniformVector(kDiffuseColorHandleName, light.diffuse);
+  shader.SetUniformVector(kDiffuseColorHandleName, light.diffuse);
   directional_shader_->SetUniformVector(kSpecularColorHandleName, light.specular);
 
-  ShaderVariable view_space_normal_var = directional_shader_->uniform_var("s_viewSpaceNormal");
-  ShaderVariable depth_var = directional_shader_->uniform_var("s_depth");
-  ShaderVariable pos_var = directional_shader_->uniform_var("s_pos");
+  ShaderVariable view_space_normal_var = shader.uniform_var("s_viewSpaceNormal");
+  ShaderVariable depth_var = shader.uniform_var("s_depth");
+  ShaderVariable pos_var = shader.uniform_var("s_pos");
+  ShaderVariable specular_var = shader.uniform_var("s_specularMap");
+
   if(view_space_normal_var.location != kInvalidShaderVarLocation) {
     Texture view_space_normal_tex = NormalTex();
     render_state.UseTexture(view_space_normal_tex, 0);
@@ -252,6 +264,11 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
     render_state.UseTexture(pos_tex, 2);
     SetUniformValue(pos_var, 2);
   }
+  if(specular_var.location != kInvalidShaderVarLocation) {
+    Texture specular_tex = SpecularTex();
+    render_state.UseTexture(specular_tex, 3);
+    SetUniformValue(specular_var, 3);
+  }
 
   const mat4 &proj_mat = render_state.projection_mat();
   const mat4 &view_mat = render_state.view_mat();
@@ -262,18 +279,17 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
   light_dir = glm::normalize(light_dir);
   light_dir = vec3(1, 1, -1); // FIXME
 
-  directional_shader_->SetUniformVector("u_lightDir", light_dir);
+  shader.SetUniformVector("u_lightDir", light_dir);
 
   //full screen quad를 그리기 위해서 쓰는 mvp. 내부 계산용으로 쓸 행렬은 따로 취급한다
-  mat4 mvp(1.0f);
-  directional_shader_->SetUniformMatrix(kMVPHandleName, mvp);
+  shader.SetUniformMatrix(kMVPHandleName, mat4(1.0f));
 
   vector<Vertex2D> vert_list;
   vert_list.push_back(CreateVertex2D(-1, -1, 0, 0));
   vert_list.push_back(CreateVertex2D(1, -1, 1, 0));
   vert_list.push_back(CreateVertex2D(1, 1, 1, 1));
   vert_list.push_back(CreateVertex2D(-1, 1, 0, 1));
-  directional_shader_->DrawArrays(kDrawTriangleFan, vert_list);
+  shader.DrawArrays(kDrawTriangleFan, vert_list);
 }
 void DeferredRenderer::DrawPointLight(const Light &light) {
   SR_ASSERT(light.type == kLightPoint);
@@ -285,13 +301,14 @@ void DeferredRenderer::DrawAmbientLight(const glm::vec3 &color) {
   //화면 전체를 단색으로 그리기
   Device *device = Device::GetInstance();
   RenderState &render_state = device->render_state();
-  render_state.UseShader(*ambient_shader_);
+  Shader &shader = ambient_shader();
+  render_state.UseShader(shader);
 
   mat4 mvp(1.0f);
-  ambient_shader_->SetUniformMatrix(kMVPHandleName, mvp);
+  shader.SetUniformMatrix(kMVPHandleName, mvp);
 
   vec4 ambient_color(color, 1.0f);
-  ambient_shader_->SetUniformVector(kAmbientColorHandleName, ambient_color);
+  shader.SetUniformVector(kAmbientColorHandleName, ambient_color);
 
   Texture diffuse_tex = DiffuseTex();
   render_state.UseTexture(diffuse_tex, 0);
@@ -302,7 +319,7 @@ void DeferredRenderer::DrawAmbientLight(const glm::vec3 &color) {
   vert_list.push_back(CreateVertex2D(1, 1, 1, 1));
   vert_list.push_back(CreateVertex2D(-1, 1, 0, 1));
 
-  ambient_shader_->DrawArrays(kDrawTriangleFan, vert_list);
+  shader.DrawArrays(kDrawTriangleFan, vert_list);
 }
 unsigned int DeferredRenderer::GBufferHandle() const {
   return gbuffer_->fbo();
