@@ -27,7 +27,7 @@ namespace gl {
     if(param.offset == -1 || var.location == -1) {
       return false;
     }
-    glEnableVertexAttribArray(var.location);
+    //glEnableVertexAttribArray(var.location);
     char *ptr = base_ptr + param.offset;
 
     GLenum normalize = GL_FALSE;

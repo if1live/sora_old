@@ -105,12 +105,19 @@ void ShaderManager::SetUp() {
 }
 
 Shader *ShaderManager::Get(SystemShaderType type) {
+  //already exist..
+  auto found = sys_shader_dict_.find(type);
+  if(found != sys_shader_dict_.end()) {
+    return &found->second;
+  }
+
   struct SysShaderInitData {
     SystemShaderType type;
     const char *vert_src;
     const char *frag_src;
     const char *name;
   };
+
   SysShaderInitData init_data[] = {
     { kConstColor, const_color_vert_src, const_color_frag_src, "Const Color" },
     { kAlbedo, albedo_vert_src, albedo_frag_src, "Albedo" },
@@ -121,10 +128,6 @@ Shader *ShaderManager::Get(SystemShaderType type) {
   for(int i = 0 ; i < data_size ; ++i) {
     const SysShaderInitData &data = init_data[i];
     if(data.type == type) {
-      auto it = sys_shader_dict_.find(type);
-      if(it != sys_shader_dict_.end()) {
-        return &it->second;
-      }
       Shader shader;
       LOGI("System Shader Name : %s", data.name);
       shader.Init(data.vert_src, data.frag_src);

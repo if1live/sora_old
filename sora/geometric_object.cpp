@@ -870,12 +870,20 @@ void BasicPrimitiveMeshHelper::WireSphere(float radius, int slices, int stacks) 
   float drho = sora::kPi / stacks;
   float dtheta = 2.0f * sora::kPi / slices;
 
+  //한방에 그릴수 잇도록하자.
+  //vertex list + index로 구성을 변경한다는 소리
+  //구성 방법은 gl_lines
+  DrawCmdData<vec3> cmd;
+  cmd.draw_mode = kDrawLines;
+  vector<vec3> &vert_list = cmd.vertex_list;
+  vector<unsigned short> &index_list = cmd.index_list;
+
   // draw stack lines
   for (int i = 1 ; i < stacks ; i++) { // stack line at i==stacks-1 was missing here
     float rho = i * drho;
 
-    DrawCmdData<vec3> cmd;
-    cmd.draw_mode = kDrawLineLoop;
+    //아래에 의해서 생성되는 vertex는 line loop이다. 이것을 Index/vertex로 적절히 구성하기
+    vector<vec3> tmp_vert_list;
     for (int j = 0; j < slices; j++) {
       float theta = j * dtheta;
       float x = cos(theta) * sin(rho);
@@ -886,16 +894,27 @@ void BasicPrimitiveMeshHelper::WireSphere(float radius, int slices, int stacks) 
       vert[0] = x * radius;
       vert[1] = y * radius;
       vert[2] = z * radius;
-      cmd.vertex_list.push_back(vert);
+      tmp_vert_list.push_back(vert);
     }
-    this->cmd_list_->push_back(cmd);
+    
+    int base_vert_list_size = vert_list.size();
+    //copy vertex
+    std::copy(tmp_vert_list.begin(), tmp_vert_list.end(), back_inserter(vert_list));
+    
+    for(int i = 0 ; i < (int)tmp_vert_list.size() ; i++) {
+      unsigned short idx1 = base_vert_list_size + i;
+      unsigned short idx2 = base_vert_list_size + ((i + 1) % (int)tmp_vert_list.size());
+      index_list.push_back(idx1);
+      index_list.push_back(idx2);
+    }
   }
+  
   // draw slice lines
   for (int j = 0; j < slices; j++) {
     float theta = j * dtheta;
 
-    DrawCmdData<vec3> cmd;
-    cmd.draw_mode = kDrawLineStrip;
+    //kDrawLineStrip;
+    vector<vec3> tmp_vert_list;
     for (int i = 0; i <= stacks; i++) {
       float rho = i * drho;
       float x = cos(theta) * sin(rho);
@@ -906,10 +925,21 @@ void BasicPrimitiveMeshHelper::WireSphere(float radius, int slices, int stacks) 
       vert[0] = x * radius;
       vert[1] = y * radius;
       vert[2] = z * radius;
-      cmd.vertex_list.push_back(vert);
+      tmp_vert_list.push_back(vert);
     }
-    this->cmd_list_->push_back(cmd);
+
+    int base_vert_list_size = vert_list.size();
+    std::copy(tmp_vert_list.begin(), tmp_vert_list.end(), back_inserter(vert_list));
+    
+    for(int i = 0 ; i < (int)tmp_vert_list.size() - 1 ; i++) {
+      unsigned short idx1 = base_vert_list_size + i;
+      unsigned short idx2 = base_vert_list_size + ((i + 1) % (int)tmp_vert_list.size());
+      index_list.push_back(idx1);
+      index_list.push_back(idx2);
+    }
   }
+
+  this->cmd_list_->push_back(cmd);
 }
 
 } //namespace sora

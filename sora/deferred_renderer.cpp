@@ -34,6 +34,7 @@
 #include "light.h"
 #include "frame_buffer.h"
 
+#include "debug_draw_manager.h"
 #include "draw_2d_manager.h"
 
 using namespace std;
@@ -48,11 +49,8 @@ DeferredRenderer::~DeferredRenderer() {
 }
 bool DeferredRenderer::Init(int w, int h) {
   SR_ASSERT(geometry_uber_shader_.get() == NULL);
-  SR_ASSERT(depth_shader_.get() == NULL);
   SR_ASSERT(gbuffer_.get() == NULL);
   SR_ASSERT(final_result_fb_.get() == NULL);
-  SR_ASSERT(ambient_shader_.get() == NULL);
-  SR_ASSERT(directional_shader_.get() == NULL);
 
   gbuffer_ = move(unique_ptr<GBuffer>(new GBuffer()));
   gbuffer_->Init(w, h);
@@ -72,12 +70,6 @@ bool DeferredRenderer::Init(int w, int h) {
   geometry_uber_shader_.reset(new UberShader());
   geometry_uber_shader_->InitWithFile(vert_file, frag_file, flag);
 
-  //depth pass용으로 쓰기 위한 쉐이더
-  LOGI("Deferred Renderer :: Depth Shader");
-  const char *depth_vert_file = "shader/deferred_depth.vs";
-  const char *depth_frag_file = "shader/deferred_depth.fs";
-  depth_shader_.reset(new Shader());
-  depth_shader_->LoadFromFile(depth_vert_file, depth_frag_file);
 
   //최종결과는 색으로 충분
   final_result_fb_.reset(new FrameBuffer());
@@ -110,6 +102,10 @@ void DeferredRenderer::Deinit() {
     directional_shader_->Deinit();
     directional_shader_.reset(NULL);
   }
+  if(point_shader_ != NULL) {
+    point_shader_->Deinit();
+    point_shader_.reset(NULL);
+  }
 }
 
 Shader &DeferredRenderer::ambient_shader() {
@@ -132,6 +128,28 @@ Shader &DeferredRenderer::directional_shader() {
   }
   return *directional_shader_;
 }
+Shader &DeferredRenderer::depth_shader() {
+  if(depth_shader_ == NULL) {
+    //depth pass용으로 쓰기 위한 쉐이더
+    LOGI("Deferred Renderer :: Depth Shader");
+    const char *depth_vert_file = "shader/deferred_depth.vs";
+    const char *depth_frag_file = "shader/deferred_depth.fs";
+    depth_shader_.reset(new Shader());
+    depth_shader_->LoadFromFile(depth_vert_file, depth_frag_file);
+  }
+  return *depth_shader_;
+}
+
+Shader &DeferredRenderer::point_shader() {
+  if(point_shader_ == NULL) {
+    LOGI("Deferred Renderer :: Point Light Shader");
+    const char *vert_file = "shader/deferred_point_light.vs";
+    const char *frag_flie = "shader/deferred_point_light.fs";
+    point_shader_.reset(new Shader());
+    point_shader_->LoadFromFile(vert_file, frag_flie);
+  }
+  return *point_shader_;
+}
 
 void DeferredRenderer::BeginDepthPass() {
   Device *dev = Device::GetInstance();
@@ -148,7 +166,7 @@ void DeferredRenderer::BeginDepthPass() {
   glDepthMask(true);
 
   //쉐이더는 깊이 렌더링중에 교체되지 않는다
-  render_state.UseShader(*depth_shader_);
+  render_state.UseShader(depth_shader());
 }
 void DeferredRenderer::DrawDepthPass(Mesh *mesh) {
   Device *dev = Device::GetInstance();
@@ -156,8 +174,8 @@ void DeferredRenderer::DrawDepthPass(Mesh *mesh) {
   //mesh에 따라서 model 행렬은 변하니까 begin같은곳에 떄려박지 못하고
   //메시마다 따로 대입한다
   mat4 mvp = render_state.GetMVPMatrix();
-  depth_shader_->SetUniformMatrix(kMVPHandleName, mvp);
-  depth_shader_->DrawMeshIgnoreMaterial(mesh);
+  depth_shader().SetUniformMatrix(kMVPHandleName, mvp);
+  depth_shader().DrawMeshIgnoreMaterial(mesh);
 }
 void DeferredRenderer::EndDepthPass() {
   glColorMask(true, true, true, true);
@@ -267,14 +285,9 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
     SetUniformValue(specular_var, 3);
   }
 
-  mat4 projection = render_state.GetProjection3D();
-  mat4 inv_proj = glm::inverse(projection);
-  shader.SetUniformMatrix("u_projectionInv", inv_proj);
-
   //방향성빛은 방향만 잇으니까 행렬의 3*3만 쓴다
   mat3 view_mat(render_state.view_mat());
-  //mat3 model_mat(render_state.model_mat());
-  mat3 model_mat(light.model_mat);
+  mat3 model_mat(render_state.model_mat());
   mat3 light_mv = view_mat * model_mat;
 
   vec3 light_target_pos(light.dir);
@@ -335,5 +348,15 @@ unsigned int DeferredRenderer::GBufferHandle() const {
 }
 Texture &DeferredRenderer::FinalResultTex() const {
   return final_result_fb_->color_tex();
+}
+void DeferredRenderer::DrawPointLightArea(const Light &light) {
+  Device *dev = Device::GetInstance();
+  const RenderState &render_state = dev->render_state();
+  DebugDrawManager *draw_mgr = dev->debug_draw_mgr();
+
+  float radius = light.radius;
+  const vec3 &pos = light.pos;
+  
+  draw_mgr->AddSphere(pos, radius, Color_White());
 }
 } //namespace sora

@@ -55,6 +55,7 @@ public:
   void DrawDirectionalLight(const Light &light);
   void DrawPointLight(const Light &light);
   void DrawSpotLight(const Light &light);
+  void DrawPointLightArea(const Light &light);
   void EndLightPass();
 
   GBuffer &gbuffer() { return *gbuffer_; }
@@ -71,6 +72,8 @@ public:
 private:
   Shader &ambient_shader();
   Shader &directional_shader();
+  Shader &point_shader(); //점광원용 쉐이더
+  Shader &depth_shader();
 
 private:
   std::unique_ptr<UberShader> geometry_uber_shader_;
@@ -83,6 +86,7 @@ private:
 
   std::unique_ptr<Shader> ambient_shader_;
   std::unique_ptr<Shader> directional_shader_;
+  std::unique_ptr<Shader> point_shader_;
 };
 
 } //namespace sora

@@ -325,6 +325,9 @@ void renderFrame(Device *device) {
   direction_light1.diffuse = vec4(1.0f, 1.0f, 0.0f, 1.0f);
   direction_light1.specular = vec4(0.0f, 1.0f, 1.0f, 1.0f);
 
+  //포인트 빛설정
+  Light point_light;
+  point_light.SetPoint(vec3(0, 0, 0), 1);
 
   {
     Mesh *mesh = device->mesh_mgr()->Get("mesh");
@@ -341,11 +344,15 @@ void renderFrame(Device *device) {
 
     //라이팅 처리
     deferred_renderer.BeginLightPass();
-    //deferred_renderer.DrawAmbientLight(glm::vec3(0.0, 0.2, 0.0));
+    deferred_renderer.DrawAmbientLight(glm::vec3(0.0, 0.2, 0.0));
 
     //directional
     deferred_renderer.DrawDirectionalLight(direction_light);
-    deferred_renderer.DrawDirectionalLight(direction_light1);
+    //deferred_renderer.DrawDirectionalLight(direction_light1);
+
+    //point빛 디버깅 하기 위해서 구 렌더링을 예약하기. 진짜 draw는 후처리 식으로
+    deferred_renderer.DrawPointLight(point_light);
+    deferred_renderer.DrawPointLightArea(point_light);
 
     deferred_renderer.EndLightPass();
 
