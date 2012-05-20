@@ -40,6 +40,7 @@
 #include "shader_manager.h"
 #include "memory_file.h"
 #include "filesystem.h"
+#include "matrix_helper.h"
 
 using namespace std;
 using namespace glm;
@@ -323,12 +324,7 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
   //draw_2d_mgr->AddString(vec2(0, 100), light_dir_buf, Color_Red(), 1.0f);
   shader.SetUniformVector("u_lightDir", light_pos);
 
-  vector<Vertex2D> vert_list;
-  vert_list.push_back(CreateVertex2D(-1, -1, 0, 0));
-  vert_list.push_back(CreateVertex2D(1, -1, 1, 0));
-  vert_list.push_back(CreateVertex2D(1, 1, 1, 1));
-  vert_list.push_back(CreateVertex2D(-1, 1, 0, 1));
-  shader.DrawArrays(kDrawTriangleFan, vert_list);
+  SetCommonLightQuadDraw(shader);
 }
 void DeferredRenderer::DrawPointLight(const Light &light) {
   SR_ASSERT(light.type == kLightPoint);
@@ -408,12 +404,7 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
     //2d로 교체는 렌더링 직전에 수행하자
     render_state.Set2D();
 
-    vector<Vertex2D> vert_list;
-    vert_list.push_back(CreateVertex2D(-1, -1, 0, 0));
-    vert_list.push_back(CreateVertex2D(1, -1, 1, 0));
-    vert_list.push_back(CreateVertex2D(1, 1, 1, 1));
-    vert_list.push_back(CreateVertex2D(-1, 1, 0, 1));
-    point_shader.DrawArrays(kDrawTriangleFan, vert_list);
+    SetCommonLightQuadDraw(point_shader);
   }
   
   //restore state
@@ -472,7 +463,103 @@ void DeferredRenderer::SetCommonLightUniform(Shader &shader, const Light &light)
   shader.SetUniformVector(kDiffuseColorHandleName, light.diffuse);
   shader.SetUniformVector(kSpecularColorHandleName, light.specular);
 }
+void DeferredRenderer::SetCommonLightQuadDraw(Shader &shader) {
+  Device *dev = Device::GetInstance();
+  RenderState &render_state = dev->render_state();
 
+  const mat4 &projection_mat = render_state.GetProjection3D();
+  const mat4 &view_mat = render_state.view_mat();
+  const mat4 &model_mat = render_state.model_mat();
+  mat4 modelview = view_mat * model_mat;
+  //벡터방향만 잇으면 되니까 이동관련속성은 날리기
+  for(int i = 0 ; i < 3 ; ++i) {
+    modelview[3][i] = 0;
+  }
+  vec4 viewport(0, 0, render_state.win_width(), render_state.win_height());
+
+  float pixels[4][2] = {
+    { 0, 0 },
+    { viewport[2], 0 },
+    { viewport[2], viewport[3] },
+    { 0, viewport[3] },
+  };
+  vec3 view_vec_list[4];
+  for(int i = 0 ; i < 4 ; i++) {
+    vec3 win_coord(pixels[i][0], pixels[i][1], 10);
+    vec3 obj = glm::unProject(win_coord, modelview, projection_mat, viewport);
+    vec3 &view_vec = view_vec_list[i];
+    view_vec = obj;
+    vec3 cam_pos = MatrixHelper::ViewPos(view_mat);
+    view_vec -= cam_pos;
+    view_vec = glm::normalize(view_vec);
+
+    mat3 modelview_mat3(modelview);
+    view_vec = modelview_mat3 * view_vec;
+  }
+
+  //fragment마다 view vector를 계산하기 위해서 계산에 필요한 정보까지 넣기
+  //4군데만 넣어주면 나머지는 알아서 적절히 보간될것이다
+  struct LightQuadVertex {
+    LightQuadVertex(float x, float y, float s, float t, const vec3 &view_vec)
+      : pos(x, y), texcoord(s, t), view_vec(view_vec) {}
+    vec2 pos;
+    vec2 texcoord;
+    vec3 view_vec;
+  };
+  vector<LightQuadVertex> vert_list;
+  vert_list.push_back(LightQuadVertex(-1, -1, 0, 0, view_vec_list[0]));
+  vert_list.push_back(LightQuadVertex(1, -1, 1, 0, view_vec_list[1]));
+  vert_list.push_back(LightQuadVertex(1, 1, 1, 1, view_vec_list[2]));
+  vert_list.push_back(LightQuadVertex(-1, 1, 0, 1, view_vec_list[3]));
+
+  ShaderVariable pos_var = shader.attrib_var(kPositionHandleName);
+  ShaderVariable texcoord_var = shader.attrib_var(kTexcoordHandleName);
+  ShaderVariable view_vec_var = shader.attrib_var("a_viewVector");
+  
+  {
+    SR_ASSERT(pos_var.location != kInvalidShaderVarLocation);
+    AttribBindParam param;
+    param.dim = 2;
+    param.normalize = false;
+    param.offset = offsetof(LightQuadVertex, pos);
+    param.var_type = GL_FLOAT;
+    param.vert_size = sizeof(LightQuadVertex);
+    void *ptr = &vert_list[0];
+    SetAttrib(pos_var, param, (char*)ptr);
+  }
+  {
+    SR_ASSERT(texcoord_var.location != kInvalidShaderVarLocation);
+    AttribBindParam param;
+    param.dim = 2;
+    param.normalize = false;
+    param.offset = offsetof(LightQuadVertex, texcoord);
+    param.var_type = GL_FLOAT;
+    param.vert_size = sizeof(LightQuadVertex);
+    void *ptr = &vert_list[0];
+    SetAttrib(texcoord_var, param, (char*)ptr);
+  }
+  if(view_vec_var.location != kInvalidShaderVarLocation) {
+    AttribBindParam param;
+    param.dim = 3;
+    param.normalize = false;
+    param.offset = offsetof(LightQuadVertex, view_vec);
+    param.var_type = GL_FLOAT;
+    param.vert_size = sizeof(LightQuadVertex);
+    void *ptr = &vert_list[0];
+    SetAttrib(view_vec_var, param, (char*)ptr);
+  }
+
+  shader.DrawArrays(kDrawTriangleFan, vert_list.size());
+
+  /*
+  vector<Vertex2D> vert_list;
+  vert_list.push_back(CreateVertex2D(-1, -1, 0, 0));
+  vert_list.push_back(CreateVertex2D(1, -1, 1, 0));
+  vert_list.push_back(CreateVertex2D(1, 1, 1, 1));
+  vert_list.push_back(CreateVertex2D(-1, 1, 0, 1));
+  shader.DrawArrays(kDrawTriangleFan, vert_list);
+  */
+}
 void DeferredRenderer::DrawSpotLight(const Light &light) {
   SR_ASSERT(light.type == kLightSpotLight);
 }

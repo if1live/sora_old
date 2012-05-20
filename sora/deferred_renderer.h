@@ -90,7 +90,7 @@ private:
   std::unique_ptr<Shader> point_shader_;
 
   void SetCommonLightUniform(Shader &shader, const Light &light);
-
+  void SetCommonLightQuadDraw(Shader &shader);
 private:
   const std::string &light_vert_src();
   const std::string &light_frag_src();

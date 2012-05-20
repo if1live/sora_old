@@ -1,5 +1,6 @@
 precision mediump float;
 varying vec2 v_texcoord;
+varying vec3 v_viewVector;
 
 uniform mat4 u_projectionInv;
 uniform mat4 u_mvpInv;
@@ -127,7 +128,8 @@ vec4 point_lighting(float depth, vec3 light_pos, float light_radius, vec3 p, vec
 #ifdef DIRECTION_LIGHT
 vec4 direction_light(float depth, vec3 n) {
 	vec3 light_dir = u_lightDir;
-	vec3 view_dir = -normalize(get_ndc_pos(depth));
+	//vec3 view_dir = -normalize(get_ndc_pos(depth));
+	vec3 view_dir = v_viewVector;
 	float diffuse_var = 0;
 	vec4 diffuse_color = calc_diffuse(n, light_dir, diffuse_var);
 	vec4 specular_color = vec4(0.0);
