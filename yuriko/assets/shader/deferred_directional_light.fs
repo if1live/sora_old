@@ -8,17 +8,23 @@ uniform vec3 u_lightDir;
 uniform sampler2D s_viewSpaceNormal;
 uniform sampler2D s_depth;
 uniform sampler2D s_specularMap;
+uniform sampler2D s_diffuseMap;
 
 vec4 calc_diffuse(vec3 normal, out float diffuse_var) {
 	//diffuse 적절히 계산하기
 	float diffuse = dot(u_lightDir, normal);
 	diffuse = clamp(diffuse, 0.0, 1.0);
-	vec4 diffuse_color = u_diffuseColor * diffuse;
 	diffuse_var = diffuse;
+	
+	vec4 diffuse_color = u_diffuseColor * diffuse;
+	vec4 diffuse_texel = texture2D(s_diffuseMap, v_texcoord);
+	diffuse_color = diffuse_color * diffuse_texel;
 	return diffuse_color;
 }
 vec4 calc_specular(vec3 normal, float depth) {
-	float shininess = texture2D(s_specularMap, v_texcoord).w;
+	vec4 specular_texel = texture2D(s_specularMap, v_texcoord);
+	float shininess = specular_texel.w;
+	
 	//vec3 pos = texture2D(s_pos, v_texcoord).xyz;
 	vec2 raw_pos = vec2(gl_FragCoord.x / 640.0, gl_FragCoord.y / 480.0);	//0~1
 	vec3 pos = vec3((raw_pos * 2.0) - vec2(1.0), depth);
@@ -33,6 +39,7 @@ vec4 calc_specular(vec3 normal, float depth) {
 	}
 	float pow_result = pow(dot_result, shininess);
 	vec4 specular_color = u_specularColor * pow_result;
+	specular_color *= vec4(specular_texel.xyz, 1.0);
 	return specular_color;
 }
 

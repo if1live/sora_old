@@ -356,8 +356,8 @@ void DebugDrawPolicy::DrawElem(DebugDrawCmd_Sphere *cmd) {
   }
 
   mat4 mvp = cmd->GetMVPMatrix();
-  mvp = glm::scale(mvp, vec3(cmd->radius, cmd->radius, cmd->radius));
   mvp = glm::translate(mvp, cmd->pos);
+  mvp = glm::scale(mvp, vec3(cmd->radius, cmd->radius, cmd->radius));
   ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
   SetUniformMatrix(mvp_var, mvp);
 

@@ -234,7 +234,7 @@ bool setupGraphics(Device *device, int w, int h) {
     //geo_obj.SolidTeapot(0.05f);
     //geo_obj.WireSphere(1, 16, 16);
     //geo_obj.PointSphere(1, 16, 16);
-    //geo_obj.SolidSphere(1, 16, 16);
+    geo_obj.SolidSphere(1, 16, 16);
     //geo_obj.SolidCube(1, 1, 1);
     //geo_obj.WireCube(1, 1, 1);
     //geo_obj.PointCube(1, 1, 1);
@@ -244,7 +244,7 @@ bool setupGraphics(Device *device, int w, int h) {
     //geo_obj.WireAxis(5);
     //geo_obj.SolidPlane(3);
     //geo_obj.WirePlane(3, 0.1f);
-    geo_obj.SolidTorus(1.0f, 0.3f);
+    //geo_obj.SolidTorus(1.0f, 0.3f);
     //geo_obj.SolidCone(2, 2);
 
     Mesh *mesh = new Mesh();
@@ -345,7 +345,7 @@ void renderFrame(Device *device) {
 
     //라이팅 처리
     deferred_renderer.BeginLightPass();
-    deferred_renderer.DrawAmbientLight(glm::vec3(0.0, 0.2, 0.0));
+    //deferred_renderer.DrawAmbientLight(glm::vec3(0.0, 0.2, 0.0));
 
     //directional
     deferred_renderer.DrawDirectionalLight(direction_light);
@@ -409,7 +409,7 @@ void renderFrame(Device *device) {
   {
     //디버깅용으로 화면 3d렌더링 하는거
     DebugDrawManager *mgr_3d = device->debug_draw_mgr();
-    mgr_3d->AddAxis(mat4(1.0f), 1);
+    mgr_3d->AddAxis(mat4(1.0f), 2);
     //mgr_3d->AddLine(vec3(0.0f, 0.0f, 0.0f), vec3(100, 100, 100), Color_White(), 4);
     //mgr_3d->AddSphere(vec3(0, 1, 0), 1, Color_White());
     //mgr_3d->AddCross(vec3(0, 0, 0), Color_Black(), 10, 0, false);
@@ -433,13 +433,11 @@ void renderFrame(Device *device) {
     sprintf(fps_buf, "FPS:%.2f", fps_counter.GetFPS());
     //float scr_width = device->render_state().win_width();
     float scr_height = (float)device->render_state().win_height();
-    draw_2d_mgr->AddString(vec2(0, scr_height), fps_buf, Color_Blue(), 1.5f);
+    draw_2d_mgr->AddString(vec2(0, scr_height), fps_buf, Color4ub::Blue(), 1.5f);
 
     sora::Draw2DPolicy draw_policy;
     draw_policy.Draw(*draw_2d_mgr);
   }
-  
-  
 
   //////////////////////////////
   SR_CHECK_ERROR("End RenderFrame");

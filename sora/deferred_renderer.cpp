@@ -36,6 +36,8 @@
 
 #include "debug_draw_manager.h"
 #include "draw_2d_manager.h"
+#include "geometric_object.h"
+#include "shader_manager.h"
 
 using namespace std;
 using namespace glm;
@@ -268,6 +270,7 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
   ShaderVariable view_space_normal_var = shader.uniform_var("s_viewSpaceNormal");
   ShaderVariable depth_var = shader.uniform_var("s_depth");
   ShaderVariable specular_var = shader.uniform_var("s_specularMap");
+  ShaderVariable diffuse_var = shader.uniform_var(kDiffuseMapHandleName);
 
   if(view_space_normal_var.location != kInvalidShaderVarLocation) {
     Texture view_space_normal_tex = NormalTex();
@@ -281,8 +284,13 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
   }
   if(specular_var.location != kInvalidShaderVarLocation) {
     Texture specular_tex = SpecularTex();
-    render_state.UseTexture(specular_tex, 3);
-    SetUniformValue(specular_var, 3);
+    render_state.UseTexture(specular_tex, 2);
+    SetUniformValue(specular_var, 2);
+  }
+  if(diffuse_var.location != kInvalidShaderVarLocation) {
+    Texture diffuse_tex = DiffuseTex();
+    render_state.UseTexture(diffuse_tex, 3);
+    SetUniformValue(diffuse_var, 3);
   }
 
   //방향성빛은 방향만 잇으니까 행렬의 3*3만 쓴다
@@ -315,6 +323,62 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
 }
 void DeferredRenderer::DrawPointLight(const Light &light) {
   SR_ASSERT(light.type == kLightPoint);
+
+  //해당위치의 스텐실 버퍼에 원을 그린다. 원으로 빛이 영향을 줄 영역을 결정해서
+  //depth test를 오래하지 않도록한다
+  //스텐실 버퍼에 의존하는 방식보다 scissor로 고치는게 성능상 유리할테니
+  //나중에는 적절히 고치자
+  GeometricObject<vec3> sphere_mesh;
+  sphere_mesh.SolidSphere(1, 16, 16);
+
+  //3d장면에 렌더링하기. 그래야 빛이 영향줄 구가 제대로 그려진다
+  Device *dev = Device::GetInstance();
+  RenderState &render_state = dev->render_state();
+  render_state.Set3D();
+  const mat4 &projection = render_state.projection_mat();
+  const mat4 &view = render_state.view_mat();
+  mat4 model(1.0f);
+  model = glm::translate(model, light.pos);
+  model = glm::scale(model, vec3(light.radius));
+  mat4 mvp_3d = projection * view * model;
+
+  //단색쉐이더로 대충 그리기. 스텐실 버퍼에만 그려지면 됨
+  //색칠 영역은 스텐실 버퍼니까 적절히 초기화하기
+  render_state.ClearBuffer(false, false, true, Color4ub::White());
+  glColorMask(false, false, false, false);
+  glEnable(GL_STENCIL_TEST);
+  glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+  glStencilFunc(GL_ALWAYS, 0xff, 0xff);
+
+  ShaderManager *shader_mgr = dev->shader_mgr();
+  Shader *const_color_shader = shader_mgr->Get(ShaderManager::kConstColor);
+  render_state.UseShader(*const_color_shader);
+  vec4 white(1.0f);
+  const_color_shader->SetUniformVector(kConstColorHandleName, white);
+  
+  const_color_shader->SetUniformMatrix(kMVPHandleName, mvp_3d);
+  const DrawCmdData<vec3> &draw_cmd = sphere_mesh.cmd_list().at(0);
+  const_color_shader->SetVertexList(draw_cmd.vertex_list);
+  const_color_shader->DrawElements(draw_cmd.draw_mode, draw_cmd.index_list);
+  
+
+  //스텐실 영역에 잇는거 진짜로 그리기. 2D로 그리기
+  render_state.Set2D();
+  glColorMask(true, true, true, true);
+  glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+  glStencilFunc(GL_EQUAL, 0xff, 0xff);
+  
+  const_color_shader->SetUniformMatrix(kMVPHandleName, mat4(1.0f));
+  vector<vec3> vert_list(4);
+  vert_list[0] = vec3(-1, -1, 0);
+  vert_list[1] = vec3(+1, -1, 0);
+  vert_list[2] = vec3(+1, +1, 0);
+  vert_list[3] = vec3(-1, +1, 0);
+  const_color_shader->DrawArrays(kDrawTriangleFan, vert_list);
+  
+
+  //restore state
+  glDisable(GL_STENCIL_TEST);
 }
 void DeferredRenderer::DrawSpotLight(const Light &light) {
   SR_ASSERT(light.type == kLightSpotLight);
@@ -357,6 +421,6 @@ void DeferredRenderer::DrawPointLightArea(const Light &light) {
   float radius = light.radius;
   const vec3 &pos = light.pos;
   
-  draw_mgr->AddSphere(pos, radius, Color_White());
+  draw_mgr->AddSphere(pos, radius, Color4ub::White());
 }
 } //namespace sora

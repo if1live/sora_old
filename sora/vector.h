@@ -31,21 +31,24 @@ typedef glm::detail::tvec2<unsigned char> vec2ub;
 typedef glm::detail::tvec3<unsigned char> vec3ub;
 typedef glm::detail::tvec4<unsigned char> vec4ub;
 
-static vec4ub Color_White() {
-  return vec4ub(255, 255, 255, 255);
-}
-static vec4ub Color_Black() {
-  return vec4ub(0, 0, 0, 255);
-}
-static vec4ub Color_Red() {
-  return vec4ub(255, 0, 0, 255);
-}
-static vec4ub Color_Green() {
-  return vec4ub(0, 255, 0, 255);
-}
-static vec4ub Color_Blue() {
-  return vec4ub(0, 0, 255, 255);
-}
+struct Color4ub {
+  static vec4ub White() {
+    return vec4ub(255, 255, 255, 255);
+  }
+  static vec4ub Black() {
+    return vec4ub(0, 0, 0, 255);
+  }
+  static vec4ub Red() {
+    return vec4ub(255, 0, 0, 255);
+  }
+  static vec4ub Green() {
+    return vec4ub(0, 255, 0, 255);
+  }
+  static vec4ub Blue() {
+    return vec4ub(0, 0, 255, 255);
+  }
+};
+
 }
 
 #endif  // SORA_VECTOR_H_
