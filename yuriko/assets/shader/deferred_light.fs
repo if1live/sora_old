@@ -30,6 +30,35 @@ vec3 get_light_pos() {
 }
 #endif
 
+vec3 get_ndc_pos(float depth) {
+//http://stackoverflow.com/questions/5669287/opengl-compute-eye-space-coord-from-window-space-coord-in-glsl
+	vec3 ndc_pos;
+	ndc_pos.xy = gl_FragCoord.xy / u_viewport.zw;
+	ndc_pos.z = depth; // or gl_FragCoord.z
+	ndc_pos -= 0.5;
+	ndc_pos *= 2.0;
+	return ndc_pos;
+}
+
+vec3 get_eye_pos(float depth) {
+	vec3 ndc_pos = get_ndc_pos(depth);
+	float z_near = u_clipPlane.x;
+	float z_far = u_clipPlane.y;
+
+	vec4 clip_pos;
+	
+	float a = (z_near + z_far);
+	float b = (z_near - z_far);
+	float c = (2.0 * z_near * z_far);
+	float d = (ndc_pos.z * b);
+	
+	clip_pos.w = -(-(c / (a + d)));
+	clip_pos.xyz = ndc_pos * clip_pos.w;
+	vec4 eye_pos = u_projectionInv * clip_pos;
+	eye_pos /= eye_pos.w;
+	return eye_pos.xyz;
+}
+/*
 vec3 get_viewspace_pixel_pos(float depth) {
 	vec2 raw_pos = gl_FragCoord.xy / u_viewport.zw;	//0~1
 	vec2 pixel_xy = (raw_pos * 2.0) - vec2(1.0);	
@@ -43,7 +72,7 @@ vec3 get_viewspace_pixel_pos(float depth) {
 	v_eye.z *= -1;
 	return v_eye;
 }
-
+*/
 vec4 calc_diffuse(vec3 normal, vec3 light_dir, out float diffuse_var) {
 	//diffuse 적절히 계산하기
 	float diffuse = dot(light_dir, normal);
@@ -86,16 +115,15 @@ void main() {
 	
 	float diffuse_var = 0.0;
 #ifdef POINT_LIGHT
-	vec3 viewspace_pos = get_viewspace_pixel_pos(depth);
-	vec3 light_pos = get_light_pos();
+	vec3 viewspace_pos = get_eye_pos(depth);
+	vec3 light_pos = u_lightPos.xyz;
 	vec3 light_dir = normalize(light_pos - viewspace_pos);
 	//vec3 light_dir = vec3(1, 0, 0);
 	vec3 view_dir = -normalize(viewspace_pos);
 #endif
 #ifdef DIRECTION_LIGHT
 	vec3 light_dir = u_lightDir;
-	vec3 viewspace_pos = get_viewspace_pixel_pos(depth);
-	vec3 view_dir = -normalize(viewspace_pos);
+	vec3 view_dir = -normalize(get_ndc_pos(depth));
 #endif
 	
 	vec4 diffuse_color = calc_diffuse(normal, light_dir, diffuse_var);
@@ -105,7 +133,7 @@ void main() {
 	}
 	
 	vec4 color = vec4(0.0);
-	//color = color + diffuse_color;
+	color = color + diffuse_color;
 	color = color + specular_color;
 	gl_FragColor = color;
 	

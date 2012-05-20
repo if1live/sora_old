@@ -303,38 +303,8 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
   Shader &shader = directional_shader();
   render_state.UseShader(shader);
 
-  shader.SetUniformVector(kDiffuseColorHandleName, light.diffuse);
-  directional_shader_->SetUniformVector(kSpecularColorHandleName, light.specular);
-
-  ShaderVariable view_space_normal_var = shader.uniform_var("s_viewSpaceNormal");
-  ShaderVariable depth_var = shader.uniform_var("s_depth");
-  ShaderVariable specular_var = shader.uniform_var("s_specularMap");
-  ShaderVariable diffuse_var = shader.uniform_var(kDiffuseMapHandleName);
-
-  if(view_space_normal_var.location != kInvalidShaderVarLocation) {
-    Texture view_space_normal_tex = NormalTex();
-    render_state.UseTexture(view_space_normal_tex, 0);
-    SetUniformValue(view_space_normal_var, 0);
-  }
-  if(depth_var.location != kInvalidShaderVarLocation) {
-    Texture depth_tex = DepthTex();
-    render_state.UseTexture(depth_tex, 1);
-    SetUniformValue(depth_var, 1);
-  }
-  if(specular_var.location != kInvalidShaderVarLocation) {
-    Texture specular_tex = SpecularTex();
-    render_state.UseTexture(specular_tex, 2);
-    SetUniformValue(specular_var, 2);
-  }
-  if(diffuse_var.location != kInvalidShaderVarLocation) {
-    Texture diffuse_tex = DiffuseTex();
-    render_state.UseTexture(diffuse_tex, 3);
-    SetUniformValue(diffuse_var, 3);
-  }
-
-  //viewport정보
-  vec4 viewport(0, 0, render_state.win_width(), render_state.win_height());
-  shader.SetUniformVector(kViewportHandleName, viewport);
+  //빛 계산에 쓰이는 공용 속성 설정
+  SetCommonLightUniform(shader, light);
 
   //방향성빛은 방향만 잇으니까 행렬의 3*3만 쓴다
   mat3 view_mat(render_state.view_mat());
@@ -351,16 +321,7 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
   //char light_dir_buf[128];  
   //sprintf(light_dir_buf, "LightDir:%.4f, %.4f, %.4f", light_pos.x, light_pos.y, light_pos.z);
   //draw_2d_mgr->AddString(vec2(0, 100), light_dir_buf, Color_Red(), 1.0f);
-
   shader.SetUniformVector("u_lightDir", light_pos);
-
-  mat4 projection_inv = glm::inverse(render_state.projection_mat());
-  shader.SetUniformMatrix(kProjectionInvHandleName, projection_inv);
-
-  //full screen quad를 그리기 위해서 쓰는 mvp. 내부 계산용으로 쓸 행렬은 따로 취급한다
-  shader.SetUniformMatrix(kMVPHandleName, mat4(1.0f));
-
-  shader.SetUniformVector(kClipPlaneHandleName, render_state.GetClipPlanes3D());
 
   vector<Vertex2D> vert_list;
   vert_list.push_back(CreateVertex2D(-1, -1, 0, 0));
@@ -421,10 +382,52 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
     //점광원 계산용 쉐이더로 교체
     Shader &point_shader = this->point_shader();
     render_state.UseShader(point_shader);
-    ShaderVariable diffuse_var = point_shader.uniform_var(kDiffuseMapHandleName);
-    ShaderVariable specular_var = point_shader.uniform_var(kSpecularMapHandleName);
-    ShaderVariable depth_var = point_shader.uniform_var("s_depth");
-    ShaderVariable normal_var = point_shader.uniform_var("s_viewSpaceNormal");
+    //빛 계산에 쓰이는 공용 속성 설정
+    SetCommonLightUniform(point_shader, light);
+
+    const mat4 &view = render_state.view_mat();
+    const mat4 &model = render_state.model_mat();
+    vec4 light_pos = view * model * vec4(light.pos, 1.0f);
+    light_pos /= light_pos.w; //view 공간으로 넘긴다. view공간인 상태로 계산을 해야 구가 구인 상태로 유지되서 반지름같은것이 유효하다
+    //light_pos.z *= -1;
+
+    {
+      Draw2DManager *draw_2d_mgr = dev->draw_2d();
+      char light_pos_buf[128];  
+      sprintf(light_pos_buf, "LightPos:%.4f, %.4f, %.4f", light_pos.x, light_pos.y, light_pos.z);
+      draw_2d_mgr->AddString(vec2(0, 100), light_pos_buf, Color4ub::Green(), 1.0f);
+
+      DebugDrawManager *draw_3d_mgr = dev->debug_draw_mgr();
+      draw_3d_mgr->AddString(light.pos, "Light", Color4ub::Red(), 1.0f);
+    }
+
+    point_shader.SetUniformVector("u_lightPos", light_pos);
+    point_shader.SetUniformValue("u_lightRadius", light.radius);
+    
+
+    //2d로 교체는 렌더링 직전에 수행하자
+    render_state.Set2D();
+
+    vector<Vertex2D> vert_list;
+    vert_list.push_back(CreateVertex2D(-1, -1, 0, 0));
+    vert_list.push_back(CreateVertex2D(1, -1, 1, 0));
+    vert_list.push_back(CreateVertex2D(1, 1, 1, 1));
+    vert_list.push_back(CreateVertex2D(-1, 1, 0, 1));
+    point_shader.DrawArrays(kDrawTriangleFan, vert_list);
+  }
+  
+  //restore state
+  glDisable(GL_STENCIL_TEST);
+}
+
+void DeferredRenderer::SetCommonLightUniform(Shader &shader, const Light &light) {
+  Device *dev = Device::GetInstance();
+  RenderState &render_state = dev->render_state();
+
+  ShaderVariable diffuse_var = shader.uniform_var(kDiffuseMapHandleName);
+    ShaderVariable specular_var = shader.uniform_var(kSpecularMapHandleName);
+    ShaderVariable depth_var = shader.uniform_var("s_depth");
+    ShaderVariable normal_var = shader.uniform_var("s_viewSpaceNormal");
 
     struct ShaderVarTexParam {
       ShaderVarTexParam(const ShaderVariable &shader_var, const Texture &tex)
@@ -447,51 +450,20 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
       }
     }
 
-    point_shader.SetUniformVector(kDiffuseColorHandleName, light.diffuse);
-    point_shader.SetUniformVector(kSpecularColorHandleName, light.specular);
+  shader.SetUniformVector(kClipPlaneHandleName, render_state.GetClipPlanes3D());
+  shader.SetUniformMatrix(kMVPHandleName, mat4(1.0f));
 
-    const mat4 &view = render_state.view_mat();
-    const mat4 &model = render_state.model_mat();
-    vec4 light_pos = view * model * vec4(light.pos, 1.0f);
-    light_pos /= light_pos.w; //view 공간으로 넘긴다. view공간인 상태로 계산을 해야 구가 구인 상태로 유지되서 반지름같은것이 유효하다
-    //light_pos.z *= -1;
+  const mat4 &projection = render_state.projection_mat();
+  mat4 projection_inv = glm::inverse(projection);
+  shader.SetUniformMatrix(kProjectionInvHandleName, projection_inv);
 
-    {
-      Draw2DManager *draw_2d_mgr = dev->draw_2d();
-      char light_pos_buf[128];  
-      sprintf(light_pos_buf, "LightPos:%.4f, %.4f, %.4f", light_pos.x, light_pos.y, light_pos.z);
-      draw_2d_mgr->AddString(vec2(0, 100), light_pos_buf, Color4ub::Green(), 1.0f);
+  vec4 viewport(0, 0, render_state.win_width(), render_state.win_height());
+  shader.SetUniformVector(kViewportHandleName, viewport);
 
-      DebugDrawManager *draw_3d_mgr = dev->debug_draw_mgr();
-      draw_3d_mgr->AddString(light.pos, "Light", Color4ub::Red(), 1.0f);
-    }
-
-    point_shader.SetUniformVector("u_lightPos", light_pos);
-    point_shader.SetUniformValue("u_lightRadius", light.radius);
-
-    vec4 viewport(0, 0, render_state.win_width(), render_state.win_height());
-    point_shader.SetUniformVector(kViewportHandleName, viewport);
-
-    const mat4 &projection = render_state.projection_mat();
-    mat4 projection_inv = glm::inverse(projection);
-    point_shader.SetUniformMatrix(kProjectionInvHandleName, projection_inv);
-
-    point_shader.SetUniformMatrix(kMVPHandleName, mat4(1.0f));
-
-    //2d로 교체는 렌더링 직전에 수행하자
-    render_state.Set2D();
-
-    vector<Vertex2D> vert_list;
-    vert_list.push_back(CreateVertex2D(-1, -1, 0, 0));
-    vert_list.push_back(CreateVertex2D(1, -1, 1, 0));
-    vert_list.push_back(CreateVertex2D(1, 1, 1, 1));
-    vert_list.push_back(CreateVertex2D(-1, 1, 0, 1));
-    point_shader.DrawArrays(kDrawTriangleFan, vert_list);
-  }
-  
-  //restore state
-  glDisable(GL_STENCIL_TEST);
+  shader.SetUniformVector(kDiffuseColorHandleName, light.diffuse);
+  shader.SetUniformVector(kSpecularColorHandleName, light.specular);
 }
+
 void DeferredRenderer::DrawSpotLight(const Light &light) {
   SR_ASSERT(light.type == kLightSpotLight);
 }
