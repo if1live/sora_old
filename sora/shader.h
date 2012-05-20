@@ -127,6 +127,10 @@ public:
     return Policy::SetUniformVector(handle_, name, vec);
   }
   template<typename T>
+  bool SetUniformVector(const std::string &name, const glm::detail::tvec2<T>&vec) {
+    return Policy::SetUniformVector(handle_, name, vec);
+  }
+  template<typename T>
   bool SetUniformValue(const std::string &name, T value) {
     return Policy::SetUniformValue(handle_, name, value);
   }

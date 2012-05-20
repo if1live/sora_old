@@ -360,6 +360,8 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
   //full screen quad를 그리기 위해서 쓰는 mvp. 내부 계산용으로 쓸 행렬은 따로 취급한다
   shader.SetUniformMatrix(kMVPHandleName, mat4(1.0f));
 
+  shader.SetUniformVector(kClipPlaneHandleName, render_state.GetClipPlanes3D());
+
   vector<Vertex2D> vert_list;
   vert_list.push_back(CreateVertex2D(-1, -1, 0, 0));
   vert_list.push_back(CreateVertex2D(1, -1, 1, 0));

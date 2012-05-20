@@ -31,27 +31,17 @@ vec3 get_light_pos() {
 #endif
 
 vec3 get_viewspace_pixel_pos(float depth) {
-	float scr_width = u_viewport.z;
-	float scr_height = u_viewport.w;
-	vec2 raw_pos = vec2(gl_FragCoord.x / scr_width, gl_FragCoord.y / scr_height);	//0~1
+	vec2 raw_pos = gl_FragCoord.xy / u_viewport.zw;	//0~1
 	vec2 pixel_xy = (raw_pos * 2.0) - vec2(1.0);	
-	//return vec3(pixel_xy, -depth);
-	vec4 view_pos = u_projectionInv * vec4(pixel_xy, -depth, 1.0);
-	view_pos /= view_pos.w;
-	return view_pos.xyz;
-}
-
-vec3 get_view_dir(float depth) {
-	vec3 viewspace_pixel = get_viewspace_pixel_pos(depth);
-	return -normalize(viewspace_pixel);
-/*
-	float scr_width = u_viewport.z;
-	float scr_height = u_viewport.w;
-	vec2 raw_pos = vec2(gl_FragCoord.x / scr_width, gl_FragCoord.y / scr_height);	//0~1
-	vec2 pixel_xy = (raw_pos * 2.0) - vec2(1.0);	
-	vec3 view_dir = vec3(-pixel_xy, -depth);
-	return view_dir;
-	*/
+	
+	//http://stackoverflow.com/questions/5669287/opengl-compute-eye-space-coord-from-window-space-coord-in-glsl
+	vec2 xy = pixel_xy;	//in [0,1] range
+	vec4 v_screen = vec4(xy, depth, 1.0 );
+	vec4 v_homo = u_projectionInv * 2.0*(v_screen-vec4(0.5));
+	vec3 v_eye = v_homo.xyz / v_homo.w;	//transfer from homogeneous coordinates
+	v_eye.xy /= u_viewport.zw;
+	v_eye.z *= -1;
+	return v_eye;
 }
 
 vec4 calc_diffuse(vec3 normal, vec3 light_dir, out float diffuse_var) {
@@ -103,7 +93,8 @@ void main() {
 #endif
 #ifdef DIRECTION_LIGHT
 	vec3 light_dir = u_lightDir;
-	vec3 view_dir = get_view_dir(depth);
+	vec3 viewspace_pos = get_viewspace_pixel_pos(depth);
+	vec3 view_dir = -normalize(viewspace_pos);
 #endif
 	
 	vec4 diffuse_color = calc_diffuse(normal, light_dir, diffuse_var);
@@ -113,9 +104,11 @@ void main() {
 	}
 	
 	vec4 color = vec4(0.0);
-	//color = color + diffuse_color;
+	color = color + diffuse_color;
 	color = color + specular_color;
 	gl_FragColor = color;
 	
-	//gl_FragColor = get_viewspace_pixel_pos(depth);
+	//vec3 viewpos = get_viewspace_pixel_pos(depth);
+	//gl_FragColor = vec4(viewpos, 1.0);
+	//gl_FragColor = get_eye_pos(depth);
 }

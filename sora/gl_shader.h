@@ -181,6 +181,30 @@ namespace gl {
       }
       return false;
     }
+
+    template<typename T>
+    static bool SetUniformVector(HandleType handle, const std::string &name, const glm::detail::tvec2<T>&vec) {
+      int loc = glGetUniformLocation(handle, name.c_str());
+      if(loc != -1) {
+        const bool is_float_type = std::is_same<T, float>::value;
+        const bool is_int_type = std::is_same<T, int>::value;
+        static_assert(is_float_type || is_int_type, "vec2 support int, float");
+
+        if(is_float_type) {
+          float *ptr = (float*)glm::value_ptr(vec);
+          glUniform2fv(loc, 1, ptr);
+          SR_CHECK_ERROR("glUniform2fv");
+          return true;
+        } else if(is_int_type) {
+          int *ptr = (int*)glm::value_ptr(vec);
+          glUniform2iv(loc, 1, ptr);
+          SR_CHECK_ERROR("glUniform2fi");
+          return true;
+        }
+      }
+      return false;
+    }
+
     template<typename T>
     static bool SetUniformValue(HandleType handle, const std::string &name, T value) {
       int loc = glGetUniformLocation(handle, name.c_str());
