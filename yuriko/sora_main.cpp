@@ -328,7 +328,7 @@ void renderFrame(Device *device) {
 
   //포인트 빛설정
   Light point_light;
-  point_light.SetPoint(vec3(1, 0, 1), 1);
+  point_light.SetPoint(vec3(1, 0, 0), 1);
 
   {
     Mesh *mesh = device->mesh_mgr()->Get("mesh");
@@ -348,12 +348,12 @@ void renderFrame(Device *device) {
     //deferred_renderer.DrawAmbientLight(glm::vec3(0.0, 0.2, 0.0));
 
     //directional
-    deferred_renderer.DrawDirectionalLight(direction_light);
+    //deferred_renderer.DrawDirectionalLight(direction_light);
     //deferred_renderer.DrawDirectionalLight(direction_light1);
 
     //point빛 디버깅 하기 위해서 구 렌더링을 예약하기. 진짜 draw는 후처리 식으로
-    //deferred_renderer.DrawPointLight(point_light);
-    //deferred_renderer.DrawPointLightArea(point_light);
+    deferred_renderer.DrawPointLight(point_light);
+    deferred_renderer.DrawPointLightArea(point_light);
 
     deferred_renderer.EndLightPass();
 
@@ -405,6 +405,7 @@ void renderFrame(Device *device) {
   int win_w = render_state.win_width();
   int win_h = render_state.win_height();
   glBlitFramebuffer(0, 0, win_w, win_h, 0, 0, win_w, win_h, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+  SR_CHECK_ERROR("BlitFrameBuffer");
 
   {
     //디버깅용으로 화면 3d렌더링 하는거
@@ -413,7 +414,7 @@ void renderFrame(Device *device) {
     //mgr_3d->AddLine(vec3(0.0f, 0.0f, 0.0f), vec3(100, 100, 100), Color_White(), 4);
     //mgr_3d->AddSphere(vec3(0, 1, 0), 1, Color_White());
     //mgr_3d->AddCross(vec3(0, 0, 0), Color_Black(), 10, 0, false);
-    //mgr_3d->AddString(vec3(0, 0, 0.5), "asdf", Color_Blue(), 1.5f);
+    //mgr_3d->AddString(vec3(0, 0, 0.5), "asdf", Color4ub::Blue(), 1.5f);
 
     DebugDrawPolicy debug_draw;
     debug_draw.Draw(*mgr_3d);

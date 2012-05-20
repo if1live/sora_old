@@ -124,7 +124,7 @@ namespace gl {
     }
     if(stencil) {
       flag |= GL_STENCIL_BUFFER_BIT;
-      glClearStencil(10);
+      glClearStencil(0);
     }
     if(flag) {
       glClear(flag);

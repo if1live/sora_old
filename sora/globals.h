@@ -301,6 +301,8 @@ typedef enum {
 #define kNormalMapHandleName "s_normalMap"
 
 #define kLightPositionHandleName "u_lightPos"
+
+#define kViewportHandleName "u_viewport"
 }
 
 #endif  // SORA_GLOBALS_H_

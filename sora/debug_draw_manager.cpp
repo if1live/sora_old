@@ -381,14 +381,17 @@ void DebugDrawPolicy::DrawElem(DebugDrawCmd_String *cmd) {
   //기울어지는거 없이 항상 글자가 뜨도록 적절히 만들기
   mat4 mvp = cmd->GetMVPMatrix();
   vec4 cliping_pos = mvp * vec4(cmd->pos, 1);   // -1~1에 적절히 위치한 좌표(로 아마도 보정되엇을거다)
-  cliping_pos.x /= cliping_pos.w;
-  cliping_pos.y /= cliping_pos.w;
-
+  cliping_pos /= cliping_pos.w;
+  cliping_pos.z = -cliping_pos.z; //보정된 좌표계는 z방향 다르다
+  
   RenderState *dev = &Device::GetInstance()->render_state();
   float win_w = (float)dev->win_width();
   float win_h = (float)dev->win_height();
   // -1~+1로 보정된 좌표를 윈도우좌표로 변환
-  vec3 win_coord((cliping_pos.x + 1) * win_w/2.0f, (cliping_pos.y + 1.0f) * win_h/2.0f, 0);
+  vec3 win_coord(
+    (cliping_pos.x + 1) * win_w/2.0f,
+    (cliping_pos.y + 1.0f) * win_h/2.0f,
+    cliping_pos.z);
   
   ShaderManager *shader_mgr = Device::GetInstance()->shader_mgr();
   Shader &shader = *(shader_mgr->Get(ShaderManager::kText));

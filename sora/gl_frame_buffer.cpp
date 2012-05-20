@@ -40,6 +40,22 @@ namespace gl {
     desc.height = h;
     depth_tex->Init(tex_id, desc, true);
   }
+
+  void GLFrameBuffer::CreateDepthStencilTex(int w, int h, Texture *depth_tex) {
+    GLuint tex_id = 0;
+    //깊이를 텍스쳐에 연결
+    glGenTextures(1, &tex_id);
+    glBindTexture(GL_TEXTURE_2D, tex_id);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, w, h, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, NULL);
+    SR_CHECK_ERROR("DepthTexture");
+
+    ImageDesc desc;
+    desc.width = w;
+    desc.height = h;
+    depth_tex->Init(tex_id, desc, true);
+  }
   void GLFrameBuffer::CreateNormalRGBAColorTex(int w, int h, Texture *color_tex) {
     //색은 그냥 버퍼로 쓰자
     /*
@@ -64,7 +80,8 @@ namespace gl {
 
   void GLFrameBuffer::Init(HandleType *handle, int w, int h, Texture *color_tex, Texture *depth_tex) {
     SR_ASSERT(*handle == 0);
-    CreateDepthTex(w, h, depth_tex);
+    //CreateDepthTex(w, h, depth_tex);
+    CreateDepthStencilTex(w, h, depth_tex);
     CreateNormalRGBAColorTex(w, h, color_tex);
 
     //fbo생성
@@ -72,7 +89,8 @@ namespace gl {
       GLuint fbo = 0;
       glGenFramebuffers(1, &fbo);
       glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_tex->handle(), 0);
+      //glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_tex->handle(), 0);
+      glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, depth_tex->handle(), 0);
       glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, color_tex->handle(), 0);
       //glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, color_rb);
       SR_CHECK_FRAMEBUFFER("fb");

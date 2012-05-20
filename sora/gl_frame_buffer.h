@@ -40,6 +40,7 @@ namespace gl {
     ~GLFrameBuffer() {}
   private:
     static void CreateDepthTex(int w, int h, Texture *depth_tex);
+    static void CreateDepthStencilTex(int w, int h, Texture *depth_tex);
     //unsigned byte + rgba texture
     static void CreateNormalRGBAColorTex(int w, int h, Texture *color_tex);
   };

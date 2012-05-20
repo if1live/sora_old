@@ -73,9 +73,9 @@ bool DeferredRenderer::Init(int w, int h) {
   geometry_uber_shader_->InitWithFile(vert_file, frag_file, flag);
 
 
-  //최종결과는 색으로 충분
+  //최종결과
   final_result_fb_.reset(new FrameBuffer());
-  final_result_fb_->InitWithoutDepth(w, h);
+  final_result_fb_->Init(w, h);
 
   return true;
 }
@@ -230,7 +230,7 @@ void DeferredRenderer::BeginLightPass() {
   final_result_fb_->Bind();
 
   vec4ub color(0, 0, 0, 255);
-  render_state.ClearBuffer(true, false, false, color);
+  render_state.ClearBuffer(true, true, false, color);
 
   //blend잘 써서 같은 버퍼에 덮어서 그린다고 이전 색깔 정보 날라가지 않고
   //적절히 누적되도록함
@@ -293,6 +293,10 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
     SetUniformValue(diffuse_var, 3);
   }
 
+  //viewport정보
+  vec4 viewport(0, 0, render_state.win_width(), render_state.win_height());
+  shader.SetUniformVector(kViewportHandleName, viewport);
+
   //방향성빛은 방향만 잇으니까 행렬의 3*3만 쓴다
   mat3 view_mat(render_state.view_mat());
   mat3 model_mat(render_state.model_mat());
@@ -324,6 +328,9 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
 void DeferredRenderer::DrawPointLight(const Light &light) {
   SR_ASSERT(light.type == kLightPoint);
 
+  Device *dev = Device::GetInstance();
+  RenderState &render_state = dev->render_state();
+
   //해당위치의 스텐실 버퍼에 원을 그린다. 원으로 빛이 영향을 줄 영역을 결정해서
   //depth test를 오래하지 않도록한다
   //스텐실 버퍼에 의존하는 방식보다 scissor로 고치는게 성능상 유리할테니
@@ -331,52 +338,111 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
   GeometricObject<vec3> sphere_mesh;
   sphere_mesh.SolidSphere(1, 16, 16);
 
-  //3d장면에 렌더링하기. 그래야 빛이 영향줄 구가 제대로 그려진다
-  Device *dev = Device::GetInstance();
-  RenderState &render_state = dev->render_state();
-  render_state.Set3D();
-  const mat4 &projection = render_state.projection_mat();
-  const mat4 &view = render_state.view_mat();
-  mat4 model(1.0f);
-  model = glm::translate(model, light.pos);
-  model = glm::scale(model, vec3(light.radius));
-  mat4 mvp_3d = projection * view * model;
+  {
+    //3d장면에 렌더링하기. 그래야 빛이 영향줄 구가 제대로 그려진다
+    render_state.Set3D();
+    const mat4 &projection = render_state.projection_mat();
+    const mat4 &view = render_state.view_mat();
+    mat4 model(1.0f);
+    model = glm::translate(model, light.pos);
+    model = glm::scale(model, vec3(light.radius));
+    mat4 mvp_3d = projection * view * model;
 
-  //단색쉐이더로 대충 그리기. 스텐실 버퍼에만 그려지면 됨
-  //색칠 영역은 스텐실 버퍼니까 적절히 초기화하기
-  render_state.ClearBuffer(false, false, true, Color4ub::White());
-  glColorMask(false, false, false, false);
-  glEnable(GL_STENCIL_TEST);
-  glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
-  glStencilFunc(GL_ALWAYS, 0xff, 0xff);
+    //단색쉐이더로 대충 그리기. 스텐실 버퍼에만 그려지면 됨
+    //색칠 영역은 스텐실 버퍼니까 적절히 초기화하기
+    render_state.ClearBuffer(false, false, true, Color4ub::White());
+    glColorMask(false, false, false, false);
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
+    glStencilFunc(GL_ALWAYS, 0xff, 0xff);
 
-  ShaderManager *shader_mgr = dev->shader_mgr();
-  Shader *const_color_shader = shader_mgr->Get(ShaderManager::kConstColor);
-  render_state.UseShader(*const_color_shader);
-  vec4 white(1.0f);
-  const_color_shader->SetUniformVector(kConstColorHandleName, white);
+    ShaderManager *shader_mgr = dev->shader_mgr();
+    Shader *const_color_shader = shader_mgr->Get(ShaderManager::kConstColor);
+    render_state.UseShader(*const_color_shader);
+    vec4 white(1.0f);
+    const_color_shader->SetUniformVector(kConstColorHandleName, white);
   
-  const_color_shader->SetUniformMatrix(kMVPHandleName, mvp_3d);
-  const DrawCmdData<vec3> &draw_cmd = sphere_mesh.cmd_list().at(0);
-  const_color_shader->SetVertexList(draw_cmd.vertex_list);
-  const_color_shader->DrawElements(draw_cmd.draw_mode, draw_cmd.index_list);
-  
+    const_color_shader->SetUniformMatrix(kMVPHandleName, mvp_3d);
+    const DrawCmdData<vec3> &draw_cmd = sphere_mesh.cmd_list().at(0);
+    const_color_shader->SetVertexList(draw_cmd.vertex_list);
+    const_color_shader->DrawElements(draw_cmd.draw_mode, draw_cmd.index_list);
+  }
+  {
+    //스텐실 영역에 잇는거 진짜로 그리기. 2D로 그리기
+    //이것을 진행하면서 빛 계산을 수행한다
+    glColorMask(true, true, true, true);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+    glStencilFunc(GL_EQUAL, 0xff, 0xff);
 
-  //스텐실 영역에 잇는거 진짜로 그리기. 2D로 그리기
-  render_state.Set2D();
-  glColorMask(true, true, true, true);
-  glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-  glStencilFunc(GL_EQUAL, 0xff, 0xff);
-  
-  const_color_shader->SetUniformMatrix(kMVPHandleName, mat4(1.0f));
-  vector<vec3> vert_list(4);
-  vert_list[0] = vec3(-1, -1, 0);
-  vert_list[1] = vec3(+1, -1, 0);
-  vert_list[2] = vec3(+1, +1, 0);
-  vert_list[3] = vec3(-1, +1, 0);
-  const_color_shader->DrawArrays(kDrawTriangleFan, vert_list);
-  
+    //점광원 계산용 쉐이더로 교체
+    Shader &point_shader = this->point_shader();
+    render_state.UseShader(point_shader);
+    ShaderVariable diffuse_var = point_shader.uniform_var(kDiffuseMapHandleName);
+    ShaderVariable specular_var = point_shader.uniform_var(kSpecularMapHandleName);
+    ShaderVariable depth_var = point_shader.uniform_var("s_depth");
+    ShaderVariable normal_var = point_shader.uniform_var("s_viewSpaceNormal");
 
+    struct ShaderVarTexParam {
+      ShaderVarTexParam(const ShaderVariable &shader_var, const Texture &tex)
+        : shader_var(shader_var), tex(tex) {}
+      ShaderVariable shader_var;
+      Texture tex;
+    };
+    vector<ShaderVarTexParam> var_tex_param_list;
+    var_tex_param_list.push_back(ShaderVarTexParam(diffuse_var, DiffuseTex()));
+    var_tex_param_list.push_back(ShaderVarTexParam(specular_var, SpecularTex()));
+    var_tex_param_list.push_back(ShaderVarTexParam(depth_var, DepthTex()));
+    var_tex_param_list.push_back(ShaderVarTexParam(normal_var, NormalTex()));
+    int tex_unit = 0;
+    for(size_t i = 0 ; i < var_tex_param_list.size() ; i++) {
+      ShaderVarTexParam &param = var_tex_param_list[i];
+      if(param.shader_var.location != kInvalidShaderVarLocation) {
+        render_state.UseTexture(param.tex, tex_unit);
+        SetUniformValue(param.shader_var, tex_unit);
+        tex_unit++;
+      }
+    }
+
+    point_shader.SetUniformVector(kDiffuseColorHandleName, light.diffuse);
+    point_shader.SetUniformVector(kSpecularColorHandleName, light.specular);
+
+    const mat4 &view = render_state.view_mat();
+    const mat4 &model = render_state.model_mat();
+    vec4 light_pos = vec4(light.pos, 1.0f);
+
+    {
+      //Draw2DManager *draw_2d_mgr = dev->draw_2d();
+      //char light_pos_buf[128];  
+      //sprintf(light_pos_buf, "LightPos:%.4f, %.4f, %.4f", light_pos.x, light_pos.y, light_pos.z);
+      //draw_2d_mgr->AddString(vec2(0, 100), light_pos_buf, Color4ub::Green(), 1.0f);
+      DebugDrawManager *draw_3d_mgr = dev->debug_draw_mgr();
+      draw_3d_mgr->AddString(light.pos, "Light", Color4ub::Red(), 1.0f);
+    }
+
+    point_shader.SetUniformVector("u_lightPos", light_pos);
+    point_shader.SetUniformValue("u_lightRadius", light.radius);
+
+    mat4 projection = render_state.GetProjection3D();
+    mat4 mvp = projection * view * model;
+    point_shader.SetUniformMatrix("u_mvp3d", mvp);
+
+    vec4 viewport(0, 0, render_state.win_width(), render_state.win_height());
+    point_shader.SetUniformVector(kViewportHandleName, viewport);
+    
+
+    point_shader.SetUniformMatrix(kMVPHandleName, mat4(1.0f));
+
+    //2d로 교체는 렌더링 직전에 수행하자
+    render_state.Set2D();
+
+    vector<Vertex2D> vert_list;
+    vert_list.push_back(CreateVertex2D(-1, -1, 0, 0));
+    vert_list.push_back(CreateVertex2D(1, -1, 1, 0));
+    vert_list.push_back(CreateVertex2D(1, 1, 1, 1));
+    vert_list.push_back(CreateVertex2D(-1, 1, 0, 1));
+    point_shader.DrawArrays(kDrawTriangleFan, vert_list);
+  }
+  
   //restore state
   glDisable(GL_STENCIL_TEST);
 }
@@ -404,7 +470,6 @@ void DeferredRenderer::DrawAmbientLight(const glm::vec3 &color) {
   vert_list.push_back(CreateVertex2D(1, -1, 1, 0));
   vert_list.push_back(CreateVertex2D(1, 1, 1, 1));
   vert_list.push_back(CreateVertex2D(-1, 1, 0, 1));
-
   shader.DrawArrays(kDrawTriangleFan, vert_list);
 }
 unsigned int DeferredRenderer::GBufferHandle() const {

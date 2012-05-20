@@ -62,6 +62,7 @@ public:
 
   int width() const { return width_; }
   int height() const { return height_; }
+  HandleType handle() const { return handle_; }
 
 private:
   HandleType handle_;

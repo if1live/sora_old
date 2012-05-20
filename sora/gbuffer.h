@@ -64,6 +64,8 @@ private:
 
   int width_;
   int height_;
+
+  uint stencil_;
 };
 
 } //namespace sora
