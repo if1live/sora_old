@@ -38,6 +38,8 @@
 #include "draw_2d_manager.h"
 #include "geometric_object.h"
 #include "shader_manager.h"
+#include "memory_file.h"
+#include "filesystem.h"
 
 using namespace std;
 using namespace glm;
@@ -123,10 +125,14 @@ Shader &DeferredRenderer::ambient_shader() {
 Shader &DeferredRenderer::directional_shader() {
   if(directional_shader_ == NULL) {
     LOGI("Deferred Renderer :: Directional Light Shader");
-    const char *directional_vert_file = "shader/deferred_directional_light.vs";
-    const char *directional_frag_file = "shader/deferred_directional_light.fs";
+    const char *define_txt = "#define DIRECTION_LIGHT 1\n";
+    string vert_src = define_txt;
+    string frag_src = define_txt;
+    vert_src += light_vert_src();
+    frag_src += light_frag_src();
+
     directional_shader_.reset(new Shader());
-    directional_shader_->LoadFromFile(directional_vert_file, directional_frag_file);
+    directional_shader_->Init(vert_src, frag_src);
   }
   return *directional_shader_;
 }
@@ -145,12 +151,45 @@ Shader &DeferredRenderer::depth_shader() {
 Shader &DeferredRenderer::point_shader() {
   if(point_shader_ == NULL) {
     LOGI("Deferred Renderer :: Point Light Shader");
-    const char *vert_file = "shader/deferred_point_light.vs";
-    const char *frag_flie = "shader/deferred_point_light.fs";
+
+    const char *define_txt = "#define POINT_LIGHT 1\n";
+    string vert_src = define_txt;
+    string frag_src = define_txt;
+    vert_src += light_vert_src();
+    frag_src += light_frag_src();
+
     point_shader_.reset(new Shader());
-    point_shader_->LoadFromFile(vert_file, frag_flie);
+    point_shader_->Init(vert_src, frag_src);
   }
   return *point_shader_;
+}
+
+const std::string &DeferredRenderer::light_vert_src() {
+  if(light_vert_src_.empty()) {
+    const char *vert_file = "shader/deferred_light.vs";
+    string vert_path = Filesystem::GetAppPath(vert_file);
+    MemoryFile mem_file(vert_path);
+    bool opened = mem_file.Open();
+    SR_ASSERT(opened == true);
+    const char *src = (const char*)(mem_file.start);
+    light_vert_src_ = src;
+    mem_file.Close();
+  }
+  return light_vert_src_;
+}
+
+const std::string &DeferredRenderer::light_frag_src() {
+  if(light_frag_src_.empty()) {
+    const char *frag_file = "shader/deferred_light.fs";
+    string frag_path = Filesystem::GetAppPath(frag_file);
+    MemoryFile mem_file(frag_path);
+    bool opened = mem_file.Open();
+    SR_ASSERT(opened == true);
+    const char *src = (const char*)(mem_file.start);
+    light_frag_src_ = src;
+    mem_file.Close();
+  }
+  return light_frag_src_;
 }
 
 void DeferredRenderer::BeginDepthPass() {
@@ -315,6 +354,9 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
 
   shader.SetUniformVector("u_lightDir", light_pos);
 
+  mat4 projection_inv = glm::inverse(render_state.projection_mat());
+  shader.SetUniformMatrix(kProjectionInvHandleName, projection_inv);
+
   //full screen quad를 그리기 위해서 쓰는 mvp. 내부 계산용으로 쓸 행렬은 따로 취급한다
   shader.SetUniformMatrix(kMVPHandleName, mat4(1.0f));
 
@@ -406,15 +448,20 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
     point_shader.SetUniformVector(kDiffuseColorHandleName, light.diffuse);
     point_shader.SetUniformVector(kSpecularColorHandleName, light.specular);
 
+    mat4 projection = render_state.GetProjection3D();
     const mat4 &view = render_state.view_mat();
     const mat4 &model = render_state.model_mat();
-    vec4 light_pos = vec4(light.pos, 1.0f);
+    mat4 mvp = projection * view * model;
+    vec4 light_pos = mvp * vec4(light.pos, 1.0f);
+    light_pos /= light_pos.w;
+    light_pos.z *= -1;
 
     {
       //Draw2DManager *draw_2d_mgr = dev->draw_2d();
       //char light_pos_buf[128];  
       //sprintf(light_pos_buf, "LightPos:%.4f, %.4f, %.4f", light_pos.x, light_pos.y, light_pos.z);
       //draw_2d_mgr->AddString(vec2(0, 100), light_pos_buf, Color4ub::Green(), 1.0f);
+
       DebugDrawManager *draw_3d_mgr = dev->debug_draw_mgr();
       draw_3d_mgr->AddString(light.pos, "Light", Color4ub::Red(), 1.0f);
     }
@@ -422,13 +469,11 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
     point_shader.SetUniformVector("u_lightPos", light_pos);
     point_shader.SetUniformValue("u_lightRadius", light.radius);
 
-    mat4 projection = render_state.GetProjection3D();
-    mat4 mvp = projection * view * model;
-    point_shader.SetUniformMatrix("u_mvp3d", mvp);
-
     vec4 viewport(0, 0, render_state.win_width(), render_state.win_height());
     point_shader.SetUniformVector(kViewportHandleName, viewport);
-    
+
+    mat4 projection_inv = glm::inverse(projection);
+    point_shader.SetUniformMatrix(kProjectionInvHandleName, projection_inv);
 
     point_shader.SetUniformMatrix(kMVPHandleName, mat4(1.0f));
 

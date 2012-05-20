@@ -49,7 +49,7 @@ mesh_mgr_(new MeshManager()),
 tex_mgr_(new TextureManager()),
 mtl_mgr_(new MaterialManager()),
 sys_font_(new SysFont()),
-render_state_(new RenderState()),
+render_state_(RenderState::Create()),
 draw_2d_(new Draw2DManager()),
 debug_draw_mgr_(new DebugDrawManager()),
 shader_mgr_(new ShaderManager()) {

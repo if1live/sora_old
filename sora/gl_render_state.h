@@ -33,7 +33,7 @@ struct Material;
 namespace gl {
   class GLRenderState : public sora::RenderStateInterface {
   public:
-    GLRenderState(RenderState *state);
+    GLRenderState();
     ~GLRenderState();
 
     void EndRender();
@@ -41,8 +41,6 @@ namespace gl {
   public:
     void Set2D();
     void Set3D();
-    glm::mat4 GetProjection3D() const;
-    glm::mat4 GetProjection2D() const;
     void ClearBuffer(bool color, bool depth, bool stencil, const sora::vec4ub &value);
 
     //texture
@@ -70,7 +68,7 @@ namespace gl {
     //win size
     void SetWinSize(int width, int height);
   private:
-    RenderState *state_;
+    RenderStateType render_state_;
   };
 } //namespace gl
 } //namespace sora

@@ -39,9 +39,11 @@ class TextureManager;
 class MaterialManager;
 class MeshManager;
 class SysFont;
-class RenderState;
 class DebugDrawManager;
 class ShaderManager;
+
+class RenderStateInterface;
+typedef RenderStateInterface RenderState;
 
 class Device {
 public:
@@ -74,7 +76,7 @@ private:
 private:
   std::unique_ptr<TouchEventQueue> touch_evt_queue_;
   std::unique_ptr<KeyboardEventQueue> keyboard_evt_queue_;
-  std::unique_ptr<RenderState> render_state_;
+  std::unique_ptr<RenderStateInterface> render_state_;
 
   std::unique_ptr<MeshManager> mesh_mgr_;
   std::unique_ptr<TextureManager> tex_mgr_;

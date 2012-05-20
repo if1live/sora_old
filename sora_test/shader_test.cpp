@@ -53,8 +53,8 @@ TEST(Shader, basic) {
   EXPECT_EQ(true, shader.Validate());
   SR_CHECK_ERROR("Validate");
 
-  RenderState dev;
-  dev.UseShader(shader);
+  std::unique_ptr<RenderState> dev(RenderState::Create());
+  dev->UseShader(shader);
 
   glm::mat4 m1;
   ShaderVariable mvp_var = shader.uniform_var("u_mvpMatrix");

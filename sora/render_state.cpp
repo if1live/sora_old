@@ -33,95 +33,38 @@
 using namespace glm;
 
 namespace sora {;
-RenderState::RenderState()
-: policy_(nullptr),
-win_width_(640),
+RenderStateInterface::RenderStateInterface()
+: win_width_(640),
 win_height_(480),
 model_mat_stack_(new MatrixStack()), 
 projection_mat_(glm::mat4(1.0f)),
 view_mat_(glm::mat4(1.0f)) {
-  policy_ = new sora::gl::GLRenderState(this);
 }
 
-RenderState::~RenderState() {
-  if(policy_ != nullptr) {
-    delete(policy_);
-    policy_ = nullptr;
-  }
+RenderStateInterface::~RenderStateInterface() {
 }
-
-
-void RenderState::UseShader(Shader &shader) { 
-  policy_->UseShader(shader); 
+RenderStateInterface *RenderStateInterface::Create() {
+  return new sora::gl::GLRenderState();
 }
-
-void RenderState::UseTexture(Texture &tex, int unit) {
-  policy_->UseTexture(tex, unit);
-}
-void RenderState::UnuseTexture(int unit) {
-  policy_->UnuseTexture(unit);
-}
-void RenderState::UseMaterial(const Material &mtl) {
-  policy_->UseMaterial(mtl);
-}
-void RenderState::UnuseMaterial() {
-  policy_->UnuseMaterial();
-}
-const Material &RenderState::LastMaterial() const {
-  return policy_->LastMaterial();
-}
-void RenderState::Set2D() {
-  if(render_state_ != kRenderState2D) {
-    policy_->Set2D(); 
-    render_state_ = kRenderState2D;
-  }
-}
-void RenderState::Set3D() { 
-  if(render_state_ != kRenderState3D) {
-    policy_->Set3D(); 
-    render_state_ = kRenderState3D;
-  }
-}
-
-glm::mat4 RenderState::GetProjection3D() const {
-  return policy_->GetProjection3D();
-}
-glm::mat4 RenderState::GetProjection2D() const {
-  return policy_->GetProjection2D();
-}
-void RenderState::EndRender() {
-  policy_->EndRender(); 
-}
-void RenderState::SetWinSize(int width, int height) { 
-  if(win_width_ != width || win_height_ != height) {
-    policy_->SetWinSize(width, height); 
-    win_width_ = width;
-    win_height_ = height;
-  }
-}
-
-void RenderState::ResetAllMatrix() {
+void RenderStateInterface::ResetAllMatrix() {
   ResetProjectionMat();
   ResetViewMat();
   ResetModelMat();
 }
-void RenderState::ResetProjectionMat() {
+void RenderStateInterface::ResetProjectionMat() {
   projection_mat_ = glm::mat4(1.0f);
 }
-void RenderState::ResetViewMat() {
+void RenderStateInterface::ResetViewMat() {
   view_mat_ = glm::mat4(1.0f);
 }
-void RenderState::ResetModelMat() {
+void RenderStateInterface::ResetModelMat() {
   model_mat_stack_->Clear();
 }
-const glm::mat4 &RenderState::model_mat() const {
+const glm::mat4 &RenderStateInterface::model_mat() const {
   return model_mat_stack_->Top();
 }
 
-void RenderState::ClearBuffer(bool color, bool depth, bool stencil, const sora::vec4ub &value) {
-  policy_->ClearBuffer(color, depth, stencil, value);  
-}
-glm::mat4 RenderState::GetMVPMatrix() const {
+glm::mat4 RenderStateInterface::GetMVPMatrix() const {
   mat4 mvp(1.0f);
   mvp *= projection_mat();
   mvp *= view_mat();
@@ -129,4 +72,17 @@ glm::mat4 RenderState::GetMVPMatrix() const {
   return mvp;
 }
 
+glm::mat4 RenderStateInterface::GetProjection3D() const {
+  float win_w = (float)win_width();
+  float win_h = (float)win_height();
+  glm::mat4 projection = glm::perspective(45.0f, win_w/ win_h, 0.1f, 100.0f);
+  return projection;
+}
+glm::mat4 RenderStateInterface::GetProjection2D() const {
+  float win_w = (float)win_width();
+  float win_h = (float)win_height();
+  glm::mat4 projection = glm::ortho(0.0f, win_w, 0.0f, win_h);
+  return projection;
+    
+}
 } //namespace sora

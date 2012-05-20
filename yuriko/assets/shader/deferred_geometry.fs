@@ -28,7 +28,7 @@ vec4 calc_specular_color() {
 		vec4 specular_texel = texture2D(s_specularMap, v_texcoord);
 		specular_color = specular_color * specular_texel;
 	}
-	specular_color.w = u_specularShininess;
+	specular_color.w = u_specularShininess / 255.0;
 	return specular_color;
 }
 

@@ -33,19 +33,25 @@
 
 namespace sora {;
 namespace gl {
-  GLRenderState::GLRenderState(RenderState *state)
-    : state_(state), last_mtl_(new Material()) {
+  GLRenderState::GLRenderState()
+    : last_mtl_(new Material()) {
       EndRender();
   }
   GLRenderState::~GLRenderState() {
 
   }
   void GLRenderState::SetWinSize(int w, int h) {
-    LOGI("setupGraphics(%d, %d)", (int)w, (int)h);
+    if(win_width_ != w|| win_height_ != h) {
+      LOGI("setupGraphics(%d, %d)", (int)w, (int)h);
 
-    glViewport(0, 0, (int)w, (int)h);
-    SR_CHECK_ERROR("glViewport");
+      glViewport(0, 0, (int)w, (int)h);
+      SR_CHECK_ERROR("glViewport");
+
+      win_width_ = w;
+      win_height_ = h;
+    }
   }
+
   void GLRenderState::EndRender() {
     last_prog_id_ = 0;
     *last_mtl_ = Material();
@@ -79,36 +85,29 @@ namespace gl {
     }
   }
   void GLRenderState::Set2D() {
-    glDisable(GL_DEPTH_TEST);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    if(render_state_ != kRenderState2D) {
+      render_state_ = kRenderState2D;
 
-    state_->set_projection_mat(GetProjection2D());
+      glDisable(GL_DEPTH_TEST);
+      glEnable(GL_BLEND);
+      glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    }
+    set_projection_mat(GetProjection2D());
 
   }
   void GLRenderState::Set3D() {
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(GL_LEQUAL);
-    glDisable(GL_BLEND);
+    if(render_state_ != kRenderState3D) {
+      render_state_ = kRenderState3D;
 
+      glEnable(GL_CULL_FACE);
+      glEnable(GL_DEPTH_TEST);
+      glDepthFunc(GL_LEQUAL);
+      glDisable(GL_BLEND);
+    }
     //projection 행렬 설정
-    state_->set_projection_mat(GetProjection3D());
+    set_projection_mat(GetProjection3D());
   }
 
-  glm::mat4 GLRenderState::GetProjection3D() const {
-    float win_w = (float)state_->win_width();
-    float win_h = (float)state_->win_height();
-    glm::mat4 projection = glm::perspective(45.0f, win_w/ win_h, 0.1f, 100.0f);
-    return projection;
-  }
-  glm::mat4 GLRenderState::GetProjection2D() const {
-    float win_w = (float)state_->win_width();
-    float win_h = (float)state_->win_height();
-    glm::mat4 projection = glm::ortho(0.0f, win_w, 0.0f, win_h);
-    return projection;
-    
-  }
   void GLRenderState::ClearBuffer(bool color, bool depth, bool stencil, const sora::vec4ub &value) {
     unsigned int flag = 0;
     if(color) {

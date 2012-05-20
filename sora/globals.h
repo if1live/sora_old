@@ -244,7 +244,8 @@ namespace gl {
 }
 typedef sora::gl::GLRenderState RenderStatePolicy;
 #endif
-class RenderState;
+class RenderStateInterface;
+typedef RenderStateInterface RenderState;
 //for render device
 
 //for mesh buffer - begin
@@ -289,6 +290,7 @@ typedef enum {
 #define kProjectionHandleName "u_projection"
 #define kViewHandleName "u_view"
 #define kMVInvTransposeHandleName "u_mvInvTranspose"
+#define kProjectionInvHandleName "u_projectionInv"
 
 #define kAmbientColorHandleName "u_ambientColor"
 #define kDiffuseColorHandleName "u_diffuseColor"
@@ -303,6 +305,9 @@ typedef enum {
 #define kLightPositionHandleName "u_lightPos"
 
 #define kViewportHandleName "u_viewport"
+
+//zNear, zFar
+#define kClipPlaneHandleName "u_clipPlane"
 }
 
 #endif  // SORA_GLOBALS_H_

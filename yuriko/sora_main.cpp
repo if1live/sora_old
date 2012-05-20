@@ -318,7 +318,7 @@ void renderFrame(Device *device) {
   direction_light.SetDirection(vec3(0, 0, 1));
   direction_light.diffuse = vec4(0.5f, 0.0f, 0.0f, 1.0f);
   //direction_light.diffuse = vec4(0.0f, 0.0f, 0.0f, 1.0f);
-  direction_light.specular = vec4(0.0f, 0.0f, 1.0f, 1.0f);
+  //direction_light.specular = vec4(0.0f, 0.0f, 1.0f, 1.0f);
 
   //역방향 빛 1개 더 추가해서 적용시켜보기
   Light direction_light1;
@@ -348,12 +348,12 @@ void renderFrame(Device *device) {
     //deferred_renderer.DrawAmbientLight(glm::vec3(0.0, 0.2, 0.0));
 
     //directional
-    //deferred_renderer.DrawDirectionalLight(direction_light);
+    deferred_renderer.DrawDirectionalLight(direction_light);
     //deferred_renderer.DrawDirectionalLight(direction_light1);
 
     //point빛 디버깅 하기 위해서 구 렌더링을 예약하기. 진짜 draw는 후처리 식으로
-    deferred_renderer.DrawPointLight(point_light);
-    deferred_renderer.DrawPointLightArea(point_light);
+    //deferred_renderer.DrawPointLight(point_light);
+    //deferred_renderer.DrawPointLightArea(point_light);
 
     deferred_renderer.EndLightPass();
 

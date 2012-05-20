@@ -28,32 +28,35 @@ namespace sora {;
 struct RenderStateInterface;
 class MatrixStack;
 class Material;
+struct RenderStateInterface;
 
-class RenderState {
-public:
-  RenderState();
-  ~RenderState();
+struct RenderStateInterface {
+  RenderStateInterface();
+  virtual ~RenderStateInterface();
 
-  void UseShader(Shader &shader);
-  void UseTexture(Texture &tex, int unit);
-  void UnuseTexture(int unit);
+  static RenderStateInterface *Create();
 
-  void UseMaterial(const Material &mtl);
-  void UnuseMaterial();
-  const Material &LastMaterial() const;
+  virtual void UseShader(Shader &shader) = 0;
+  virtual void UseTexture(Texture &tex, int unit) = 0;
+  virtual void UnuseTexture(int unit) = 0;
 
-  void Set2D();
-  void Set3D();
+  virtual void UseMaterial(const Material &mtl) = 0;
+  virtual void UnuseMaterial() = 0;
+  virtual const Material &LastMaterial() const = 0;
 
-  void EndRender();
+  glm::mat4 GetProjection3D() const;
+  glm::mat4 GetProjection2D() const;
 
-  void SetWinSize(int width, int height);
+  virtual void Set2D() = 0;
+  virtual void Set3D() = 0;
+  virtual void ClearBuffer(bool color, bool depth, bool stencil, const sora::vec4ub &value) = 0;
 
+  virtual void EndRender() = 0;
+  virtual void SetWinSize(int width, int height) = 0;
+
+  //공통부분 묶기
   int win_width() const { return win_width_; }
   int win_height() const { return win_height_; }
-
-  //buffer관련 사항
-  void ClearBuffer(bool color, bool depth, bool stencil, const sora::vec4ub &value);
 
   //matrix 
   glm::mat4 &projection_mat() { return projection_mat_; }
@@ -73,45 +76,14 @@ public:
   void ResetViewMat();
   void ResetModelMat();
 
-  glm::mat4 GetProjection3D() const;
-  glm::mat4 GetProjection2D() const;
-
-private:
-  RenderStateInterface *policy_;
+protected:
   int win_width_;
   int win_height_;
-
-  RenderStateType render_state_;
 
   glm::mat4 projection_mat_;
   glm::mat4 view_mat_;
   std::unique_ptr<MatrixStack> model_mat_stack_;
   //텍스쳐 좌표 스택까지 전역으로 묶을 필요가 잇을까? 해서 일단 미뤄놧다. 필요해지면 그떄 넣지뭐
-
-};
-
-struct RenderStateInterface {
-  RenderStateInterface() {}
-  virtual ~RenderStateInterface() {}
-
-  virtual void UseShader(Shader &shader) = 0;
-  virtual void UseTexture(Texture &tex, int unit) = 0;
-  virtual void UnuseTexture(int unit) = 0;
-
-  virtual void UseMaterial(const Material &mtl) = 0;
-  virtual void UnuseMaterial() = 0;
-  virtual const Material &LastMaterial() const = 0;
-
-  virtual glm::mat4 GetProjection3D() const = 0;
-  virtual glm::mat4 GetProjection2D() const = 0;
-
-  virtual void Set2D() = 0;
-  virtual void Set3D() = 0;
-  virtual void ClearBuffer(bool color, bool depth, bool stencil, const sora::vec4ub &value) = 0;
-
-  virtual void EndRender() = 0;
-
-  virtual void SetWinSize(int width, int height) = 0;
 };
 }
 #endif  // SORA_RENDER_DEVICE_H_

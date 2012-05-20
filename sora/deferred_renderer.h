@@ -85,8 +85,15 @@ private:
   std::unique_ptr<FrameBuffer> final_result_fb_;
   
   std::unique_ptr<Shader> ambient_shader_;
+
   std::unique_ptr<Shader> directional_shader_;
   std::unique_ptr<Shader> point_shader_;
+
+private:
+  const std::string &light_vert_src();
+  const std::string &light_frag_src();
+  std::string light_vert_src_;
+  std::string light_frag_src_;
 };
 
 } //namespace sora
