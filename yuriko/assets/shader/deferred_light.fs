@@ -23,8 +23,8 @@ uniform sampler2D s_diffuseMap;
 
 #if POINT_LIGHT
 vec3 get_light_pos() {
-	//float light_z = u_lightPos.z * - 1;
-	float light_z = u_lightPos.z;
+	float light_z = u_lightPos.z * - 1;
+	//float light_z = u_lightPos.z;
 	light_z += 0.021;	//why error??	
 	return vec3(u_lightPos.xy, light_z);
 }
@@ -35,10 +35,10 @@ vec3 get_viewspace_pixel_pos(float depth) {
 	vec2 pixel_xy = (raw_pos * 2.0) - vec2(1.0);	
 	
 	//http://stackoverflow.com/questions/5669287/opengl-compute-eye-space-coord-from-window-space-coord-in-glsl
-	vec2 xy = pixel_xy;	//in [0,1] range
-	vec4 v_screen = vec4(xy, depth, 1.0 );
+	vec4 v_screen = vec4(pixel_xy, depth, 1.0 );
 	vec4 v_homo = u_projectionInv * 2.0*(v_screen-vec4(0.5));
 	vec3 v_eye = v_homo.xyz / v_homo.w;	//transfer from homogeneous coordinates
+	//added code
 	v_eye.xy /= u_viewport.zw;
 	v_eye.z *= -1;
 	return v_eye;
@@ -86,10 +86,11 @@ void main() {
 	
 	float diffuse_var = 0.0;
 #ifdef POINT_LIGHT
-	vec3 pixel_pos = get_viewspace_pixel_pos(depth);
+	vec3 viewspace_pos = get_viewspace_pixel_pos(depth);
 	vec3 light_pos = get_light_pos();
-	vec3 light_dir = normalize(light_pos - pixel_pos);
-	vec3 view_dir = -normalize(pixel_pos);
+	vec3 light_dir = normalize(light_pos - viewspace_pos);
+	//vec3 light_dir = vec3(1, 0, 0);
+	vec3 view_dir = -normalize(viewspace_pos);
 #endif
 #ifdef DIRECTION_LIGHT
 	vec3 light_dir = u_lightDir;
@@ -104,7 +105,7 @@ void main() {
 	}
 	
 	vec4 color = vec4(0.0);
-	color = color + diffuse_color;
+	//color = color + diffuse_color;
 	color = color + specular_color;
 	gl_FragColor = color;
 	

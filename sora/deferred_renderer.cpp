@@ -450,19 +450,17 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
     point_shader.SetUniformVector(kDiffuseColorHandleName, light.diffuse);
     point_shader.SetUniformVector(kSpecularColorHandleName, light.specular);
 
-    mat4 projection = render_state.GetProjection3D();
     const mat4 &view = render_state.view_mat();
     const mat4 &model = render_state.model_mat();
-    mat4 mvp = projection * view * model;
-    vec4 light_pos = mvp * vec4(light.pos, 1.0f);
-    light_pos /= light_pos.w;
-    light_pos.z *= -1;
+    vec4 light_pos = view * model * vec4(light.pos, 1.0f);
+    light_pos /= light_pos.w; //view 공간으로 넘긴다. view공간인 상태로 계산을 해야 구가 구인 상태로 유지되서 반지름같은것이 유효하다
+    //light_pos.z *= -1;
 
     {
-      //Draw2DManager *draw_2d_mgr = dev->draw_2d();
-      //char light_pos_buf[128];  
-      //sprintf(light_pos_buf, "LightPos:%.4f, %.4f, %.4f", light_pos.x, light_pos.y, light_pos.z);
-      //draw_2d_mgr->AddString(vec2(0, 100), light_pos_buf, Color4ub::Green(), 1.0f);
+      Draw2DManager *draw_2d_mgr = dev->draw_2d();
+      char light_pos_buf[128];  
+      sprintf(light_pos_buf, "LightPos:%.4f, %.4f, %.4f", light_pos.x, light_pos.y, light_pos.z);
+      draw_2d_mgr->AddString(vec2(0, 100), light_pos_buf, Color4ub::Green(), 1.0f);
 
       DebugDrawManager *draw_3d_mgr = dev->debug_draw_mgr();
       draw_3d_mgr->AddString(light.pos, "Light", Color4ub::Red(), 1.0f);
@@ -474,6 +472,7 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
     vec4 viewport(0, 0, render_state.win_width(), render_state.win_height());
     point_shader.SetUniformVector(kViewportHandleName, viewport);
 
+    const mat4 &projection = render_state.projection_mat();
     mat4 projection_inv = glm::inverse(projection);
     point_shader.SetUniformMatrix(kProjectionInvHandleName, projection_inv);
 
