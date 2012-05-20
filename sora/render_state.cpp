@@ -72,10 +72,17 @@ glm::mat4 RenderStateInterface::GetMVPMatrix() const {
   return mvp;
 }
 
+glm::vec2 RenderStateInterface::GetClipPlanes3D() const {
+  return glm::vec2(0.1f, 100.0f); 
+}
+
 glm::mat4 RenderStateInterface::GetProjection3D() const {
   float win_w = (float)win_width();
   float win_h = (float)win_height();
-  glm::mat4 projection = glm::perspective(45.0f, win_w/ win_h, 0.1f, 100.0f);
+  vec2 clip_plane = GetClipPlanes3D();
+  float z_near = clip_plane.x;
+  float z_far = clip_plane.y;
+  glm::mat4 projection = glm::perspective(45.0f, win_w/ win_h, z_near, z_far);
   return projection;
 }
 glm::mat4 RenderStateInterface::GetProjection2D() const {

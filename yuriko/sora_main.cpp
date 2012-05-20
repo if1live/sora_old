@@ -328,7 +328,7 @@ void renderFrame(Device *device) {
 
   //포인트 빛설정
   Light point_light;
-  point_light.SetPoint(vec3(1, 0, 0), 1);
+  point_light.SetPoint(vec3(0, 0, 1), 1);
 
   {
     Mesh *mesh = device->mesh_mgr()->Get("mesh");
@@ -348,7 +348,7 @@ void renderFrame(Device *device) {
     //deferred_renderer.DrawAmbientLight(glm::vec3(0.0, 0.2, 0.0));
 
     //directional
-    //deferred_renderer.DrawDirectionalLight(direction_light);
+    deferred_renderer.DrawDirectionalLight(direction_light);
     //deferred_renderer.DrawDirectionalLight(direction_light1);
 
     //point빛 디버깅 하기 위해서 구 렌더링을 예약하기. 진짜 draw는 후처리 식으로

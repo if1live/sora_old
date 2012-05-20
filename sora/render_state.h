@@ -46,7 +46,7 @@ struct RenderStateInterface {
 
   glm::mat4 GetProjection3D() const;
   glm::mat4 GetProjection2D() const;
-  glm::vec2 GetClipPlanes3D() const { return glm::vec2(0.1f, 100.0f); }
+  glm::vec2 GetClipPlanes3D() const;
 
   virtual void Set2D() = 0;
   virtual void Set3D() = 0;

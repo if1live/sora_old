@@ -390,6 +390,7 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
     vec4 light_pos = view * model * vec4(light.pos, 1.0f);
     light_pos /= light_pos.w; //view 공간으로 넘긴다. view공간인 상태로 계산을 해야 구가 구인 상태로 유지되서 반지름같은것이 유효하다
     //light_pos.z *= -1;
+    light_pos.w = light.radius; //4번쨰를 반지름으로 사용
 
     {
       Draw2DManager *draw_2d_mgr = dev->draw_2d();
@@ -402,7 +403,6 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
     }
 
     point_shader.SetUniformVector("u_lightPos", light_pos);
-    point_shader.SetUniformValue("u_lightRadius", light.radius);
     
 
     //2d로 교체는 렌더링 직전에 수행하자
@@ -454,8 +454,17 @@ void DeferredRenderer::SetCommonLightUniform(Shader &shader, const Light &light)
   shader.SetUniformMatrix(kMVPHandleName, mat4(1.0f));
 
   const mat4 &projection = render_state.projection_mat();
+  const mat4 &view = render_state.view_mat();
+  const mat4 &model = render_state.model_mat();
+  mat4 mvp = projection * view * model;
+  mat4 mvp_inv = glm::inverse(mvp);
+  shader.SetUniformMatrix(kMVPInverseHandleName, mvp_inv);
+
   mat4 projection_inv = glm::inverse(projection);
   shader.SetUniformMatrix(kProjectionInvHandleName, projection_inv);
+
+  mat4 mv = view * model;
+  shader.SetUniformMatrix(kModelViewHandleName, mv);
 
   vec4 viewport(0, 0, render_state.win_width(), render_state.win_height());
   shader.SetUniformVector(kViewportHandleName, viewport);

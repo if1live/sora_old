@@ -291,6 +291,8 @@ typedef enum {
 #define kViewHandleName "u_view"
 #define kMVInvTransposeHandleName "u_mvInvTranspose"
 #define kProjectionInvHandleName "u_projectionInv"
+#define kMVPInverseHandleName "u_mvpInv"
+#define kModelViewHandleName "u_mv"
 
 #define kAmbientColorHandleName "u_ambientColor"
 #define kDiffuseColorHandleName "u_diffuseColor"
