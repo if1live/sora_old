@@ -75,8 +75,8 @@ void ForwardRenderer::Init() {
   SR_ASSERT(uber_shader_.get() == NULL);
   uber_shader_ = move(unique_ptr<UberShader>(new UberShader()));
 
-  const char *vert_file = "shader/per_pixel_uber.vs";
-  const char *frag_file = "shader/per_pixel_uber.fs";
+  const char *vert_file = "shader/forward/per_pixel_uber.vs";
+  const char *frag_file = "shader/forward/per_pixel_uber.fs";
   unsigned int flag = 0;
   flag |= kMaterialAmbient;
   flag |= kMaterialDiffuse;

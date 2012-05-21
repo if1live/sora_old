@@ -30,31 +30,10 @@
 namespace sora {;
 
 struct Light {
-  Light()
-  : ambient(1.0f, 1.0f, 1.0f, 1.0f),
-  diffuse(1.0f, 1.0f, 1.0f, 1.0f),
-  specular(1.0f, 1.0f, 1.0f, 1.0f),
-  type(kLightPoint),
-  radius(0),
-  inner_cone(20),
-  outer_cone(30) {
-  }
-  void SetPoint(const glm::vec3 &pos, float radius) {
-    type = kLightPoint;
-    this->pos = pos;
-    this->radius = radius;
-  }
-  void SetDirection(const glm::vec3 &dir) {
-    type = kLightDirection;
-    this->dir = dir;
-  }
-  void SetSpotLight(const glm::vec3 &pos, const glm::vec3 &dir, float inner, float outer) {
-    type = kLightSpotLight;
-    this->pos = pos;
-    this->dir = dir;
-    this->inner_cone = inner;
-    this->outer_cone = outer;
-  }
+  Light();
+  void SetPoint(const glm::vec3 &pos, float radius);
+  void SetDirection(const glm::vec3 &dir);
+  void SetSpotLight(const glm::vec3 &pos, const glm::vec3 &dir, float inner, float outer);
 
   glm::vec3 pos;
   glm::vec3 dir;
@@ -68,6 +47,11 @@ struct Light {
   glm::vec4 specular;
 
   LightType type;
+
+  //static
+  //기본 라이트 모델의 정보를 다루기 위한것
+  static const std::string &GetLightModelFragSrc();
+
 };
 
 }

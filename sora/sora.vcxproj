@@ -106,6 +106,7 @@
     <ClCompile Include="gl_texture.cpp" />
     <ClCompile Include="heap.cpp" />
     <ClCompile Include="image.cpp" />
+    <ClCompile Include="light.cpp" />
     <ClCompile Include="lodepng\lodepng.cpp" />
     <ClCompile Include="logger.cpp" />
     <ClCompile Include="low_level_c_file.cpp" />

@@ -196,7 +196,11 @@ const std::string &DeferredRenderer::light_frag_src() {
     bool opened = mem_file.Open();
     SR_ASSERT(opened == true);
     const char *src = (const char*)(mem_file.start);
-    light_frag_src_ = src;
+
+    const std::string &light_model_src = Light::GetLightModelFragSrc();
+    light_frag_src_ = light_model_src;
+    light_frag_src_ += src;
+
     mem_file.Close();
   }
   return light_frag_src_;

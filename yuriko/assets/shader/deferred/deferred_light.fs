@@ -6,8 +6,6 @@ uniform mat4 u_projectionInv;
 uniform mat4 u_mvpInv;
 uniform mat4 u_mv;
 
-uniform vec4 u_diffuseColor;
-uniform vec4 u_specularColor;
 uniform vec2 u_clipPlane;
 
 #ifdef POINT_LIGHT
@@ -79,37 +77,13 @@ vec3 get_viewspace_pixel_pos(float depth) {
 	return v_eye;
 }
 */
-vec4 calc_diffuse(vec3 normal, vec3 light_dir, out float diffuse_var) {
-	//diffuse 적절히 계산하기
-	float diffuse = dot(light_dir, normal);
-	diffuse = clamp(diffuse, 0.0, 1.0);
-	diffuse_var = diffuse;
-	
-	vec4 diffuse_color = u_diffuseColor * diffuse;
-	vec4 diffuse_texel = texture2D(s_diffuseMap, v_texcoord);
-	diffuse_color = diffuse_color * diffuse_texel;
-	return diffuse_color;
-}
-
-vec4 calc_specular(vec3 normal, vec3 light_dir, vec3 view_dir) {
-	vec4 specular_texel = texture2D(s_specularMap, v_texcoord);
-	float shininess = specular_texel.w * 255;
-	
-	vec3 reflection = reflect(light_dir, normal);
-	reflection = normalize(reflection);
-
-	float dot_result = clamp(dot(reflection, view_dir), 0.0, 1.0);
-	if(dot_result == 0) {
-		return vec4(0.0);
-	}
-	float pow_result = pow(dot_result, shininess);
-	vec4 specular_color = u_specularColor * pow_result;
-	//specular_color *= vec4(specular_texel.xyz, 1.0);
-	return specular_color;
-}
 
 #ifdef POINT_LIGHT
 vec4 point_lighting(float depth, vec3 light_pos, float light_radius, vec3 n) {
+	vec4 specular_texel = texture2D(s_specularMap, v_texcoord);
+	float shininess = specular_texel.w * 255;
+	vec4 diffuse_texel = texture2D(s_diffuseMap, v_texcoord);
+	
 	//pos가 올바르지 않은 느낌이다.
 	//pos를 viewspace로만 보낼수 잇으면 성공인데...
 	//view dir
@@ -156,14 +130,18 @@ vec4 point_lighting(float depth, vec3 light_pos, float light_radius, vec3 n) {
 
 #ifdef DIRECTION_LIGHT
 vec4 direction_light(float depth, vec3 n) {
+	vec4 specular_texel = texture2D(s_specularMap, v_texcoord);
+	float shininess = specular_texel.w * 255;
+	vec4 diffuse_texel = texture2D(s_diffuseMap, v_texcoord);
+	
 	vec3 light_dir = u_lightDir;
 	//vec3 view_dir = -normalize(get_ndc_pos(depth));
 	vec3 view_dir = v_viewVector;
 	float diffuse_var = 0;
-	vec4 diffuse_color = calc_diffuse(n, light_dir, diffuse_var);
+	vec4 diffuse_color = calc_diffuse(n, light_dir, diffuse_texel, diffuse_var);
 	vec4 specular_color = vec4(0.0);
 	if(diffuse_var > 0.0) {
-		specular_color = calc_specular(n, light_dir, view_dir);
+		specular_color = calc_specular(n, light_dir, specular_texel.xyz, shininess, view_dir);
 	}
 	vec4 color = vec4(0.0);
 	color = color + diffuse_color;

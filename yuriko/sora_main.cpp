@@ -73,6 +73,7 @@
 #include "deferred_renderer.h"
 #include "gbuffer.h"
 #include "forward_renderer.h"
+#include "matrix_stack.h"
 
 using namespace std;
 using namespace sora;
@@ -294,6 +295,10 @@ void renderFrame(Device *device) {
   glm::mat4 view_mat = glm::lookAt(eye, center, up);
   device->render_state().set_view_mat(view_mat);
 
+  //normal vector가 제대로 회전되는지 확인하기 위한 용도
+  glm::mat4 model_mat = glm::translate(mat4(1.0f), vec3(-0.5f, 0.0f, 0.0f));
+  //device->render_state().model_mat_stack().Load(model_mat);
+
   //테스트용 마테리얼은 일단 공통
   Material mtl;
   //mtl.ambient = vec4(0.1, 0.1, 0.1, 1);
@@ -331,7 +336,8 @@ void renderFrame(Device *device) {
   Light point_light;
   point_light.SetPoint(vec3(1, 0, 1), 1);
 
-  {
+  bool use_deferred = true;
+  if(use_deferred) {
     Mesh *mesh = device->mesh_mgr()->Get("mesh");
 
     //early z-pass
@@ -349,21 +355,20 @@ void renderFrame(Device *device) {
     //deferred_renderer.DrawAmbientLight(glm::vec3(0.0, 0.2, 0.0));
 
     //directional
-    //deferred_renderer.DrawDirectionalLight(direction_light);
+    deferred_renderer.DrawDirectionalLight(direction_light);
     //deferred_renderer.DrawDirectionalLight(direction_light1);
 
     //point빛 디버깅 하기 위해서 구 렌더링을 예약하기. 진짜 draw는 후처리 식으로
-    deferred_renderer.DrawPointLight(point_light);
-    deferred_renderer.DrawPointLightArea(point_light);
+    //deferred_renderer.DrawPointLight(point_light);
+    //deferred_renderer.DrawPointLightArea(point_light);
 
     deferred_renderer.EndLightPass();
-
   }
-  /*
-  {
+  
+  if(use_deferred == false) {
     //forward renderer
     forward_renderer.BeginPass();
-    forward_renderer.SetLight(light);
+    forward_renderer.SetLight(direction_light);
     forward_renderer.ApplyRenderState();
 
     //메시 그리기 일단 제거
@@ -371,47 +376,50 @@ void renderFrame(Device *device) {
     forward_renderer.DrawMesh(mesh);
     //forward_renderer.EndPass();
   }
-*/
   
   //fbo에 있는 내용을 적절히 그리기
   //null_post_effect.Draw(depth_fbo.color_tex(), &device->render_state());
-  switch (curr_deferred_fbo_idx) {
-  case kDeferredRendererTexDepth:
-    deferred_renderer.DumpDepthTex();
-    break;
-  case kDeferredRendererTexDiffuse:
-    null_post_effect.Draw(deferred_renderer.DiffuseTex());
-    break;
-  case kDeferredRendererTexNormal:
-    deferred_renderer.DumpNormalTex();
-    break;
-  case kDeferredRendererTexSpecular:
-    null_post_effect.Draw(deferred_renderer.SpecularTex());
-    break;
-  case kDeferredRendererTexPosition:
-    null_post_effect.Draw(deferred_renderer.PositionTex());
-    break;
-  case kDeferredRendererTexFinalResult:
-    null_post_effect.Draw(deferred_renderer.FinalResultTex());
-    break;
-  default:
-    break;
+  if(use_deferred == true) {
+    switch (curr_deferred_fbo_idx) {
+    case kDeferredRendererTexDepth:
+      deferred_renderer.DumpDepthTex();
+      break;
+    case kDeferredRendererTexDiffuse:
+      null_post_effect.Draw(deferred_renderer.DiffuseTex());
+      break;
+    case kDeferredRendererTexNormal:
+      deferred_renderer.DumpNormalTex();
+      break;
+    case kDeferredRendererTexSpecular:
+      null_post_effect.Draw(deferred_renderer.SpecularTex());
+      break;
+    case kDeferredRendererTexPosition:
+      null_post_effect.Draw(deferred_renderer.PositionTex());
+      break;
+    case kDeferredRendererTexFinalResult:
+      null_post_effect.Draw(deferred_renderer.FinalResultTex());
+      break;
+    default:
+      break;
+    }
   }
-  
 
-  
-  //디버깅렌더링 하기전에 deferred renderer에 잇는 depth buffer를 적절히 복사하기
-  //그래야 깊이테스트가 올바르게 돌아간다
-  //만약 이게 없다면 테스트 렌더링도 deferred 안쪽에 집어넣어야한다
-  //http://stackoverflow.com/questions/9914046/opengl-how-to-use-depthbuffer-from-framebuffer-as-usual-depth-buffer
-  glBindFramebuffer(GL_READ_FRAMEBUFFER, deferred_renderer.GBufferHandle());
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-  int win_w = render_state.win_width();
-  int win_h = render_state.win_height();
-  glBlitFramebuffer(0, 0, win_w, win_h, 0, 0, win_w, win_h, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
-  SR_CHECK_ERROR("BlitFrameBuffer");
+  if(use_deferred == true) {
+    //디버깅렌더링 하기전에 deferred renderer에 잇는 depth buffer를 적절히 복사하기
+    //그래야 깊이테스트가 올바르게 돌아간다
+    //만약 이게 없다면 테스트 렌더링도 deferred 안쪽에 집어넣어야한다
+    //http://stackoverflow.com/questions/9914046/opengl-how-to-use-depthbuffer-from-framebuffer-as-usual-depth-buffer
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, deferred_renderer.GBufferHandle());
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    int win_w = render_state.win_width();
+    int win_h = render_state.win_height();
+    glBlitFramebuffer(0, 0, win_w, win_h, 0, 0, win_w, win_h, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
+    SR_CHECK_ERROR("BlitFrameBuffer");
+  }
 
   {
+    //기본행렬상태로 돌려놓기
+    render_state.ResetModelMat();
     //디버깅용으로 화면 3d렌더링 하는거
     DebugDrawManager *mgr_3d = device->debug_draw_mgr();
     mgr_3d->AddAxis(mat4(1.0f), 2);
