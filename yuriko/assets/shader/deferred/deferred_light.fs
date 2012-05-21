@@ -99,13 +99,10 @@ vec4 point_lighting(float depth, vec3 light_pos, float light_radius, vec3 n) {
 	float normalized_light_dist = light_dist / light_radius;
 	float att = 1.0 / (att_0 + att_1 * normalized_light_dist);
 	
-	vec3 view_dir = u_viewPosition.xyz - world_pos;
-	
 	vec3 viewspace_light_dir = mat3(u_view) * light_dir;
-	vec3 viewspace_view_dir = mat3(u_view) * view_dir;
-	
 	viewspace_light_dir = normalize(viewspace_light_dir);
-	viewspace_view_dir = normalize(viewspace_view_dir);
+	vec3 viewspace_view_dir = normalize(v_viewVector);
+	
 	
 	float diffuse_var = 0;
 	vec4 diffuse_color = calc_diffuse(n, viewspace_light_dir, diffuse_texel, diffuse_var);
@@ -129,13 +126,11 @@ vec4 direction_light(float depth, vec3 n) {
 	vec3 world_pos = texture2D(s_positionMap, v_texcoord).xyz;
 	
 	vec3 light_dir = u_lightDir;
-	vec3 view_dir = u_viewPosition.xyz - world_pos;
 	
 	vec3 viewspace_light_dir = mat3(u_view) * light_dir;
-	vec3 viewspace_view_dir = mat3(u_view) * view_dir;
-	
 	viewspace_light_dir = normalize(viewspace_light_dir);
-	viewspace_view_dir = normalize(viewspace_view_dir);
+	vec3 viewspace_view_dir = normalize(v_viewVector);
+	
 	
 	float diffuse_var = 0;
 	vec4 diffuse_color = calc_diffuse(n, viewspace_light_dir, diffuse_texel, diffuse_var);
@@ -144,10 +139,10 @@ vec4 direction_light(float depth, vec3 n) {
 		specular_color = calc_specular(n, viewspace_light_dir, specular_texel.xyz, shininess, viewspace_view_dir);
 	}
 	vec4 color = vec4(0.0);
-	//color = color + diffuse_color;
+	color = color + diffuse_color;
 	color = color + specular_color;
 	return color;
-	//return vec4(n, 1.0);
+	//return vec4(viewspace_view_dir, 1.0);
 }
 #endif
 

@@ -340,11 +340,11 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
   vec3 light_dir = normalize(viewspace_light_target_pos);
 
   //빛 방향을 디버깅을 위해서 출력하기
-  Draw2DManager *draw_2d_mgr = device->draw_2d();
-  char light_dir_buf[128];  
-  sprintf(light_dir_buf, "LightDir:%.4f, %.4f, %.4f", light_dir.x, light_dir.y, light_dir.z);
-  draw_2d_mgr->AddString(vec2(0, 100), light_dir_buf, Color4ub::Red(), 1.0f);
-  shader.SetUniformVector("u_lightDir", light_dir);
+  //Draw2DManager *draw_2d_mgr = device->draw_2d();
+  //char light_dir_buf[128];  
+  //sprintf(light_dir_buf, "LightDir:%.4f, %.4f, %.4f", light_dir.x, light_dir.y, light_dir.z);
+  //draw_2d_mgr->AddString(vec2(0, 100), light_dir_buf, Color4ub::Red(), 1.0f);
+  //shader.SetUniformVector("u_lightDir", light_dir);
 
   SetCommonLightQuadDraw(shader);
 }
@@ -361,6 +361,9 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
   GeometricObject<vec3> sphere_mesh;
   sphere_mesh.SolidSphere(1, 16, 16);
 
+  //스텐실을 이용해서 그리면 화면 전체가 아니라
+  //빛이 영향을 받는 곳에 대해서만 구를 그려서 빛 계산을 하도록하니까
+  //계산부하를 줄일수잇다
   const bool use_stencil = true;
   if(use_stencil) {
     //3d장면에 렌더링하기. 그래야 빛이 영향줄 구가 제대로 그려진다
@@ -412,13 +415,12 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
     light_pos.w = light.radius; //4번쨰를 반지름으로 사용
 
     {
-      Draw2DManager *draw_2d_mgr = dev->draw_2d();
-      char light_pos_buf[128];  
-      sprintf(light_pos_buf, "LightPos:%.4f, %.4f, %.4f", light_pos.x, light_pos.y, light_pos.z);
-      draw_2d_mgr->AddString(vec2(0, 100), light_pos_buf, Color4ub::Green(), 1.0f);
-
-      DebugDrawManager *draw_3d_mgr = dev->debug_draw_mgr();
-      draw_3d_mgr->AddString(light.pos, "Light", Color4ub::Red(), 1.0f);
+      //Draw2DManager *draw_2d_mgr = dev->draw_2d();
+      //char light_pos_buf[128];  
+      //sprintf(light_pos_buf, "LightPos:%.4f, %.4f, %.4f", light_pos.x, light_pos.y, light_pos.z);
+      //draw_2d_mgr->AddString(vec2(0, 100), light_pos_buf, Color4ub::Green(), 1.0f);
+      //DebugDrawManager *draw_3d_mgr = dev->debug_draw_mgr();
+      //draw_3d_mgr->AddString(light.pos, "Light", Color4ub::Red(), 1.0f);
     }
 
     point_shader.SetUniformVector("u_lightPos", light_pos);
@@ -488,6 +490,9 @@ void DeferredRenderer::SetCommonLightUniform(Shader &shader, const Light &light)
   vec4 viewport(0, 0, render_state.win_width(), render_state.win_height());
   shader.SetUniformVector(kViewportHandleName, viewport);
 
+  vec3 view_pos = MatrixHelper::ViewPos(view);
+  shader.SetUniformVector(kViewPositionHandleName, vec4(view_pos, 1.0f));
+
   shader.SetUniformVector(kDiffuseColorHandleName, light.diffuse);
   shader.SetUniformVector(kSpecularColorHandleName, light.specular);
 }
@@ -523,6 +528,7 @@ void DeferredRenderer::SetCommonLightQuadDraw(Shader &shader) {
 
     mat3 modelview_mat3(modelview);
     view_vec = modelview_mat3 * view_vec;
+    view_vec.z *= -1; //픽셀에서 cam_pos로 들어오는 방향으로 만들기 위해서 z뒤집음
   }
 
   //fragment마다 view vector를 계산하기 위해서 계산에 필요한 정보까지 넣기
@@ -632,6 +638,11 @@ void DeferredRenderer::DrawPointLightArea(const Light &light) {
   const vec3 &pos = light.pos;
   
   draw_mgr->AddSphere(pos, radius, Color4ub::White());
+
+  const mat4 &model = render_state.model_mat();
+  vec4 light_pos = model * vec4(light.pos, 1.0f);
+  DebugDrawManager *draw_3d_mgr = dev->debug_draw_mgr();
+  draw_3d_mgr->AddString(light.pos, "Light", Color4ub::White(), 1.0f);
 }
 PostEffect &DeferredRenderer::NormalDumpPostEffect() {
   if(normal_dump_post_effect_ == NULL) {
