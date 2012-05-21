@@ -78,7 +78,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <AdditionalLibraryDirectories>..\sdk\esUtil\Lib;..\sdk\OGLES2Tools\OGLES2\Build\WindowsVC2008\$(Configuration);..\sdk\OGLES2\WindowsX86\Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libEGL.lib;libGLESv2.lib;OGLES2Tools.lib;</AdditionalDependencies>
+      <AdditionalDependencies>sora.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

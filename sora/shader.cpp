@@ -64,20 +64,24 @@ bool Shader::Init(const std::vector<const char*> &vert_src_list, const std::vect
 }
 
 void Shader::AfterInit() {
-  uniform_list_ = Policy::GetActiveUniformVarList(handle_);
-  auto it = uniform_list_.begin();
-  auto endit = uniform_list_.end();
+  vector<ShaderVariable> uniform_list = Policy::GetActiveUniformVarList(handle_);
+  auto it = uniform_list.begin();
+  auto endit = uniform_list.end();
   for( ; it != endit ; ++it) {
     const ShaderVariable &loc = *it;
     LOGI("%s", loc.str().c_str());
+
+    uniform_list_[loc.name] = loc;
   }
 
-  attrib_list_ = Policy::GetActiveAttributeVarList(handle_);
-  it = attrib_list_.begin();
-  endit = attrib_list_.end();
+  vector<ShaderVariable> attrib_list = Policy::GetActiveAttributeVarList(handle_);
+  it = attrib_list.begin();
+  endit = attrib_list.end();
   for( ; it != endit ; ++it) {
     const ShaderVariable &loc = *it;
     LOGI("%s", loc.str().c_str());
+
+    attrib_list_[loc.name] = loc;
   }
 }
 
@@ -125,11 +129,25 @@ bool Shader::Validate() const {
 
 
 ShaderVariable Shader::uniform_var(const std::string &name) const {
-  return FindShaderVar(name, uniform_list_);
+  //return FindShaderVar(name, uniform_list_);
+  auto found = uniform_list_.find(name);
+  if(found != uniform_list_.end()) {
+    return found->second;
+  } else {
+    static ShaderVariable empty;
+    return empty;
+  }
 }
 
 ShaderVariable Shader::attrib_var(const std::string &name) const {
-  return FindShaderVar(name, attrib_list_);
+  //return FindShaderVar(name, attrib_list_);
+  auto found = attrib_list_.find(name);
+  if(found != attrib_list_.end()) {
+    return found->second;
+  } else {
+    static ShaderVariable empty;
+    return empty;
+  }
 }
 
 ShaderVariable Shader::GetHandle(const std::string &name) const {

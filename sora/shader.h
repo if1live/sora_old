@@ -55,6 +55,10 @@ bool SetUniformVector(const ShaderVariable &var, const glm::detail::tvec3<T>&vec
   return ShaderVariablePolicy::SetVector(var, vec);
 }
 template<typename T>
+bool SetUniformVector(const ShaderVariable &var, const glm::detail::tvec2<T>&vec) {
+  return ShaderVariablePolicy::SetVector(var, vec);
+}
+template<typename T>
 bool SetUniformValue(const ShaderVariable &var, T value) {
   return ShaderVariablePolicy::SetValue(var, value);
 }
@@ -112,27 +116,39 @@ public:
 
   template<typename T>
   bool SetUniformMatrix(const std::string &name, const glm::detail::tmat4x4<T> &mat) {
-    return Policy::SetUniformMatrix(handle_, name, mat);
+    //return Policy::SetUniformMatrix(handle_, name, mat);
+    ShaderVariable shader_var = uniform_var(name);
+    return sora::SetUniformMatrix(shader_var, mat);
   }
   template<typename T>
   bool SetUniformMatrix(const std::string &name, const glm::detail::tmat3x3<T> &mat) {
-    return Policy::SetUniformMatrix(handle_, name, mat);
+    //return Policy::SetUniformMatrix(handle_, name, mat);
+    ShaderVariable shader_var = uniform_var(name);
+    return sora::SetUniformMatrix(shader_var, mat);
   }
   template<typename T>
   bool SetUniformVector(const std::string &name, const glm::detail::tvec4<T> &vec) {
-    return Policy::SetUniformVector(handle_, name, vec);
+    //return Policy::SetUniformVector(handle_, name, vec);
+    ShaderVariable shader_var = uniform_var(name);
+    return sora::SetUniformVector(shader_var, vec);
   }
   template<typename T>
   bool SetUniformVector(const std::string &name, const glm::detail::tvec3<T>&vec) {
-    return Policy::SetUniformVector(handle_, name, vec);
+    //return Policy::SetUniformVector(handle_, name, vec);
+    ShaderVariable shader_var = uniform_var(name);
+    return sora::SetUniformVector(shader_var, vec);
   }
   template<typename T>
   bool SetUniformVector(const std::string &name, const glm::detail::tvec2<T>&vec) {
-    return Policy::SetUniformVector(handle_, name, vec);
+    //return Policy::SetUniformVector(handle_, name, vec);
+    ShaderVariable shader_var = uniform_var(name);
+    return sora::SetUniformVector(shader_var, vec);
   }
   template<typename T>
   bool SetUniformValue(const std::string &name, T value) {
-    return Policy::SetUniformValue(handle_, name, value);
+    //return Policy::SetUniformValue(handle_, name, value);
+    ShaderVariable shader_var = uniform_var(name);
+    return sora::SetUniformValue(shader_var, value);
   }
 
   void DrawMeshIgnoreMaterial(Mesh *mesh);
@@ -140,8 +156,8 @@ public:
 
 private:
   HandleType handle_;
-  std::vector<ShaderVariable> uniform_list_;
-  std::vector<ShaderVariable> attrib_list_;
+  std::tr1::unordered_map<std::string, ShaderVariable> uniform_list_;
+  std::tr1::unordered_map<std::string, ShaderVariable> attrib_list_;
 };
 } //namespace sora
 

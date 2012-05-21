@@ -40,6 +40,8 @@ namespace gl {
     template<typename T>
     static bool SetVector(const ShaderVariable &var, const glm::detail::tvec3<T>&vec);
     template<typename T>
+    static bool SetVector(const ShaderVariable &var, const glm::detail::tvec2<T>&vec);
+    template<typename T>
     static bool SetValue(const ShaderVariable &var, T value);
 
     //attrib bind function
@@ -48,6 +50,9 @@ namespace gl {
 
   template<typename T>
   bool GLShaderVariable::SetMatrix(const ShaderVariable &var, const glm::detail::tmat4x4<T> &mat) {
+    if(var.location == kInvalidShaderVarLocation) {
+      return false;
+    }
     SR_ASSERT(var.location != -1 && "not valid shader var location");
     SR_ASSERT(var.location_type == kHandleUniform);
     SR_ASSERT(var.size == 1);
@@ -67,6 +72,9 @@ namespace gl {
   }
   template<typename T>
   bool GLShaderVariable::SetMatrix(const ShaderVariable &var, const glm::detail::tmat3x3<T> &mat) {
+    if(var.location == kInvalidShaderVarLocation) {
+      return false;
+    }
     SR_ASSERT(var.location != -1 && "not valid shader var location");
     SR_ASSERT(var.location_type == kHandleUniform);
     SR_ASSERT(var.size == 1);
@@ -85,6 +93,9 @@ namespace gl {
   }
   template<typename T>
   bool GLShaderVariable::SetVector(const ShaderVariable &var, const glm::detail::tvec4<T> &vec) {
+    if(var.location == kInvalidShaderVarLocation) {
+      return false;
+    }
     SR_ASSERT(var.location != -1 && "not valid shader var location");
     SR_ASSERT(var.location_type == kHandleUniform);
     SR_ASSERT(var.size == 1);
@@ -110,6 +121,9 @@ namespace gl {
   }
   template<typename T>
   bool GLShaderVariable::SetVector(const ShaderVariable &var, const glm::detail::tvec3<T>&vec) {
+    if(var.location == kInvalidShaderVarLocation) {
+      return false;
+    }
     SR_ASSERT(var.location != -1 && "not valid shader var location");
     SR_ASSERT(var.location_type == kHandleUniform);
     SR_ASSERT(var.size == 1);
@@ -136,7 +150,40 @@ namespace gl {
     }
   }
   template<typename T>
+  bool GLShaderVariable::SetVector(const ShaderVariable &var, const glm::detail::tvec2<T>&vec) {
+    if(var.location == kInvalidShaderVarLocation) {
+      return false;
+    }
+    SR_ASSERT(var.location != -1 && "not valid shader var location");
+    SR_ASSERT(var.location_type == kHandleUniform);
+    SR_ASSERT(var.size == 1);
+
+    const bool is_float_type = std::is_same<T, float>::value;
+    const bool is_int_type = std::is_same<T, int>::value;
+    static_assert(is_float_type || is_int_type, "vec2 support int, float");
+
+    void *ptr = (void*)glm::value_ptr(vec);
+    GLenum var_type = GLEnv::VarTypeToGLEnum(var.var_type);
+    if(is_float_type) {
+      SR_ASSERT(var_type == GL_FLOAT_VEC2);
+      glUniform2fv(var.location, 1, (float*)ptr);
+      SR_CHECK_ERROR("glUniform2fv");
+      return true;
+    } else if(is_int_type) {
+      SR_ASSERT(var_type == GL_INT_VEC2);
+      glUniform2iv(var.location, 1, (int*)ptr);
+      SR_CHECK_ERROR("glUniform2iv");
+      return true;
+    } else {
+      SR_ASSERT(!"do not reach");
+      return false;
+    }
+  }
+  template<typename T>
   bool GLShaderVariable::SetValue(const ShaderVariable &var, T value) {
+    if(var.location == kInvalidShaderVarLocation) {
+      return false;
+    }
     SR_ASSERT(var.location != -1 && "not valid shader var location");
     SR_ASSERT(var.location_type == kHandleUniform);
     SR_ASSERT(var.size == 1);

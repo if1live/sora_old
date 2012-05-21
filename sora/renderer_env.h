@@ -114,7 +114,12 @@ bool RendererEnvT<T, RendererType>::CheckError(const std::string &msg) {
 }
 
 //에러검사같은 기능은 매크로로 해놓으면 활성화/비활성화가 쉽다
+#if _DEBUG
 #define SR_CHECK_ERROR(MSG) RendererEnv::CheckError(MSG);
 #define SR_CHECK_FRAMEBUFFER(MSG) RendererEnv::CheckFrameBufferStatus(MSG);
+#else
+#define SR_CHECK_ERROR(MSG)
+#define SR_CHECK_FRAMEBUFFER(MSG)
+#endif
 
 #endif  // SORA_RENDERER_ENV_H_

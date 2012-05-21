@@ -90,12 +90,13 @@ vec4 point_lighting(float depth, vec3 light_pos, float light_radius, vec3 n) {
 	vec3 light_dir = light_pos - world_pos;
 	float light_dist = length(light_dir);
 	if(light_dist > light_radius) {
-		return vec4(0.0, 0.0, 0.0, 1.0);
+		//return vec4(1.0, 0.0, 0.0, 1.0);
+		discard;	//되긴하는데 보통 느리니까 나중에 고치기
 	}
 	
 	//반지름 기반으로적당한 감쇄 적용
 	float att_0 = 1.0;
-	float att_1 = 1.0;
+	float att_1 = 3.0;
 	float normalized_light_dist = light_dist / light_radius;
 	float att = 1.0 / (att_0 + att_1 * normalized_light_dist);
 	
@@ -114,7 +115,6 @@ vec4 point_lighting(float depth, vec3 light_pos, float light_radius, vec3 n) {
 	color = color + diffuse_color;
 	color = color + specular_color;
 	return color * att;
-	
 }
 #endif
 

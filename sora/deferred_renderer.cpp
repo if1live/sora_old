@@ -344,7 +344,7 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
   //char light_dir_buf[128];  
   //sprintf(light_dir_buf, "LightDir:%.4f, %.4f, %.4f", light_dir.x, light_dir.y, light_dir.z);
   //draw_2d_mgr->AddString(vec2(0, 100), light_dir_buf, Color4ub::Red(), 1.0f);
-  //shader.SetUniformVector("u_lightDir", light_dir);
+  shader.SetUniformVector("u_lightDir", light_dir);
 
   SetCommonLightQuadDraw(shader);
 }
@@ -377,9 +377,9 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
 
     //단색쉐이더로 대충 그리기. 스텐실 버퍼에만 그려지면 됨
     //색칠 영역은 스텐실 버퍼니까 적절히 초기화하기
+    glEnable(GL_STENCIL_TEST);
     render_state.ClearBuffer(false, false, true, Color4ub::White());
     glColorMask(false, false, false, false);
-    glEnable(GL_STENCIL_TEST);
     glStencilOp(GL_REPLACE, GL_REPLACE, GL_REPLACE);
     glStencilFunc(GL_ALWAYS, 0xff, 0xff);
 
