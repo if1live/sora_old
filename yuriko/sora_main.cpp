@@ -101,6 +101,7 @@ enum {
   kDeferredRendererTexNormal,
   kDeferredRendererTexDiffuse,
   kDeferredRendererTexSpecular,
+  kDeferredRendererTexPosition,
   kDeferredRendererTexFinalResult,
 };
 int curr_deferred_fbo_idx = kDeferredRendererTexFinalResult;
@@ -328,7 +329,7 @@ void renderFrame(Device *device) {
 
   //포인트 빛설정
   Light point_light;
-  point_light.SetPoint(vec3(0, 0, 1), 1);
+  point_light.SetPoint(vec3(1, 0, 1), 1);
 
   {
     Mesh *mesh = device->mesh_mgr()->Get("mesh");
@@ -348,12 +349,12 @@ void renderFrame(Device *device) {
     //deferred_renderer.DrawAmbientLight(glm::vec3(0.0, 0.2, 0.0));
 
     //directional
-    deferred_renderer.DrawDirectionalLight(direction_light);
+    //deferred_renderer.DrawDirectionalLight(direction_light);
     //deferred_renderer.DrawDirectionalLight(direction_light1);
 
     //point빛 디버깅 하기 위해서 구 렌더링을 예약하기. 진짜 draw는 후처리 식으로
-    //deferred_renderer.DrawPointLight(point_light);
-    //deferred_renderer.DrawPointLightArea(point_light);
+    deferred_renderer.DrawPointLight(point_light);
+    deferred_renderer.DrawPointLightArea(point_light);
 
     deferred_renderer.EndLightPass();
 
@@ -376,19 +377,22 @@ void renderFrame(Device *device) {
   //null_post_effect.Draw(depth_fbo.color_tex(), &device->render_state());
   switch (curr_deferred_fbo_idx) {
   case kDeferredRendererTexDepth:
-    null_post_effect.Draw(deferred_renderer.DepthTex(), &device->render_state());
+    deferred_renderer.DumpDepthTex();
     break;
   case kDeferredRendererTexDiffuse:
-    null_post_effect.Draw(deferred_renderer.DiffuseTex(), &device->render_state());
+    null_post_effect.Draw(deferred_renderer.DiffuseTex());
     break;
   case kDeferredRendererTexNormal:
-    null_post_effect.Draw(deferred_renderer.NormalTex(), &device->render_state());
+    deferred_renderer.DumpNormalTex();
     break;
   case kDeferredRendererTexSpecular:
-    null_post_effect.Draw(deferred_renderer.SpecularTex(), &device->render_state());
+    null_post_effect.Draw(deferred_renderer.SpecularTex());
+    break;
+  case kDeferredRendererTexPosition:
+    null_post_effect.Draw(deferred_renderer.PositionTex());
     break;
   case kDeferredRendererTexFinalResult:
-    null_post_effect.Draw(deferred_renderer.FinalResultTex(), &device->render_state());
+    null_post_effect.Draw(deferred_renderer.FinalResultTex());
     break;
   default:
     break;
@@ -591,6 +595,9 @@ void SORA_update_frame(Device *device, float dt) {
         curr_deferred_fbo_idx = kDeferredRendererTexSpecular;
         break;
       case '5':
+        curr_deferred_fbo_idx = kDeferredRendererTexPosition;
+        break;
+      case '6':
         curr_deferred_fbo_idx = kDeferredRendererTexFinalResult;
         break;
       }

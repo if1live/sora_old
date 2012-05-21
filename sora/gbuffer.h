@@ -31,6 +31,7 @@ public:
     kNormalTex,
     kDiffuseTex,
     kSpecularTex,
+    kPositionTex,
     kTexCount
   };
 
@@ -48,6 +49,7 @@ public:
   Texture NormalTex() const;
   Texture DiffuseTex() const;
   Texture SpecularTex() const;
+  Texture PositionTex() const;
 
   FrameBufferHandle fbo() const { return fbo_; }
 
@@ -59,7 +61,7 @@ private:
   //RT0, view-space normal
   //RT1, diffuse(color * albedo)
   //RT2, specular map(rgb + shininess)
-  //RT3, position map(xyz, 일단 간단한 구현 위해서 놓지만 최적화하면 제거하자)
+  //RT3, viewspace-position map(xyz. 역계산하는게 빡쳐서 그냥 RT로 때우자. 나중에 최적화하자)
   std::array<TextureHandle, kTexCount> tex_list_;
 
   int width_;

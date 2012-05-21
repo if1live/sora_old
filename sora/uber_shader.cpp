@@ -237,6 +237,7 @@ void UberShader::ApplyCamera(const glm::mat4 &projection, const glm::mat4 &view,
   shader.SetUniformMatrix(kModelHandleName, model);
   shader.SetUniformMatrix(kProjectionHandleName, projection);
   shader.SetUniformMatrix(kViewHandleName, view);
+  shader.SetUniformMatrix(kModelViewHandleName, view * model);
 
   //빛 계산에는 normal계산 뒤집는 행렬이 필요하다
   glm::mat4 modelview_mat4(view * model);

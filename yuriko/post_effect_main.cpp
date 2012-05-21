@@ -277,9 +277,9 @@ namespace posteffect {
     simple_shader.DrawArrays(kDrawTriangleFan, vert_list.size());
     }
     */
-    null_post_effect.DrawScissor(depth_fbo.color_tex(), &device->render_state(), 0, 0, 320, 480);
-    grayscale_post_effect.DrawScissor(depth_fbo.color_tex(), &device->render_state(), 320, 0, 320, 480);
-    grayscale_post_effect.Draw(depth_fbo.color_tex(), &device->render_state(), 100, 100, 100, 100);
+    null_post_effect.DrawScissor(depth_fbo.color_tex(), 0, 0, 320, 480);
+    grayscale_post_effect.DrawScissor(depth_fbo.color_tex(), 320, 0, 320, 480);
+    grayscale_post_effect.Draw(depth_fbo.color_tex(), 100, 100, 100, 100);
 
     SR_CHECK_ERROR("End RenderFrame");
   }

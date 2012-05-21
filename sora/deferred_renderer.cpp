@@ -41,6 +41,7 @@
 #include "memory_file.h"
 #include "filesystem.h"
 #include "matrix_helper.h"
+#include "post_effect.h"
 
 using namespace std;
 using namespace glm;
@@ -61,8 +62,8 @@ bool DeferredRenderer::Init(int w, int h) {
   gbuffer_->Init(w, h);
 
   LOGI("Deferred Renderer :: Geomerty Shader");
-  const char *vert_file = "shader/deferred_geometry.vs";
-  const char *frag_file = "shader/deferred_geometry.fs";
+  const char *vert_file = "shader/deferred/deferred_geometry.vs";
+  const char *frag_file = "shader/deferred/deferred_geometry.fs";
   unsigned int flag = 0;
   //flag |= kMaterialAmbient; //디퍼드는 객체별 ambient가 먹히지 않는다(속성을 따로 저장하지 않아서)
   flag |= kMaterialDiffuse;
@@ -111,13 +112,21 @@ void DeferredRenderer::Deinit() {
     point_shader_->Deinit();
     point_shader_.reset(NULL);
   }
+  if(normal_dump_post_effect_ != NULL) {
+    normal_dump_post_effect_->Deinit();
+    normal_dump_post_effect_.reset(NULL);
+  }
+  if(depth_dump_post_effect_ != NULL) {
+    depth_dump_post_effect_->Deinit();
+    depth_dump_post_effect_.reset(NULL);
+  }
 }
 
 Shader &DeferredRenderer::ambient_shader() {
   if(ambient_shader_ == NULL) {
     LOGI("Deferred Renderer :: Ambient Shader");
-    const char *ambient_vert_file = "shader/deferred_ambient_light.vs";
-    const char *ambient_frag_file = "shader/deferred_ambient_light.fs";
+    const char *ambient_vert_file = "shader/deferred/deferred_ambient_light.vs";
+    const char *ambient_frag_file = "shader/deferred/deferred_ambient_light.fs";
     ambient_shader_.reset(new Shader());
     ambient_shader_->LoadFromFile(ambient_vert_file, ambient_frag_file);
   }
@@ -141,8 +150,8 @@ Shader &DeferredRenderer::depth_shader() {
   if(depth_shader_ == NULL) {
     //depth pass용으로 쓰기 위한 쉐이더
     LOGI("Deferred Renderer :: Depth Shader");
-    const char *depth_vert_file = "shader/deferred_depth.vs";
-    const char *depth_frag_file = "shader/deferred_depth.fs";
+    const char *depth_vert_file = "shader/deferred/deferred_depth.vs";
+    const char *depth_frag_file = "shader/deferred/deferred_depth.fs";
     depth_shader_.reset(new Shader());
     depth_shader_->LoadFromFile(depth_vert_file, depth_frag_file);
   }
@@ -167,7 +176,7 @@ Shader &DeferredRenderer::point_shader() {
 
 const std::string &DeferredRenderer::light_vert_src() {
   if(light_vert_src_.empty()) {
-    const char *vert_file = "shader/deferred_light.vs";
+    const char *vert_file = "shader/deferred/deferred_light.vs";
     string vert_path = Filesystem::GetAppPath(vert_file);
     MemoryFile mem_file(vert_path);
     bool opened = mem_file.Open();
@@ -181,7 +190,7 @@ const std::string &DeferredRenderer::light_vert_src() {
 
 const std::string &DeferredRenderer::light_frag_src() {
   if(light_frag_src_.empty()) {
-    const char *frag_file = "shader/deferred_light.fs";
+    const char *frag_file = "shader/deferred/deferred_light.fs";
     string frag_path = Filesystem::GetAppPath(frag_file);
     MemoryFile mem_file(frag_path);
     bool opened = mem_file.Open();
@@ -242,6 +251,16 @@ void DeferredRenderer::DrawMesh(Mesh *mesh) {
   render_state.UseShader(shader);
   geometry_uber_shader_->ApplyCamera();
   geometry_uber_shader_->ApplyMaterial(material);
+
+  //normal vector를 적절히 돌리기
+  const mat4 &view_mat = render_state.view_mat();
+  const mat4 &model_mat = render_state.model_mat();
+  mat4 modelview_mat4 = view_mat * model_mat;
+  mat4 modelview_mat4_inv = glm::inverse(modelview_mat4);
+  mat3 modelview_inv(modelview_mat4_inv);
+  const char *rotation_mat_var_name = "u_rotationMat";
+  shader.SetUniformMatrix(rotation_mat_var_name, modelview_inv);
+
 
   shader.DrawMeshIgnoreMaterial(mesh);
 }
@@ -339,7 +358,8 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
   GeometricObject<vec3> sphere_mesh;
   sphere_mesh.SolidSphere(1, 16, 16);
 
-  {
+  const bool use_stencil = false;
+  if(use_stencil) {
     //3d장면에 렌더링하기. 그래야 빛이 영향줄 구가 제대로 그려진다
     render_state.Set3D();
     const mat4 &projection = render_state.projection_mat();
@@ -371,9 +391,11 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
   {
     //스텐실 영역에 잇는거 진짜로 그리기. 2D로 그리기
     //이것을 진행하면서 빛 계산을 수행한다
-    glColorMask(true, true, true, true);
-    glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-    glStencilFunc(GL_EQUAL, 0xff, 0xff);
+    if(use_stencil) {
+      glColorMask(true, true, true, true);
+      glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+      glStencilFunc(GL_EQUAL, 0xff, 0xff);
+    }
 
     //점광원 계산용 쉐이더로 교체
     Shader &point_shader = this->point_shader();
@@ -408,7 +430,9 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
   }
   
   //restore state
-  glDisable(GL_STENCIL_TEST);
+  if(use_stencil) {
+    glDisable(GL_STENCIL_TEST);
+  }
 }
 
 void DeferredRenderer::SetCommonLightUniform(Shader &shader, const Light &light) {
@@ -419,6 +443,7 @@ void DeferredRenderer::SetCommonLightUniform(Shader &shader, const Light &light)
     ShaderVariable specular_var = shader.uniform_var(kSpecularMapHandleName);
     ShaderVariable depth_var = shader.uniform_var("s_depth");
     ShaderVariable normal_var = shader.uniform_var("s_viewSpaceNormal");
+    ShaderVariable pos_var = shader.uniform_var("s_positionMap");
 
     struct ShaderVarTexParam {
       ShaderVarTexParam(const ShaderVariable &shader_var, const Texture &tex)
@@ -431,6 +456,7 @@ void DeferredRenderer::SetCommonLightUniform(Shader &shader, const Light &light)
     var_tex_param_list.push_back(ShaderVarTexParam(specular_var, SpecularTex()));
     var_tex_param_list.push_back(ShaderVarTexParam(depth_var, DepthTex()));
     var_tex_param_list.push_back(ShaderVarTexParam(normal_var, NormalTex()));
+    var_tex_param_list.push_back(ShaderVarTexParam(pos_var, PositionTex()));
     int tex_unit = 0;
     for(size_t i = 0 ; i < var_tex_param_list.size() ; i++) {
       ShaderVarTexParam &param = var_tex_param_list[i];
@@ -541,7 +567,7 @@ void DeferredRenderer::SetCommonLightQuadDraw(Shader &shader) {
   if(view_vec_var.location != kInvalidShaderVarLocation) {
     AttribBindParam param;
     param.dim = 3;
-    param.normalize = false;
+    param.normalize = true;
     param.offset = offsetof(LightQuadVertex, view_vec);
     param.var_type = GL_FLOAT;
     param.vert_size = sizeof(LightQuadVertex);
@@ -592,6 +618,9 @@ unsigned int DeferredRenderer::GBufferHandle() const {
 Texture &DeferredRenderer::FinalResultTex() const {
   return final_result_fb_->color_tex();
 }
+Texture DeferredRenderer::PositionTex() const {
+  return gbuffer_->PositionTex();
+}
 void DeferredRenderer::DrawPointLightArea(const Light &light) {
   Device *dev = Device::GetInstance();
   const RenderState &render_state = dev->render_state();
@@ -601,5 +630,29 @@ void DeferredRenderer::DrawPointLightArea(const Light &light) {
   const vec3 &pos = light.pos;
   
   draw_mgr->AddSphere(pos, radius, Color4ub::White());
+}
+PostEffect &DeferredRenderer::NormalDumpPostEffect() {
+  if(normal_dump_post_effect_ == NULL) {
+    normal_dump_post_effect_.reset(new PostEffect());
+    string fs_path = Filesystem::GetAppPath("shader/deferred/normal_visualization.fs");
+    normal_dump_post_effect_->InitFromFile(fs_path);
+  }
+  return *normal_dump_post_effect_;
+}
+PostEffect &DeferredRenderer::DepthDumpPostEffect() {
+  if(depth_dump_post_effect_ == NULL) {
+    depth_dump_post_effect_.reset(new PostEffect());
+    string fs_path = Filesystem::GetAppPath("shader/deferred/depth_visualization.fs");
+    depth_dump_post_effect_->InitFromFile(fs_path);
+  }
+  return *depth_dump_post_effect_;
+}
+void DeferredRenderer::DumpNormalTex() {
+  Texture tex = NormalTex();
+  NormalDumpPostEffect().Draw(tex);
+}
+void DeferredRenderer::DumpDepthTex() {
+  Texture tex = DepthTex();
+  DepthDumpPostEffect().Draw(tex);
 }
 } //namespace sora

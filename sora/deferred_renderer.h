@@ -29,6 +29,7 @@ class Material;
 class UberShader;
 class Light;
 class Shader;
+class PostEffect;
 
 class DeferredRenderer {
 public:
@@ -64,10 +65,10 @@ public:
   Texture NormalTex() const;
   Texture DiffuseTex() const;
   Texture SpecularTex() const;
-
+  Texture PositionTex() const;
   Texture &FinalResultTex() const;
 
-  uint GBufferHandle() const;
+  uint GBufferHandle() const;  
 
 private:
   Shader &ambient_shader();
@@ -96,6 +97,16 @@ private:
   const std::string &light_frag_src();
   std::string light_vert_src_;
   std::string light_frag_src_;
+
+  //디버깅 덤프용
+public:
+  PostEffect &NormalDumpPostEffect();
+  PostEffect &DepthDumpPostEffect();
+  void DumpNormalTex();
+  void DumpDepthTex();
+private:
+  std::unique_ptr<PostEffect> normal_dump_post_effect_;
+  std::unique_ptr<PostEffect> depth_dump_post_effect_;
 };
 
 } //namespace sora

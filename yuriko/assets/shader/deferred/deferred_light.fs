@@ -24,6 +24,7 @@ uniform sampler2D s_viewSpaceNormal;
 uniform sampler2D s_depth;
 uniform sampler2D s_specularMap;
 uniform sampler2D s_diffuseMap;
+uniform sampler2D s_positionMap;
 
 vec4 unproject(float depth) {
 	mat4 inverse = u_mvpInv;
@@ -108,9 +109,36 @@ vec4 calc_specular(vec3 normal, vec3 light_dir, vec3 view_dir) {
 }
 
 #ifdef POINT_LIGHT
-vec4 point_lighting(float depth, vec3 light_pos, float light_radius, vec3 p, vec3 n) {
-	vec3 light_dir = light_pos - p;	//light vec
-	vec3 view_dir = normalize(p);	//view vec
+vec4 point_lighting(float depth, vec3 light_pos, float light_radius, vec3 n) {
+	//pos가 올바르지 않은 느낌이다.
+	//pos를 viewspace로만 보낼수 잇으면 성공인데...
+	//view dir
+	vec3 view = v_viewVector;
+	
+	//계산빡쳐서 viewspace를 바로 얻어올수 잇도록햇다. 텍스쳐에는 큰수 저장안되니까 역수로 저장한거 복구하기
+	//vec3 viewspace_pos_inv = texture2D(s_positionMap, v_texcoord).xyz;
+	//vec3 viewspace_pos = vec3(1.0) / viewspace_pos_inv;
+	vec3 viewspace_pos = texture2D(s_positionMap, v_texcoord).xyz;
+	
+	//position
+	//vec4 eye_pos = get_eye_pos(depth);
+	//vec3 pos = eye_pos.xyz / eye_pos.w;
+	//pos.z = u_clipPlane.y / (u_clipPlane.x + depth);
+	//pos.xy = view.xy / view.z * pos.z;
+	
+	light_pos = vec3(3, 0, 0);
+	vec3 light_dir = normalize(light_pos - viewspace_pos);	//light vec
+	vec3 view_dir = view;	//view vec
+	
+	//return vec4(viewspace_pos, 1.0);
+	/*
+	float dist = length(light_dir);
+	float att = 0;
+	if(dist <= light_radius) {
+		//att = dist / light_radius;
+		att = 1;
+	}
+	*/
 	
 	float diffuse_var = 0;
 	vec4 diffuse_color = calc_diffuse(n, light_dir, diffuse_var);
@@ -122,6 +150,7 @@ vec4 point_lighting(float depth, vec3 light_pos, float light_radius, vec3 p, vec
 	color = color + diffuse_color;
 	color = color + specular_color;
 	return color;
+	
 }
 #endif
 
@@ -146,7 +175,6 @@ vec4 direction_light(float depth, vec3 n) {
 void main() {
 	//0~1 => -1~+1
 	vec3 normal = texture2D(s_viewSpaceNormal, v_texcoord).xyz;
-	normal = (normal * 2.0) - vec3(1.0);
 	float depth = texture2D(s_depth, v_texcoord).x;
 	
 	if(depth == 1.0) {
@@ -155,26 +183,13 @@ void main() {
 	}
 
 #ifdef POINT_LIGHT
-	vec3 pos;
-	pos.z = u_clipPlane.y / (u_clipPlane.x + depth);
-	pos.xy = view.xy/view.z*pos.z;
-	
-	//view dir
 	vec3 light_pos = u_lightPos.xyz;
 	float radius = u_lightPos.w;
-	vec4 color = point_lighting(depth, light_pos, radius, pos, normal) {
+	vec4 color = point_lighting(depth, light_pos, radius, normal);
+	//vec4 color = vec4(light_pos.xyz, 1.0);
 #endif
 #ifdef DIRECTION_LIGHT
 	vec4 color = direction_light(depth, normal);
 #endif
 	gl_FragColor = color;
-	
-#ifdef POINT_LIGHT
-	vec4 viewpos = unproject(depth);
-	viewpos *= viewpos.w;
-	viewpos *= 0.01;
-	//viewpos.z *= -1;
-	gl_FragColor = viewpos;
-	//gl_FragColor = get_eye_pos(depth);
-#endif
 }

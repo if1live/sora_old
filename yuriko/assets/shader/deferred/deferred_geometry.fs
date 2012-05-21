@@ -1,6 +1,7 @@
 precision mediump float;
 
-uniform mat4 u_mvInvTranspose;
+uniform mat3 u_rotationMat;
+uniform mat4 u_mv;
 
 varying vec4 v_color;
 varying vec2 v_texcoord;
@@ -49,10 +50,8 @@ vec4 calc_diffuse_color() {
 
 vec3 calc_viewspace_normal() {
 	const bool use_normal_map = NORMAL_MAP_MASK == 1 ? true : false;
-	vec4 normal4 = u_mvInvTranspose * vec4(v_normal, 1.0);
-	//normal의 범위는 -1~+1인데 저장은 0~+1만 되니까 적절히 정규화하기
-	vec3 normal = (normal4.xyz + vec3(1.0)) * 0.5;
-	return normal;
+	vec3 normal = u_rotationMat * v_normal;
+	return normalize(normal);
 }
 
 void main() {
@@ -69,5 +68,8 @@ void main() {
 	gl_FragData[2] = specular_color;
 	
 	//RT3 : pos tex
-	gl_FragData[3] = vec4(v_position, 1.0);
+	vec4 viewspace_pos = u_mv * vec4(v_position, 1.0);
+	viewspace_pos /= viewspace_pos.w;
+	//viewspace_pos.xyz = vec3(1.0) / viewspace_pos.xyz;
+	gl_FragData[3] = vec4(viewspace_pos.xyz, 1.0);
 }

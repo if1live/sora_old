@@ -23,6 +23,10 @@
 
 #include "vertex.h"
 #include "render_state.h"
+#include "filesystem.h"
+#include "device.h"
+#include "render_state.h"
+#include "shader.h"
 
 using namespace glm;
 using namespace std;
@@ -33,19 +37,31 @@ PostEffect::PostEffect() {
 
 }
 PostEffect::~PostEffect() {
-
+  Deinit();
 }
 
+Shader &PostEffect::post_effect() {
+  if(post_effect_ == NULL) {
+    post_effect_.reset(new Shader());
+  }
+  return *post_effect_;
+}
 void PostEffect::Deinit() {
-  post_effect_.Deinit();
+  if(post_effect_ != NULL) {
+    post_effect_->Deinit();
+    post_effect_.reset(NULL);
+  }
 }
 
-void PostEffect::Draw(Texture &tex, RenderState *dev) {
-  dev->Set2D();
-  dev->UseShader(post_effect_);
-  dev->UseTexture(tex, 0);
+void PostEffect::Draw(Texture &tex) {
+  RenderState &render_state = Device::GetInstance()->render_state();
+  Shader &shader = post_effect();
 
-  ShaderVariable mvp_var = post_effect_.uniform_var(kMVPHandleName);
+  render_state.Set2D();
+  render_state.UseShader(shader);
+  render_state.UseTexture(tex, 0);
+
+  ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
   mat4 world_mat(1.0f);
   SetUniformMatrix(mvp_var, world_mat);
 
@@ -54,15 +70,18 @@ void PostEffect::Draw(Texture &tex, RenderState *dev) {
   vert_list.push_back(CreateVertex2D(1, -1, 1, 0));
   vert_list.push_back(CreateVertex2D(1, 1, 1, 1));
   vert_list.push_back(CreateVertex2D(-1, 1, 0, 1));
-  post_effect_.SetVertexList(vert_list);
-  post_effect_.DrawArrays(kDrawTriangleFan, vert_list.size());
+  shader.SetVertexList(vert_list);
+  shader.DrawArrays(kDrawTriangleFan, vert_list.size());
 }
-void PostEffect::Draw(Texture &tex, RenderState *dev, int x, int y, int w, int h) {
-  dev->Set2D();
-  dev->UseShader(post_effect_);
-  dev->UseTexture(tex, 0);
+void PostEffect::Draw(Texture &tex, int x, int y, int w, int h) {
+  RenderState &render_state = Device::GetInstance()->render_state();
+  Shader &shader = post_effect();
 
-  ShaderVariable mvp_var = post_effect_.uniform_var(kMVPHandleName);
+  render_state.Set2D();
+  render_state.UseShader(shader);
+  render_state.UseTexture(tex, 0);
+
+  ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
   mat4 world_mat(1.0f);
   SetUniformMatrix(mvp_var, world_mat);
   
@@ -71,8 +90,8 @@ void PostEffect::Draw(Texture &tex, RenderState *dev, int x, int y, int w, int h
   float rect_y = (float)y;
   float rect_w = (float)w;
   float rect_h = (float)h;
-  float win_w = static_cast<float>(dev->win_width());
-  float win_h = static_cast<float>(dev->win_height());
+  float win_w = static_cast<float>(render_state.win_width());
+  float win_h = static_cast<float>(render_state.win_height());
 
   float pos_left = (2.0f / win_w * rect_x) - 1;
   float pos_bottom = (2.0f / win_h * rect_y) - 1;
@@ -84,18 +103,22 @@ void PostEffect::Draw(Texture &tex, RenderState *dev, int x, int y, int w, int h
   vert_list.push_back(CreateVertex2D(pos_left + pos_w, pos_bottom, 1, 0));
   vert_list.push_back(CreateVertex2D(pos_left + pos_w, pos_bottom + pos_h, 1, 1));
   vert_list.push_back(CreateVertex2D(pos_left, pos_bottom + pos_h, 0, 1));
-  post_effect_.SetVertexList(vert_list);
-  post_effect_.DrawArrays(kDrawTriangleFan, vert_list.size());
+  shader.SetVertexList(vert_list);
+  shader.DrawArrays(kDrawTriangleFan, vert_list.size());
 }
 
-void PostEffect::DrawScissor(Texture &tex, RenderState *dev, int x, int y, int w, int h) {
+void PostEffect::DrawScissor(Texture &tex, int x, int y, int w, int h) {
   glEnable(GL_SCISSOR_TEST);
   glScissor(x, y, w, h);
-  Draw(tex, dev);
+  Draw(tex);
   glDisable(GL_SCISSOR_TEST);
 }
 
 void PostEffect::InitFromFile(const std::string &vert_path, const std::string &frag_path) {
-  post_effect_.LoadFromFile(vert_path, frag_path);
+  post_effect().LoadFromFile(vert_path, frag_path);
+}
+void PostEffect::InitFromFile(const std::string &frag_path) {
+  string vs_path = Filesystem::GetAppPath("posteffect/shared.vs");
+  post_effect().LoadFromFile(vs_path, frag_path);
 }
 }
