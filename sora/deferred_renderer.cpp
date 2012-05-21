@@ -653,6 +653,13 @@ void DeferredRenderer::DumpNormalTex() {
 }
 void DeferredRenderer::DumpDepthTex() {
   Texture tex = DepthTex();
-  DepthDumpPostEffect().Draw(tex);
+  PostEffect &post_effect = DepthDumpPostEffect();
+  post_effect.BeginPass();
+
+  vec2 clip_plane = Device::GetInstance()->render_state().GetClipPlanes3D();
+  Shader &shader = post_effect.post_effect();
+  shader.SetUniformVector(kClipPlaneHandleName, clip_plane);
+  post_effect.LowLevelDraw(tex);
+  post_effect.EndPass();
 }
 } //namespace sora

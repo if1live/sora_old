@@ -53,12 +53,44 @@ void PostEffect::Deinit() {
   }
 }
 
-void PostEffect::Draw(Texture &tex) {
+void PostEffect::BeginPass() {
   RenderState &render_state = Device::GetInstance()->render_state();
   Shader &shader = post_effect();
 
   render_state.Set2D();
   render_state.UseShader(shader);
+}
+void PostEffect::EndPass() {
+}
+void PostEffect::Draw(Texture &tex) {
+  BeginPass();
+  LowLevelDraw(tex);
+  EndPass();
+}
+void PostEffect::Draw(Texture &tex, int x, int y, int w, int h) {
+  BeginPass();
+  LowLevelDraw(tex, x, y, w, h);
+  EndPass();
+}
+
+void PostEffect::DrawScissor(Texture &tex, int x, int y, int w, int h) {
+  BeginPass();
+  LowLevelDrawScissor(tex, x, y, w, h);
+  EndPass();
+}
+
+void PostEffect::InitFromFile(const std::string &vert_path, const std::string &frag_path) {
+  post_effect().LoadFromFile(vert_path, frag_path);
+}
+void PostEffect::InitFromFile(const std::string &frag_path) {
+  string vs_path = Filesystem::GetAppPath("posteffect/shared.vs");
+  post_effect().LoadFromFile(vs_path, frag_path);
+}
+
+void PostEffect::LowLevelDraw(Texture &tex) {
+  RenderState &render_state = Device::GetInstance()->render_state();
+  Shader &shader = post_effect();
+
   render_state.UseTexture(tex, 0);
 
   ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
@@ -73,12 +105,10 @@ void PostEffect::Draw(Texture &tex) {
   shader.SetVertexList(vert_list);
   shader.DrawArrays(kDrawTriangleFan, vert_list.size());
 }
-void PostEffect::Draw(Texture &tex, int x, int y, int w, int h) {
+void PostEffect::LowLevelDraw(Texture &tex, int x, int y, int w, int h) {
   RenderState &render_state = Device::GetInstance()->render_state();
   Shader &shader = post_effect();
 
-  render_state.Set2D();
-  render_state.UseShader(shader);
   render_state.UseTexture(tex, 0);
 
   ShaderVariable mvp_var = shader.uniform_var(kMVPHandleName);
@@ -106,19 +136,10 @@ void PostEffect::Draw(Texture &tex, int x, int y, int w, int h) {
   shader.SetVertexList(vert_list);
   shader.DrawArrays(kDrawTriangleFan, vert_list.size());
 }
-
-void PostEffect::DrawScissor(Texture &tex, int x, int y, int w, int h) {
+void PostEffect::LowLevelDrawScissor(Texture &tex, int x, int y, int w, int h) {
   glEnable(GL_SCISSOR_TEST);
   glScissor(x, y, w, h);
   Draw(tex);
   glDisable(GL_SCISSOR_TEST);
 }
-
-void PostEffect::InitFromFile(const std::string &vert_path, const std::string &frag_path) {
-  post_effect().LoadFromFile(vert_path, frag_path);
-}
-void PostEffect::InitFromFile(const std::string &frag_path) {
-  string vs_path = Filesystem::GetAppPath("posteffect/shared.vs");
-  post_effect().LoadFromFile(vs_path, frag_path);
-}
-}
+} //namespace sora
