@@ -372,6 +372,8 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
   //depth test를 오래하지 않도록한다
   //스텐실 버퍼에 의존하는 방식보다 scissor로 고치는게 성능상 유리할테니
   //나중에는 적절히 고치자
+  //GeometricObject<vec3> sphere_mesh;
+  //sphere_mesh.SolidSphere(1, 16, 16);
 
   //스텐실을 이용해서 그리면 화면 전체가 아니라
   //빛이 영향을 받는 곳에 대해서만 구를 그려서 빛 계산을 하도록하니까
@@ -407,6 +409,7 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
     //const_color_shader->DrawElements(draw_cmd.draw_mode, draw_cmd.index_list);
     const_color_shader->DrawMeshIgnoreMaterial(&GetSphereMesh());
   }
+
   {
     //스텐실 영역에 잇는거 진짜로 그리기. 2D로 그리기
     //이것을 진행하면서 빛 계산을 수행한다

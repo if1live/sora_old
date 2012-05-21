@@ -313,7 +313,7 @@ namespace gl {
     if(run == false) {
       run = true;
       for(int i = 0 ; i < kVertexCodeCount ; i++) {
-        data[i] = ToGLVertexInfo(VertexInfo::Info(code));
+        data[i] = ToGLVertexInfo(VertexInfo::Info((VertexCode)i));
       }
     }
     return data[code];
