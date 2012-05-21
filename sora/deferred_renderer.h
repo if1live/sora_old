@@ -107,6 +107,10 @@ public:
 private:
   std::unique_ptr<PostEffect> normal_dump_post_effect_;
   std::unique_ptr<PostEffect> depth_dump_post_effect_;
+
+  //디퍼드 렌더링+점광원에는 구가 쓰인다. 구를 vbo로 만들어서 한방에 그릴수 잇도록 하자
+  Mesh &GetSphereMesh();
+  std::unique_ptr<Mesh> sphere_mesh_;
 };
 
 } //namespace sora
