@@ -261,8 +261,8 @@ void UberShader::ApplyCamera(const glm::mat4 &projection, const glm::mat4 &view,
 
   glm::vec4 dir_vec(dir.x, dir.y, dir.z, 1.0f);
   shader.SetUniformVector(kViewDirHandleName, dir_vec);
-
 }
+
 void UberShader::ApplyCamera() {
   Device *dev = Device::GetInstance();
   RenderState *render_dev = &dev->render_state();

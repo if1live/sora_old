@@ -321,7 +321,7 @@ void renderFrame(Device *device) {
   //방향성 빛 설정
   Light direction_light;
   //direction_light.SetDirection(vec3(1, 1, -1));
-  direction_light.SetDirection(vec3(0, 0, 1));
+  direction_light.SetDirection(vec3(1, 0, 1));
   direction_light.diffuse = vec4(0.5f, 0.0f, 0.0f, 1.0f);
   //direction_light.diffuse = vec4(0.0f, 0.0f, 0.0f, 1.0f);
   //direction_light.specular = vec4(0.0f, 0.0f, 1.0f, 1.0f);
@@ -355,12 +355,12 @@ void renderFrame(Device *device) {
     //deferred_renderer.DrawAmbientLight(glm::vec3(0.0, 0.2, 0.0));
 
     //directional
-    deferred_renderer.DrawDirectionalLight(direction_light);
+    //deferred_renderer.DrawDirectionalLight(direction_light);
     //deferred_renderer.DrawDirectionalLight(direction_light1);
 
     //point빛 디버깅 하기 위해서 구 렌더링을 예약하기. 진짜 draw는 후처리 식으로
-    //deferred_renderer.DrawPointLight(point_light);
-    //deferred_renderer.DrawPointLightArea(point_light);
+    deferred_renderer.DrawPointLight(point_light);
+    deferred_renderer.DrawPointLightArea(point_light);
 
     deferred_renderer.EndLightPass();
   }
@@ -416,6 +416,10 @@ void renderFrame(Device *device) {
     glBlitFramebuffer(0, 0, win_w, win_h, 0, 0, win_w, win_h, GL_DEPTH_BUFFER_BIT, GL_NEAREST);
     SR_CHECK_ERROR("BlitFrameBuffer");
   }
+
+  //카메라 디버깅용 문자열 찍기
+  render_state.DumpViewInfo(0, 200);
+
 
   {
     //기본행렬상태로 돌려놓기

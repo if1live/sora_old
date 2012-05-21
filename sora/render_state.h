@@ -77,6 +77,8 @@ struct RenderStateInterface {
   void ResetViewMat();
   void ResetModelMat();
 
+  //디버깅용 출력. 왼쪽아래를 0,0으로 찍은 스크린좌표
+  void DumpViewInfo(float x, float y);
 protected:
   int win_width_;
   int win_height_;

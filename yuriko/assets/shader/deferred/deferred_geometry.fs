@@ -1,6 +1,7 @@
 precision mediump float;
 
 uniform mat3 u_rotationMat;
+uniform mat4 u_model;
 uniform mat4 u_mv;
 
 varying vec4 v_color;
@@ -49,7 +50,7 @@ vec4 calc_diffuse_color() {
 }
 
 vec3 calc_viewspace_normal() {
-	const bool use_normal_map = NORMAL_MAP_MASK == 1 ? true : false;
+	//const bool use_normal_map = NORMAL_MAP_MASK == 1 ? true : false;
 	vec3 normal = u_rotationMat * v_normal;
 	return normalize(normal);
 }
@@ -68,8 +69,7 @@ void main() {
 	gl_FragData[2] = specular_color;
 	
 	//RT3 : pos tex
-	vec4 viewspace_pos = u_mv * vec4(v_position, 1.0);
-	viewspace_pos /= viewspace_pos.w;
-	//viewspace_pos.xyz = vec3(1.0) / viewspace_pos.xyz;
-	gl_FragData[3] = vec4(viewspace_pos.xyz, 1.0);
+	vec4 world_pos = u_model * vec4(v_position, 1.0);
+	//vec4 world_pos = u_mv * vec4(v_position, 1.0);
+	gl_FragData[3] = world_pos;
 }

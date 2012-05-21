@@ -18,7 +18,7 @@ varying vec3 v_position;
 void main() {
 	vec4 position = u_mvp * a_position;
 	gl_Position = position;
-	v_position = position.xyz;
+	v_position = a_position.xyz;
 	v_color = a_color;	
 	v_texcoord = a_texcoord;
 	v_normal = a_normal;

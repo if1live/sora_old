@@ -5,6 +5,8 @@ varying vec3 v_viewVector;
 uniform mat4 u_projectionInv;
 uniform mat4 u_mvpInv;
 uniform mat4 u_mv;
+uniform mat4 u_view;
+uniform vec4 u_viewPosition;
 
 uniform vec2 u_clipPlane;
 
@@ -83,47 +85,38 @@ vec4 point_lighting(float depth, vec3 light_pos, float light_radius, vec3 n) {
 	vec4 specular_texel = texture2D(s_specularMap, v_texcoord);
 	float shininess = specular_texel.w * 255;
 	vec4 diffuse_texel = texture2D(s_diffuseMap, v_texcoord);
+	vec3 world_pos = texture2D(s_positionMap, v_texcoord).xyz;
 	
-	//pos가 올바르지 않은 느낌이다.
-	//pos를 viewspace로만 보낼수 잇으면 성공인데...
-	//view dir
-	vec3 view = v_viewVector;
-	
-	//계산빡쳐서 viewspace를 바로 얻어올수 잇도록햇다. 텍스쳐에는 큰수 저장안되니까 역수로 저장한거 복구하기
-	//vec3 viewspace_pos_inv = texture2D(s_positionMap, v_texcoord).xyz;
-	//vec3 viewspace_pos = vec3(1.0) / viewspace_pos_inv;
-	vec3 viewspace_pos = texture2D(s_positionMap, v_texcoord).xyz;
-	
-	//position
-	//vec4 eye_pos = get_eye_pos(depth);
-	//vec3 pos = eye_pos.xyz / eye_pos.w;
-	//pos.z = u_clipPlane.y / (u_clipPlane.x + depth);
-	//pos.xy = view.xy / view.z * pos.z;
-	
-	light_pos = vec3(3, 0, 0);
-	vec3 light_dir = normalize(light_pos - viewspace_pos);	//light vec
-	vec3 view_dir = view;	//view vec
-	
-	//return vec4(viewspace_pos, 1.0);
-	/*
-	float dist = length(light_dir);
-	float att = 0;
-	if(dist <= light_radius) {
-		//att = dist / light_radius;
-		att = 1;
+	vec3 light_dir = light_pos - world_pos;
+	float light_dist = length(light_dir);
+	if(light_dist > light_radius) {
+		return vec4(0.0, 0.0, 0.0, 1.0);
 	}
-	*/
+	
+	//반지름 기반으로적당한 감쇄 적용
+	float att_0 = 1.0;
+	float att_1 = 1.0;
+	float normalized_light_dist = light_dist / light_radius;
+	float att = 1.0 / (att_0 + att_1 * normalized_light_dist);
+	
+	vec3 view_dir = u_viewPosition.xyz - world_pos;
+	
+	vec3 viewspace_light_dir = mat3(u_view) * light_dir;
+	vec3 viewspace_view_dir = mat3(u_view) * view_dir;
+	
+	viewspace_light_dir = normalize(viewspace_light_dir);
+	viewspace_view_dir = normalize(viewspace_view_dir);
 	
 	float diffuse_var = 0;
-	vec4 diffuse_color = calc_diffuse(n, light_dir, diffuse_var);
+	vec4 diffuse_color = calc_diffuse(n, viewspace_light_dir, diffuse_texel, diffuse_var);
 	vec4 specular_color = vec4(0.0);
 	if(diffuse_var > 0.0) {
-		specular_color = calc_specular(n, light_dir, view_dir);
+		specular_color = calc_specular(n, viewspace_light_dir, specular_texel.xyz, shininess, viewspace_view_dir);
 	}
 	vec4 color = vec4(0.0);
 	color = color + diffuse_color;
 	color = color + specular_color;
-	return color;
+	return color * att;
 	
 }
 #endif
@@ -133,20 +126,28 @@ vec4 direction_light(float depth, vec3 n) {
 	vec4 specular_texel = texture2D(s_specularMap, v_texcoord);
 	float shininess = specular_texel.w * 255;
 	vec4 diffuse_texel = texture2D(s_diffuseMap, v_texcoord);
+	vec3 world_pos = texture2D(s_positionMap, v_texcoord).xyz;
 	
 	vec3 light_dir = u_lightDir;
-	//vec3 view_dir = -normalize(get_ndc_pos(depth));
-	vec3 view_dir = v_viewVector;
+	vec3 view_dir = u_viewPosition.xyz - world_pos;
+	
+	vec3 viewspace_light_dir = mat3(u_view) * light_dir;
+	vec3 viewspace_view_dir = mat3(u_view) * view_dir;
+	
+	viewspace_light_dir = normalize(viewspace_light_dir);
+	viewspace_view_dir = normalize(viewspace_view_dir);
+	
 	float diffuse_var = 0;
-	vec4 diffuse_color = calc_diffuse(n, light_dir, diffuse_texel, diffuse_var);
+	vec4 diffuse_color = calc_diffuse(n, viewspace_light_dir, diffuse_texel, diffuse_var);
 	vec4 specular_color = vec4(0.0);
 	if(diffuse_var > 0.0) {
-		specular_color = calc_specular(n, light_dir, specular_texel.xyz, shininess, view_dir);
+		specular_color = calc_specular(n, viewspace_light_dir, specular_texel.xyz, shininess, viewspace_view_dir);
 	}
 	vec4 color = vec4(0.0);
-	color = color + diffuse_color;
+	//color = color + diffuse_color;
 	color = color + specular_color;
 	return color;
+	//return vec4(n, 1.0);
 }
 #endif
 

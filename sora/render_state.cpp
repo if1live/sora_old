@@ -30,6 +30,11 @@
 #include "matrix_stack.h"
 #include <glm/gtc/matrix_inverse.hpp>
 
+#include "device.h"
+#include "draw_2d_manager.h"
+#include "matrix_helper.h"
+#include "sys_font.h"
+
 using namespace glm;
 
 namespace sora {;
@@ -92,4 +97,26 @@ glm::mat4 RenderStateInterface::GetProjection2D() const {
   return projection;
     
 }
+
+void RenderState::DumpViewInfo(float x, float y) {
+  Draw2DManager *draw_2d_mgr = Device::GetInstance()->draw_2d();
+
+  const mat4 &view = view_mat();
+  const glm::vec3 eye = MatrixHelper::ViewPos(view);
+  const glm::vec3 up = MatrixHelper::ViewUpVec(view);
+  const glm::vec3 dir = MatrixHelper::ViewDirVec(view);
+  glm::vec3 view_side = glm::cross(dir, up);
+
+  const sora::vec4ub &color = Color4ub::Red();
+  char buf[128];
+  float scale = 1.0f;
+  float font_width = SysFont::kFontSize * scale;
+
+  sprintf(buf, "ViewPos:%.4f, %.4f, %.4f", eye.x, eye.y, eye.z);
+  draw_2d_mgr->AddString(glm::vec2(x, y), buf, color, scale);
+
+  sprintf(buf, "ViewDir:%.4f, %.4f, %.4f", dir.x, dir.y, dir.z);
+  draw_2d_mgr->AddString(glm::vec2(x, y - font_width), buf, color, scale);
+}
+
 } //namespace sora

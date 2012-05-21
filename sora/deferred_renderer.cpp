@@ -262,8 +262,9 @@ void DeferredRenderer::DrawMesh(Mesh *mesh) {
   mat4 modelview_mat4 = view_mat * model_mat;
   mat4 modelview_mat4_inv = glm::inverse(modelview_mat4);
   mat3 modelview_inv(modelview_mat4_inv);
+  mat3 modelview_inv_transpose = glm::transpose(modelview_inv);
   const char *rotation_mat_var_name = "u_rotationMat";
-  shader.SetUniformMatrix(rotation_mat_var_name, modelview_inv);
+  shader.SetUniformMatrix(rotation_mat_var_name, modelview_inv_transpose);
 
 
   shader.DrawMeshIgnoreMaterial(mesh);
@@ -331,21 +332,19 @@ void DeferredRenderer::DrawDirectionalLight(const Light &light) {
   SetCommonLightUniform(shader, light);
 
   //방향성빛은 방향만 잇으니까 행렬의 3*3만 쓴다
-  mat3 view_mat(render_state.view_mat());
   mat3 model_mat(render_state.model_mat());
-  mat3 light_mv = view_mat * model_mat;
+  mat3 light_mat(model_mat);
 
   vec3 light_target_pos(light.dir);
-  vec3 viewspace_light_target_pos(light_mv * light_target_pos);
-  viewspace_light_target_pos = normalize(viewspace_light_target_pos);
-  vec3 light_pos = (viewspace_light_target_pos);
+  vec3 viewspace_light_target_pos(light_mat * light_target_pos);
+  vec3 light_dir = normalize(viewspace_light_target_pos);
 
   //빛 방향을 디버깅을 위해서 출력하기
-  //Draw2DManager *draw_2d_mgr = device->draw_2d();
-  //char light_dir_buf[128];  
-  //sprintf(light_dir_buf, "LightDir:%.4f, %.4f, %.4f", light_pos.x, light_pos.y, light_pos.z);
-  //draw_2d_mgr->AddString(vec2(0, 100), light_dir_buf, Color_Red(), 1.0f);
-  shader.SetUniformVector("u_lightDir", light_pos);
+  Draw2DManager *draw_2d_mgr = device->draw_2d();
+  char light_dir_buf[128];  
+  sprintf(light_dir_buf, "LightDir:%.4f, %.4f, %.4f", light_dir.x, light_dir.y, light_dir.z);
+  draw_2d_mgr->AddString(vec2(0, 100), light_dir_buf, Color4ub::Red(), 1.0f);
+  shader.SetUniformVector("u_lightDir", light_dir);
 
   SetCommonLightQuadDraw(shader);
 }
@@ -362,7 +361,7 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
   GeometricObject<vec3> sphere_mesh;
   sphere_mesh.SolidSphere(1, 16, 16);
 
-  const bool use_stencil = false;
+  const bool use_stencil = true;
   if(use_stencil) {
     //3d장면에 렌더링하기. 그래야 빛이 영향줄 구가 제대로 그려진다
     render_state.Set3D();
@@ -409,9 +408,7 @@ void DeferredRenderer::DrawPointLight(const Light &light) {
 
     const mat4 &view = render_state.view_mat();
     const mat4 &model = render_state.model_mat();
-    vec4 light_pos = view * model * vec4(light.pos, 1.0f);
-    light_pos /= light_pos.w; //view 공간으로 넘긴다. view공간인 상태로 계산을 해야 구가 구인 상태로 유지되서 반지름같은것이 유효하다
-    //light_pos.z *= -1;
+    vec4 light_pos = model * vec4(light.pos, 1.0f);
     light_pos.w = light.radius; //4번쨰를 반지름으로 사용
 
     {
@@ -480,6 +477,7 @@ void DeferredRenderer::SetCommonLightUniform(Shader &shader, const Light &light)
   mat4 mvp = projection * view * model;
   mat4 mvp_inv = glm::inverse(mvp);
   shader.SetUniformMatrix(kMVPInverseHandleName, mvp_inv);
+  shader.SetUniformMatrix(kViewHandleName, view);
 
   mat4 projection_inv = glm::inverse(projection);
   shader.SetUniformMatrix(kProjectionInvHandleName, projection_inv);
